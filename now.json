@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "name": "mcd-cdp-portal",
+  "alias": ["mcd-cdp-portal-staging"],
+  "builds": [{ "src": "package.json", "use": "@now/static-build" }],
+  "static": {
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "X-Frame-Options",
+            "value": "Deny"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-XSS-protection",
+            "value": "1; mode=block"
+          }
+        ]
+      }
+    ]
+  }
+}

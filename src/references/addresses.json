@@ -1,0 +1,35 @@
+{
+  "mainnet": {},
+  "kovan": {
+    "vat": "0xcd726790550afcd77e9a7a47e86a3f9010af126b",
+    "drip": "0xea29Db06E0Aa791E8ca2330D8cd9073E0760b3F1",
+    "ethPip": "0x9fffe440258b79c5d6604001674a4722ffc0f7bc",
+    "pit": "0xe7cf3198787c9a4daac73371a38f29aaeeced87e",
+    "cat": "0x2f34f22a00ee4b7a8f8bbc4eaee1658774c624e0",
+    "mom": "0x2d13ff37cdbcdb60b5c298b95b3e360bec147e7e",
+    "vow": "0x3728e9777b2a0a611ee0f89e00e01044ce4736d1",
+    "DAI": {
+      "join": "0xfcbecd1a2ac11a260f6ff9de400f815f2906a2bd",
+      "tokenContract": "0xC4375B7De8af5a38a93548eb8453a498222C4fF2"
+    },
+    "MKR": {
+      "tokenContract": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd"
+    },
+    "ETH": {
+      "pip": "0x9fffe440258b79c5d6604001674a4722ffc0f7bc",
+      "spot": "0x0a787b0c65a6b4ffde2c10c01eb4ac7409606533",
+      "flip": "0x32d496ad866d110060866b7125981c73642cc509",
+      "join": "0x3ccd75157dc0ec69141294eda7a3657a4db8a399",
+      "move": "0xefe0a31b90c3a81e18e329dba100f96b7bc01860",
+      "tokenContract": "0x467b0b14223fb578ff785338fc21db21636d9b1e"
+    },
+    "REP": {
+      "pip": "0xf88bBDc1E2718F8857F30A180076ec38d53cf296",
+      "spot": "0x6639d21c843eaadf72c9eec8108b6f6fae569490",
+      "flip": "0xc0851f73cc8dd5c0765e71980ec7e7fd1ef74434",
+      "join": "0x5df073feb82b95af2b3c90ae458201b997512ff7",
+      "move": "0x32b9c412e8c0055fb74f723b5b17c253f911d389",
+      "tokenContract": "0x697854e2d31948d2728dc73c0d0d21cc5ee4ccff"
+    }
+  }
+}

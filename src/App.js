@@ -1,28 +1,42 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Provider } from 'react-redux';
+import styled, { ThemeProvider } from 'styled-components';
+import { themeLight, Grid } from '@makerdao/ui-components';
+import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+import { GenericNotFound } from 'pages/NotFound';
+import Navbar from './components/Navbar';
+
+import cdpTypesConfig from './references/cdpTypes';
+import store from './store';
+
+const Body = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+`;
+
+function App(props) {
+  return (
+    <ThemeProvider theme={themeLight}>
+      <NavProvider navigation={props.navigation}>
+        <Provider store={store}>
+          <Body>
+            <Grid
+              gridTemplateColumns="80px 1fr 315px"
+              gridTemplateAreas="'navbar view sidebar'"
+            >
+              <Navbar cdps={cdpTypesConfig} />
+              <NavNotFoundBoundary render={GenericNotFound}>
+                <NavContent />
+              </NavNotFoundBoundary>
+            </Grid>
+          </Body>
+        </Provider>
+      </NavProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

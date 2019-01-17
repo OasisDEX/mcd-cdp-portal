@@ -1,0 +1,7 @@
+*,
+*:before,
+*:after {
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}

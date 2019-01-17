@@ -1,12 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import watcher from './watch';
+import maker from './maker';
+import { createBrowserNavigation } from 'navi';
+
+import '@makerdao/ui-components/dist/styles/global.css';
+import './global.css';
+
+import pages from './pages';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+(async () => {
+  const navigation = createBrowserNavigation({ pages });
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  watcher.startWatch();
+
+  // It's pretty annoying to wait for this before rendering
+  // since we really only need to block transactions before authentication
+  // but here it stays for now
+  await maker.authenticate();
+
+  // Wait until async content is ready (or has failed).
+  await navigation.steady();
+
+  ReactDOM.render(
+    <App navigation={navigation} />,
+    document.getElementById('root')
+  );
+})();
