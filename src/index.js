@@ -13,15 +13,12 @@ import App from './App';
 (async () => {
   const navigation = createBrowserNavigation({ pages });
 
+  // start watching for ethereum state diffs
   watcher.startWatch();
 
-  // It's pretty annoying to wait for this before rendering
-  // since we really only need to block transactions before authentication
-  // but here it stays for now
-  await maker.authenticate();
-
-  // Wait until async content is ready (or has failed).
-  await navigation.steady();
+  maker.authenticate();
+  // prepare routes
+  navigation.steady();
 
   ReactDOM.render(
     <App navigation={navigation} />,

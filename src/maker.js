@@ -1,4 +1,4 @@
-import Maker from '@makerdao/dai';
+import Maker, { USD, DAI } from '@makerdao/dai';
 
 const maker = Maker.create('http', {
   log: false,
@@ -8,4 +8,5 @@ const maker = Maker.create('http', {
   }
 });
 
+export { USD, DAI };
 export default maker;

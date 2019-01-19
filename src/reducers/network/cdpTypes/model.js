@@ -1,13 +1,14 @@
+import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
-import { fromWei, fromRay, fromRad } from 'utils/units';
+import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 import {
   ADAPTER_BALANCE,
   MAX_AUCTION_LOT_SIZE,
   LIQUIDATION_PENALTY,
   LIQUIDATOR_ADDRESS,
   LIQUIDATION_RATIO,
-  FEED_LIVENESS,
-  FEED_VALUE,
+  FEED_SET_USD,
+  FEED_VALUE_USD,
   RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
@@ -20,8 +21,8 @@ const priceFeed = name => ({
   target: kovanAddresses[name].pip,
   call: ['peek()(uint256,bool)'],
   returns: [
-    [`${name}.${FEED_VALUE}`, val => fromWei(val, 5)],
-    [`${name}.${FEED_LIVENESS}`, liveness => (liveness ? 'live' : 'ded')]
+    [`${name}.${FEED_VALUE_USD}`, val => USD(val, -18)],
+    [`${name}.${FEED_SET_USD}`, liveness => (liveness ? 'live' : 'ded')]
   ]
 });
 
@@ -46,7 +47,7 @@ const pitData = name => ({
 const liquidation = name => ({
   target: kovanAddresses[name].spot,
   call: ['mat()(uint256)'],
-  returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromWei(val, 5)]]
+  returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
 });
 
 const flipper = name => ({
@@ -54,7 +55,10 @@ const flipper = name => ({
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
     [`${name}.${LIQUIDATOR_ADDRESS}`],
-    [`${name}.${LIQUIDATION_PENALTY}`, val => fromRay(val, 5)],
+    [
+      `${name}.${LIQUIDATION_PENALTY}`,
+      val => fromRay(mul(sub(val, RAY), 100), 2)
+    ],
     [`${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
   ]
 });

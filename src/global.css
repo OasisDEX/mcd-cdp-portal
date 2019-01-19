@@ -5,3 +5,7 @@
   box-sizing: border-box;
   flex-shrink: 0;
 }
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Helvetica Neue,
+    Roboto, Segoe UI, sans-serif;
+}

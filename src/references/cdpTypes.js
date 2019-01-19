@@ -4,7 +4,7 @@ export default [
   {
     slug: 'eth', // url param
     symbol: 'ETH', // how it's displayed in the UI
-    key: 'ETH', // the actual ilk key in the vat
+    key: 'ETH', // the actual ilk key used in the vat
     logo: ethLogo
   },
   {

@@ -10,3 +10,7 @@ export function toHex(str, { with0x = true, rightPadding = 64 } = {}) {
   if (rightPadding > 0) result = padRight(result, rightPadding);
   return with0x ? '0x' + result : result;
 }
+
+export function addressAsNumber(address) {
+  return parseInt(address.slice(2, 10), 16);
+}

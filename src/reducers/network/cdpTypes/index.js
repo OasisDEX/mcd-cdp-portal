@@ -1,7 +1,7 @@
 import cdpTypesConfig from 'references/cdpTypes';
 
-export const FEED_LIVENESS = 'feedLiveness';
-export const FEED_VALUE = 'feedValue';
+export const FEED_SET_USD = 'feedSetUSD';
+export const FEED_VALUE_USD = 'feedValueUSD';
 export const RATE = 'rate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
@@ -16,16 +16,26 @@ export function getCDPType(state, cdpTypeSlug) {
   return state.network.cdpTypes.find(({ slug }) => cdpTypeSlug === slug) || {};
 }
 
+export function getAllFeeds(state) {
+  return state.network.cdpTypes.reduce((acc, cdpType) => {
+    // this will get usd feeds only
+    return acc.concat({
+      pair: `${[cdpType.symbol]}/USD`,
+      value: cdpType[FEED_VALUE_USD]
+    });
+  }, []);
+}
+
 const defaultCDPTypeState = {
   key: '',
   slug: '',
   [RATE]: '0',
   [LAST_DRIP]: '0',
-  [FEED_VALUE]: '0',
+  [FEED_VALUE_USD]: '0',
   [DEBT_CEILING]: '0',
   [ADAPTER_BALANCE]: '0',
   [LIQUIDATION_RATIO]: '0',
-  [FEED_LIVENESS]: false,
+  [FEED_SET_USD]: false,
   [LIQUIDATOR_ADDRESS]: '',
   [LIQUIDATION_PENALTY]: '0',
   [MAX_AUCTION_LOT_SIZE]: '0',
@@ -44,13 +54,14 @@ function cdpTypes(state = initialState, action) {
 
     // is this a new cdp type?
     if (cdpState === undefined) {
-      // then grab the associated url slug from our config
-      const slug = cdpTypesConfig.find(({ key }) => cdpTypeKey === key).slug;
+      // then grab the relevant config
+      const cdpTypeConfig = cdpTypesConfig.find(
+        ({ key }) => cdpTypeKey === key
+      );
       return state.concat({
         ...defaultCDPTypeState,
-        [valueType]: value,
-        key: cdpTypeKey,
-        slug
+        ...cdpTypeConfig,
+        [valueType]: value
       });
     } else {
       const idx = state.findIndex(({ key }) => key === cdpTypeKey);

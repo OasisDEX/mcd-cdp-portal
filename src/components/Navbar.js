@@ -1,8 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { NavLink, NavRoute } from 'react-navi';
+import { NavLink } from 'react-navi';
 
 import MakerLogo from '../images/maker.svg';
+import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 
 const StyledMakerLogo = styled.div`
   display: block;
@@ -10,7 +11,7 @@ const StyledMakerLogo = styled.div`
   width: 33px;
   height: 21px;
   background: url(${MakerLogo}) center no-repeat;
-  margin: 23px auto 40px;
+  margin: 23px auto 32px;
   background-size: 33px;
 `;
 
@@ -50,7 +51,6 @@ const NavbarItemContainer = styled(NavLink)`
   font-weight: 700;
   text-align: center;
   ${props => (props.active ? activeItemStyle : inactiveItemStyle)};
-  // optimistically repaint mwahaha (we don't need to wait for the url params to change)
   &:active {
     background: #1aab9b !important;
     color: #f8f8f8 !important;
@@ -72,15 +72,20 @@ const DelegateStyle = styled.div`
   }
 `;
 
-function CDPListView({ cdps, urlParams }) {
+function CDPListView({ cdps }) {
   return (
     <DelegateStyle>
+      <NavbarItem
+        key="overview"
+        href="/overview"
+        label="Overview"
+        Logo={MakerSmall}
+      />
       {cdps.map((cdp, idx) => (
         <NavbarItem
           key={idx}
-          active={urlParams.type === cdp.slug}
           href={`/cdp/${cdp.slug}`}
-          symbol={cdp.symbol}
+          label={cdp.symbol}
           Logo={cdp.logo}
         />
       ))}
@@ -89,29 +94,32 @@ function CDPListView({ cdps, urlParams }) {
 }
 
 function CDPList({ cdps }) {
-  return (
-    <NavRoute>
-      {({ lastSegment }) => (
-        <CDPListView cdps={cdps} urlParams={lastSegment.params} />
-      )}
-    </NavRoute>
-  );
+  return <CDPListView cdps={cdps} />;
 }
 
-const NavbarItem = ({ href, symbol, active, Logo, ...props }) => (
-  <NavbarItemContainer href={href} active={active} {...props}>
+const NavbarItem = ({ href, label, Logo, ...props }) => (
+  <NavbarItemContainer
+    href={href}
+    exact={false}
+    activeStyle={{
+      background: '#1aab9b !important',
+      color: '#f8f8f8 !important'
+    }}
+    precache={true}
+    {...props}
+  >
     <div>
       <LogoWrap>
         <Logo />
       </LogoWrap>
-      <span>{symbol}</span>
+      <span>{label}</span>
     </div>
   </NavbarItemContainer>
 );
 
 const Navbar = ({ cdps, ...props }) => (
   <StyledNavbar {...props}>
-    <NavLink href="/overview">
+    <NavLink href="/">
       <StyledMakerLogo />
     </NavLink>
     <CDPList cdps={cdps} />
