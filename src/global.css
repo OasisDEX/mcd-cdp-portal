@@ -9,3 +9,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, Helvetica Neue,
     Roboto, Segoe UI, sans-serif;
 }
+a {
+  color: inherit;
+  text-decoration: none;
+}

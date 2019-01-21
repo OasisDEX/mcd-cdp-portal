@@ -79,11 +79,12 @@ const DelegateStyle = styled.div`
 `;
 
 function CDPListView({ currentPath, currentSearch }) {
+  const readOnly = currentPath.includes('read-only') ? '/read-only' : '';
   return (
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href={`/overview/${currentSearch}`}
+        href={`${readOnly}/overview/${currentSearch}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
@@ -94,7 +95,7 @@ function CDPListView({ currentPath, currentSearch }) {
         return (
           <NavbarItem
             key={idx}
-            href={linkPath + currentSearch}
+            href={readOnly + linkPath + currentSearch}
             label={cdp.symbol}
             Logo={cdp.logo}
             active={active}

@@ -10,9 +10,9 @@ import './global.css';
 import pages from './pages';
 import App from './App';
 
-(async () => {
-  const navigation = createBrowserNavigation({ pages });
+export const navigation = createBrowserNavigation({ pages });
 
+(async () => {
   // start watching for ethereum state diffs
   watcher.startWatch();
 
@@ -22,7 +22,7 @@ import App from './App';
   maker.authenticate();
 
   // prepare routes
-  navigation.steady();
+  await navigation.steady();
 
   ReactDOM.render(
     <App navigation={navigation} />,

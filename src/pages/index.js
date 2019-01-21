@@ -53,6 +53,7 @@ export default createSwitch({
       });
     },
 
+    '/read-only': createRedirect(`/read-only/overview`),
     '/read-only/overview': createPage({
       title: 'Overview Read-Only Mode',
       content: <Overview readOnly />

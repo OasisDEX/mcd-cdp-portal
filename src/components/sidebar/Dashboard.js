@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Flex } from '@makerdao/ui-components';
+import { NavLink } from 'react-navi';
+import { Flex, Button } from '@makerdao/ui-components';
 import Jazzicon from '../Jazzicon';
 import { cutMiddle } from 'utils/ui';
 
@@ -34,6 +35,12 @@ const Network = styled(Section)`
   line-height: 30px;
   color: #48495f;
   font-size: 12px;
+`;
+
+const CustomButton = styled(Button)`
+  height: 30px;
+  margin-left: 30px;
+  padding: 0px 26px;
 `;
 
 const networkColors = {
@@ -74,7 +81,12 @@ function SidebarDashboard({
               <StyledAddress>{cutMiddle(address, 7, 5)}</StyledAddress>
             </>
           ) : (
-            'Read-Only Mode'
+            <>
+              <span>Read-Only Mode</span>
+              <NavLink href="/" precache={true}>
+                <CustomButton variant="secondary-outline">Connect</CustomButton>
+              </NavLink>
+            </>
           )}
         </Flex>
       </Header>
