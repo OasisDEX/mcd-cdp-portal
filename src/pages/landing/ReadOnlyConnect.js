@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { Button } from '@makerdao/ui-components';
 
 const StyleLink = styled(NavLink)`
-  color: white;
+  color: inherit;
   text-decoration: none;
 `;
 
 function ReadOnlyConnect() {
   return (
-    <Button>
-      <StyleLink href="/read-only/overview">View in read-only mode</StyleLink>
+    <Button variant="secondary-outline" width="225px">
+      <StyleLink href="/read-only/overview">Read-Only</StyleLink>
     </Button>
   );
 }

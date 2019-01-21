@@ -1,22 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-navi';
 import { prettifyNumber } from 'utils/ui';
 
 // TODO: Use theme variables
 const StyledSidebarSystem = styled.div`
   margin: 2.5rem 0;
   margin: 1.9rem 0;
-`;
-
-const StyledLink = styled(NavLink)`
-  color: #2d9cdb;
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Title = styled.h1`
@@ -63,7 +52,6 @@ const SidebarSystem = ({ system }) => {
           <Value>{value}</Value>
         </React.Fragment>
       ))}
-      <StyledLink href="/overview">Go to System Overview</StyledLink>
     </StyledSidebarSystem>
   );
 };

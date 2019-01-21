@@ -19,6 +19,7 @@ export function getCDPType(state, cdpTypeSlug) {
 export function getAllFeeds(state) {
   return state.network.cdpTypes.reduce((acc, cdpType) => {
     // this will get usd feeds only
+    if (!cdpType[FEED_VALUE_USD]) return acc;
     return acc.concat({
       pair: `${[cdpType.symbol]}/USD`,
       value: cdpType[FEED_VALUE_USD]
@@ -66,6 +67,7 @@ function cdpTypes(state = initialState, action) {
     } else {
       const idx = state.findIndex(({ key }) => key === cdpTypeKey);
       state[idx] = { ...state[idx], [valueType]: value };
+      return [...state];
     }
   }
 

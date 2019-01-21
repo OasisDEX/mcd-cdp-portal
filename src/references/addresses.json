@@ -3,7 +3,6 @@
   "kovan": {
     "vat": "0xcd726790550afcd77e9a7a47e86a3f9010af126b",
     "drip": "0xea29Db06E0Aa791E8ca2330D8cd9073E0760b3F1",
-    "ethPip": "0x9fffe440258b79c5d6604001674a4722ffc0f7bc",
     "pit": "0xe7cf3198787c9a4daac73371a38f29aaeeced87e",
     "cat": "0x2f34f22a00ee4b7a8f8bbc4eaee1658774c624e0",
     "mom": "0x2d13ff37cdbcdb60b5c298b95b3e360bec147e7e",
@@ -30,6 +29,12 @@
       "join": "0x5df073feb82b95af2b3c90ae458201b997512ff7",
       "move": "0x32b9c412e8c0055fb74f723b5b17c253f911d389",
       "tokenContract": "0x697854e2d31948d2728dc73c0d0d21cc5ee4ccff"
+    },
+    "BTC": {
+      "pip": "0x51322A569233db3506892881eE7710f511db96A1"
+    },
+    "DGX": {
+      "pip": "0xa541d04193bccf9c3b62ef34ebc3aa19d00bb69f"
     }
   }
 }

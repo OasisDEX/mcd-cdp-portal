@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { prettifyNumber } from 'utils/ui';
 
 // TODO: Use theme variables
 const SidebarFeedsWrapper = styled.div`
@@ -44,7 +45,7 @@ function FeedsTable({ feeds }) {
   const rows = feeds.map(({ pair, value }) => (
     <tr key={pair}>
       <Pair>{pair}</Pair>
-      <Price>{value.toString()}</Price>
+      <Price>{prettifyNumber(value)}</Price>
     </tr>
   ));
 

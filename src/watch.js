@@ -3,19 +3,21 @@ import store from './store';
 import { batchActions } from 'utils/redux';
 
 import { cdpSystemStateModel } from 'reducers/network/system/model';
-import { createCDPTypeModel } from 'reducers/network/cdpTypes/model';
+import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 
 import config from 'references/config.json';
 import cdpTypes from 'references/cdpTypes';
 
-const supportedCDPKeys = cdpTypes.map(({ key }) => key);
+const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
 const multicallConfig = config.multicall.kovan;
 
 const initialModel = [
   ...cdpSystemStateModel,
-  ...supportedCDPKeys
-    .map(key => createCDPTypeModel(key))
-    .reduce((acc, cur) => acc.concat(cur), [])
+  ...supportedCDPTypes
+    .map(({ key }) => cdpTypeModel.createCDPTypeModel(key))
+    .reduce((acc, cur) => acc.concat(cur), []),
+  cdpTypeModel.priceFeed('DGX', { decimals: 9 }),
+  cdpTypeModel.priceFeed('BTC', { decimals: 8 })
 ];
 
 const watcher = createWatcher(initialModel, multicallConfig);

@@ -1,36 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { NavHistory } from 'react-navi';
-import { Button } from '@makerdao/ui-components';
+import styled from 'styled-components';
+import { Button, Flex } from '@makerdao/ui-components';
+import { MakerAuthContext } from 'components/context/MakerAuth';
+import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
+
 import maker from 'maker';
 
-function MetaMaskConnect({ history }) {
-  const [authenticated, setAuthenticated] = useState(false);
+// hack to get around button padding for now
+const MMLogo = styled(MetaMaskLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
 
-  useEffect(() => {
-    maker.authenticate().then(() => {
-      setAuthenticated(true);
-    });
-  }, []);
+function MetaMaskConnect({ history }) {
+  const makerAuthenticated = useContext(MakerAuthContext);
 
   return (
     <Button
-      disabled={!authenticated}
+      variant="secondary-outline"
+      width="225px"
+      disabled={!makerAuthenticated}
       onClick={async () => {
         const account = await maker.addAccount({ type: 'browser' });
-        const { address } = account;
         history.push({
           pathname: '/overview',
-          search: `?address=${address}`
+          search: `?address=${account.address}`
         });
       }}
     >
-      Connect with MetaMask
+      <Flex alignItems="center">
+        <MMLogo />
+        <span style={{ margin: 'auto' }}>MetaMask</span>
+      </Flex>
     </Button>
   );
 }
 
-export default () => {
+export default function() {
   return (
     <NavHistory>{history => <MetaMaskConnect history={history} />}</NavHistory>
   );
-};
+}

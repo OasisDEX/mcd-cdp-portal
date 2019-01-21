@@ -16,7 +16,11 @@ import App from './App';
   // start watching for ethereum state diffs
   watcher.startWatch();
 
+  // for debugging
+  window.maker = maker;
+
   maker.authenticate();
+
   // prepare routes
   navigation.steady();
 

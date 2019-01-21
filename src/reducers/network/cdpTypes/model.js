@@ -17,16 +17,16 @@ import {
 import contractAddresses from 'references/addresses.json';
 const kovanAddresses = contractAddresses.kovan;
 
-const priceFeed = name => ({
+export const priceFeed = (name, { decimals = 18 } = {}) => ({
   target: kovanAddresses[name].pip,
   call: ['peek()(uint256,bool)'],
   returns: [
-    [`${name}.${FEED_VALUE_USD}`, val => USD(val, -18)],
+    [`${name}.${FEED_VALUE_USD}`, val => USD(val, -decimals)],
     [`${name}.${FEED_SET_USD}`, liveness => (liveness ? 'live' : 'ded')]
   ]
 });
 
-const rateData = name => ({
+export const rateData = name => ({
   target: kovanAddresses.drip,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
   returns: [
@@ -35,7 +35,7 @@ const rateData = name => ({
   ]
 });
 
-const pitData = name => ({
+export const pitData = name => ({
   target: kovanAddresses.pit,
   call: ['ilks(bytes32)(uint256,uint256)', toHex(name)],
   returns: [
@@ -44,13 +44,13 @@ const pitData = name => ({
   ]
 });
 
-const liquidation = name => ({
+export const liquidation = name => ({
   target: kovanAddresses[name].spot,
   call: ['mat()(uint256)'],
   returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
 });
 
-const flipper = name => ({
+export const flipper = name => ({
   target: kovanAddresses.cat,
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
@@ -63,7 +63,7 @@ const flipper = name => ({
   ]
 });
 
-const adapterBalance = name => ({
+export const adapterBalance = name => ({
   target: kovanAddresses[name].tokenContract,
   call: ['balanceOf(address)(uint256)', kovanAddresses[name].join],
   returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]

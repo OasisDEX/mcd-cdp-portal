@@ -1,8 +1,6 @@
 import React from 'react';
-import { createPage, createSwitch } from 'navi';
-import styled from 'styled-components';
+import { createPage, createRedirect, createSwitch } from 'navi';
 import cdpTypes from 'references/cdpTypes';
-import { Grid } from '@makerdao/ui-components';
 import watcher from '../watch';
 
 import { CDPTypeNotFound } from './NotFound';
@@ -10,17 +8,11 @@ import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
-import Navbar from 'components/Navbar';
-import Sidebar from 'components/Sidebar';
-import cdpTypesConfig from 'references/cdpTypes';
 import maker from '../maker';
 
-const View = styled.div`
-  padding: 55px 32px;
-  background: #f6f8f9;
-`;
-
-const supportedCDPTypeSlugs = cdpTypes.map(({ slug }) => slug);
+const supportedCDPTypeSlugs = cdpTypes
+  .filter(({ hidden }) => !hidden)
+  .map(({ slug }) => slug);
 
 export default createSwitch({
   paths: {
@@ -29,28 +21,44 @@ export default createSwitch({
       content: <Landing />
     }),
 
-    '/overview': async env => {
+    '/overview': async () => {
       await maker.authenticate();
       await watcher.awaitInitialFetch();
       return createPage({
         title: 'Overview',
-        content: (
-          <Grid
-            gridTemplateColumns="80px 1fr 315px"
-            gridTemplateAreas="'navbar view sidebar'"
-            width="100%"
-          >
-            <Navbar cdps={cdpTypesConfig} />
-            <View>
-              <Overview />
-            </View>
-            <Sidebar networkName="kovan" networkDisplayName="Kovan Testnet" />
-          </Grid>
-        )
+        content: <Overview />
       });
     },
 
     '/cdp/:type': async env => {
+      const cdpTypeSlug = env.params.type;
+
+      // TODO: check what cdps the current active address has
+
+      if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
+        return createPage({
+          title: 'CDP Type Not Found',
+          content: <CDPTypeNotFound cdpTypeSlug={cdpTypeSlug} />
+        });
+
+      const address = env.query.address;
+      await watcher.awaitInitialFetch();
+      if (address === undefined)
+        return createRedirect(`/read-only/cdp/${cdpTypeSlug}`);
+
+      await maker.authenticate();
+      return createPage({
+        title: 'CDP',
+        content: <CDPPage cdpTypeSlug={cdpTypeSlug} address={address} />
+      });
+    },
+
+    '/read-only/overview': createPage({
+      title: 'Overview Read-Only Mode',
+      content: <Overview readOnly />
+    }),
+
+    '/read-only/cdp/:type': async env => {
       const cdpTypeSlug = env.params.type;
 
       if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
@@ -62,32 +70,20 @@ export default createSwitch({
       await maker.authenticate();
       await watcher.awaitInitialFetch();
       return createPage({
-        title: 'CDP',
-        content: (
-          <Grid
-            gridTemplateColumns="80px 1fr 315px"
-            gridTemplateAreas="'navbar view sidebar'"
-            width="100%"
-          >
-            <Navbar cdps={cdpTypesConfig} />
-            <View>
-              <CDPPage cdpTypeSlug={cdpTypeSlug} />
-            </View>
-            <Sidebar networkName="kovan" networkDisplayName="Kovan Testnet" />
-          </Grid>
-        )
+        title: 'Overview Read-Only Mode',
+        content: <CDPPage cdpTypeSlug={cdpTypeSlug} readOnly />
       });
     },
 
-    '/read-only/overview': createPage({
-      title: 'Overview Read-Only Mode',
-      content: <div>Move along, nothing to see here</div>
-    }),
-
-    '/sandbox/overview': createPage({
-      // eg https://cdp.makerdao.com/sandbox/overview?rpcURL=https://111.13.5.6:5000/&config=https://111.13.5.6:5001/
-      title: 'Overview Sandbox Mode',
-      content: <div>Move along, nothing to see here</div>
-    })
+    '/sandbox/overview': async env => {
+      // const providerConfigURL = env.params.config;
+      // const _providerConfig = await fetch(providerConfigURL);
+      // const providerConfig = await _providerConfig.json();
+      // eg https://cdp.makerdao.com/sandbox/overview?config=https://111.13.5.6:5001/
+      return createPage({
+        title: 'Overview Sandbox Mode',
+        content: <div>Move along, nothing to see here</div>
+      });
+    }
   }
 });

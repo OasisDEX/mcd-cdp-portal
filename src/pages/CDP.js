@@ -2,9 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getCDPType } from 'reducers/network/cdpTypes';
 import styled from 'styled-components';
-import cdpTypes from 'references/cdpTypes';
+import cdpTypesConfig from 'references/cdpTypes';
 
 const StyledCdp = styled.div`
+  max-width: 1200px;
+  margin: auto;
   span.last-active-date {
     font-size: 1.4rem;
     color: #9aa3ad;
@@ -211,7 +213,7 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
 function mapStateToProps(state, { cdpTypeSlug }) {
   return {
     cdpTypeDetails: getCDPType(state, cdpTypeSlug),
-    cdpSymbol: cdpTypes.find(({ slug }) => slug === cdpTypeSlug).symbol
+    cdpSymbol: cdpTypesConfig.find(({ slug }) => slug === cdpTypeSlug).symbol
   };
 }
 

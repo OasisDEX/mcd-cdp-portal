@@ -1,9 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { NavLink } from 'react-navi';
+import { NavLink, NavRoute } from 'react-navi';
+import cdpTypesConfig from 'references/cdpTypes';
 
 import MakerLogo from '../images/maker.svg';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
+
+const shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
 
 const StyledMakerLogo = styled.div`
   display: block;
@@ -20,22 +23,6 @@ const StyledNavbar = styled.div`
   background: #222;
 `;
 
-const activeItemStyle = css`
-  background: #1aab9b;
-  color: #f8f8f8;
-  svg {
-    opacity: 1;
-  }
-`;
-
-const inactiveItemStyle = css`
-  background: #383838;
-  color: #727272;
-  svg {
-    opacity: 0.3;
-  }
-`;
-
 const NavbarItemContainer = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -50,7 +37,22 @@ const NavbarItemContainer = styled(NavLink)`
   font-size: 1.2rem;
   font-weight: 700;
   text-align: center;
-  ${props => (props.active ? activeItemStyle : inactiveItemStyle)};
+  ${({ active }) =>
+    active
+      ? css`
+          background: #1aab9b;
+          color: #f8f8f8;
+          svg {
+            opacity: 1;
+          }
+        `
+      : css`
+          background: #383838;
+          color: #727272;
+          svg {
+            opacity: 0.3;
+          }
+        `};
   &:active {
     background: #1aab9b !important;
     color: #f8f8f8 !important;
@@ -67,47 +69,54 @@ const LogoWrap = styled.div`
 `;
 
 const DelegateStyle = styled.div`
-  &:active > * {
-    ${inactiveItemStyle}
+  &:active > a:not(:active) {
+    background: #383838 !important;
+    color: #727272 !important;
+    svg {
+      opacity: 0.3 !important;
+    }
   }
 `;
 
-function CDPListView({ cdps }) {
+function CDPListView({ currentPath, currentSearch }) {
   return (
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href="/overview"
+        href={`/overview/${currentSearch}`}
         label="Overview"
         Logo={MakerSmall}
+        active={currentPath.includes('/overview/')}
       />
-      {cdps.map((cdp, idx) => (
-        <NavbarItem
-          key={idx}
-          href={`/cdp/${cdp.slug}`}
-          label={cdp.symbol}
-          Logo={cdp.logo}
-        />
-      ))}
+      {shownCDPTypes.map((cdp, idx) => {
+        const linkPath = `/cdp/${cdp.slug}/`;
+        const active = currentPath.includes(linkPath);
+        return (
+          <NavbarItem
+            key={idx}
+            href={linkPath + currentSearch}
+            label={cdp.symbol}
+            Logo={cdp.logo}
+            active={active}
+          />
+        );
+      })}
     </DelegateStyle>
   );
 }
 
-function CDPList({ cdps }) {
-  return <CDPListView cdps={cdps} />;
+function CDPList() {
+  return (
+    <NavRoute>
+      {({ url }) => (
+        <CDPListView currentPath={url.pathname} currentSearch={url.search} />
+      )}
+    </NavRoute>
+  );
 }
 
-const NavbarItem = ({ href, label, Logo, ...props }) => (
-  <NavbarItemContainer
-    href={href}
-    exact={false}
-    activeStyle={{
-      background: '#1aab9b !important',
-      color: '#f8f8f8 !important'
-    }}
-    precache={true}
-    {...props}
-  >
+const NavbarItem = ({ href, label, Logo, active, ...props }) => (
+  <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <div>
       <LogoWrap>
         <Logo />
@@ -117,12 +126,12 @@ const NavbarItem = ({ href, label, Logo, ...props }) => (
   </NavbarItemContainer>
 );
 
-const Navbar = ({ cdps, ...props }) => (
+const Navbar = ({ ...props }) => (
   <StyledNavbar {...props}>
-    <NavLink href="/">
+    <NavLink href="/" precache={true}>
       <StyledMakerLogo />
     </NavLink>
-    <CDPList cdps={cdps} />
+    <CDPList />
   </StyledNavbar>
 );
 

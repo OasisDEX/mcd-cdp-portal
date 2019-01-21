@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Flex } from '@makerdao/ui-components';
 import Jazzicon from '../Jazzicon';
+import { cutMiddle } from 'utils/ui';
 
 import SidebarFeeds from './Feeds';
 import SidebarSystem from './System';
 
 // currency units are failing diff checker
-// READ only mode button
 
 // TODO: Use theme variables
 const StyledSidebarDashboard = styled.div`
@@ -57,14 +57,25 @@ const StyledAddress = styled.span`
   margin: 0 14px;
 `;
 
-const ADDRESS = '0x999999...B1gDog';
-function SidebarDashboard({ feeds, system, networkName, networkDisplayName }) {
+function SidebarDashboard({
+  feeds,
+  system,
+  address,
+  networkName,
+  networkDisplayName
+}) {
   return (
     <StyledSidebarDashboard>
       <Header>
         <Flex height="50px" alignItems="center">
-          <Jazzicon address={ADDRESS} />
-          <StyledAddress>{ADDRESS}</StyledAddress>
+          {address ? (
+            <>
+              <Jazzicon address={address} />
+              <StyledAddress>{cutMiddle(address, 7, 5)}</StyledAddress>
+            </>
+          ) : (
+            'Read-Only Mode'
+          )}
         </Flex>
       </Header>
       <Network>

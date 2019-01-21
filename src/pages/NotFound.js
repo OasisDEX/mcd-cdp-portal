@@ -1,17 +1,28 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const MiddleText = styled.div`
+  margin: auto;
+  text-align: center;
+  width: 100%;
+`;
 
 export function CDPTypeNotFound({ cdpTypeSlug }) {
   return (
-    <div>
-      <h2>CDP type {cdpTypeSlug} not found</h2>
-    </div>
+    <MiddleText>
+      <h1>
+        <code>CDP Type "{cdpTypeSlug.toUpperCase()}" Not Found</code>
+      </h1>
+    </MiddleText>
   );
 }
 
 export function GenericNotFound() {
   return (
-    <div>
-      <h1>404 - Not Found</h1>
-    </div>
+    <MiddleText>
+      <h1>
+        <code>404 - Not Found</code>
+      </h1>
+    </MiddleText>
   );
 }
