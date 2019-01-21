@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
-import { NavHistory } from 'react-navi';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
+import { NavHistory } from 'react-navi';
 import { Button, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
@@ -24,14 +27,14 @@ function MetaMaskConnect({ history }) {
       onClick={async () => {
         const account = await maker.addAccount({ type: 'browser' });
         history.push({
-          pathname: '/overview',
+          pathname: '/overview/',
           search: `?address=${account.address}`
         });
       }}
     >
       <Flex alignItems="center">
         <MMLogo />
-        <span style={{ margin: 'auto' }}>MetaMask</span>
+        <span style={{ margin: 'auto' }}>{lang.landing_page.metamask}</span>
       </Flex>
     </Button>
   );

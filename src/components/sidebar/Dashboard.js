@@ -1,5 +1,8 @@
 import React from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { NavLink } from 'react-navi';
 import { Flex, Button } from '@makerdao/ui-components';
 import Jazzicon from '../Jazzicon';
@@ -82,9 +85,11 @@ function SidebarDashboard({
             </>
           ) : (
             <>
-              <span>Read-Only Mode</span>
+              <span>{lang.sidebar.read_only_mode}</span>
               <NavLink href="/" precache={true}>
-                <CustomButton variant="secondary-outline">Connect</CustomButton>
+                <CustomButton variant="secondary-outline">
+                  {lang.connect}
+                </CustomButton>
               </NavLink>
             </>
           )}

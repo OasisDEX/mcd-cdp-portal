@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { Button, Modal, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as Logo } from 'images/trezor.svg';
@@ -40,7 +43,7 @@ function TrezorConnect() {
       >
         <Flex alignItems="center">
           <TrezorLogo />
-          <span style={{ margin: 'auto' }}>Trezor</span>
+          <span style={{ margin: 'auto' }}>{lang.landing_page.trezor}</span>
         </Flex>
       </Button>
     </>

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Header, Footer, Flex } from '@makerdao/ui-components';
+import lang from '../languages';
 
 import MetaMaskConnect from './landing/MetaMaskConnect';
 import ReadOnlyConnect from './landing/ReadOnlyConnect';
@@ -13,11 +14,10 @@ const Container = styled.div`
   background: ${({ white }) => (white ? '#fff' : '#f6f8f9')};
   text-align: center;
   min-height: 540px;
-  min-width: 1200px;
   width: 100%;
 `;
 
-const StyledTitle = styled.div`
+const Title = styled.div`
   font-size: 45px;
   color: #231536;
   width: 500px;
@@ -26,7 +26,7 @@ const StyledTitle = styled.div`
   text-align: left;
 `;
 
-const StyledBody = styled.div`
+const Subtitle = styled.div`
   margin-top: 10px;
   line-height: 31px;
   font-size: 19.5px;
@@ -43,13 +43,8 @@ function Landing() {
       <Container>
         <Flex justifyContent="space-evenly" height="400px" alignItems="center">
           <div>
-            <StyledTitle>
-              Spend crypto without leaving your position.
-            </StyledTitle>
-            <StyledBody>
-              Leverage your crypto assets to generate Dai, a decentralized
-              cryptocurrency pegged at the value of 1 US dollar.
-            </StyledBody>
+            <Title>{lang.landing_page.title}</Title>
+            <Subtitle>{lang.landing_page.subtitle}</Subtitle>
           </div>
           <Flex
             justifyContent="space-around"

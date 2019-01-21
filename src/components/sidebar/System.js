@@ -1,5 +1,8 @@
 import React from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { prettifyNumber } from 'utils/ui';
 
 // TODO: Use theme variables
@@ -35,12 +38,24 @@ const Value = styled.div`
 
 const SidebarSystem = ({ system }) => {
   const systemParams = [
-    ['GLOBAL DEBT CEILING', prettifyNumber(system.globalDebtCeiling)],
-    ['CURRENT DEBT', prettifyNumber(system.totalDebt)],
-    ['BASE RATE', `${system.baseRate} %`],
-    ['NUMBER OF LIQUIDATIONS', prettifyNumber(system.numberOfLiquidations)],
-    ['BUY & BURN LOT SIZE', prettifyNumber(system.surplusAuctionLotSize)],
-    ['INFLATE & SELL LOT SIZE', prettifyNumber(system.debtAuctionLotSize)]
+    [
+      lang.sidebar.global_debt_ceiling,
+      prettifyNumber(system.globalDebtCeiling)
+    ],
+    [lang.sidebar.current_debt, prettifyNumber(system.totalDebt)],
+    [lang.sidebar.burn_rate, `${system.baseRate} %`],
+    [
+      lang.sidebar.number_of_liquidations,
+      prettifyNumber(system.numberOfLiquidations)
+    ],
+    [
+      lang.sidebar.buy_and_burn_lot_size,
+      prettifyNumber(system.surplusAuctionLotSize)
+    ],
+    [
+      lang.sidebar.inflate_and_sell_lot_size,
+      prettifyNumber(system.debtAuctionLotSize)
+    ]
   ];
 
   return (

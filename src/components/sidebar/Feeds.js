@@ -1,5 +1,8 @@
 import React from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { prettifyNumber } from 'utils/ui';
 
 // TODO: Use theme variables
@@ -58,7 +61,7 @@ function FeedsTable({ feeds }) {
 
 const SidebarFeeds = ({ feeds }) => (
   <SidebarFeedsWrapper>
-    <Title>Price Feeds</Title>
+    <Title>{lang.sidebar.price_feeds}</Title>
     <FeedsTable feeds={feeds} />
   </SidebarFeedsWrapper>
 );

@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { Button, Modal, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
@@ -41,7 +44,9 @@ function LedgerConnect() {
       >
         <Flex alignItems="center">
           <StyledLedgerLogo />
-          <span style={{ margin: 'auto' }}>Ledger Nano</span>
+          <span style={{ margin: 'auto' }}>
+            {lang.landing_page.ledger_nano}
+          </span>
         </Flex>
       </Button>
     </>

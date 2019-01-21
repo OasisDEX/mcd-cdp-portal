@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import lang from 'languages';
 
 const MiddleText = styled.div`
   margin: auto;
@@ -11,7 +12,9 @@ export function CDPTypeNotFound({ cdpTypeSlug }) {
   return (
     <MiddleText>
       <h1>
-        <code>CDP Type "{cdpTypeSlug.toUpperCase()}" Not Found</code>
+        <code>
+          {lang.cdp_type} "{cdpTypeSlug.toUpperCase()}" {lang.not_found}
+        </code>
       </h1>
     </MiddleText>
   );
@@ -21,7 +24,7 @@ export function GenericNotFound() {
   return (
     <MiddleText>
       <h1>
-        <code>404 - Not Found</code>
+        <code>404 - {lang.not_found}</code>
       </h1>
     </MiddleText>
   );

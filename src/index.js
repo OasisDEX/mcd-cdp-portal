@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import watcher from './watch';
 import maker from './maker';
-import { createBrowserNavigation } from 'navi';
+import lang from 'languages';
 
+import { createBrowserNavigation } from 'navi';
 import '@makerdao/ui-components/dist/styles/global.css';
 import './global.css';
 
@@ -13,6 +14,8 @@ import App from './App';
 export const navigation = createBrowserNavigation({ pages });
 
 (async () => {
+  lang.setLanguage('en');
+
   // start watching for ethereum state diffs
   watcher.startWatch();
 
@@ -22,7 +25,7 @@ export const navigation = createBrowserNavigation({ pages });
   maker.authenticate();
 
   // prepare routes
-  await navigation.steady();
+  navigation.steady();
 
   ReactDOM.render(
     <App navigation={navigation} />,

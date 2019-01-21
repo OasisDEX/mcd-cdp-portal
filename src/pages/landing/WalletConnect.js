@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+
+import lang from 'languages';
 import styled from 'styled-components';
+
 import { Button, Flex } from '@makerdao/ui-components';
 import { ReactComponent as Logo } from 'images/wallet-connect.svg';
+
 // import WalletConnecter from 'walletconnect';
 // import WalletConnectQRCodeModal from 'walletconnect-qrcode-modal';
 
@@ -53,7 +57,9 @@ function WalletConnect() {
       >
         <Flex alignItems="center">
           <WalletConnectLogo />
-          <span style={{ margin: 'auto' }}>Wallet Connect</span>
+          <span style={{ margin: 'auto' }}>
+            {lang.landing_page.wallet_connect}
+          </span>
         </Flex>
       </Button>
     </>

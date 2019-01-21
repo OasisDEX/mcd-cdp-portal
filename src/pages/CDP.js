@@ -1,8 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { getCDPType } from 'reducers/network/cdpTypes';
+
+import lang from 'languages';
 import styled from 'styled-components';
 import cdpTypesConfig from 'references/cdpTypes';
+
+import { connect } from 'react-redux';
+import { getCDPType } from 'reducers/network/cdpTypes';
 
 const StyledCdp = styled.div`
   max-width: 1200px;
@@ -146,7 +149,7 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
   return (
     <StyledCdp>
       <Heading>
-        {cdpSymbol} CDP
+        {cdpSymbol} {lang.cdp}
         <span className="last-active-date">
           {/* Last active {cdp.dateLastActive} */}
         </span>
@@ -157,7 +160,7 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
             <div className="flexbox">
               <div className="col strong">
                 <div className="heading tooltip-underline">
-                  Liquidation price
+                  {lang.cdp_page.liquidation_ratio}
                 </div>
                 <span className="heading-sm">({cdpSymbol}/USD)</span>
               </div>
@@ -166,7 +169,7 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
             <div className="flexbox">
               <div className="col">
                 <div className="heading tooltip-underline">
-                  Current price information
+                  {lang.cdp_page.current_price_information}
                 </div>
                 <span className="heading-sm">({cdpSymbol}/USD)</span>
               </div>
@@ -175,7 +178,7 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
             <div className="flexbox">
               <div className="col">
                 <div className="heading tooltip-underline">
-                  Liquidation penalty
+                  {lang.cdp_page.liquidation_penalty}
                 </div>
               </div>
               <div className="col">{cdpTypeDetails.liquidationPenalty} %</div>
@@ -186,20 +189,24 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
             <div className="flexbox">
               <div className="col strong">
                 <div className="heading tooltip-underline">
-                  Collateralization ratio
+                  {lang.cdp_page.collateralization_ratio}
                 </div>
               </div>
               {/* <div className="col strong">{cdp.collateralizationRatio} %</div> */}
             </div>
             <div className="flexbox">
               <div className="col">
-                <div className="heading tooltip-underline">Minimum ratio</div>
+                <div className="heading tooltip-underline">
+                  {lang.cdp_page.minimum_ratio}
+                </div>
               </div>
               <div className="col">{cdpTypeDetails.liquidationRatio} %</div>
             </div>
             <div className="flexbox">
               <div className="col">
-                <div className="heading tooltip-underline">Stability fee</div>
+                <div className="heading tooltip-underline">
+                  {lang.cdp_page.stability_fee}
+                </div>
               </div>
               {/* <div className="col">{cdp.stabilityFee} %</div> */}
             </div>

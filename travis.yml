@@ -1,0 +1,9 @@
+language: node_js
+sudo: required
+node_js:
+  - 'stable'
+cache:
+  directories:
+    - node_modules
+install:
+  - yarn install
