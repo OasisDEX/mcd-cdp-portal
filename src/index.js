@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import watcher from './watch';
 import maker from './maker';
-import lang from 'languages';
+import lang from './languages';
 
 import { createBrowserNavigation } from 'navi';
 import '@makerdao/ui-components/dist/styles/global.css';

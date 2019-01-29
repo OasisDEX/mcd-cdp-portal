@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { NavLink, NavRoute } from 'react-navi';
 import cdpTypesConfig from 'references/cdpTypes';
+import { Box } from '@makerdao/ui-components';
 
 import MakerLogo from '../images/maker.svg';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
@@ -118,12 +119,12 @@ function CDPList() {
 
 const NavbarItem = ({ href, label, Logo, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
-    <div>
+    <Box>
       <LogoWrap>
         <Logo />
       </LogoWrap>
       <span>{label}</span>
-    </div>
+    </Box>
   </NavbarItemContainer>
 );
 

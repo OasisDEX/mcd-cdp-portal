@@ -2,11 +2,11 @@ import React from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
-import cdpTypesConfig from 'references/cdpTypes';
 
 import { connect } from 'react-redux';
-import { getCDPType } from 'reducers/network/cdpTypes';
+import { getCDPTypeDetails } from 'reducers/network/cdpTypes';
 
+// NOTE: CDP Page styles imported directly from prototype
 const StyledCdp = styled.div`
   max-width: 1200px;
   margin: auto;
@@ -145,14 +145,12 @@ const Heading = styled.div`
   color: #231536;
 `;
 
-function CDPView({ cdpTypeDetails, cdpSymbol }) {
+function CDPView({ cdpTypeDetails }) {
+  console.log(cdpTypeDetails);
   return (
     <StyledCdp>
       <Heading>
-        {cdpSymbol} {lang.cdp}
-        <span className="last-active-date">
-          {/* Last active {cdp.dateLastActive} */}
-        </span>
+        {cdpTypeDetails.symbol} {lang.cdp}
       </Heading>
       <div className="grid-wrapper">
         <div className="grid">
@@ -162,7 +160,9 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
                 <div className="heading tooltip-underline">
                   {lang.cdp_page.liquidation_ratio}
                 </div>
-                <span className="heading-sm">({cdpSymbol}/USD)</span>
+                <span className="heading-sm">
+                  ({cdpTypeDetails.symbol}/USD)
+                </span>
               </div>
               {/* <div className="col strong">{`${cdpTypeDetails.liquidationPrice}`}</div> */}
             </div>
@@ -171,7 +171,9 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
                 <div className="heading tooltip-underline">
                   {lang.cdp_page.current_price_information}
                 </div>
-                <span className="heading-sm">({cdpSymbol}/USD)</span>
+                <span className="heading-sm">
+                  ({cdpTypeDetails.symbol}/USD)
+                </span>
               </div>
               {/* <div className="col">{`${cdp.collateralPrice}`}</div> */}
             </div>
@@ -219,9 +221,28 @@ function CDPView({ cdpTypeDetails, cdpSymbol }) {
 
 function mapStateToProps(state, { cdpTypeSlug }) {
   return {
-    cdpTypeDetails: getCDPType(state, cdpTypeSlug),
-    cdpSymbol: cdpTypesConfig.find(({ slug }) => slug === cdpTypeSlug).symbol
+    cdpTypeDetails: getCDPTypeDetails(state, cdpTypeSlug)
   };
 }
+
+// ~~ cdpTypeDetails object for reference ~~
+// ---------------------------------------
+// const defaultCDPTypeState = {
+//   key: '',
+//   slug: '',
+//   symbol: '',
+//   rate: '0',
+//   lastDrip: '0',
+//   feedValueUSD: '0',
+//   debtCeiling: '0',
+//   adapterBalance: '0',
+//   liquidationRatio: '0',
+//   feedSetUSD: false,
+//   liquidatorAddress: '',
+//   liquidationPenalty: '0',
+//   maxAuctionLotSize: '0',
+//   priceWithSafetyMargin: '0'
+// };
+// ---------------------------------------
 
 export default connect(mapStateToProps)(CDPView);

@@ -1,11 +1,13 @@
 import React from 'react';
 import lang from 'languages';
 
+import { Box } from '@makerdao/ui-components';
+
 function Overview() {
   return (
-    <div>
+    <Box>
       <h2>{lang.overview_page.title}</h2>
-    </div>
+    </Box>
   );
 }
 

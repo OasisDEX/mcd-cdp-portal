@@ -11,7 +11,8 @@ import TrezorConnect from './landing/TrezorConnect';
 import WalletConnect from './landing/WalletConnect';
 
 const Container = styled.div`
-  background: ${({ white }) => (white ? '#fff' : '#f6f8f9')};
+  background: ${({ white, theme }) =>
+    white ? '#fff' : theme.colors.backgroundGrey};
   text-align: center;
   min-height: 540px;
   width: 100%;
@@ -19,7 +20,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   font-size: 45px;
-  color: #231536;
+  color: ${({ theme }) => theme.colors.heading};
   width: 500px;
   line-height: 54px;
   font-weight: 500;
@@ -30,7 +31,7 @@ const Subtitle = styled.div`
   margin-top: 10px;
   line-height: 31px;
   font-size: 19.5px;
-  color: #48495f;
+  color: ${({ theme }) => theme.colors.text};
   letter-spacing: 0.2px;
   width: 561px;
   text-align: left;

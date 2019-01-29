@@ -11,17 +11,19 @@ function removeAllChildNodes(element) {
 }
 
 function Jazzicon({ address }) {
-  const jazziconEl = React.useRef(null);
+  const jazziconElement = React.useRef(null);
 
   function generateJazzicon(_address) {
-    removeAllChildNodes(jazziconEl.current);
+    removeAllChildNodes(jazziconElement.current);
     const _jazzicon = jazzicon(22, addressAsNumber(_address));
-    jazziconEl.current.appendChild(_jazzicon);
+    jazziconElement.current.appendChild(_jazzicon);
   }
 
-  React.useEffect(() => generateJazzicon(address), [address]);
+  React.useEffect(() => {
+    generateJazzicon(address);
+  }, [address]);
 
-  return <div ref={jazziconEl} />;
+  return <div ref={jazziconElement} />;
 }
 
 export default Jazzicon;

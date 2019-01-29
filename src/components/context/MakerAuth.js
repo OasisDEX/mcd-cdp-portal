@@ -8,8 +8,8 @@ function MakerAuthProvider({ children }) {
   const [authenticated, setAuthenticated] = React.useState(false);
 
   React.useEffect(() => {
-    // NOTE: this triggers authentication if it hasn't already been;
-    // if we don't want that, we need a different approach here
+    // NOTE: this triggers authentication if it hasn't already been triggered;
+    // if we don't want that, we need a different approach
     maker.authenticate().then(() => {
       setAuthenticated(true);
     });

@@ -3,12 +3,12 @@ import { createStore } from 'redux';
 import { combineReducers } from 'redux';
 import { enableBatching } from 'utils/redux';
 
-import apps from 'reducers/app';
+import sdkState from 'reducers/sdkState';
 import system from 'reducers/network/system';
 import cdpTypes from 'reducers/network/cdpTypes';
 
 const rootReducer = combineReducers({
-  apps,
+  sdkState,
   network: combineReducers({
     system,
     cdpTypes

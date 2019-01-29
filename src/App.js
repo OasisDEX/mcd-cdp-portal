@@ -35,7 +35,7 @@ const Body = styled.div`
 
 const View = styled.div`
   padding: 55px 32px;
-  background: #f6f8f9;
+  background: ${({ theme }) => theme.colors.backgroundGrey};
 `;
 
 function App() {

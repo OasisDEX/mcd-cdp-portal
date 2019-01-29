@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { prettifyNumber } from 'utils/ui';
 
-// TODO: Use theme variables
 const SidebarFeedsWrapper = styled.div`
   margin: 2.5rem 0;
 `;
@@ -19,8 +18,8 @@ const Table = styled.table`
 `;
 
 const Title = styled.h1`
-  color: #231536;
-  font-weight: 600;
+  color: ${({ theme }) => theme.colors.heading};
+  font-weight: ${({ theme }) => theme.fontWeights.semibold};
   font-size: 1.8rem;
   letter-spacing: -0.03rem;
   line-height: normal;
@@ -33,13 +32,13 @@ const Td = styled.td`
 
 const Pair = styled(Td)`
   color: #4f445e;
-  font-weight: 700;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
   font-size: 1.3rem;
 `;
 
 const Price = styled(Td)`
-  color: #231536;
-  font-weight: 400;
+  color: ${({ theme }) => theme.colors.heading};
+  font-weight: ${({ theme }) => theme.fontWeights.normal};
   font-size: 1.4rem;
   text-align: right;
 `;

@@ -53,6 +53,8 @@ export default createSwitch({
       });
     },
 
+    // READ-ONLY --------------------------------------------------------------
+
     '/read-only': createRedirect(`/read-only/overview`),
     '/read-only/overview': createPage({
       title: 'Overview Read-Only Mode',
@@ -75,6 +77,8 @@ export default createSwitch({
         content: <CDPPage cdpTypeSlug={cdpTypeSlug} readOnly />
       });
     },
+
+    // SANDBOX ----------------------------------------------------------------
 
     '/sandbox/overview': async env => {
       // const providerConfigURL = env.params.config;
