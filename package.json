@@ -2,6 +2,9 @@
   "name": "mcd-cdp-portal",
   "description": "The primary web interface for interacting with the Multi-Collateral Dai smart contract system.",
   "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "homepage": "https://mcd.makerdao.com",
   "contributors": [
     "Michael Elliot <mike@makerdao.com>",
     "Joshua Levine <joshua@makerdao.com>"
