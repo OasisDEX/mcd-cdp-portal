@@ -2,12 +2,17 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { NavLink, NavRoute } from 'react-navi';
 import cdpTypesConfig from 'references/cdpTypes';
-import { Box } from '@makerdao/ui-components';
+import { Flex, Text } from '@makerdao/ui-components';
 
+import RatioDisplay from './navbar/RatioDisplay';
 import MakerLogo from '../images/maker.svg';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 
-const shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
+const _shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
+const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
+  ...cdpType,
+  ratio: (Math.random() * 1000).toFixed(2)
+}));
 
 const StyledMakerLogo = styled.div`
   display: block;
@@ -28,7 +33,6 @@ const NavbarItemContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
   width: 66px;
   height: 54px;
   margin: 0 auto;
@@ -38,54 +42,48 @@ const NavbarItemContainer = styled(NavLink)`
   font-size: 1.2rem;
   font-weight: 700;
   text-align: center;
+  color: #f8f8f8;
   ${({ active }) =>
     active
       ? css`
           background: #1aab9b;
-          color: #f8f8f8;
           svg {
             opacity: 1;
           }
         `
       : css`
           background: #383838;
-          color: #727272;
           svg {
             opacity: 0.3;
           }
         `};
   &:active {
     background: #1aab9b !important;
-    color: #f8f8f8 !important;
     svg {
       opacity: 1 !important;
     }
   }
 `;
 
-const LogoWrap = styled.div`
-  width: 100%;
-  height: 18px;
-  margin-bottom: 5px;
-`;
-
 const DelegateStyle = styled.div`
   &:active > a:not(:active) {
     background: #383838 !important;
-    color: #727272 !important;
     svg {
       opacity: 0.3 !important;
     }
   }
 `;
 
-function CDPListView({ currentPath, currentSearch }) {
-  const readOnly = currentPath.includes('read-only') ? '/read-only' : '';
+function CDPListView({ currentPath, currentQuery }) {
+  let pathPrefix = '';
+  if (currentPath.includes('read-only')) pathPrefix = '/read-only';
+  else if (currentPath.includes('sandbox')) pathPrefix = '/sandbox';
+
   return (
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href={`${readOnly}/overview/${currentSearch}`}
+        href={`${pathPrefix}/overview/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
@@ -96,9 +94,9 @@ function CDPListView({ currentPath, currentSearch }) {
         return (
           <NavbarItem
             key={idx}
-            href={readOnly + linkPath + currentSearch}
+            href={pathPrefix + linkPath + currentQuery}
             label={cdp.symbol}
-            Logo={cdp.logo}
+            ratio={cdp.ratio}
             active={active}
           />
         );
@@ -111,20 +109,18 @@ function CDPList() {
   return (
     <NavRoute>
       {({ url }) => (
-        <CDPListView currentPath={url.pathname} currentSearch={url.search} />
+        <CDPListView currentPath={url.pathname} currentQuery={url.search} />
       )}
     </NavRoute>
   );
 }
 
-const NavbarItem = ({ href, label, Logo, active, ...props }) => (
+const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
-    <Box>
-      <LogoWrap>
-        <Logo />
-      </LogoWrap>
-      <span>{label}</span>
-    </Box>
+    <Flex flexDirection="column" lineHeight="17px">
+      <Text>{label}</Text>
+      <RatioDisplay ratio={ratio} />
+    </Flex>
   </NavbarItemContainer>
 );
 
