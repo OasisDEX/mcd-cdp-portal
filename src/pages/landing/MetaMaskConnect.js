@@ -7,7 +7,7 @@ import { NavHistory } from 'react-navi';
 import { Button, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
-
+import { mixpanelIdentify } from 'utils/analytics';
 import maker from 'maker';
 
 // hack to get around button padding for now
@@ -25,10 +25,11 @@ function MetaMaskConnect({ history }) {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        const account = await maker.addAccount({ type: 'browser' });
+        const { address } = await maker.addAccount({ type: 'browser' });
+        mixpanelIdentify(address, 'metamask');
         history.push({
           pathname: '/overview/',
-          search: `?address=${account.address}`
+          search: `?address=${address}`
         });
       }}
     >

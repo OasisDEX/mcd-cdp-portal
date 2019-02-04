@@ -1,6 +1,7 @@
 import React, { createContext } from 'react';
 
 import maker from 'maker';
+import { mixpanelIdentify } from 'utils/analytics';
 
 export const MakerAuthContext = createContext(false);
 

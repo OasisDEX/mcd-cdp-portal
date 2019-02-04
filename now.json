@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "my-navi-project",
+  "name": "MCD CDP Portal",
   "builds": [
     {
       "src": "package.json",

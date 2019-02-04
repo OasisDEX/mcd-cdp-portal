@@ -16,6 +16,7 @@
     "@makerdao/ui-components": "^1.0.0-alpha.28",
     "bignumber.js": "^8.0.2",
     "jazzicon": "^1.5.0",
+    "mixpanel-browser": "^2.26.0",
     "navi": "^0.10.7",
     "react": "^16.8.0-alpha.0",
     "react-dom": "^16.8.0-alpha.0",
