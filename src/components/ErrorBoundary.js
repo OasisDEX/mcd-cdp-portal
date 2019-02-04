@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import Button from './common/Button';
+import { Button } from '@makerdao/ui-components';
 
 export const FillSpaceError = styled.div`
   display: flex;

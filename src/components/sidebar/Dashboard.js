@@ -1,17 +1,14 @@
 import React from 'react';
 
-import lang from 'languages';
 import styled from 'styled-components';
 
-import { NavLink } from 'react-navi';
-import { Flex, Button } from '@makerdao/ui-components';
+import { Flex } from '@makerdao/ui-components';
 import Jazzicon from '../Jazzicon';
 import { cutMiddle } from 'utils/ui';
 
 import SidebarFeeds from './Feeds';
 import SidebarSystem from './System';
-
-// currency units are failing diff checker
+import AccountConnect from './AccountConnect';
 
 // TODO: Use theme variables
 const StyledSidebarDashboard = styled.div`
@@ -38,12 +35,6 @@ const Network = styled(Section)`
   line-height: 30px;
   color: #48495f;
   font-size: 12px;
-`;
-
-const CustomButton = styled(Button)`
-  height: 30px;
-  margin-left: 30px;
-  padding: 0px 26px;
 `;
 
 const networkColors = {
@@ -84,14 +75,7 @@ function SidebarDashboard({
               <StyledAddress>{cutMiddle(address, 7, 5)}</StyledAddress>
             </>
           ) : (
-            <>
-              <span>{lang.sidebar.read_only_mode}</span>
-              <NavLink href="/" precache={true}>
-                <CustomButton variant="secondary-outline">
-                  {lang.connect}
-                </CustomButton>
-              </NavLink>
-            </>
+            <AccountConnect />
           )}
         </Flex>
       </Header>

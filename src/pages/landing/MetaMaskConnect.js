@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { NavHistory } from 'react-navi';
+import { navigation } from '../../index';
 import { Button, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
@@ -16,7 +16,7 @@ const MMLogo = styled(MetaMaskLogo)`
   margin-bottom: -5px;
 `;
 
-function MetaMaskConnect({ history }) {
+export default function MetaMaskConnect() {
   const makerAuthenticated = useContext(MakerAuthContext);
 
   return (
@@ -27,7 +27,7 @@ function MetaMaskConnect({ history }) {
       onClick={async () => {
         const { address } = await maker.addAccount({ type: 'browser' });
         mixpanelIdentify(address, 'metamask');
-        history.push({
+        navigation.history.push({
           pathname: '/overview/',
           search: `?address=${address}`
         });
@@ -38,11 +38,5 @@ function MetaMaskConnect({ history }) {
         <span style={{ margin: 'auto' }}>{lang.landing_page.metamask}</span>
       </Flex>
     </Button>
-  );
-}
-
-export default function() {
-  return (
-    <NavHistory>{history => <MetaMaskConnect history={history} />}</NavHistory>
   );
 }

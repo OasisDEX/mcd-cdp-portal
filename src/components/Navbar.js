@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled, { css } from 'styled-components';
 import { NavLink, NavRoute } from 'react-navi';
 import cdpTypesConfig from 'references/cdpTypes';
@@ -75,7 +75,7 @@ const DelegateStyle = styled.div`
   }
 `;
 
-function CDPListView({ currentPath, currentQuery }) {
+const CDPListView = memo(function({ currentPath, currentQuery }) {
   let pathPrefix = '';
   if (currentPath.includes('read-only')) pathPrefix = '/read-only';
   else if (currentPath.includes('sandbox')) pathPrefix = '/sandbox';
@@ -105,7 +105,7 @@ function CDPListView({ currentPath, currentQuery }) {
       })}
     </DelegateStyle>
   );
-}
+});
 
 function CDPList() {
   return (

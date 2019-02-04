@@ -146,7 +146,6 @@ const Heading = styled.div`
 `;
 
 function CDPView({ cdpTypeDetails }) {
-  console.log(cdpTypeDetails);
   return (
     <StyledCdp>
       <Heading>

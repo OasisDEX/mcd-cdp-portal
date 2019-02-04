@@ -1,6 +1,7 @@
 {
   "mainnet": {},
   "kovan": {
+    "multicall": "0xb2155b4f516a2e93fd0c40fdba57a3ab39952236",
     "vat": "0xcd726790550afcd77e9a7a47e86a3f9010af126b",
     "drip": "0xea29Db06E0Aa791E8ca2330D8cd9073E0760b3F1",
     "pit": "0xe7cf3198787c9a4daac73371a38f29aaeeced87e",

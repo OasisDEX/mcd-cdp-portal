@@ -11,6 +11,7 @@ import {
 
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
+import ErrorBoundary from 'components/ErrorBoundary';
 import MakerAuthProvider from 'components/context/MakerAuth';
 import { GenericNotFound } from 'pages/NotFound';
 
@@ -41,33 +42,35 @@ const View = styled.div`
 function App() {
   return (
     <Body>
-      <NavNotFoundBoundary render={GenericNotFound}>
-        <NavRoute>
-          {({ url }) => {
-            if (url.pathname === '/') return <NavContent />;
-            else
-              return (
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Grid
-                    gridTemplateColumns="80px 1fr 315px"
-                    gridTemplateAreas="'navbar view sidebar'"
-                    width="100%"
-                  >
-                    <Navbar />
-                    <View>
-                      <NavContent />
-                    </View>
-                    <Sidebar
-                      address={url.query.address}
-                      networkName="kovan"
-                      networkDisplayName="Kovan Testnet"
-                    />
-                  </Grid>
-                </Suspense>
-              );
-          }}
-        </NavRoute>
-      </NavNotFoundBoundary>
+      <ErrorBoundary>
+        <NavNotFoundBoundary render={GenericNotFound}>
+          <NavRoute>
+            {({ url }) => {
+              if (url.pathname === '/') return <NavContent />;
+              else
+                return (
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Grid
+                      gridTemplateColumns="80px 1fr 315px"
+                      gridTemplateAreas="'navbar view sidebar'"
+                      width="100%"
+                    >
+                      <Navbar />
+                      <View>
+                        <NavContent />
+                      </View>
+                      <Sidebar
+                        address={url.query.address}
+                        networkName="kovan"
+                        networkDisplayName="Kovan Testnet"
+                      />
+                    </Grid>
+                  </Suspense>
+                );
+            }}
+          </NavRoute>
+        </NavNotFoundBoundary>
+      </ErrorBoundary>
     </Body>
   );
 }

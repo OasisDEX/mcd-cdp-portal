@@ -12,10 +12,10 @@ const StyledSidebar = styled.aside`
   box-shadow: -1px 0px 3px rgba(159, 159, 159, 0.25);
 `;
 
-function Sidebar(props) {
+function Sidebar({ feeds, system }) {
   return (
     <StyledSidebar>
-      <SidebarDashboard {...props} />
+      <SidebarDashboard feeds={feeds} system={system} />
     </StyledSidebar>
   );
 }

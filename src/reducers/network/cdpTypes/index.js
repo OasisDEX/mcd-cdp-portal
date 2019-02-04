@@ -48,6 +48,7 @@ const initialState = [];
 
 function cdpTypes(state = initialState, action) {
   const { value, type } = action;
+
   // example type: ETH.debtCeiling
   const [cdpTypeKey, valueType] = type.split('.');
 
