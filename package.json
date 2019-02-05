@@ -35,6 +35,7 @@
     "start": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco build",
     "precommit": "lint-staged",
+    "test": "echo \"Live long or Dai hard\"",
     "deploy": "yarn build && now ./build -A ../now.json",
     "now-build": "yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
