@@ -12,6 +12,9 @@
   "dependencies": {
     "@craco/craco": "^3.1.0",
     "@makerdao/dai": "^0.9.10",
+    "@makerdao/dai-plugin-config": "^0.0.2",
+    "@makerdao/dai-plugin-ledger-web": "^0.9.7",
+    "@makerdao/dai-plugin-trezor-web": "^0.9.4",
     "@makerdao/multicall": "0.5.1-alpha.5",
     "@makerdao/ui-components": "^1.0.0-alpha.28",
     "bignumber.js": "^8.0.2",

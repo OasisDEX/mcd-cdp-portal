@@ -1,7 +1,7 @@
 import { createWatcher } from '@makerdao/multicall';
 import store from './store';
-import { batchActions } from 'utils/redux';
 
+import { batchActions } from 'utils/redux';
 import { cdpSystemStateModel } from 'reducers/network/system/model';
 import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 

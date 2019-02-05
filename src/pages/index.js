@@ -7,43 +7,76 @@ import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
-import maker, { reInstantiateMaker } from 'maker';
+import maker, {
+  reInstantiateMaker,
+  reInstantiateMakerWithTestchain,
+  getLastTestchainId
+} from 'maker';
+
 import store from 'store';
 import watcher from '../watch';
 
-const ID_TO_NETWORK_NAME = {
-  1: 'mainnet',
-  42: 'kovan'
-};
-
-const RPC_URLS = {
-  1: 'https://kovan.infura.io/',
-  42: 'https://infura.io/'
-};
-
-const ADDRESSES = {
-  1: {},
-  42: {}
-};
-
-function getOrFetchAddresses(networkID) {
-  return ADDRESSES[networkID];
+function eq(a, b) {
+  return parseInt(a, 10) === parseInt(b, 10);
 }
 
-const CDPS = [];
+const SUPPORTED_NETWORK_IDS = ['42'];
 
-function getUserCDPs(address) {
-  return CDPS;
-}
+// this function must be idempotent except wrt env.query
+function withStagedNetwork(getSuccessPage, getErrorPage) {
+  return async env => {
+    await maker.authenticate();
 
-function newAccountModel(address, cdps) {
-  return [];
-}
+    const { testchainId } = env.query;
+    const newTestchain =
+      testchainId !== undefined && !eq(testchainId, getLastTestchainId()); // we should be checking the store
 
-function determineNetwork() {
-  const networkState = { readOnly: true, network: { rpcURL: '', name: '' } };
+    if (newTestchain) {
+      // this testchain is different from the one whose state we have cached
+      store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
 
-  return { ...networkState };
+      const networkDetails = await reInstantiateMakerWithTestchain({
+        testchainId
+      });
+
+      if (networkDetails.notFound)
+        return getErrorPage('FAILED TO GET TESTCHAIN CONFIG');
+
+      const { rpcURL, addresses } = networkDetails;
+
+      await watcher.reCreate([], {
+        rpcURL,
+        multicallAddress: addresses.multicall
+      });
+    }
+
+    // if we're connecting to a testchain, don't worry about anything else
+    if (testchainId !== undefined) return getSuccessPage(env);
+
+    const { networkId } = env.query;
+    if (!SUPPORTED_NETWORK_IDS.includes(networkId))
+      return getErrorPage(`UNSUPPORTED NETWORK ID ${networkId}`);
+    const makerNetworkId = maker.service('web3').networkId();
+    const newNetwork = !eq(networkId, makerNetworkId);
+
+    if (newNetwork) {
+      // this network is different from the one whose state we have cached
+      store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
+      const networkDetails = await reInstantiateMaker({ networkId });
+
+      if (networkDetails.notFound)
+        return getErrorPage(`UNSUPPORTED NETWORK ID ${networkId}`);
+
+      const { rpcURL, addresses } = networkDetails;
+
+      await watcher.reCreate([], {
+        rpcURL,
+        multicallAddress: addresses.multicall
+      });
+    }
+
+    return getSuccessPage(env);
+  };
 }
 
 const supportedCDPTypeSlugs = cdpTypes
@@ -57,64 +90,20 @@ export default createSwitch({
       content: <Landing />
     }),
 
-    '/overview': async env => {
-      const { networkId } = env.context;
-      const { address } = env.query;
-
-      // user can
-
-      await maker.authenticate();
-
-      if (networkId === undefined) throw new Error('');
-
-      const networkName = ID_TO_NETWORK_NAME[networkId];
-      const rpcURL = RPC_URLS[networkId];
-
-      const userCDPs = getUserCDPs(address);
-      const currentNetworkId = maker.service('web3').networkId();
-
-      // the network is different from what our maker instance thinks it is
-      if (networkId !== currentNetworkId) {
-        // we're asking context to keep track of the fact that our network has been spent
-
-        // clear network state from the store
-        store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
-
-        const contractAddresses = getOrFetchAddresses(networkId);
-
-        const authWaiter = reInstantiateMaker(rpcURL);
-        const fetchWaiter = watcher.setConfig(() => ({
-          multicallAddress: contractAddresses.multicall,
-          rpcURL
-        }));
-
-        await Promise.all([fetchWaiter, authWaiter]);
-      } else await watcher.awaitInitialFetch();
-
-      try {
-        const account = maker.currentAccount();
-        if (store.getState().user.address !== account.address) {
-          await watcher.tap(model => {
-            return model.concat(newAccountModel(account.address, userCDPs));
-          });
-        }
+    '/overview': withStagedNetwork(
+      () => {
         return createPage({
           title: 'Overview',
-          content: (
-            <Overview
-              // readOnly={readOnly}
-              // useNetwork={useNetwork}
-              networkName={networkName}
-              rpcURL={rpcURL}
-            />
-          )
+          content: <Overview />
         });
-      } catch (_) {
-        return createRedirect(`/read-only/overview`);
+      },
+      errMSG => {
+        return createPage({
+          title: 'Error',
+          content: <div>{errMSG}</div>
+        });
       }
-
-      // const useNetwork = createNetworkHook();
-    },
+    ),
 
     '/cdp/:type': async env => {
       const cdpTypeSlug = env.params.type;

@@ -18,7 +18,7 @@ export const navigation = createBrowserNavigation({ pages });
 (async () => {
   lang.setLanguage('en');
 
-  // start watching for ethereum state diffs
+  // start watching for ethereum state changes
   watcher.start();
 
   // for debugging

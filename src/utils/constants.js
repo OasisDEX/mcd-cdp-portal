@@ -4,3 +4,5 @@ export const CDP_SAFETY_LEVELS = {
   NEUTRAL: 'neutral',
   SAFE: 'safe'
 };
+
+export const KNOWN_NETWORK_IDS = [1, 42];

@@ -25,11 +25,15 @@ export default function MetaMaskConnect() {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        const { address } = await maker.addAccount({ type: 'browser' });
+        const { address, subprovider } = await maker.addAccount({
+          type: 'browser'
+        });
+        const networkId = subprovider.provider.networkVersion;
+        // TODO: the sdk could provide this ^ in a more natural way
         mixpanelIdentify(address, 'metamask');
         navigation.history.push({
           pathname: '/overview/',
-          search: `?address=${address}`
+          search: `?address=${address}&networkId=${networkId}`
         });
       }}
     >

@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Provider } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
 import { themeLight, Grid } from '@makerdao/ui-components';
 import {
@@ -60,6 +60,7 @@ function App() {
                         <NavContent />
                       </View>
                       <Sidebar
+                        network={{ name: 'kovan', ID: 42, swappable: false }}
                         address={url.query.address}
                         networkName="kovan"
                         networkDisplayName="Kovan Testnet"
@@ -79,11 +80,11 @@ function AppWithContext({ navigation }) {
   return (
     <NavProvider navigation={navigation}>
       <ThemeProvider theme={theme}>
-        <Provider store={store}>
+        <ReduxProvider store={store}>
           <MakerAuthProvider>
             <App />
           </MakerAuthProvider>
-        </Provider>
+        </ReduxProvider>
       </ThemeProvider>
     </NavProvider>
   );

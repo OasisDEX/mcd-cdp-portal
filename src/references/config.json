@@ -5,5 +5,6 @@
       "multicallAddress": "0xb2155b4f516a2e93fd0c40fdba57a3ab39952236",
       "block": "latest"
     }
-  }
+  },
+  "networks": {}
 }
