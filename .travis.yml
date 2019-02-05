@@ -1,0 +1,26 @@
+language: node_js
+sudo: required
+node_js:
+  - 'stable'
+cache:
+  directories:
+    - node_modules
+  timeout: 9000
+install:
+  - yarn install
+before_deploy:
+  - yarn build
+  - npm install now --no-save
+deploy:
+
+  - provider: script
+    script: now ./build --token $NOW_TOKEN -A ../now.json && now alias --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      branch: master
+
+  - provider: script
+    script: now ./build --token $NOW_TOKEN -A ../now.dev.json && now alias --token $NOW_TOKEN -A ./now.dev.json
+    skip_cleanup: true
+    on:
+      branch: develop
