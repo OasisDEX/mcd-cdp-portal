@@ -1,5 +1,7 @@
 # CDP Portal for MCD
 
+[![Build Status](https://travis-ci.com/makerdao/mcd-cdp-portal.svg?token=3BTQxsyAmYGZyiaheNXp&branch=master)](https://travis-ci.com/makerdao/mcd-cdp-portal)
+
 ## The official Maker dapp for managing CDPs and generating Dai
 
 ### Prerequisites
