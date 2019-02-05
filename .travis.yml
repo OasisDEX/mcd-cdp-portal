@@ -14,13 +14,13 @@ before_deploy:
 deploy:
 
   - provider: script
-    script: now ./build --token $NOW_TOKEN -A ../now.json && now alias --token $NOW_TOKEN
+    script: now ./build --token $NOW_TOKEN --team mkr-js-prod -A ../now.json && now alias --token $NOW_TOKEN --team mkr-js-prod -A ../now.json
     skip_cleanup: true
     on:
       branch: master
 
   - provider: script
-    script: now ./build --token $NOW_TOKEN -A ../now.dev.json && now alias --token $NOW_TOKEN -A ./now.dev.json
+    script: now ./build --token $NOW_TOKEN --team mkr-js-prod -A ../now.dev.json && now alias --token $NOW_TOKEN --team mkr-js-prod -A ./now.dev.json
     skip_cleanup: true
     on:
       branch: develop
