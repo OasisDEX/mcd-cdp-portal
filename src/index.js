@@ -11,7 +11,7 @@ import './global.css';
 
 import pages from './pages';
 import App from './App';
-import { mixpanelInit, mixpanelTrackNavigation } from 'utils/analytics';
+import { mixpanelInit, gaInit } from 'utils/analytics';
 
 export const navigation = createBrowserNavigation({ pages });
 
@@ -29,8 +29,9 @@ export const navigation = createBrowserNavigation({ pages });
   // prepare routes
   navigation.steady();
 
-  mixpanelInit();
-  mixpanelTrackNavigation(navigation);
+  // start GA and mixpanel tracking
+  gaInit(navigation);
+  mixpanelInit(navigation);
 
   ReactDOM.render(
     <App navigation={navigation} />,
