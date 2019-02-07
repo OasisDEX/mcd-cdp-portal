@@ -1,4 +1,4 @@
-import { createWatcher } from '@makerdao/multicall/src/index';
+import { createWatcher } from '@makerdao/multicall';
 import store from './store';
 import { batchActions } from 'utils/redux';
 
@@ -22,7 +22,7 @@ const initialModel = [
 
 const watcher = createWatcher(initialModel, multicallConfig);
 
-watcher.batchStateDiffs().subscribe(newStateEvents => {
+watcher.batch().subscribe(newStateEvents => {
   store.dispatch(batchActions(newStateEvents));
 });
 

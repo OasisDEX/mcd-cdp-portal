@@ -19,7 +19,7 @@ export const navigation = createBrowserNavigation({ pages });
   lang.setLanguage('en');
 
   // start watching for ethereum state diffs
-  watcher.startWatch();
+  watcher.start();
 
   // for debugging
   window.maker = maker;
