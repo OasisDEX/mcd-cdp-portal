@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import watcher from './watch';
-import maker from './maker';
+import { initializeMaker } from './maker';
 import lang from './languages';
 
 import { createBrowserNavigation } from 'navi';
@@ -21,10 +21,7 @@ export const navigation = createBrowserNavigation({ pages });
   // start watching for ethereum state changes
   watcher.start();
 
-  // for debugging
-  window.maker = maker;
-
-  maker.authenticate();
+  initializeMaker();
 
   // prepare routes
   navigation.steady();

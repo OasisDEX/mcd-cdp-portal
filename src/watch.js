@@ -2,25 +2,33 @@ import { createWatcher } from '@makerdao/multicall';
 import store from './store';
 
 import { batchActions } from 'utils/redux';
-import { cdpSystemStateModel } from 'reducers/network/system/model';
+import { createCDPSystemModel } from 'reducers/network/system/model';
 import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 
 import config from 'references/config.json';
 import cdpTypes from 'references/cdpTypes';
+import addresses from 'references/addresses';
 
 const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
-const multicallConfig = config.multicall.kovan;
+
+const { defaultNetwork, rpcUrls } = config;
+
+const defaultAddresses = addresses[defaultNetwork];
 
 const initialModel = [
-  ...cdpSystemStateModel,
-  ...supportedCDPTypes
-    .map(({ key }) => cdpTypeModel.createCDPTypeModel(key))
-    .reduce((acc, cur) => acc.concat(cur), []),
-  cdpTypeModel.priceFeed('DGX', { decimals: 9 }),
-  cdpTypeModel.priceFeed('BTC', { decimals: 18 })
+  ...createCDPSystemModel(defaultAddresses)
+  // ...cdpSystemStateModel,
+  // ...supportedCDPTypes
+  //   .map(({ key }) => cdpTypeModel.createCDPTypeModel(key))
+  //   .reduce((acc, cur) => acc.concat(cur), []),
+  // cdpTypeModel.priceFeed('DGX', { decimals: 9 }),
+  // cdpTypeModel.priceFeed('BTC', { decimals: 18 })
 ];
 
-const watcher = createWatcher(initialModel, multicallConfig);
+const watcher = createWatcher(initialModel, {
+  rpcURL: rpcUrls[defaultNetwork],
+  multicallAddress: defaultAddresses.MULTICALL
+});
 
 watcher.batch().subscribe(newStateEvents => {
   store.dispatch(batchActions(newStateEvents));

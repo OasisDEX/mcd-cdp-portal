@@ -16,6 +16,7 @@ const initialState = {
 
 function system(state = initialState, action) {
   const { value, type } = action;
+  if (type === 'CLEAR_ALL_CONTRACT_STATE') return initialState;
   if (Object.keys(initialState).includes(type))
     return { ...state, [type]: value };
   else return state;

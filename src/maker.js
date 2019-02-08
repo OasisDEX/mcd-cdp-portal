@@ -1,49 +1,60 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import configPlugin from '@makerdao/dai-plugin-config';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
-let _testchainId;
+import config from 'references/config';
+
+const { defaultNetwork, rpcUrls } = config;
 
 // TODO: remove old listeners and attach fresh ones after reinstantiating
 
-// default
-let maker = Maker.create('http', {
-  log: false,
-  provider: {
-    url: 'https://kovan.infura.io/',
-    type: 'HTTP'
-  }
-});
+let maker;
+export function getMaker() {
+  return maker;
+}
 
-// for swapping rpcURLs
-export async function reInstantiateMaker({ rpcURL }) {
+// default
+export function initializeMaker() {
   maker = Maker.create('http', {
     log: false,
-    plugins: [trezorPlugin, ledgerPlugin],
     provider: {
-      url: rpcURL,
+      url: rpcUrls[defaultNetwork],
       type: 'HTTP'
     }
   });
-  await maker.authenticate();
-  return {};
+
+  // for debugging
+  window.maker = maker;
+  return maker.authenticate();
 }
 
-// for Maker qa testchains
-export async function reInstantiateMakerWithTestchain({ testchainId }) {
-  _testchainId = testchainId;
-  maker = Maker.create('http', {
-    plugins: [[configPlugin, { testchainId }], trezorPlugin, ledgerPlugin],
-    log: false
-  });
-  await maker.authenticate();
-  return {};
-}
+// for swapping rpcURLs
+export async function reInstantiateMaker({ rpcURL }) {
+  try {
+    maker = Maker.create('http', {
+      log: false,
+      plugins: [trezorPlugin, ledgerPlugin],
+      provider: {
+        url: rpcURL,
+        type: 'HTTP'
+      }
+    });
 
-export function getLastTestchainId() {
-  return _testchainId;
+    window.maker = maker;
+    await maker.authenticate();
+    return {
+      notFound: false,
+      addresses: {}
+    };
+  } catch (_) {
+    return { notFound: true, addresses: {} };
+  }
 }
 
 export { USD, DAI };
-export default maker;
+
+// Helpers --------------------------------------------------------------------
+
+export function awaitMakerAuthentication() {
+  return maker.authenticate();
+}

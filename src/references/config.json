@@ -1,10 +1,8 @@
 {
-  "multicall": {
-    "kovan": {
-      "rpcUrl": "https://kovan.infura.io",
-      "multicallAddress": "0xb2155b4f516a2e93fd0c40fdba57a3ab39952236",
-      "block": "latest"
-    }
+  "supportedNetworkIds": ["1", "42"],
+  "rpcUrls": {
+    "1": "https://mainnet.infura.io",
+    "42": "https://kovan.infura.io"
   },
-  "networks": {}
+  "defaultNetwork": "42"
 }

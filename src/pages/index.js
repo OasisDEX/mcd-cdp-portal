@@ -7,75 +7,106 @@ import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
-import maker, {
-  reInstantiateMaker,
-  reInstantiateMakerWithTestchain,
-  getLastTestchainId
-} from 'maker';
+import { reInstantiateMaker } from 'maker';
 
 import store from 'store';
 import watcher from '../watch';
+import config from 'references/config';
+import { getTestchainDetails } from 'utils/testchain';
+import localAddressConfig from 'references/addresses.json';
+import { createCDPSystemModel } from 'reducers/network/system/model';
 
-function eq(a, b) {
-  return parseInt(a, 10) === parseInt(b, 10);
+const { supportedNetworkIds, rpcUrls, defaultNetwork } = config;
+
+// network  can come from, or live in, the following:
+// 1. `the maker object`
+// 2. `the multicall watcher`
+// 3. `metamask`
+// 4. `the url query param`, which can be seperated into:
+//    - a testchainId
+//    - a networkId
+
+// memoized callback with a memory of 1
+
+const DEFAULT_NETWORK_CONFIG = {
+  rpcURL: rpcUrls[defaultNetwork],
+  addresses: localAddressConfig[defaultNetwork]
+};
+
+function reCreateWatcher({ rpcURL, addresses }) {
+  return watcher.reCreate([...createCDPSystemModel(addresses)], {
+    rpcURL,
+    multicallAddress: addresses.multicall
+  });
 }
 
-const SUPPORTED_NETWORK_IDS = ['42'];
+let _lastRpcURL = '';
+function rpcURLHasChanged(currentRpcURL) {
+  const differenRpcURL = currentRpcURL !== _lastRpcURL;
+  if (differenRpcURL) _lastRpcURL = currentRpcURL;
+  return differenRpcURL;
+}
 
-// this function must be idempotent except wrt env.query
-function withStagedNetwork(getSuccessPage, getErrorPage) {
+async function getOrFetchNetworkDetails({ testchainId, networkId }) {
+  // if there's a testchain id, we immediately try to connect to the ex_testchain instance
+  if (testchainId !== undefined) {
+    const { rpcURL, addresses, notFound } = await getTestchainDetails(
+      testchainId
+    );
+
+    if (notFound) throw new Error(`Testchain id ${testchainId} not found`);
+    return { rpcURL, addresses };
+
+    // if not, we check for a network id
+  } else {
+    // if there is none, connect to the default network
+    if (networkId === undefined) return DEFAULT_NETWORK_CONFIG;
+
+    if (!supportedNetworkIds.includes(networkId))
+      throw new Error(`Unsupported network id: ${networkId}`);
+
+    return {
+      rpcURL: rpcUrls[networkId],
+      addresses: localAddressConfig[networkId]
+    };
+  }
+}
+
+function withNetworkConfigurations(getSuccessPage, getErrorPage) {
+  let cachedIds = { testchainId: null, networkId: null };
+
+  function idsHaveChanged({ testchainId = null, networkId = null } = {}) {
+    if (testchainId !== cachedIds.testchainId) return true;
+    if (networkId !== cachedIds.networkId) return true;
+    return false;
+  }
+
   return async env => {
-    await maker.authenticate();
+    const { testchainId, networkId } = env.query;
 
-    const { testchainId } = env.query;
-    const newTestchain =
-      testchainId !== undefined && !eq(testchainId, getLastTestchainId()); // we should be checking the store
+    if (!idsHaveChanged({ testchainId, networkId })) return getSuccessPage(env);
+    cachedIds = { testchainId, networkId };
 
-    if (newTestchain) {
-      // this testchain is different from the one whose state we have cached
-      store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
-
-      const networkDetails = await reInstantiateMakerWithTestchain({
-        testchainId
+    try {
+      // testchainId or networkId
+      const { rpcURL, addresses } = await getOrFetchNetworkDetails({
+        testchainId,
+        networkId
       });
-
-      if (networkDetails.notFound)
-        return getErrorPage('FAILED TO GET TESTCHAIN CONFIG');
-
-      const { rpcURL, addresses } = networkDetails;
-
-      await watcher.reCreate([], {
-        rpcURL,
-        multicallAddress: addresses.multicall
-      });
+      if (rpcURLHasChanged(rpcURL)) {
+        store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
+        await reInstantiateMaker({ rpcURL });
+        await reCreateWatcher({ rpcURL, addresses });
+      }
+      return getSuccessPage(env);
+    } catch (errMSG) {
+      return getErrorPage(errMSG);
     }
 
-    // if we're connecting to a testchain, don't worry about anything else
-    if (testchainId !== undefined) return getSuccessPage(env);
+    // on metamask switch
 
-    const { networkId } = env.query;
-    if (!SUPPORTED_NETWORK_IDS.includes(networkId))
-      return getErrorPage(`UNSUPPORTED NETWORK ID ${networkId}`);
-    const makerNetworkId = maker.service('web3').networkId();
-    const newNetwork = !eq(networkId, makerNetworkId);
-
-    if (newNetwork) {
-      // this network is different from the one whose state we have cached
-      store.dispatch({ type: 'CLEAR_ALL_CONTRACT_STATE' });
-      const networkDetails = await reInstantiateMaker({ networkId });
-
-      if (networkDetails.notFound)
-        return getErrorPage(`UNSUPPORTED NETWORK ID ${networkId}`);
-
-      const { rpcURL, addresses } = networkDetails;
-
-      await watcher.reCreate([], {
-        rpcURL,
-        multicallAddress: addresses.multicall
-      });
-    }
-
-    return getSuccessPage(env);
+    // const makerNetworkId = maker.service('web3').networkId();
+    // const newNetwork = !eq(networkId, makerNetworkId);
   };
 }
 
@@ -90,11 +121,42 @@ export default createSwitch({
       content: <Landing />
     }),
 
-    '/overview': withStagedNetwork(
+    '/overview': withNetworkConfigurations(
       () => {
+        // success
         return createPage({
           title: 'Overview',
           content: <Overview />
+        });
+      },
+      errMSG => {
+        // error
+        return createPage({
+          title: 'Error',
+          content: <div>{errMSG}</div>
+        });
+      }
+    ),
+
+    '/cdp/:type': withNetworkConfigurations(
+      async env => {
+        const cdpTypeSlug = env.params.type;
+
+        // TODO: check what cdps the current active address has
+
+        if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
+          return createPage({
+            title: 'CDP Type Not Found',
+            content: <CDPTypeNotFound cdpTypeSlug={cdpTypeSlug} />
+          });
+
+        const address = env.query.address;
+        if (address === undefined)
+          return createRedirect(`/read-only/cdp/${cdpTypeSlug}`);
+
+        return createPage({
+          title: 'CDP',
+          content: <CDPPage cdpTypeSlug={cdpTypeSlug} address={address} />
         });
       },
       errMSG => {
@@ -105,52 +167,45 @@ export default createSwitch({
       }
     ),
 
-    '/cdp/:type': async env => {
-      const cdpTypeSlug = env.params.type;
-
-      // TODO: check what cdps the current active address has
-
-      if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
-        return createPage({
-          title: 'CDP Type Not Found',
-          content: <CDPTypeNotFound cdpTypeSlug={cdpTypeSlug} />
-        });
-
-      const address = env.query.address;
-      await watcher.awaitInitialFetch();
-      if (address === undefined)
-        return createRedirect(`/read-only/cdp/${cdpTypeSlug}`);
-
-      await maker.authenticate();
-      return createPage({
-        title: 'CDP',
-        content: <CDPPage cdpTypeSlug={cdpTypeSlug} address={address} />
-      });
-    },
-
     // READ-ONLY --------------------------------------------------------------
 
     '/read-only': createRedirect(`/read-only/overview`),
-    '/read-only/overview': createPage({
-      title: 'Overview Read-Only Mode',
-      content: <Overview readOnly />
-    }),
-
-    '/read-only/cdp/:type': async env => {
-      const cdpTypeSlug = env.params.type;
-
-      if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
+    '/read-only/overview': withNetworkConfigurations(
+      () => {
         return createPage({
-          title: 'CDP Type Not Found',
-          content: <CDPTypeNotFound cdpTypeSlug={cdpTypeSlug} />
+          title: 'Overview Read-Only Mode',
+          content: <Overview readOnly />
         });
+      },
+      errMSG => {
+        return createPage({
+          title: 'Error',
+          content: <div>{errMSG}</div>
+        });
+      }
+    ),
 
-      await maker.authenticate();
-      await watcher.awaitInitialFetch();
-      return createPage({
-        title: 'Overview Read-Only Mode',
-        content: <CDPPage cdpTypeSlug={cdpTypeSlug} readOnly />
-      });
-    }
+    '/read-only/cdp/:type': withNetworkConfigurations(
+      async env => {
+        const cdpTypeSlug = env.params.type;
+
+        if (!supportedCDPTypeSlugs.includes(cdpTypeSlug))
+          return createPage({
+            title: 'CDP Type Not Found',
+            content: <CDPTypeNotFound cdpTypeSlug={cdpTypeSlug} />
+          });
+
+        return createPage({
+          title: 'Overview Read-Only Mode',
+          content: <CDPPage cdpTypeSlug={cdpTypeSlug} readOnly />
+        });
+      },
+      errMSG => {
+        return createPage({
+          title: 'Error',
+          content: <div>{errMSG}</div>
+        });
+      }
+    )
   }
 });

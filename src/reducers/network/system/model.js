@@ -7,50 +7,60 @@ import {
   SURPLUS_AUCTION_LOT_SIZE,
   NUMBER_OF_LIQUIDATIONS
 } from 'reducers/network/system';
-import contractAddresses from 'references/addresses.json';
-const kovanAddresses = contractAddresses.kovan;
 
-const totalDebt = {
-  target: kovanAddresses.vat,
+const totalDebt = addresses => ({
+  target: addresses.MCD_VAT,
   call: ['debt()(uint256)'],
   returns: [[TOTAL_DEBT, val => DAI(val, -45)]]
-};
+});
 
-const baseRate = {
-  target: kovanAddresses.drip,
+const baseRate = addresses => ({
+  target: addresses.MCD_DRIP,
   call: ['repo()(uint256)'],
   returns: [[BASE_RATE]]
-};
+});
 
-const globalDebtCeiling = {
-  target: kovanAddresses.pit,
+const globalDebtCeiling = addresses => ({
+  target: addresses.MCD_PIT,
   call: ['Line()(uint256)'],
   returns: [[GLOBAL_DEBT_CEILING, val => DAI(val, -18)]]
-};
+});
 
-const debtAuctionLotSzie = {
-  target: kovanAddresses.vow,
+const debtAuctionLotSzie = addresses => ({
+  target: addresses.MCD_VOW,
   call: ['sump()(uint256)'],
   returns: [[DEBT_AUCTION_LOT_SIZE, val => DAI(val, -18)]]
-};
+});
 
-const surplusAuctionLotSize = {
-  target: kovanAddresses.vow,
+const surplusAuctionLotSize = addresses => ({
+  target: addresses.MCD_VOW,
   call: ['bump()(uint256)'],
   returns: [[SURPLUS_AUCTION_LOT_SIZE, val => DAI(val, -18)]]
-};
+});
 
-const numberOfLiquidations = {
-  target: kovanAddresses.cat,
+const numberOfLiquidations = addresses => ({
+  target: addresses.MCD_CAT,
   call: ['nflip()(uint256)'],
   returns: [[NUMBER_OF_LIQUIDATIONS]]
-};
+});
 
-export const cdpSystemStateModel = [
-  totalDebt,
-  baseRate,
-  globalDebtCeiling,
-  debtAuctionLotSzie,
-  surplusAuctionLotSize,
-  numberOfLiquidations
-];
+function isNotMissingContract(calldata) {
+  if (calldata.target === undefined) {
+    console.error(`Address for ${calldata.call} not found`);
+    return false;
+  }
+  return true;
+}
+
+export function createCDPSystemModel(addresses) {
+  return [
+    totalDebt,
+    baseRate,
+    globalDebtCeiling,
+    debtAuctionLotSzie,
+    surplusAuctionLotSize,
+    numberOfLiquidations
+  ]
+    .map(f => f(addresses))
+    .filter(calldata => isNotMissingContract(calldata));
+}

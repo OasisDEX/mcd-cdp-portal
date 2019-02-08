@@ -15,7 +15,7 @@ import {
   DEBT_CEILING
 } from 'reducers/network/cdpTypes';
 import contractAddresses from 'references/addresses.json';
-const kovanAddresses = contractAddresses.kovan;
+const kovanAddresses = contractAddresses[42];
 
 export const priceFeed = (name, { decimals = 18 } = {}) => ({
   target: kovanAddresses[name].pip,
@@ -44,11 +44,11 @@ export const pitData = name => ({
   ]
 });
 
-export const liquidation = name => ({
-  target: kovanAddresses[name].spot,
-  call: ['mat()(uint256)'],
-  returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
-});
+// export const liquidation = name => ({
+//   target: kovanAddresses[name].spot,
+//   call: ['mat()(uint256)'],
+//   returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
+// });
 
 export const flipper = name => ({
   target: kovanAddresses.cat,
@@ -74,7 +74,7 @@ export function createCDPTypeModel(cdpKey) {
     priceFeed,
     rateData,
     pitData,
-    liquidation,
+    // liquidation,
     flipper,
     adapterBalance
   ].map(f => f(cdpKey));

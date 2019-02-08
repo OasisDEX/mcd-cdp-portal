@@ -36,7 +36,7 @@
     "walletconnect-qrcode-modal": "^0.7.28"
   },
   "scripts": {
-    "start": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
+    "start": "NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco build",
     "precommit": "lint-staged",
     "test": "echo \"Live long or Dai hard\"",

@@ -8,7 +8,11 @@ import { Button, Flex } from '@makerdao/ui-components';
 import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
-import maker from 'maker';
+
+import { getMaker } from 'maker';
+import config from 'references/config';
+
+const { supportedNetworkIds } = config;
 
 // hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
@@ -25,11 +29,15 @@ export default function MetaMaskConnect() {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        const { address, subprovider } = await maker.addAccount({
+        const { address, subprovider } = await getMaker().addAccount({
           type: 'browser'
         });
         const networkId = subprovider.provider.networkVersion;
-        // TODO: the sdk could provide this ^ in a more natural way
+
+        if (!supportedNetworkIds.includes(networkId))
+          throw new Error(`Unsupported network id: ${networkId}`);
+
+        // TODO: the sdk might be able to provide this ^ in a more natural way
         mixpanelIdentify(address, 'metamask');
         navigation.history.push({
           pathname: '/overview/',
