@@ -9,7 +9,7 @@ import config from 'references/config.json';
 import cdpTypes from 'references/cdpTypes';
 import addresses from 'references/addresses';
 
-const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
+// const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
 
 const { defaultNetwork, rpcUrls } = config;
 
@@ -26,13 +26,27 @@ const initialModel = [
 ];
 
 const watcher = createWatcher(initialModel, {
-  rpcURL: rpcUrls[defaultNetwork],
+  rpcUrl: rpcUrls[defaultNetwork],
   multicallAddress: defaultAddresses.MULTICALL
 });
 
 watcher.batch().subscribe(newStateEvents => {
   store.dispatch(batchActions(newStateEvents));
 });
+
+let _rpcUrl = null;
+export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
+  if (_rpcUrl !== rpcUrl) {
+    if (addresses.MULTICALL === undefined)
+      throw new Error('Multicall address not defined');
+    await watcher.reCreate([], {
+      rpcUrl,
+      multicallAddress: addresses.MULTICALL
+    });
+    return watcher;
+  }
+  return watcher;
+}
 
 // watcher
 //   .onNetworkTrouble(() => {

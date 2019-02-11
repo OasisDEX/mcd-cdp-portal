@@ -4,5 +4,6 @@
     "1": "https://mainnet.infura.io",
     "42": "https://kovan.infura.io"
   },
-  "defaultNetwork": "42"
+  "defaultNetwork": "42",
+  "exTestchainApiUrl": "http://18.185.172.121:4000/chain"
 }
