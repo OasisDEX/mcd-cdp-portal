@@ -102,9 +102,6 @@ function stageAccount() {}
 // NOTE: all pages are wrapped in a suspense component which displays a loader while these promises are resolving.
 function withStagedState(getPage) {
   return async env => {
-    await new Promise(res => {
-      setTimeout(res, 100000);
-    });
     try {
       // ensure our maker and watcher instances are connected to the correct network (determined by url params)
       const { maker } = await stageNetwork(env);

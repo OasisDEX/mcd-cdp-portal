@@ -76,15 +76,11 @@ const DelegateStyle = styled.div`
 `;
 
 const CDPListView = memo(function({ currentPath, currentQuery }) {
-  let pathPrefix = '';
-  if (currentPath.includes('read-only')) pathPrefix = '/read-only';
-  else if (currentPath.includes('sandbox')) pathPrefix = '/sandbox';
-
   return (
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href={`${pathPrefix}/overview/${currentQuery}`}
+        href={`overview/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
@@ -95,7 +91,7 @@ const CDPListView = memo(function({ currentPath, currentQuery }) {
         return (
           <NavbarItem
             key={idx}
-            href={pathPrefix + linkPath + currentQuery}
+            href={linkPath + currentQuery}
             label={cdp.symbol}
             ratio={cdp.ratio}
             active={active}
