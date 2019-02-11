@@ -17,7 +17,7 @@ const initialModel = [
     .map(({ key }) => cdpTypeModel.createCDPTypeModel(key))
     .reduce((acc, cur) => acc.concat(cur), []),
   cdpTypeModel.priceFeed('DGX', { decimals: 9 }),
-  cdpTypeModel.priceFeed('BTC', { decimals: 8 })
+  cdpTypeModel.priceFeed('BTC', { decimals: 18 })
 ];
 
 const watcher = createWatcher(initialModel, multicallConfig);
