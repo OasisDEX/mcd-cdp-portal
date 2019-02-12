@@ -844,11 +844,12 @@
     web3 "1.0.0-beta.34"
     web3-provider-engine makerdao/provider-engine#remove-provider-dist
 
-"@makerdao/multicall@0.5.0-alpha.1":
-  version "0.5.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.5.0-alpha.1.tgz#aeff49e4818c983ac6fe7e27b7d46d990e9daaad"
-  integrity sha512-rErgnQGJyVa5xvh2risnju3488L6DHmmB0UGEyDZvJwZAH2qpVs8Dk4HaMNLspmtFlOAuVEq7GBQsSnbpzfU0Q==
+"@makerdao/multicall@0.5.1-alpha.5":
+  version "0.5.1-alpha.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.5.1-alpha.5.tgz#46a684b1bc043cd73060e1ea3f86f86e7cec7935"
+  integrity sha512-r76jrKRSuQhEyfLDklMHoF3jBL4Qc9pTDow326qKHGtGrl61m6MxXJfAiklfBTOTGkmPFckWZ6wg9VfhoniX0Q==
   dependencies:
+    cross-fetch "^3.0.1"
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
@@ -3033,6 +3034,14 @@ cross-fetch@^2.1.0, cross-fetch@^2.1.1:
   dependencies:
     node-fetch "2.1.2"
     whatwg-fetch "2.0.4"
+
+cross-fetch@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.1.tgz#3f207bbd829a76e9aa2a953348bd1f2a3cf388a7"
+  integrity sha512-qWtpgBAF8ioqBOddRD+pHhrdzm/UWOArkrlIU7c08DlNbOxo5GfUbSY2vr90ZypWf0raW+HNN1F38pi5CEOjiQ==
+  dependencies:
+    node-fetch "2.3.0"
+    whatwg-fetch "3.0.0"
 
 cross-spawn@6.0.5, cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -7599,6 +7608,11 @@ no-case@^2.2.0:
 node-fetch@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
+
+node-fetch@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
+  integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
 
 node-fetch@^1.0.1, node-fetch@~1.7.1:
   version "1.7.3"
