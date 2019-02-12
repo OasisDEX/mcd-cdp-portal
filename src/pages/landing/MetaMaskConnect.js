@@ -7,7 +7,6 @@ import { navigation } from '../../index';
 import { Button, Flex } from '@makerdao/ui-components';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
-import { networkIdToName } from 'utils/network';
 import useMaker from 'components/hooks/useMaker';
 
 // hack to get around button padding for now
@@ -48,11 +47,12 @@ export default function MetaMaskConnect() {
           const { address } = await maker.addAccount({ type: 'browser' });
 
           mixpanelIdentify(address, 'metamask');
+
+          const { search } = navigation.history.location;
+
           navigation.history.push({
             pathname: '/overview/',
-            search: `?address=${address}&network=${networkIdToName(
-              connectedNetwork
-            )}`
+            search: `${search}&address=${address}`
           });
         } catch (err) {
           console.log(err);

@@ -10,6 +10,9 @@ import { cutMiddle } from 'utils/ui';
 import SidebarFeeds from './sidebar/Feeds';
 import SidebarSystem from './sidebar/System';
 import AccountConnect from './sidebar/AccountConnect';
+import config from 'references/config';
+
+const { networkDisplayNames } = config;
 
 const StyledSidebar = styled.aside`
   min-height: 1000px;
@@ -53,16 +56,12 @@ const StyledAddress = styled.span`
 
 const NETWORK_COLORS = {
   1: '#1abc9c',
-  42: '#690496'
-};
-
-const NETWORK_DISPLAY_NAMES = {
-  1: 'Mainnet',
-  42: 'Kovan Testnet'
+  42: '#690496',
+  999: 'black'
 };
 
 function netIdToDisplayName(networkId) {
-  const displayName = NETWORK_DISPLAY_NAMES[networkId];
+  const displayName = networkDisplayNames[networkId];
   if (displayName !== undefined) return displayName;
   return 'Unkown network';
 }

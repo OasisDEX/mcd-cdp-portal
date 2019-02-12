@@ -75,7 +75,7 @@ const DelegateStyle = styled.div`
   }
 `;
 
-const CDPListView = memo(function({ currentPath, currentQuery }) {
+const CDPList = memo(function({ currentPath, currentQuery }) {
   return (
     <DelegateStyle>
       <NavbarItem
@@ -103,17 +103,7 @@ const CDPListView = memo(function({ currentPath, currentQuery }) {
   );
 });
 
-function CDPList() {
-  return (
-    <NavRoute>
-      {({ url }) => (
-        <CDPListView currentPath={url.pathname} currentQuery={url.search} />
-      )}
-    </NavRoute>
-  );
-}
-
-const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
+const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <Flex flexDirection="column" lineHeight="17px">
       <Text>{label}</Text>
@@ -123,12 +113,16 @@ const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
 );
 
 const Navbar = ({ ...props }) => (
-  <StyledNavbar {...props}>
-    <NavLink href="/" precache={true}>
-      <StyledMakerLogo />
-    </NavLink>
-    <CDPList />
-  </StyledNavbar>
+  <NavRoute>
+    {({ url }) => (
+      <StyledNavbar {...props}>
+        <NavLink href={`/${url.search}`} precache={true}>
+          <StyledMakerLogo />
+        </NavLink>
+        <CDPList currentPath={url.pathname} currentQuery={url.search} />
+      </StyledNavbar>
+    )}
+  </NavRoute>
 );
 
 export default Navbar;

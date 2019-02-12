@@ -11,7 +11,7 @@
   ],
   "dependencies": {
     "@craco/craco": "^3.1.0",
-    "@makerdao/dai": "^0.9.10",
+    "@makerdao/dai": "^0.10.0",
     "@makerdao/dai-plugin-config": "^0.0.2",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
     "@makerdao/dai-plugin-trezor-web": "^0.9.4",

@@ -1004,10 +1004,10 @@
     trezor-connect "^6.0.4"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.9.10":
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.9.10.tgz#d5efb0f868131a58beaf9283a449d88de69196dd"
-  integrity sha512-XbW3cx1P3rx2dZkDCJG/bMPM+kBKlGbLf9cpqWSxdL+BEwFylpmXePSNEjAcUKvpBLoDnUslCsOtqfRAP8IhNA==
+"@makerdao/dai@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.10.0.tgz#65036dd4bb1e28f114c95d7d9069d836cdd8265c"
+  integrity sha512-sOkLRJLW9kb071xwobEe45A3jUK9QPaFO9N2tZJCTRbxvLF+o9t3JdT09nOh231KceoXoAQMtnbbZPwwnwwhoQ==
   dependencies:
     babel-plugin-transform-decorators-legacy "^1.3.5"
     babel-runtime "^6.26.0"
@@ -1029,7 +1029,7 @@
     promise-props "^1.0.0"
     toposort "^2.0.2"
     web3 "1.0.0-beta.34"
-    web3-provider-engine makerdao/provider-engine#remove-provider-dist
+    web3-provider-engine makerdao/provider-engine#kovan-fix-dist
 
 "@makerdao/multicall@0.5.1-alpha.5":
   version "0.5.1-alpha.5"
@@ -13188,9 +13188,9 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#remove-provider-dist:
+web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
   version "14.0.4"
-  resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/df251328c54b45982e5fd67fe8d74664b2243944"
+  resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
     async "^2.5.0"
     backoff "^2.5.0"
