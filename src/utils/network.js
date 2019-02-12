@@ -1,6 +1,6 @@
 import config from 'references/config';
 
-const { exTestchainApiUrl } = config;
+const { exTestchainApiUrl, networkNames } = config;
 
 export async function getTestchainDetails(testchainId) {
   try {
@@ -12,4 +12,15 @@ export async function getTestchainDetails(testchainId) {
   } catch (_) {
     return { rpcUrl: '', addresses: {}, notFound: true };
   }
+}
+
+export function networkNameToId(networkName) {
+  for (let [id, name] of Object.entries(networkNames)) {
+    if (name === networkName) return id;
+  }
+  return undefined;
+}
+
+export function networkIdToName(networkId) {
+  return networkNames[networkId];
 }

@@ -80,7 +80,7 @@ const CDPListView = memo(function({ currentPath, currentQuery }) {
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href={`overview/${currentQuery}`}
+        href={`/overview/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}

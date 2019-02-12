@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
 
 import { Button, Modal, Flex } from '@makerdao/ui-components';
-import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as Logo } from 'images/trezor.svg';
 
 const TrezorLogo = styled(Logo)`
@@ -17,7 +16,6 @@ const PaddedDiv = styled.div`
 `;
 
 function TrezorConnect() {
-  const makerAuthenticated = useContext(MakerAuthContext);
   const [modelOpen, setModalBool] = useState(false);
 
   return (
@@ -36,7 +34,6 @@ function TrezorConnect() {
       <Button
         variant="secondary-outline"
         width="225px"
-        disabled={!makerAuthenticated}
         onClick={() => {
           setModalBool(true);
         }}

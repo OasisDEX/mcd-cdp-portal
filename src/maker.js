@@ -2,8 +2,8 @@ import Maker, { USD, DAI } from '@makerdao/dai';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
-let _maker = null;
-let _rpcUrl = null;
+let _maker;
+let _rpcUrl;
 
 export function getMaker() {
   if (_maker === null) throw new Error('Maker has not been instatiated');
@@ -15,10 +15,13 @@ export function getMaker() {
  * otherwise, return the current maker instance
  */
 export async function getOrReinstantiateMaker({ rpcUrl }) {
+  let reinstantiated = false;
   if (rpcUrl !== _rpcUrl) {
+    reinstantiated = true;
+
     _rpcUrl = rpcUrl;
 
-    _maker = Maker.create('http', {
+    _maker = await Maker.create('http', {
       log: false,
       plugins: [trezorPlugin, ledgerPlugin],
       provider: {
@@ -27,13 +30,11 @@ export async function getOrReinstantiateMaker({ rpcUrl }) {
       }
     });
 
-    await _maker.authenticate();
-
     // for debugging
     window.maker = _maker;
   }
 
-  return _maker;
+  return { maker: _maker, reinstantiated };
 }
 
 export { USD, DAI };

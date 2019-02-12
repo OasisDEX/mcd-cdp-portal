@@ -3,10 +3,10 @@ import store from './store';
 
 import { batchActions } from 'utils/redux';
 import { createCDPSystemModel } from 'reducers/network/system/model';
-import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
+// import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 
 import config from 'references/config.json';
-import cdpTypes from 'references/cdpTypes';
+// import cdpTypes from 'references/cdpTypes';
 import addresses from 'references/addresses';
 
 // const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
@@ -29,6 +29,8 @@ const watcher = createWatcher(initialModel, {
   rpcUrl: rpcUrls[defaultNetwork],
   multicallAddress: defaultAddresses.MULTICALL
 });
+
+window.watcher = watcher;
 
 watcher.batch().subscribe(newStateEvents => {
   store.dispatch(batchActions(newStateEvents));

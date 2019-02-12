@@ -1,18 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
 
 import { navigation } from '../../index';
 import { Button, Flex } from '@makerdao/ui-components';
-import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
-
-import { getMaker } from 'maker';
-import config from 'references/config';
-
-const { supportedNetworkIds } = config;
+import { networkIdToName } from 'utils/network';
+import useMaker from 'components/hooks/useMaker';
 
 // hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
@@ -20,8 +16,19 @@ const MMLogo = styled(MetaMaskLogo)`
   margin-bottom: -5px;
 `;
 
+async function checkMetaMaskNetwork() {
+  return new Promise((res, rej) => {
+    if (window.web3) {
+      window.web3.version.getNetwork(async (err, _netId) => {
+        if (!!err) rej(err);
+        else res(parseInt(_netId, 10));
+      });
+    } else rej('No web3 provider detected, is MetaMask installed?');
+  });
+}
+
 export default function MetaMaskConnect() {
-  const makerAuthenticated = useContext(MakerAuthContext);
+  const { maker, authenticated: makerAuthenticated } = useMaker();
 
   return (
     <Button
@@ -29,20 +36,27 @@ export default function MetaMaskConnect() {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        const { address, subprovider } = await getMaker().addAccount({
-          type: 'browser'
-        });
-        const networkId = subprovider.provider.networkVersion;
+        try {
+          const metamaksNetwork = await checkMetaMaskNetwork();
+          const connectedNetwork = maker.service('web3').networkId();
 
-        if (!supportedNetworkIds.includes(networkId))
-          throw new Error(`Unsupported network id: ${networkId}`);
+          if (metamaksNetwork !== connectedNetwork)
+            throw new Error(
+              'MetaMask network and url query parameters do not match'
+            );
 
-        // TODO: the sdk might be able to provide this ^ in a more natural way
-        mixpanelIdentify(address, 'metamask');
-        navigation.history.push({
-          pathname: '/overview/',
-          search: `?address=${address}&networkId=${networkId}`
-        });
+          const { address } = await maker.addAccount({ type: 'browser' });
+
+          mixpanelIdentify(address, 'metamask');
+          navigation.history.push({
+            pathname: '/overview/',
+            search: `?address=${address}&network=${networkIdToName(
+              connectedNetwork
+            )}`
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }}
     >
       <Flex alignItems="center">

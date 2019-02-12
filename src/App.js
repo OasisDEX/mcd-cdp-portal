@@ -1,18 +1,10 @@
 import React, { Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
-import { themeLight, Grid } from '@makerdao/ui-components';
-import {
-  NavProvider,
-  NavContent,
-  NavRoute,
-  NavNotFoundBoundary
-} from 'react-navi';
+import { themeLight } from '@makerdao/ui-components';
+import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
 
-import Navbar from 'components/Navbar';
-import Sidebar from 'components/Sidebar';
 import ErrorBoundary from 'components/ErrorBoundary';
-import MakerAuthProvider from 'components/context/MakerAuth';
 import { GenericNotFound } from 'pages/NotFound';
 
 import store from './store';
@@ -34,42 +26,14 @@ const Body = styled.div`
   max-height: 100vh;
 `;
 
-const View = styled.div`
-  padding: 55px 32px;
-  background: ${({ theme }) => theme.colors.backgroundGrey};
-`;
-
 function App() {
   return (
     <Body>
       <ErrorBoundary>
         <NavNotFoundBoundary render={GenericNotFound}>
-          <NavRoute>
-            {({ url }) => {
-              if (url.pathname === '/') return <NavContent />;
-              else
-                return (
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Grid
-                      gridTemplateColumns="80px 1fr 315px"
-                      gridTemplateAreas="'navbar view sidebar'"
-                      width="100%"
-                    >
-                      <Navbar />
-                      <View>
-                        <NavContent />
-                      </View>
-                      <Sidebar
-                        network={{ name: 'kovan', ID: 42, swappable: false }}
-                        address={url.query.address}
-                        networkName="kovan"
-                        networkDisplayName="Kovan Testnet"
-                      />
-                    </Grid>
-                  </Suspense>
-                );
-            }}
-          </NavRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <NavContent />
+          </Suspense>
         </NavNotFoundBoundary>
       </ErrorBoundary>
     </Body>
@@ -81,9 +45,7 @@ function AppWithContext({ navigation }) {
     <NavProvider navigation={navigation}>
       <ThemeProvider theme={theme}>
         <ReduxProvider store={store}>
-          <MakerAuthProvider>
-            <App />
-          </MakerAuthProvider>
+          <App />
         </ReduxProvider>
       </ThemeProvider>
     </NavProvider>

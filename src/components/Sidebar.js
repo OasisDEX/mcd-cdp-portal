@@ -85,8 +85,8 @@ function NetworkSection({ swappable = false, networkID }) {
   );
 }
 
-function AccountSection({ address }) {
-  if (address !== undefined)
+function AccountSection({ address = null } = {}) {
+  if (address !== null)
     return (
       <Header>
         <Flex height="50px" alignItems="center">
@@ -109,7 +109,7 @@ function Sidebar({ feeds, system, address, network }) {
   return (
     <StyledSidebar>
       <AccountSection address={address} />
-      <NetworkSection networkID={network.ID} swappable={network.swappable} />
+      <NetworkSection networkID={network.id} swappable={network.swappable} />
       <Section>
         <SidebarFeeds feeds={feeds} />
       </Section>
@@ -119,8 +119,6 @@ function Sidebar({ feeds, system, address, network }) {
     </StyledSidebar>
   );
 }
-
-// prop types
 
 function mapStateToProps(state) {
   return {

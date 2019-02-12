@@ -1,156 +1,173 @@
 import React from 'react';
-import { createPage, createSwitch } from 'navi';
-import cdpTypes from 'references/cdpTypes';
+import { createPage, createRedirect, createSwitch } from 'navi';
+import { Grid } from '@makerdao/ui-components';
 
-import { CDPTypeNotFound } from './NotFound';
+import Navbar from 'components/Navbar';
+import Sidebar from 'components/Sidebar';
 import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
-import store from 'store';
 import { getOrRecreateWatcher } from '../watch';
 import config from 'references/config';
 import localAddressConfig from 'references/addresses.json';
 import { getOrReinstantiateMaker } from '../maker';
-import { getTestchainDetails } from 'utils/network';
+import { getTestchainDetails, networkNameToId } from 'utils/network';
 import MakerHooksProvider from 'components/context/MakerHooksProvider';
 
-const { supportedNetworkIds, rpcUrls, defaultNetwork } = config;
+const { supportedNetworkIds, rpcUrls, networkNames, defaultNetwork } = config;
 
-// network  can come from, or live in, the following:
-// 1. `the maker object`
-// 2. `the multicall watcher`
-// 3. `metamask`
-// 4. `the url query param`, which can be seperated into:
-//    - a testchainId
-//    - a networkId
-
-const DEFAULT_NETWORK_CONFIG = {
-  rpcUrl: rpcUrls[defaultNetwork],
-  addresses: localAddressConfig[defaultNetwork]
-};
-
-// capture all contexts
-// release all contexts
-
-const _cache = { networkIds: [], testchainIds: [] };
-export async function getOrFetchNetworkDetails({ networkId, testchainId }) {
+const _cache = {};
+export async function getOrFetchNetworkDetails({ network, testchainId }) {
   // is this a pair we've seen before?
-  // if (_cache.networkId !== networkId ) return;
-  // if there's a testchain id, we immediately attempt to connect to its ex testchain instance
+  const serializedKey = JSON.stringify({ network, testchainId });
+  if (_cache[serializedKey] !== undefined) return _cache[serializedKey];
+
+  // if we have a testchain id, try to connect to an ex testchain instance
   if (testchainId !== undefined) {
     const { rpcUrl, addresses, notFound } = await getTestchainDetails(
       testchainId
     );
 
     if (notFound) throw new Error(`Testchain id ${testchainId} not found`);
-    return { rpcUrl, addresses };
+
+    _cache[serializedKey] = { rpcUrl, addresses };
   } else {
-    // if the network can't be determined from the url, we connect to defaults
-    if (networkId === undefined) return DEFAULT_NETWORK_CONFIG;
+    const networkId = networkNameToId(network);
 
     if (!supportedNetworkIds.includes(networkId))
-      throw new Error(`Unsupported network id: ${networkId}`);
+      throw new Error(`Unsupported network: ${network}`);
 
-    return {
+    _cache[serializedKey] = {
       rpcUrl: rpcUrls[networkId],
       addresses: localAddressConfig[networkId]
     };
   }
+
+  return _cache[serializedKey];
 }
 
 async function stageNetwork(env) {
-  // theses are the variables that deteremine the network
-  const { testchainId, networkId } = env.query;
+  // theses url params deteremine the network
+  const { testchainId, network } = env.query;
 
-  try {
-    // memoized on networkId - testchainId combination, no memory limit
-    const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
-      networkId,
-      testchainId
-    });
+  // memoized on networkId-testchainId combination, no limit
+  const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
+    network,
+    testchainId
+  });
 
-    // memoized memory of 1, reinstantiated if the rpcUrl has changed
-    const { maker, newMaker } = await getOrReinstantiateMaker({ rpcUrl });
-    const { watcher, newWatcher } = await getOrRecreateWatcher({
-      rpcUrl,
-      addresses
-    });
+  // memoized on rpcUrl, memory of 1
+  const { maker } = await getOrReinstantiateMaker({ rpcUrl });
 
-    if (newWatcher)
-      store.dispatch({ type: 'CLEAR_ALL_WATCHER_CONTRACT_STATE' });
-    // if (newMaker) reattachMakerListeners();
+  // const { watcher, newWatcher } = await getOrRecreateWatcher({
+  //   rpcUrl,
+  //   addresses
+  // });
 
-    return { maker, watcher };
-  } catch (errMsg) {
-    return createPage({
-      title: 'Error',
-      content: <div>{errMsg}</div>
-    });
-  }
+  // if (newWatcher) {
+  //   // this is a new network, all bets are off
+  //   store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+  // }
 
-  // on metamask switch
-
-  // const makerNetworkId = maker.service('web3').networkId();
-  // const newNetwork = !eq(networkId, makerNetworkId);
+  return { maker };
 }
 
-function stageAccount() {}
-
-// If any component down the tree would like to change what network the app is connected to, or what address the is UI should display,
-// it must replace url params, which will re-run this function. All expensive opetations in this function should be memoized.
-// NOTE: all pages are wrapped in a suspense component which displays a loader while these promises are resolving.
-function withStagedState(getPage) {
+// If any component down the tree would like to change which network the app is connected to, it must replace url params,
+// which will re-run this function. All expensive operations should be memoized.
+// NOTE: pages are wrapped in a suspense component which will display a loader while these promises resolve.
+function withStagedNetwork(getPage) {
   return async env => {
     try {
-      // ensure our maker and watcher instances are connected to the correct network (determined by url params)
+      // ensure our maker and watcher instances are connected to the correct network
       const { maker } = await stageNetwork(env);
-      // TODO: ensure we have the current account's cdps and are polling them for state changes
-      await stageAccount(env);
 
+      const { pathname } = env;
+
+      let connectedAddress = null;
+      try {
+        connectedAddress = maker.currentAddress();
+      } catch (_) {
+        console.log('No connected account');
+      }
+
+      const getPageWithMaker = () => (
+        <MakerHooksProvider maker={maker}>{getPage()}</MakerHooksProvider>
+      );
+
+      if (pathname === '/') return getPageWithMaker();
+
+      await maker.authenticate();
       return (
-        <MakerHooksProvider maker={maker}>{getPage(env)}</MakerHooksProvider>
+        <Grid
+          gridTemplateColumns="80px 1fr 315px"
+          gridTemplateAreas="'navbar view sidebar'"
+          width="100%"
+        >
+          <Navbar />
+          {getPageWithMaker()}
+          <Sidebar
+            network={{
+              id: maker.service('web3').networkId(),
+              swappable: false
+            }}
+            address={connectedAddress}
+          />
+        </Grid>
       );
     } catch (errMsg) {
-      return createPage({
-        title: 'Error',
-        content: <div>{errMsg}</div>
-      });
+      return <div>{errMsg.toString()}</div>;
     }
   };
 }
 
 export default createSwitch({
   paths: {
-    '/': createPage({
-      title: 'Landing',
-      content: <Landing />
-    }),
+    '/': env => {
+      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
 
-    '/overview': env =>
-      createPage({
+      return createPage({
+        title: 'Landing',
+        getContent: withStagedNetwork(() => <Landing />)
+      });
+    },
+
+    '/overview': env => {
+      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
+
+      return createPage({
         title: 'Overview',
-        getContent: () => withStagedState(() => <Overview />)(env)
-      }),
+        getContent: withStagedNetwork(() => <Overview />)
+      });
+    },
 
     '/cdp/:type': env => {
-      const cdpTypeSlug = env.params.type;
-      const address = env.query.address;
+      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
 
-      let readOnlyMode = false;
-      if (address === undefined) readOnlyMode = true;
+      const cdpTypeSlug = env.params.type;
 
       return createPage({
         title: 'CDP',
-        getContent: () =>
-          withStagedState(() => (
-            <CDPPage
-              cdpTypeSlug={cdpTypeSlug}
-              readOnly={readOnlyMode}
-              address={address}
-            />
-          ))(env)
+        getContent: withStagedNetwork(() => (
+          <CDPPage cdpTypeSlug={cdpTypeSlug} />
+        ))
       });
     }
   }
 });
+
+function networkIsUndefined(env) {
+  return env.query.network === undefined && env.query.testchainId === undefined;
+}
+
+function createDefaultNetworkRedirect(env) {
+  const { address } = env.query;
+  const { pathname } = env;
+  const addressQuery = address === undefined ? '?' : `?address=${address}&`;
+
+  return createRedirect(
+    `${pathname === '/' ? '' : pathname}/${addressQuery}network=${
+      networkNames[defaultNetwork]
+    }`
+  );
+}
