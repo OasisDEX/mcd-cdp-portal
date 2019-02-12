@@ -32,6 +32,7 @@ const StyledNavbar = styled.div`
 const NavbarItemContainer = styled(NavLink)`
   display: flex;
   align-items: center;
+  overflow: hidden;
   justify-content: center;
   width: 66px;
   height: 54px;
@@ -98,6 +99,7 @@ function CDPListView({ currentPath, currentQuery }) {
             label={cdp.symbol}
             ratio={cdp.ratio}
             active={active}
+            cdpKey={cdp.key}
           />
         );
       })}
@@ -115,11 +117,11 @@ function CDPList() {
   );
 }
 
-const NavbarItem = ({ href, label, ratio, active, ...props }) => (
+const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <Flex flexDirection="column" lineHeight="17px">
       <Text>{label}</Text>
-      <RatioDisplay ratio={ratio} />
+      <RatioDisplay ratio={ratio} cdpKey={cdpKey} />
     </Flex>
   </NavbarItemContainer>
 );

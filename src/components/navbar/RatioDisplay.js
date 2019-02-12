@@ -2,32 +2,33 @@ import React from 'react';
 import styled from 'styled-components';
 import { CDP_SAFETY_LEVELS } from 'utils/constants';
 import { Text } from '@makerdao/ui-components';
+import { prettifyNumber } from 'utils/ui';
 
 const StyledRatio = styled(Text)`
-  color: ${({ theme, color }) => theme.colors[color]};
+  color: ${({ color }) => color};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
 `;
 
 const CDP_SAFETY_COLOR_PALETE = {
-  [CDP_SAFETY_LEVELS.DANGER]: 'makerOrange',
-  [CDP_SAFETY_LEVELS.WARNING]: 'daiYellow',
-  [CDP_SAFETY_LEVELS.SAFE]: 'backgroundGrey'
+  [CDP_SAFETY_LEVELS.DANGER]: '#f65728',
+  [CDP_SAFETY_LEVELS.NEUTRAL]: '#c2c2c2',
+  [CDP_SAFETY_LEVELS.SAFE]: '#24be9f'
 };
 
-function lookupCDPSafetyLevel(_ratio, cdpType) {
+function lookupCDPSafetyLevel(_ratio, cdpKey) {
   const ratio = parseFloat(_ratio);
   if (ratio < 250) return CDP_SAFETY_LEVELS.DANGER;
-  if (ratio < 500) return CDP_SAFETY_LEVELS.WARNING;
+  if (ratio < 500) return CDP_SAFETY_LEVELS.NEUTRAL;
   return CDP_SAFETY_LEVELS.SAFE;
 }
 
-export default function RatioDisplay({ ratio, cdpType }) {
+export default function RatioDisplay({ ratio, cdpKey }) {
   if (!ratio) return null;
-  const safetyLevel = lookupCDPSafetyLevel(ratio, cdpType);
+  const safetyLevel = lookupCDPSafetyLevel(ratio, cdpKey);
 
   return (
     <StyledRatio color={CDP_SAFETY_COLOR_PALETE[safetyLevel]}>
-      {ratio}%
+      {prettifyNumber(ratio, true)}%
     </StyledRatio>
   );
 }
