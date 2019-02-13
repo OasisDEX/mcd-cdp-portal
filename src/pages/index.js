@@ -1,9 +1,10 @@
 import React from 'react';
 import { createPage, createRedirect, createSwitch } from 'navi';
-import { Grid } from '@makerdao/ui-components';
+import { Grid } from '@makerdao/ui-components-core';
 
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
+import ResponsivePageLayout from 'components/ResponsivePageLayout';
 import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
@@ -18,6 +19,7 @@ import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 import { createCDPSystemModel } from 'reducers/network/system/model';
 import MakerHooksProvider from 'components/context/MakerHooksProvider';
 import config from 'references/config';
+import MobileNav from '../components/MobileNav';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -82,21 +84,28 @@ function withAuthenticatedNetwork(getPage) {
       await maker.authenticate();
       await stateFetchPromise;
       return (
-        <Grid
-          gridTemplateColumns="80px 1fr 315px"
-          gridTemplateAreas="'navbar view sidebar'"
-          width="100%"
-        >
-          <Navbar />
-          {getPageWithMakerProvider()}
-          <Sidebar
-            network={{
-              id: maker.service('web3').networkId(),
-              swappable: false
-            }}
-            address={connectedAddress}
-          />
-        </Grid>
+        <ResponsivePageLayout
+          mobileNav={
+            <MobileNav
+              network={{
+                id: maker.service('web3').networkId(),
+                swappable: false
+              }}
+              address={connectedAddress}
+            />
+          }
+          navbar={<Navbar />}
+          sidebar={
+            <Sidebar
+              network={{
+                id: maker.service('web3').networkId(),
+                swappable: false
+              }}
+              address={connectedAddress}
+            />
+          }
+          content={getPageWithMakerProvider()}
+        />
       );
     } catch (errMsg) {
       return <div>{errMsg.toString()}</div>;

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Header, Footer, Flex } from '@makerdao/ui-components';
+import Footer from '@makerdao/ui-components-footer';
+import Header from '@makerdao/ui-components-header';
+import { Flex } from '@makerdao/ui-components-core';
 import lang from '../languages';
 
 import MetaMaskConnect from './landing/MetaMaskConnect';

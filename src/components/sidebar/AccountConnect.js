@@ -4,7 +4,7 @@ import lang from 'languages';
 
 import styled from 'styled-components';
 
-import { Button, Modal } from '@makerdao/ui-components';
+import { Button, Modal } from '@makerdao/ui-components-core';
 
 const CustomButton = styled(Button)`
   height: 30px;

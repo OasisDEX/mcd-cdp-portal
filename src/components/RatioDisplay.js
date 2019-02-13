@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CDP_SAFETY_LEVELS } from 'utils/constants';
-import { Text } from '@makerdao/ui-components';
+import { Text } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
 const StyledRatio = styled(Text)`
@@ -15,16 +15,16 @@ const CDP_SAFETY_COLOR_PALETE = {
   [CDP_SAFETY_LEVELS.SAFE]: '#24be9f'
 };
 
-function lookupCDPSafetyLevel(_ratio, cdpKey) {
+function lookupCDPSafetyLevel(_ratio) {
   const ratio = parseFloat(_ratio);
   if (ratio < 250) return CDP_SAFETY_LEVELS.DANGER;
   if (ratio < 500) return CDP_SAFETY_LEVELS.NEUTRAL;
   return CDP_SAFETY_LEVELS.SAFE;
 }
 
-export default function RatioDisplay({ ratio, cdpKey }) {
+export default function RatioDisplay({ ratio }) {
   if (!ratio) return null;
-  const safetyLevel = lookupCDPSafetyLevel(ratio, cdpKey);
+  const safetyLevel = lookupCDPSafetyLevel(ratio);
 
   return (
     <StyledRatio color={CDP_SAFETY_COLOR_PALETE[safetyLevel]}>

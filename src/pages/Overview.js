@@ -2,7 +2,7 @@ import React from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Box } from '@makerdao/ui-components';
+import { Box } from '@makerdao/ui-components-core';
 
 const View = styled.div`
   padding: 55px 32px;

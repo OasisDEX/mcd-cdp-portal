@@ -5,7 +5,7 @@ import watcher from './watch';
 import lang from './languages';
 
 import { createBrowserNavigation } from 'navi';
-import '@makerdao/ui-components/dist/styles/global.css';
+import '@makerdao/ui-components-core/dist/styles/global.css';
 import './global.css';
 
 import pages from './pages';

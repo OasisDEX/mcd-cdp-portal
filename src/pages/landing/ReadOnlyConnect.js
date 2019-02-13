@@ -3,7 +3,7 @@ import React from 'react';
 import lang from 'languages';
 
 import { NavLink, NavRoute } from 'react-navi';
-import { Button } from '@makerdao/ui-components';
+import { Button } from '@makerdao/ui-components-core';
 
 function ReadOnlyConnect() {
   return (
