@@ -15,15 +15,25 @@ const MMLogo = styled(MetaMaskLogo)`
   margin-bottom: -5px;
 `;
 
-async function checkMetaMaskNetwork() {
-  return new Promise((res, rej) => {
-    if (window.web3) {
-      window.web3.version.getNetwork(async (err, _netId) => {
-        if (!!err) rej(err);
-        else res(parseInt(_netId, 10));
+async function checkEthereumProvider() {
+  return new Promise(async (res, rej) => {
+    if (typeof window.ethereum !== 'undefined') {
+      await window.ethereum.enable();
+      const { selectedAddress, networkVersion } = window.ethereum;
+      res({
+        networkId: parseInt(networkVersion, 10),
+        address: selectedAddress
       });
-    } else rej('No web3 provider detected, is MetaMask installed?');
+    } else rej('No web3 provider detected');
   });
+}
+
+function makerIsAlreadyConnected(maker, provider) {
+  return (
+    maker.service('accounts').hasAccount() &&
+    !!provider.address &&
+    provider.address === maker.currentAddress()
+  );
 }
 
 export default function MetaMaskConnect() {
@@ -36,17 +46,20 @@ export default function MetaMaskConnect() {
       disabled={!makerAuthenticated}
       onClick={async () => {
         try {
-          const metamaksNetwork = await checkMetaMaskNetwork();
-          const connectedNetwork = maker.service('web3').networkId();
+          const browserProvider = await checkEthereumProvider();
+          const connectedNetworkId = maker.service('web3').networkId();
 
-          if (metamaksNetwork !== connectedNetwork)
+          if (browserProvider.networkId !== connectedNetworkId)
             throw new Error(
-              'MetaMask network and url network param do not match'
+              'Browser eth provider network and url network param do not match'
             );
 
-          const { address: connectedAddress } = await maker.addAccount({
-            type: 'browser'
-          });
+          if (!makerIsAlreadyConnected(maker, browserProvider))
+            await maker.addAccount({
+              type: 'browser'
+            });
+
+          const connectedAddress = maker.currentAddress();
 
           mixpanelIdentify(connectedAddress, 'metamask');
 

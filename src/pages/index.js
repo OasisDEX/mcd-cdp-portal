@@ -43,7 +43,7 @@ async function stageNetwork(env) {
 
   let stateFetchPromise = Promise.resolve();
   if (watcherReinstantiated) {
-    // all bets are off wrt what contract state is in our store
+    // all bets are off wrt contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     // do our best to attach state listeners to this new network
     stateFetchPromise = watcher.tap(() => {
@@ -60,8 +60,8 @@ async function stageNetwork(env) {
   return { maker, stateFetchPromise };
 }
 
-// If any components would like to change which network the app is connected to, they must replace url params,
-// re-running this function. All expensive operations should be memoized.
+// Any component that would like to change the network must replace url query params, re-running this function.
+// All expensive operations should be memoized.
 function withNetworkAuthenticated(getPage) {
   return async env => {
     try {
@@ -74,7 +74,7 @@ function withNetworkAuthenticated(getPage) {
       try {
         connectedAddress = maker.currentAddress();
       } catch (_) {
-        // no connected account, we'll render read-only mode
+        // if no account is connected, or if maker.authenticate is still resolving, we render read-only mode
       }
 
       const getPageWithMaker = () => (

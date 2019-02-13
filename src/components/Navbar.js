@@ -116,13 +116,9 @@ const Navbar = ({ ...props }) => (
   <NavRoute>
     {({ url }) => (
       <StyledNavbar {...props}>
-        <div
-          onClick={() =>
-            (window.location.href = `/?network=${url.query.network}`)
-          }
-        >
+        <NavLink href={`/${url.search}`} precache={true}>
           <StyledMakerLogo />
-        </div>
+        </NavLink>
         <CDPList currentPath={url.pathname} currentQuery={url.search} />
       </StyledNavbar>
     )}
