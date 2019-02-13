@@ -7,7 +7,6 @@ const StyledMakerLogo = styled.div`
   width: 33px;
   height: 21px;
   background: url(${MakerLogo}) center no-repeat;
-  margin: 23px auto 32px;
   background-size: 33px;
 `;
 

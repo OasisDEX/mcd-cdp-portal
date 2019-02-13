@@ -4,12 +4,12 @@ import styled, { css } from 'styled-components';
 const breakpointMinWidth = '950px';
 const breakpoint = `@media only screen and (min-width: ${breakpointMinWidth})`;
 
-console.log(breakpoint);
 const ResponsiveWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: ${({ theme }) => theme.colors.backgroundGrey};
 
   ${breakpoint} {
     display: grid;
@@ -41,7 +41,11 @@ const NavbarWrap = styled.div`
 
 const MobileNavWrap = styled.div`
   display: flex;
+  width: 100%;
+  align-items: center;
   background: #222;
+  height: 80px;
+  padding: 15px;
 
   ${breakpoint} {
     display: none;

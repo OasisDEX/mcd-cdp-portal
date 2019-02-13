@@ -17,12 +17,12 @@ const PaddedDiv = styled.div`
 `;
 
 export default function AccountConnect() {
-  const [modelOpen, setModalBool] = useState(false);
+  const [modalOpen, setModalBool] = useState(false);
 
   return (
     <>
       <Modal
-        show={modelOpen}
+        show={modalOpen}
         onClose={() => {
           setModalBool(false);
         }}

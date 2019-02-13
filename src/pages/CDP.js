@@ -144,7 +144,6 @@ const Heading = styled.div`
 
 const View = styled.div`
   padding: 55px 32px;
-  background: ${({ theme }) => theme.colors.backgroundGrey};
 `;
 
 function CDPView({ cdpTypeSlug }) {
