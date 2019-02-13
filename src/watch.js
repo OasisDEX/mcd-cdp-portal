@@ -2,7 +2,7 @@ import { createWatcher } from '@makerdao/multicall';
 import store from './store';
 
 import { batchActions } from 'utils/redux';
-import { createCDPSystemModel } from 'reducers/network/system/model';
+// import { createCDPSystemModel } from 'reducers/network/system/model';
 // import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 
 import config from 'references/config.json';
@@ -15,17 +15,7 @@ const { defaultNetwork, rpcUrls } = config;
 
 const defaultAddresses = addresses[defaultNetwork];
 
-const initialModel = [
-  ...createCDPSystemModel(defaultAddresses)
-  // ...cdpSystemStateModel,
-  // ...supportedCDPTypes
-  //   .map(({ key }) => cdpTypeModel.createCDPTypeModel(key))
-  //   .reduce((acc, cur) => acc.concat(cur), []),
-  // cdpTypeModel.priceFeed('DGX', { decimals: 9 }),
-  // cdpTypeModel.priceFeed('BTC', { decimals: 18 })
-];
-
-const watcher = createWatcher(initialModel, {
+const watcher = createWatcher([], {
   rpcUrl: rpcUrls[defaultNetwork],
   multicallAddress: defaultAddresses.MULTICALL
 });
@@ -38,16 +28,22 @@ watcher.batch().subscribe(newStateEvents => {
 
 let _rpcUrl = null;
 export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
+  let reinstantiated = false;
+
   if (_rpcUrl !== rpcUrl) {
     if (addresses.MULTICALL === undefined)
-      throw new Error('Multicall address not defined');
+      throw new Error('No multicall address found');
+
+    _rpcUrl = rpcUrl;
+
+    reinstantiated = true;
+
     await watcher.reCreate([], {
       rpcUrl,
       multicallAddress: addresses.MULTICALL
     });
-    return watcher;
   }
-  return watcher;
+  return { watcher, reinstantiated };
 }
 
 // watcher

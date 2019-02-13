@@ -44,14 +44,6 @@ const numberOfLiquidations = addresses => ({
   returns: [[NUMBER_OF_LIQUIDATIONS]]
 });
 
-function isNotMissingContract(calldata) {
-  if (calldata.target === undefined) {
-    console.error(`Address for ${calldata.call} not found`);
-    return false;
-  }
-  return true;
-}
-
 export function createCDPSystemModel(addresses) {
   return [
     totalDebt,
@@ -60,7 +52,5 @@ export function createCDPSystemModel(addresses) {
     debtAuctionLotSzie,
     surplusAuctionLotSize,
     numberOfLiquidations
-  ]
-    .map(f => f(addresses))
-    .filter(calldata => isNotMissingContract(calldata));
+  ].map(f => f(addresses));
 }

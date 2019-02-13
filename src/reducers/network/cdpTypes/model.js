@@ -14,11 +14,9 @@ import {
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING
 } from 'reducers/network/cdpTypes';
-import contractAddresses from 'references/addresses.json';
-const kovanAddresses = contractAddresses[42];
 
-export const priceFeed = (name, { decimals = 18 } = {}) => ({
-  target: kovanAddresses[name].pip,
+export const priceFeed = addresses => (name, { decimals = 18 } = {}) => ({
+  target: addresses[`PIP_${name}`],
   call: ['peek()(uint256,bool)'],
   returns: [
     [`${name}.${FEED_VALUE_USD}`, val => USD(val, -decimals)],
@@ -26,8 +24,8 @@ export const priceFeed = (name, { decimals = 18 } = {}) => ({
   ]
 });
 
-export const rateData = name => ({
-  target: kovanAddresses.drip,
+export const rateData = addresses => name => ({
+  target: addresses.MCD_DRIP,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
   returns: [
     [`${name}.${RATE}`, val => fromRad(val, 5)],
@@ -35,8 +33,8 @@ export const rateData = name => ({
   ]
 });
 
-export const pitData = name => ({
-  target: kovanAddresses.pit,
+export const pitData = addresses => name => ({
+  target: addresses.MCD_PIT,
   call: ['ilks(bytes32)(uint256,uint256)', toHex(name)],
   returns: [
     [`${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
@@ -44,14 +42,14 @@ export const pitData = name => ({
   ]
 });
 
-// export const liquidation = name => ({
-//   target: kovanAddresses[name].spot,
-//   call: ['mat()(uint256)'],
-//   returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
-// });
+export const liquidation = addresses => name => ({
+  target: addresses[`MCD_SPOT_${name}`],
+  call: ['mat()(uint256)'],
+  returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
+});
 
-export const flipper = name => ({
-  target: kovanAddresses.cat,
+export const flipper = addresses => name => ({
+  target: addresses.MCD_CAT,
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
     [`${name}.${LIQUIDATOR_ADDRESS}`],
@@ -63,20 +61,20 @@ export const flipper = name => ({
   ]
 });
 
-export const adapterBalance = name => ({
-  target: kovanAddresses[name].tokenContract,
-  call: ['balanceOf(address)(uint256)', kovanAddresses[name].join],
+export const adapterBalance = addresses => name => ({
+  target: addresses[name],
+  call: ['balanceOf(address)(uint256)', addresses[`MCD_JOIN_${name}`]],
   returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
 });
 
-export function createCDPTypeModel(cdpKey) {
+export function createCDPTypeModel(cdpKey, addresses) {
   const cdpModel = [
     priceFeed,
     rateData,
     pitData,
-    // liquidation,
+    liquidation,
     flipper,
     adapterBalance
-  ].map(f => f(cdpKey));
+  ].map(f => f(addresses)(cdpKey));
   return cdpModel;
 }

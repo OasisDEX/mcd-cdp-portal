@@ -44,15 +44,21 @@ export default function MetaMaskConnect() {
               'MetaMask network and url query parameters do not match'
             );
 
-          const { address } = await maker.addAccount({ type: 'browser' });
+          const { address: connectedAddress } = await maker.addAccount({
+            type: 'browser'
+          });
 
-          mixpanelIdentify(address, 'metamask');
+          mixpanelIdentify(connectedAddress, 'metamask');
 
-          const { search } = navigation.history.location;
+          const {
+            network,
+            address: urlParamAddress
+          } = navigation.receivedRoute.url.query;
 
+          const addressToView = urlParamAddress || connectedAddress;
           navigation.history.push({
             pathname: '/overview/',
-            search: `${search}&address=${address}`
+            search: `?network=${network}&address=${addressToView}`
           });
         } catch (err) {
           console.log(err);

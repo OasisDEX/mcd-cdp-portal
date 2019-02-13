@@ -1,6 +1,12 @@
 import config from 'references/config';
+import localAddressConfig from 'references/addresses.json';
 
-const { exTestchainApiUrl, networkNames } = config;
+const {
+  exTestchainApiUrl,
+  rpcUrls,
+  supportedNetworkIds,
+  networkNames
+} = config;
 
 export async function getTestchainDetails(testchainId) {
   try {
@@ -23,4 +29,34 @@ export function networkNameToId(networkName) {
 
 export function networkIdToName(networkId) {
   return networkNames[networkId];
+}
+
+const _cache = {};
+export async function getOrFetchNetworkDetails({ network, testchainId }) {
+  // is this a pair we've seen before?
+  const serializedKey = JSON.stringify({ network, testchainId });
+  if (_cache[serializedKey] !== undefined) return _cache[serializedKey];
+
+  // if we have a testchain id, try to connect to an ex testchain instance
+  if (testchainId !== undefined) {
+    const { rpcUrl, addresses, notFound } = await getTestchainDetails(
+      testchainId
+    );
+
+    if (notFound) throw new Error(`Testchain id ${testchainId} not found`);
+
+    _cache[serializedKey] = { rpcUrl, addresses };
+  } else {
+    const networkId = networkNameToId(network);
+
+    if (!supportedNetworkIds.includes(networkId))
+      throw new Error(`Unsupported network: ${network}`);
+
+    _cache[serializedKey] = {
+      rpcUrl: rpcUrls[networkId],
+      addresses: localAddressConfig[networkId]
+    };
+  }
+
+  return _cache[serializedKey];
 }

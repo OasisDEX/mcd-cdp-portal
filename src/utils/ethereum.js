@@ -14,3 +14,11 @@ export function toHex(str, { with0x = true, rightPadding = 64 } = {}) {
 export function addressAsNumber(address) {
   return parseInt(address.slice(2, 10), 16);
 }
+
+export function isMissingContractAddress(calldata) {
+  if (calldata.target === undefined) {
+    console.error(`Address for ${calldata.call} not found`);
+    return true;
+  }
+  return false;
+}
