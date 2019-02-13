@@ -51,7 +51,7 @@ export default function MetaMaskConnect() {
 
           if (browserProvider.networkId !== connectedNetworkId)
             throw new Error(
-              'Browser eth provider network and url network param do not match'
+              'browser ethereum provider and URL network param do not match.'
             );
 
           if (!makerIsAlreadyConnected(maker, browserProvider))

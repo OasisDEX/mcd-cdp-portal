@@ -72,12 +72,12 @@ function withAuthenticatedNetwork(getPage) {
         // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
 
-      const getPageWithMaker = () => (
+      const getPageWithMakerProvider = () => (
         // the canonical maker source
         <MakerHooksProvider maker={maker}>{getPage()}</MakerHooksProvider>
       );
 
-      if (pathname === '/') return getPageWithMaker();
+      if (pathname === '/') return getPageWithMakerProvider();
 
       await maker.authenticate();
       await stateFetchPromise;
@@ -88,7 +88,7 @@ function withAuthenticatedNetwork(getPage) {
           width="100%"
         >
           <Navbar />
-          {getPageWithMaker()}
+          {getPageWithMakerProvider()}
           <Sidebar
             network={{
               id: maker.service('web3').networkId(),

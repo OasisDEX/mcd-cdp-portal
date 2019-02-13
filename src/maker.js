@@ -6,7 +6,7 @@ let _maker;
 let _rpcUrl;
 
 export function getMaker() {
-  if (_maker === null) throw new Error('Maker has not been instatiated');
+  if (_maker === undefined) throw new Error('Maker has not been instatiated');
   return _maker;
 }
 
