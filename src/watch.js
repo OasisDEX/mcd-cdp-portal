@@ -33,7 +33,7 @@ export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
 
     reinstantiated = true;
 
-    await watcher.reCreate([], {
+    watcher.reCreate([], {
       rpcUrl,
       multicallAddress: addresses.MULTICALL
     });

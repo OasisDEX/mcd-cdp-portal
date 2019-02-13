@@ -62,7 +62,6 @@ async function stageNetwork(env) {
 
 // If any components would like to change which network the app is connected to, they must replace url params,
 // re-running this function. All expensive operations should be memoized.
-// NOTE: pages are wrapped in a suspense component which will display a loader while these promises resolve.
 function withNetworkAuthenticated(getPage) {
   return async env => {
     try {

@@ -41,7 +41,7 @@ export default function MetaMaskConnect() {
 
           if (metamaksNetwork !== connectedNetwork)
             throw new Error(
-              'MetaMask network and url query parameters do not match'
+              'MetaMask network and url network param do not match'
             );
 
           const { address: connectedAddress } = await maker.addAccount({
@@ -61,7 +61,7 @@ export default function MetaMaskConnect() {
             search: `?network=${network}&address=${addressToView}`
           });
         } catch (err) {
-          console.log(err);
+          window.alert(err.toString());
         }
       }}
     >
