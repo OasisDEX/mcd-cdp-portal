@@ -23,7 +23,7 @@ watcher.batch().subscribe(newStateEvents => {
 
 let _rpcUrl = null;
 export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
-  let reinstantiated = false;
+  let recreated = false;
 
   if (_rpcUrl !== rpcUrl) {
     if (addresses.MULTICALL === undefined)
@@ -31,14 +31,14 @@ export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
 
     _rpcUrl = rpcUrl;
 
-    reinstantiated = true;
+    recreated = true;
 
     watcher.reCreate([], {
       rpcUrl,
       multicallAddress: addresses.MULTICALL
     });
   }
-  return { watcher, reinstantiated };
+  return { watcher, recreated };
 }
 
 // watcher

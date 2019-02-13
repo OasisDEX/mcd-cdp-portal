@@ -21,29 +21,25 @@ import config from 'references/config';
 
 const { networkNames, defaultNetwork } = config;
 
-async function stageNetwork(env) {
-  // theses url params deteremine the network
-  const { testchainId, network } = env.query;
+async function stageNetwork({ testchainId, network }) {
+  // testchainId and network url params deteremine the network
 
-  // memoized on networkId-testchainId combination, no limit
+  // memoized on network-testchainId combination, no memory limit
   const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
     network,
     testchainId
   });
 
-  // memoized on rpcUrl, memory of 1
+  // reinstantiated if rpcUrl has changed
   const { maker } = await getOrReinstantiateMaker({ rpcUrl });
-  const {
-    watcher,
-    reinstantiated: watcherReinstantiated
-  } = await getOrRecreateWatcher({
+  const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
   });
 
   let stateFetchPromise = Promise.resolve();
-  if (watcherReinstantiated) {
-    // all bets are off wrt contract state in our store
+  if (watcherRecreated) {
+    // all bets are off wrt what contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     // do our best to attach state listeners to this new network
     stateFetchPromise = watcher.tap(() => {
@@ -53,7 +49,7 @@ async function stageNetwork(env) {
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 })
-      ].filter(calldata => !isMissingContractAddress(calldata));
+      ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
   }
 
@@ -61,12 +57,11 @@ async function stageNetwork(env) {
 }
 
 // Any component that would like to change the network must replace url query params, re-running this function.
-// All expensive operations should be memoized.
-function withNetworkAuthenticated(getPage) {
+function withAuthenticatedNetwork(getPage) {
   return async env => {
     try {
       // ensure our maker and watcher instances are connected to the correct network
-      const { maker, stateFetchPromise } = await stageNetwork(env);
+      const { maker, stateFetchPromise } = await stageNetwork(env.query);
 
       const { pathname } = env;
 
@@ -74,7 +69,7 @@ function withNetworkAuthenticated(getPage) {
       try {
         connectedAddress = maker.currentAddress();
       } catch (_) {
-        // if no account is connected, or if maker.authenticate is still resolving, we render read-only mode
+        // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
 
       const getPageWithMaker = () => (
@@ -116,7 +111,7 @@ export default createSwitch({
 
       return createPage({
         title: 'Landing',
-        getContent: withNetworkAuthenticated(() => <Landing />)
+        getContent: withAuthenticatedNetwork(() => <Landing />)
       });
     },
 
@@ -125,7 +120,7 @@ export default createSwitch({
 
       return createPage({
         title: 'Overview',
-        getContent: withNetworkAuthenticated(() => <Overview />)
+        getContent: withAuthenticatedNetwork(() => <Overview />)
       });
     },
 
@@ -135,7 +130,7 @@ export default createSwitch({
 
       return createPage({
         title: 'CDP',
-        getContent: withNetworkAuthenticated(() => (
+        getContent: withAuthenticatedNetwork(() => (
           <CDPPage cdpTypeSlug={cdpTypeSlug} />
         ))
       });

@@ -15,7 +15,7 @@ const totalDebt = addresses => ({
 });
 
 const baseRate = addresses => ({
-  target: addresses.MCD_DRIP,
+  target: addresses.MCD_JUG,
   call: ['repo()(uint256)'],
   returns: [[BASE_RATE]]
 });
