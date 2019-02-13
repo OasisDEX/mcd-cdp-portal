@@ -23,8 +23,6 @@
 //   }
 // }, 250);
 
-// block number
-
 const initialState = {
   authenticated: false,
   activeAccountAddress: '',

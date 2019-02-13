@@ -1,5 +1,7 @@
 {
-  "1": {},
+  "1": {
+    "MULTICALL": "0x4844f6ce55baf02362c7dcac26fd9dd968a2071b"
+  },
   "42": {
     "MULTICALL": "0xb2155b4f516a2e93fd0c40fdba57a3ab39952236",
     "MCD_VAT": "0xcd726790550afcd77e9a7a47e86a3f9010af126b",

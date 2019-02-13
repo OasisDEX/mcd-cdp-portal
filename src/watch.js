@@ -2,14 +2,9 @@ import { createWatcher } from '@makerdao/multicall';
 import store from './store';
 
 import { batchActions } from 'utils/redux';
-// import { createCDPSystemModel } from 'reducers/network/system/model';
-// import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 
 import config from 'references/config.json';
-// import cdpTypes from 'references/cdpTypes';
 import addresses from 'references/addresses';
-
-// const supportedCDPTypes = cdpTypes.filter(({ hidden }) => !hidden);
 
 const { defaultNetwork, rpcUrls } = config;
 

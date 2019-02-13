@@ -28,12 +28,7 @@ function LedgerConnect() {
         }}
       >
         <PaddedDiv>
-          <h3>Select Network</h3>
-          <br />
-          <Button variant="secondary-outline">Mainnet</Button>
-          <br />
-          <br />
-          <Button variant="secondary-outline">Kovan</Button>
+          <h3>Modal Content</h3>
         </PaddedDiv>
       </Modal>
 

@@ -60,7 +60,7 @@ async function stageNetwork(env) {
   return { maker, stateFetchPromise };
 }
 
-// If any components in the tree would like to change which network the app is connected to, they must replace url params,
+// If any components would like to change which network the app is connected to, they must replace url params,
 // re-running this function. All expensive operations should be memoized.
 // NOTE: pages are wrapped in a suspense component which will display a loader while these promises resolve.
 function withNetworkAuthenticated(getPage) {

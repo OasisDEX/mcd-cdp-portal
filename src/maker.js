@@ -11,8 +11,8 @@ export function getMaker() {
 }
 
 /**
- * @desc if the rpcUrl has changed, instantiate a new maker instance
- * otherwise, return the current maker instance
+ * @desc if the rpcUrl has changed, instantiate a new maker instance.
+ * Otherwise, return the current maker instance
  */
 export async function getOrReinstantiateMaker({ rpcUrl }) {
   let reinstantiated = false;
