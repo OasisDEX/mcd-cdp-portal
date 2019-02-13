@@ -103,7 +103,7 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
   );
 });
 
-const NavbarItem = ({ href, label, ratio, active, ...props }) => (
+const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <Flex flexDirection="column" lineHeight="17px">
       <Text>{label}</Text>
