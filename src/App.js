@@ -4,7 +4,6 @@ import styled, { ThemeProvider } from 'styled-components';
 import { themeLight } from '@makerdao/ui-components';
 import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
 
-import ErrorBoundary from 'components/ErrorBoundary';
 import { GenericNotFound } from 'pages/NotFound';
 
 import store from './store';
@@ -29,13 +28,11 @@ const Body = styled.div`
 function App() {
   return (
     <Body>
-      <ErrorBoundary>
-        <NavNotFoundBoundary render={GenericNotFound}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <NavContent />
-          </Suspense>
-        </NavNotFoundBoundary>
-      </ErrorBoundary>
+      <NavNotFoundBoundary render={GenericNotFound}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <NavContent />
+        </Suspense>
+      </NavNotFoundBoundary>
     </Body>
   );
 }
