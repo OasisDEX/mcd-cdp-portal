@@ -48,6 +48,9 @@ const initialState = [];
 
 function cdpTypes(state = initialState, action) {
   const { value, type } = action;
+
+  if (type === 'CLEAR_CONTRACT_STATE') return initialState;
+
   // example type: ETH.debtCeiling
   const [cdpTypeKey, valueType] = type.split('.');
 

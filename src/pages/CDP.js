@@ -3,9 +3,6 @@ import React from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { connect } from 'react-redux';
-import { getCDPTypeDetails } from 'reducers/network/cdpTypes';
-
 // NOTE: CDP Page styles imported directly from prototype
 const StyledCdp = styled.div`
   max-width: 1200px;
@@ -145,104 +142,84 @@ const Heading = styled.div`
   color: #231536;
 `;
 
-function CDPView({ cdpTypeDetails }) {
-  console.log(cdpTypeDetails);
-  return (
-    <StyledCdp>
-      <Heading>
-        {cdpTypeDetails.symbol} {lang.cdp}
-      </Heading>
-      <div className="grid-wrapper">
-        <div className="grid">
-          <div className="grid-item">
-            <div className="flexbox">
-              <div className="col strong">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.liquidation_ratio}
-                </div>
-                <span className="heading-sm">
-                  ({cdpTypeDetails.symbol}/USD)
-                </span>
-              </div>
-              {/* <div className="col strong">{`${cdpTypeDetails.liquidationPrice}`}</div> */}
-            </div>
-            <div className="flexbox">
-              <div className="col">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.current_price_information}
-                </div>
-                <span className="heading-sm">
-                  ({cdpTypeDetails.symbol}/USD)
-                </span>
-              </div>
-              {/* <div className="col">{`${cdp.collateralPrice}`}</div> */}
-            </div>
-            <div className="flexbox">
-              <div className="col">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.liquidation_penalty}
-                </div>
-              </div>
-              <div className="col">{cdpTypeDetails.liquidationPenalty} %</div>
-            </div>
-          </div>
+const View = styled.div`
+  padding: 55px 32px;
+  background: ${({ theme }) => theme.colors.backgroundGrey};
+`;
 
-          <div className="grid-item">
-            <div className="flexbox">
-              <div className="col strong">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.collateralization_ratio}
+function CDPView({ cdpTypeSlug }) {
+  return (
+    <View>
+      <StyledCdp>
+        <Heading>
+          {cdpTypeSlug.toUpperCase()} {lang.cdp}
+        </Heading>
+        <div className="grid-wrapper">
+          <div className="grid">
+            <div className="grid-item">
+              <div className="flexbox">
+                <div className="col strong">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.liquidation_ratio}
+                  </div>
+                  <span className="heading-sm">
+                    {/* ({cdpTypeDetails.symbol}/USD) */}
+                  </span>
                 </div>
+                {/* <div className="col strong">{`${cdpTypeDetails.liquidationPrice}`}</div> */}
               </div>
-              {/* <div className="col strong">{cdp.collateralizationRatio} %</div> */}
+              <div className="flexbox">
+                <div className="col">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.current_price_information}
+                  </div>
+                  <span className="heading-sm">
+                    {/* ({cdpTypeDetails.symbol}/USD) */}
+                  </span>
+                </div>
+                {/* <div className="col">{`${cdp.collateralPrice}`}</div> */}
+              </div>
+              <div className="flexbox">
+                <div className="col">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.liquidation_penalty}
+                  </div>
+                </div>
+                {/* <div className="col">{cdpTypeDetails.liquidationPenalty} %</div> */}
+              </div>
             </div>
-            <div className="flexbox">
-              <div className="col">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.minimum_ratio}
+
+            <div className="grid-item">
+              <div className="flexbox">
+                <div className="col strong">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.collateralization_ratio}
+                  </div>
                 </div>
+                {/* <div className="col strong">{cdp.collateralizationRatio} %</div> */}
               </div>
-              <div className="col">{cdpTypeDetails.liquidationRatio} %</div>
-            </div>
-            <div className="flexbox">
-              <div className="col">
-                <div className="heading tooltip-underline">
-                  {lang.cdp_page.stability_fee}
+              <div className="flexbox">
+                <div className="col">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.minimum_ratio}
+                  </div>
                 </div>
+                {/* <div className="col">{cdpTypeDetails.liquidationRatio} %</div> */}
               </div>
-              {/* <div className="col">{cdp.stabilityFee} %</div> */}
+              <div className="flexbox">
+                <div className="col">
+                  <div className="heading tooltip-underline">
+                    {lang.cdp_page.stability_fee}
+                  </div>
+                </div>
+                {/* <div className="col">{cdp.stabilityFee} %</div> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </StyledCdp>
+      </StyledCdp>
+    </View>
   );
 }
 
-function mapStateToProps(state, { cdpTypeSlug }) {
-  return {
-    cdpTypeDetails: getCDPTypeDetails(state, cdpTypeSlug)
-  };
-}
-
-// ~~ cdpTypeDetails object for reference ~~
-// ---------------------------------------
-// const defaultCDPTypeState = {
-//   key: '',
-//   slug: '',
-//   symbol: '',
-//   rate: '0',
-//   lastDrip: '0',
-//   feedValueUSD: '0',
-//   debtCeiling: '0',
-//   adapterBalance: '0',
-//   liquidationRatio: '0',
-//   feedSetUSD: false,
-//   liquidatorAddress: '',
-//   liquidationPenalty: '0',
-//   maxAuctionLotSize: '0',
-//   priceWithSafetyMargin: '0'
-// };
-// ---------------------------------------
-
-export default connect(mapStateToProps)(CDPView);
+export default CDPView;

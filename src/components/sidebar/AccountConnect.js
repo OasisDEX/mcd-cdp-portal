@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 
 import lang from 'languages';
+
 import styled from 'styled-components';
 
-import { Button, Modal, Flex } from '@makerdao/ui-components';
-import { ReactComponent as Logo } from 'images/trezor.svg';
+import { Button, Modal } from '@makerdao/ui-components';
 
-const TrezorLogo = styled(Logo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+const CustomButton = styled(Button)`
+  height: 30px;
+  margin-left: 30px;
+  padding: 0px 26px;
 `;
 
 const PaddedDiv = styled.div`
   padding: 20px;
 `;
 
-function TrezorConnect() {
+export default function AccountConnect() {
   const [modelOpen, setModalBool] = useState(false);
 
   return (
@@ -31,20 +32,15 @@ function TrezorConnect() {
         </PaddedDiv>
       </Modal>
 
-      <Button
-        variant="secondary-outline"
-        width="225px"
+      <span>{lang.sidebar.read_only_mode}</span>
+      <CustomButton
         onClick={() => {
           setModalBool(true);
         }}
+        variant="secondary-outline"
       >
-        <Flex alignItems="center">
-          <TrezorLogo />
-          <span style={{ margin: 'auto' }}>{lang.landing_page.trezor}</span>
-        </Flex>
-      </Button>
+        {lang.connect}
+      </CustomButton>
     </>
   );
 }
-
-export default TrezorConnect;

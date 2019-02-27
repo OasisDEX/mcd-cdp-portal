@@ -31,6 +31,8 @@
   },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
+  "network": "Network",
+  "unknown": "Unknown",
   "cdp": "CDP",
   "connect": "Connect"
 }

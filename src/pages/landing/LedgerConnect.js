@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
 
 import { Button, Modal, Flex } from '@makerdao/ui-components';
-import { MakerAuthContext } from 'components/context/MakerAuth';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 
 // hack to get around button padding for now
@@ -18,7 +17,6 @@ const PaddedDiv = styled.div`
 `;
 
 function LedgerConnect() {
-  const makerAuthenticated = useContext(MakerAuthContext);
   const [modelOpen, setModalBool] = useState(false);
 
   return (
@@ -37,7 +35,6 @@ function LedgerConnect() {
       <Button
         variant="secondary-outline"
         width="225px"
-        disabled={!makerAuthenticated}
         onClick={() => {
           setModalBool(true);
         }}

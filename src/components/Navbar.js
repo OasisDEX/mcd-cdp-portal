@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled, { css } from 'styled-components';
 import { NavLink, NavRoute } from 'react-navi';
 import cdpTypesConfig from 'references/cdpTypes';
@@ -75,16 +75,12 @@ const DelegateStyle = styled.div`
   }
 `;
 
-function CDPListView({ currentPath, currentQuery }) {
-  let pathPrefix = '';
-  if (currentPath.includes('read-only')) pathPrefix = '/read-only';
-  else if (currentPath.includes('sandbox')) pathPrefix = '/sandbox';
-
+const CDPList = memo(function({ currentPath, currentQuery }) {
   return (
     <DelegateStyle>
       <NavbarItem
         key="overview"
-        href={`${pathPrefix}/overview/${currentQuery}`}
+        href={`/overview/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
@@ -95,7 +91,7 @@ function CDPListView({ currentPath, currentQuery }) {
         return (
           <NavbarItem
             key={idx}
-            href={pathPrefix + linkPath + currentQuery}
+            href={linkPath + currentQuery}
             label={cdp.symbol}
             ratio={cdp.ratio}
             active={active}
@@ -105,17 +101,7 @@ function CDPListView({ currentPath, currentQuery }) {
       })}
     </DelegateStyle>
   );
-}
-
-function CDPList() {
-  return (
-    <NavRoute>
-      {({ url }) => (
-        <CDPListView currentPath={url.pathname} currentQuery={url.search} />
-      )}
-    </NavRoute>
-  );
-}
+});
 
 const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
@@ -127,12 +113,16 @@ const NavbarItem = ({ href, label, ratio, active, cdpKey, ...props }) => (
 );
 
 const Navbar = ({ ...props }) => (
-  <StyledNavbar {...props}>
-    <NavLink href="/" precache={true}>
-      <StyledMakerLogo />
-    </NavLink>
-    <CDPList />
-  </StyledNavbar>
+  <NavRoute>
+    {({ url }) => (
+      <StyledNavbar {...props}>
+        <NavLink href={`/${url.search}`} precache={true}>
+          <StyledMakerLogo />
+        </NavLink>
+        <CDPList currentPath={url.pathname} currentQuery={url.search} />
+      </StyledNavbar>
+    )}
+  </NavRoute>
 );
 
 export default Navbar;

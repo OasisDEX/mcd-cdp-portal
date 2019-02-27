@@ -1,9 +1,19 @@
 {
-  "multicall": {
-    "kovan": {
-      "rpcUrl": "https://kovan.infura.io",
-      "multicallAddress": "0xb2155b4f516a2e93fd0c40fdba57a3ab39952236",
-      "block": "latest"
-    }
-  }
+  "supportedNetworkIds": ["999", "42", "1"],
+  "rpcUrls": {
+    "1": "https://mainnet.infura.io",
+    "42": "https://kovan.infura.io"
+  },
+  "networkNames": {
+    "1": "mainnet",
+    "42": "kovan",
+    "999": "testchain"
+  },
+  "networkDisplayNames": {
+    "1": "Mainnet",
+    "42": "Kovan Testnet",
+    "999": "Testchain"
+  },
+  "defaultNetwork": "42",
+  "exTestchainApiUrl": "http://18.185.172.121:4000/chain"
 }
