@@ -1,10 +1,9 @@
 import React from 'react';
 import { createPage, createRedirect, createSwitch } from 'navi';
-import { Grid } from '@makerdao/ui-components-core';
 
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
-import ResponsivePageLayout from 'components/ResponsivePageLayout';
+import PageLayout from 'layouts/PageLayout';
 import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
@@ -17,9 +16,9 @@ import { isMissingContractAddress } from 'utils/ethereum';
 
 import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 import { createCDPSystemModel } from 'reducers/network/system/model';
-import MakerHooksProvider from 'components/context/MakerHooksProvider';
+import MakerHooksProvider from 'providers/MakerHooksProvider';
 import config from 'references/config';
-import MobileNav from '../components/MobileNav';
+import MobileNav from 'components/MobileNav';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -84,7 +83,7 @@ function withAuthenticatedNetwork(getPage) {
       await maker.authenticate();
       await stateFetchPromise;
       return (
-        <ResponsivePageLayout
+        <PageLayout
           mobileNav={
             <MobileNav
               network={{

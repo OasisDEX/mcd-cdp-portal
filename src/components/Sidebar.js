@@ -7,9 +7,9 @@ import { Flex } from '@makerdao/ui-components-core';
 import Jazzicon from './Jazzicon';
 import { cutMiddle } from 'utils/ui';
 
-import SidebarFeeds from './sidebar/Feeds';
-import SidebarSystem from './sidebar/System';
-import AccountConnect from './sidebar/AccountConnect';
+import SidebarFeeds from './SidebarFeeds';
+import SidebarSystem from './SidebarSystem';
+import AccountConnect from './SidebarAccountConnect';
 import config from 'references/config';
 
 const { networkDisplayNames } = config;

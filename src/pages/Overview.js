@@ -1,21 +1,17 @@
 import React from 'react';
+import PageContentLayout from 'layouts/PageContentLayout';
+
 import lang from 'languages';
-import styled from 'styled-components';
 
 import { Box } from '@makerdao/ui-components-core';
 
-const View = styled.div`
-  padding: 55px 32px;
-  background: ${({ theme }) => theme.colors.backgroundGrey};
-`;
-
 function Overview() {
   return (
-    <View>
+    <PageContentLayout>
       <Box>
         <h2>{lang.overview_page.title}</h2>
       </Box>
-    </View>
+    </PageContentLayout>
   );
 }
 

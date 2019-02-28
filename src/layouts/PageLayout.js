@@ -1,8 +1,8 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-const breakpointMinWidth = '950px';
-const breakpoint = `@media only screen and (min-width: ${breakpointMinWidth})`;
+import { mediaQueries } from 'styles/constants';
+const breakpoint = mediaQueries.m.min;
 
 const ResponsiveWrap = styled.div`
   width: 100%;
