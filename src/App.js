@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
-import { themeLight } from '@makerdao/ui-components';
+import { themeLight } from '@makerdao/ui-components-core';
 import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
 
+import { hot } from 'react-hot-loader';
 import { GenericNotFound } from 'pages/NotFound';
 
 import store from './store';
@@ -21,7 +22,6 @@ const Body = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
-  min-width: 1200px;
   max-height: 100vh;
 `;
 
@@ -49,4 +49,4 @@ function AppWithContext({ navigation }) {
   );
 }
 
-export default AppWithContext;
+export default hot(module)(AppWithContext);

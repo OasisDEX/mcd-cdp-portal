@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Flex } from '@makerdao/ui-components';
+import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as Logo } from 'images/wallet-connect.svg';
 
 // import WalletConnecter from 'walletconnect';

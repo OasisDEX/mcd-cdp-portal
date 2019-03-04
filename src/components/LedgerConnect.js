@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Modal, Flex } from '@makerdao/ui-components';
+import { Button, Modal, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 
 // hack to get around button padding for now

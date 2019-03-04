@@ -3,11 +3,11 @@ import React from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { navigation } from '../../index';
-import { Button, Flex } from '@makerdao/ui-components';
+import { navigation } from '../index';
+import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
-import useMaker from 'components/hooks/useMaker';
+import useMaker from 'hooks/useMaker';
 
 // hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`

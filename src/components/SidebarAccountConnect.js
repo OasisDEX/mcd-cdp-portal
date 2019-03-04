@@ -4,7 +4,7 @@ import lang from 'languages';
 
 import styled from 'styled-components';
 
-import { Button, Modal } from '@makerdao/ui-components';
+import { Button, Modal } from '@makerdao/ui-components-core';
 
 const CustomButton = styled(Button)`
   height: 30px;
@@ -17,12 +17,12 @@ const PaddedDiv = styled.div`
 `;
 
 export default function AccountConnect() {
-  const [modelOpen, setModalBool] = useState(false);
+  const [modalOpen, setModalBool] = useState(false);
 
   return (
     <>
       <Modal
-        show={modelOpen}
+        show={modalOpen}
         onClose={() => {
           setModalBool(false);
         }}

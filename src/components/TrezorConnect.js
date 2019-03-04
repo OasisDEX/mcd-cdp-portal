@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Modal, Flex } from '@makerdao/ui-components';
+import { Button, Modal, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as Logo } from 'images/trezor.svg';
 
 const TrezorLogo = styled(Logo)`

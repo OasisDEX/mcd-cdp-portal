@@ -1,68 +1,54 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Header, Footer, Flex } from '@makerdao/ui-components';
-import lang from '../languages';
+import Footer from '@makerdao/ui-components-footer';
+import Header from '@makerdao/ui-components-header';
+import { Box } from '@makerdao/ui-components-core';
+import { Block } from 'components/Primitives';
+import lang from 'languages';
 
-import MetaMaskConnect from './landing/MetaMaskConnect';
-import ReadOnlyConnect from './landing/ReadOnlyConnect';
+import MetaMaskConnect from 'components/MetaMaskConnect';
+import ReadOnlyConnect from 'components/ReadOnlyConnect';
 
-import LedgerConnect from './landing/LedgerConnect';
-import TrezorConnect from './landing/TrezorConnect';
-import WalletConnect from './landing/WalletConnect';
+import LedgerConnect from 'components/LedgerConnect';
+import TrezorConnect from 'components/TrezorConnect';
+import WalletConnect from 'components/WalletConnect';
 
-const Container = styled.div`
-  background: ${({ white, theme }) =>
-    white ? '#fff' : theme.colors.backgroundGrey};
-  text-align: center;
-  min-height: 540px;
-  width: 100%;
-`;
-
-const Title = styled.div`
-  font-size: 45px;
-  color: ${({ theme }) => theme.colors.heading};
-  width: 500px;
-  line-height: 54px;
-  font-weight: 500;
-  text-align: left;
-`;
-
-const Subtitle = styled.div`
-  margin-top: 10px;
-  line-height: 31px;
-  font-size: 19.5px;
-  color: ${({ theme }) => theme.colors.text};
-  letter-spacing: 0.2px;
-  width: 561px;
-  text-align: left;
-`;
+import LandingHeroLayout from 'layouts/LandingHeroLayout';
+import { Title, Subtitle } from 'components/Typography';
 
 function Landing() {
   return (
-    <Container>
+    <Block width="100%">
       <Header />
-      <Container>
-        <Flex justifyContent="space-evenly" height="400px" alignItems="center">
-          <div>
-            <Title>{lang.landing_page.title}</Title>
-            <Subtitle>{lang.landing_page.subtitle}</Subtitle>
-          </div>
-          <Flex
-            justifyContent="space-around"
-            height="280px"
-            flexDirection="column"
+      <Block bg="backgroundGrey">
+        <LandingHeroLayout>
+          <Block
+            pb="m"
+            css={`
+              max-width: 500px;
+            `}
           >
-            <MetaMaskConnect />
-            <LedgerConnect />
-            <TrezorConnect />
-            <WalletConnect />
-            <ReadOnlyConnect />
-          </Flex>
-        </Flex>
-      </Container>
-      <Container white />
+            <Box pb="s">
+              <Title display="block">{lang.landing_page.title}</Title>
+            </Box>
+            <Subtitle>{lang.landing_page.subtitle}</Subtitle>
+          </Block>
+          <Block px="m">
+            {[
+              <MetaMaskConnect key="mm" />,
+              <LedgerConnect key="le" />,
+              <TrezorConnect key="tre" />,
+              <WalletConnect key="wc" />,
+              <ReadOnlyConnect key="ro" />
+            ].map(comp => (
+              <Block py="xs" key={`wrap-${comp.key}`}>
+                {comp}
+              </Block>
+            ))}
+          </Block>
+        </LandingHeroLayout>
+      </Block>
       <Footer />
-    </Container>
+    </Block>
   );
 }
 

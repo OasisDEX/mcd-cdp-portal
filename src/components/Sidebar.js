@@ -1,24 +1,18 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex } from '@makerdao/ui-components';
+import { Flex } from '@makerdao/ui-components-core';
 import Jazzicon from './Jazzicon';
 import { cutMiddle } from 'utils/ui';
 
-import SidebarFeeds from './sidebar/Feeds';
-import SidebarSystem from './sidebar/System';
-import AccountConnect from './sidebar/AccountConnect';
+import SidebarFeeds from './SidebarFeeds';
+import SidebarSystem from './SidebarSystem';
+import AccountConnect from './SidebarAccountConnect';
 import config from 'references/config';
 
 const { networkDisplayNames } = config;
-
-const StyledSidebar = styled.aside`
-  min-height: 1000px;
-  background: #fff;
-  box-shadow: -1px 0px 3px rgba(159, 159, 159, 0.25);
-`;
 
 const Section = styled.section`
   padding: 0 20px;
@@ -106,7 +100,7 @@ function AccountSection({ address = null } = {}) {
 
 function Sidebar({ feeds, system, address, network }) {
   return (
-    <StyledSidebar>
+    <Fragment>
       <AccountSection address={address} />
       <NetworkSection networkID={network.id} swappable={network.swappable} />
       <Section>
@@ -115,7 +109,7 @@ function Sidebar({ feeds, system, address, network }) {
       <Section>
         <SidebarSystem system={system} />
       </Section>
-    </StyledSidebar>
+    </Fragment>
   );
 }
 

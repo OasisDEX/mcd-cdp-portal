@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { MakerObjectContext } from '../context/MakerHooksProvider';
+import { MakerObjectContext } from 'providers/MakerHooksProvider';
 
 function useMaker() {
   const maker = useContext(MakerObjectContext);
