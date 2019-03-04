@@ -4,7 +4,7 @@ import cdpTypesConfig from 'references/cdpTypes';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { Flex, Text } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { NavLink, NavRoute } from 'react-navi';
+import { NavLink } from 'react-navi';
 
 const _shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
 const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
