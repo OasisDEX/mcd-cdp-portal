@@ -20,6 +20,8 @@
     "@makerdao/ui-components-core": "^0.1.0",
     "@makerdao/ui-components-footer": "^0.1.0",
     "@makerdao/ui-components-header": "^0.1.0",
+    "@walletconnect/browser": "^1.0.0-beta.6",
+    "@walletconnect/qrcode-modal": "^1.0.0-beta.6",
     "bignumber.js": "^8.0.2",
     "jazzicon": "^1.5.0",
     "mixpanel-browser": "^2.26.0",
@@ -36,9 +38,7 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
     "reselect": "^4.0.0",
-    "styled-components": "^4.1.3",
-    "walletconnect": "^0.7.28",
-    "walletconnect-qrcode-modal": "^0.7.28"
+    "styled-components": "^4.1.3"
   },
   "scripts": {
     "start": "NODE_ENV=development NODE_PATH=src/ craco start",
