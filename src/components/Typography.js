@@ -9,6 +9,13 @@ const Title = styled(Text)`
   display: block;
 `;
 
+const Heading = styled(Text)`
+  display: block;
+  font-weight: 600;
+  font-size: 28px;
+  letter-spacing: -1pt;
+`;
+
 const Subtitle = styled(Text)`
   font-size: 20px;
   letter-spacing: 0.2px;
@@ -16,4 +23,9 @@ const Subtitle = styled(Text)`
   display: block;
 `;
 
-export { Title, Subtitle };
+const NavLabel = styled(Text)`
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.grayLight};
+`;
+
+export { Title, Subtitle, NavLabel, Heading };

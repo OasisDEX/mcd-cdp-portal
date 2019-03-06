@@ -9,7 +9,7 @@ const Navbar = () => (
     {({ url }) => (
       <Fragment>
         <NavLink href={`/${url.search}`} precache={true}>
-          <Flex p="m">
+          <Flex alignItems="center" justifyContent="center" py="m">
             <NavLogo />
           </Flex>
         </NavLink>

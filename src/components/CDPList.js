@@ -1,66 +1,36 @@
-import React, { memo } from 'react';
-import styled, { css } from 'styled-components';
+import React, { memo, Fragment } from 'react';
+import styled from 'styled-components';
 import cdpTypesConfig from 'references/cdpTypes';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { NavLink } from 'react-navi';
-
+import { NavLabel } from 'components/Typography';
 const _shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
+
 const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
   ...cdpType,
   ratio: (Math.random() * 1000).toFixed(2)
 }));
 
-const DelegateStyle = styled.div`
-  &:active > a:not(:active) {
-    background: #383838 !important;
-    svg {
-      opacity: 0.3 !important;
-    }
-  }
-`;
 const NavbarItemContainer = styled(NavLink)`
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  justify-content: center;
-  width: 66px;
-  height: 54px;
-  margin: 0 auto;
-  margin-bottom: 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-align: center;
-  color: #f8f8f8;
-  ${({ active }) =>
-    active
-      ? css`
-          background: #1aab9b;
-          svg {
-            opacity: 1;
-          }
-        `
-      : css`
-          background: #383838;
-          svg {
-            opacity: 0.3;
-          }
-        `};
-  &:active {
-    background: #1aab9b !important;
-    svg {
-      opacity: 1 !important;
-    }
-  }
+  display: block;
+  margin-bottom: ${({ theme }) => theme.space.xs};
 `;
 
 const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
-    <Flex flexDirection="column" lineHeight="17px">
-      <Text>{label}</Text>
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      bg={active ? 'greenPastel' : 'blackLight'}
+      css={`
+        border-radius: 4px;
+        height: 50px;
+      `}
+    >
+      <NavLabel t="p6">{label}</NavLabel>
       <RatioDisplay ratio={ratio} active={active} />
     </Flex>
   </NavbarItemContainer>
@@ -68,7 +38,7 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, currentQuery }) {
   return (
-    <DelegateStyle>
+    <Fragment>
       <NavbarItem
         key="overview"
         href={`/overview/${currentQuery}`}
@@ -90,7 +60,7 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
           />
         );
       })}
-    </DelegateStyle>
+    </Fragment>
   );
 });
 

@@ -8,7 +8,9 @@ import {
   Dropdown,
   DefaultDropdown,
   Flex,
-  Box
+  Box,
+  Text,
+  Grid
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
@@ -26,16 +28,16 @@ const CDPDropdown = ({ children }) => {
           <Flex
             alignItems="center"
             justifyContent="center"
+            px="m"
+            py="s"
+            bg="greenPastel"
             css={`
-              font-size: 1.2rem;
-              font-weight: 700;
               border-radius: 4px;
-              background: #1aab9b;
-              width: 66px;
-              height: 54px;
             `}
           >
-            ETH
+            <Text t="p6" fontWeight="bold">
+              ETH
+            </Text>
           </Flex>
           <Box ml="s">
             <CaratDownIcon />
@@ -43,7 +45,11 @@ const CDPDropdown = ({ children }) => {
         </Flex>
       }
     >
-      <DefaultDropdown>{children}</DefaultDropdown>
+      <DefaultDropdown>
+        <Grid gridTemplateColumns="64px 64px" gridColumnGap="xs">
+          {children}
+        </Grid>
+      </DefaultDropdown>
     </Dropdown>
   );
 };

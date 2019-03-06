@@ -33,6 +33,7 @@ const NavbarWrap = styled.div`
   display: none;
   grid-area: navbar;
   background: #222;
+  padding: 0 ${({ theme }) => theme.space.xs};
 
   ${breakpoint} {
     display: block;
