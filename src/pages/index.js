@@ -23,7 +23,7 @@ import MobileNav from 'components/MobileNav';
 const { networkNames, defaultNetwork } = config;
 
 async function stageNetwork({ testchainId, network }) {
-  // testchainId and network url params deteremine the network
+  // network will be ignored if testchainId is present
 
   // memoized on network-testchainId combination, no memory limit
   const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
@@ -59,12 +59,12 @@ async function stageNetwork({ testchainId, network }) {
 
 // Any component that would like to change the network must replace url query params, re-running this function.
 function withAuthenticatedNetwork(getPage) {
-  return async env => {
+  return async url => {
     try {
       // ensure our maker and watcher instances are connected to the correct network
-      const { maker, stateFetchPromise } = await stageNetwork(env.query);
+      const { maker, stateFetchPromise } = await stageNetwork(url.query);
 
-      const { pathname } = env;
+      const { pathname } = url;
 
       let connectedAddress = null;
       try {
@@ -114,8 +114,8 @@ function withAuthenticatedNetwork(getPage) {
 
 export default createSwitch({
   paths: {
-    '/': env => {
-      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
+    '/': url => {
+      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
 
       return createPage({
         title: 'Landing',
@@ -123,8 +123,8 @@ export default createSwitch({
       });
     },
 
-    '/overview': env => {
-      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
+    '/overview': url => {
+      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
 
       return createPage({
         title: 'Overview',
@@ -132,9 +132,9 @@ export default createSwitch({
       });
     },
 
-    '/cdp/:type': env => {
-      if (networkIsUndefined(env)) return createDefaultNetworkRedirect(env);
-      const cdpTypeSlug = env.params.type;
+    '/cdp/:type': url => {
+      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
+      const cdpTypeSlug = url.params.type;
 
       return createPage({
         title: 'CDP',
@@ -146,13 +146,13 @@ export default createSwitch({
   }
 });
 
-function networkIsUndefined(env) {
-  return env.query.network === undefined && env.query.testchainId === undefined;
+function networkIsUndefined(url) {
+  return url.query.network === undefined && url.query.testchainId === undefined;
 }
 
-function createDefaultNetworkRedirect(env) {
-  const { address } = env.query;
-  const { pathname } = env;
+function createDefaultNetworkRedirect(url) {
+  const { address } = url.query;
+  const { pathname } = url;
   const addressQuery = address === undefined ? '?' : `?address=${address}&`;
 
   return createRedirect(
