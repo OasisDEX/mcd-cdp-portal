@@ -12,7 +12,7 @@
   "dependencies": {
     "@craco/craco": "^3.4.1",
     "@hot-loader/react-dom": "^16.8.1",
-    "@makerdao/dai": "^0.11.3",
+    "@makerdao/dai": "^0.11.4",
     "@makerdao/dai-plugin-config": "^0.0.3",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
     "@makerdao/dai-plugin-trezor-web": "^0.9.5",

@@ -32,7 +32,7 @@ function reducer(state, action) {
   }
 }
 
-const useMakerTx = txCreator => {
+function useMakerTx(txCreator) {
   const { maker, authenticated } = useMaker();
   const [txDetails, dispatch] = useReducer(reducer, initialState);
 
@@ -73,6 +73,6 @@ const useMakerTx = txCreator => {
   };
 
   return { ...txDetails, ...TxLifecycle, send, clear };
-};
+}
 
 export default useMakerTx;

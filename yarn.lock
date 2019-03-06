@@ -972,10 +972,10 @@
     trezor-connect "^6.0.4"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.11.3":
-  version "0.11.3"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.11.3.tgz#e6900c83eb3338542507bbf13687d07018835e6b"
-  integrity sha512-j6ILlKYT0uqbXPMK/n2CFI8LDv3PpOIMDZkT6b3NVIxfifJATrzN9HRIUB3+wvYiyccD90x7MOzxLfbFUwmLRA==
+"@makerdao/dai@^0.11.4":
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.11.4.tgz#de3fa21000b5d1b3a2e16a528d3bc0149b07465f"
+  integrity sha512-WGFazNonTofVJked6RvNvz8MhwI3q+JWe6mViz28r/RHfwjMdeKLJM9QEIn1AIpjJY1iMT4b4GC8gU5klZ0ooQ==
   dependencies:
     "@makerdao/services-core" "^0.9.4"
     babel-plugin-module-resolver "^3.1.1"
@@ -988,6 +988,7 @@
     ethers-web3-bridge "0.0.1"
     eventemitter2 "^5.0.1"
     invariant "^2.2.2"
+    isomorphic-fetch "^2.2.1"
     lodash "^4.17.10"
     lodash.intersection "^4.4.0"
     lodash.isequal "^4.5.0"
@@ -7096,7 +7097,7 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-isomorphic-fetch@^2.1.1:
+isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
   integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
@@ -13189,7 +13190,7 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
+web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
