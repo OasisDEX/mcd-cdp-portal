@@ -1783,7 +1783,7 @@ async-eventemitter@^0.2.2:
   dependencies:
     async "^2.4.0"
 
-"async-eventemitter@github:ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c":
+async-eventemitter@ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c:
   version "0.2.3"
   resolved "https://codeload.github.com/ahultgren/async-eventemitter/tar.gz/fa06e39e56786ba541c180061dbf2c0a5bbf951c"
   dependencies:
@@ -12185,6 +12185,14 @@ styled-system@^3.1.11:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.2"
 
+styled-system@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/styled-system/-/styled-system-4.0.1.tgz#0f37a25cadbb172fbe03c4d19de9dfaabe6b6d02"
+  integrity sha512-wb7dA8gpl9gr04HLWAaPUABmp7QGICpqB2rUMGbC2Ho0sTgjTeUgLTHTWZBiYR3yybYyVysdku7SXFvLtOh4fg==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    prop-types "^15.6.2"
+
 stylehacks@^4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/stylehacks/-/stylehacks-4.0.3.tgz#6718fcaf4d1e07d8a1318690881e8d96726a71d5"
@@ -13206,7 +13214,7 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
+web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
