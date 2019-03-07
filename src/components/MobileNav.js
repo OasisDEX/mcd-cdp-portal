@@ -31,9 +31,7 @@ const CDPDropdown = ({ children }) => {
             px="m"
             py="s"
             bg="greenPastel"
-            css={`
-              border-radius: 4px;
-            `}
+            borderRadius="4px"
           >
             <Text t="p6" fontWeight="bold">
               ETH
@@ -46,7 +44,11 @@ const CDPDropdown = ({ children }) => {
       }
     >
       <DefaultDropdown>
-        <Grid gridTemplateColumns="64px 64px" gridColumnGap="xs">
+        <Grid
+          gridTemplateColumns="64px 64px"
+          gridColumnGap="xs"
+          gridRowGap="xs"
+        >
           {children}
         </Grid>
       </DefaultDropdown>
@@ -98,6 +100,7 @@ const SidebarDrawer = ({
         css={{
           maxWidth: '320px',
           backgroundColor: 'white',
+          overflow: 'scroll',
           marginLeft: 'auto'
         }}
       >

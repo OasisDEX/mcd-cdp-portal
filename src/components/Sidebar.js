@@ -6,7 +6,7 @@ import { getAllFeeds } from 'reducers/network/cdpTypes';
 import { Flex, Text } from '@makerdao/ui-components-core';
 import Jazzicon from './Jazzicon';
 import { cutMiddle } from 'utils/ui';
-import { useColor } from 'styles/theme';
+import { getColor } from 'styles/theme';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
@@ -26,9 +26,9 @@ const Header = styled(Section)`
 `;
 
 const Network = styled(Section)`
-  height: 30px;
-  line-height: 30px;
-  color: #48495f;
+  padding-top: ${({ theme }) => theme.space.xs};
+  padding-bottom: ${({ theme }) => theme.space.xs};
+  color: ${({ theme }) => theme.colors.black3};
 `;
 
 const Dot = styled.span`
@@ -46,9 +46,9 @@ const StyledAddress = styled(Text)`
 `;
 
 const NETWORK_COLORS = {
-  1: useColor('greenPastel'),
-  42: useColor('purple'),
-  999: useColor('black')
+  1: getColor('greenPastel'),
+  42: getColor('purple'),
+  999: getColor('black')
 };
 
 function netIdToDisplayName(networkId) {

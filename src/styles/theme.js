@@ -30,10 +30,10 @@ const theme = {
 console.log(theme, 'theme here');
 export default theme;
 
-export function useSpace(key) {
+export function getSpace(key) {
   return theme.space[key];
 }
 
-export function useColor(key) {
+export function getColor(key) {
   return theme.colors[key];
 }

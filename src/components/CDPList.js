@@ -15,7 +15,6 @@ const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
-  margin-bottom: ${({ theme }) => theme.space.xs};
 `;
 
 const NavbarItem = ({ href, label, ratio, active, ...props }) => (
@@ -25,10 +24,8 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
       alignItems="center"
       justifyContent="center"
       bg={active ? 'greenPastel' : 'blackLight'}
-      css={`
-        border-radius: 4px;
-        height: 50px;
-      `}
+      borderRadius="4px"
+      height="50px"
     >
       <NavLabel t="p6">{label}</NavLabel>
       <RatioDisplay ratio={ratio} active={active} />

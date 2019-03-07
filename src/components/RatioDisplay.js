@@ -1,13 +1,13 @@
 import React from 'react';
-import { useColor } from 'styles/theme';
+import { getColor } from 'styles/theme';
 import { CDP_SAFETY_LEVELS } from 'utils/constants';
 import { Text } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
 const CDP_SAFETY_COLOR_PALETE = {
-  [CDP_SAFETY_LEVELS.DANGER]: useColor('redVivid'),
-  [CDP_SAFETY_LEVELS.NEUTRAL]: useColor('grayLight2'),
-  [CDP_SAFETY_LEVELS.SAFE]: useColor('greenVivid')
+  [CDP_SAFETY_LEVELS.DANGER]: getColor('redVivid'),
+  [CDP_SAFETY_LEVELS.NEUTRAL]: getColor('grayLight2'),
+  [CDP_SAFETY_LEVELS.SAFE]: getColor('greenVivid')
 };
 
 function lookupCDPSafetyLevel(ratio) {
