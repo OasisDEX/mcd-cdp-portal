@@ -1,4 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
+import McdPlugin, { ETH } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
@@ -23,7 +24,16 @@ export async function getOrReinstantiateMaker({ rpcUrl }) {
 
     _maker = await Maker.create('http', {
       log: false,
-      plugins: [trezorPlugin, ledgerPlugin],
+      plugins: [
+        trezorPlugin,
+        ledgerPlugin,
+        [
+          McdPlugin,
+          {
+            cdpTypes: [{ currency: ETH, name: 'ETH' }]
+          }
+        ]
+      ],
       provider: {
         url: rpcUrl,
         type: 'HTTP'
