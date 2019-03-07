@@ -1,25 +1,17 @@
 import React from 'react';
 import PageContentLayout from 'layouts/PageContentLayout';
 import lang from 'languages';
-import styled from 'styled-components';
-
-const Heading = styled.div`
-  display: block;
-  padding-right: 20px;
-  margin: 0;
-  font-weight: 600;
-  font-size: 28px;
-  margin-bottom: 20px;
-  letter-spacing: -1pt;
-  color: #231536;
-`;
+import { Box } from '@makerdao/ui-components-core';
+import { Heading } from 'components/Typography';
 
 function CDPView({ cdpTypeSlug }) {
   return (
     <PageContentLayout>
-      <Heading>
-        {cdpTypeSlug.toUpperCase()} {lang.cdp}
-      </Heading>
+      <Box pr="m" mb="m">
+        <Heading color="black2">
+          {cdpTypeSlug.toUpperCase()} {lang.cdp}
+        </Heading>
+      </Box>
       <div className="grid-wrapper">
         <div className="grid">
           <div className="grid-item">

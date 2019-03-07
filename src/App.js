@@ -1,22 +1,11 @@
 import React, { Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
-import { themeLight } from '@makerdao/ui-components-core';
 import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
-
 import { hot } from 'react-hot-loader';
 import { GenericNotFound } from 'pages/NotFound';
-
 import store from './store';
-
-const theme = {
-  ...themeLight,
-  header: {
-    linkHeaderColor: '#291A41',
-    backgroundColor: '#F6F8F9',
-    linkColor: '#627685'
-  }
-};
+import theme from 'styles/theme';
 
 const Body = styled.div`
   display: flex;

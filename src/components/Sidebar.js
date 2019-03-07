@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex } from '@makerdao/ui-components-core';
+import { Flex, Text } from '@makerdao/ui-components-core';
 import Jazzicon from './Jazzicon';
 import { cutMiddle } from 'utils/ui';
-
+import { getColor } from 'styles/theme';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
@@ -16,7 +16,7 @@ const { networkDisplayNames } = config;
 
 const Section = styled.section`
   padding: 0 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.grayLight3};
   box-sizing: content-box;
 `;
 
@@ -26,10 +26,9 @@ const Header = styled(Section)`
 `;
 
 const Network = styled(Section)`
-  height: 30px;
-  line-height: 30px;
-  color: #48495f;
-  font-size: 12px;
+  padding-top: ${({ theme }) => theme.space.xs};
+  padding-bottom: ${({ theme }) => theme.space.xs};
+  color: ${({ theme }) => theme.colors.black3};
 `;
 
 const Dot = styled.span`
@@ -41,17 +40,15 @@ const Dot = styled.span`
   background: ${({ color }) => color || '#000'};
 `;
 
-const StyledAddress = styled.span`
-  line-height: 24px;
-  font-size: 15px;
-  color: #231536;
+const StyledAddress = styled(Text)`
+  color: ${({ theme }) => theme.colors.black2};
   margin: 0 14px;
 `;
 
 const NETWORK_COLORS = {
-  1: '#1abc9c',
-  42: '#690496',
-  999: 'black'
+  1: getColor('greenPastel'),
+  42: getColor('purple'),
+  999: getColor('black')
 };
 
 function netIdToDisplayName(networkId) {
@@ -60,20 +57,12 @@ function netIdToDisplayName(networkId) {
   return 'Unkown network';
 }
 
-function NetworkSection({ swappable = false, networkID }) {
+function NetworkSection({ networkID }) {
   const networkDisplayName = netIdToDisplayName(networkID);
-  if (swappable)
-    return (
-      <Network>
-        <Dot color={NETWORK_COLORS[networkID]} />
-        {networkDisplayName}
-      </Network>
-    );
-
   return (
-    <Network>
+    <Network py="xs" color="black3">
       <Dot color={NETWORK_COLORS[networkID]} />
-      {networkDisplayName}
+      <Text t="p6">{networkDisplayName}</Text>
     </Network>
   );
 }
@@ -84,7 +73,7 @@ function AccountSection({ address = null } = {}) {
       <Header>
         <Flex height="50px" alignItems="center">
           <Jazzicon address={address} />
-          <StyledAddress>{cutMiddle(address, 7, 5)}</StyledAddress>
+          <StyledAddress t="p5">{cutMiddle(address, 7, 5)}</StyledAddress>
         </Flex>
       </Header>
     );
