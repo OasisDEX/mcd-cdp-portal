@@ -4,16 +4,12 @@ import lang from 'languages';
 
 import styled from 'styled-components';
 
-import { Button, Modal } from '@makerdao/ui-components-core';
+import { Button, Modal, Box } from '@makerdao/ui-components-core';
 
 const CustomButton = styled(Button)`
   height: 30px;
   margin-left: 30px;
   padding: 0px 26px;
-`;
-
-const PaddedDiv = styled.div`
-  padding: 20px;
 `;
 
 export default function AccountConnect() {
@@ -27,9 +23,9 @@ export default function AccountConnect() {
           setModalBool(false);
         }}
       >
-        <PaddedDiv>
+        <Box pa="m">
           <h3>Modal Content</h3>
-        </PaddedDiv>
+        </Box>
       </Modal>
 
       <span>{lang.sidebar.read_only_mode}</span>
