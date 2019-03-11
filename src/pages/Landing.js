@@ -1,4 +1,5 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 import Footer from '@makerdao/ui-components-footer';
 import Header from '@makerdao/ui-components-header';
 import { Box } from '@makerdao/ui-components-core';
@@ -52,4 +53,4 @@ function Landing() {
   );
 }
 
-export default Landing;
+export default hot(Landing);

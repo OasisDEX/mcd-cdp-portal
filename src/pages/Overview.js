@@ -1,4 +1,5 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import lang from 'languages';
 import { Heading } from 'components/Typography';
@@ -14,4 +15,4 @@ function Overview() {
   );
 }
 
-export default Overview;
+export default hot(Overview);

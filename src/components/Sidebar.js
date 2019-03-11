@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
 import { Flex, Text } from '@makerdao/ui-components-core';
@@ -109,4 +110,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Sidebar);
+export default hot(connect(mapStateToProps)(Sidebar));
