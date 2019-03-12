@@ -5,17 +5,24 @@ import lang from 'languages';
 import styled from 'styled-components';
 
 import { navigation } from '../index';
-import { Button, Modal, Flex } from '@makerdao/ui-components-core';
+import { Button, Modal, Flex, Grid, Box } from '@makerdao/ui-components-core';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { mixpanelIdentify } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
+import { cutMiddle, copyToClipboard } from '../utils/ui';
+import { AccountTypes } from '../utils/constants';
+import { addMkrAndEthBalance } from '../utils/ethereum';
 
-// the Ledger subprovider interprets these paths to mean that the last digit is
-// the one that should be incremented.
-// i.e. the second path for Live is "44'/60'/1'/0/0"
-// and the second path for Legacy is "44'/60'/0'/0/1"
+import {
+  AddressContainer,
+  Table,
+  InlineTd,
+  CopyBtn,
+  CopyBtnIcon
+} from './HotColdTable';
+
 const LEDGER_LIVE_PATH = "44'/60'/0'";
-const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
+// const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
 const DEFAULT_ACCOUNTS_PER_PAGE = 5;
 
 // hack to get around button padding for now
@@ -28,48 +35,42 @@ const PaddedDiv = styled.div`
   padding: 20px;
 `;
 
-async function checkEthereumProvider() {
-  return new Promise(async (res, rej) => {
-    if (typeof window.ethereum !== 'undefined') {
-      await window.ethereum.enable();
-      const { selectedAddress, networkVersion } = window.ethereum;
-      res({
-        networkId: parseInt(networkVersion, 10),
-        address: selectedAddress
-      });
-    } else rej('No web3 provider detected');
-  });
-}
+export const StyledTitle = styled.div`
+  font-weight: bold;
+  color: #212536;
+  line-height: 22px;
+  font-size: 28px;
+`;
 
-async function checkLedgerProvider() {
-  return new Promise(async (res, rej) => {
-    // if (typeof window.ethereum !== 'undefined') {
-    await window.ethereum.enable();
-    const { selectedAddress, networkVersion } = window.ethereum;
-    res({
-      networkId: parseInt(networkVersion, 10),
-      address: selectedAddress
-    });
-    // } else rej('No web3 provider detected');
-  });
-}
+export const StyledBlurb = styled.div`
+  line-height: 22px;
+  font-size: 17px;
+  margin: 22px 0px 16px 0px;
+`;
+
+export const StyledTop = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const addLedgerAccount = async (maker, setAddresses) => {
-  console.log('sanity addledger');
   try {
-    const browserProvider = await checkEthereumProvider();
-    const connectedNetworkId = maker.service('web3').networkId();
-
-    //chjeck path?
     await maker.addAccount({
-      type: 'ledger',
+      type: AccountTypes.LEDGER,
       path: LEDGER_LIVE_PATH,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
       choose: addresses => {
-        console.log('hello');
-        console.log(addresses);
-        setAddresses(addresses);
+        const addressBalancePromises = addresses.map(address =>
+          addMkrAndEthBalance({
+            address,
+            type: AccountTypes.LEDGER
+          })
+        );
+        console.log('addressBalancePromises', addressBalancePromises);
+        Promise.all(addressBalancePromises).then(addressBalances =>
+          setAddresses(addressBalances)
+        );
       }
     });
 
@@ -79,7 +80,7 @@ const addLedgerAccount = async (maker, setAddresses) => {
 
     console.log('connectedAddress', connectedAddress);
 
-    mixpanelIdentify(connectedAddress, 'metamask');
+    mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
 
     const {
       network,
@@ -97,7 +98,7 @@ const addLedgerAccount = async (maker, setAddresses) => {
 };
 
 function LedgerConnect({ ...state }) {
-  const [addresses, setAddresses] = useState(0);
+  const [addresses, setAddresses] = useState([]);
   console.log('state', state);
   const [modelOpen, setModalBool] = useState(false);
   const { maker, authenticated: makerAuthenticated } = useMaker();
@@ -110,9 +111,56 @@ function LedgerConnect({ ...state }) {
           setModalBool(false);
         }}
       >
-        <PaddedDiv>
+        <StyledTop>
+          <StyledTitle>Select address</StyledTitle>
+        </StyledTop>
+        <StyledBlurb style={{ textAlign: 'center', marginTop: '14px' }}>
+          Please select which address you would like to open
+        </StyledBlurb>
+        <AddressContainer>
+          <Table>
+            <thead>
+              <tr>
+                <th className="radio">Select</th>
+                <th>#</th>
+                <th>Address</th>
+                <th>ETH</th>
+                <th>MKR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {addresses.map(({ address, ethBalance, mkrBalance }, index) => (
+                <tr key={address}>
+                  <td className="radio">
+                    <input
+                      type="radio"
+                      name="address"
+                      value={index}
+                      // checked={address === this.state.selectedAddress}
+                      // onChange={() =>
+                      //   this.setState({ selectedAddress: address })
+                      // }
+                    />
+                  </td>
+                  <td>{index + 1}</td>
+                  {/* <td>{index + page * PER_PAGE + 1}</td> */}
+
+                  <InlineTd title={address}>
+                    {cutMiddle(address, 7, 5)}
+                    <CopyBtn onClick={() => copyToClipboard(address)}>
+                      <CopyBtnIcon />
+                    </CopyBtn>
+                  </InlineTd>
+                  <td>{ethBalance} ETH</td>
+                  <td>{mkrBalance} MKR</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </AddressContainer>
+        {/* <PaddedDiv>
           <h3>{addresses}</h3>
-        </PaddedDiv>
+        </PaddedDiv> */}
       </Modal>
 
       <Button
@@ -141,5 +189,3 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(LedgerConnect);
-
-// export default LedgerConnect;
