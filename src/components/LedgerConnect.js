@@ -68,39 +68,43 @@ const addLedgerAccount = async (maker, setAddresses) => {
           })
         );
         console.log('addressBalancePromises', addressBalancePromises);
-        Promise.all(addressBalancePromises).then(addressBalances =>
+        return Promise.all(addressBalancePromises).then(addressBalances =>
           setAddresses(addressBalances)
         );
       }
-    });
-
-    // console.log('addedAcct', addedAcct);
-
-    const connectedAddress = maker.currentAddress();
-
-    console.log('connectedAddress', connectedAddress);
-
-    mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
-
-    const {
-      network,
-      address: urlParamAddress
-    } = navigation.receivedRoute.url.query;
-
-    const addressToView = urlParamAddress || connectedAddress;
-    navigation.history.push({
-      pathname: '/overview/',
-      search: `?network=${network}&address=${addressToView}`
     });
   } catch (err) {
     window.alert(err.toString());
   }
 };
 
-function LedgerConnect({ ...state }) {
+const onConfirm = async (maker, address) => {
+  await maker.addAccount({ address, type: AccountTypes.LEDGER });
+  console.log('list account', maker.listAccounts);
+  maker.useAccountWithAddress(address);
+
+  const connectedAddress = maker.currentAddress();
+  console.log('connectedAddress', connectedAddress);
+
+  mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
+
+  const {
+    network,
+    address: urlParamAddress
+  } = navigation.receivedRoute.url.query;
+
+  const addressToView = urlParamAddress || connectedAddress;
+
+  navigation.history.push({
+    pathname: '/overview/',
+    search: `?network=${network}&address=${addressToView}`
+  });
+};
+const onBack = () => {};
+
+function LedgerConnect() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
-  console.log('state', state);
   const [modelOpen, setModalBool] = useState(false);
   const { maker, authenticated: makerAuthenticated } = useMaker();
 
@@ -157,9 +161,22 @@ function LedgerConnect({ ...state }) {
             </tbody>
           </Table>
         </AddressContainer>
-        {/* <PaddedDiv>
-          <h3>{addresses}</h3>
-        </PaddedDiv> */}
+        <Grid
+          gridRowGap="xs"
+          gridColumnGap="s"
+          gridTemplateColumns={['1fr', 'auto auto']}
+          justifySelf={['stretch', 'center']}
+        >
+          <Button variant="secondary-outline" onClick={onBack}>
+            Change wallet
+          </Button>
+          <Button
+            disabled={!selectedAddress}
+            onClick={async () => onConfirm(maker, selectedAddress)}
+          >
+            Confirm wallet
+          </Button>
+        </Grid>
       </Modal>
 
       <Button
