@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import OnboardingFullScreen from '@makerdao/ui-components-onboarding';
+import OnboardingFullScreen from 'components/StepperUI';
 import { Box, Button, Grid, Text } from '@makerdao/ui-components-core';
 import { Block } from 'components/Primitives';
 
@@ -13,6 +13,7 @@ const HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT =
 function CDPOnboarding({ show, onClose }) {
   const [step, setStep] = useState(0);
 
+  // const ethBalance = 0;
   const ethBalance = useMakerState(maker =>
     maker.getToken('ETH').balanceOf(HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT)
   );
@@ -65,7 +66,7 @@ function CDPOnboarding({ show, onClose }) {
             </Button>
           </Box>
           <Block textAlign="center">
-            <Text>YOUR BALANCE {prettifyNumber(ethBalance.value)}</Text>
+            <Text>YOUR BALANCE </Text>
           </Block>
         </Grid>
       </Box>

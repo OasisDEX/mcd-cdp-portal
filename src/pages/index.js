@@ -19,6 +19,7 @@ import { createCDPSystemModel } from 'reducers/network/system/model';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
+import { ModalContextProvider } from 'providers/ModalProvider';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -33,6 +34,7 @@ async function stageNetwork({ testchainId, network }) {
 
   // reinstantiated if rpcUrl has changed
   const { maker } = await getOrReinstantiateMaker({ rpcUrl });
+  console.log(maker, 'maker here');
   const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
@@ -72,39 +74,42 @@ function withAuthenticatedNetwork(getPage) {
       } catch (_) {
         // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
-
-      const getPageWithMakerProvider = () => (
-        // the canonical maker source
-        <MakerHooksProvider maker={maker}>{getPage()}</MakerHooksProvider>
-      );
-
-      if (pathname === '/') return getPageWithMakerProvider();
-
       await maker.authenticate();
       await stateFetchPromise;
-      return (
-        <PageLayout
-          mobileNav={
-            <MobileNav
-              network={{
-                id: maker.service('web3').networkId(),
-                swappable: false
-              }}
-              address={connectedAddress}
-            />
-          }
-          navbar={<Navbar />}
-          sidebar={
-            <Sidebar
-              network={{
-                id: maker.service('web3').networkId(),
-                swappable: false
-              }}
-              address={connectedAddress}
-            />
-          }
-          content={getPageWithMakerProvider()}
-        />
+
+      const withMakerProvider = children => (
+        // the canonical maker source
+        <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
+      );
+
+      if (pathname === '/') return withMakerProvider(getPage());
+
+      // console.log('readyyy', maker);
+      return withMakerProvider(
+        <ModalContextProvider>
+          <PageLayout
+            mobileNav={
+              <MobileNav
+                network={{
+                  id: maker.service('web3').networkId(),
+                  swappable: false
+                }}
+                address={connectedAddress}
+              />
+            }
+            navbar={<Navbar />}
+            sidebar={
+              <Sidebar
+                network={{
+                  id: maker.service('web3').networkId(),
+                  swappable: false
+                }}
+                address={connectedAddress}
+              />
+            }
+            content={getPage()}
+          />
+        </ModalContextProvider>
       );
     } catch (errMsg) {
       return <div>{errMsg.toString()}</div>;

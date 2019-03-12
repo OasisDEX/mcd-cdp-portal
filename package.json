@@ -37,6 +37,7 @@
     "react-icons": "^3.4.0",
     "react-localization": "^1.0.13",
     "react-navi": "^0.10.6",
+    "react-onclickoutside": "^6.8.0",
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.5",
     "redux": "^4.0.1",
