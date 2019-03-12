@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import OnboardingFullScreen from 'components/StepperUI';
+import StepperUI from 'components/StepperUI';
 import { Box, Button, Grid, Text } from '@makerdao/ui-components-core';
 import { Block } from 'components/Primitives';
 
@@ -23,7 +23,7 @@ function CDPOnboarding({ show, onClose }) {
   }, []);
 
   return (
-    <OnboardingFullScreen
+    <StepperUI
       step={step}
       show={show}
       onClose={onClose}
@@ -87,7 +87,7 @@ function CDPOnboarding({ show, onClose }) {
           </Box>
         </Grid>
       </Box>
-    </OnboardingFullScreen>
+    </StepperUI>
   );
 }
 

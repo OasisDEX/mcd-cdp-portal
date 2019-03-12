@@ -44,6 +44,7 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, currentQuery }) {
   const { showType } = useModal();
+
   return (
     <Fragment>
       <NavbarItem

@@ -34,7 +34,6 @@ async function stageNetwork({ testchainId, network }) {
 
   // reinstantiated if rpcUrl has changed
   const { maker } = await getOrReinstantiateMaker({ rpcUrl });
-  console.log(maker, 'maker here');
   const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
@@ -74,8 +73,6 @@ function withAuthenticatedNetwork(getPage) {
       } catch (_) {
         // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
-      await maker.authenticate();
-      await stateFetchPromise;
 
       const withMakerProvider = children => (
         // the canonical maker source
@@ -84,7 +81,8 @@ function withAuthenticatedNetwork(getPage) {
 
       if (pathname === '/') return withMakerProvider(getPage());
 
-      // console.log('readyyy', maker);
+      await maker.authenticate();
+      await stateFetchPromise;
       return withMakerProvider(
         <ModalContextProvider>
           <PageLayout
