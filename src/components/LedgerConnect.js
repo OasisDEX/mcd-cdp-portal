@@ -99,6 +99,7 @@ const addLedgerAccount = async (maker, setAddresses) => {
 
 function LedgerConnect({ ...state }) {
   const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState('');
   console.log('state', state);
   const [modelOpen, setModalBool] = useState(false);
   const { maker, authenticated: makerAuthenticated } = useMaker();
@@ -136,10 +137,8 @@ function LedgerConnect({ ...state }) {
                       type="radio"
                       name="address"
                       value={index}
-                      // checked={address === this.state.selectedAddress}
-                      // onChange={() =>
-                      //   this.setState({ selectedAddress: address })
-                      // }
+                      checked={address === selectedAddress}
+                      onChange={() => setSelectedAddress(address)}
                     />
                   </td>
                   <td>{index + 1}</td>
