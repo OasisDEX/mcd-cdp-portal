@@ -1,40 +1,9 @@
 import React from 'react';
 
 import lang from 'languages';
-import styled from 'styled-components';
+import { Text, Box } from '@makerdao/ui-components-core';
 
 import { prettifyNumber } from 'utils/ui';
-
-// TODO: Use theme variables
-const StyledSidebarSystem = styled.div`
-  margin: 2.5rem 0;
-  margin: 1.9rem 0;
-`;
-
-const Title = styled.h1`
-  color: ${({ theme }) => theme.colors.heading};
-  font-weight: ${({ theme }) => theme.fontWeights.semibold};
-  font-size: 1.8rem;
-  letter-spacing: -0.03rem;
-  line-height: normal;
-  & + div {
-    margin-top: 2.5rem;
-  }
-`;
-
-const Param = styled.div`
-  color: #4f445e;
-  font-weight: ${({ theme }) => theme.fontWeights.semibold};
-  font-size: 1.3rem;
-  margin: 1rem 0;
-`;
-
-const Value = styled.div`
-  color: ${({ theme }) => theme.colors.heading};
-  font-weight: ${({ theme }) => theme.fontWeights.normal};
-  font-size: 1.4rem;
-  margin: 1rem 0 3.5rem;
-`;
 
 const GLOBAL_DEBT_CEILING = system => [
   lang.sidebar.global_debt_ceiling,
@@ -74,15 +43,25 @@ const SidebarSystem = ({ system }) => {
   ].map(f => f(system));
 
   return (
-    <StyledSidebarSystem className="container">
-      <Title>System Information</Title>
+    <Box py="m">
+      <Box pb="s">
+        <Text t="p2" fontWeight="bold" color="heading">
+          System Information
+        </Text>
+      </Box>
       {systemParams.map(([param, value], idx) => (
-        <React.Fragment key={idx}>
-          <Param>{param}</Param>
-          <Value>{value}</Value>
-        </React.Fragment>
+        <Box key={idx} pt="xs" pb="m">
+          <Text color="black4" fontWeight="semibold" t="p5">
+            {param}
+          </Text>
+          <Box pt="2xs">
+            <Text color="heading" fontWeight="normal" t="p6">
+              {value}
+            </Text>
+          </Box>
+        </Box>
       ))}
-    </StyledSidebarSystem>
+    </Box>
   );
 };
 

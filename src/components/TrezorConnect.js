@@ -3,16 +3,12 @@ import React, { useState } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Modal, Flex } from '@makerdao/ui-components-core';
+import { Button, Modal, Flex, Box } from '@makerdao/ui-components-core';
 import { ReactComponent as Logo } from 'images/trezor.svg';
 
 const TrezorLogo = styled(Logo)`
   margin-top: -5px;
   margin-bottom: -5px;
-`;
-
-const PaddedDiv = styled.div`
-  padding: 20px;
 `;
 
 function TrezorConnect() {
@@ -26,9 +22,9 @@ function TrezorConnect() {
           setModalBool(false);
         }}
       >
-        <PaddedDiv>
+        <Box pa="m">
           <h3>Modal Content</h3>
-        </PaddedDiv>
+        </Box>
       </Modal>
 
       <Button
