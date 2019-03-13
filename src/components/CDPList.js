@@ -43,7 +43,7 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
 );
 
 const CDPList = memo(function({ currentPath, currentQuery }) {
-  const { showType } = useModal();
+  const { showByType } = useModal();
 
   return (
     <Fragment>
@@ -69,7 +69,7 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
         );
       })}
       <DashedFakeButton
-        onClick={() => showType('cdpcreate')}
+        onClick={() => showByType('cdpcreate')}
         justifyContent="center"
         borderRadius="4px"
         py="s"

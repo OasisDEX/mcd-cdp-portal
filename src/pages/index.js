@@ -19,7 +19,8 @@ import { createCDPSystemModel } from 'reducers/network/system/model';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
-import { ModalContextProvider } from 'providers/ModalProvider';
+import { ModalProvider } from 'providers/ModalProvider';
+import modals from 'components/Modals';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -84,7 +85,7 @@ function withAuthenticatedNetwork(getPage) {
       await maker.authenticate();
       await stateFetchPromise;
       return withMakerProvider(
-        <ModalContextProvider>
+        <ModalProvider modals={modals}>
           <PageLayout
             mobileNav={
               <MobileNav
@@ -107,7 +108,7 @@ function withAuthenticatedNetwork(getPage) {
             }
             content={getPage()}
           />
-        </ModalContextProvider>
+        </ModalProvider>
       );
     } catch (errMsg) {
       return <div>{errMsg.toString()}</div>;
