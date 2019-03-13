@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
 import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
 import store from './store';
 import theme from 'styles/theme';
@@ -39,4 +39,4 @@ function AppWithContext({ navigation }) {
   );
 }
 
-export default hot(module)(AppWithContext);
+export default hot(AppWithContext);

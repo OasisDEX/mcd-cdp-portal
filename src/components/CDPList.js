@@ -68,7 +68,8 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
           />
         );
       })}
-      {!address ? null : (
+      {/* {!address ? null : ( */}
+      {
         <DashedFakeButton
           onClick={() => showType('cdpcreate')}
           justifyContent="center"
@@ -77,7 +78,7 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
         >
           <Plus />
         </DashedFakeButton>
-      )}
+      }
     </Fragment>
   );
 });

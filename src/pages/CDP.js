@@ -1,4 +1,5 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import lang from 'languages';
 import { Box } from '@makerdao/ui-components-core';
@@ -79,4 +80,4 @@ function CDPView({ cdpTypeSlug }) {
   );
 }
 
-export default CDPView;
+export default hot(CDPView);

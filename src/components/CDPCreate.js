@@ -6,8 +6,86 @@ import { Block } from 'components/Primitives';
 
 import useMakerTx from 'hooks/useMakerTx';
 import useMaker from 'hooks/useMaker';
-
+import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { TxLifecycle } from 'utils/constants';
+
+const ScreenHeader = ({ title, text }) => {
+  return (
+    <Box>
+      <Text t="p2">{title}</Text>
+      <Text t="p6">{text}</Text>
+    </Box>
+  );
+};
+const ScreenFooter = ({ setStep, loading, screenIndex }) => {
+  return (
+    <Box textAlign="center">
+      <Button
+        width="110px"
+        variant="secondary-outline"
+        onClick={() => {
+          setStep(screenIndex - 1);
+        }}
+      >
+        Back
+      </Button>
+      <Button
+        // loading={createProxyTx.status === TxLifecycle.PENDING}
+        loading={loading}
+        width="145px"
+        onClick={() => {
+          setStep(screenIndex + 1);
+        }}
+      >
+        Continue
+      </Button>
+    </Box>
+  );
+};
+
+const ScreenOneSidebar = () => (
+  <Box>
+    <Text t="p3">Risk Parameters</Text>
+    <Box>
+      {[
+        [
+          'Stability Fee',
+          'The fee calculated on top of the existing debt of the CDP. This is paid when paying back Dai.'
+        ],
+        [
+          'Liquidation Ratio',
+          'The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation. '
+        ],
+        [
+          'Liquidation Fee',
+          'The fee that is added to the total outstanding DAI debt when a liquidation occurs.'
+        ]
+      ].map(([title, text]) => (
+        <Box>
+          <Text>{title}</Text>
+          <text>{text}</text>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+);
+const ScreenOne = () => {
+  return (
+    <Box>
+      <ScreenHeader
+        title="Select a collateral type"
+        text="Each collateral type has its own risk parameters. You can lock up additional collateral types later."
+      />
+      <TwoColumnCardsLayout sideContent={<ScreenOneSidebar />} />
+      <ScreenFooter setStep={() => {}} loading screenIndex={3} />
+    </Box>
+  );
+};
+const screens = {
+  'Select Collateral': props => <ScreenOne />,
+  'Generate Dai': () => <div>sup</div>,
+  Confirmation: () => <div>here</div>
+};
 
 function CDPCreate({ show, onClose }) {
   const [step, setStep] = useState(0);
@@ -57,14 +135,18 @@ function CDPCreate({ show, onClose }) {
     )
   };
 
+  const screenProps = {
+    text: 'test'
+  };
   return (
     <StepperUI
       step={step}
       show={show}
       onClose={onClose}
-      steps={['Select Collateral', 'Generate Dai', 'Confirmation']}
+      steps={Object.keys(screens)}
     >
-      <Box>
+      {Object.values(screens).map(fn => fn(screenProps))}
+      {/* <Box>
         <Grid gridRowGap="m">
           <Box textAlign="center">
             <Button
@@ -81,34 +163,15 @@ function CDPCreate({ show, onClose }) {
 
       <Box>
         <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="110px"
-              variant="secondary-outline"
-              onClick={() => {
-                setStep(0);
-              }}
-            >
-              Back
-            </Button>
-            <Button
-              loading={createProxyTx.status === TxLifecycle.PENDING}
-              width="145px"
-              onClick={() => {
-                setStep(2);
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
+
           <Block textAlign="center">
             {proxyStatusToUI[userProxyDetails.status]}
           </Block>
         </Grid>
       </Box>
 
-      <Box>
-        <Grid gridRowGap="m">
+      <Box> */}
+      {/* <Grid gridRowGap="m">
           <Box textAlign="center">
             <Button
               width="110px"
@@ -122,7 +185,7 @@ function CDPCreate({ show, onClose }) {
             <Button width="145px">Create CDP</Button>
           </Box>
         </Grid>
-      </Box>
+      </Box> */}
     </StepperUI>
   );
 }
