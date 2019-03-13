@@ -76,7 +76,9 @@ function CDPCreate({ show, onClose }) {
       onClose={onClose}
       steps={screens.map(([title]) => title)}
     >
-      {screens.map(([title, fn], index) => fn(screenProps, index))}
+      {screens.map(([title, fn], screenIndex) =>
+        fn({ ...screenProps, screenIndex })
+      )}
       {/* <Box>
         <Grid gridRowGap="m">
           <Box textAlign="center">

@@ -87,13 +87,19 @@ const CDPCreateSelectCollateralSidebar = () => (
 
 const CDPCreateSelectCollateral = ({ createProxyTx, setStep, screenIndex }) => {
   return (
-    <Box>
+    <Box
+      maxWidth="1040px"
+      css={`
+        margin: 0 auto;
+      `}
+    >
       <ScreenHeader
         title="Select a collateral type"
         text="Each collateral type has its own risk parameters. You can lock up additional collateral types later."
       />
       <Box my="l">
         <TwoColumnCardsLayout
+          ratio={[3, 1]}
           mainContent={<div>{"I'm a table y'all"}</div>}
           sideContent={<CDPCreateSelectCollateralSidebar />}
         />
@@ -102,7 +108,6 @@ const CDPCreateSelectCollateral = ({ createProxyTx, setStep, screenIndex }) => {
         screenIndex={screenIndex}
         setStep={setStep}
         loading={createProxyTx.status === TxLifecycle.PENDING}
-        screenIndex={3}
       />
     </Box>
   );
@@ -110,7 +115,12 @@ const CDPCreateSelectCollateral = ({ createProxyTx, setStep, screenIndex }) => {
 
 const CDPCreateDeposit = ({ createProxyTx, setStep, screenIndex }) => {
   return (
-    <Box>
+    <Box
+      maxWidth="1040px"
+      css={`
+        margin: 0 auto;
+      `}
+    >
       <ScreenHeader
         title="Select a collateral type"
         text="Each collateral type has its own risk parameters. You can lock up additional collateral types later."
@@ -118,15 +128,15 @@ const CDPCreateDeposit = ({ createProxyTx, setStep, screenIndex }) => {
       <Box my="l">
         <TwoColumnCardsLayout
           mainContent={<div>🤑</div>}
+          ratio={[4, 2]}
           sideContent={<CDPCreateSelectCollateralSidebar />}
-          sidebarAsCard={false}
+          SidebarComponent={Box}
         />
       </Box>
       <ScreenFooter
         screenIndex={screenIndex}
         setStep={setStep}
         loading={createProxyTx.status === TxLifecycle.PENDING}
-        screenIndex={3}
       />
     </Box>
   );
@@ -134,7 +144,12 @@ const CDPCreateDeposit = ({ createProxyTx, setStep, screenIndex }) => {
 
 const CDPCreateConfirmCDP = ({ createProxyTx, setStep, screenIndex }) => {
   return (
-    <Box>
+    <Box
+      maxWidth="1040px"
+      css={`
+        margin: 0 auto;
+      `}
+    >
       <ScreenHeader
         title="Select a collateral type"
         text="Each collateral type has its own risk parameters. You can lock up additional collateral types later."
@@ -147,7 +162,6 @@ const CDPCreateConfirmCDP = ({ createProxyTx, setStep, screenIndex }) => {
         screenIndex={screenIndex}
         setStep={setStep}
         loading={createProxyTx.status === TxLifecycle.PENDING}
-        screenIndex={3}
       />
     </Box>
   );
