@@ -8,6 +8,7 @@ import { Flex, Text } from '@makerdao/ui-components-core';
 import Jazzicon from './Jazzicon';
 import { cutMiddle } from 'utils/ui';
 import { getColor } from 'styles/theme';
+import SidebarWallet from './SidebarWallet';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
@@ -93,6 +94,9 @@ function Sidebar({ feeds, system, address, network }) {
     <Fragment>
       <AccountSection address={address} />
       <NetworkSection networkID={network.id} swappable={network.swappable} />
+      <Section>
+        <SidebarWallet />
+      </Section>
       <Section>
         <SidebarFeeds feeds={feeds} />
       </Section>

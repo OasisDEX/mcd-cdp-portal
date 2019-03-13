@@ -3,11 +3,13 @@ import React from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
+import store from 'store';
 import { navigation } from '../index';
 import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
+import { switchAccount } from 'reducers/sdkState';
 
 // hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
@@ -60,6 +62,9 @@ export default function MetaMaskConnect() {
             });
 
           const connectedAddress = maker.currentAddress();
+
+          // TODO: This should be dispatched from watching maker.on() events in sdkState.js
+          store.dispatch(switchAccount(connectedAddress));
 
           mixpanelIdentify(connectedAddress, 'metamask');
 

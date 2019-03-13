@@ -14,6 +14,7 @@ import { getOrReinstantiateMaker } from '../maker';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import { isMissingContractAddress } from 'utils/ethereum';
 
+import * as accountModel from 'reducers/network/account/model';
 import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 import { createCDPSystemModel } from 'reducers/network/system/model';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
@@ -37,6 +38,8 @@ async function stageNetwork({ testchainId, network }) {
     rpcUrl,
     addresses
   });
+  // FIXME: Temporary kludge
+  maker._addresses = addresses;
 
   let stateFetchPromise = Promise.resolve();
   if (watcherRecreated) {
@@ -46,6 +49,21 @@ async function stageNetwork({ testchainId, network }) {
     stateFetchPromise = watcher.tap(() => {
       return [
         ...createCDPSystemModel(addresses),
+        // TODO: Remove temporary calldata for testing watcher tap updates
+        {
+          ...accountModel.accountTokenBalance(addresses)(
+            'DAI',
+            '0xdb33dfd3d61308c33c63209845dad3e6bfb2c674'
+          ),
+          type: 'wallet_token_balance'
+        },
+        {
+          ...accountModel.accountTokenBalance(addresses)(
+            'MKR',
+            '0xdb33dfd3d61308c33c63209845dad3e6bfb2c674'
+          ),
+          type: 'wallet_token_balance'
+        },
         cdpTypeModel.priceFeed(addresses)('ETH', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),

@@ -10,7 +10,7 @@ const { defaultNetwork, rpcUrls } = config;
 
 const defaultAddresses = addresses[defaultNetwork];
 
-const watcher = createWatcher([], {
+export const watcher = createWatcher([], {
   rpcUrl: rpcUrls[defaultNetwork],
   multicallAddress: defaultAddresses.MULTICALL
 });

@@ -9,9 +9,6 @@ import theme from 'styles/theme';
 
 const Body = styled.div`
   display: flex;
-  width: 100vw;
-  height: 100vh;
-  max-height: 100vh;
 `;
 
 function App() {
