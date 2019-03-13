@@ -4,7 +4,14 @@ import { Grid } from '@makerdao/ui-components-core';
 
 const modals = {
   cdpcreate: props => (
-    <Grid gridRowGap="l" p="m" maxWidth="100%" width="95vw" height="90vh">
+    <Grid
+      gridRowGap="l"
+      p="m"
+      maxWidth="100%"
+      width="95vw"
+      height="90vh"
+      bg="grayLight5"
+    >
       <CDPCreate />
     </Grid>
   )

@@ -40,7 +40,7 @@ const FadeIn = styled.div`
 class StepperUI extends React.Component {
   render() {
     return (
-      <Grid gridRowGap="xl">
+      <Grid>
         {/* <StepperMenu onClose={this.props.onClose} /> */}
         <Stepper
           style={{ margin: '0 auto' }}

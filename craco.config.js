@@ -22,7 +22,7 @@ module.exports = {
       }
     },
     devServer: {
-      hotOnly: true
+      hot: true
     }
   },
   babel: {
