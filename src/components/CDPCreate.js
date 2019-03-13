@@ -10,7 +10,7 @@ import useMakerState from 'hooks/useMakerState';
 const HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT =
   '0x00DaA9a2D88BEd5a29A6ca93e0B7d860cd1d403F';
 
-function CDPOnboarding({ show, onClose }) {
+function CDPCreate({ show, onClose }) {
   const [step, setStep] = useState(0);
 
   // const ethBalance = 0;
@@ -91,4 +91,4 @@ function CDPOnboarding({ show, onClose }) {
   );
 }
 
-export default CDPOnboarding;
+export default CDPCreate;
