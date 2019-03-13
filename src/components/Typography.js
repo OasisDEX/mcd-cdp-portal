@@ -28,4 +28,8 @@ const NavLabel = styled(Text)`
   color: ${({ theme }) => theme.colors.grayLight};
 `;
 
-export { Title, Subtitle, NavLabel, Heading };
+const TextBlock = styled(Text)`
+  display: block;
+`;
+
+export { Title, Subtitle, NavLabel, Heading, TextBlock };

@@ -8,12 +8,14 @@ import useMakerTx from 'hooks/useMakerTx';
 import useMaker from 'hooks/useMaker';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { TxLifecycle } from 'utils/constants';
+import { TextBlock } from 'components/Typography';
+import { hot } from 'react-hot-loader/root';
 
 const ScreenHeader = ({ title, text }) => {
   return (
-    <Box>
-      <Text t="p2">{title}</Text>
-      <Text t="p6">{text}</Text>
+    <Box textAlign="center" py="m">
+      <TextBlock t="p1">{title}</TextBlock>
+      <TextBlock t="p6">{text}</TextBlock>
     </Box>
   );
 };
@@ -44,9 +46,9 @@ const ScreenFooter = ({ setStep, loading, screenIndex }) => {
 };
 
 const ScreenOneSidebar = () => (
-  <Box>
-    <Text t="p3">Risk Parameters</Text>
-    <Box>
+  <Box p="s">
+    <TextBlock t="p2">Risk Parameters</TextBlock>
+    <Box mt="s">
       {[
         [
           'Stability Fee',
@@ -61,9 +63,9 @@ const ScreenOneSidebar = () => (
           'The fee that is added to the total outstanding DAI debt when a liquidation occurs.'
         ]
       ].map(([title, text]) => (
-        <Box>
-          <Text>{title}</Text>
-          <text>{text}</text>
+        <Box mt="xs">
+          <TextBlock t="p3">{title}</TextBlock>
+          <TextBlock t="p6">{text}</TextBlock>
         </Box>
       ))}
     </Box>
@@ -190,4 +192,4 @@ function CDPCreate({ show, onClose }) {
   );
 }
 
-export default CDPCreate;
+export default hot(CDPCreate);
