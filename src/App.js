@@ -6,6 +6,7 @@ import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
 import store from './store';
 import theme from 'styles/theme';
+import LoadingLayout from 'layouts/LoadingLayout';
 
 const Body = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ function App() {
   return (
     <Body>
       <NavNotFoundBoundary render={GenericNotFound}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingLayout text="Loading..." />}>
           <NavContent />
         </Suspense>
       </NavNotFoundBoundary>
