@@ -968,10 +968,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.2.tgz#5485cd828adc39ae60fca1cce5b81212e540b5d1"
-  integrity sha512-7DFM/hfWgvEEUibZj51KhZLEQCNOKRJJ+w/z/mJwg4XviXoPdL7LrwRLfSU08KRXlQk6d8v6feBBYzR1Cv+fvA==
+"@makerdao/dai-plugin-mcd@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.3.tgz#add344841df43a7b273472e8dd31703473fd5348"
+  integrity sha512-/ubjTs4yN9qSn+8y/GSG/7NM45HGUDoRsy9Y0am67fBPeiHfTMbRY6TzpPasrDSqfpaX/I4txrVjeaXClhz92A==
   dependencies:
     "@makerdao/currency" "^0.9.0"
     "@makerdao/services-core" "^0.9.4"
@@ -10687,7 +10687,7 @@ react-navi@^0.10.6:
     "@types/react" "^16.4.6"
     exenv "^1.2.2"
 
-react-onclickoutside@^6.7.1, react-onclickoutside@^6.8.0:
+react-onclickoutside@^6.7.1:
   version "6.8.0"
   resolved "https://registry.yarnpkg.com/react-onclickoutside/-/react-onclickoutside-6.8.0.tgz#9f91b5b3ed59f4d9e43fd71620dc200773a4d569"
   integrity sha512-5Q4Rn7QLEoh7WIe66KFvYIpWJ49GeHoygP1/EtJyZjXKgrWH19Tf0Ty3lWyQzrEEDyLOwUvvmBFSE3dcDdvagA==

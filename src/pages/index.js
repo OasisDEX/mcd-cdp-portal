@@ -33,7 +33,7 @@ async function stageNetwork({ testchainId, network }) {
   });
 
   // reinstantiated if rpcUrl has changed
-  const { maker } = await getOrReinstantiateMaker({ rpcUrl });
+  const { maker } = await getOrReinstantiateMaker({ rpcUrl, addresses });
   const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
