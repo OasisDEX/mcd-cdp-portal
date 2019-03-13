@@ -3,9 +3,9 @@ import { ModalStateContext } from 'providers/ModalProvider';
 
 function useModal() {
   const { show, reset } = useContext(ModalStateContext);
-  const showType = modalType => show({ modalType });
+  const showByType = modalType => show({ modalType });
 
-  return { show, reset, showType };
+  return { show, reset, showByType };
 }
 
 export default useModal;

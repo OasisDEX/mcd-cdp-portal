@@ -1,19 +1,10 @@
 import React, { createContext, useReducer } from 'react';
-import { Modal, Grid } from '@makerdao/ui-components-core';
-import CDPCreate from 'components/CDPCreate';
+import { Modal } from '@makerdao/ui-components-core';
 
-function resolveModalTypeToComponent(type, props) {
-  const typeToComponent = {
-    cdpcreate: props => (
-      <Grid gridRowGap="l" p="m" maxWidth="100%" width="95vw" height="90vh">
-        <CDPCreate />
-      </Grid>
-    )
-  };
+function resolveModalTypeToComponent(modals, type, props) {
+  if (!modals || !type || !modals[type]) return null;
 
-  if (!type || !typeToComponent[type]) return null;
-
-  return typeToComponent[type](props);
+  return modals[type](props);
 }
 
 const initialState = {
@@ -35,7 +26,7 @@ const reducer = (state, { type, payload }) => {
 
 const ModalStateContext = createContext(initialState);
 
-function ModalContextProvider({ children }) {
+function ModalProvider({ children, modals }) {
   const [{ modalType, modalData, modalProps }, dispatch] = useReducer(
     reducer,
     initialState
@@ -50,11 +41,11 @@ function ModalContextProvider({ children }) {
   return (
     <ModalStateContext.Provider value={{ show, reset }}>
       <Modal show={shouldShow} onClose={reset} {...modalProps}>
-        {resolveModalTypeToComponent(modalType, modalData)}
+        {resolveModalTypeToComponent(modals, modalType, modalData)}
       </Modal>
       {children}
     </ModalStateContext.Provider>
   );
 }
 
-export { ModalStateContext, ModalContextProvider };
+export { ModalStateContext, ModalProvider };
