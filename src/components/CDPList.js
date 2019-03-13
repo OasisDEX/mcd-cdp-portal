@@ -42,7 +42,7 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   </NavbarItemContainer>
 );
 
-const CDPList = memo(function({ currentPath, currentQuery }) {
+const CDPList = memo(function({ currentPath, currentQuery, address }) {
   const { showType } = useModal();
 
   return (
@@ -68,14 +68,16 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
           />
         );
       })}
-      <DashedFakeButton
-        onClick={() => showType('cdpcreate')}
-        justifyContent="center"
-        borderRadius="4px"
-        py="s"
-      >
-        <Plus />
-      </DashedFakeButton>
+      {!address ? null : (
+        <DashedFakeButton
+          onClick={() => showType('cdpcreate')}
+          justifyContent="center"
+          borderRadius="4px"
+          py="s"
+        >
+          <Plus />
+        </DashedFakeButton>
+      )}
     </Fragment>
   );
 });

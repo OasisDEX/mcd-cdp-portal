@@ -4,7 +4,7 @@ import CDPList from 'components/CDPList';
 import NavLogo from 'components/NavLogo';
 import { Flex, Grid } from '@makerdao/ui-components-core';
 
-const Navbar = () => (
+const Navbar = ({ address }) => (
   <NavRoute>
     {({ url }) => (
       <Fragment>
@@ -14,7 +14,11 @@ const Navbar = () => (
           </Flex>
         </NavLink>
         <Grid gridRowGap="xs">
-          <CDPList currentPath={url.pathname} currentQuery={url.search} />
+          <CDPList
+            currentPath={url.pathname}
+            currentQuery={url.search}
+            address={address}
+          />
         </Grid>
       </Fragment>
     )}

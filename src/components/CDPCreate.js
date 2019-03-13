@@ -4,23 +4,58 @@ import StepperUI from 'components/StepperUI';
 import { Box, Button, Grid, Text } from '@makerdao/ui-components-core';
 import { Block } from 'components/Primitives';
 
-import { prettifyNumber } from 'utils/ui';
-import useMakerState from 'hooks/useMakerState';
+import useMakerTx from 'hooks/useMakerTx';
+import useMaker from 'hooks/useMaker';
 
-const HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT =
-  '0x00DaA9a2D88BEd5a29A6ca93e0B7d860cd1d403F';
+import { TxLifecycle } from 'utils/constants';
 
 function CDPCreate({ show, onClose }) {
   const [step, setStep] = useState(0);
+  const { authenticatedMaker } = useMaker();
+  const [userProxyDetails, setUserProxyDetails] = useState({
+    status: 'null',
+    address: ''
+  });
 
-  // const ethBalance = 0;
-  const ethBalance = useMakerState(maker =>
-    maker.getToken('ETH').balanceOf(HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT)
-  );
+  const createProxyTx = useMakerTx(maker => maker.service('proxy').build());
+
+  async function checkProxyStatus() {
+    const maker = await authenticatedMaker();
+    setUserProxyDetails({ status: 'checking', address: '' });
+    const proxyAddress = await maker.service('proxy').currentProxy();
+    if (!proxyAddress)
+      setUserProxyDetails({
+        status: 'noProxy',
+        address: ''
+      });
+    else
+      setUserProxyDetails({
+        address: proxyAddress,
+        status: 'found'
+      });
+  }
 
   useEffect(() => {
-    ethBalance.prefetch();
+    checkProxyStatus();
   }, []);
+
+  const proxyStatusToUI = {
+    null: '',
+    checking: 'Checking for user proxy',
+    found: <div>proxy address {userProxyDetails.address}</div>,
+    noProxy: (
+      <div>
+        user has no proxy{' '}
+        <button
+          onClick={() => {
+            createProxyTx.send();
+          }}
+        >
+          create a proxy
+        </button>
+      </div>
+    )
+  };
 
   return (
     <StepperUI
@@ -57,6 +92,7 @@ function CDPCreate({ show, onClose }) {
               Back
             </Button>
             <Button
+              loading={createProxyTx.status === TxLifecycle.PENDING}
               width="145px"
               onClick={() => {
                 setStep(2);
@@ -66,7 +102,7 @@ function CDPCreate({ show, onClose }) {
             </Button>
           </Box>
           <Block textAlign="center">
-            <Text>YOUR BALANCE </Text>
+            {proxyStatusToUI[userProxyDetails.status]}
           </Block>
         </Grid>
       </Box>

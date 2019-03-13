@@ -95,7 +95,7 @@ function withAuthenticatedNetwork(getPage) {
                 address={connectedAddress}
               />
             }
-            navbar={<Navbar />}
+            navbar={<Navbar address={connectedAddress} />}
             sidebar={
               <Sidebar
                 network={{
