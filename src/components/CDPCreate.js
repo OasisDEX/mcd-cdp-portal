@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import StepperUI from 'components/StepperUI';
-import useMakerTx from 'hooks/useMakerTx';
-import useMaker from 'hooks/useMaker';
+import React from 'react';
 import { hot } from 'react-hot-loader/root';
+import { connect } from 'react-redux';
+import { getActionableIlks } from 'reducers/addresses';
+
+import StepperUI from 'components/StepperUI';
 import {
   CDPCreateSelectCollateral,
   CDPCreateConfirmCDP,
@@ -15,112 +16,81 @@ const screens = [
   ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
 ];
 
-function CDPCreate({ show, onClose }) {
-  const [step, setStep] = useState(0);
-  const { authenticatedMaker } = useMaker();
-  const [userProxyDetails, setUserProxyDetails] = useState({
-    status: 'null',
-    address: ''
-  });
+const initialState = {
+  step: 0,
+  selectedIlk: {
+    userGemBalance: '',
+    key: ''
+  },
+  gemsToLock: '',
+  daiToDraw: '',
+  targetCollateralizationRatio: ''
+};
 
-  const createProxyTx = useMakerTx(maker => maker.service('proxy').build());
-
-  async function checkProxyStatus() {
-    const maker = await authenticatedMaker();
-    setUserProxyDetails({ status: 'checking', address: '' });
-    const proxyAddress = await maker.service('proxy').currentProxy();
-    if (!proxyAddress)
-      setUserProxyDetails({
-        status: 'noProxy',
-        address: ''
-      });
-    else
-      setUserProxyDetails({
-        address: proxyAddress,
-        status: 'found'
-      });
+function reducer(state, action) {
+  const { type, payload } = action;
+  switch (type) {
+    case 'increment-step':
+      return {
+        ...state,
+        step: state.step + 1
+      };
+    case 'decrement-step':
+      return {
+        ...state,
+        step: state.step - 1
+      };
+    case 'set-ilk':
+      return {
+        ...state,
+        selectedIlk: {
+          key: payload.key,
+          userGemBalance: payload.gemBalance,
+          ilkData: payload.ilkData
+        }
+      };
+    case 'form/set-gemsToLock':
+      return { ...state, gemsToLock: payload.value };
+    case 'form/set-daiToDraw':
+      return { ...state, daiToDraw: payload.value };
+    case 'form/set-targetCollateralizationRatio':
+      return {
+        ...state,
+        targetCollateralizationRatio: payload.value
+      };
+    case 'reset':
+      return { ...initialState };
+    default:
+      return state;
   }
+}
 
-  useEffect(() => {
-    checkProxyStatus();
-  }, []);
-
-  const proxyStatusToUI = {
-    null: '',
-    checking: 'Checking for user proxy',
-    found: <div>proxy address {userProxyDetails.address}</div>,
-    noProxy: (
-      <div>
-        user has no proxy{' '}
-        <button
-          onClick={() => {
-            createProxyTx.send();
-          }}
-        >
-          create a proxy
-        </button>
-      </div>
-    )
-  };
+function CDPCreate({ actionableIlks }) {
+  const [{ step, selectedIlk, ...cdpParams }, dispatch] = React.useReducer(
+    reducer,
+    initialState
+  );
 
   const screenProps = {
-    setStep,
-    createProxyTx,
-    userProxyDetails,
-    proxyStatusToUI
+    actionableIlks,
+    selectedIlk,
+    cdpParams,
+    dispatch
   };
+
   return (
-    <StepperUI
-      step={step}
-      show={show}
-      onClose={onClose}
-      steps={screens.map(([title]) => title)}
-    >
+    <StepperUI step={step} steps={screens.map(([title]) => title)}>
       {screens.map(([title, fn], screenIndex) =>
-        fn({ ...screenProps, screenIndex })
+        fn({ ...screenProps, screenIndex, key: screenIndex })
       )}
-      {/* <Box>
-        <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="145px"
-              onClick={() => {
-                setStep(1);
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
-        </Grid>
-      </Box>
-
-      <Box>
-        <Grid gridRowGap="m">
-
-          <Block textAlign="center">
-            {proxyStatusToUI[userProxyDetails.status]}
-          </Block>
-        </Grid>
-      </Box>
-
-      <Box> */}
-      {/* <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="110px"
-              variant="secondary-outline"
-              onClick={() => {
-                setStep(1);
-              }}
-            >
-              Back
-            </Button>
-            <Button width="145px">Create CDP</Button>
-          </Box>
-        </Grid>
-      </Box> */}
     </StepperUI>
   );
 }
 
-export default hot(CDPCreate);
+export default connect(
+  state => ({
+    // ie a list of ilks we have the right addresses for
+    actionableIlks: getActionableIlks(state)
+  }),
+  {}
+)(hot(CDPCreate));

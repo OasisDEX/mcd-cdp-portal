@@ -53,6 +53,7 @@ function useMakerTx(txCreator) {
       );
 
     clear();
+
     const txObject = txCreator(maker);
     const sender = maker.currentAddress();
     maker.service('transactionManager').listen(txObject, {

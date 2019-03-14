@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, Box } from '@makerdao/ui-components-core';
+import { Grid, Card } from '@makerdao/ui-components-core';
 
 const TwoColumnCardsLayout = ({
   ratio = [4, 1],
@@ -9,7 +9,7 @@ const TwoColumnCardsLayout = ({
 }) => {
   const columnsTemplate = `${ratio[0]}fr ${ratio[1]}fr`;
   return (
-    <Grid gridTemplateColumns={columnsTemplate} gridColumnGap="xs">
+    <Grid gridTemplateColumns={columnsTemplate} gridColumnGap="m">
       <Card>{mainContent}</Card>
       <SidebarComponent>{sideContent}</SidebarComponent>
     </Grid>

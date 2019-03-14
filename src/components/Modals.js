@@ -1,17 +1,25 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
-import { Grid } from '@makerdao/ui-components-core';
+import { Grid, Flex, Box } from '@makerdao/ui-components-core';
 
 const modals = {
-  cdpcreate: props => (
+  cdpcreate: ({ onClose }) => (
     <Grid
-      gridRowGap="l"
+      gridRowGap="s"
+      gridTemplateRows="50px 1fr"
       p="m"
       maxWidth="100%"
-      width="95vw"
-      height="90vh"
+      width="100vw"
+      height="100vh"
       bg="grayLight5"
+      onClick={e => e.stopPropagation()}
+      css={`
+        overflow-y: auto;
+      `}
     >
+      <Flex justifyContent="flex-end">
+        <Box onClick={onClose}>Close</Box>
+      </Flex>
       <CDPCreate />
     </Grid>
   )

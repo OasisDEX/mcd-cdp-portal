@@ -10,6 +10,7 @@ const theme = {
     grayLight3: '#e0e0e0',
     grayLight4: '#9AA3AD',
     grayLight5: '#F6F8F9',
+    grayLight6: '#E9EAF3',
     greenPastel: '#1aab9b',
     greenVivid: '#24be9f',
     purple: '#690496',
@@ -20,6 +21,8 @@ const theme = {
     black5: '#222',
     blackLight: '#383838',
     redVivid: '#f65728',
+    yellowDark: '#A87807',
+    yellowPastel: '#fee8b4',
     ...colors
   },
   typography: {
@@ -52,6 +55,13 @@ const theme = {
 
     textS: {
       fontSize: '1.4rem',
+      lineHeight: '22px'
+    },
+
+    smallCaps: {
+      fontSize: '1.2rem',
+      textTransform: 'uppercase',
+      letterSpacing: '0.3px',
       lineHeight: '22px'
     },
 

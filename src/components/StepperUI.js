@@ -1,10 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { themeGet } from 'styled-system';
-
 import { Grid, Stepper } from '@makerdao/ui-components-core';
-// import StepperMenu from '@makerdao/ui-components-onboarding/src/OnboardingMenu';
 
 const FadeIn = styled.div`
   opacity: 0;
@@ -40,7 +37,7 @@ const FadeIn = styled.div`
 class StepperUI extends React.Component {
   render() {
     return (
-      <Grid>
+      <Grid maxWidth="1600px" m="0 auto">
         {/* <StepperMenu onClose={this.props.onClose} /> */}
         <Stepper
           style={{ margin: '0 auto' }}
