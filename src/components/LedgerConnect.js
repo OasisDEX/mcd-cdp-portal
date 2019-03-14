@@ -13,6 +13,7 @@ import { cutMiddle, copyToClipboard } from '../utils/ui';
 import { AccountTypes } from '../utils/constants';
 import { addMkrAndEthBalance } from '../utils/ethereum';
 
+// added components
 import {
   AddressContainer,
   Table,
@@ -20,6 +21,8 @@ import {
   CopyBtn,
   CopyBtnIcon
 } from './HotColdTable';
+import ButtonCard from './ButtonCard';
+import { BreakableText } from './Typography';
 
 const LEDGER_LIVE_PATH = "44'/60'/0'";
 // const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
@@ -29,10 +32,6 @@ const DEFAULT_ACCOUNTS_PER_PAGE = 5;
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
-`;
-
-const PaddedDiv = styled.div`
-  padding: 20px;
 `;
 
 export const StyledTitle = styled.div`
@@ -100,16 +99,69 @@ const onConfirm = async (maker, address) => {
     search: `?network=${network}&address=${addressToView}`
   });
 };
-const onBack = () => {};
+const onBack = () => {},
+  onLedgerLegacy = () => {},
+  onCancel = () => {};
+
+//Ledger step component, to be moved into separate component//
+const LedgerStep = ({ active, onLedgerLive, onLedgerLegacy, onCancel }) => {
+  return (
+    <Grid gridRowGap="m">
+      {/* <OnboardingHeader
+        mt={[0, 0, 0, 'l']}
+        title="Ledger live or legacy"
+        subtitle="Due to a firmware update, you will need to choose between Ledger
+      Live and Ledger legacy."
+      /> */}
+      <ButtonCard
+        icon={<StyledLedgerLogo />}
+        onNext={onLedgerLive}
+        title="Ledger live"
+        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        buttonText="Connect"
+      />
+      <ButtonCard
+        icon={<StyledLedgerLogo />}
+        onNext={onLedgerLegacy}
+        title="Ledger legacy"
+        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        buttonText="Connect"
+      />
+      <Box justifySelf="center">
+        <Button variant="secondary-outline" onClick={onCancel}>
+          Select another wallet
+        </Button>
+      </Box>
+    </Grid>
+  );
+};
+//End Ledger step component//
 
 function LedgerConnect() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [ledgerStepModelOpen, setledgerStepModalBool] = useState(false);
   const [modelOpen, setModalBool] = useState(false);
   const { maker, authenticated: makerAuthenticated } = useMaker();
 
   return (
     <>
+      <Modal
+        show={ledgerStepModelOpen}
+        onClose={() => {
+          setledgerStepModalBool(false);
+        }}
+      >
+        <LedgerStep
+          onLedgerLive={() => {
+            setledgerStepModalBool(false);
+            setModalBool(true);
+            addLedgerAccount(maker, setAddresses);
+          }}
+          onLedgerLegacy={onLedgerLegacy}
+          onCancel={onCancel}
+        />
+      </Modal>
       <Modal
         show={modelOpen}
         onClose={() => {
@@ -147,7 +199,6 @@ function LedgerConnect() {
                   </td>
                   <td>{index + 1}</td>
                   {/* <td>{index + page * PER_PAGE + 1}</td> */}
-
                   <InlineTd title={address}>
                     {cutMiddle(address, 7, 5)}
                     <CopyBtn onClick={() => copyToClipboard(address)}>
@@ -183,8 +234,8 @@ function LedgerConnect() {
         variant="secondary-outline"
         width="225px"
         onClick={() => {
-          setModalBool(true);
-          addLedgerAccount(maker, setAddresses);
+          setledgerStepModalBool(true);
+          // addLedgerAccount(maker, setAddresses);
         }}
       >
         <Flex alignItems="center">
