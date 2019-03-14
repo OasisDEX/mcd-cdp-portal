@@ -45,7 +45,8 @@ function reducer(state, action) {
         ...state,
         selectedIlk: {
           key: payload.key,
-          userGemBalance: payload.gemBalance
+          userGemBalance: payload.gemBalance,
+          ilkData: payload.ilkData
         }
       };
     case 'form/set-gemsToLock':
