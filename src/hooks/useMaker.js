@@ -10,6 +10,7 @@ function useMaker() {
     maker.authenticate().then(() => {
       setAuthenticated(true);
     });
+
     return () => {
       setAuthenticated(false);
     };

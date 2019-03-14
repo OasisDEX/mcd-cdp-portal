@@ -2,10 +2,13 @@ import React, { memo, Fragment } from 'react';
 import styled from 'styled-components';
 import cdpTypesConfig from 'references/cdpTypes';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
+import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
+import useModal from 'hooks/useModal';
+
 const _shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
 
 const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
@@ -15,6 +18,12 @@ const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
+`;
+
+const DashedFakeButton = styled(Flex)`
+  border: 1px dashed;
+  cursor: pointer;
+  border-color: ${({ theme }) => theme.colors.blackLight};
 `;
 
 const NavbarItem = ({ href, label, ratio, active, ...props }) => (
@@ -34,6 +43,8 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
 );
 
 const CDPList = memo(function({ currentPath, currentQuery }) {
+  const { showByType } = useModal();
+
   return (
     <Fragment>
       <NavbarItem
@@ -57,6 +68,14 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
           />
         );
       })}
+      <DashedFakeButton
+        onClick={() => showByType('cdpcreate')}
+        justifyContent="center"
+        borderRadius="4px"
+        py="s"
+      >
+        <Plus />
+      </DashedFakeButton>
     </Fragment>
   );
 });

@@ -2,10 +2,11 @@ import React, { Suspense } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import styled, { ThemeProvider } from 'styled-components';
 import { NavProvider, NavContent, NavNotFoundBoundary } from 'react-navi';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
 import store from './store';
 import theme from 'styles/theme';
+import LoadingLayout from 'layouts/LoadingLayout';
 
 const Body = styled.div`
   display: flex;
@@ -18,7 +19,7 @@ function App() {
   return (
     <Body>
       <NavNotFoundBoundary render={GenericNotFound}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingLayout text="Loading..." />}>
           <NavContent />
         </Suspense>
       </NavNotFoundBoundary>
@@ -38,4 +39,4 @@ function AppWithContext({ navigation }) {
   );
 }
 
-export default hot(module)(AppWithContext);
+export default hot(AppWithContext);
