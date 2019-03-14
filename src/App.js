@@ -8,7 +8,7 @@ import store from './store';
 import theme from 'styles/theme';
 import LoadingLayout from 'layouts/LoadingLayout';
 
-const NOT_PRODUCTION_READY_MODAL_SCROLLING = true;
+const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
 
 const Body = styled.div`
   display: flex;

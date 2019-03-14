@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Box,
   Button,
@@ -8,23 +8,36 @@ import {
   Table,
   Flex,
   Card,
-  Checkbox
+  Checkbox,
+  Link
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
-
+import { Pill } from 'components/Primitives';
 import { connect } from 'react-redux';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import { prettifyNumber } from 'utils/ui';
 import LoadingLayout from 'layouts/LoadingLayout';
-
+import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
+import lang from 'languages';
+
+function mapStateToProps(state, { ilk }) {
+  return {
+    ilk: {
+      ...ilk,
+      data: getIlkData(state, ilk.slug)
+    }
+  };
+}
 
 const ScreenHeader = ({ title, text }) => {
   return (
-    <Box textAlign="center" py="m">
-      <Box pb="xs">
-        <TextBlock t="headingL">{title}</TextBlock>
+    <Box textAlign="center" pt="m">
+      <Box pb="m">
+        <TextBlock t="headingL" fontWeight="medium">
+          {title}
+        </TextBlock>
       </Box>
       <TextBlock t="textL" color="gray2">
         {text}
@@ -33,7 +46,12 @@ const ScreenHeader = ({ title, text }) => {
   );
 };
 
-const ScreenFooter = ({ dispatch, loading, canProgress = true } = {}) => {
+const ScreenFooter = ({
+  dispatch,
+  loading,
+  canProgress = true,
+  continueText = lang.actions.continue
+} = {}) => {
   return (
     <Flex textAlign="center" justifyContent="center">
       <Button
@@ -42,7 +60,7 @@ const ScreenFooter = ({ dispatch, loading, canProgress = true } = {}) => {
         mx="xs"
         onClick={() => dispatch({ type: 'decrement-step' })}
       >
-        Back
+        {lang.actions.back}
       </Button>
       <Button
         disabled={!canProgress}
@@ -51,40 +69,34 @@ const ScreenFooter = ({ dispatch, loading, canProgress = true } = {}) => {
         mx="xs"
         onClick={() => dispatch({ type: 'increment-step' })}
       >
-        Continue
+        {continueText}
       </Button>
     </Flex>
   );
 };
 
 const CDPCreateSelectCollateralSidebar = () => (
-  <Box p="m">
+  <Box p="l">
     <TextBlock t="headingS" fontWeight="medium">
-      Risk Parameters
+      {lang.risk_parameters}
     </TextBlock>
     <Box mt="m">
       {[
+        [lang.stability_fee, lang.cdp_create.stability_fee_description],
+        [lang.liquidation_ratio, lang.cdp_create.liquidation_ratio_description],
         [
-          'Stability Fee',
-          'The fee calculated on top of the existing debt of the CDP. This is paid when paying back Dai.'
-        ],
-        [
-          'Liquidation Ratio',
-          'The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation. '
-        ],
-        [
-          'Liquidation Fee',
-          'The fee that is added to the total outstanding DAI debt when a liquidation occurs.'
+          lang.liquidation_penalty,
+          lang.cdp_create.liquidation_penalty_description
         ]
       ].map(([title, text]) => (
-        <Box mb="m" key={title}>
+        <Grid mb="m" key={title} gridRowGap="xs">
           <TextBlock t="textM" fontWeight="medium">
             {title}
           </TextBlock>
           <TextBlock t="textS" color="black3">
             {text}
           </TextBlock>
-        </Box>
+        </Grid>
       ))}
     </Box>
   </Box>
@@ -103,7 +115,12 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
   }, []);
 
   return (
-    <tbody>
+    <tbody
+      css={`
+        border-bottom: 1px solid;
+        border-bottom-color: ${({ theme }) => theme.colors.grayLight6};
+      `}
+    >
       <tr>
         <td>
           <Checkbox
@@ -111,7 +128,11 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
             onChange={() =>
               dispatch({
                 type: 'set-ilk',
-                payload: { key: ilk.key, gemBalance: userGemBalance.toNumber() }
+                payload: {
+                  key: ilk.key,
+                  gemBalance: userGemBalance.toNumber(),
+                  ilkData: ilk.data
+                }
               })
             }
             mr="xs"
@@ -126,19 +147,135 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
     </tbody>
   );
 }
-
-function mapStateToProps(state, { ilk }) {
-  return {
-    ilk: {
-      ...ilk,
-      data: getIlkData(state, ilk.slug)
-    }
-  };
-}
 const IlkTableRow = connect(
   mapStateToProps,
   {}
 )(IlkTableRowView);
+
+function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
+  const userHasSufficientGemBalance =
+    parseFloat(selectedIlk.userGemBalance) >= parseFloat(cdpParams.gemsToLock);
+
+  const fields = [
+    [
+      lang.formatString(
+        lang.cdp_create.deposit_form_field1_title,
+        selectedIlk.key
+      ),
+      lang.formatString(
+        lang.cdp_create.deposit_form_field1_text,
+        selectedIlk.key
+      ),
+      <Input
+        key="collinput"
+        name="gemsToLock"
+        after={selectedIlk.key}
+        type="number"
+        value={cdpParams.gemsToLock}
+        onChange={handleInputChange}
+        width={300}
+        errorMessage={
+          userHasSufficientGemBalance || !cdpParams.gemsToLock
+            ? null
+            : lang.formatString(
+                lang.cdp_create.insufficient_ilk_balance,
+                selectedIlk.key
+              )
+        }
+      />,
+      <Box>
+        <Text t="smallCaps" color="gray2" fontWeight="medium">
+          {lang.your_balance}{' '}
+        </Text>
+        <Text t="textS">
+          {selectedIlk.userGemBalance} {selectedIlk.key}
+        </Text>
+      </Box>
+    ],
+    [
+      lang.cdp_create.deposit_form_field2_title,
+      <Fragment key="ratioinfo">
+        {lang.formatString(
+          lang.cdp_create.deposit_form_field2_text,
+          <Pill bg="yellowPastel" display="inline-block">
+            <Text t="smallCaps" color="yellowDark" fontWeight="bold">
+              Moderate
+            </Text>
+          </Pill>
+        )}
+      </Fragment>,
+      <Input
+        key="ratioinput"
+        name="targetCollateralizationRatio"
+        after="%"
+        type="number"
+        width={230}
+        value={cdpParams.targetCollateralizationRatio}
+        onChange={handleInputChange}
+      />,
+      <Box key="ratioafter">
+        <Text t="smallCaps" color="gray2" fontWeight="medium">
+          {lang.cdp_create.deposit_form_field2_after}{' '}
+        </Text>
+        <Text t="textS">200%</Text>
+      </Box>
+    ],
+    [
+      lang.cdp_create.deposit_form_field3_title,
+      lang.cdp_create.deposit_form_field3_text,
+      <Input
+        key="daiToDraw"
+        name="daiToDraw"
+        after="DAI"
+        width="250px"
+        type="number"
+        value={cdpParams.daiToDraw}
+        onChange={handleInputChange}
+      />,
+      <Grid gridRowGap="xs" key="keytodrawinfo">
+        <Text t="smallCaps" color="gray2" fontWeight="medium">
+          {lang.cdp_create.deposit_form_field3_after1}{' '}
+          <Text t="textS">200%</Text>
+        </Text>
+        <Text t="smallCaps" color="gray2" fontWeight="medium">
+          {lang.cdp_create.deposit_form_field3_after2}{' '}
+          <Text t="textS">200%</Text>
+        </Text>
+      </Grid>
+    ]
+  ];
+
+  return (
+    <Grid gridRowGap="l" p="l" maxWidth="100%">
+      <Grid
+        gridTemplateColumns="auto"
+        gridRowGap="m"
+        gridColumnGap="m"
+        alignItems="center"
+      >
+        {fields.map(([title, text, input, renderAfter]) => {
+          return (
+            <Grid gridRowGap="xs" key={title}>
+              <TextBlock t="headingS" fontWeight="medium">
+                {title}
+              </TextBlock>
+              <TextBlock t="textS" color="gray2">
+                {text}
+              </TextBlock>
+              <Box>{input}</Box>
+              {renderAfter}
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Grid>
+  );
+}
+
+function cdpParamsAreValid({ gemsToLock, daiToDraw }, userGemBalance) {
+  if (parseFloat(gemsToLock) > parseFloat(userGemBalance)) return false;
+  return !!gemsToLock && !!daiToDraw;
+}
 
 const CDPCreateSelectCollateral = ({
   selectedIlk,
@@ -153,23 +290,27 @@ const CDPCreateSelectCollateral = ({
       `}
     >
       <ScreenHeader
-        title="Select a collateral type"
-        text="Each collateral type has its own risk parameters. You can lock up additional collateral types later."
+        title={lang.cdp_create.select_title}
+        text={lang.cdp_create.select_text}
       />
       <Box my="l">
         <TwoColumnCardsLayout
-          ratio={[3, 1]}
+          ratio={[6, 3]}
           mainContent={
-            <Flex justifyContent="center" p="m">
-              <Table width="700px">
+            <Flex justifyContent="center" p="l">
+              <Table width="100%">
                 <thead>
                   <tr>
                     <th />
-                    <th>Collateral Type</th>
-                    <th>Stability Fee</th>
-                    <th>Liq Ratio</th>
-                    <th>Liq Fee</th>
-                    <th>Your Balance</th>
+                    {[
+                      lang.collateral_type,
+                      lang.stability_fee,
+                      lang.liquidation_ratio_shortened,
+                      lang.liquidation_penalty_shortened,
+                      lang.your_balance
+                    ].map(t => (
+                      <th key={t}>{t}</th>
+                    ))}
                   </tr>
                 </thead>
                 {actionableIlks.map(({ slug, key, gem, symbol }) => (
@@ -191,73 +332,50 @@ const CDPCreateSelectCollateral = ({
   );
 };
 
-function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
-  const userHasSufficientGemBalance =
-    parseFloat(selectedIlk.userGemBalance) >= parseFloat(cdpParams.gemsToLock);
+const CDPCreateDepositSidebar = ({ selectedIlk }) => {
+  const { liquidationPenalty, liquidationRatio, key } = selectedIlk.ilkData;
   return (
-    <Grid gridRowGap="l" p="m" width={500} maxWidth="100%">
-      <h3>Deposit Ethereum and Generate Dai</h3>
-      <Grid
-        gridTemplateColumns="auto"
-        gridRowGap="m"
-        gridColumnGap="m"
-        alignItems="center"
-      >
-        <Flex flexDirection="column">
-          <Text>
-            How much {selectedIlk.key} would you like to lock in your CDP?
-          </Text>
-          <Input
-            name="gemsToLock"
-            after={selectedIlk.key}
-            type="number"
-            value={cdpParams.gemsToLock}
-            onChange={handleInputChange}
-            errorMessage={
-              userHasSufficientGemBalance || !cdpParams.gemsToLock
-                ? null
-                : `Insufficient ${selectedIlk.key} balance`
-            }
-          />
-          <Text>
-            You currently have {selectedIlk.userGemBalance} {selectedIlk.key}
-          </Text>
-        </Flex>
-
-        <Flex flexDirection="column">
-          <Text>
-            What target collateralization ratio would you like to stay above?
-          </Text>
-          <Input
-            name="targetCollateralizationRatio"
-            after="%"
-            type="number"
-            value={cdpParams.targetCollateralizationRatio}
-            onChange={handleInputChange}
-          />
-        </Flex>
-
-        <Flex flexDirection="column">
-          <Text>How much DAI would you like to generate?</Text>
-          <Input
-            name="daiToDraw"
-            after="DAI"
-            type="number"
-            value={cdpParams.daiToDraw}
-            onChange={handleInputChange}
-          />
-        </Flex>
-      </Grid>
-    </Grid>
+    <Fragment>
+      <Card p="l">
+        <TextBlock t="headingS" fontWeight="medium">
+          {key} Risk Parameters
+        </TextBlock>
+        <Box mt="m">
+          {[
+            [lang.cdp_page.stability_fee, '2.50%'],
+            [lang.cdp_page.liquidation_ratio, `${liquidationRatio}%`],
+            [lang.cdp_page.liquidation_penalty, `${liquidationPenalty}%`]
+          ].map(([title, value]) => (
+            <Grid mt="m" gridRowGap="xs" key={title}>
+              <TextBlock t="textM" fontWeight="medium">
+                {title}
+              </TextBlock>
+              <TextBlock t="headingS" fontWeight="medium">
+                {value}
+              </TextBlock>
+            </Grid>
+          ))}
+        </Box>
+      </Card>
+      {[
+        [lang.collateralization, '0%'], // TODO
+        [lang.collateralization_ratio, '$0']
+      ].map(([title, value]) => (
+        <Card mt="m" p="l" key="title">
+          <Grid gridRowGap="xs">
+            <TextBlock t="headingS" fontWeight="medium">
+              {title}
+            </TextBlock>
+            <TextBlock t="headingL">{value}</TextBlock>
+          </Grid>
+        </Card>
+      ))}
+    </Fragment>
   );
-}
-
-function cdpParamsAreValid({ gemsToLock, daiToDraw }, userGemBalance) {
-  if (parseFloat(gemsToLock) > parseFloat(userGemBalance)) return false;
-  return !!gemsToLock && !!daiToDraw;
-}
-
+};
 const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
+  console.log(selectedIlk, cdpParams, 'here');
+
   function handleInputChange({ target }) {
     dispatch({
       type: `form/set-${target.name}`,
@@ -273,8 +391,11 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       `}
     >
       <ScreenHeader
-        title="Deposit Ethereum and Generate Dai"
-        text="Different collateral types have different risk parameters and collateralization ratios."
+        title={lang.formatString(
+          lang.cdp_create.deposit_title,
+          selectedIlk.key
+        )}
+        text={lang.cdp_create.deposit_text}
       />
       <Box my="l">
         <TwoColumnCardsLayout
@@ -286,7 +407,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             />
           }
           ratio={[4, 2]}
-          sideContent={<CDPCreateSelectCollateralSidebar />}
+          sideContent={<CDPCreateDepositSidebar selectedIlk={selectedIlk} />}
           SidebarComponent={Box}
         />
       </Box>
@@ -298,45 +419,33 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   );
 };
 
-const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
-  const { maker } = useMaker();
-  const [userProxyDetails, setUserProxyDetails] = React.useState({
-    status: 'null',
-    address: ''
-  });
+const CDPCreateNoProxy = () => {
+  return (
+    <Box>
+      <ScreenHeader
+        title={lang.cdp_create.proxy_title}
+        text={lang.cdp_create.proxy_text}
+      />
+    </Box>
+  );
+};
 
-  async function checkProxyStatus() {
-    setUserProxyDetails({ status: 'checking', address: '' });
-    const proxyAddress = await maker.service('proxy').currentProxy();
-    if (!proxyAddress)
-      setUserProxyDetails({
-        status: 'no-proxy',
-        address: ''
-      });
-    else
-      setUserProxyDetails({
-        address: proxyAddress,
-        status: 'found'
-      });
-  }
+const CDPCreateConfirmSummary = ({
+  cdpParams,
+  selectedIlk,
+  capturedDispatch
+}) => {
+  const { liquidationPenalty, liquidationRatio } = selectedIlk.ilkData;
 
-  React.useEffect(() => {
-    checkProxyStatus();
-  }, []);
-
-  const showLoader = userProxyDetails.status === 'checking';
-  if (showLoader) return <LoadingLayout background="#F6F8F9" />;
-
-  if (userProxyDetails.status === 'no-proxy')
-    return (
-      <Box>
-        <ScreenHeader
-          title="Creating a proxy"
-          text="Before creating your first CDP, you must create a personal proxy contract."
-        />
-      </Box>
-    );
-
+  const rows = [
+    [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
+    [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
+    [lang.collateralization_ratio, `${cdpParams.daiToDraw}%`],
+    [lang.liquidation_ratio, `${liquidationRatio}%`],
+    [lang.liquidation_price, `$${cdpParams.daiToDraw}`],
+    [lang.liquidation_penalty, `${liquidationPenalty}%`],
+    [lang.stability_fee, '2.5%']
+  ];
   return (
     <Box
       maxWidth="1040px"
@@ -344,21 +453,128 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
         margin: 0 auto;
       `}
     >
-      <ScreenHeader title="Confirm CDP" />
+      <ScreenHeader title={lang.cdp_create.confirm_title} />
       <Box my="l">
-        <Card>
-          <Box m="l">
-            <Text>
-              Depositing {cdpParams.gemsToLock} {selectedIlk.key}
-            </Text>
-          </Box>
-          <Box m="l">
-            <Text>Generating {cdpParams.daiToDraw} DAI</Text>
-          </Box>
+        <Card p="l" px="xl">
+          <Grid>
+            {rows.map(([title, value], index) => {
+              return (
+                <Grid
+                  key={title + value}
+                  mt={!!index && 's'}
+                  pt={!!index && 's'}
+                  gridTemplateColumns="5fr 1fr"
+                  justifyItems="start"
+                  css={{
+                    [index !== 0 ? 'borderTop' : '']: '1px solid',
+                    borderColor: getColor('grayLight6')
+                  }}
+                >
+                  <Text>{title}</Text>
+                  <Text fontWeight="bold">{value}</Text>
+                </Grid>
+              );
+            })}
+          </Grid>
+          <Flex>
+            <Box m="auto" mt="l">
+              <Checkbox checked={false} onChange={() => {}} mr="xs" />
+              <Text color="gray2">
+                {lang.formatString(
+                  lang.terms_of_service_text,
+                  <Link color="greenPastel">{lang.terms_of_service}</Link>
+                )}
+              </Text>
+            </Box>
+          </Flex>
         </Card>
       </Box>
-      <ScreenFooter dispatch={dispatch} />
+      <ScreenFooter
+        dispatch={capturedDispatch}
+        continueText={lang.actions.create_cdp}
+      />
     </Box>
+  );
+};
+
+const CDPCreateConfirmed = ({ dispatch }) => {
+  return (
+    <Box
+      maxWidth="1040px"
+      css={`
+        margin: 0 auto;
+      `}
+    >
+      <ScreenHeader
+        title={lang.cdp_create.confirmed_title}
+        text={lang.cdp_create.confirmed_text}
+      />
+      <Box my="m">More info goes here...</Box>
+    </Box>
+  );
+};
+
+const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
+  const { maker } = useMaker();
+
+  const [userProxyDetails, setUserProxyDetails] = React.useState({
+    status: 'null',
+    address: ''
+  });
+
+  const [creating, setCreate] = React.useState(false);
+
+  const capturedDispatch = payload => {
+    const { type } = payload;
+
+    if (type !== 'increment-step') return dispatch(payload);
+
+    // TODO - actually do the thing
+    setCreate(true);
+    console.log('will create CDP');
+  };
+
+  function handleProxyStatusCallback(addr, setFn) {
+    if (!addr) {
+      setFn({
+        status: 'no-proxy',
+        address: ''
+      });
+
+      ensureProxy();
+    } else
+      setFn({
+        address: addr,
+        status: 'found'
+      });
+  }
+  async function ensureProxy() {
+    const proxyAddress = await maker.service('proxy').ensureProxy();
+    handleProxyStatusCallback(proxyAddress, setUserProxyDetails);
+  }
+  async function checkProxyStatus() {
+    setUserProxyDetails({ status: 'checking', address: '' });
+    const proxyAddress = await maker.service('proxy').currentProxy();
+    handleProxyStatusCallback(proxyAddress, setUserProxyDetails);
+  }
+
+  React.useEffect(() => {
+    checkProxyStatus();
+  }, []);
+
+  if (creating) return <CDPCreateConfirmed />;
+
+  if (userProxyDetails.status === 'checking')
+    return <LoadingLayout background="#F6F8F9" />;
+
+  if (userProxyDetails.status === 'no-proxy') return <CDPCreateNoProxy />;
+
+  return (
+    <CDPCreateConfirmSummary
+      cdpParams={cdpParams}
+      selectedIlk={selectedIlk}
+      capturedDispatch={capturedDispatch}
+    />
   );
 };
 
