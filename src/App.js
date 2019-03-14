@@ -6,19 +6,27 @@ import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
 import store from './store';
 import theme from 'styles/theme';
+import LoadingLayout from 'layouts/LoadingLayout';
+
+const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
 
 const Body = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
   max-height: 100vh;
+  ${NOT_PRODUCTION_READY_MODAL_SCROLLING
+    ? `  div {
+    overflow-y: auto;
+  }`
+    : ''}
 `;
 
 function App() {
   return (
     <Body>
       <NavNotFoundBoundary render={GenericNotFound}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingLayout text="Loading..." />}>
           <NavContent />
         </Suspense>
       </NavNotFoundBoundary>

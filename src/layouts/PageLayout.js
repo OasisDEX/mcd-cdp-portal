@@ -9,6 +9,7 @@ const ResponsiveWrap = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-y: auto;
   background: ${({ theme }) => theme.colors.backgroundGrey};
 
   ${breakpoint} {
@@ -32,7 +33,7 @@ const SidebarWrap = styled.div`
 const NavbarWrap = styled.div`
   display: none;
   grid-area: navbar;
-  background: #222;
+  background: ${({ theme }) => theme.colors.black5};
   padding: 0 ${({ theme }) => theme.space.xs};
 
   ${breakpoint} {

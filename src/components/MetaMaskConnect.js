@@ -65,13 +65,17 @@ export default function MetaMaskConnect() {
 
           const {
             network,
+            testchainId,
             address: urlParamAddress
           } = navigation.receivedRoute.url.query;
 
           const addressToView = urlParamAddress || connectedAddress;
           navigation.history.push({
             pathname: '/overview/',
-            search: `?network=${network}&address=${addressToView}`
+            search:
+              testchainId !== undefined
+                ? `?testchainId=${testchainId}&address=${addressToView}`
+                : `?network=${network}&address=${addressToView}`
           });
         } catch (err) {
           window.alert(err.toString());

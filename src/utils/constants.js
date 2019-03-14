@@ -4,3 +4,11 @@ export const CDP_SAFETY_LEVELS = {
   NEUTRAL: 'neutral',
   SAFE: 'safe'
 };
+
+export const TxLifecycle = {
+  NULL: 'null',
+  INITIALIZED: 'initialized',
+  PENDING: 'pending',
+  MINED: 'mined',
+  ERROR: 'error'
+};

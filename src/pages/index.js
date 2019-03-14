@@ -19,6 +19,8 @@ import { createCDPSystemModel } from 'reducers/network/system/model';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
+import { ModalProvider } from 'providers/ModalProvider';
+import modals from 'components/Modals';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -32,7 +34,13 @@ async function stageNetwork({ testchainId, network }) {
   });
 
   // reinstantiated if rpcUrl has changed
-  const { maker } = await getOrReinstantiateMaker({ rpcUrl });
+  const {
+    maker,
+    reinstantiated: makerReinstantiated
+  } = await getOrReinstantiateMaker({ rpcUrl, addresses });
+  if (makerReinstantiated)
+    store.dispatch({ type: 'addresses/set', payload: { addresses } });
+
   const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
@@ -49,7 +57,13 @@ async function stageNetwork({ testchainId, network }) {
         cdpTypeModel.priceFeed(addresses)('ETH', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 })
+        cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 }),
+        cdpTypeModel.rateData(addresses)('ETH'),
+        cdpTypeModel.rateData(addresses)('REP'),
+        cdpTypeModel.liquidation(addresses)('ETH'),
+        cdpTypeModel.liquidation(addresses)('REP'),
+        cdpTypeModel.flipper(addresses)('ETH'),
+        cdpTypeModel.flipper(addresses)('REP')
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
   }
@@ -63,48 +77,47 @@ function withAuthenticatedNetwork(getPage) {
     try {
       // ensure our maker and watcher instances are connected to the correct network
       const { maker, stateFetchPromise } = await stageNetwork(url.query);
-
       const { pathname } = url;
-
       let connectedAddress = null;
+
       try {
         connectedAddress = maker.currentAddress();
       } catch (_) {
         // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
 
-      const getPageWithMakerProvider = () => (
+      const withMakerProvider = children => (
         // the canonical maker source
-        <MakerHooksProvider maker={maker}>{getPage()}</MakerHooksProvider>
+        <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
-      if (pathname === '/') return getPageWithMakerProvider();
+      if (pathname === '/') return withMakerProvider(getPage());
 
       await maker.authenticate();
       await stateFetchPromise;
-      return (
-        <PageLayout
-          mobileNav={
-            <MobileNav
-              network={{
-                id: maker.service('web3').networkId(),
-                swappable: false
-              }}
-              address={connectedAddress}
-            />
-          }
-          navbar={<Navbar />}
-          sidebar={
-            <Sidebar
-              network={{
-                id: maker.service('web3').networkId(),
-                swappable: false
-              }}
-              address={connectedAddress}
-            />
-          }
-          content={getPageWithMakerProvider()}
-        />
+      return withMakerProvider(
+        <ModalProvider modals={modals}>
+          <PageLayout
+            mobileNav={
+              <MobileNav
+                network={{
+                  id: maker.service('web3').networkId()
+                }}
+                address={connectedAddress}
+              />
+            }
+            navbar={<Navbar address={connectedAddress} />}
+            sidebar={
+              <Sidebar
+                network={{
+                  id: maker.service('web3').networkId()
+                }}
+                address={connectedAddress}
+              />
+            }
+            content={getPage()}
+          />
+        </ModalProvider>
       );
     } catch (errMsg) {
       return <div>{errMsg.toString()}</div>;
