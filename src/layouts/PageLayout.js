@@ -9,6 +9,7 @@ const ResponsiveWrap = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-y: auto;
   background: ${({ theme }) => theme.colors.backgroundGrey};
 
   ${breakpoint} {

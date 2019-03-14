@@ -1,4 +1,4 @@
-export function prettifyNumber(_num, truncate = false) {
+export function prettifyNumber(_num = null, truncate = false) {
   if (_num === null) return null;
   let symbol = ' ';
   if (_num.symbol !== undefined) symbol += _num.symbol;

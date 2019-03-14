@@ -29,10 +29,62 @@
     "buy_and_burn_lot_size": "BUY & BURN LOT SIZE",
     "inflate_and_sell_lot_size": "INFLATE & SELL LOT SIZE"
   },
+  "cdp_create": {
+    "select_title": "Select a collateral type",
+    "select_text": "Each collateral type has its own risk parameters. You can lock up additional collateral types later.",
+
+    "deposit_title": "Deposit {0} and Generate Dai",
+    "deposit_text": "Different collateral types have different risk parameters and collateralization ratios.",
+    "deposit_sidebar_title": "{0} Risk Parameters",
+    "deposit_form_field1_title": "How much {0} would you like to lock in your CDP?",
+    "deposit_form_field1_text": "The amount of {0} you lock up determines how much Dai you can generate.",
+    "deposit_form_field2_title": "What target collateralization ratio would you like to stay above?",
+    "deposit_form_field2_text": "If your cdp drops below this target it will be considered {0} risk.",
+    "deposit_form_field2_after": "Suggested:",
+    "deposit_form_field3_title": "How much DAI would you like to generate?",
+    "deposit_form_field3_text": "You should generate an amount that is safely above the liquidation ratio.",
+    "deposit_form_field3_after1": "Max at target ratio",
+    "deposit_form_field3_after2": "Max at liq. ratio",
+
+    "confirm_title": "Confirm CDP",
+    "confirmed_title": "Your CDP is being created",
+    "confirmed_text": "The estimated time is 8 minutes. You can safely leave this page and return.",
+    "proxy_title": "Creating a proxy",
+    "proxy_text": "Before creating your first CDP, you must create a personal proxy contract.",
+    "insufficient_ilk_balance": "Insufficient {0} balance",
+    "stability_fee_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",
+    "liquidation_ratio_description": "The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation.",
+    "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs."
+  },
+  "actions": {
+    "back": "Back",
+    "continue": "Continue",
+    "create_cdp": "Create CDP"
+  },
+
+  "verbs": {
+    "depositing": "Depositing",
+    "generating": "Generating"
+  },
+
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
   "network": "Network",
   "unknown": "Unknown",
   "cdp": "CDP",
-  "connect": "Connect"
+  "connect": "Connect",
+  "stability_fee": "Stability fee",
+  "liquidation_penalty": "Liquidation penalty",
+  "liquidation_ratio": "Liquidation ratio",
+  "liquidation_price": "Liquidation Price",
+  "liquidation_penalty_shortened": "Liq Fee",
+  "liquidation_ratio_shortened": "Liq ratio",
+  "liquidation_price_shortened": "Liq Price",
+  "collateral_type": "Collateral Type",
+  "collateralization": "Collateralization",
+  "collateralization_ratio": "Collateralization ratio",
+  "your_balance": "Your balance",
+  "risk_parameters": "Risk Parameters",
+  "terms_of_service_text": "I have read and accepted the {0}",
+  "terms_of_service": "Terms of Service"
 }

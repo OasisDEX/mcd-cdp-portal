@@ -12,7 +12,7 @@ export const LIQUIDATION_PENALTY = 'liquidationPenalty';
 export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
 
-export function getCDPTypeDetails(state, cdpTypeSlug) {
+export function getIlkData(state, cdpTypeSlug) {
   return state.network.cdpTypes.find(({ slug }) => cdpTypeSlug === slug) || {};
 }
 

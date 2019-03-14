@@ -1,6 +1,6 @@
 import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
-import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
+import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
 import {
   ADAPTER_BALANCE,
   MAX_AUCTION_LOT_SIZE,
@@ -25,10 +25,10 @@ export const priceFeed = addresses => (name, { decimals = 18 } = {}) => ({
 });
 
 export const rateData = addresses => name => ({
-  target: addresses.MCD_DRIP,
+  target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
   returns: [
-    [`${name}.${RATE}`, val => fromRad(val, 5)],
+    [`${name}.${RATE}`, val => fromRay(val, 2)],
     [`${name}.${LAST_DRIP}`]
   ]
 });
@@ -43,9 +43,12 @@ export const pitData = addresses => name => ({
 });
 
 export const liquidation = addresses => name => ({
-  target: addresses[`MCD_SPOT_${name}`],
-  call: ['mat()(uint256)'],
-  returns: [[`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 2)]]
+  target: addresses[`MCD_SPOT`],
+  call: ['ilks(bytes32)(address,uint256)', toHex(name)],
+  returns: [
+    [`pip${name}`],
+    [`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 0)]
+  ]
 });
 
 export const flipper = addresses => name => ({
