@@ -8,11 +8,18 @@ import store from './store';
 import theme from 'styles/theme';
 import LoadingLayout from 'layouts/LoadingLayout';
 
+const NOT_PRODUCTION_READY_MODAL_SCROLLING = true;
+
 const Body = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
   max-height: 100vh;
+  ${NOT_PRODUCTION_READY_MODAL_SCROLLING
+    ? `  div {
+    overflow-y: auto;
+  }`
+    : ''}
 `;
 
 function App() {
