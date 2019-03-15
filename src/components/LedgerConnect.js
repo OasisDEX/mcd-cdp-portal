@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import lang from 'languages';
@@ -12,6 +12,7 @@ import useMaker from 'hooks/useMaker';
 import { cutMiddle, copyToClipboard } from '../utils/ui';
 import { AccountTypes } from '../utils/constants';
 import { addMkrAndEthBalance } from '../utils/ethereum';
+import useModal from 'hooks/useModal';
 
 // added components
 import {
@@ -52,101 +53,103 @@ export const StyledTop = styled.div`
   justify-content: center;
 `;
 
-const addLedgerAccount = async (maker, setAddresses) => {
-  try {
-    await maker.addAccount({
-      type: AccountTypes.LEDGER,
-      path: LEDGER_LIVE_PATH,
-      accountsOffset: 0,
-      accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-      choose: addresses => {
-        const addressBalancePromises = addresses.map(address =>
-          addMkrAndEthBalance({
-            address,
-            type: AccountTypes.LEDGER
-          })
-        );
-        console.log('addressBalancePromises', addressBalancePromises);
-        return Promise.all(addressBalancePromises).then(addressBalances =>
-          setAddresses(addressBalances)
-        );
-      }
-    });
-  } catch (err) {
-    window.alert(err.toString());
-  }
-};
+// const addLedgerAccount = async (maker, setAddresses) => {
+//   try {
+//     await maker.addAccount({
+//       type: AccountTypes.LEDGER,
+//       path: LEDGER_LIVE_PATH,
+//       accountsOffset: 0,
+//       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
+//       choose: addresses => {
+//         const addressBalancePromises = addresses.map(address =>
+//           addMkrAndEthBalance({
+//             address,
+//             type: AccountTypes.LEDGER
+//           })
+//         );
+//         console.log('addressBalancePromises', addressBalancePromises);
+//         return Promise.all(addressBalancePromises).then(addressBalances =>
+//           setAddresses(addressBalances)
+//         );
+//       }
+//     });
+//   } catch (err) {
+//     window.alert(err.toString());
+//   }
+// };
 
-const onConfirm = async (maker, address) => {
-  await maker.addAccount({ address, type: AccountTypes.LEDGER });
-  console.log('list account', maker.listAccounts);
-  maker.useAccountWithAddress(address);
+// const onConfirm = async (maker, address) => {
+//   await maker.addAccount({ address, type: AccountTypes.LEDGER });
+//   console.log('list account', maker.listAccounts);
+//   maker.useAccountWithAddress(address);
 
-  const connectedAddress = maker.currentAddress();
-  console.log('connectedAddress', connectedAddress);
+//   const connectedAddress = maker.currentAddress();
+//   console.log('connectedAddress', connectedAddress);
 
-  mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
+//   mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
 
-  const {
-    network,
-    address: urlParamAddress
-  } = navigation.receivedRoute.url.query;
+//   const {
+//     network,
+//     address: urlParamAddress
+//   } = navigation.receivedRoute.url.query;
 
-  const addressToView = urlParamAddress || connectedAddress;
+//   const addressToView = urlParamAddress || connectedAddress;
 
-  navigation.history.push({
-    pathname: '/overview/',
-    search: `?network=${network}&address=${addressToView}`
-  });
-};
-const onBack = () => {},
-  onLedgerLegacy = () => {},
-  onCancel = () => {};
+//   navigation.history.push({
+//     pathname: '/overview/',
+//     search: `?network=${network}&address=${addressToView}`
+//   });
+// };
+// const onBack = () => {},
+//   onLedgerLegacy = () => {},
+//   onCancel = () => {};
 
 //Ledger step component, to be moved into separate component//
-const LedgerStep = ({ active, onLedgerLive, onLedgerLegacy, onCancel }) => {
-  return (
-    <Grid gridRowGap="m">
-      {/* <OnboardingHeader
-        mt={[0, 0, 0, 'l']}
-        title="Ledger live or legacy"
-        subtitle="Due to a firmware update, you will need to choose between Ledger
-      Live and Ledger legacy."
-      /> */}
-      <ButtonCard
-        icon={<StyledLedgerLogo />}
-        onNext={onLedgerLive}
-        title="Ledger live"
-        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
-        buttonText="Connect"
-      />
-      <ButtonCard
-        icon={<StyledLedgerLogo />}
-        onNext={onLedgerLegacy}
-        title="Ledger legacy"
-        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
-        buttonText="Connect"
-      />
-      <Box justifySelf="center">
-        <Button variant="secondary-outline" onClick={onCancel}>
-          Select another wallet
-        </Button>
-      </Box>
-    </Grid>
-  );
-};
+// const LedgerStep = ({ active, onLedgerLive, onLedgerLegacy, onCancel }) => {
+//   return (
+//     <Grid gridRowGap="m">
+//       {/* <OnboardingHeader
+//         mt={[0, 0, 0, 'l']}
+//         title="Ledger live or legacy"
+//         subtitle="Due to a firmware update, you will need to choose between Ledger
+//       Live and Ledger legacy."
+//       /> */}
+//       <ButtonCard
+//         icon={<StyledLedgerLogo />}
+//         onNext={onLedgerLive}
+//         title="Ledger live"
+//         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+//         buttonText="Connect"
+//       />
+//       <ButtonCard
+//         icon={<StyledLedgerLogo />}
+//         onNext={onLedgerLegacy}
+//         title="Ledger legacy"
+//         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+//         buttonText="Connect"
+//       />
+//       <Box justifySelf="center">
+//         <Button variant="secondary-outline" onClick={onCancel}>
+//           Select another wallet
+//         </Button>
+//       </Box>
+//     </Grid>
+//   );
+// };
 //End Ledger step component//
 
-function LedgerConnect() {
-  const [addresses, setAddresses] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState('');
-  const [ledgerStepModelOpen, setledgerStepModalBool] = useState(false);
-  const [modelOpen, setModalBool] = useState(false);
-  const { maker, authenticated: makerAuthenticated } = useMaker();
+const LedgerConnect = memo(function() {
+  // const [addresses, setAddresses] = useState([]);
+  // const [selectedAddress, setSelectedAddress] = useState('');
+  // const [ledgerStepModelOpen, setledgerStepModalBool] = useState(false);
+  // const [modelOpen, setModalBool] = useState(false);
+  // const { maker, authenticated: makerAuthenticated } = useMaker();
+  const { showByType } = useModal();
+  console.log('show by tp', showByType);
 
   return (
-    <>
-      <Modal
+    <Fragment>
+      {/* <Modal
         show={ledgerStepModelOpen}
         onClose={() => {
           setledgerStepModalBool(false);
@@ -161,8 +164,8 @@ function LedgerConnect() {
           onLedgerLegacy={onLedgerLegacy}
           onCancel={onCancel}
         />
-      </Modal>
-      <Modal
+      </Modal> */}
+      {/* <Modal
         show={modelOpen}
         onClose={() => {
           setModalBool(false);
@@ -198,7 +201,7 @@ function LedgerConnect() {
                     />
                   </td>
                   <td>{index + 1}</td>
-                  {/* <td>{index + page * PER_PAGE + 1}</td> */}
+
                   <InlineTd title={address}>
                     {cutMiddle(address, 7, 5)}
                     <CopyBtn onClick={() => copyToClipboard(address)}>
@@ -228,15 +231,12 @@ function LedgerConnect() {
             Confirm wallet
           </Button>
         </Grid>
-      </Modal>
+      </Modal> */}
 
       <Button
         variant="secondary-outline"
         width="225px"
-        onClick={() => {
-          setledgerStepModalBool(true);
-          // addLedgerAccount(maker, setAddresses);
-        }}
+        onClick={() => showByType('ledgertype')}
       >
         <Flex alignItems="center">
           <StyledLedgerLogo />
@@ -245,14 +245,38 @@ function LedgerConnect() {
           </span>
         </Flex>
       </Button>
-    </>
+    </Fragment>
   );
-}
+});
 
-function mapStateToProps(state) {
-  return {
-    ...state
-  };
-}
+export default LedgerConnect;
 
-export default connect(mapStateToProps)(LedgerConnect);
+// function mapStateToProps(state) {
+//   return {
+//     ...state
+//   };
+// }
+
+// export default connect(mapStateToProps)(LedgerConnect);
+
+/**
+ * <Button
+        icon={<StyledLedgerLogo />}
+        onNext={onLedgerLive}
+        title="Ledger live"
+        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        buttonText="Connect"
+      />
+      <Button
+        icon={<StyledLedgerLogo />}
+        onNext={onLedgerLegacy}
+        title="Ledger legacy"
+        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        buttonText="Connect"
+      />
+      <Box justifySelf="center">
+        <Button variant="secondary-outline" onClick={onCancel}>
+          Select another wallet
+        </Button>
+      </Box>
+ */
