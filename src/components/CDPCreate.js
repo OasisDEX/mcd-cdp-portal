@@ -1,94 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { hot } from 'react-hot-loader/root';
+import { connect } from 'react-redux';
+import { getActionableIlks } from 'reducers/addresses';
 
 import StepperUI from 'components/StepperUI';
-import { Box, Button, Grid, Text } from '@makerdao/ui-components-core';
-import { Block } from 'components/Primitives';
+import {
+  CDPCreateSelectCollateral,
+  CDPCreateConfirmCDP,
+  CDPCreateDeposit
+} from 'components/CDPCreateScreens';
 
-import { prettifyNumber } from 'utils/ui';
-import useMakerState from 'hooks/useMakerState';
+const screens = [
+  ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
+  ['Generate Dai', props => <CDPCreateDeposit {...props} />],
+  ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
+];
 
-const HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT =
-  '0x00DaA9a2D88BEd5a29A6ca93e0B7d860cd1d403F';
+const initialState = {
+  step: 0,
+  selectedIlk: {
+    userGemBalance: '',
+    ilkData: {},
+    key: ''
+  },
+  gemsToLock: '',
+  daiToDraw: '',
+  targetCollateralizationRatio: ''
+};
 
-function CDPCreate({ show, onClose }) {
-  const [step, setStep] = useState(0);
+function reducer(state, action) {
+  const { type, payload } = action;
+  switch (type) {
+    case 'increment-step':
+      return {
+        ...state,
+        step: state.step + 1
+      };
+    case 'decrement-step':
+      return {
+        ...state,
+        step: state.step - 1
+      };
+    case 'set-ilk':
+      return {
+        ...state,
+        selectedIlk: {
+          key: payload.key,
+          userGemBalance: payload.gemBalance,
+          ilkData: payload.ilkData
+        }
+      };
+    case 'form/set-gemsToLock':
+      return { ...state, gemsToLock: payload.value };
+    case 'form/set-daiToDraw':
+      return { ...state, daiToDraw: payload.value };
+    case 'form/set-targetCollateralizationRatio':
+      return {
+        ...state,
+        targetCollateralizationRatio: payload.value
+      };
+    case 'reset':
+      return { ...initialState };
+    default:
+      return state;
+  }
+}
 
-  // const ethBalance = 0;
-  const ethBalance = useMakerState(maker =>
-    maker.getToken('ETH').balanceOf(HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT)
+function CDPCreate({ actionableIlks }) {
+  const [{ step, selectedIlk, ...cdpParams }, dispatch] = React.useReducer(
+    reducer,
+    initialState
   );
 
-  useEffect(() => {
-    ethBalance.prefetch();
-  }, []);
+  const screenProps = {
+    actionableIlks,
+    selectedIlk,
+    cdpParams,
+    dispatch
+  };
 
   return (
-    <StepperUI
-      step={step}
-      show={show}
-      onClose={onClose}
-      steps={['Select Collateral', 'Generate Dai', 'Confirmation']}
-    >
-      <Box>
-        <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="145px"
-              onClick={() => {
-                setStep(1);
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
-        </Grid>
-      </Box>
-
-      <Box>
-        <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="110px"
-              variant="secondary-outline"
-              onClick={() => {
-                setStep(0);
-              }}
-            >
-              Back
-            </Button>
-            <Button
-              width="145px"
-              onClick={() => {
-                setStep(2);
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
-          <Block textAlign="center">
-            <Text>YOUR BALANCE </Text>
-          </Block>
-        </Grid>
-      </Box>
-
-      <Box>
-        <Grid gridRowGap="m">
-          <Box textAlign="center">
-            <Button
-              width="110px"
-              variant="secondary-outline"
-              onClick={() => {
-                setStep(1);
-              }}
-            >
-              Back
-            </Button>
-            <Button width="145px">Create CDP</Button>
-          </Box>
-        </Grid>
-      </Box>
+    <StepperUI step={step} steps={screens.map(([title]) => title)}>
+      {screens.map(([title, fn], screenIndex) =>
+        fn({ ...screenProps, screenIndex, key: screenIndex })
+      )}
     </StepperUI>
   );
 }
 
-export default CDPCreate;
+export default connect(
+  state => ({
+    // ie a list of ilks we have the right addresses for
+    actionableIlks: getActionableIlks(state)
+  }),
+  {}
+)(hot(CDPCreate));

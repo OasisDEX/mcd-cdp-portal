@@ -28,9 +28,13 @@ const NavLabel = styled(Text)`
   color: ${({ theme }) => theme.colors.grayLight};
 `;
 
+const TextBlock = styled(Text)`
+  display: block;
+`;
+
 const BreakableText = styled(Text)`
   overflow-wrap: break-word;
   word-break: break-word;
 `;
 
-export { Title, Subtitle, NavLabel, Heading, BreakableText };
+export { Title, Subtitle, NavLabel, Heading, TextBlock, BreakableText };

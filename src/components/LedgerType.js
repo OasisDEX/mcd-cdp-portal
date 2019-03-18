@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, Grid } from '@makerdao/ui-components-core';
+import { Box, Button, Grid, Flex } from '@makerdao/ui-components-core';
 import ButtonCard from './ButtonCard';
 
 import styled from 'styled-components';
@@ -23,11 +23,28 @@ export const StyledTitle = styled.div`
   font-size: 28px;
 `;
 
-function LedgerType({ onLedgerLegacy, onCancel }) {
+// const onClose = () => {};
+
+function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
   const { showByType } = useModal();
 
   return (
-    <Grid gridRowGap="m">
+    <Grid
+      gridRowGap="s"
+      gridTemplateRows="50px 1fr"
+      p="m"
+      maxWidth="100%"
+      width="100vw"
+      height="100vh"
+      bg="grayLight5"
+      onClick={e => e.stopPropagation()}
+      css={`
+        overflow-y: auto;
+      `}
+    >
+      <Flex justifyContent="flex-end">
+        <Box onClick={onClose}>Close</Box>
+      </Flex>
       <StyledTitle>Connect Ledger Live or Legacy</StyledTitle>
       <ButtonCard
         icon={<StyledLedgerLogo />}

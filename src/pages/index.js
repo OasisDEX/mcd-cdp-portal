@@ -34,7 +34,13 @@ async function stageNetwork({ testchainId, network }) {
   });
 
   // reinstantiated if rpcUrl has changed
-  const { maker } = await getOrReinstantiateMaker({ rpcUrl });
+  const {
+    maker,
+    reinstantiated: makerReinstantiated
+  } = await getOrReinstantiateMaker({ rpcUrl, addresses });
+  if (makerReinstantiated)
+    store.dispatch({ type: 'addresses/set', payload: { addresses } });
+
   const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
@@ -48,10 +54,12 @@ async function stageNetwork({ testchainId, network }) {
     stateFetchPromise = watcher.tap(() => {
       return [
         ...createCDPSystemModel(addresses),
-        cdpTypeModel.priceFeed(addresses)('ETH', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 })
+        cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 }),
+        cdpTypeModel.rateData(addresses)('REP'),
+        cdpTypeModel.liquidation(addresses)('REP'),
+        cdpTypeModel.flipper(addresses)('REP')
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
   }
@@ -65,10 +73,9 @@ function withAuthenticatedNetwork(getPage) {
     try {
       // ensure our maker and watcher instances are connected to the correct network
       const { maker, stateFetchPromise } = await stageNetwork(url.query);
-
       const { pathname } = url;
-
       let connectedAddress = null;
+
       try {
         connectedAddress = maker.currentAddress();
       } catch (_) {
@@ -96,18 +103,16 @@ function withAuthenticatedNetwork(getPage) {
             mobileNav={
               <MobileNav
                 network={{
-                  id: maker.service('web3').networkId(),
-                  swappable: false
+                  id: maker.service('web3').networkId()
                 }}
                 address={connectedAddress}
               />
             }
-            navbar={<Navbar />}
+            navbar={<Navbar address={connectedAddress} />}
             sidebar={
               <Sidebar
                 network={{
-                  id: maker.service('web3').networkId(),
-                  swappable: false
+                  id: maker.service('web3').networkId()
                 }}
                 address={connectedAddress}
               />

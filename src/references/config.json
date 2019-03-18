@@ -15,5 +15,5 @@
     "999": "Testchain"
   },
   "defaultNetwork": "42",
-  "exTestchainApiUrl": "http://18.185.172.121:4000/chain"
+  "exTestchainApiUrl": "https://testchain-backendgatway.makerfoundation.com:4001/chain"
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Grid } from '@makerdao/ui-components-core';
+import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
 
 import { navigation } from '../index';
@@ -50,7 +50,7 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address) => {
+const onConfirm = async (maker, address, closeModal) => {
   await maker.addAccount({ address, type: AccountTypes.LEDGER });
   console.log('list account', maker.listAccounts);
   maker.useAccountWithAddress(address);
@@ -71,11 +71,10 @@ const onConfirm = async (maker, address) => {
     pathname: '/overview/',
     search: `?network=${network}&address=${addressToView}`
   });
+  closeModal();
 };
 
-const onBack = () => {};
-
-function LedgerAddresses({ onLedgerLive, onLedgerLegacy, onCancel }) {
+function LedgerAddresses({ onLedgerLive, onLedgerLegacy, onClose }) {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const { maker, authenticated: makerAuthenticated } = useMaker();
@@ -105,7 +104,22 @@ function LedgerAddresses({ onLedgerLive, onLedgerLegacy, onCancel }) {
   }, []);
 
   return (
-    <Grid gridRowGap="m">
+    <Grid
+      gridRowGap="s"
+      gridTemplateRows="50px 1fr"
+      p="m"
+      maxWidth="100%"
+      width="100vw"
+      height="100vh"
+      bg="grayLight5"
+      onClick={e => e.stopPropagation()}
+      css={`
+        overflow-y: auto;
+      `}
+    >
+      <Flex justifyContent="flex-end">
+        <Box onClick={onClose}>Close</Box>
+      </Flex>
       <StyledTop>
         <StyledTitle>Select address</StyledTitle>
       </StyledTop>
@@ -156,12 +170,14 @@ function LedgerAddresses({ onLedgerLive, onLedgerLegacy, onCancel }) {
         gridTemplateColumns={['1fr', 'auto auto']}
         justifySelf={['stretch', 'center']}
       >
-        <Button variant="secondary-outline" onClick={onBack}>
+        <Button variant="secondary-outline" onClick={onClose}>
           Change wallet
         </Button>
         <Button
           disabled={!selectedAddress}
-          onClick={async () => onConfirm(maker, selectedAddress)}
+          onClick={async () => {
+            onConfirm(maker, selectedAddress, onClose);
+          }}
         >
           Confirm wallet
         </Button>

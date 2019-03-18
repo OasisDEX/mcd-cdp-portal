@@ -6,6 +6,11 @@ function useMaker() {
   const maker = useContext(MakerObjectContext);
   const [authenticated, setAuthenticated] = useState(false);
 
+  async function authenticatedMaker() {
+    await maker.authenticate();
+    return maker;
+  }
+
   useEffect(() => {
     maker.authenticate().then(() => {
       setAuthenticated(true);
@@ -16,7 +21,7 @@ function useMaker() {
     };
   }, [maker]);
 
-  return { maker, authenticated };
+  return { maker, authenticated, authenticatedMaker };
 }
 
 export default useMaker;

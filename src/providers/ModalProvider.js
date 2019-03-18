@@ -1,6 +1,20 @@
 import React, { createContext, useReducer } from 'react';
-import { Modal } from '@makerdao/ui-components-core';
+import styled from 'styled-components';
+import { Flex } from '@makerdao/ui-components-core';
 
+const BasicModal = ({ show, onClose, children }) => {
+  const Bg = styled(Flex)`
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  `;
+  if (!show) return null;
+
+  return <Bg onClick={onClose}>{children}</Bg>;
+};
 function resolveModalTypeToComponent(modals, type, props) {
   if (!modals || !type || !modals[type]) return null;
 
@@ -42,9 +56,12 @@ function ModalProvider({ children, modals }) {
 
   return (
     <ModalStateContext.Provider value={{ show, reset }}>
-      <Modal show={shouldShow} onClose={reset} {...modalProps}>
-        {resolveModalTypeToComponent(modals, modalType, modalData)}
-      </Modal>
+      <BasicModal show={shouldShow} onClose={reset} {...modalProps}>
+        {resolveModalTypeToComponent(modals, modalType, {
+          ...modalData,
+          onClose: reset
+        })}
+      </BasicModal>
       {children}
     </ModalStateContext.Provider>
   );
