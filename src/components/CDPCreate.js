@@ -20,6 +20,7 @@ const initialState = {
   step: 0,
   selectedIlk: {
     userGemBalance: '',
+    ilkData: {},
     key: ''
   },
   gemsToLock: '',

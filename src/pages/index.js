@@ -54,15 +54,11 @@ async function stageNetwork({ testchainId, network }) {
     stateFetchPromise = watcher.tap(() => {
       return [
         ...createCDPSystemModel(addresses),
-        cdpTypeModel.priceFeed(addresses)('ETH', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),
         cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 }),
-        cdpTypeModel.rateData(addresses)('ETH'),
         cdpTypeModel.rateData(addresses)('REP'),
-        cdpTypeModel.liquidation(addresses)('ETH'),
         cdpTypeModel.liquidation(addresses)('REP'),
-        cdpTypeModel.flipper(addresses)('ETH'),
         cdpTypeModel.flipper(addresses)('REP')
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });

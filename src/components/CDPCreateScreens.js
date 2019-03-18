@@ -21,6 +21,7 @@ import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
+import { MAX_UINT_BN } from 'utils/units';
 
 function mapStateToProps(state, { ilk }) {
   return {
@@ -419,16 +420,16 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   );
 };
 
-const CDPCreateNoProxy = () => {
-  return (
-    <Box>
-      <ScreenHeader
-        title={lang.cdp_create.proxy_title}
-        text={lang.cdp_create.proxy_text}
-      />
-    </Box>
-  );
-};
+// const CDPCreateNoProxy = () => {
+//   return (
+//     <Box>
+//       <ScreenHeader
+//         title={lang.cdp_create.proxy_title}
+//         text={lang.cdp_create.proxy_text}
+//       />
+//     </Box>
+//   );
+// };
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -517,57 +518,37 @@ const CDPCreateConfirmed = ({ dispatch }) => {
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
   const { maker } = useMaker();
 
-  const [userProxyDetails, setUserProxyDetails] = React.useState({
-    status: 'null',
-    address: ''
-  });
+  const [canCreateCDP, setCanCreateCDP] = React.useState(false);
+  const [cdpCreated, setCdpCreated] = React.useState(false);
 
-  const [creating, setCreate] = React.useState(false);
-
-  const capturedDispatch = payload => {
+  async function capturedDispatch(payload) {
     const { type } = payload;
-
     if (type !== 'increment-step') return dispatch(payload);
 
-    // TODO - actually do the thing
-    setCreate(true);
-    console.log('will create CDP');
-  };
-
-  function handleProxyStatusCallback(addr, setFn) {
-    if (!addr) {
-      setFn({
-        status: 'no-proxy',
-        address: ''
-      });
-
-      ensureProxy();
-    } else
-      setFn({
-        address: addr,
-        status: 'found'
-      });
+    await maker.service('mcd:cdpManager').open(selectedIlk.key);
+    setCdpCreated(true);
   }
-  async function ensureProxy() {
+
+  async function ensureProxyWithGemApprovals() {
     const proxyAddress = await maker.service('proxy').ensureProxy();
-    handleProxyStatusCallback(proxyAddress, setUserProxyDetails);
-  }
-  async function checkProxyStatus() {
-    setUserProxyDetails({ status: 'checking', address: '' });
-    const proxyAddress = await maker.service('proxy').currentProxy();
-    handleProxyStatusCallback(proxyAddress, setUserProxyDetails);
+    const gemToken = maker.getToken(selectedIlk.ilkData.gem);
+    const gemAllowanceSet = (await gemToken.allowance(
+      maker.currentAddress(),
+      proxyAddress
+    )).eq(MAX_UINT_BN);
+
+    if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
+
+    setCanCreateCDP(true);
   }
 
   React.useEffect(() => {
-    checkProxyStatus();
+    ensureProxyWithGemApprovals();
   }, []);
 
-  if (creating) return <CDPCreateConfirmed />;
+  if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 
-  if (userProxyDetails.status === 'checking')
-    return <LoadingLayout background="#F6F8F9" />;
-
-  if (userProxyDetails.status === 'no-proxy') return <CDPCreateNoProxy />;
+  if (cdpCreated) return <CDPCreateConfirmed />;
 
   return (
     <CDPCreateConfirmSummary

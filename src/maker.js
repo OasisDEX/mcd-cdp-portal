@@ -1,5 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, { ETH, REP } from '@makerdao/dai-plugin-mcd/src/index';
+import McdPlugin, { WETH, REP } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import proxyRegistryAbi from 'references/proxyRegistry.abi.json';
@@ -32,7 +32,7 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
           McdPlugin,
           {
             cdpTypes: [
-              { currency: ETH, name: 'ETH' },
+              { currency: WETH, name: 'WETH' },
               { currency: REP, name: 'REP' }
             ],
             addressOverrides: { ...addresses }
