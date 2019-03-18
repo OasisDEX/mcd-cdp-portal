@@ -1,6 +1,7 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
+import LedgerAddresses from './LedgerAddresses';
 import { Grid } from '@makerdao/ui-components-core';
 
 const modals = {
@@ -9,11 +10,8 @@ const modals = {
       <CDPCreate />
     </Grid>
   ),
-  ledgertype: props => (
-    <Grid gridRowGap="m">
-      <LedgerType />
-    </Grid>
-  )
+  ledgertype: props => <LedgerType />,
+  ledgeraddresses: props => <LedgerAddresses />
 };
 
 export default modals;

@@ -1,20 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React from 'react';
 
-import StepperUI from 'components/StepperUI';
-import { Box, Button, Grid, Text } from '@makerdao/ui-components-core';
-import { Block } from 'components/Primitives';
+import { Box, Button, Grid } from '@makerdao/ui-components-core';
+import ButtonCard from './ButtonCard';
 
-import lang from 'languages';
 import styled from 'styled-components';
 
 import { BreakableText } from './Typography';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 
-import { prettifyNumber } from 'utils/ui';
-import useMakerState from 'hooks/useMakerState';
-
-const HARDCODED_USER_ADDRESS_FOR_DEVELOPMENT =
-  '0x00DaA9a2D88BEd5a29A6ca93e0B7d860cd1d403F';
+import useModal from 'hooks/useModal';
 
 // hack to get around button padding for now
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -22,19 +16,31 @@ const StyledLedgerLogo = styled(LedgerLogo)`
   margin-bottom: -5px;
 `;
 
-function LedgerType({ onLedgerLive, onLedgerLegacy, onCancel }) {
+export const StyledTitle = styled.div`
+  font-weight: bold;
+  color: #212536;
+  line-height: 22px;
+  font-size: 28px;
+`;
+
+function LedgerType({ onLedgerLegacy, onCancel }) {
+  const { showByType } = useModal();
+
   return (
-    <Fragment>
-      <Button
+    <Grid gridRowGap="m">
+      <StyledTitle>Connect Ledger Live or Legacy</StyledTitle>
+      <ButtonCard
         icon={<StyledLedgerLogo />}
-        onNext={onLedgerLive}
+        onClick={() => {
+          showByType('ledgeraddresses');
+        }}
         title="Ledger live"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
         buttonText="Connect"
       />
-      <Button
+      <ButtonCard
         icon={<StyledLedgerLogo />}
-        onNext={onLedgerLegacy}
+        onClick={onLedgerLegacy}
         title="Ledger legacy"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
         buttonText="Connect"
@@ -44,7 +50,7 @@ function LedgerType({ onLedgerLive, onLedgerLegacy, onCancel }) {
           Select another wallet
         </Button>
       </Box>
-    </Fragment>
+    </Grid>
   );
 }
 

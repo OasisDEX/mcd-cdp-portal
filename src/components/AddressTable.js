@@ -58,7 +58,7 @@ export const CopyBtnIcon = styled.p`
   background: url(${copy}) no-repeat;
 `;
 
-class HotColdTable extends Component {
+class AddressTable extends Component {
   render() {
     const {
       hotAddress,
@@ -113,4 +113,4 @@ class HotColdTable extends Component {
   }
 }
 
-export default HotColdTable;
+export default AddressTable;

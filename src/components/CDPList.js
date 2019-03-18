@@ -69,7 +69,7 @@ const CDPList = memo(function({ currentPath, currentQuery }) {
         );
       })}
       <DashedFakeButton
-        onClick={() => showByType('ledgertype')}
+        onClick={() => showByType('cdpcreate')}
         justifyContent="center"
         borderRadius="4px"
         py="s"

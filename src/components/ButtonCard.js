@@ -5,7 +5,7 @@ const ButtonCard = ({
   icon,
   title,
   subtitle,
-  onNext,
+  onClick,
   buttonText,
   ...props
 }) => {
@@ -33,7 +33,7 @@ const ButtonCard = ({
           </Box>
         </Box>
         <Box gridColumn={'3'} alignSelf="center">
-          <Button width="100%" onClick={onNext}>
+          <Button width="100%" onClick={onClick}>
             {buttonText}
           </Button>
         </Box>
