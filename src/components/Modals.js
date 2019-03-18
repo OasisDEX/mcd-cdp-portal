@@ -1,6 +1,6 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
-import { Grid, Flex, Box } from '@makerdao/ui-components-core';
+import { Grid } from '@makerdao/ui-components-core';
 
 const modals = {
   cdpcreate: ({ onClose }) => (

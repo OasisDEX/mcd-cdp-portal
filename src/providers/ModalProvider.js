@@ -1,6 +1,5 @@
-import React, { createContext, useReducer, useEffect, useState } from 'react';
+import React, { createContext, useReducer, useState } from 'react';
 import styled from 'styled-components';
-import { Flex } from '@makerdao/ui-components-core';
 import { useSpring, animated, config } from 'react-spring';
 const BasicModal = ({ show, onClose, modalData, children }) => {
   if (!show) return null;
