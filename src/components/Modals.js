@@ -26,7 +26,9 @@ const modals = {
     </Grid>
   ),
   ledgertype: ({ onClose }) => <LedgerType onClose={onClose} />,
-  ledgeraddresses: ({ onClose }) => <LedgerAddresses onClose={onClose} />
+  ledgeraddresses: ({ onClose, isLedgerLive }) => (
+    <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
+  )
 };
 
 export default modals;

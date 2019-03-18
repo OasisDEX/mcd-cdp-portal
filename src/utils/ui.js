@@ -26,7 +26,6 @@ export function cutMiddle(str = '', left = 4, right = 4) {
 export const copyToClipboard = string => {
   const textArea = document.createElement('textarea');
   textArea.value = string;
-  // lol
   document.body.appendChild(textArea);
   textArea.select();
   document.execCommand('Copy');

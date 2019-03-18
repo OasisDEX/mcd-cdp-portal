@@ -28,7 +28,6 @@ const initialState = {
 };
 
 const reducer = (state, { type, payload }) => {
-  console.log('reducer', state);
   switch (type) {
     case 'show':
       return { ...state, ...payload };
@@ -42,7 +41,6 @@ const reducer = (state, { type, payload }) => {
 const ModalStateContext = createContext(initialState);
 
 function ModalProvider({ children, modals }) {
-  console.log('modal provider', children, modals);
   const [{ modalType, modalData, modalProps }, dispatch] = useReducer(
     reducer,
     initialState

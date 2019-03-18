@@ -23,10 +23,8 @@ export const StyledTitle = styled.div`
   font-size: 28px;
 `;
 
-// const onClose = () => {};
-
 function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
-  const { showByType } = useModal();
+  const { show } = useModal();
 
   return (
     <Grid
@@ -49,7 +47,10 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
       <ButtonCard
         icon={<StyledLedgerLogo />}
         onClick={() => {
-          showByType('ledgeraddresses');
+          show({
+            modalType: 'ledgeraddresses',
+            modalData: { isLedgerLive: true }
+          });
         }}
         title="Ledger live"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
@@ -57,7 +58,12 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
       />
       <ButtonCard
         icon={<StyledLedgerLogo />}
-        onClick={onLedgerLegacy}
+        onClick={() => {
+          show({
+            modalType: 'ledgeraddresses',
+            modalData: { isLedgerLive: false }
+          });
+        }}
         title="Ledger legacy"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
         buttonText="Connect"

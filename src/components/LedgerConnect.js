@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 
+import useMaker from 'hooks/useMaker';
 import useModal from 'hooks/useModal';
 
 // hack to get around button padding for now
@@ -32,7 +33,8 @@ export const StyledTop = styled.div`
   justify-content: center;
 `;
 
-const LedgerConnect = memo(function() {
+export default function LedgerConnect() {
+  const { authenticated: makerAuthenticated } = useMaker();
   const { showByType } = useModal();
 
   return (
@@ -40,6 +42,7 @@ const LedgerConnect = memo(function() {
       <Button
         variant="secondary-outline"
         width="225px"
+        disabled={!makerAuthenticated}
         onClick={() => showByType('ledgertype')}
       >
         <Flex alignItems="center">
@@ -51,6 +54,4 @@ const LedgerConnect = memo(function() {
       </Button>
     </Fragment>
   );
-});
-
-export default LedgerConnect;
+}

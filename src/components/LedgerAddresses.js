@@ -23,14 +23,8 @@ import {
 } from './AddressTable';
 
 const LEDGER_LIVE_PATH = "44'/60'/0'";
-// const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
+const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
 const DEFAULT_ACCOUNTS_PER_PAGE = 5;
-
-// hack to get around button padding for now
-const StyledLedgerLogo = styled(LedgerLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-`;
 
 export const StyledTop = styled.div`
   display: flex;
@@ -52,11 +46,9 @@ export const StyledBlurb = styled.div`
 
 const onConfirm = async (maker, address, closeModal) => {
   await maker.addAccount({ address, type: AccountTypes.LEDGER });
-  console.log('list account', maker.listAccounts);
   maker.useAccountWithAddress(address);
 
   const connectedAddress = maker.currentAddress();
-  console.log('connectedAddress', connectedAddress);
 
   mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
 
@@ -74,15 +66,15 @@ const onConfirm = async (maker, address, closeModal) => {
   closeModal();
 };
 
-function LedgerAddresses({ onLedgerLive, onLedgerLegacy, onClose }) {
+function LedgerAddresses({ onClose, isLedgerLive }) {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
-  const { maker, authenticated: makerAuthenticated } = useMaker();
+  const { maker } = useMaker();
 
   const walletAddresses = useMakerState(maker =>
     maker.addAccount({
       type: AccountTypes.LEDGER,
-      path: LEDGER_LIVE_PATH,
+      path: isLedgerLive ? LEDGER_LIVE_PATH : LEDGER_LEGACY_PATH,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
       choose: addresses => {

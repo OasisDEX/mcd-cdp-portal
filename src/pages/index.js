@@ -96,7 +96,7 @@ function withAuthenticatedNetwork(getPage) {
 
       await maker.authenticate();
       await stateFetchPromise;
-      console.log('modals to pass to provider', modals);
+
       return withMakerProvider(
         <ModalProvider modals={modals}>
           <PageLayout
