@@ -1,9 +1,13 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Flex } from '@makerdao/ui-components-core';
+import { useSpring, animated, config } from 'react-spring';
+const BasicModal = ({ show, onClose, modalData, children }) => {
+  if (!show) return null;
+  const [closing, setClosing] = useState(false);
 
-const BasicModal = ({ show, onClose, children }) => {
-  const Bg = styled(Flex)`
+  const Bg = styled(animated.div)`
+    display: flex;
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -11,14 +15,40 @@ const BasicModal = ({ show, onClose, children }) => {
     left: 0;
     z-index: 10;
   `;
-  if (!show) return null;
 
-  return <Bg onClick={onClose}>{children}</Bg>;
+  const animationStart = {
+    opacity: 0,
+    transform: 'scale(0.99) translate3d(0, 10px, 0)'
+  };
+  const animationEnd = {
+    opacity: 1,
+    transform: 'scale(1) translate3d(0, 0, 0)'
+  };
+
+  const animationProps = useSpring({
+    to: closing ? animationStart : animationEnd,
+    from: animationStart,
+    config: config.stiff,
+    onRest: () => {
+      if (!closing) return false;
+      onClose();
+    }
+  });
+
+  const onCloseAnimated = () => {
+    setClosing(true);
+  };
+
+  return (
+    <Bg onClick={onCloseAnimated} style={animationProps}>
+      {children({ ...modalData, onClose: onCloseAnimated })}
+    </Bg>
+  );
 };
-function resolveModalTypeToComponent(modals, type, props) {
+function resolveModalTypeToComponent(modals, type) {
   if (!modals || !type || !modals[type]) return null;
 
-  return modals[type](props);
+  return modals[type];
 }
 
 const initialState = {
@@ -54,11 +84,13 @@ function ModalProvider({ children, modals }) {
 
   return (
     <ModalStateContext.Provider value={{ show, reset }}>
-      <BasicModal show={shouldShow} onClose={reset} {...modalProps}>
-        {resolveModalTypeToComponent(modals, modalType, {
-          ...modalData,
-          onClose: reset
-        })}
+      <BasicModal
+        show={shouldShow}
+        onClose={reset}
+        modalData={modalData}
+        {...modalProps}
+      >
+        {resolveModalTypeToComponent(modals, modalType)}
       </BasicModal>
       {children}
     </ModalStateContext.Provider>

@@ -184,11 +184,21 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
               )
         }
       />,
-      <Box>
+      <Box key="ba">
         <Text t="smallCaps" color="gray2" fontWeight="medium">
           {lang.your_balance}{' '}
         </Text>
-        <Text t="textS">
+        <Text
+          t="textS"
+          onClick={() => {
+            handleInputChange({
+              target: {
+                name: 'gemsToLock',
+                value: selectedIlk.userGemBalance
+              }
+            });
+          }}
+        >
           {selectedIlk.userGemBalance} {selectedIlk.key}
         </Text>
       </Box>
@@ -218,7 +228,19 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
         <Text t="smallCaps" color="gray2" fontWeight="medium">
           {lang.cdp_create.deposit_form_field2_after}{' '}
         </Text>
-        <Text t="textS">200%</Text>
+        <Text
+          t="textS"
+          onClick={() => {
+            handleInputChange({
+              target: {
+                name: 'targetCollateralizationRatio',
+                value: 200
+              }
+            });
+          }}
+        >
+          200%
+        </Text>
       </Box>
     ],
     [
@@ -383,6 +405,8 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
+  const { ilkData } = selectedIlk;
+  console.log(ilkData.feedValueUSD ? ilkData.feedValueUSD : null);
 
   return (
     <Box

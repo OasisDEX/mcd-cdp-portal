@@ -6,7 +6,7 @@ const modals = {
   cdpcreate: ({ onClose }) => (
     <Grid
       gridRowGap="s"
-      gridTemplateRows="50px 1fr"
+      gridTemplateRows="auto 1fr"
       p="m"
       maxWidth="100%"
       width="100vw"
@@ -17,10 +17,7 @@ const modals = {
         overflow-y: auto;
       `}
     >
-      <Flex justifyContent="flex-end">
-        <Box onClick={onClose}>Close</Box>
-      </Flex>
-      <CDPCreate />
+      <CDPCreate onClose={onClose} />
     </Grid>
   )
 };

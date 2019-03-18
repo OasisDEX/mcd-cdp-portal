@@ -91,6 +91,7 @@ function withAuthenticatedNetwork(getPage) {
 
       await maker.authenticate();
       await stateFetchPromise;
+
       return withMakerProvider(
         <ModalProvider modals={modals}>
           <PageLayout
@@ -108,6 +109,9 @@ function withAuthenticatedNetwork(getPage) {
                 network={{
                   id: maker.service('web3').networkId()
                 }}
+                currentAccount={
+                  connectedAddress ? maker.currentAccount() : null
+                }
                 address={connectedAddress}
               />
             }
