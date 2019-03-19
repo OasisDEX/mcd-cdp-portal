@@ -135,7 +135,7 @@ function CDPCreate({ actionableIlks, onClose }) {
       steps={screens.map(([title]) => title)}
       renderStepperHeader={() => <CDPCreateHeader onClose={onClose} />}
     >
-      {screens.map(([title, fn], screenIndex) =>
+      {screens.map(([, fn], screenIndex) =>
         fn({ ...screenProps, screenIndex, key: screenIndex })
       )}
     </StepperUI>
