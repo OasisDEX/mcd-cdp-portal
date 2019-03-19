@@ -22,6 +22,7 @@ import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 function mapStateToProps(state, { ilk }) {
   return {
@@ -522,7 +523,9 @@ const CDPCreateConfirmSummary = ({
   );
 };
 
-const CDPCreateConfirmed = ({ dispatch }) => {
+const CDPCreateConfirmed = ({ data }) => {
+  const { hash } = data;
+  const emoji = '🤑';
   return (
     <Box
       maxWidth="1040px"
@@ -534,23 +537,47 @@ const CDPCreateConfirmed = ({ dispatch }) => {
         title={lang.cdp_create.confirmed_title}
         text={lang.cdp_create.confirmed_text}
       />
-      <Box my="m">More info goes here...</Box>
+      <Flex my="l" justifyContent="center">
+        <Grid gridRowGap="s">
+          <TextBlock textAlign="center" fontSize="70px">
+            {emoji}
+          </TextBlock>
+          <TextBlock t="headingS" textAlign="center">
+            Transaction
+          </TextBlock>
+          <Box>
+            <Link t="textS" href={`https://kovan.etherscan.io/tx/${hash}`}>
+              {hash}
+            </Link>
+          </Box>
+        </Grid>
+      </Flex>
     </Box>
   );
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
   const { maker } = useMaker();
+  const { gemsToLock, daiToDraw } = cdpParams;
 
   const [canCreateCDP, setCanCreateCDP] = React.useState(false);
-  const [cdpCreated, setCdpCreated] = React.useState(false);
+  const [openingCDP, setOpeningCDP] = React.useState(false);
+  const [cdpCreatedInfo, setCdpCreated] = React.useState(false);
 
   async function capturedDispatch(payload) {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
+    setOpeningCDP(true);
 
-    await maker.service('mcd:cdpManager').open(selectedIlk.key);
-    setCdpCreated(true);
+    const { currency, id, ilk } = await maker
+      .service('mcd:cdpManager')
+      .open(selectedIlk.key);
+    const cdp = await maker
+      .service('mcd:cdpManager')
+      .lockAndDraw(id, ilk, currency(gemsToLock), MDAI(daiToDraw));
+    console.log(cdp, 'hereee');
+    setOpeningCDP(false);
+    setCdpCreated(cdp);
   }
 
   async function ensureProxyWithGemApprovals() {
@@ -570,9 +597,10 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
     ensureProxyWithGemApprovals();
   }, []);
 
-  if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
+  if (!canCreateCDP || openingCDP)
+    return <LoadingLayout background="#F6F8F9" />;
 
-  if (cdpCreated) return <CDPCreateConfirmed />;
+  if (cdpCreatedInfo) return <CDPCreateConfirmed data={cdpCreatedInfo} />;
 
   return (
     <CDPCreateConfirmSummary
