@@ -13,7 +13,6 @@ import {
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
-import { Pill } from 'components/Primitives';
 import { connect } from 'react-redux';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import { prettifyNumber } from 'utils/ui';
@@ -23,6 +22,53 @@ import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
+
+function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
+  const { liquidationRatio } = ilkData;
+  const collateralizationRatio =
+    calcCollateralizationRatio({
+      deposited: parseFloat(gemsToLock),
+      price: getUsdPrice(ilkData),
+      generated: parseFloat(daiToDraw)
+    }) || 0;
+  const liquidationPrice =
+    calcLiquidationPrice({
+      liquidationRatio,
+      deposited: parseFloat(gemsToLock),
+      generated: parseFloat(daiToDraw),
+      price: getUsdPrice(ilkData)
+    }) || 0;
+  const daiAvailable = calcDaiAvailable({
+    liquidationRatio,
+    deposited: parseFloat(gemsToLock),
+    generated: parseFloat(daiToDraw),
+    price: getUsdPrice(ilkData)
+  });
+
+  return {
+    collateralizationRatio,
+    liquidationPrice,
+    daiAvailable
+  };
+}
+function calcCollateralizationRatio({ deposited, price, generated }) {
+  const value = ((deposited * price) / generated) * 100;
+  return isNaN(value) ? 0 : value.toFixed(2);
+}
+
+function calcLiquidationPrice({ liquidationRatio, deposited, generated }) {
+  const value = (liquidationRatio * generated) / (100 * deposited);
+  return isNaN(value) ? 0 : value.toFixed(2);
+}
+
+function calcDaiAvailable({ deposited, price, liquidationRatio }) {
+  const value = deposited * price * (100 / liquidationRatio);
+  return isNaN(value) ? 0 : value.toFixed(2);
+}
+
+function getUsdPrice(ilkData) {
+  return parseFloat(ilkData.feedValueUSD.toString());
+}
 
 function mapStateToProps(state, { ilk }) {
   return {
@@ -78,11 +124,8 @@ const ScreenFooter = ({
 };
 
 const CDPCreateSelectCollateralSidebar = () => (
-  <Box p="l">
-    <TextBlock t="headingS" fontWeight="medium">
-      {lang.risk_parameters}
-    </TextBlock>
-    <Box mt="m">
+  <Box px="l" py="m">
+    <Box>
       {[
         [lang.stability_fee, lang.cdp_create.stability_fee_description],
         [lang.liquidation_ratio, lang.cdp_create.liquidation_ratio_description],
@@ -154,7 +197,13 @@ const IlkTableRow = connect(
   {}
 )(IlkTableRowView);
 
-function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
+function OpenCDPForm({
+  selectedIlk,
+  cdpParams,
+  handleInputChange,
+  daiAvailable
+}) {
+  const { ilkData } = selectedIlk;
   const userHasSufficientGemBalance =
     parseFloat(selectedIlk.userGemBalance) >= parseFloat(cdpParams.gemsToLock);
 
@@ -205,46 +254,6 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
       </Box>
     ],
     [
-      lang.cdp_create.deposit_form_field2_title,
-      <Fragment key="ratioinfo">
-        {lang.formatString(
-          lang.cdp_create.deposit_form_field2_text,
-          <Pill bg="yellowPastel" display="inline-block">
-            <Text t="smallCaps" color="yellowDark" fontWeight="bold">
-              Moderate
-            </Text>
-          </Pill>
-        )}
-      </Fragment>,
-      <Input
-        key="ratioinput"
-        name="targetCollateralizationRatio"
-        after="%"
-        type="number"
-        width={230}
-        value={cdpParams.targetCollateralizationRatio}
-        onChange={handleInputChange}
-      />,
-      <Box key="ratioafter">
-        <Text t="smallCaps" color="gray2" fontWeight="medium">
-          {lang.cdp_create.deposit_form_field2_after}{' '}
-        </Text>
-        <Text
-          t="textS"
-          onClick={() => {
-            handleInputChange({
-              target: {
-                name: 'targetCollateralizationRatio',
-                value: 200
-              }
-            });
-          }}
-        >
-          200%
-        </Text>
-      </Box>
-    ],
-    [
       lang.cdp_create.deposit_form_field3_title,
       lang.cdp_create.deposit_form_field3_text,
       <Input
@@ -257,35 +266,48 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange }) {
         onChange={handleInputChange}
       />,
       <Grid gridRowGap="xs" key="keytodrawinfo">
-        <Text t="smallCaps" color="gray2" fontWeight="medium">
-          {lang.cdp_create.deposit_form_field3_after1}{' '}
-          <Text t="textS">200%</Text>
-        </Text>
-        <Text t="smallCaps" color="gray2" fontWeight="medium">
-          {lang.cdp_create.deposit_form_field3_after2}{' '}
-          <Text t="textS">200%</Text>
-        </Text>
+        <Box key="ba">
+          <Text t="smallCaps" color="gray2" fontWeight="medium">
+            {lang.cdp_create.deposit_form_field3_after2}{' '}
+            <Text t="textS">{ilkData.liquidationRatio}%</Text>{' '}
+          </Text>
+          <Text
+            t="textS"
+            onClick={() => {
+              handleInputChange({
+                target: {
+                  name: 'daiToDraw',
+                  value: daiAvailable
+                }
+              });
+            }}
+          >
+            {daiAvailable} DAI
+          </Text>
+        </Box>
       </Grid>
     ]
   ];
 
   return (
-    <Grid gridRowGap="l" p="l" maxWidth="100%">
+    <Grid gridRowGap="l" px="l" py="m" maxWidth="100%">
       <Grid
         gridTemplateColumns="auto"
-        gridRowGap="m"
+        gridRowGap="l"
         gridColumnGap="m"
         alignItems="center"
       >
         {fields.map(([title, text, input, renderAfter]) => {
           return (
-            <Grid gridRowGap="xs" key={title}>
-              <TextBlock t="headingS" fontWeight="medium">
-                {title}
-              </TextBlock>
-              <TextBlock t="textS" color="gray2">
-                {text}
-              </TextBlock>
+            <Grid gridRowGap="s" key={title}>
+              <Grid gridRowGap="xs">
+                <TextBlock t="textM" fontWeight="medium">
+                  {title}
+                </TextBlock>
+                <TextBlock t="textS" color="gray2">
+                  {text}
+                </TextBlock>
+              </Grid>
               <Box>{input}</Box>
               {renderAfter}
             </Grid>
@@ -321,7 +343,7 @@ const CDPCreateSelectCollateral = ({
         <TwoColumnCardsLayout
           ratio={[6, 3]}
           mainContent={
-            <Flex justifyContent="center" p="l">
+            <Flex justifyContent="center" px="l" py="m">
               <Table width="100%">
                 <thead>
                   <tr>
@@ -356,49 +378,47 @@ const CDPCreateSelectCollateral = ({
   );
 };
 
-const CDPCreateDepositSidebar = ({ selectedIlk }) => {
-  const { liquidationPenalty, liquidationRatio, key } = selectedIlk.ilkData;
+const CDPCreateDepositSidebar = ({
+  selectedIlk,
+  liquidationPrice,
+  collateralizationRatio
+}) => {
+  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.ilkData;
   return (
     <Fragment>
-      <Card p="l">
-        <TextBlock t="headingS" fontWeight="medium">
-          {key} Risk Parameters
-        </TextBlock>
-        <Box mt="m">
+      <Card px="l" pb="m">
+        <Box>
           {[
-            [lang.cdp_page.stability_fee, '2.50%'],
-            [lang.cdp_page.liquidation_ratio, `${liquidationRatio}%`],
-            [lang.cdp_page.liquidation_penalty, `${liquidationPenalty}%`]
+            [lang.collateralization, `${collateralizationRatio}%`],
+            [lang.liquidation_price, `$${liquidationPrice}`],
+            ['Current Price', `$${getUsdPrice(selectedIlk.ilkData)}`],
+
+            [lang.stability_fee, `${rate}%`],
+            [lang.liquidation_ratio, `${liquidationRatio}%`],
+            [lang.liquidation_penalty, `${liquidationPenalty}%`]
           ].map(([title, value]) => (
             <Grid mt="m" gridRowGap="xs" key={title}>
               <TextBlock t="textM" fontWeight="medium">
                 {title}
               </TextBlock>
-              <TextBlock t="headingS" fontWeight="medium">
+              <TextBlock t="textS" color="black3">
                 {value}
               </TextBlock>
             </Grid>
           ))}
         </Box>
       </Card>
-      {[
-        [lang.collateralization, '0%'], // TODO
-        [lang.collateralization_ratio, '$0']
-      ].map(([title, value]) => (
-        <Card mt="m" p="l" key="title">
-          <Grid gridRowGap="xs">
-            <TextBlock t="headingS" fontWeight="medium">
-              {title}
-            </TextBlock>
-            <TextBlock t="headingL">{value}</TextBlock>
-          </Grid>
-        </Card>
-      ))}
     </Fragment>
   );
 };
 const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
-  console.log(selectedIlk, cdpParams, 'here');
+  const { gemsToLock, daiToDraw } = cdpParams;
+  const { ilkData } = selectedIlk;
+  const {
+    liquidationPrice,
+    collateralizationRatio,
+    daiAvailable
+  } = calcCDPParams({ ilkData, gemsToLock, daiToDraw });
 
   function handleInputChange({ target }) {
     dispatch({
@@ -406,9 +426,6 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
-  const { ilkData } = selectedIlk;
-  console.log(ilkData.feedValueUSD ? ilkData.feedValueUSD : null);
-
   return (
     <Box
       maxWidth="1040px"
@@ -430,10 +447,17 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
               cdpParams={cdpParams}
               handleInputChange={handleInputChange}
               selectedIlk={selectedIlk}
+              daiAvailable={daiAvailable}
             />
           }
           ratio={[4, 2]}
-          sideContent={<CDPCreateDepositSidebar selectedIlk={selectedIlk} />}
+          sideContent={
+            <CDPCreateDepositSidebar
+              selectedIlk={selectedIlk}
+              collateralizationRatio={collateralizationRatio}
+              liquidationPrice={liquidationPrice}
+            />
+          }
           SidebarComponent={Box}
         />
       </Box>
@@ -445,32 +469,28 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   );
 };
 
-// const CDPCreateNoProxy = () => {
-//   return (
-//     <Box>
-//       <ScreenHeader
-//         title={lang.cdp_create.proxy_title}
-//         text={lang.cdp_create.proxy_text}
-//       />
-//     </Box>
-//   );
-// };
-
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
   capturedDispatch
 }) => {
-  const { liquidationPenalty, liquidationRatio } = selectedIlk.ilkData;
+  const { ilkData } = selectedIlk;
+  const { liquidationPenalty, liquidationRatio, rate } = ilkData;
+  const { gemsToLock, daiToDraw } = cdpParams;
+  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
+    ilkData,
+    gemsToLock,
+    daiToDraw
+  });
 
   const rows = [
     [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
     [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
-    [lang.collateralization_ratio, `${cdpParams.daiToDraw}%`],
+    [lang.collateralization_ratio, `${collateralizationRatio}%`],
     [lang.liquidation_ratio, `${liquidationRatio}%`],
-    [lang.liquidation_price, `$${cdpParams.daiToDraw}`],
+    [lang.liquidation_price, `$${liquidationPrice}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
-    [lang.stability_fee, '2.5%']
+    [lang.stability_fee, `${rate}%`]
   ];
   return (
     <Box
@@ -575,7 +595,6 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
     const cdp = await maker
       .service('mcd:cdpManager')
       .lockAndDraw(id, ilk, currency(gemsToLock), MDAI(daiToDraw));
-    console.log(cdp, 'hereee');
     setOpeningCDP(false);
     setCdpCreated(cdp);
   }
