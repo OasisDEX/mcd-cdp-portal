@@ -14,6 +14,7 @@ const theme = {
     greenPastel: '#1aab9b',
     greenVivid: '#24be9f',
     purple: '#690496',
+    steel: '#708390',
     black: '#000',
     black2: '#231536',
     black3: '#48495f',

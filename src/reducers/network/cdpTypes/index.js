@@ -1,4 +1,4 @@
-import cdpTypesConfig from 'references/cdpTypes';
+import ilkList from 'references/ilkList';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -12,8 +12,8 @@ export const LIQUIDATION_PENALTY = 'liquidationPenalty';
 export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
 
-export function getIlkData(state, cdpTypeSlug) {
-  return state.network.cdpTypes.find(({ slug }) => cdpTypeSlug === slug) || {};
+export function getIlkData(state, ilkKey) {
+  return state.network.cdpTypes.find(({ key }) => ilkKey === key) || {};
 }
 
 export function getAllFeeds(state) {
@@ -27,24 +27,21 @@ export function getAllFeeds(state) {
   }, []);
 }
 
-const defaultCDPTypeState = {
-  key: '',
-  slug: '',
-  symbol: '',
-  [RATE]: '0',
-  [LAST_DRIP]: '0',
-  [FEED_VALUE_USD]: '0',
-  [DEBT_CEILING]: '0',
-  [ADAPTER_BALANCE]: '0',
-  [LIQUIDATION_RATIO]: '0',
+const defaultIlkState = {
+  [RATE]: '',
+  [LAST_DRIP]: '',
+  [FEED_VALUE_USD]: '',
+  [DEBT_CEILING]: '',
+  [ADAPTER_BALANCE]: '',
+  [LIQUIDATION_RATIO]: '',
   [FEED_SET_USD]: false,
   [LIQUIDATOR_ADDRESS]: '',
-  [LIQUIDATION_PENALTY]: '0',
-  [MAX_AUCTION_LOT_SIZE]: '0',
-  [PRICE_WITH_SAFETY_MARGIN]: '0'
+  [LIQUIDATION_PENALTY]: '',
+  [MAX_AUCTION_LOT_SIZE]: '',
+  [PRICE_WITH_SAFETY_MARGIN]: ''
 };
 
-const initialState = [];
+const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
 
 function cdpTypes(state = initialState, action) {
   const { value, type } = action;
@@ -52,24 +49,16 @@ function cdpTypes(state = initialState, action) {
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
 
   // example type: ETH.debtCeiling
-  const [cdpTypeKey, valueType] = type.split('.');
+  const [key, valueType] = type.split('.');
 
-  if (Object.keys(defaultCDPTypeState).includes(valueType)) {
-    const cdpState = state.find(({ key }) => key === cdpTypeKey);
-
-    // is this a new cdp type?
-    if (cdpState === undefined) {
-      // then grab the relevant config
-      const cdpTypeConfig = cdpTypesConfig.find(
-        ({ key }) => cdpTypeKey === key
+  if (Object.keys(defaultIlkState).includes(valueType)) {
+    if (valueType === FEED_VALUE_USD) {
+      // the feed value is keyed off of gem so we can mix it into all ilks that share that gem
+      return state.map(ilkData =>
+        ilkData.gem === key ? { ...ilkData, [valueType]: value } : ilkData
       );
-      return state.concat({
-        ...defaultCDPTypeState,
-        ...cdpTypeConfig,
-        [valueType]: value
-      });
     } else {
-      const idx = state.findIndex(({ key }) => key === cdpTypeKey);
+      const idx = state.findIndex(({ key: ilkKey }) => ilkKey === key);
       state[idx] = { ...state[idx], [valueType]: value };
       return [...state];
     }

@@ -32,7 +32,7 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
           McdPlugin,
           {
             cdpTypes: [
-              { currency: WETH, name: 'WETH' },
+              { currency: WETH, name: 'ETH' },
               { currency: REP, name: 'REP' }
             ],
             addressOverrides: { ...addresses }

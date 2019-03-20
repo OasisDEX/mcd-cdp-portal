@@ -5,14 +5,12 @@ import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
 import { Flex, Text } from '@makerdao/ui-components-core';
-import Jazzicon from './Jazzicon';
-import { cutMiddle } from 'utils/ui';
 import { getColor } from 'styles/theme';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
 import config from 'references/config';
-
+import WalletSelection from 'components/WalletSelection';
 const { networkDisplayNames } = config;
 
 const Section = styled.section`
@@ -20,10 +18,11 @@ const Section = styled.section`
   border-bottom: 1px solid ${({ theme }) => theme.colors.grayLight3};
   box-sizing: content-box;
 `;
-
-const Header = styled(Section)`
-  height: 50px;
-  margin-top: 1px;
+const VerticallyPaddedSection = styled(Section)`
+  box-sizing: border-box;
+  height: auto;
+  padding-top: ${({ theme }) => theme.space.s};
+  padding-bottom: ${({ theme }) => theme.space.s};
 `;
 
 const Network = styled(Section)`
@@ -39,11 +38,6 @@ const Dot = styled.span`
   border-radius: 50%;
   margin: 0 1rem 0 0.2rem;
   background: ${({ color }) => color || '#000'};
-`;
-
-const StyledAddress = styled(Text)`
-  color: ${({ theme }) => theme.colors.black2};
-  margin: 0 14px;
 `;
 
 const NETWORK_COLORS = {
@@ -68,30 +62,24 @@ function NetworkSection({ networkID }) {
   );
 }
 
-function AccountSection({ address = null } = {}) {
-  if (address !== null)
-    return (
-      <Header>
-        <Flex height="50px" alignItems="center">
-          <Jazzicon address={address} />
-          <StyledAddress t="p5">{cutMiddle(address, 7, 5)}</StyledAddress>
-        </Flex>
-      </Header>
-    );
-
+function AccountSection({ address = null, currentAccount } = {}) {
   return (
-    <Header>
-      <Flex height="50px" alignItems="center">
-        <AccountConnect />
-      </Flex>
-    </Header>
+    <VerticallyPaddedSection>
+      {address ? (
+        <WalletSelection address={address} currentAccount={currentAccount} />
+      ) : (
+        <Flex alignItems="center">
+          <AccountConnect />
+        </Flex>
+      )}
+    </VerticallyPaddedSection>
   );
 }
 
-function Sidebar({ feeds, system, address, network }) {
+function Sidebar({ feeds, system, address, network, currentAccount }) {
   return (
     <Fragment>
-      <AccountSection address={address} />
+      <AccountSection address={address} currentAccount={currentAccount} />
       <NetworkSection networkID={network.id} swappable={network.swappable} />
       <Section>
         <SidebarFeeds feeds={feeds} />

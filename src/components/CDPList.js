@@ -1,6 +1,6 @@
 import React, { memo, Fragment } from 'react';
 import styled from 'styled-components';
-import cdpTypesConfig from 'references/cdpTypes';
+import ilkList from 'references/ilkList';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
@@ -9,9 +9,7 @@ import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 
-const _shownCDPTypes = cdpTypesConfig.filter(({ hidden }) => !hidden);
-
-const shownCDPTypes = _shownCDPTypes.map(cdpType => ({
+const shownIlks = ilkList.map(cdpType => ({
   ...cdpType,
   ratio: (Math.random() * 1000).toFixed(2)
 }));
@@ -54,7 +52,7 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
       />
-      {shownCDPTypes.map((cdp, idx) => {
+      {shownIlks.map((cdp, idx) => {
         const linkPath = `/cdp/${cdp.slug}/`;
         const active = currentPath.includes(linkPath);
         return (

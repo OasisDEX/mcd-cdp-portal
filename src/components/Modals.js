@@ -2,13 +2,13 @@ import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
 import LedgerAddresses from './LedgerAddresses';
-import { Grid, Flex, Box } from '@makerdao/ui-components-core';
+import { Grid } from '@makerdao/ui-components-core';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
     <Grid
       gridRowGap="s"
-      gridTemplateRows="50px 1fr"
+      gridTemplateRows="auto 1fr"
       p="m"
       maxWidth="100%"
       width="100vw"
@@ -19,10 +19,7 @@ const modals = {
         overflow-y: auto;
       `}
     >
-      <Flex justifyContent="flex-end">
-        <Box onClick={onClose}>Close</Box>
-      </Flex>
-      <CDPCreate />
+      <CDPCreate onClose={onClose} />
     </Grid>
   ),
   ledgertype: ({ onClose }) => <LedgerType onClose={onClose} />,

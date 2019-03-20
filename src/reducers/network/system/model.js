@@ -1,4 +1,5 @@
 import { DAI } from 'maker';
+import { fromRad } from 'utils/units';
 import {
   TOTAL_DEBT,
   BASE_RATE,
@@ -21,9 +22,9 @@ const baseRate = addresses => ({
 });
 
 const globalDebtCeiling = addresses => ({
-  target: addresses.MCD_PIT,
+  target: addresses.MCD_VAT,
   call: ['Line()(uint256)'],
-  returns: [[GLOBAL_DEBT_CEILING, val => DAI(val, -18)]]
+  returns: [[GLOBAL_DEBT_CEILING, val => fromRad(val)]]
 });
 
 const debtAuctionLotSzie = addresses => ({

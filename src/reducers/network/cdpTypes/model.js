@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+
 import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
 import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
@@ -28,7 +30,18 @@ export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
   returns: [
-    [`${name}.${RATE}`, val => fromRay(val, 2)],
+    [
+      `${name}.${RATE}`,
+      val => {
+        const taxBigNumber = new BigNumber(val.toString()).dividedBy(RAY);
+        const secondsPerYear = 60 * 60 * 24 * 365;
+        BigNumber.config({ POW_PRECISION: 100 });
+        return taxBigNumber
+          .pow(secondsPerYear)
+          .minus(1)
+          .toNumber();
+      }
+    ],
     [`${name}.${LAST_DRIP}`]
   ]
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Grid, Stepper } from '@makerdao/ui-components-core';
@@ -37,27 +37,30 @@ const FadeIn = styled.div`
 class StepperUI extends React.Component {
   render() {
     return (
-      <Grid maxWidth="1600px" m="0 auto">
-        {/* <StepperMenu onClose={this.props.onClose} /> */}
-        <Stepper
-          style={{ margin: '0 auto' }}
-          steps={this.props.steps}
-          selected={this.props.step}
-        />
-        <div style={{ width: '100%', position: 'relative' }}>
-          {React.Children.map(this.props.children, (child, index) => {
-            return (
-              <FadeIn
-                toLeft={index < this.props.step}
-                toRight={index > this.props.step}
-                active={index === this.props.step}
-              >
-                {index === this.props.step && child}
-              </FadeIn>
-            );
-          })}
-        </div>
-      </Grid>
+      <Fragment>
+        {this.props.renderStepperHeader()}
+
+        <Grid maxWidth="1600px" m="0 auto">
+          <Stepper
+            style={{ margin: '0 auto' }}
+            steps={this.props.steps}
+            selected={this.props.step}
+          />
+          <div style={{ width: '100%', position: 'relative' }}>
+            {React.Children.map(this.props.children, (child, index) => {
+              return (
+                <FadeIn
+                  toLeft={index < this.props.step}
+                  toRight={index > this.props.step}
+                  active={index === this.props.step}
+                >
+                  {index === this.props.step && child}
+                </FadeIn>
+              );
+            })}
+          </div>
+        </Grid>
+      </Fragment>
     );
   }
 }
@@ -76,6 +79,7 @@ StepperUI.propTypes = {
 
 StepperUI.defaultProps = {
   show: false,
+  renderStepperHeader: () => {},
   steps: [],
   step: 0
 };
