@@ -35,7 +35,7 @@ export const StyledTop = styled.div`
 
 export default function LedgerConnect() {
   const { authenticated: makerAuthenticated } = useMaker();
-  const { showByType } = useModal();
+  const { showSimpleByType } = useModal();
 
   return (
     <Fragment>
@@ -43,7 +43,7 @@ export default function LedgerConnect() {
         variant="secondary-outline"
         width="225px"
         disabled={!makerAuthenticated}
-        onClick={() => showByType('ledgertype')}
+        onClick={() => showSimpleByType('ledgertype')}
       >
         <Flex alignItems="center">
           <StyledLedgerLogo />

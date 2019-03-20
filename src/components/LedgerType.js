@@ -32,13 +32,8 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
       gridTemplateRows="50px 1fr"
       p="m"
       maxWidth="100%"
-      width="100vw"
-      height="100vh"
       bg="grayLight5"
       onClick={e => e.stopPropagation()}
-      css={`
-        overflow-y: auto;
-      `}
     >
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>

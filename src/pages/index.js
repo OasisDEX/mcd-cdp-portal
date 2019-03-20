@@ -91,9 +91,7 @@ function withAuthenticatedNetwork(getPage) {
 
       if (pathname === '/')
         return withMakerProvider(
-          <ModalProvider modals={modals}>
-            <PageLayout content={getPage()} />
-          </ModalProvider>
+          <ModalProvider modals={modals}>{getPage()}</ModalProvider>
         );
 
       await maker.authenticate();
