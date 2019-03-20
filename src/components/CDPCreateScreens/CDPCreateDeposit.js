@@ -215,7 +215,11 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       </Box>
       <ScreenFooter
         dispatch={dispatch}
-        canProgress={cdpParamsAreValid(cdpParams, selectedIlk.userBalance)}
+        canProgress={cdpParamsAreValid(
+          cdpParams,
+          selectedIlk.userBalance,
+          selectedIlk.ilkData
+        )}
       />
     </Box>
   );

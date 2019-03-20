@@ -54,6 +54,11 @@ function reducer(state, action) {
           ilkData: payload.ilkData
         }
       };
+    case 'reset-ilk':
+      return {
+        ...state,
+        selectedIlk: {}
+      };
     case 'form/set-gemsToLock':
       return { ...state, gemsToLock: payload.value };
     case 'form/set-daiToDraw':
@@ -135,8 +140,8 @@ function CDPCreate({ actionableIlks, onClose }) {
       steps={screens.map(([title]) => title)}
       renderStepperHeader={() => <CDPCreateHeader onClose={onClose} />}
     >
-      {screens.map(([, fn], screenIndex) =>
-        fn({ ...screenProps, screenIndex, key: screenIndex })
+      {screens.map(([, getComponent], screenIndex) =>
+        getComponent({ ...screenProps, screenIndex, key: screenIndex })
       )}
     </StepperUI>
   );

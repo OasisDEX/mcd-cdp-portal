@@ -18,11 +18,14 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { calcCDPParams } from 'utils/ui';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
+
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
   capturedDispatch
 }) => {
+  const [hasReadTOS, setHasReadTOS] = React.useState(false);
+
   const { ilkData } = selectedIlk;
   const { liquidationPenalty, liquidationRatio, rate } = ilkData;
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -73,7 +76,11 @@ const CDPCreateConfirmSummary = ({
           </Grid>
           <Flex>
             <Box m="auto" mt="l">
-              <Checkbox checked={false} onChange={() => {}} mr="xs" />
+              <Checkbox
+                checked={hasReadTOS}
+                onChange={() => setHasReadTOS(state => !state)}
+                mr="xs"
+              />
               <Text color="gray2">
                 {lang.formatString(
                   lang.terms_of_service_text,
@@ -85,6 +92,7 @@ const CDPCreateConfirmSummary = ({
         </Card>
       </Box>
       <ScreenFooter
+        canProgress={hasReadTOS}
         dispatch={capturedDispatch}
         continueText={lang.actions.create_cdp}
       />

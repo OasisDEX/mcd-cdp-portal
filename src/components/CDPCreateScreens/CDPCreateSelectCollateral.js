@@ -60,14 +60,18 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
           <Checkbox
             checked={checked}
             onChange={() =>
-              dispatch({
-                type: 'set-ilk',
-                payload: {
-                  key: ilk.key,
-                  gemBalance: userGemBalance.toNumber(),
-                  ilkData: ilk.data
-                }
-              })
+              checked
+                ? dispatch({
+                    type: 'reset-ilk'
+                  })
+                : dispatch({
+                    type: 'set-ilk',
+                    payload: {
+                      key: ilk.key,
+                      gemBalance: userGemBalance.toNumber(),
+                      ilkData: ilk.data
+                    }
+                  })
             }
             mr="xs"
           />

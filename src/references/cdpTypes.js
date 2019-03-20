@@ -20,6 +20,8 @@ export default [
   {
     slug: 'rep',
     symbol: 'REP',
+    ilkKey: 'REP',
+    gemKey: 'REP',
     key: 'REP',
     gem: 'REP',
     logo: ethLogo,
@@ -28,6 +30,8 @@ export default [
   {
     slug: 'btc',
     symbol: 'BTC',
+    ilkKey: 'BTC',
+    gemKey: 'BTC',
     key: 'BTC',
     gem: 'BTC',
     logo: ethLogo,
@@ -36,6 +40,8 @@ export default [
   {
     slug: 'dgx',
     symbol: 'DGX',
+    ilkKey: 'DGX',
+    gemKey: 'DGX',
     gem: 'DGX',
     key: 'DGX',
     logo: ethLogo,
