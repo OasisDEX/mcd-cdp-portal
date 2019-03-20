@@ -14,7 +14,6 @@ function OpenCDPForm({
   handleInputChange,
   daiAvailable
 }) {
-  const { ilkData } = selectedIlk;
   const userHasSufficientGemBalance =
     parseFloat(selectedIlk.userGemBalance) >= parseFloat(cdpParams.gemsToLock);
 
@@ -80,7 +79,7 @@ function OpenCDPForm({
         <Box key="ba">
           <Text t="smallCaps" color="gray2" fontWeight="medium">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
-            <Text t="textS">{ilkData.liquidationRatio}%</Text>{' '}
+            <Text t="textS">{selectedIlk.data.liquidationRatio}%</Text>{' '}
           </Text>
           <Text
             t="textS"
@@ -134,7 +133,7 @@ const CDPCreateDepositSidebar = ({
   liquidationPrice,
   collateralizationRatio
 }) => {
-  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.ilkData;
+  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   return (
     <Fragment>
       <Card px="l" pb="m">
@@ -142,7 +141,7 @@ const CDPCreateDepositSidebar = ({
           {[
             [lang.collateralization, `${collateralizationRatio}%`],
             [lang.liquidation_price, `$${liquidationPrice}`],
-            ['Current Price', `$${getUsdPrice(selectedIlk.ilkData)}`],
+            ['Current Price', `$${getUsdPrice(selectedIlk.data)}`],
 
             [lang.stability_fee, `${rate}%`],
             [lang.liquidation_ratio, `${liquidationRatio}%`],
@@ -165,12 +164,11 @@ const CDPCreateDepositSidebar = ({
 
 const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   const { gemsToLock, daiToDraw } = cdpParams;
-  const { ilkData } = selectedIlk;
   const {
     liquidationPrice,
     collateralizationRatio,
     daiAvailable
-  } = calcCDPParams({ ilkData, gemsToLock, daiToDraw });
+  } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
 
   function handleInputChange({ target }) {
     dispatch({
@@ -217,8 +215,8 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         dispatch={dispatch}
         canProgress={cdpParamsAreValid(
           cdpParams,
-          selectedIlk.userBalance,
-          selectedIlk.ilkData
+          selectedIlk.userGemBalance,
+          selectedIlk.data
         )}
       />
     </Box>

@@ -24,7 +24,7 @@ const initialState = {
   step: 0,
   selectedIlk: {
     userGemBalance: '',
-    ilkData: {},
+    data: {},
     key: ''
   },
   gemsToLock: '',
@@ -51,7 +51,7 @@ function reducer(state, action) {
         selectedIlk: {
           key: payload.key,
           userGemBalance: payload.gemBalance,
-          ilkData: payload.ilkData
+          data: payload.data
         }
       };
     case 'reset-ilk':

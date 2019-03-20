@@ -69,7 +69,7 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
                     payload: {
                       key: ilk.key,
                       gemBalance: userGemBalance.toNumber(),
-                      ilkData: ilk.data
+                      data: ilk.data
                     }
                   })
             }
@@ -90,7 +90,7 @@ function mapStateToProps(state, { ilk }) {
   return {
     ilk: {
       ...ilk,
-      data: getIlkData(state, ilk.slug)
+      data: getIlkData(state, ilk.key)
     }
   };
 }
@@ -136,12 +136,12 @@ const CDPCreateSelectCollateral = ({
                     ))}
                   </tr>
                 </thead>
-                {actionableIlks.map(({ slug, key, gem, symbol }) => (
+                {actionableIlks.map(ilk => (
                   <IlkTableRow
-                    key={key}
-                    checked={key === selectedIlk.key}
+                    key={ilk.key}
+                    checked={ilk.key === selectedIlk.key}
                     dispatch={dispatch}
-                    ilk={{ symbol, slug, key, gem }}
+                    ilk={ilk}
                   />
                 ))}
               </Table>
@@ -150,7 +150,11 @@ const CDPCreateSelectCollateral = ({
           sideContent={<CDPCreateSelectCollateralSidebar />}
         />
       </Box>
-      <ScreenFooter dispatch={dispatch} canProgress={!!selectedIlk.key} />
+      <ScreenFooter
+        dispatch={dispatch}
+        canGoBack={false}
+        canProgress={!!selectedIlk.key}
+      />
     </Box>
   );
 };

@@ -55,8 +55,10 @@ async function stageNetwork({ testchainId, network }) {
       return [
         ...createCDPSystemModel(addresses),
         cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('BTC', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('DGX', { decimals: 9 }),
+        cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
+        cdpTypeModel.rateData(addresses)('ETH'), // everything else is by ilk
+        cdpTypeModel.liquidation(addresses)('ETH'),
+        cdpTypeModel.flipper(addresses)('ETH'),
         cdpTypeModel.rateData(addresses)('REP'),
         cdpTypeModel.liquidation(addresses)('REP'),
         cdpTypeModel.flipper(addresses)('REP')

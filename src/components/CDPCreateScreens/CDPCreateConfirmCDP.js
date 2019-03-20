@@ -26,11 +26,10 @@ const CDPCreateConfirmSummary = ({
 }) => {
   const [hasReadTOS, setHasReadTOS] = React.useState(false);
 
-  const { ilkData } = selectedIlk;
-  const { liquidationPenalty, liquidationRatio, rate } = ilkData;
+  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   const { gemsToLock, daiToDraw } = cdpParams;
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-    ilkData,
+    ilkData: selectedIlk.data,
     gemsToLock,
     daiToDraw
   });
@@ -158,7 +157,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
 
   async function ensureProxyWithGemApprovals() {
     const proxyAddress = await maker.service('proxy').ensureProxy();
-    const gemToken = maker.getToken(selectedIlk.ilkData.gem);
+    const gemToken = maker.getToken(selectedIlk.data.gem);
     const gemAllowanceSet = (await gemToken.allowance(
       maker.currentAddress(),
       proxyAddress

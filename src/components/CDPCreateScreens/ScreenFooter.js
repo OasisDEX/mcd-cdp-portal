@@ -6,12 +6,14 @@ import lang from 'languages';
 const ScreenFooter = ({
   dispatch,
   loading,
+  canGoBack = true,
   canProgress = true,
   continueText = lang.actions.continue
 } = {}) => {
   return (
     <Flex textAlign="center" justifyContent="center">
       <Button
+        disabled={!canGoBack}
         width="110px"
         variant="secondary-outline"
         mx="xs"
