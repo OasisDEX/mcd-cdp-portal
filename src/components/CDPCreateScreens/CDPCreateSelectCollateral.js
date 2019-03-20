@@ -69,6 +69,7 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
                     payload: {
                       key: ilk.key,
                       gemBalance: userGemBalance.toNumber(),
+                      currency: ilk.currency,
                       data: ilk.data
                     }
                   })

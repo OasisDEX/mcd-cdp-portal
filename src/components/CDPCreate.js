@@ -24,6 +24,7 @@ const initialState = {
   step: 0,
   selectedIlk: {
     userGemBalance: '',
+    currency: null,
     data: {},
     key: ''
   },
@@ -49,9 +50,10 @@ function reducer(state, action) {
       return {
         ...state,
         selectedIlk: {
-          key: payload.key,
           userGemBalance: payload.gemBalance,
-          data: payload.data
+          currency: payload.currency,
+          data: payload.data,
+          key: payload.key
         }
       };
     case 'reset-ilk':

@@ -16,6 +16,8 @@ import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { calcCDPParams } from 'utils/ui';
+import { etherscanLink } from 'utils/ethereum';
+import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 
@@ -101,7 +103,13 @@ const CDPCreateConfirmSummary = ({
 
 const CDPCreateConfirmed = ({ data }) => {
   const { hash } = data;
-  const emoji = '🤑';
+  const { maker } = useMaker();
+
+  const networkId = maker.service('web3').networkId();
+  const isTestchain = ![1, 42].includes(networkId);
+
+  const emoji = '🔥🤑🔥';
+
   return (
     <Box
       maxWidth="1040px"
@@ -122,9 +130,16 @@ const CDPCreateConfirmed = ({ data }) => {
             Transaction
           </TextBlock>
           <Box>
-            <Link t="textS" href={`https://kovan.etherscan.io/tx/${hash}`}>
-              {hash}
-            </Link>
+            {isTestchain ? (
+              <Text>{hash}</Text>
+            ) : (
+              <Link
+                t="textS"
+                href={etherscanLink(hash, networkIdToName(networkId))}
+              >
+                {hash}
+              </Link>
+            )}
           </Box>
         </Grid>
       </Flex>
@@ -134,6 +149,7 @@ const CDPCreateConfirmed = ({ data }) => {
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
   const { maker } = useMaker();
+
   const { gemsToLock, daiToDraw } = cdpParams;
 
   const [canCreateCDP, setCanCreateCDP] = React.useState(false);
@@ -145,12 +161,13 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
     if (type !== 'increment-step') return dispatch(payload);
     setOpeningCDP(true);
 
-    const { currency, id, ilk } = await maker
+    const { id, ilk } = await maker
       .service('mcd:cdpManager')
       .open(selectedIlk.key);
     const cdp = await maker
       .service('mcd:cdpManager')
-      .lockAndDraw(id, ilk, currency(gemsToLock), MDAI(daiToDraw));
+      .lockAndDraw(id, ilk, selectedIlk.currency(gemsToLock), MDAI(daiToDraw));
+
     setOpeningCDP(false);
     setCdpCreated(cdp);
   }
