@@ -1,3 +1,5 @@
+import { greaterThanOrEqual } from './bignumber';
+
 export function prettifyNumber(_num = null, truncate = false) {
   if (_num === null) return null;
   let symbol = ' ';
@@ -74,7 +76,26 @@ export function getUsdPrice(ilkData) {
   return parseFloat(ilkData.feedValueUSD.toString());
 }
 
-export function cdpParamsAreValid({ gemsToLock, daiToDraw }, userGemBalance) {
-  if (parseFloat(gemsToLock) > parseFloat(userGemBalance)) return false;
-  return !!gemsToLock && !!daiToDraw;
+export function cdpParamsAreValid(
+  { gemsToLock, daiToDraw },
+  userGemBalance,
+  ilkData
+) {
+  // must not open empty cdp
+  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
+  // must lock collateral in order to draw dai
+  if (!!daiToDraw && !gemsToLock) return false;
+  // must be positive
+  if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
+  // must have enough tokens
+  if (greaterThanOrEqual(gemsToLock, userGemBalance)) return false;
+
+  const daiAvailable = calcDaiAvailable({
+    gemsToLock: parseFloat(gemsToLock),
+    price: getUsdPrice(ilkData),
+    liquidationRatio: parseFloat(ilkData.liquidationRatio)
+  });
+  // must open a cdp above the liquidation threshold
+  if (greaterThanOrEqual(daiAvailable, daiToDraw)) return false;
+  return true;
 }

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
+import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { getUsdPrice, calcCDPParams, cdpParamsAreValid } from 'utils/ui';
@@ -14,8 +15,14 @@ function OpenCDPForm({
   handleInputChange,
   daiAvailable
 }) {
-  const userHasSufficientGemBalance =
-    parseFloat(selectedIlk.userGemBalance) >= parseFloat(cdpParams.gemsToLock);
+  const userHasSufficientGemBalance = greaterThanOrEqual(
+    selectedIlk.userGemBalance,
+    cdpParams.gemsToLock
+  );
+  const userCanDrawDaiAmount = greaterThanOrEqual(
+    daiAvailable,
+    cdpParams.daiToDraw
+  );
 
   const fields = [
     [
@@ -72,6 +79,9 @@ function OpenCDPForm({
         after="DAI"
         width="250px"
         type="number"
+        errorMessage={
+          userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
+        }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
       />,
@@ -171,6 +181,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
 
   function handleInputChange({ target }) {
+    if (parseFloat(target.value) < 0) return;
     dispatch({
       type: `form/set-${target.name}`,
       payload: { value: target.value }
