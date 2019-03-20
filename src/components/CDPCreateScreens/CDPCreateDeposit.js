@@ -37,7 +37,7 @@ function OpenCDPForm({
       <Input
         key="collinput"
         name="gemsToLock"
-        after={selectedIlk.key}
+        after={selectedIlk.data.gem}
         type="number"
         value={cdpParams.gemsToLock}
         onChange={handleInputChange}
@@ -66,7 +66,7 @@ function OpenCDPForm({
             });
           }}
         >
-          {selectedIlk.userGemBalance} {selectedIlk.key}
+          {selectedIlk.userGemBalance} {selectedIlk.data.gem}
         </Text>
       </Box>
     ],
