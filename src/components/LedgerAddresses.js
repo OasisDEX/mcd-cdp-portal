@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
@@ -103,7 +103,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
   });
 
   return (
-    <Fragment>
+    <Grid gridRowGap="s" p="m">
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>
       </Flex>
@@ -172,7 +172,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
           Confirm wallet
         </Button>
       </Grid>
-    </Fragment>
+    </Grid>
   );
 }
 

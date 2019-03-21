@@ -133,7 +133,8 @@ function CDPCreate({ actionableIlks, onClose }) {
     actionableIlks,
     selectedIlk,
     cdpParams,
-    dispatch
+    dispatch,
+    onClose
   };
 
   return (

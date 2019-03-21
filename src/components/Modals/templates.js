@@ -47,8 +47,8 @@ const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   };
 
   return (
-    <Bg onClick={onCloseAnimated} style={animationProps}>
-      {children({ ...modalProps, onClose: onCloseAnimated })}
+    <Bg onClick={onCloseAnimated}>
+      {children({ ...modalProps, onClose: onCloseAnimated, animationProps })}
     </Bg>
   );
 };
@@ -89,7 +89,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
   const onCloseAnimated = () => {
     setClosing(true);
   };
-  console.log('chikdre  here', children);
+
   return (
     <Bg
       onClick={onCloseAnimated}
@@ -98,7 +98,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
       }}
       style={bgAnimation}
     >
-      <ModalContent style={contentAnimation}>
+      <ModalContent style={contentAnimation} onClick={e => e.stopPropagation()}>
         {children({ ...modalProps, onClose: onCloseAnimated })}
       </ModalContent>
     </Bg>

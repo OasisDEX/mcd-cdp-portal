@@ -25,27 +25,11 @@ const modals = {
   ),
 
   ledgertype: ({ onClose }) => {
-    return (
-      <Grid
-        gridRowGap="s"
-        gridTemplateRows="50px 1fr"
-        maxWidth="100%"
-        onClick={e => e.stopPropagation()}
-      >
-        <LedgerType onClose={onClose} />
-      </Grid>
-    );
+    return <LedgerType onClose={onClose} />;
   },
 
   ledgeraddresses: ({ onClose, isLedgerLive }) => (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="50px 1fr"
-      maxWidth="100%"
-      onClick={e => e.stopPropagation()}
-    >
-      <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
-    </Grid>
+    <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
   )
 };
 

@@ -1,6 +1,6 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
-import { Box, Button, Flex } from '@makerdao/ui-components-core';
+import { Box, Button, Flex, Grid } from '@makerdao/ui-components-core';
 import ButtonCard from './ButtonCard';
 
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ function LedgerType({ onClose }) {
   const { show } = useModal();
 
   return (
-    <Fragment>
+    <Grid gridRowGap="s" p="m">
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>
       </Flex>
@@ -37,7 +37,7 @@ function LedgerType({ onClose }) {
         onClick={() => {
           show({
             modalType: 'ledgeraddresses',
-            modalData: { isLedgerLive: true },
+            modalProps: { isLedgerLive: true },
             modalTemplate: 'simple'
           });
         }}
@@ -50,7 +50,7 @@ function LedgerType({ onClose }) {
         onClick={() => {
           show({
             modalType: 'ledgeraddresses',
-            modalData: { isLedgerLive: false },
+            modalProps: { isLedgerLive: false },
             modalTemplate: 'simple'
           });
         }}
@@ -63,7 +63,7 @@ function LedgerType({ onClose }) {
           Select another wallet
         </Button>
       </Box>
-    </Fragment>
+    </Grid>
   );
 }
 

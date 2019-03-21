@@ -6,6 +6,7 @@ import {
   Flex,
   Card,
   Checkbox,
+  Button,
   Link
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
@@ -19,6 +20,7 @@ import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
+import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -100,7 +102,7 @@ const CDPCreateConfirmSummary = ({
   );
 };
 
-const CDPCreateConfirmed = ({ hash }) => {
+const CDPCreateConfirmed = ({ hash, onClose }) => {
   const { maker } = useMaker();
 
   const networkId = maker.service('web3').networkId();
@@ -124,10 +126,7 @@ const CDPCreateConfirmed = ({ hash }) => {
           <TextBlock textAlign="center" fontSize="70px">
             {emoji}
           </TextBlock>
-          <TextBlock t="headingS" textAlign="center">
-            Transaction
-          </TextBlock>
-          <Box>
+          <Box my="l" textAlign="center">
             {isTestchain ? (
               <Text>{hash}</Text>
             ) : (
@@ -136,17 +135,22 @@ const CDPCreateConfirmed = ({ hash }) => {
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
-                {hash}
+                View transaction details <ExternalLinkIcon />
               </Link>
             )}
           </Box>
+          <Flex textAlign="center" justifyContent="center">
+            <Button onClick={onClose} width="145px">
+              Exit
+            </Button>
+          </Flex>
         </Grid>
       </Flex>
     </Box>
   );
 };
 
-const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
+const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
   const { maker } = useMaker();
 
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -189,11 +193,12 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
 
   React.useEffect(() => {
     ensureProxyWithGemApprovals();
-  }, []);
+  }, [ensureProxyWithGemApprovals]);
 
   if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 
-  if (openCDPTxHash) return <CDPCreateConfirmed hash={openCDPTxHash} />;
+  if (openCDPTxHash)
+    return <CDPCreateConfirmed hash={openCDPTxHash} onClose={onClose} />;
 
   return (
     <CDPCreateConfirmSummary

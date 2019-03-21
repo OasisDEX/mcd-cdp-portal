@@ -15,7 +15,7 @@ const WalletSection = ({
     <Flex alignItems="center">
       <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
       {!currentAccount ? null : (
-        <Box ml="s" mr="auto">
+        <Box ml="xs" mr="auto">
           <Text t={t} color={textColor}>
             {currentAccount ? currentAccount.type : null}
           </Text>
