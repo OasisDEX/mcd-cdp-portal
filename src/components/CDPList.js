@@ -1,6 +1,6 @@
 import React, { memo, Fragment } from 'react';
 import styled from 'styled-components';
-import ilkList from 'references/ilkList';
+import ilks from 'references/ilks';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
@@ -9,7 +9,7 @@ import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 
-const shownIlks = ilkList.map(cdpType => ({
+const shownIlks = ilks.map(cdpType => ({
   ...cdpType,
   ratio: (Math.random() * 1000).toFixed(2)
 }));

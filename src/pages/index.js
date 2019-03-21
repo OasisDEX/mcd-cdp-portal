@@ -14,9 +14,11 @@ import { getOrReinstantiateMaker } from '../maker';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import { isMissingContractAddress } from 'utils/ethereum';
 
-import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
-import { createCDPSystemModel } from 'reducers/network/system/model';
+import * as accountWatcherCalls from 'reducers/network/account/calls';
+import { createIlkWatcherCalls } from 'reducers/network/ilks/calls';
+import { createSystemWatcherCalls } from 'reducers/network/system/calls';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
+import ilks from 'references/ilks';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
@@ -24,6 +26,22 @@ import modals from 'components/Modals';
 import { userSnapInit } from 'utils/analytics';
 
 const { networkNames, defaultNetwork } = config;
+
+function tapTokenAllowanceCalls(watcher, addresses, address, proxy) {
+  watcher.tap(calls => [
+    // Remove any existing token balance calls
+    ...calls.filter(calldata => calldata.type !== 'token_allowance'),
+    // Add token allowance calls for this wallet address and proxy
+    ...store
+      .getState()
+      .network.account.tokens.map(({ key: gem }) =>
+        accountWatcherCalls.tokenAllowance(addresses)(gem, address, proxy)
+      )
+  ]);
+}
+
+let lastConnectedAddress = null;
+let lastProxyAddress = null;
 
 async function stageNetwork({ testchainId, network }) {
   // network will be ignored if testchainId is present
@@ -50,6 +68,21 @@ async function stageNetwork({ testchainId, network }) {
     addresses
   });
 
+  if (makerReinstantiated) {
+    store.dispatch({ type: 'addresses/set', payload: { addresses } });
+    maker.on('dsproxy/BUILD', obj => {
+      const proxyAddress = obj.payload.address;
+      const connectedAddress = maker.currentAddress();
+      console.debug(`New DSProxy created: ${proxyAddress}.`);
+      tapTokenAllowanceCalls(
+        watcher,
+        addresses,
+        connectedAddress,
+        proxyAddress
+      );
+    });
+  }
+
   let stateFetchPromise = Promise.resolve();
   if (watcherRecreated) {
     // all bets are off wrt what contract state in our store
@@ -57,20 +90,21 @@ async function stageNetwork({ testchainId, network }) {
     // do our best to attach state listeners to this new network
     stateFetchPromise = watcher.tap(() => {
       return [
-        ...createCDPSystemModel(addresses),
-        cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
-        cdpTypeModel.rateData(addresses)('ETH'), // everything else is by ilk
-        cdpTypeModel.liquidation(addresses)('ETH'),
-        cdpTypeModel.flipper(addresses)('ETH'),
-        cdpTypeModel.rateData(addresses)('REP'),
-        cdpTypeModel.liquidation(addresses)('REP'),
-        cdpTypeModel.flipper(addresses)('REP')
+        // add watcher calls for system variables
+        ...createSystemWatcherCalls(addresses),
+        // add watcher calls for the ilks we have
+        ...ilks.reduce(
+          (acc, { key }) => (
+            // eslint-disable-next-line
+            acc.push(...createIlkWatcherCalls(addresses, key)), acc
+          ),
+          []
+        )
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
   }
 
-  return { maker, stateFetchPromise };
+  return { maker, watcher, addresses, stateFetchPromise };
 }
 
 // Any component that would like to change the network must replace url query params, re-running this function.
@@ -78,12 +112,45 @@ function withAuthenticatedNetwork(getPage) {
   return async url => {
     try {
       // ensure our maker and watcher instances are connected to the correct network
-      const { maker, stateFetchPromise } = await stageNetwork(url.query);
+      const {
+        maker,
+        watcher,
+        addresses,
+        stateFetchPromise
+      } = await stageNetwork(url.query);
       const { pathname } = url;
       let connectedAddress = null;
 
       try {
         connectedAddress = maker.currentAddress();
+        const proxyAddress = await maker.service('proxy').currentProxy();
+        if (connectedAddress !== lastConnectedAddress) {
+          console.debug(`Active address changed to ${connectedAddress}.`);
+          lastConnectedAddress = connectedAddress;
+          watcher.tap(calls => [
+            // Remove any existing token balance calls
+            ...calls.filter(calldata => calldata.type !== 'token_balance'),
+            // Add token balance calls for this wallet address
+            ...store
+              .getState()
+              .network.account.tokens.map(({ key: gem }) =>
+                accountWatcherCalls.tokenBalance(addresses)(
+                  gem,
+                  connectedAddress
+                )
+              )
+          ]);
+        }
+        if (proxyAddress !== lastProxyAddress) {
+          console.debug(`DSProxy address changed to ${proxyAddress}.`);
+          lastProxyAddress = proxyAddress;
+          tapTokenAllowanceCalls(
+            watcher,
+            addresses,
+            connectedAddress,
+            proxyAddress
+          );
+        }
       } catch (_) {
         // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
       }
@@ -128,8 +195,8 @@ function withAuthenticatedNetwork(getPage) {
           />
         </ModalProvider>
       );
-    } catch (errMsg) {
-      return <div>{errMsg.toString()}</div>;
+    } catch (err) {
+      return <div>{err.toString()}</div>;
     }
   };
 }

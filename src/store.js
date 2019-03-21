@@ -5,15 +5,17 @@ import { enableBatching } from 'utils/redux';
 
 import sdkState from 'reducers/sdkState';
 import addresses from 'reducers/addresses';
+import account from 'reducers/network/account';
 import system from 'reducers/network/system';
-import cdpTypes from 'reducers/network/cdpTypes';
+import ilks from 'reducers/network/ilks';
 
 const rootReducer = combineReducers({
   sdkState,
   addresses,
   network: combineReducers({
+    account,
     system,
-    cdpTypes
+    ilks
   })
 });
 

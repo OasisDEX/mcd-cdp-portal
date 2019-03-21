@@ -2,10 +2,11 @@ import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
-import { getAllFeeds } from 'reducers/network/cdpTypes';
+import { getAllFeeds } from 'reducers/network/system';
 
 import { Flex, Text } from '@makerdao/ui-components-core';
 import { getColor } from 'styles/theme';
+import SidebarWallet from './SidebarWallet';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
@@ -81,6 +82,11 @@ function Sidebar({ feeds, system, address, network, currentAccount }) {
     <Fragment>
       <AccountSection address={address} currentAccount={currentAccount} />
       <NetworkSection networkID={network.id} swappable={network.swappable} />
+      {address && (
+        <Section>
+          <SidebarWallet />
+        </Section>
+      )}
       <Section>
         <SidebarFeeds feeds={feeds} />
       </Section>

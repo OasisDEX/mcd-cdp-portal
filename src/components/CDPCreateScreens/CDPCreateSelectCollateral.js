@@ -5,7 +5,7 @@ import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { connect } from 'react-redux';
 
 import { prettifyNumber } from 'utils/ui';
-import { getIlkData } from 'reducers/network/cdpTypes';
+import { getIlkData } from 'reducers/network/ilks';
 
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';

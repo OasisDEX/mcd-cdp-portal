@@ -1,4 +1,4 @@
-import { DAI } from 'maker';
+import { DAI, USD } from 'maker';
 import { fromRad } from 'utils/units';
 import {
   TOTAL_DEBT,
@@ -6,8 +6,21 @@ import {
   GLOBAL_DEBT_CEILING,
   DEBT_AUCTION_LOT_SIZE,
   SURPLUS_AUCTION_LOT_SIZE,
-  NUMBER_OF_LIQUIDATIONS
+  NUMBER_OF_LIQUIDATIONS,
+  FEED_VALUE_USD,
+  FEED_SET_USD
 } from 'reducers/network/system';
+import { shownFeedGems } from 'references/gems';
+
+export const priceFeeds = addresses =>
+  shownFeedGems().map(({ key: gem, decimals = 18 }) => ({
+    target: addresses[`PIP_${gem}`],
+    call: ['peek()(uint256,bool)'],
+    returns: [
+      [`${gem}.${FEED_VALUE_USD}`, val => USD(val, -decimals)],
+      [`${gem}.${FEED_SET_USD}`, liveness => (liveness ? 'live' : 'ded')]
+    ]
+  }));
 
 const totalDebt = addresses => ({
   target: addresses.MCD_VAT,
@@ -45,8 +58,8 @@ const numberOfLiquidations = addresses => ({
   returns: [[NUMBER_OF_LIQUIDATIONS]]
 });
 
-export function createCDPSystemModel(addresses) {
-  return [
+export function createSystemWatcherCalls(addresses) {
+  const calls = [
     totalDebt,
     baseRate,
     globalDebtCeiling,
@@ -54,4 +67,6 @@ export function createCDPSystemModel(addresses) {
     surplusAuctionLotSize,
     numberOfLiquidations
   ].map(f => f(addresses));
+  calls.push(...priceFeeds(addresses));
+  return calls;
 }
