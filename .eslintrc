@@ -16,12 +16,15 @@
       "jsx": true
     }
   },
+  "plugins": ["react-hooks"],
   "rules": {
     "no-console": "off",
     "linebreak-style": ["error", "unix"],
     "semi": ["error", "always"],
     "quotes": ["error", "single", { "avoidEscape": true }],
     "react/prop-types": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

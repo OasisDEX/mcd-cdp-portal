@@ -89,7 +89,10 @@ function withAuthenticatedNetwork(getPage) {
         <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
-      if (pathname === '/') return withMakerProvider(getPage());
+      if (pathname === '/')
+        return withMakerProvider(
+          <ModalProvider modals={modals}>{getPage()}</ModalProvider>
+        );
 
       await maker.authenticate();
       await stateFetchPromise;

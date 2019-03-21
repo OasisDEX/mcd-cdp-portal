@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { memo, Fragment } from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Modal, Flex } from '@makerdao/ui-components-core';
+import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+
+import useMaker from 'hooks/useMaker';
+import useModal from 'hooks/useModal';
 
 // hack to get around button padding for now
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -12,32 +15,35 @@ const StyledLedgerLogo = styled(LedgerLogo)`
   margin-bottom: -5px;
 `;
 
-const PaddedDiv = styled.div`
-  padding: 20px;
+export const StyledTitle = styled.div`
+  font-weight: bold;
+  color: #212536;
+  line-height: 22px;
+  font-size: 28px;
 `;
 
-function LedgerConnect() {
-  const [modelOpen, setModalBool] = useState(false);
+export const StyledBlurb = styled.div`
+  line-height: 22px;
+  font-size: 17px;
+  margin: 22px 0px 16px 0px;
+`;
+
+export const StyledTop = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export default function LedgerConnect() {
+  const { authenticated: makerAuthenticated } = useMaker();
+  const { showSimpleByType } = useModal();
 
   return (
-    <>
-      <Modal
-        show={modelOpen}
-        onClose={() => {
-          setModalBool(false);
-        }}
-      >
-        <PaddedDiv>
-          <h3>Modal Content</h3>
-        </PaddedDiv>
-      </Modal>
-
+    <Fragment>
       <Button
         variant="secondary-outline"
         width="225px"
-        onClick={() => {
-          setModalBool(true);
-        }}
+        disabled={!makerAuthenticated}
+        onClick={() => showSimpleByType('ledgertype')}
       >
         <Flex alignItems="center">
           <StyledLedgerLogo />
@@ -46,8 +52,6 @@ function LedgerConnect() {
           </span>
         </Flex>
       </Button>
-    </>
+    </Fragment>
   );
 }
-
-export default LedgerConnect;

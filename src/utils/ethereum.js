@@ -1,3 +1,6 @@
+import round from 'lodash.round';
+import { MKR, ETH } from 'maker';
+
 export function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
 }
@@ -22,6 +25,25 @@ export function isMissingContractAddress(calldata) {
   }
   return false;
 }
+
+export const toNum = async promise => {
+  const val = await promise;
+  return val.toBigNumber().toFixed();
+};
+
+export const addMkrAndEthBalance = async account => {
+  return {
+    ...account,
+    ethBalance: round(
+      await toNum(window.maker.getToken(ETH).balanceOf(account.address)),
+      3
+    ),
+    mkrBalance: round(
+      await toNum(window.maker.getToken(MKR).balanceOf(account.address)),
+      3
+    )
+  };
+};
 
 export const isValidAddressString = addressString =>
   /^0x([A-Fa-f0-9]{40})$/.test(addressString);

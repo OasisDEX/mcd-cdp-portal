@@ -12,3 +12,9 @@ export const TxLifecycle = {
   MINED: 'mined',
   ERROR: 'error'
 };
+
+export const AccountTypes = {
+  LEDGER: 'ledger',
+  TREZOR: 'trezor',
+  METAMASK: 'browser'
+};

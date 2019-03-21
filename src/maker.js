@@ -1,5 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { WETH, REP, ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
@@ -79,4 +79,4 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
   return { maker: _maker, reinstantiated };
 }
 
-export { USD, DAI };
+export { USD, DAI, MKR, ETH };

@@ -32,4 +32,9 @@ const TextBlock = styled(Text)`
   display: block;
 `;
 
-export { Title, Subtitle, NavLabel, Heading, TextBlock };
+const BreakableText = styled(Text)`
+  overflow-wrap: break-word;
+  word-break: break-word;
+`;
+
+export { Title, Subtitle, NavLabel, Heading, TextBlock, BreakableText };

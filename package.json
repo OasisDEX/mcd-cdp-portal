@@ -27,6 +27,8 @@
     "@walletconnect/browser": "^1.0.0-beta.6",
     "@walletconnect/qrcode-modal": "^1.0.0-beta.6",
     "bignumber.js": "^8.0.2",
+    "eslint-plugin-react-hooks": "^1.5.0",
+    "lodash.round": "^4.0.4",
     "mixpanel-browser": "^2.26.0",
     "navi": "^0.10.7",
     "prop-types": "^15.7.2",
@@ -47,6 +49,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development NODE_PATH=src/ craco start",
+    "start:https": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco build",
     "precommit": "lint-staged",
     "test": "echo \"Live long or Dai hard\"",

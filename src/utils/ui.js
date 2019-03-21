@@ -25,6 +25,15 @@ export function cutMiddle(str = '', left = 4, right = 4) {
   return `${str.slice(0, left)}...${str.slice(-right)}`;
 }
 
+export const copyToClipboard = string => {
+  const textArea = document.createElement('textarea');
+  textArea.value = string;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('Copy');
+  textArea.remove();
+};
+
 export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
   const { liquidationRatio } = ilkData;
   const collateralizationRatio =
