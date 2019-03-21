@@ -20,11 +20,12 @@ import MakerHooksProvider from 'providers/MakerHooksProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
-import modals from 'components/Modals';
+import modals, { templates } from 'components/Modals';
 import { userSnapInit } from 'utils/analytics';
 
 const { networkNames, defaultNetwork } = config;
 
+console.log('modasdasd', modals, templates);
 async function stageNetwork({ testchainId, network }) {
   // network will be ignored if testchainId is present
 
@@ -93,16 +94,20 @@ function withAuthenticatedNetwork(getPage) {
         <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
+      const withModalProvider = children => (
+        <ModalProvider modals={modals} templates={templates}>
+          {children}
+        </ModalProvider>
+      );
+
       if (pathname === '/')
-        return withMakerProvider(
-          <ModalProvider modals={modals}>{getPage()}</ModalProvider>
-        );
+        return withMakerProvider(withModalProvider(getPage()));
 
       await maker.authenticate();
       await stateFetchPromise;
 
       return withMakerProvider(
-        <ModalProvider modals={modals}>
+        withModalProvider(
           <PageLayout
             mobileNav={
               <MobileNav
@@ -126,7 +131,7 @@ function withAuthenticatedNetwork(getPage) {
             }
             content={getPage()}
           />
-        </ModalProvider>
+        )
       );
     } catch (errMsg) {
       return <div>{errMsg.toString()}</div>;

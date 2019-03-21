@@ -41,7 +41,7 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
 );
 
 const CDPList = memo(function({ currentPath, currentQuery, address }) {
-  const { showFullscreenByType } = useModal();
+  const { show } = useModal();
 
   return (
     <Fragment>
@@ -68,7 +68,9 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
       })}
       {!address ? null : (
         <DashedFakeButton
-          onClick={() => showFullscreenByType('cdpcreate')}
+          onClick={() =>
+            show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
+          }
           justifyContent="center"
           borderRadius="4px"
           py="s"

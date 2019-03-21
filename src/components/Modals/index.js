@@ -1,8 +1,9 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
-import LedgerAddresses from './LedgerAddresses';
+import LedgerAddresses from 'components/LedgerAddresses';
 import { Grid } from '@makerdao/ui-components-core';
+import templates from './templates';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
@@ -28,9 +29,7 @@ const modals = {
       <Grid
         gridRowGap="s"
         gridTemplateRows="50px 1fr"
-        p="m"
         maxWidth="100%"
-        bg="grayLight5"
         onClick={e => e.stopPropagation()}
       >
         <LedgerType onClose={onClose} />
@@ -42,9 +41,7 @@ const modals = {
     <Grid
       gridRowGap="s"
       gridTemplateRows="50px 1fr"
-      p="m"
       maxWidth="100%"
-      bg="grayLight5"
       onClick={e => e.stopPropagation()}
     >
       <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
@@ -52,4 +49,5 @@ const modals = {
   )
 };
 
+export { templates };
 export default modals;
