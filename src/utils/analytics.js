@@ -23,7 +23,15 @@ const config = {
       token: 'a030d8845e34bfdc11be3d9f3054ad67',
       config: { ip: false }
     },
-    gaTrackingId: 'UA-128164213-3'
+    gaTrackingId: 'UA-128164213-3',
+    userSnap: {
+      token: 'def2ae23-a9a8-4f11-85e6-5346cb86d4f2',
+      config: {
+        fields: {
+          email: null
+        }
+      }
+    }
   }
 }[env];
 
