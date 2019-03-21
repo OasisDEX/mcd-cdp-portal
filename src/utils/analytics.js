@@ -59,6 +59,9 @@ export const mixpanelIdentify = (id, walletType) => {
 };
 
 export const userSnapInit = () => {
+  // already injected
+  if (document.getElementById('usersnap-script')) return;
+
   window.onUsersnapLoad = function(api) {
     api.init(config.userSnap.config);
     window.Usersnap = api;
@@ -68,7 +71,7 @@ export const userSnapInit = () => {
     config.userSnap.token
   }.js?onload=onUsersnapLoad`;
   const script = document.createElement('script');
-
+  script.id = 'usersnap-script';
   script.src = scriptUrl;
   script.async = true;
 
