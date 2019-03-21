@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { Box, Button, Grid, Flex } from '@makerdao/ui-components-core';
 import ButtonCard from './ButtonCard';
@@ -23,18 +23,11 @@ export const StyledTitle = styled.div`
   font-size: 28px;
 `;
 
-function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
+function LedgerType({ onClose }) {
   const { show } = useModal();
 
   return (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="50px 1fr"
-      p="m"
-      maxWidth="100%"
-      bg="grayLight5"
-      onClick={e => e.stopPropagation()}
-    >
+    <Fragment>
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>
       </Flex>
@@ -44,7 +37,8 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
         onClick={() => {
           show({
             modalType: 'ledgeraddresses',
-            modalData: { isLedgerLive: true }
+            modalData: { isLedgerLive: true },
+            modalTemplate: 'simple'
           });
         }}
         title="Ledger live"
@@ -56,7 +50,8 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
         onClick={() => {
           show({
             modalType: 'ledgeraddresses',
-            modalData: { isLedgerLive: false }
+            modalData: { isLedgerLive: false },
+            modalTemplate: 'simple'
           });
         }}
         title="Ledger legacy"
@@ -64,11 +59,11 @@ function LedgerType({ onLedgerLegacy, onCancel, onClose }) {
         buttonText="Connect"
       />
       <Box justifySelf="center">
-        <Button variant="secondary-outline" onClick={onCancel}>
+        <Button variant="secondary-outline" onClick={onClose}>
           Select another wallet
         </Button>
       </Box>
-    </Grid>
+    </Fragment>
   );
 }
 

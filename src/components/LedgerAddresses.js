@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
@@ -96,19 +96,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
   }, []);
 
   return (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="50px 1fr"
-      p="m"
-      maxWidth="100%"
-      width="100vw"
-      height="100vh"
-      bg="grayLight5"
-      onClick={e => e.stopPropagation()}
-      css={`
-        overflow-y: auto;
-      `}
-    >
+    <Fragment>
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>
       </Flex>
@@ -174,7 +162,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
           Confirm wallet
         </Button>
       </Grid>
-    </Grid>
+    </Fragment>
   );
 }
 
