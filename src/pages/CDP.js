@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
-// import lang from 'languages'; TODO - localization
+import lang from 'languages';
 import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
 
@@ -118,8 +118,7 @@ function CDPView({ cdpTypeSlug }) {
     <PageContentLayout>
       <Box>
         <Title color="black2">
-          {/* cdpTypeSlug.toUpperCase()} {lang.cdp */}
-          Ethereum CDP
+          {cdpTypeSlug.toUpperCase()} {lang.cdp}
         </Title>
       </Box>
       <Grid
@@ -128,55 +127,60 @@ function CDPView({ cdpTypeSlug }) {
         gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
       >
         <CdpViewCard
-          title="Liquidation price"
+          title={lang.cdp_page.liquidation_price}
           rows={[
             ['114.92 USD', '(ETH/USD)'],
-            ['Current price information (ETH/USD)', '249.06 USD'],
-            ['Liquidation penalty', '15%']
+            [`${lang.cdp_page.current_price_info} (ETH/USD)`, '249.06 USD'],
+            [lang.cdp_page.liquidation_penalty, '15%']
           ]}
           isAction={false}
         />
 
         <CdpViewCard
-          title="ETH Collateral"
+          title={lang.cdp_page.collateralization_ratio}
           rows={[
             ['171.65 %', '\u00A0'],
-            ['Minimum ratio', '150.00%'],
-            ['Stability Fee', '2.500%']
+            [lang.cdp_page.minimum_ratio, '150.00%'],
+            [lang.cdp_page.stability_fee, '2.500%']
           ]}
           isAction={false}
         />
 
         <CdpViewCard
-          title="Collateralization Ratio"
+          title={`${cdpTypeSlug.toUpperCase()} ${lang.cdp_page.collateral}`}
           rows={[
             ['5.5 ETH', '4,312.06 USD'],
-            ['Locked', '3.00 ETH', '2,352.03', <ActionButton name="Deposit" />],
             [
-              'Able to withdraw',
+              lang.cdp_page.locked,
+              '3.00 ETH',
+              '2,352.03',
+              <ActionButton name={lang.actions.deposit} />
+            ],
+            [
+              lang.cdp_page.able_withdraw,
               '2.50 ETH',
               '1,960.03 USD',
-              <ActionButton name="Withdraw" />
+              <ActionButton name={lang.actions.withdraw} />
             ]
           ]}
           isAction={true}
         />
 
         <CdpViewCard
-          title="DAI position"
+          title={`DAI ${lang.cdp_page.position}`}
           rows={[
-            ['10,0001.01 DAI', 'Outstanding debt'],
+            ['10,0001.01 DAI', lang.cdp_page.outstanding_debt],
             [
-              'DAI wallet balance',
+              `DAI ${lang.cdp_page.wallet_balance}`,
               '3.00 DAI',
               '3.00 USD',
-              <ActionButton name="Pay back" />
+              <ActionButton name={lang.actions.pay_back} />
             ],
             [
-              'Able to generate',
+              lang.cdp_page.able_generate,
               '4,002.08 DAI',
               '4,002.03 USD',
-              <ActionButton name="Generate" />
+              <ActionButton name={lang.actions.generate} />
             ]
           ]}
           isAction={true}

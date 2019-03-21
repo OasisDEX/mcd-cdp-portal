@@ -1,11 +1,20 @@
 {
   "cdp_page": {
+    "liquidation_price": "Liquidation price",
     "liquidation_ratio": "Liquidation ratio",
     "collateralization_ratio": "Collateralization ratio",
     "current_price_information": "Current price information",
     "liquidation_penalty": "Liquidation penalty",
     "minimum_ratio": "Minimum ratio",
-    "stability_fee": "Stability fee"
+    "stability_fee": "Stability fee",
+    "current_price_info": "Current price information",
+    "position": "position",
+    "collateral": "collateral",
+    "locked": "Locked",
+    "able_withdraw": "Able to withdraw",
+    "able_generate": "Able to generate",
+    "outstanding_debt": "Outstanding debt",
+    "wallet_balance": "wallet balance"
   },
   "landing_page": {
     "title": "Spend crypto without leaving your position.",
@@ -60,7 +69,11 @@
   "actions": {
     "back": "Back",
     "continue": "Continue",
-    "create_cdp": "Create CDP"
+    "create_cdp": "Create CDP",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "pay_back": "Pay back",
+    "generate": "Generate"
   },
 
   "verbs": {
