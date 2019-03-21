@@ -12,6 +12,7 @@ import { addMkrAndEthBalance } from '../utils/ethereum';
 
 import useMaker from 'hooks/useMaker';
 import useMakerState from 'hooks/useMakerState';
+import useModal from 'hooks/useModal';
 
 import {
   AddressContainer,
@@ -43,8 +44,13 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, closeModal) => {
-  await maker.addAccount({ address, type: AccountTypes.LEDGER });
+const onConfirm = async (maker, address, path, closeModal) => {
+  await maker.addAccount({
+    address: address,
+    type: AccountTypes.LEDGER,
+    legacy: true,
+    path
+  });
   maker.useAccountWithAddress(address);
 
   const connectedAddress = maker.currentAddress();
@@ -69,11 +75,13 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const { maker } = useMaker();
+  const { showSimpleByType } = useModal();
+  const path = isLedgerLive ? LEDGER_LIVE_PATH : LEDGER_LEGACY_PATH;
 
   const walletAddresses = useMakerState(maker =>
     maker.addAccount({
       type: AccountTypes.LEDGER,
-      path: isLedgerLive ? LEDGER_LIVE_PATH : LEDGER_LEGACY_PATH,
+      path,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
       choose: addresses => {
@@ -92,7 +100,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
 
   useEffect(() => {
     walletAddresses.prefetch();
-  }, []);
+  });
 
   return (
     <Fragment>
@@ -149,13 +157,16 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
         gridTemplateColumns={['1fr', 'auto auto']}
         justifySelf={['stretch', 'center']}
       >
-        <Button variant="secondary-outline" onClick={onClose}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => showSimpleByType('ledgertype')}
+        >
           Change wallet
         </Button>
         <Button
           disabled={!selectedAddress}
           onClick={async () => {
-            onConfirm(maker, selectedAddress, onClose);
+            onConfirm(maker, selectedAddress, path, onClose);
           }}
         >
           Confirm wallet
