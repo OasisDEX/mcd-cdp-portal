@@ -21,12 +21,16 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
 import modals from 'components/Modals';
+import { userSnapInit } from 'utils/analytics';
 
 const { networkNames, defaultNetwork } = config;
 
 async function stageNetwork({ testchainId, network }) {
   // network will be ignored if testchainId is present
 
+  if (network !== 'mainnet') {
+    userSnapInit();
+  }
   // memoized on network-testchainId combination, no memory limit
   const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
     network,
