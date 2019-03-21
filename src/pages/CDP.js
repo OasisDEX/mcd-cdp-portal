@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
-import lang from 'languages';
+// import lang from 'languages'; TODO - localization
 import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
 
@@ -32,7 +32,7 @@ const TopContainerRow = ({ props }) => {
 };
 
 const InfoContainerRow = ({ props }) => {
-  const [title, value, row] = props;
+  const [title, value] = props;
   const [rowInfoTitle, ...rowInfoLabel] = title.split(/( \()/g);
   return (
     <Flex py="xs" flexWrap="wrap">
