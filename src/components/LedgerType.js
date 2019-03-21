@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Box, Button, Grid, Flex } from '@makerdao/ui-components-core';
+import { Box, Button, Flex } from '@makerdao/ui-components-core';
 import ButtonCard from './ButtonCard';
 
 import styled from 'styled-components';

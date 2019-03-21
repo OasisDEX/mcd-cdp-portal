@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { navigation } from '../index';
 
-import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle, copyToClipboard } from '../utils/ui';
 import { AccountTypes } from '../utils/constants';

@@ -1,4 +1,4 @@
-import React, { memo, Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 import lang from 'languages';
 import styled from 'styled-components';
