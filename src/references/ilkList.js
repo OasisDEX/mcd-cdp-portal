@@ -1,4 +1,7 @@
-import { WETH, REP } from '@makerdao/dai-plugin-mcd';
+import { createCurrency } from '@makerdao/currency';
+
+const REP = createCurrency('REP');
+const WETH = createCurrency('WETH');
 
 export default [
   {

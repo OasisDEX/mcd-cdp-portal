@@ -14,7 +14,6 @@ import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { calcCDPParams } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
@@ -101,8 +100,7 @@ const CDPCreateConfirmSummary = ({
   );
 };
 
-const CDPCreateConfirmed = ({ data }) => {
-  const { hash } = data;
+const CDPCreateConfirmed = ({ hash }) => {
   const { maker } = useMaker();
 
   const networkId = maker.service('web3').networkId();
@@ -135,6 +133,7 @@ const CDPCreateConfirmed = ({ data }) => {
             ) : (
               <Link
                 t="textS"
+                target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
                 {hash}
@@ -153,46 +152,48 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
   const { gemsToLock, daiToDraw } = cdpParams;
 
   const [canCreateCDP, setCanCreateCDP] = React.useState(false);
-  const [openingCDP, setOpeningCDP] = React.useState(false);
-  const [cdpCreatedInfo, setCdpCreated] = React.useState(false);
+  const [openCDPTxHash, setOpenCDPTxHash] = React.useState(null);
 
   async function capturedDispatch(payload) {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
-    setOpeningCDP(true);
 
-    const { id, ilk } = await maker
+    const txObject = maker
       .service('mcd:cdpManager')
-      .open(selectedIlk.key);
-    const cdp = await maker
-      .service('mcd:cdpManager')
-      .lockAndDraw(id, ilk, selectedIlk.currency(gemsToLock), MDAI(daiToDraw));
+      .openLockAndDraw(
+        selectedIlk.key,
+        selectedIlk.currency(gemsToLock),
+        daiToDraw
+      );
 
-    setOpeningCDP(false);
-    setCdpCreated(cdp);
+    maker.service('transactionManager').listen(txObject, {
+      pending: tx => setOpenCDPTxHash(tx.hash)
+    });
   }
 
   async function ensureProxyWithGemApprovals() {
-    const proxyAddress = await maker.service('proxy').ensureProxy();
-    const gemToken = maker.getToken(selectedIlk.data.gem);
-    const gemAllowanceSet = (await gemToken.allowance(
-      maker.currentAddress(),
-      proxyAddress
-    )).eq(MAX_UINT_BN);
+    try {
+      const proxyAddress = await maker.service('proxy').ensureProxy();
+      const gemToken = maker.getToken(selectedIlk.currency.symbol);
+      const gemAllowanceSet = (await gemToken.allowance(
+        maker.currentAddress(),
+        proxyAddress
+      )).eq(MAX_UINT_BN);
 
-    if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
-
-    setCanCreateCDP(true);
+      if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
+      setCanCreateCDP(true);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   React.useEffect(() => {
     ensureProxyWithGemApprovals();
   }, []);
 
-  if (!canCreateCDP || openingCDP)
-    return <LoadingLayout background="#F6F8F9" />;
+  if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 
-  if (cdpCreatedInfo) return <CDPCreateConfirmed data={cdpCreatedInfo} />;
+  if (openCDPTxHash) return <CDPCreateConfirmed hash={openCDPTxHash} />;
 
   return (
     <CDPCreateConfirmSummary

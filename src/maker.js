@@ -2,7 +2,12 @@ import Maker, { USD, DAI } from '@makerdao/dai';
 import McdPlugin, { WETH, REP, ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
+
 import proxyRegistryAbi from 'references/proxyRegistry.abi.json';
+import gemJoinAbi from 'references/gemJoin.abi.json';
+import dsTokenAbi from 'references/dsToken.abi.json';
+
+import ilkList from 'references/ilkList';
 
 let _maker;
 let _rpcUrl;
@@ -31,28 +36,37 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
         [
           McdPlugin,
           {
-            cdpTypes: [
-              { currency: WETH, name: 'ETH' },
-              { currency: REP, name: 'REP' }
-            ],
+            cdpTypes: ilkList.map(({ currency, key, gem }) => ({
+              currency,
+              ilk: key,
+              address: addresses[gem],
+              abi: dsTokenAbi
+            })),
             addressOverrides: { ...addresses }
           }
         ]
       ],
+      smartContract: {
+        addContracts: {}
+      },
       provider: {
         url: rpcUrl,
         type: 'HTTP'
       }
     };
 
+    for (let ilk of ilkList) {
+      const adapterName = `MCD_JOIN_${ilk.key}`;
+      config.smartContract.addContracts[adapterName] = {
+        abi: gemJoinAbi,
+        address: addresses[adapterName]
+      };
+    }
+
     if (addresses.PROXY_REGISTRY) {
-      config.smartContract = {
-        addContracts: {
-          PROXY_REGISTRY: {
-            address: addresses.PROXY_REGISTRY,
-            abi: proxyRegistryAbi
-          }
-        }
+      config.smartContract.addContracts.PROXY_REGISTRY = {
+        address: addresses.PROXY_REGISTRY,
+        abi: proxyRegistryAbi
       };
     }
 
