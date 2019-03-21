@@ -2,6 +2,7 @@ import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
 import LedgerAddresses from 'components/LedgerAddresses';
+import TrezorAddresses from './TrezorAddresses';
 import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
 
@@ -30,6 +31,19 @@ const modals = {
 
   ledgeraddresses: ({ onClose, isLedgerLive }) => (
     <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
+  ),
+
+  trezoraddresses: ({ onClose }) => (
+    <Grid
+      gridRowGap="s"
+      gridTemplateRows="50px 1fr"
+      p="m"
+      maxWidth="100%"
+      bg="grayLight5"
+      onClick={e => e.stopPropagation()}
+    >
+      <TrezorAddresses onClose={onClose} />
+    </Grid>
   )
 };
 
