@@ -1,5 +1,8 @@
 import ilks from 'references/ilks';
 
+export const ADDRESSES_SET = 'addresses/set';
+export const ADDRESSES_CLEAR = 'addresses/clear';
+
 export function getActionableIlks({ addresses }) {
   // in order to interact with the cdps of an ilk,
   // we need to ensure we have the following ilk-specific addresses
@@ -18,9 +21,9 @@ export function getGemAddress({ addresses }, gem) {
 
 function addresses(state = {}, action) {
   switch (action.type) {
-    case 'addresses/set':
+    case ADDRESSES_SET:
       return { ...action.payload.addresses };
-    case 'addresses/clear':
+    case ADDRESSES_CLEAR:
       return {};
     default:
       return state;

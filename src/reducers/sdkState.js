@@ -23,6 +23,9 @@
 //   }
 // }, 250);
 
+export const AUTHENTICATED = 'Authenticated';
+export const ACTIVE_ACCOUNT_SWITCHED = 'ActiveAccountSwitched';
+
 const initialState = {
   authenticated: false,
   activeAccountAddress: '',
@@ -31,9 +34,9 @@ const initialState = {
 
 function sdkState(state = initialState, action) {
   switch (action.type) {
-    case 'Authenticated':
+    case AUTHENTICATED:
       return { ...state, authenticated: true };
-    case 'ActiveAccountSwitched':
+    case ACTIVE_ACCOUNT_SWITCHED:
       return {
         ...state,
         activeAccountAddress: action.address,

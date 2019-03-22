@@ -10,6 +10,9 @@ import dsTokenAbi from 'references/dsToken.abi.json';
 
 import ilks from 'references/ilks';
 
+import store from './store';
+import { PROXY_CREATED } from './reducers/app';
+
 let _maker;
 let _rpcUrl;
 
@@ -84,6 +87,20 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
 
     // for debugging
     window.maker = _maker;
+
+    _maker.on('dsproxy/BUILD', obj => {
+      const proxyAddress = obj.payload.address;
+      console.debug(`New DSProxy created: ${proxyAddress}.`);
+
+      store.dispatch({
+        type: PROXY_CREATED,
+        payload: {
+          proxyAddress
+        }
+      });
+    });
+
+    await _maker.authenticate();
   }
 
   return { maker: _maker, reinstantiated };
