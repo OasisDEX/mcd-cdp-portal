@@ -1,11 +1,4 @@
-import { createCurrency } from '@makerdao/currency';
-
-const WETH = createCurrency('WETH');
-const COL1 = createCurrency('COL1');
-const COL2 = createCurrency('COL2');
-const COL3 = createCurrency('COL3');
-const COL4 = createCurrency('COL4');
-const COL5 = createCurrency('COL5');
+import { MWETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -13,7 +6,7 @@ export default [
     symbol: 'WETH-A', // how it's displayed in the UI
     key: 'ETH-A', // the actual ilk name used in the vat
     gem: 'WETH', // the actual asset that's being locked
-    currency: WETH // the associated dai.js currency type
+    currency: MWETH // the associated dai.js currency type
     // (might be able replace "gem" completely)
   },
   {
@@ -21,7 +14,7 @@ export default [
     symbol: 'WETH-B',
     key: 'ETH-B',
     gem: 'WETH',
-    currency: WETH
+    currency: MWETH
   },
   {
     slug: 'col1-a',
