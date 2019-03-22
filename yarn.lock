@@ -977,13 +977,13 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.8.tgz#ac874744d7b6e69ae9ab71bb2b2a9e66a746a894"
-  integrity sha512-g/LgcIu14fKbkolOxUm+wqPoyads0LyElBxZ433U5xKAf9k/cShnOLomcfIHhNrVD3sNqjs79Iq4XDjRJYZN4Q==
+"@makerdao/dai-plugin-mcd@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.10.tgz#69fe67e28f51ed1edbdbd2594510ee6d0db9a17b"
+  integrity sha512-NpuzrinFoQI5W9xPKKB2rNuXEzBdzPSA05m7orRYzVe6u1Htp/Guu1/1kWLMCMHKvXSkY9RKqhPFUGzICKvbxw==
   dependencies:
     "@makerdao/currency" "^0.9.0"
-    "@makerdao/services-core" "^0.9.4"
+    "@makerdao/services-core" "^0.9.5"
     bignumber.js "^8.1.1"
 
 "@makerdao/dai-plugin-trezor-web@^0.9.5":
@@ -1040,7 +1040,7 @@
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
-"@makerdao/services-core@^0.9.4":
+"@makerdao/services-core@^0.9.4", "@makerdao/services-core@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
   integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
@@ -1049,26 +1049,26 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.0.tgz#3f1517ab80426501bf21df14edd45cb571fd2b4a"
-  integrity sha512-EiwEs4xOsmnEjs/5emn8sDuZuDbtaeyzMD5NRWmNltyYPugllZ/l8I0hIMNaAoDqCeBH4uQ4iAu9LlNNnIjLzg==
+"@makerdao/ui-components-core@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.2.tgz#860f5655a2abb8033a1477bf5b8c04efcadca21e"
+  integrity sha512-I0o4SPEkpetrv8zJaPuVd/v45m8plHDDb9gq2Z92MVAvWhwozDFV+m7apjlZZy8ztT5JmAg9Oostd5poK/Yayw==
   dependencies:
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"
 
-"@makerdao/ui-components-footer@^0.1.0":
+"@makerdao/ui-components-footer@^0.1.3":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.4.tgz#a314aae71cff3fbc21ef51646347395e2df677b5"
   integrity sha512-SJ/+aqEaGJwjWkxLluXRXEy7OKUnIo8b3aOqM9ww8spcaKPd1SvgowsTQeB93bPuvp7YUoEK0ZW+lqSPVYqfLg==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.3"
 
-"@makerdao/ui-components-header@^0.1.0":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.4.tgz#50c0b4bb151b6d1734d29edc478b67c6c71f17d3"
-  integrity sha512-0ip1FMXA4eaixKt5pNzTihZ3DfWWmBGloSDx1lWAhIZYrQT17Xfheh1cOhlld1cdLHG+OClZ/x+MfCXid3fUDA==
+"@makerdao/ui-components-header@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.5.tgz#b14737c52994ee1f74c938d8051d72e6fd9b0c30"
+  integrity sha512-nCFTCDEA5OVV3PVRTmkRnknqRzEmpPuCt32zkbND9NDddsQyhE0ZCGwFsLdQSoNNJc8CNHgxRS5zp5ETY288ZA==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.3"
 
