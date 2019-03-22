@@ -22,6 +22,7 @@ import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
 import modals, { templates } from 'components/Modals';
 import { userSnapInit } from 'utils/analytics';
+import ilkList from 'references/ilkList';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -59,14 +60,14 @@ async function stageNetwork({ testchainId, network }) {
     stateFetchPromise = watcher.tap(() => {
       return [
         ...createCDPSystemModel(addresses),
-        cdpTypeModel.priceFeed(addresses)('REP', { decimals: 18 }),
-        cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
-        cdpTypeModel.rateData(addresses)('ETH'), // everything else is by ilk
-        cdpTypeModel.liquidation(addresses)('ETH'),
-        cdpTypeModel.flipper(addresses)('ETH'),
-        cdpTypeModel.rateData(addresses)('REP'),
-        cdpTypeModel.liquidation(addresses)('REP'),
-        cdpTypeModel.flipper(addresses)('REP')
+        // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
+        ...ilkList
+          .map(({ key: ilk }) => [
+            cdpTypeModel.rateData(addresses)(ilk),
+            cdpTypeModel.liquidation(addresses)(ilk),
+            cdpTypeModel.flipper(addresses)(ilk)
+          ])
+          .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
   }

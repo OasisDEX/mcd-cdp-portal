@@ -82,7 +82,7 @@ export function calcDaiAvailable({ deposited, price, liquidationRatio }) {
 }
 
 export function getUsdPrice(ilkData) {
-  return parseFloat(ilkData.feedValueUSD.toString());
+  return parseFloat(ilkData.feedValueUSD.toString()) || '---';
 }
 
 export function cdpParamsAreValid(

@@ -36,12 +36,12 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
         [
           McdPlugin,
           {
-            cdpTypes: ilkList.map(({ currency, key, gem }) => ({
-              currency,
-              ilk: key,
-              address: addresses[gem],
-              abi: dsTokenAbi
-            })),
+            // cdpTypes: ilkList.map(({ currency, key, gem }) => ({
+            //   currency,
+            //   ilk: key,
+            //   address: addresses[gem],
+            //   abi: dsTokenAbi
+            // })),
             addressOverrides: { ...addresses }
           }
         ]

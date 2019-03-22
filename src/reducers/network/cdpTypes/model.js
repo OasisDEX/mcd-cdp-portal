@@ -39,7 +39,7 @@ export const rateData = addresses => name => ({
         return taxBigNumber
           .pow(secondsPerYear)
           .minus(1)
-          .toNumber();
+          .toFixed(3);
       }
     ],
     [`${name}.${LAST_DRIP}`]

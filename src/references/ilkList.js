@@ -1,23 +1,54 @@
-import { createCurrency } from '@makerdao/currency';
-
-const REP = createCurrency('REP');
-const WETH = createCurrency('WETH');
+import { MWETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
-    slug: 'weth', // URL param
-    symbol: 'WETH', // how it's displayed in the UI
-    key: 'ETH', // the actual ilk name used in the vat
+    slug: 'weth-a', // URL param
+    symbol: 'WETH-A', // how it's displayed in the UI
+    key: 'ETH-A', // the actual ilk name used in the vat
     gem: 'WETH', // the actual asset that's being locked
-    currency: WETH // the associated dai.js currency type
+    currency: MWETH // the associated dai.js currency type
     // (might be able replace "gem" completely)
   },
   {
-    slug: 'rep',
-    symbol: 'REP',
-    name: 'REP',
-    key: 'REP',
-    gem: 'REP',
-    currency: REP
+    slug: 'weth-b',
+    symbol: 'WETH-B',
+    key: 'ETH-B',
+    gem: 'WETH',
+    currency: MWETH
+  },
+  {
+    slug: 'col1-a',
+    symbol: 'COL1-A',
+    key: 'COL1-A',
+    gem: 'COL1',
+    currency: COL1
+  },
+  {
+    slug: 'col2-a',
+    symbol: 'COL2-A',
+    key: 'COL2-A',
+    gem: 'COL2',
+    currency: COL2
+  },
+  {
+    slug: 'col3-a',
+    symbol: 'COL3-A',
+    key: 'COL3-A',
+    gem: 'COL3',
+    currency: COL3
+  },
+  {
+    slug: 'col4-a',
+    symbol: 'COL4-A',
+    key: 'COL4-A',
+    gem: 'COL4',
+    currency: COL4
+  },
+  {
+    slug: 'col5-a',
+    symbol: 'COL5-A',
+    key: 'COL5-A',
+    gem: 'COL5',
+    currency: COL5
   }
 ];
