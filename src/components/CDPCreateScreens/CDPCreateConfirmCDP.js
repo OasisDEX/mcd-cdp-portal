@@ -13,7 +13,7 @@ import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
-import { MAX_UINT_BN } from 'utils/units';
+import { MAX_SHIFTED_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
@@ -178,7 +178,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk }) => {
       const gemAllowanceSet = (await gemToken.allowance(
         maker.currentAddress(),
         proxyAddress
-      )).eq(MAX_UINT_BN);
+      )).eq(MAX_SHIFTED_UINT_BN);
 
       if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
       setCanCreateCDP(true);

@@ -10,10 +10,10 @@ import {
   FEED_VALUE_USD,
   FEED_SET_USD
 } from 'reducers/network/system';
-import { shownFeedGems } from 'references/gems';
+import { getShownFeedGems } from 'references/gems';
 
 export const priceFeeds = addresses =>
-  shownFeedGems().map(({ key: gem, decimals = 18 }) => ({
+  getShownFeedGems().map(({ key: gem, decimals = 18 }) => ({
     target: addresses[`PIP_${gem}`],
     call: ['peek()(uint256,bool)'],
     returns: [

@@ -1,4 +1,4 @@
-import { shownFeedGems } from 'references/gems';
+import { getShownFeedGems } from 'references/gems';
 
 export const TOTAL_DEBT = 'totalDebt';
 export const BASE_RATE = 'baseRate';
@@ -21,7 +21,7 @@ const initialState = {
   [DEBT_AUCTION_LOT_SIZE]: '0',
   [NUMBER_OF_LIQUIDATIONS]: '0',
   [SURPLUS_AUCTION_LOT_SIZE]: '0',
-  feeds: shownFeedGems().map(gem => ({
+  feeds: getShownFeedGems().map(gem => ({
     gem: gem.key,
     symbol: gem.symbol,
     ...defaultFeedState

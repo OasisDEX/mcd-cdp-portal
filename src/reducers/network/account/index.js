@@ -1,4 +1,4 @@
-import { shownWalletGems } from 'references/gems';
+import { getShownWalletGems } from 'references/gems';
 
 export const TOKEN_BALANCE = 'balance';
 export const TOKEN_UNLOCKED = 'unlocked';
@@ -18,7 +18,7 @@ const defaultTokenState = {
 };
 
 const initialState = {
-  tokens: shownWalletGems().map(gem => ({ ...gem, ...defaultTokenState }))
+  tokens: getShownWalletGems().map(gem => ({ ...gem, ...defaultTokenState }))
 };
 
 export default function account(state = initialState, action) {

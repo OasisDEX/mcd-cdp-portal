@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import { Table, Button } from '@makerdao/ui-components-core';
+import { Table, Button, Box } from '@makerdao/ui-components-core';
 
 import { getTokens, setTokenAllowance } from 'reducers/network/account';
 import ToggleSwitch from 'components/ToggleSwitch';
@@ -29,7 +29,7 @@ const ColorStrip = ({ color }) => (
   </svg>
 );
 
-const Unlock = ({ gem, unlocked, setTokenAllowance }) => {
+const Unlock = memo(({ gem, unlocked, setTokenAllowance }) => {
   const { maker } = useMaker();
   const [unlockPending, setUnlockPending] = React.useState(false);
 
@@ -58,8 +58,7 @@ const Unlock = ({ gem, unlocked, setTokenAllowance }) => {
       setTokenAllowance(gem, allow);
     } catch (err) {
       // catch rejected signing request errors
-      console.error('Error:', err);
-    } finally {
+      console.error('Error changing token allowance:', err);
       setUnlockPending(false);
     }
   }
@@ -72,7 +71,7 @@ const Unlock = ({ gem, unlocked, setTokenAllowance }) => {
       pending={unlockPending}
     />
   );
-};
+});
 
 const StyledTable = styled(Table)`
   thead tr {
@@ -115,20 +114,9 @@ const Tr = styled.tr`
   }
 `;
 
-const StyledButton = styled(Button)`
-  padding: 0;
-  width: 4.8rem;
-  height: 2.4rem;
-  font-size: 1rem;
-`;
-
-const SidebarWalletWrapper = styled.div`
-  margin: 2.5rem 0;
-`;
-
 function SidebarWallet({ tokens }) {
   return (
-    <SidebarWalletWrapper>
+    <Box>
       <StyledTable width="100%">
         <thead>
           <Tr>
@@ -147,9 +135,17 @@ function SidebarWallet({ tokens }) {
               </td>
               <td className="balance">{prettifyNumber(balance, true)}</td>
               <td>
-                <StyledButton variant="secondary">
+                <Button
+                  css={`
+                    padding: 0;
+                    width: 4.8rem;
+                    height: 2.4rem;
+                    font-size: 1rem;
+                  `}
+                  variant="secondary"
+                >
                   {lang.sidebar.wallet.button_send}
-                </StyledButton>
+                </Button>
               </td>
               <td className="unlock">
                 <Unlock
@@ -162,7 +158,7 @@ function SidebarWallet({ tokens }) {
           ))}
         </tbody>
       </StyledTable>
-    </SidebarWalletWrapper>
+    </Box>
   );
 }
 

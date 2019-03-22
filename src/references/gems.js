@@ -40,5 +40,7 @@ export const gems = [
   }
 ].map(gem => ({ ...gem, currency: createCurrency(gem.key) }));
 
-export const shownWalletGems = () => gems.filter(gem => gem.showInWallet);
-export const shownFeedGems = () => gems.filter(gem => gem.showInFeeds);
+export const getCurrencies = () =>
+  gems.map(({ key, currency }) => ({ [key]: currency }));
+export const getShownWalletGems = () => gems.filter(gem => gem.showInWallet);
+export const getShownFeedGems = () => gems.filter(gem => gem.showInFeeds);

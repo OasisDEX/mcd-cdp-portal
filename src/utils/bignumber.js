@@ -16,6 +16,12 @@ export function greaterThanOrEqual(numberOne, numberTwo) {
   );
 }
 
+export function isEqualTo(numberOne, numberTwo) {
+  return BigNumber(numberOne.toString()).isEqualTo(
+    BigNumber(numberTwo.toString())
+  );
+}
+
 export function multiply(numberOne, numberTwo) {
   return BigNumber(numberOne.toString())
     .times(BigNumber(numberTwo.toString()))
