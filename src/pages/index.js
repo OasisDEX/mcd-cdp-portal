@@ -35,38 +35,58 @@ import ilkList from 'references/ilkList';
 
 const { networkNames, defaultNetwork } = config;
 
-console.log('modasdasd', modals, templates);
-async function stageNetwork({ testchainId, network }) {
-  // network will be ignored if testchainId is present
-
+async function initUserSnap(request, prevContext) {
+  const { network } = request.query;
   if (network !== 'mainnet') {
     userSnapInit();
   }
-  // memoized on network-testchainId combination, no memory limit
+  return {
+    prevContext
+  };
+}
+
+const networkDetails = async (request, prevContext) => {
+  const { testchainId, network } = request.query;
   const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
     network,
     testchainId
   });
 
-  // reinstantiated if rpcUrl has changed
-  const {
-    maker,
-    reinstantiated: makerReinstantiated
-  } = await getOrReinstantiateMaker({ rpcUrl, addresses });
-  if (makerReinstantiated)
-    store.dispatch({ type: 'addresses/set', payload: { addresses } });
+  return {
+    ...prevContext,
+    rpcUrl,
+    addresses
+  };
+};
 
-  const { watcher, recreated: watcherRecreated } = await getOrRecreateWatcher({
+const makerContext = async (request, prevContext) => {
+  const { rpcUrl, addresses } = prevContext;
+  const { maker, reinstantiated } = await getOrReinstantiateMaker({
+    rpcUrl,
+    addresses
+  });
+  if (reinstantiated) {
+    store.dispatch({ type: 'addresses/set', payload: { addresses } });
+    await maker.authenticate();
+  }
+  return {
+    ...prevContext,
+    maker
+  };
+};
+
+const watcherContext = async (request, prevContext) => {
+  const { rpcUrl, addresses } = prevContext;
+  const { watcher, recreated } = await getOrRecreateWatcher({
     rpcUrl,
     addresses
   });
 
-  let stateFetchPromise = Promise.resolve();
-  if (watcherRecreated) {
+  if (recreated) {
     // all bets are off wrt what contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     // do our best to attach state listeners to this new network
-    stateFetchPromise = watcher.tap(() => {
+    await watcher.tap(() => {
       return [
         ...createCDPSystemModel(addresses),
         // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
@@ -81,37 +101,28 @@ async function stageNetwork({ testchainId, network }) {
     });
   }
 
-  return { maker, stateFetchPromise };
-}
-
-// Any component that would like to change the network must replace url query params, re-running this function.
-const authenticatedContext = async (request, prevContext) => {
-  // ensure our maker and watcher instances are connected to the correct network
-  const { maker, stateFetchPromise } = await stageNetwork(request.query);
-  let connectedAddress = null;
-
-  try {
-    connectedAddress = maker.currentAddress();
-  } catch (_) {
-    // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
-  }
-
-  await maker.authenticate();
-  await stateFetchPromise;
-  const networkId = maker.service('web3').networkId();
-
-  return { ...prevContext, connectedAddress, networkId, maker };
+  return {
+    ...prevContext,
+    watcher
+  };
 };
 
 const withDefaultLayout = route =>
   withView((request, context) => {
-    const { connectedAddress, networkId, maker } = context;
+    const { maker } = context;
+    let connectedAddress = null;
+    try {
+      connectedAddress = maker.currentAddress();
+    } catch (_) {
+      // if no account is connected, we render in read-only mode
+    }
+
     return (
       <PageLayout
         mobileNav={
           <MobileNav
             network={{
-              id: networkId
+              id: maker.service('web3').networkId()
             }}
             address={connectedAddress}
           />
@@ -120,7 +131,7 @@ const withDefaultLayout = route =>
         sidebar={
           <Sidebar
             network={{
-              id: networkId
+              id: maker.service('web3').networkId()
             }}
             currentAccount={connectedAddress ? maker.currentAccount() : null}
             address={connectedAddress}
@@ -143,17 +154,20 @@ const hasNetwork = route =>
 
 export default hasNetwork(
   compose(
-    withContext(authenticatedContext),
-    withView(
-      <ModalProvider modals={modals} templates={templates}>
-        <View />
-      </ModalProvider>
-    ),
+    withContext(initUserSnap),
+    withContext(networkDetails),
+    withContext(makerContext),
+    withContext(watcherContext),
     withView((request, context) => (
       <MakerHooksProvider maker={context.maker}>
         <View />
       </MakerHooksProvider>
     )),
+    withView(
+      <ModalProvider modals={modals} templates={templates}>
+        <View />
+      </ModalProvider>
+    ),
     mount({
       '/': route(request => {
         return {
