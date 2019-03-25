@@ -1049,26 +1049,26 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.0.tgz#3f1517ab80426501bf21df14edd45cb571fd2b4a"
-  integrity sha512-EiwEs4xOsmnEjs/5emn8sDuZuDbtaeyzMD5NRWmNltyYPugllZ/l8I0hIMNaAoDqCeBH4uQ4iAu9LlNNnIjLzg==
+"@makerdao/ui-components-core@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.4.tgz#4a06843c63eedfba0add21b5f2deebbe31ac1e5a"
+  integrity sha512-xffkdFgjcPg6Jhyr0wzdUeNpRXPuN5wd4FyZWhjJeXd0tlyFGxSeqnycJM1+f+kGarywnUnvDXaldME0jeQPFA==
   dependencies:
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"
 
-"@makerdao/ui-components-footer@^0.1.0":
+"@makerdao/ui-components-footer@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.4.tgz#a314aae71cff3fbc21ef51646347395e2df677b5"
   integrity sha512-SJ/+aqEaGJwjWkxLluXRXEy7OKUnIo8b3aOqM9ww8spcaKPd1SvgowsTQeB93bPuvp7YUoEK0ZW+lqSPVYqfLg==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.3"
 
-"@makerdao/ui-components-header@^0.1.0":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.4.tgz#50c0b4bb151b6d1734d29edc478b67c6c71f17d3"
-  integrity sha512-0ip1FMXA4eaixKt5pNzTihZ3DfWWmBGloSDx1lWAhIZYrQT17Xfheh1cOhlld1cdLHG+OClZ/x+MfCXid3fUDA==
+"@makerdao/ui-components-header@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.5.tgz#b14737c52994ee1f74c938d8051d72e6fd9b0c30"
+  integrity sha512-nCFTCDEA5OVV3PVRTmkRnknqRzEmpPuCt32zkbND9NDddsQyhE0ZCGwFsLdQSoNNJc8CNHgxRS5zp5ETY288ZA==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.3"
 

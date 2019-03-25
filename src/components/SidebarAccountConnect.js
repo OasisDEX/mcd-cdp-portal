@@ -6,12 +6,6 @@ import styled from 'styled-components';
 
 import { Button, Modal, Box } from '@makerdao/ui-components-core';
 
-const CustomButton = styled(Button)`
-  height: 30px;
-  margin-left: 30px;
-  padding: 0px 26px;
-`;
-
 export default function AccountConnect() {
   const [modalOpen, setModalBool] = useState(false);
 
@@ -29,14 +23,18 @@ export default function AccountConnect() {
       </Modal>
 
       <span>{lang.sidebar.read_only_mode}</span>
-      <CustomButton
+      <Button
         onClick={() => {
           setModalBool(true);
         }}
         variant="secondary-outline"
+        height="30px"
+        ml="30px"
+        px="26px"
+        py="0px"
       >
         {lang.connect}
-      </CustomButton>
+      </Button>
     </>
   );
 }
