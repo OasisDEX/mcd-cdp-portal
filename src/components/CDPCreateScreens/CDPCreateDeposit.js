@@ -19,10 +19,10 @@ function OpenCDPForm({
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
   );
-  const userCanDrawDaiAmount = greaterThanOrEqual(
-    daiAvailable,
-    cdpParams.daiToDraw
-  );
+  // const userCanDrawDaiAmount = greaterThanOrEqual(
+  //   daiAvailable,
+  //   cdpParams.daiToDraw
+  // );
 
   const fields = [
     [

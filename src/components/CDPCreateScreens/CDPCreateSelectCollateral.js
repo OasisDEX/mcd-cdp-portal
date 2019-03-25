@@ -41,7 +41,7 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
   const [userGemBalance, setUserGemBalance] = React.useState(null);
 
   async function checkGemBalance() {
-    setUserGemBalance(await maker.getToken(ilk.gem).balance());
+    setUserGemBalance(await maker.getToken(ilk.currency).balance());
   }
 
   React.useEffect(() => {
