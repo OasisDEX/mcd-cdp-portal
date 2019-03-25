@@ -43,9 +43,8 @@ export const mixpanelInit = navigation => {
   );
   mixpanel.init(config.mixpanel.token, config.mixpanel.config);
   mixpanel.track('Pageview');
-  navigation.subscribe(snapshot => {
-    const { route } = snapshot;
-    if (route.type === 'page') {
+  navigation.subscribe(route => {
+    if (route.type === 'ready') {
       mixpanel.track('Pageview', { routeName: route.title });
       console.debug(`[Mixpanel] Tracked: ${route.title}`);
     }
@@ -83,13 +82,13 @@ export const gaInit = async navigation => {
     `[GA] Tracking initialized for ${env} env using ${config.gaTrackingId}`
   );
   ReactGA.initialize(config.gaTrackingId);
-  const { route } = navigation.getCurrentValue();
-  if (route.status === 'ready') {
+  const route = await navigation.getRoute();
+  if (route.type === 'ready') {
     console.debug(`[GA] Tracked initial pageview: ${route.url.href}`);
     ReactGA.pageview(route.url.href);
   }
-  navigation.subscribe(({ route }) => {
-    if (route.type === 'page') {
+  navigation.subscribe(route => {
+    if (route.type === 'ready') {
       console.debug(`[GA] Tracked pageview: ${route.url.href}`);
       ReactGA.pageview(route.url.href);
     }

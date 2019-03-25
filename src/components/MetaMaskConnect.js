@@ -3,7 +3,7 @@ import React from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { navigation } from '../index';
+import { useNavigation } from 'react-navi';
 import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { mixpanelIdentify } from 'utils/analytics';
@@ -38,6 +38,7 @@ function makerIsAlreadyConnected(maker, provider) {
 
 export default function MetaMaskConnect() {
   const { maker, authenticated: makerAuthenticated } = useMaker();
+  const navigation = useNavigation();
 
   return (
     <Button
@@ -67,10 +68,10 @@ export default function MetaMaskConnect() {
             network,
             testchainId,
             address: urlParamAddress
-          } = navigation.receivedRoute.url.query;
+          } = (await navigation.getRoute()).url.query;
 
           const addressToView = urlParamAddress || connectedAddress;
-          navigation.history.push({
+          navigation.navigate({
             pathname: '/overview/',
             search:
               testchainId !== undefined

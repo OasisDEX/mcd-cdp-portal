@@ -1,5 +1,14 @@
 import React from 'react';
-import { createPage, createRedirect, createSwitch } from 'navi';
+import {
+  map,
+  route,
+  mount,
+  redirect,
+  compose,
+  withView,
+  withContext
+} from 'navi';
+import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
@@ -76,115 +85,120 @@ async function stageNetwork({ testchainId, network }) {
 }
 
 // Any component that would like to change the network must replace url query params, re-running this function.
-function withAuthenticatedNetwork(getPage) {
-  return async url => {
-    try {
-      // ensure our maker and watcher instances are connected to the correct network
-      const { maker, stateFetchPromise } = await stageNetwork(url.query);
-      const { pathname } = url;
-      let connectedAddress = null;
+const authenticatedContext = async (request, prevContext) => {
+  // ensure our maker and watcher instances are connected to the correct network
+  const { maker, stateFetchPromise } = await stageNetwork(request.query);
+  let connectedAddress = null;
 
-      try {
-        connectedAddress = maker.currentAddress();
-      } catch (_) {
-        // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
-      }
-
-      const withMakerProvider = children => (
-        // the canonical maker source
-        <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
-      );
-
-      const withModalProvider = children => (
-        <ModalProvider modals={modals} templates={templates}>
-          {children}
-        </ModalProvider>
-      );
-
-      if (pathname === '/')
-        return withMakerProvider(withModalProvider(getPage()));
-
-      await maker.authenticate();
-      await stateFetchPromise;
-
-      return withMakerProvider(
-        withModalProvider(
-          <PageLayout
-            mobileNav={
-              <MobileNav
-                network={{
-                  id: maker.service('web3').networkId()
-                }}
-                address={connectedAddress}
-              />
-            }
-            navbar={<Navbar address={connectedAddress} />}
-            sidebar={
-              <Sidebar
-                network={{
-                  id: maker.service('web3').networkId()
-                }}
-                currentAccount={
-                  connectedAddress ? maker.currentAccount() : null
-                }
-                address={connectedAddress}
-              />
-            }
-            content={getPage()}
-          />
-        )
-      );
-    } catch (errMsg) {
-      return <div>{errMsg.toString()}</div>;
-    }
-  };
-}
-
-export default createSwitch({
-  paths: {
-    '/': url => {
-      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
-
-      return createPage({
-        title: 'Landing',
-        getContent: withAuthenticatedNetwork(() => <Landing />)
-      });
-    },
-
-    '/overview': url => {
-      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
-
-      return createPage({
-        title: 'Overview',
-        getContent: withAuthenticatedNetwork(() => <Overview />)
-      });
-    },
-
-    '/cdp/:type': url => {
-      if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
-      const cdpTypeSlug = url.params.type;
-
-      return createPage({
-        title: 'CDP',
-        getContent: withAuthenticatedNetwork(() => (
-          <CDPPage cdpTypeSlug={cdpTypeSlug} />
-        ))
-      });
-    }
+  try {
+    connectedAddress = maker.currentAddress();
+  } catch (_) {
+    // if no account is connected, or if maker.authenticate is still resolving, we render in read-only mode
   }
-});
 
-function networkIsUndefined(url) {
-  return url.query.network === undefined && url.query.testchainId === undefined;
+  await maker.authenticate();
+  await stateFetchPromise;
+  const networkId = maker.service('web3').networkId();
+
+  return { ...prevContext, connectedAddress, networkId, maker };
+};
+
+const withDefaultLayout = route =>
+  withView((request, context) => {
+    const { connectedAddress, networkId, maker } = context;
+    return (
+      <PageLayout
+        mobileNav={
+          <MobileNav
+            network={{
+              id: networkId
+            }}
+            address={connectedAddress}
+          />
+        }
+        navbar={<Navbar address={connectedAddress} />}
+        sidebar={
+          <Sidebar
+            network={{
+              id: networkId
+            }}
+            currentAccount={connectedAddress ? maker.currentAccount() : null}
+            address={connectedAddress}
+          />
+        }
+      >
+        <View />
+      </PageLayout>
+    );
+  }, route);
+
+const hasNetwork = route =>
+  map((request, context) => {
+    if (networkIsUndefined(request)) {
+      return createDefaultNetworkRedirect(request);
+    } else {
+      return route;
+    }
+  });
+
+export default hasNetwork(
+  compose(
+    withContext(authenticatedContext),
+    withView(
+      <ModalProvider modals={modals} templates={templates}>
+        <View />
+      </ModalProvider>
+    ),
+    withView((request, context) => (
+      <MakerHooksProvider maker={context.maker}>
+        <View />
+      </MakerHooksProvider>
+    )),
+    mount({
+      '/': route(request => {
+        return {
+          title: 'Landing',
+          view: <Landing />
+        };
+      }),
+
+      '/overview': withDefaultLayout(
+        route(request => {
+          return {
+            title: 'Overview',
+            view: <Overview />
+          };
+        })
+      ),
+
+      '/cdp/:type': withDefaultLayout(
+        route(request => {
+          const cdpTypeSlug = request.params.type;
+
+          return {
+            title: 'CDP',
+            view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
+          };
+        })
+      )
+    })
+  )
+);
+
+function networkIsUndefined(request) {
+  return (
+    request.query.network === undefined &&
+    request.query.testchainId === undefined
+  );
 }
 
-function createDefaultNetworkRedirect(url) {
-  const { address } = url.query;
-  const { pathname } = url;
+function createDefaultNetworkRedirect(request) {
+  const { address } = request.query;
+  const { mountpath } = request;
   const addressQuery = address === undefined ? '?' : `?address=${address}&`;
 
-  return createRedirect(
-    `${pathname === '/' ? '' : pathname}/${addressQuery}network=${
+  return redirect(
+    `${mountpath === '/' ? '' : mountpath}/${addressQuery}network=${
       networkNames[defaultNetwork]
     }`
   );

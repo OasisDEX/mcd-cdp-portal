@@ -54,11 +54,11 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => (
+const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => (
   <ResponsiveWrap>
     <MobileNavWrap>{mobileNav}</MobileNavWrap>
     <NavbarWrap>{navbar}</NavbarWrap>
-    {content}
+    {children}
     <SidebarWrap>{sidebar}</SidebarWrap>
   </ResponsiveWrap>
 );

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
-
-import { navigation } from '../index';
+import { useNavigation } from 'react-navi';
 
 import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle, copyToClipboard } from '../utils/ui';
@@ -44,7 +43,7 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, path, closeModal) => {
+const onConfirm = async (maker, address, path, closeModal, navigation) => {
   await maker.addAccount({
     address: address,
     type: AccountTypes.LEDGER,
@@ -60,11 +59,11 @@ const onConfirm = async (maker, address, path, closeModal) => {
   const {
     network,
     address: urlParamAddress
-  } = navigation.receivedRoute.url.query;
+  } = (await navigation.getRoute()).url.query;
 
   const addressToView = urlParamAddress || connectedAddress;
 
-  navigation.history.push({
+  navigation.navigate({
     pathname: '/overview/',
     search: `?network=${network}&address=${addressToView}`
   });
@@ -77,6 +76,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
   const { maker } = useMaker();
   const { showSimpleByType } = useModal();
   const path = isLedgerLive ? LEDGER_LIVE_PATH : LEDGER_LEGACY_PATH;
+  const navigation = useNavigation();
 
   const walletAddresses = useMakerState(maker =>
     maker.addAccount({
@@ -166,7 +166,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
         <Button
           disabled={!selectedAddress}
           onClick={async () => {
-            onConfirm(maker, selectedAddress, path, onClose);
+            onConfirm(maker, selectedAddress, path, onClose, navigation);
           }}
         >
           Confirm wallet

@@ -5,7 +5,7 @@ import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { NavLink } from 'react-navi';
+import { Link } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 
@@ -14,7 +14,7 @@ const shownIlks = ilkList.map(cdpType => ({
   ratio: (Math.random() * 1000).toFixed(2)
 }));
 
-const NavbarItemContainer = styled(NavLink)`
+const NavbarItemContainer = styled(Link)`
   display: block;
 `;
 
@@ -25,7 +25,7 @@ const DashedFakeButton = styled(Flex)`
 `;
 
 const NavbarItem = ({ href, label, ratio, active, ...props }) => (
-  <NavbarItemContainer href={href} active={active} precache={true} {...props}>
+  <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
     <Flex
       flexDirection="column"
       alignItems="center"
@@ -49,11 +49,12 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
         key="overview"
         href={`/overview/${currentQuery}`}
         label="Overview"
-        Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
-      />
+      >
+        <MakerSmall />
+      </NavbarItem>
       {shownIlks.map((cdp, idx) => {
-        const linkPath = `/cdp/${cdp.slug}/`;
+        const linkPath = `/cdp/${cdp.slug}`;
         const active = currentPath.includes(linkPath);
         return (
           <NavbarItem

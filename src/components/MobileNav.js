@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { NavLink, NavRoute } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import Sidebar from 'components/Sidebar';
@@ -111,28 +111,23 @@ const SidebarDrawer = ({
 };
 const MobileNav = ({ network, address }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
+  const { url } = useCurrentRoute();
 
   return (
-    <NavRoute>
-      {({ url }) => (
-        <Fragment>
-          <NavLink href={`/${url.search}`} precache={true}>
-            <NavLogo />
-          </NavLink>
+    <Fragment>
+      <Link href={`/${url.search}`} prefetch={true}>
+        <NavLogo />
+      </Link>
 
-          <CDPDropdown>
-            <CDPList currentPath={url.pathname} currentQuery={url.search} />
-          </CDPDropdown>
+      <CDPDropdown>
+        <CDPList currentPath={url.pathname} currentQuery={url.search} />
+      </CDPDropdown>
 
-          <SidebarDrawerTrigger
-            {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}
-          />
-          <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-            <Sidebar {...{ network, address }} />
-          </SidebarDrawer>
-        </Fragment>
-      )}
-    </NavRoute>
+      <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
+      <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
+        <Sidebar {...{ network, address }} />
+      </SidebarDrawer>
+    </Fragment>
   );
 };
 
