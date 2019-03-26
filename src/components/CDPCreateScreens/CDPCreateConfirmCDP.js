@@ -21,7 +21,6 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
-import retry from 'async-retry';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -180,12 +179,9 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     try {
       let proxyAddress = await maker.service('proxy').currentProxy();
       if (!proxyAddress) await maker.service('proxy').build();
-      if (selectedIlk.currency.symbol === 'ETH') {
-        await new Promise(res => setTimeout(res, 7500));
-      } else {
-        const proxyAddress = await retry(() =>
-          maker.service('proxy').currentProxy()
-        );
+      await new Promise(res => setTimeout(res, 7500));
+      if (selectedIlk.currency.symbol !== 'ETH') {
+        proxyAddress = await maker.service('proxy').currentProxy();
         const gemToken = maker.getToken(selectedIlk.currency.symbol);
         const gemAllowanceSet = (await gemToken.allowance(
           maker.currentAddress(),
