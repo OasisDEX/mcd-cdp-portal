@@ -12,6 +12,7 @@ import { addMkrAndEthBalance } from '../utils/ethereum';
 
 import useMaker from 'hooks/useMaker';
 import useMakerState from 'hooks/useMakerState';
+import useFn from 'hooks/useFn';
 
 import {
   AddressContainer,
@@ -42,9 +43,8 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, closeModal) => {
-  console.log(typeof address);
-  await maker.addAccount({ address, type: AccountTypes.TREZOR });
+const onConfirm = async (maker, address, closeModal, accountCb) => {
+  await accountCb(address);
   maker.useAccountWithAddress(address);
 
   const connectedAddress = maker.currentAddress();
@@ -66,8 +66,9 @@ const onConfirm = async (maker, address, closeModal) => {
 };
 
 function TrezorAddresses({ onClose }) {
-  const [addresses, setAddresses] = useState([]);
+  const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [accountCb, setAccountCb] = useFn(() => null);
   const { maker } = useMaker();
 
   const walletAddresses = useMakerState(maker =>
@@ -76,17 +77,15 @@ function TrezorAddresses({ onClose }) {
       path: TREZOR_PATH,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-      choose: addresses => {
-        console.log(addresses);
+      choose: async (addresses, cb) => {
         const addressBalancePromises = addresses.map(address =>
           addMkrAndEthBalance({
             address,
             type: AccountTypes.TREZOR
           })
         );
-        return Promise.all(addressBalancePromises).then(addressBalances =>
-          setAddresses(addressBalances)
-        );
+        setAddressList(await Promise.all(addressBalancePromises));
+        setAccountCb(async address => await cb(null, address));
       }
     })
   );
@@ -118,7 +117,7 @@ function TrezorAddresses({ onClose }) {
             </tr>
           </thead>
           <tbody>
-            {addresses.map(({ address, ethBalance, mkrBalance }, index) => (
+            {addressList.map(({ address, ethBalance, mkrBalance }, index) => (
               <tr key={address}>
                 <td className="radio">
                   <input
@@ -156,7 +155,7 @@ function TrezorAddresses({ onClose }) {
         <Button
           disabled={!selectedAddress}
           onClick={async () => {
-            onConfirm(maker, selectedAddress, onClose);
+            onConfirm(maker, selectedAddress, onClose, accountCb);
           }}
         >
           Confirm wallet
