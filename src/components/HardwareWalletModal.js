@@ -22,9 +22,6 @@ import {
   CopyBtnIcon
 } from './AddressTable';
 
-const TREZOR_PATH = "44'/60'/0'/0/0";
-const DEFAULT_ACCOUNTS_PER_PAGE = 5;
-
 export const StyledTop = styled.div`
   display: flex;
   justify-content: center;
@@ -43,10 +40,11 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, closeModal) => {
+const onConfirm = async (maker, address, closeModal, accType) => {
   maker.useAccountWithAddress(address);
   const connectedAddress = maker.currentAddress();
-  mixpanelIdentify(connectedAddress, AccountTypes.TREZOR);
+
+  mixpanelIdentify(connectedAddress, accType);
 
   const {
     network,
@@ -62,23 +60,34 @@ const onConfirm = async (maker, address, closeModal) => {
   closeModal();
 };
 
-function TrezorAddresses({ onClose }) {
+const TREZOR_PATH = "44'/60'/0'/0/0";
+const LEDGER_LIVE_PATH = "44'/60'/0'";
+const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
+const DEFAULT_ACCOUNTS_PER_PAGE = 5;
+
+function HardwareWalletModal({ onClose, type, isLedgerLive }) {
   const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
   const [accountCb, setAccountCb] = useFn(() => null);
   const { maker } = useMaker();
+  const path =
+    type === AccountTypes.TREZOR
+      ? TREZOR_PATH
+      : isLedgerLive
+      ? LEDGER_LIVE_PATH
+      : LEDGER_LEGACY_PATH;
 
   const walletAddresses = useMakerState(maker =>
     maker.addAccount({
-      type: AccountTypes.TREZOR,
-      path: TREZOR_PATH,
+      type,
+      path,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
       choose: async (addresses, cb) => {
         const addressBalancePromises = addresses.map(address =>
           addMkrAndEthBalance({
             address,
-            type: AccountTypes.TREZOR
+            type
           })
         );
         setAddressList(await Promise.all(addressBalancePromises));
@@ -153,7 +162,7 @@ function TrezorAddresses({ onClose }) {
           disabled={!selectedAddress}
           onClick={async () => {
             await accountCb(selectedAddress);
-            onConfirm(maker, selectedAddress, onClose);
+            onConfirm(maker, selectedAddress, onClose, type);
           }}
         >
           Confirm wallet
@@ -163,4 +172,4 @@ function TrezorAddresses({ onClose }) {
   );
 }
 
-export default TrezorAddresses;
+export default HardwareWalletModal;

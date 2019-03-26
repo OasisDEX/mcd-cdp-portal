@@ -36,7 +36,7 @@ function LedgerType({ onClose }) {
         icon={<StyledLedgerLogo />}
         onClick={() => {
           show({
-            modalType: 'ledgeraddresses',
+            modalType: 'ledger',
             modalProps: { isLedgerLive: true },
             modalTemplate: 'simple'
           });
@@ -49,7 +49,7 @@ function LedgerType({ onClose }) {
         icon={<StyledLedgerLogo />}
         onClick={() => {
           show({
-            modalType: 'ledgeraddresses',
+            modalType: 'ledger',
             modalProps: { isLedgerLive: false },
             modalTemplate: 'simple'
           });

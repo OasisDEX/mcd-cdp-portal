@@ -24,7 +24,7 @@ export default function TrezorConnect() {
         variant="secondary-outline"
         width="225px"
         disabled={!makerAuthenticated}
-        onClick={() => showByType('trezoraddresses')}
+        onClick={() => showByType('trezor')}
       >
         <Flex alignItems="center">
           <TrezorLogo />

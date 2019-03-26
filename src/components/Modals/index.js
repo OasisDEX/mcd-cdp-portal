@@ -1,10 +1,10 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
-import LedgerAddresses from 'components/LedgerAddresses';
-import TrezorAddresses from 'components/TrezorAddresses';
+import HardwareWalletModal from 'components/HardwareWalletModal';
 import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
+import { AccountTypes } from '../../utils/constants';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
@@ -25,25 +25,18 @@ const modals = {
     </Grid>
   ),
 
-  ledgertype: ({ onClose }) => {
-    return <LedgerType onClose={onClose} />;
-  },
+  ledgertype: ({ onClose }) => <LedgerType onClose={onClose} />,
 
-  ledgeraddresses: ({ onClose, isLedgerLive }) => (
-    <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
+  ledger: ({ onClose, isLedgerLive }) => (
+    <HardwareWalletModal
+      isLedgerLive={isLedgerLive}
+      onClose={onClose}
+      type={AccountTypes.LEDGER}
+    />
   ),
 
-  trezoraddresses: ({ onClose }) => (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="50px 1fr"
-      p="m"
-      maxWidth="100%"
-      bg="grayLight5"
-      onClick={e => e.stopPropagation()}
-    >
-      <TrezorAddresses onClose={onClose} />
-    </Grid>
+  trezor: ({ onClose }) => (
+    <HardwareWalletModal onClose={onClose} type={AccountTypes.TREZOR} />
   )
 };
 
