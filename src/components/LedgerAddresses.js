@@ -13,6 +13,7 @@ import { addMkrAndEthBalance } from '../utils/ethereum';
 import useMaker from 'hooks/useMaker';
 import useMakerState from 'hooks/useMakerState';
 import useModal from 'hooks/useModal';
+import useFn from 'hooks/useFn';
 
 import {
   AddressContainer,
@@ -44,17 +45,9 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, path, closeModal) => {
-  await maker.addAccount({
-    address: address,
-    type: AccountTypes.LEDGER,
-    legacy: true,
-    path
-  });
+const onConfirm = async (maker, address, closeModal) => {
   maker.useAccountWithAddress(address);
-
   const connectedAddress = maker.currentAddress();
-
   mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
 
   const {
@@ -72,10 +65,11 @@ const onConfirm = async (maker, address, path, closeModal) => {
 };
 
 function LedgerAddresses({ onClose, isLedgerLive }) {
-  const [addresses, setAddresses] = useState([]);
+  const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
+  const [accountCb, setAccountCb] = useFn(() => null);
   const { maker } = useMaker();
-  const { showSimpleByType } = useModal();
+  const { showByType } = useModal();
   const path = isLedgerLive ? LEDGER_LIVE_PATH : LEDGER_LEGACY_PATH;
 
   const walletAddresses = useMakerState(maker =>
@@ -84,16 +78,15 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
       path,
       accountsOffset: 0,
       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-      choose: addresses => {
+      choose: async (addresses, cb) => {
         const addressBalancePromises = addresses.map(address =>
           addMkrAndEthBalance({
             address,
-            type: AccountTypes.LEDGER
+            type: AccountTypes.TREZOR
           })
         );
-        return Promise.all(addressBalancePromises).then(addressBalances =>
-          setAddresses(addressBalances)
-        );
+        setAddressList(await Promise.all(addressBalancePromises));
+        setAccountCb(async address => await cb(null, address));
       }
     })
   );
@@ -125,7 +118,7 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
             </tr>
           </thead>
           <tbody>
-            {addresses.map(({ address, ethBalance, mkrBalance }, index) => (
+            {addressList.map(({ address, ethBalance, mkrBalance }, index) => (
               <tr key={address}>
                 <td className="radio">
                   <input
@@ -159,14 +152,15 @@ function LedgerAddresses({ onClose, isLedgerLive }) {
       >
         <Button
           variant="secondary-outline"
-          onClick={() => showSimpleByType('ledgertype')}
+          onClick={() => showByType('ledgertype')}
         >
           Change wallet
         </Button>
         <Button
           disabled={!selectedAddress}
           onClick={async () => {
-            onConfirm(maker, selectedAddress, path, onClose);
+            await accountCb(selectedAddress);
+            onConfirm(maker, selectedAddress, onClose);
           }}
         >
           Confirm wallet
