@@ -178,10 +178,12 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
   async function ensureProxyWithGemApprovals() {
     try {
       let proxyAddress = await maker.service('proxy').currentProxy();
-      if (!proxyAddress) await maker.service('proxy').build();
-      await new Promise(res => setTimeout(res, 7500));
+      if (!proxyAddress) {
+        await maker.service('proxy').build();
+        await new Promise(res => setTimeout(res, 7500));
+        proxyAddress = await maker.service('proxy').getProxyAddress();
+      }
       if (selectedIlk.currency.symbol !== 'ETH') {
-        proxyAddress = await maker.service('proxy').currentProxy();
         const gemToken = maker.getToken(selectedIlk.currency.symbol);
         const gemAllowanceSet = (await gemToken.allowance(
           maker.currentAddress(),
