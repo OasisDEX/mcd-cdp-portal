@@ -21,6 +21,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import retry from 'async-retry';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -177,14 +178,22 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   async function ensureProxyWithGemApprovals() {
     try {
-      const proxyAddress = await maker.service('proxy').ensureProxy();
-      const gemToken = maker.getToken(selectedIlk.currency.symbol);
-      const gemAllowanceSet = (await gemToken.allowance(
-        maker.currentAddress(),
-        proxyAddress
-      )).eq(MAX_UINT_BN);
+      let proxyAddress = await maker.service('proxy').currentProxy();
+      if (!proxyAddress) await maker.service('proxy').build();
+      if (selectedIlk.currency.symbol === 'ETH') {
+        await new Promise(res => setTimeout(res, 7500));
+      } else {
+        const proxyAddress = await retry(() =>
+          maker.service('proxy').currentProxy()
+        );
+        const gemToken = maker.getToken(selectedIlk.currency.symbol);
+        const gemAllowanceSet = (await gemToken.allowance(
+          maker.currentAddress(),
+          proxyAddress
+        )).eq(MAX_UINT_BN);
 
-      if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
+        if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
+      }
       setCanCreateCDP(true);
     } catch (err) {
       console.error(err);
@@ -193,7 +202,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   React.useEffect(() => {
     ensureProxyWithGemApprovals();
-  }, [ensureProxyWithGemApprovals]);
+  }, []);
 
   if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 

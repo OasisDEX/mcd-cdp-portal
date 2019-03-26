@@ -45,9 +45,7 @@ function WalletConnect() {
       variant="secondary-outline"
       width="225px"
       onClick={async () => {
-        const { accounts, chainId } = await getWalletConnectAccounts();
-        console.log('Wallet Connect accounts', accounts);
-        console.log('Wallet Connect chain id', chainId);
+        await getWalletConnectAccounts();
       }}
     >
       <Flex alignItems="center">

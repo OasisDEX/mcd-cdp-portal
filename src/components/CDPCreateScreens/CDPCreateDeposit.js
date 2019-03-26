@@ -19,10 +19,10 @@ function OpenCDPForm({
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
   );
-  // const userCanDrawDaiAmount = greaterThanOrEqual(
-  //   daiAvailable,
-  //   cdpParams.daiToDraw
-  // );
+  const userCanDrawDaiAmount = greaterThanOrEqual(
+    daiAvailable,
+    cdpParams.daiToDraw
+  );
 
   const fields = [
     [
@@ -79,9 +79,9 @@ function OpenCDPForm({
         after="DAI"
         width="250px"
         type="number"
-        // errorMessage={
-        //   userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
-        // }
+        errorMessage={
+          userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
+        }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
       />,
@@ -197,7 +197,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       <ScreenHeader
         title={lang.formatString(
           lang.cdp_create.deposit_title,
-          selectedIlk.key
+          selectedIlk.currency.symbol
         )}
         text={lang.cdp_create.deposit_text}
       />

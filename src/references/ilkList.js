@@ -1,20 +1,20 @@
-import { MWETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
+import { ETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
     slug: 'eth-a', // URL param
     symbol: 'ETH-A', // how it's displayed in the UI
     key: 'ETH-A', // the actual ilk name used in the vat
-    gem: 'WETH', // the actual asset that's being locked
-    currency: MWETH // the associated dai.js currency type
+    gem: 'ETH', // the actual asset that's being locked
+    currency: ETH // the associated dai.js currency type
     // (might be able replace "gem" completely)
   },
   {
     slug: 'eth-b',
     symbol: 'ETH-B',
     key: 'ETH-B',
-    gem: 'WETH',
-    currency: MWETH
+    gem: 'ETH',
+    currency: ETH
   },
   {
     slug: 'col1-a',
