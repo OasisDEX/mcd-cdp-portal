@@ -70,7 +70,6 @@ const theme = {
   }
 };
 
-console.log(theme, 'theme here');
 export default theme;
 
 export function getSpace(key) {

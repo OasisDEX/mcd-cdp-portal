@@ -1,4 +1,5 @@
 import ilkList from 'references/ilkList';
+import { getUnique } from 'utils/ui';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -17,11 +18,11 @@ export function getIlkData(state, ilkKey) {
 }
 
 export function getAllFeeds(state) {
-  return state.network.cdpTypes.reduce((acc, cdpType) => {
+  return getUnique(state.network.cdpTypes, 'gem').reduce((acc, cdpType) => {
     // this will get usd feeds only
     if (!cdpType[FEED_VALUE_USD]) return acc;
     return acc.concat({
-      pair: `${[cdpType.symbol]}/USD`,
+      pair: `${[cdpType.currency.symbol]}/USD`,
       value: cdpType[FEED_VALUE_USD]
     });
   }, []);

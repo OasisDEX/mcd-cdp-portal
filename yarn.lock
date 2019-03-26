@@ -1049,7 +1049,7 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@^0.1.0":
+"@makerdao/ui-components-core@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.0.tgz#3f1517ab80426501bf21df14edd45cb571fd2b4a"
   integrity sha512-EiwEs4xOsmnEjs/5emn8sDuZuDbtaeyzMD5NRWmNltyYPugllZ/l8I0hIMNaAoDqCeBH4uQ4iAu9LlNNnIjLzg==

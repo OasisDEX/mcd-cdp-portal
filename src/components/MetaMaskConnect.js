@@ -69,7 +69,7 @@ export default function MetaMaskConnect() {
             address: urlParamAddress
           } = navigation.receivedRoute.url.query;
 
-          const addressToView = urlParamAddress || connectedAddress;
+          const addressToView = connectedAddress || urlParamAddress;
           navigation.history.push({
             pathname: '/overview/',
             search:

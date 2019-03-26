@@ -22,11 +22,15 @@ import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
 import modals, { templates } from 'components/Modals';
 import { userSnapInit } from 'utils/analytics';
+import { getUnique } from 'utils/ui';
 import ilkList from 'references/ilkList';
+
+import BigNumber from 'bignumber.js';
+import { createCurrencyRatio } from '@makerdao/currency';
+import { USD } from '@makerdao/dai';
 
 const { networkNames, defaultNetwork } = config;
 
-console.log('modasdasd', modals, templates);
 async function stageNetwork({ testchainId, network }) {
   // network will be ignored if testchainId is present
 
@@ -72,7 +76,7 @@ async function stageNetwork({ testchainId, network }) {
     });
   }
 
-  return { maker, stateFetchPromise };
+  return { maker, addresses, stateFetchPromise };
 }
 
 // Any component that would like to change the network must replace url query params, re-running this function.
@@ -80,7 +84,9 @@ function withAuthenticatedNetwork(getPage) {
   return async url => {
     try {
       // ensure our maker and watcher instances are connected to the correct network
-      const { maker, stateFetchPromise } = await stageNetwork(url.query);
+      const { maker, stateFetchPromise, addresses } = await stageNetwork(
+        url.query
+      );
       const { pathname } = url;
       let connectedAddress = null;
 
@@ -106,6 +112,20 @@ function withAuthenticatedNetwork(getPage) {
 
       await maker.authenticate();
       await stateFetchPromise;
+
+      // FIXME: #0.2.2
+      const gemList = getUnique(ilkList, 'gem');
+      for (let { gem, currency } of gemList) {
+        const pipAddress = addresses[`PIP_${gem}`];
+        if (!pipAddress) continue;
+        const storage = await maker
+          .service('web3')
+          ._web3.eth.getStorageAt(pipAddress, 3);
+        const val = storage.substr(34);
+        const ratio = createCurrencyRatio(USD, currency);
+        const price = ratio.wei(new BigNumber('0x' + val.toString()));
+        store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
+      }
 
       return withMakerProvider(
         withModalProvider(

@@ -108,3 +108,11 @@ export function cdpParamsAreValid(
   if (greaterThanOrEqual(daiAvailable, daiToDraw)) return false;
   return true;
 }
+
+export function getUnique(arr, comp) {
+  return arr
+    .map(e => e[comp])
+    .map((e, i, final) => final.indexOf(e) === i && i)
+    .filter(e => arr[e])
+    .map(e => arr[e]);
+}
