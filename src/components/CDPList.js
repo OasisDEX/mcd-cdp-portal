@@ -1,6 +1,5 @@
-import React, { memo, Fragment } from 'react';
+import React, { memo, Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ilkList from 'references/ilkList';
 import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
@@ -8,11 +7,8 @@ import RatioDisplay from './RatioDisplay';
 import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
-
-const shownIlks = ilkList.map(cdpType => ({
-  ...cdpType,
-  ratio: (Math.random() * 1000).toFixed(2)
-}));
+import useMaker from 'hooks/useMaker';
+import qs from 'query-string';
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
@@ -40,7 +36,28 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   </NavbarItemContainer>
 );
 
-const CDPList = memo(function({ currentPath, currentQuery, address }) {
+const CDPList = memo(function({ currentPath, currentQuery, isOwner }) {
+  const { maker } = useMaker();
+  const [cdps, setCDPs] = useState([]);
+
+  const { address } = qs.parse(currentQuery);
+  useEffect(() => {
+    (async () => {
+      const proxy = await maker.service('proxy').getProxyAddress(address);
+      if (!proxy) {
+        return;
+      }
+      const cdpManager = maker.service('mcd:cdpManager');
+      const cdpIds = await cdpManager.getCdpIds(proxy);
+      const cdps = await Promise.all(
+        cdpIds.map(async ({ id }) => {
+          return await cdpManager.getCdp(id);
+        })
+      );
+      setCDPs(cdps);
+    })();
+  }, [address, maker]);
+
   const { show } = useModal();
 
   return (
@@ -52,21 +69,20 @@ const CDPList = memo(function({ currentPath, currentQuery, address }) {
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
       />
-      {shownIlks.map((cdp, idx) => {
-        const linkPath = `/cdp/${cdp.slug}/`;
+      {cdps.map((cdp, idx) => {
+        const linkPath = `/cdp/${cdp.id}/`;
         const active = currentPath.includes(linkPath);
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
-            label={cdp.symbol}
-            ratio={cdp.ratio}
+            label={cdp.ilk}
+            // ratio={cdp.ratio}
             active={active}
-            cdpKey={cdp.key}
           />
         );
       })}
-      {!address ? null : (
+      {!isOwner ? null : (
         <DashedFakeButton
           onClick={() =>
             show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })

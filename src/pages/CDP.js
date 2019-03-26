@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import lang from 'languages';
 import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
+import useMaker from 'hooks/useMaker';
 
 function CardTitle({ title }) {
   return (
@@ -114,11 +115,25 @@ const CdpViewCard = ({ title, rows, isAction }) => {
 };
 
 function CDPView({ cdpTypeSlug }) {
+  const { maker } = useMaker();
+
+  // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
+  const [cdpState, setCDPState] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const cdpManager = maker.service('mcd:cdpManager');
+      const cdp = await cdpManager.getCdp(cdpTypeSlug);
+      setCDPState(cdp);
+    })();
+  }, [cdpTypeSlug, maker]);
+
+  console.log('CDP state to be rendered on the page:', cdpState);
   return (
     <PageContentLayout>
       <Box>
         <Title color="black2">
-          {cdpTypeSlug.toUpperCase()} {lang.cdp}
+          {lang.cdp} {cdpTypeSlug.toUpperCase()}
         </Title>
       </Box>
       <Grid

@@ -977,13 +977,13 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.8.tgz#ac874744d7b6e69ae9ab71bb2b2a9e66a746a894"
-  integrity sha512-g/LgcIu14fKbkolOxUm+wqPoyads0LyElBxZ433U5xKAf9k/cShnOLomcfIHhNrVD3sNqjs79Iq4XDjRJYZN4Q==
+"@makerdao/dai-plugin-mcd@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.0.10.tgz#69fe67e28f51ed1edbdbd2594510ee6d0db9a17b"
+  integrity sha512-NpuzrinFoQI5W9xPKKB2rNuXEzBdzPSA05m7orRYzVe6u1Htp/Guu1/1kWLMCMHKvXSkY9RKqhPFUGzICKvbxw==
   dependencies:
     "@makerdao/currency" "^0.9.0"
-    "@makerdao/services-core" "^0.9.4"
+    "@makerdao/services-core" "^0.9.5"
     bignumber.js "^8.1.1"
 
 "@makerdao/dai-plugin-trezor-web@^0.9.5":
@@ -1040,7 +1040,7 @@
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
-"@makerdao/services-core@^0.9.4":
+"@makerdao/services-core@^0.9.4", "@makerdao/services-core@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
   integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
@@ -10437,6 +10437,14 @@ query-string@^5.0.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
+query-string@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.4.0.tgz#1566c0cec3a2da2d82c222ed3f9e2a921dba5e6a"
+  integrity sha512-Werid2I41/tJTqOGPJ3cC3vwrIh/8ZupBQbp7BSsqXzr+pTin3aMJ/EZb8UEuk7ZO3VqQFvq2qck/ihc6wqIdw==
+  dependencies:
+    decode-uri-component "^0.2.0"
+    strict-uri-encode "^2.0.0"
+
 querystring-es3@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring-es3/-/querystring-es3-0.2.1.tgz#9ec61f79049875707d69414596fd907a4d711e73"
@@ -11943,6 +11951,11 @@ strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
   integrity sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=
+
+strict-uri-encode@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
+  integrity sha1-ucczDHBChi9rFC3CdLvMWGbONUY=
 
 string-argv@^0.0.2:
   version "0.0.2"
