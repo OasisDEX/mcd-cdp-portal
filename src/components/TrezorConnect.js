@@ -16,7 +16,7 @@ const TrezorLogo = styled(Logo)`
 
 export default function TrezorConnect() {
   const { authenticated: makerAuthenticated } = useMaker();
-  const { showSimpleByType } = useModal();
+  const { showByType } = useModal();
 
   return (
     <Fragment>
@@ -24,7 +24,7 @@ export default function TrezorConnect() {
         variant="secondary-outline"
         width="225px"
         disabled={!makerAuthenticated}
-        onClick={() => showSimpleByType('trezoraddresses')}
+        onClick={() => showByType('trezoraddresses')}
       >
         <Flex alignItems="center">
           <TrezorLogo />

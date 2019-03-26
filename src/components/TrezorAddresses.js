@@ -43,12 +43,9 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, closeModal, accountCb) => {
-  await accountCb(address);
+const onConfirm = async (maker, address, closeModal) => {
   maker.useAccountWithAddress(address);
-
   const connectedAddress = maker.currentAddress();
-
   mixpanelIdentify(connectedAddress, AccountTypes.TREZOR);
 
   const {
@@ -155,7 +152,8 @@ function TrezorAddresses({ onClose }) {
         <Button
           disabled={!selectedAddress}
           onClick={async () => {
-            onConfirm(maker, selectedAddress, onClose, accountCb);
+            await accountCb(selectedAddress);
+            onConfirm(maker, selectedAddress, onClose);
           }}
         >
           Confirm wallet

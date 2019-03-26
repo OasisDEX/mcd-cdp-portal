@@ -2,7 +2,7 @@ import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
 import LedgerAddresses from 'components/LedgerAddresses';
-import TrezorAddresses from './TrezorAddresses';
+import TrezorAddresses from 'components/TrezorAddresses';
 import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
 
