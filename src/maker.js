@@ -5,7 +5,7 @@ import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
 import proxyRegistryAbi from 'references/proxyRegistry.abi.json';
 import gemJoinAbi from 'references/gemJoin.abi.json';
-import dsTokenAbi from 'references/dsToken.abi.json';
+// import dsTokenAbi from 'references/dsToken.abi.json';
 
 import ilkList from 'references/ilkList';
 

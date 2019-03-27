@@ -70,7 +70,7 @@ export default function MetaMaskConnect() {
             address: urlParamAddress
           } = (await navigation.getRoute()).url.query;
 
-          const addressToView = urlParamAddress || connectedAddress;
+          const addressToView = connectedAddress || urlParamAddress;
           navigation.navigate({
             pathname: '/overview/',
             search:

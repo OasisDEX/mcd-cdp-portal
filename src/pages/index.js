@@ -31,7 +31,12 @@ import MobileNav from 'components/MobileNav';
 import { ModalProvider } from 'providers/ModalProvider';
 import modals, { templates } from 'components/Modals';
 import { userSnapInit } from 'utils/analytics';
+import { getUnique } from 'utils/ui';
 import ilkList from 'references/ilkList';
+
+import BigNumber from 'bignumber.js';
+import { createCurrencyRatio } from '@makerdao/currency';
+import { USD } from '@makerdao/dai';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -108,13 +113,25 @@ const watcherContext = async (request, prevContext) => {
 };
 
 const withDefaultLayout = route =>
-  withView((request, context) => {
+  withView(async (request, context) => {
     const { maker } = context;
     let connectedAddress = null;
     try {
       connectedAddress = maker.currentAddress();
-    } catch (_) {
-      // if no account is connected, we render in read-only mode
+    } catch (_) {}
+
+    // FIXME: #0.2.2
+    const gemList = getUnique(ilkList, 'gem');
+    for (let { gem, currency } of gemList) {
+      const pipAddress = addresses[`PIP_${gem}`];
+      if (!pipAddress) continue;
+      const storage = await maker
+        .service('web3')
+        ._web3.eth.getStorageAt(pipAddress, 3);
+      const val = storage.substr(34);
+      const ratio = createCurrencyRatio(USD, currency);
+      const price = ratio.wei(new BigNumber('0x' + val.toString()));
+      store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
     }
 
     return (
@@ -137,6 +154,7 @@ const withDefaultLayout = route =>
             address={connectedAddress}
           />
         }
+        content={getPage()}
       >
         <View />
       </PageLayout>

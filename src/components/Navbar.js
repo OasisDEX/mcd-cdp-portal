@@ -17,7 +17,8 @@ const Navbar = ({ address }) => {
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}
-          address={address}
+          // address={address}
+          isOwner={address}
         />
       </Grid>
     </Fragment>
