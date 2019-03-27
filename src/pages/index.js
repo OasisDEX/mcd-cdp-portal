@@ -143,6 +143,18 @@ const withDefaultLayout = route =>
     );
   }, route);
 
+const withMakerHooksProvider = (maker, children) => {
+  return <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>;
+};
+
+const withModalProvider = children => {
+  return (
+    <ModalProvider modals={modals} templates={templates}>
+      {children}
+    </ModalProvider>
+  );
+};
+
 const hasNetwork = route =>
   map((request, context) => {
     if (networkIsUndefined(request)) {
@@ -158,29 +170,25 @@ export default hasNetwork(
     withContext(networkDetails),
     withContext(makerContext),
     withContext(watcherContext),
-    withView((request, context) => (
-      <MakerHooksProvider maker={context.maker}>
-        <View />
-      </MakerHooksProvider>
-    )),
-    withView(
-      <ModalProvider modals={modals} templates={templates}>
-        <View />
-      </ModalProvider>
-    ),
     mount({
-      '/': route(request => {
+      '/': route((request, context) => {
         return {
           title: 'Landing',
-          view: <Landing />
+          view: withMakerHooksProvider(
+            context.maker,
+            withModalProvider(<Landing />)
+          )
         };
       }),
 
       '/overview': withDefaultLayout(
-        route(request => {
+        route((request, context) => {
           return {
             title: 'Overview',
-            view: <Overview />
+            view: withMakerHooksProvider(
+              context.maker,
+              withModalProvider(<Overview />)
+            )
           };
         })
       ),
@@ -191,7 +199,10 @@ export default hasNetwork(
 
           return {
             title: 'CDP',
-            view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
+            view: withMakerHooksProvider(
+              context.maker,
+              withModalProvider(<CDPPage cdpTypeSlug={cdpTypeSlug} />)
+            )
           };
         })
       )
