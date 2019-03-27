@@ -40,12 +40,10 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
   const { maker } = useMaker();
   const [userGemBalance, setUserGemBalance] = React.useState(null);
 
-  async function checkGemBalance() {
-    setUserGemBalance(await maker.getToken(ilk.currency).balance());
-  }
-
   React.useEffect(() => {
-    checkGemBalance();
+    (async () => {
+      setUserGemBalance(await maker.getToken(ilk.currency).balance());
+    })();
   }, []);
 
   return (

@@ -3,7 +3,6 @@ import { NavLink, NavRoute } from 'react-navi';
 import CDPList from 'components/CDPList';
 import NavLogo from 'components/NavLogo';
 import { Flex, Grid } from '@makerdao/ui-components-core';
-
 const Navbar = ({ address }) => (
   <NavRoute>
     {({ url }) => (
@@ -17,7 +16,8 @@ const Navbar = ({ address }) => (
           <CDPList
             currentPath={url.pathname}
             currentQuery={url.search}
-            address={address}
+            // address={address}
+            isOwner={address}
           />
         </Grid>
       </Fragment>
