@@ -35,7 +35,7 @@ const config = {
   }
 }[env];
 
-export const mixpanelInit = navigation => {
+export const mixpanelInit = () => {
   console.debug(
     `[Mixpanel] Tracking initialized for ${env} env using ${
       config.mixpanel.token
@@ -43,12 +43,7 @@ export const mixpanelInit = navigation => {
   );
   mixpanel.init(config.mixpanel.token, config.mixpanel.config);
   mixpanel.track('Pageview');
-  navigation.subscribe(route => {
-    if (route.type === 'ready') {
-      mixpanel.track('Pageview', { routeName: route.title });
-      console.debug(`[Mixpanel] Tracked: ${route.title}`);
-    }
-  });
+  return mixpanel;
 };
 
 export const mixpanelIdentify = (id, walletType) => {
@@ -77,20 +72,10 @@ export const userSnapInit = () => {
   document.getElementsByTagName('head')[0].appendChild(script);
 };
 
-export const gaInit = async navigation => {
+export const gaInit = () => {
   console.debug(
     `[GA] Tracking initialized for ${env} env using ${config.gaTrackingId}`
   );
   ReactGA.initialize(config.gaTrackingId);
-  const route = await navigation.getRoute();
-  if (route.type === 'ready') {
-    console.debug(`[GA] Tracked initial pageview: ${route.url.href}`);
-    ReactGA.pageview(route.url.href);
-  }
-  navigation.subscribe(route => {
-    if (route.type === 'ready') {
-      console.debug(`[GA] Tracked pageview: ${route.url.href}`);
-      ReactGA.pageview(route.url.href);
-    }
-  });
+  return ReactGA;
 };

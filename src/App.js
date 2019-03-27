@@ -32,8 +32,17 @@ const navigation = createBrowserNavigation({
 
 function App() {
   useEffect(() => {
-    gaInit(navigation);
-    mixpanelInit(navigation);
+    const reactGa = gaInit(navigation);
+    const mixpanel = mixpanelInit(navigation);
+    navigation.subscribe(route => {
+      if (route.type === 'ready') {
+        console.debug(`[Mixpanel] Tracked: ${route.title}`);
+        mixpanel.track('Pageview', { routeName: route.title });
+
+        console.debug(`[GA] Tracked pageview: ${route.url.href}`);
+        reactGa.pageview(route.url.href);
+      }
+    });
   }, []);
 
   return (
