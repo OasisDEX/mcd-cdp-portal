@@ -14,7 +14,8 @@
     "able_withdraw": "Able to withdraw",
     "able_generate": "Able to generate",
     "outstanding_debt": "Outstanding debt",
-    "wallet_balance": "wallet balance"
+    "wallet_balance": "wallet balance",
+    "tx_history": "Transaction history"
   },
   "landing_page": {
     "title": "Spend crypto without leaving your position.",
@@ -75,12 +76,17 @@
     "pay_back": "Pay back",
     "generate": "Generate"
   },
-
   "verbs": {
     "depositing": "Depositing",
     "generating": "Generating"
   },
-
+  "table": {
+    "type": "Type",
+    "activity": "Activity",
+    "time": "Time",
+    "sender_id": "Sender ID",
+    "tx_hash": "Tx Hash"
+  },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
   "network": "Network",

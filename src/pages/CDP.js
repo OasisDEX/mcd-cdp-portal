@@ -5,10 +5,21 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import { calcCDPParams } from 'utils/ui';
-import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
+import {
+  Box,
+  Grid,
+  Flex,
+  Card,
+  Button,
+  Table,
+  Address,
+  Link
+} from '@makerdao/ui-components-core';
+
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import { getIlkData } from 'reducers/network/cdpTypes';
+import { etherscanLink } from '../utils/ethereum';
 
 function CardTitle({ title }) {
   return (
@@ -120,6 +131,49 @@ const CdpViewCard = ({ title, rows, isAction }) => {
   );
 };
 
+const CdpViewHistory = ({ title, rows }) => {
+  return (
+    <Box>
+      <CardTitle title={title} />
+      <Card px="m" py="s" my="s">
+        <Table width="100%" variant="normal">
+          <thead>
+            <tr>
+              <th>{lang.table.type}</th>
+              <th>{lang.table.activity}</th>
+              <th>{lang.table.time}</th>
+              <th>{lang.table.sender_id}</th>
+              <th>{lang.table.tx_hash}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(
+              (
+                [collateralType, actionMsg, dateOfAction, senderId, txHash],
+                i
+              ) => (
+                <tr key={i}>
+                  <td>{collateralType}</td>
+                  <td>{actionMsg}</td>
+                  <td>{dateOfAction}</td>
+                  <td>{senderId}</td>
+                  <td>{txHash}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </Table>
+      </Card>
+    </Box>
+  );
+};
+
+const AddrLink = ({ address }) => (
+  <Link fontWeight="400" href={etherscanLink(address, 'kovan')} target="_blank">
+    <Address full={`${address}\u2B67`} shorten={true} />
+  </Link>
+);
+
 function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
 
@@ -169,6 +223,7 @@ function CDPView({ cdpId, getIlk }) {
   // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
   // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
 
+  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
       <Box>
@@ -258,6 +313,47 @@ function CDPView({ cdpId, getIlk }) {
           isAction={true}
         />
       </Grid>
+
+      <CdpViewHistory
+        title={lang.cdp_page.tx_history}
+        rows={[
+          [
+            'ETH',
+            'Paid back 1,000.00 DAI',
+            'Feb 15, 2019',
+            <AddrLink address={mockAddr} />,
+            <AddrLink address={mockAddr} />
+          ],
+          [
+            'ETH',
+            'Sent 1,000.00 DAI',
+            'Feb 12, 2019',
+            <AddrLink address={mockAddr} />,
+            <AddrLink address={mockAddr} />
+          ],
+          [
+            'ETH',
+            'Locked 1,000.00 DAI',
+            'Feb 09, 2019',
+            <AddrLink address={mockAddr} />,
+            <AddrLink address={mockAddr} />
+          ],
+          [
+            'ETH',
+            'Withdrew 3,468.72 ETH',
+            'Feb 03, 2019',
+            <AddrLink address={mockAddr} />,
+            <AddrLink address={mockAddr} />
+          ],
+          [
+            'ETH',
+            'Opened CDP',
+            'Jan 15, 2019',
+            <AddrLink address={mockAddr} />,
+            <AddrLink address={mockAddr} />
+          ]
+        ]}
+      />
     </PageContentLayout>
   );
 }
