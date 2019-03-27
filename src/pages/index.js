@@ -112,6 +112,18 @@ const watcherContext = async (request, prevContext) => {
   };
 };
 
+const withMakerHooksProvider = (maker, children) => {
+  return <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>;
+};
+
+const withModalProvider = children => {
+  return (
+    <ModalProvider modals={modals} templates={templates}>
+      {children}
+    </ModalProvider>
+  );
+};
+
 const withDefaultLayout = route =>
   withView(async (request, context) => {
     const { maker } = context;
@@ -134,44 +146,35 @@ const withDefaultLayout = route =>
       store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
     }
 
-    return (
-      <PageLayout
-        mobileNav={
-          <MobileNav
-            network={{
-              id: maker.service('web3').networkId()
-            }}
-            address={connectedAddress}
-          />
-        }
-        navbar={<Navbar address={connectedAddress} />}
-        sidebar={
-          <Sidebar
-            network={{
-              id: maker.service('web3').networkId()
-            }}
-            currentAccount={connectedAddress ? maker.currentAccount() : null}
-            address={connectedAddress}
-          />
-        }
-        content={getPage()}
-      >
-        <View />
-      </PageLayout>
+    return withMakerHooksProvider(
+      maker,
+      withModalProvider(
+        <PageLayout
+          mobileNav={
+            <MobileNav
+              network={{
+                id: maker.service('web3').networkId()
+              }}
+              address={connectedAddress}
+            />
+          }
+          navbar={<Navbar address={connectedAddress} />}
+          sidebar={
+            <Sidebar
+              network={{
+                id: maker.service('web3').networkId()
+              }}
+              currentAccount={connectedAddress ? maker.currentAccount() : null}
+              address={connectedAddress}
+            />
+          }
+          content={getPage()}
+        >
+          <View />
+        </PageLayout>
+      )
     );
   }, route);
-
-const withMakerHooksProvider = (maker, children) => {
-  return <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>;
-};
-
-const withModalProvider = children => {
-  return (
-    <ModalProvider modals={modals} templates={templates}>
-      {children}
-    </ModalProvider>
-  );
-};
 
 const hasNetwork = route =>
   map((request, context) => {
@@ -200,13 +203,10 @@ export default hasNetwork(
       }),
 
       '/overview': withDefaultLayout(
-        route((request, context) => {
+        route(request => {
           return {
             title: 'Overview',
-            view: withMakerHooksProvider(
-              context.maker,
-              withModalProvider(<Overview />)
-            )
+            view: <Overview />
           };
         })
       ),
@@ -217,10 +217,7 @@ export default hasNetwork(
 
           return {
             title: 'CDP',
-            view: withMakerHooksProvider(
-              context.maker,
-              withModalProvider(<CDPPage cdpTypeSlug={cdpTypeSlug} />)
-            )
+            view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
           };
         })
       )
