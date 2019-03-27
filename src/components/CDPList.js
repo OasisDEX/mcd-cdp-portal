@@ -1,6 +1,6 @@
 import React, { memo, Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
+// import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
@@ -8,7 +8,6 @@ import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
-import qs from 'query-string';
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
@@ -36,48 +35,55 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   </NavbarItemContainer>
 );
 
-const CDPList = memo(function({ currentPath, currentQuery, isOwner }) {
+const CDPList = memo(function({
+  currentPath,
+  viewedAddress,
+  currentQuery,
+  isOwner
+}) {
   const { maker } = useMaker();
   const [cdps, setCDPs] = useState([]);
 
-  const { address } = qs.parse(currentQuery);
   useEffect(() => {
     (async () => {
-      const proxy = await maker.service('proxy').getProxyAddress(address);
-      if (!proxy) {
-        return;
+      if (viewedAddress) {
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(viewedAddress);
+        if (!proxy) {
+          return;
+        }
+        const cdpManager = maker.service('mcd:cdpManager');
+        const cdpIds = await cdpManager.getCdpIds(proxy);
+        const cdps = await Promise.all(
+          cdpIds.map(async ({ id }) => {
+            return await cdpManager.getCdp(id);
+          })
+        );
+        setCDPs(cdps);
       }
-      const cdpManager = maker.service('mcd:cdpManager');
-      const cdpIds = await cdpManager.getCdpIds(proxy);
-      const cdps = await Promise.all(
-        cdpIds.map(async ({ id }) => {
-          return await cdpManager.getCdp(id);
-        })
-      );
-      setCDPs(cdps);
     })();
-  }, [address, maker]);
+  }, [maker, viewedAddress]);
 
   const { show } = useModal();
 
   return (
     <Fragment>
-      <NavbarItem
+      {/* <NavbarItem
         key="overview"
-        href={`/overview/${currentQuery}`}
+        href={`/owner/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
-      />
+      /> */}
       {cdps.map((cdp, idx) => {
-        const linkPath = `/cdp/${cdp.id}/`;
+        const linkPath = `/${cdp.id}`;
         const active = currentPath.includes(linkPath);
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
             label={cdp.ilk}
-            // ratio={cdp.ratio}
             active={active}
           />
         );

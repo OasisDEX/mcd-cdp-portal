@@ -63,19 +63,16 @@ export default function MetaMaskConnect() {
 
           mixpanelIdentify(connectedAddress, 'metamask');
 
-          const {
-            network,
-            testchainId,
-            address: urlParamAddress
-          } = navigation.receivedRoute.url.query;
+          const { network, testchainId } = navigation.receivedRoute.url.query;
 
-          const addressToView = connectedAddress || urlParamAddress;
+          const addressToView = connectedAddress;
+
           navigation.history.push({
-            pathname: '/overview/',
+            pathname: `owner/${addressToView}`,
             search:
               testchainId !== undefined
-                ? `?testchainId=${testchainId}&address=${addressToView}`
-                : `?network=${network}&address=${addressToView}`
+                ? `?testchainId=${testchainId}`
+                : `?network=${network}`
           });
         } catch (err) {
           window.alert(err.toString());

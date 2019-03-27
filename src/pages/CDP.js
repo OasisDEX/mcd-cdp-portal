@@ -114,7 +114,7 @@ const CdpViewCard = ({ title, rows, isAction }) => {
   );
 };
 
-function CDPView({ cdpTypeSlug }) {
+function CDPView({ cdpId }) {
   const { maker } = useMaker();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
@@ -123,17 +123,17 @@ function CDPView({ cdpTypeSlug }) {
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(cdpTypeSlug);
+      const cdp = await cdpManager.getCdp(cdpId);
       setCDPState(cdp);
     })();
-  }, [cdpTypeSlug, maker]);
+  }, [cdpId, maker]);
 
   console.log('CDP state to be rendered on the page:', cdpState);
   return (
     <PageContentLayout>
       <Box>
         <Title color="black2">
-          {lang.cdp} {cdpTypeSlug.toUpperCase()}
+          {lang.cdp} {cdpId}
         </Title>
       </Box>
       <Grid
@@ -162,7 +162,7 @@ function CDPView({ cdpTypeSlug }) {
         />
 
         <CdpViewCard
-          title={`${cdpTypeSlug.toUpperCase()} ${lang.cdp_page.collateral}`}
+          title={`${cdpId} ${lang.cdp_page.collateral}`}
           rows={[
             ['5.5 ETH', '4,312.06 USD'],
             [

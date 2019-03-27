@@ -76,10 +76,13 @@ function AccountSection({ address = null, currentAccount } = {}) {
   );
 }
 
-function Sidebar({ feeds, system, address, network, currentAccount }) {
+function Sidebar({ feeds, system, connectedAddress, network, currentAccount }) {
   return (
     <Fragment>
-      <AccountSection address={address} currentAccount={currentAccount} />
+      <AccountSection
+        address={connectedAddress}
+        currentAccount={currentAccount}
+      />
       <NetworkSection networkID={network.id} swappable={network.swappable} />
       <Section>
         <SidebarFeeds feeds={feeds} />
