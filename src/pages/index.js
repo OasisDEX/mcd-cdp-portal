@@ -126,7 +126,7 @@ const withModalProvider = children => {
 
 const withDefaultLayout = route =>
   withView(async (request, context) => {
-    const { maker } = context;
+    const { maker, addresses } = context;
     let connectedAddress = null;
     try {
       connectedAddress = maker.currentAddress();
@@ -168,7 +168,6 @@ const withDefaultLayout = route =>
               address={connectedAddress}
             />
           }
-          content={getPage()}
         >
           <View />
         </PageLayout>
