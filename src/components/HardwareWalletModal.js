@@ -11,7 +11,6 @@ import { AccountTypes } from '../utils/constants';
 import { addMkrAndEthBalance } from '../utils/ethereum';
 
 import useMaker from 'hooks/useMaker';
-import useMakerState from 'hooks/useMakerState';
 
 import {
   AddressContainer,
@@ -73,7 +72,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
       ? LEDGER_LIVE_PATH
       : LEDGER_LEGACY_PATH;
 
-  const walletAddresses = useMakerState(maker =>
+  useEffect(() => {
     maker.addAccount({
       type,
       path,
@@ -89,11 +88,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
         setAddressList(await Promise.all(addressBalancePromises));
         setAccountCb({ fn: cb });
       }
-    })
-  );
-
-  useEffect(() => {
-    walletAddresses.prefetch();
+    });
   }, []);
 
   return (
