@@ -88,7 +88,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
           })
         );
         setAddressList(await Promise.all(addressBalancePromises));
-        setAccountCb(async address => await cb(null, address));
+        setAccountCb(address => cb(null, address));
       }
     })
   );
@@ -157,9 +157,9 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
         </Button>
         <Button
           disabled={!selectedAddress}
-          onClick={async () => {
-            await accountCb(selectedAddress);
-            onConfirm(maker, selectedAddress, onClose, type);
+          onClick={() => {
+            accountCb(selectedAddress);
+            setTimeout(() => onConfirm(maker, selectedAddress, onClose, type));
           }}
         >
           Confirm wallet
