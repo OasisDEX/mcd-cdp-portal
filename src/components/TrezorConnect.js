@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { Button, Modal, Flex, Box } from '@makerdao/ui-components-core';
+import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as Logo } from 'images/trezor.svg';
 
 import useMaker from 'hooks/useMaker';
