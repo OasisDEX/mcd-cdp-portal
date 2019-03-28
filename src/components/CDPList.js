@@ -35,21 +35,15 @@ const NavbarItem = ({ href, label, ratio, active, ...props }) => (
   </NavbarItemContainer>
 );
 
-const CDPList = memo(function({
-  currentPath,
-  viewedAddress,
-  currentQuery,
-  isOwner
-}) {
-  const { maker } = useMaker();
+const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
+  const { maker, account } = useMaker();
   const [cdps, setCDPs] = useState([]);
 
   useEffect(() => {
     (async () => {
-      if (viewedAddress) {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
+      const address = account ? account.address : viewedAddress;
+      if (address) {
+        const proxy = await maker.service('proxy').getProxyAddress(address);
         if (!proxy) {
           return;
         }
@@ -63,7 +57,7 @@ const CDPList = memo(function({
         setCDPs(cdps);
       }
     })();
-  }, [maker, viewedAddress]);
+  }, [maker, viewedAddress, account]);
 
   const { show } = useModal();
 
@@ -88,7 +82,7 @@ const CDPList = memo(function({
           />
         );
       })}
-      {!isOwner ? null : (
+      {!account ? null : (
         <DashedFakeButton
           onClick={() =>
             show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })

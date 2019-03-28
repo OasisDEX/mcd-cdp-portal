@@ -4,6 +4,7 @@ const { colors, typography } = themeLight;
 const theme = {
   ...themeLight,
   colors: {
+    white: '#fff',
     gray2: '#8D8EA7',
     grayLight: '#f8f8f8',
     grayLight2: '#c2c2c2',

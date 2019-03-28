@@ -98,6 +98,7 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
 
       const withMakerProvider = children => (
         // the canonical maker source
+
         <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
@@ -150,10 +151,6 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
                 network={{
                   id: maker.service('web3').networkId()
                 }}
-                currentAccount={
-                  connectedAddress ? maker.currentAccount() : null
-                }
-                connectedAddress={connectedAddress}
                 viewedAddress={viewedAddress}
               />
             }

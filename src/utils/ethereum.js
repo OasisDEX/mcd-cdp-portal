@@ -59,3 +59,16 @@ export const etherscanLink = (string, network = 'mainnet') => {
     return `https://${pathPrefix}etherscan.io/tx/${string}`;
   else throw new Error(`Can't create Etherscan link for "${string}"`);
 };
+
+export async function checkEthereumProvider() {
+  return new Promise(async (res, rej) => {
+    if (typeof window.ethereum !== 'undefined') {
+      await window.ethereum.enable();
+      const { selectedAddress, networkVersion } = window.ethereum;
+      res({
+        networkId: parseInt(networkVersion, 10),
+        address: selectedAddress
+      });
+    } else rej('No web3 provider detected');
+  });
+}
