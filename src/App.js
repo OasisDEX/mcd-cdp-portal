@@ -12,6 +12,9 @@ import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
 
+import { ModalProvider } from 'providers/ModalProvider';
+import modals, { templates } from 'components/Modals';
+
 const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
 
 const Body = styled.div`
@@ -58,11 +61,13 @@ function App() {
   );
 }
 
-function AppWithContext({ navigation }) {
+function AppWithContext() {
   return (
     <ThemeProvider theme={theme}>
       <ReduxProvider store={store}>
-        <App />
+        <ModalProvider modals={modals} templates={templates}>
+          <App />
+        </ModalProvider>
       </ReduxProvider>
     </ThemeProvider>
   );

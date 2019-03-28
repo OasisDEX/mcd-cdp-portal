@@ -2,9 +2,11 @@ import React, { Fragment } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import CDPList from 'components/CDPList';
 import NavLogo from 'components/NavLogo';
+import useMaker from 'hooks/useMaker';
 import { Flex, Grid } from '@makerdao/ui-components-core';
 
 const Navbar = ({ address }) => {
+  const { maker } = useMaker();
   const { url } = useCurrentRoute();
   return (
     <Fragment>
@@ -18,7 +20,7 @@ const Navbar = ({ address }) => {
           currentPath={url.pathname}
           currentQuery={url.search}
           // address={address}
-          isOwner={address}
+          isOwner={maker.currentAddress()}
         />
       </Grid>
     </Fragment>

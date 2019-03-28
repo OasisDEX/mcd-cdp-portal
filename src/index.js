@@ -9,11 +9,9 @@ import './global.css';
 
 import App from './App';
 
-(async () => {
-  lang.setLanguage('en');
+lang.setLanguage('en');
 
-  // start watching for ethereum state changes
-  watcher.start();
+// start watching for ethereum state changes
+watcher.start();
 
-  ReactDOM.render(<App />, document.getElementById('root'));
-})();
+ReactDOM.render(<App />, document.getElementById('root'));

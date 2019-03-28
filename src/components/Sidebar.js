@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
+import useMaker from 'hooks/useMaker';
 
 import { Flex, Text } from '@makerdao/ui-components-core';
 import { getColor } from 'styles/theme';
@@ -52,11 +53,11 @@ function netIdToDisplayName(networkId) {
   return 'Unkown network';
 }
 
-function NetworkSection({ networkID }) {
-  const networkDisplayName = netIdToDisplayName(networkID);
+function NetworkSection({ networkId }) {
+  const networkDisplayName = netIdToDisplayName(networkId);
   return (
     <Network py="xs" color="black3">
-      <Dot color={NETWORK_COLORS[networkID]} />
+      <Dot color={NETWORK_COLORS[networkId]} />
       <Text t="p6">{networkDisplayName}</Text>
     </Network>
   );
@@ -76,11 +77,15 @@ function AccountSection({ address = null, currentAccount } = {}) {
   );
 }
 
-function Sidebar({ feeds, system, address, network, currentAccount }) {
+function Sidebar({ feeds, system, networkId }) {
+  const { maker } = useMaker();
   return (
     <Fragment>
-      <AccountSection address={address} currentAccount={currentAccount} />
-      <NetworkSection networkID={network.id} swappable={network.swappable} />
+      <AccountSection
+        address={maker.currentAddress()}
+        currentAccount={maker.currentAccount()}
+      />
+      <NetworkSection networkId={networkId} />
       <Section>
         <SidebarFeeds feeds={feeds} />
       </Section>

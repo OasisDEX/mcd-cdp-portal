@@ -13,6 +13,8 @@ import {
   Grid
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
+import useMaker from 'hooks/useMaker';
+
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
@@ -109,7 +111,8 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ network, address }) => {
+const MobileNav = ({ networkId }) => {
+  const { maker } = useMaker();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { url } = useCurrentRoute();
 
@@ -125,7 +128,7 @@ const MobileNav = ({ network, address }) => {
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
       <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-        <Sidebar {...{ network, address }} />
+        <Sidebar {...{ networkId, address: maker.currentAddress() }} />
       </SidebarDrawer>
     </Fragment>
   );

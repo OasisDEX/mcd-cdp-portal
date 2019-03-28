@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  map,
-  route,
-  mount,
-  redirect,
-  compose,
-  withView,
-  withContext
-} from 'navi';
+import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -17,166 +9,58 @@ import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
-import store from 'store';
-import { getOrRecreateWatcher } from '../watch';
-import { getOrReinstantiateMaker } from '../maker';
-import { getOrFetchNetworkDetails } from 'utils/network';
-import { isMissingContractAddress } from 'utils/ethereum';
-
-import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
-import { createCDPSystemModel } from 'reducers/network/system/model';
+import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
+import WatcherProvider from 'providers/WatcherProvider';
+
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
-import { ModalProvider } from 'providers/ModalProvider';
-import modals, { templates } from 'components/Modals';
+import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
 import { getUnique } from 'utils/ui';
 import ilkList from 'references/ilkList';
+import { getOrFetchNetworkDetails } from 'utils/network';
+import useMaker from 'hooks/useMaker';
+import useWatcher from 'hooks/useWatcher';
+
+import { createCDPSystemModel } from 'reducers/network/system/model';
+import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
+import { isMissingContractAddress } from 'utils/ethereum';
 
 import BigNumber from 'bignumber.js';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { USD } from '@makerdao/dai';
+import store from '../store';
 
 const { networkNames, defaultNetwork } = config;
 
-async function initUserSnap(request, prevContext) {
-  const { network } = request.query;
-  if (network !== 'mainnet') {
-    userSnapInit();
-  }
-  return {
-    prevContext
-  };
-}
-
-const networkDetails = async (request, prevContext) => {
-  const { testchainId, network } = request.query;
-  const { rpcUrl, addresses } = await getOrFetchNetworkDetails({
-    network,
-    testchainId
-  });
-
-  return {
-    ...prevContext,
-    rpcUrl,
-    addresses
-  };
-};
-
-const makerContext = async (request, prevContext) => {
-  const { rpcUrl, addresses } = prevContext;
-  const { maker, reinstantiated } = await getOrReinstantiateMaker({
-    rpcUrl,
-    addresses
-  });
-  if (reinstantiated) {
-    store.dispatch({ type: 'addresses/set', payload: { addresses } });
-    await maker.authenticate();
-  }
-  return {
-    ...prevContext,
-    maker
-  };
-};
-
-const watcherContext = async (request, prevContext) => {
-  const { rpcUrl, addresses } = prevContext;
-  const { watcher, recreated } = await getOrRecreateWatcher({
-    rpcUrl,
-    addresses
-  });
-
-  if (recreated) {
-    // all bets are off wrt what contract state in our store
-    store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    // do our best to attach state listeners to this new network
-    await watcher.tap(() => {
-      return [
-        ...createCDPSystemModel(addresses),
-        // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
-        ...ilkList
-          .map(({ key: ilk }) => [
-            cdpTypeModel.rateData(addresses)(ilk),
-            cdpTypeModel.liquidation(addresses)(ilk),
-            cdpTypeModel.flipper(addresses)(ilk)
-          ])
-          .flat()
-      ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
-    });
-  }
-
-  return {
-    ...prevContext,
-    watcher
-  };
-};
-
-const withMakerHooksProvider = (maker, children) => {
-  return <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>;
-};
-
-const withModalProvider = children => {
-  return (
-    <ModalProvider modals={modals} templates={templates}>
-      {children}
-    </ModalProvider>
-  );
-};
-
 const withDefaultLayout = route =>
-  withView(async (request, context) => {
-    const { maker, addresses } = context;
-    let connectedAddress = null;
-    try {
-      connectedAddress = maker.currentAddress();
-    } catch (_) {}
+  withView(async request => {
+    const { network } = request.query;
+    const { addresses, rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
-    // FIXME: #0.2.2
-    const gemList = getUnique(ilkList, 'gem');
-    for (let { gem, currency } of gemList) {
-      const pipAddress = addresses[`PIP_${gem}`];
-      if (!pipAddress) continue;
-      const storage = await maker
-        .service('web3')
-        ._web3.eth.getStorageAt(pipAddress, 3);
-      const val = storage.substr(34);
-      const ratio = createCurrencyRatio(USD, currency);
-      const price = ratio.wei(new BigNumber('0x' + val.toString()));
-      store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
-    }
-
-    return withMakerHooksProvider(
-      maker,
-      withModalProvider(
-        <PageLayout
-          mobileNav={
-            <MobileNav
-              network={{
-                id: maker.service('web3').networkId()
-              }}
-              address={connectedAddress}
-            />
-          }
-          navbar={<Navbar address={connectedAddress} />}
-          sidebar={
-            <Sidebar
-              network={{
-                id: maker.service('web3').networkId()
-              }}
-              currentAccount={connectedAddress ? maker.currentAccount() : null}
-              address={connectedAddress}
-            />
-          }
-        >
-          <View />
-        </PageLayout>
-      )
+    const networkId = networkNameToId(network);
+    return (
+      <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
+        <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+          <RouteEffects addresses={addresses} network={network}>
+            <AwaitMakerAuthentication>
+              <PageLayout
+                mobileNav={<MobileNav networkId={networkId} />}
+                navbar={<Navbar />}
+                sidebar={<Sidebar networkId={networkId} />}
+              >
+                <View />
+              </PageLayout>
+            </AwaitMakerAuthentication>
+          </RouteEffects>
+        </MakerHooksProvider>
+      </WatcherProvider>
     );
   }, route);
 
 const hasNetwork = route =>
-  map((request, context) => {
+  map(request => {
     if (networkIsUndefined(request)) {
       return createDefaultNetworkRedirect(request);
     } else {
@@ -185,43 +69,47 @@ const hasNetwork = route =>
   });
 
 export default hasNetwork(
-  compose(
-    withContext(initUserSnap),
-    withContext(networkDetails),
-    withContext(makerContext),
-    withContext(watcherContext),
-    mount({
-      '/': route((request, context) => {
+  mount({
+    '/': route(async request => {
+      const { network } = request.query;
+      const { addresses, rpcUrl } = await getOrFetchNetworkDetails(
+        request.query
+      );
+
+      return {
+        title: 'Landing',
+        view: (
+          <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
+            <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+              <RouteEffects addresses={addresses} network={network}>
+                <Landing />
+              </RouteEffects>
+            </MakerHooksProvider>
+          </WatcherProvider>
+        )
+      };
+    }),
+
+    '/overview': withDefaultLayout(
+      route(() => {
         return {
-          title: 'Landing',
-          view: withMakerHooksProvider(
-            context.maker,
-            withModalProvider(<Landing />)
-          )
+          title: 'Overview',
+          view: <Overview />
         };
-      }),
+      })
+    ),
 
-      '/overview': withDefaultLayout(
-        route(request => {
-          return {
-            title: 'Overview',
-            view: <Overview />
-          };
-        })
-      ),
+    '/cdp/:type': withDefaultLayout(
+      route(request => {
+        const cdpTypeSlug = request.params.type;
 
-      '/cdp/:type': withDefaultLayout(
-        route(request => {
-          const cdpTypeSlug = request.params.type;
-
-          return {
-            title: 'CDP',
-            view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
-          };
-        })
-      )
-    })
-  )
+        return {
+          title: 'CDP',
+          view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
+        };
+      })
+    )
+  })
 );
 
 function networkIsUndefined(request) {
@@ -241,4 +129,62 @@ function createDefaultNetworkRedirect(request) {
       networkNames[defaultNetwork]
     }`
   );
+}
+
+function RouteEffects({ children, addresses, network }) {
+  const { maker } = useMaker();
+
+  React.useEffect(() => {
+    if (maker && addresses)
+      (async () => {
+        // FIXME: #0.2.2
+        await maker.authenticate();
+        const gemList = getUnique(ilkList, 'gem');
+        for (let { gem, currency } of gemList) {
+          const pipAddress = addresses[`PIP_${gem}`];
+          if (!pipAddress) continue;
+          const storage = await maker
+            .service('web3')
+            ._web3.eth.getStorageAt(pipAddress, 3);
+          const val = storage.substr(34);
+          const ratio = createCurrencyRatio(USD, currency);
+          const price = ratio.wei(new BigNumber('0x' + val.toString()));
+          store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
+        }
+      })();
+  }, [maker, addresses]);
+
+  React.useEffect(() => {
+    if (network !== 'mainnet') userSnapInit();
+  }, [network]);
+
+  return (
+    <WatcherRouteEffects addresses={addresses}>{children}</WatcherRouteEffects>
+  );
+}
+
+function WatcherRouteEffects({ addresses, children }) {
+  const { watcher } = useWatcher();
+  React.useEffect(() => {
+    if (!addresses) return;
+    // all bets are off wrt what contract state in our store
+    store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+    console.log('tap');
+    // do our best to attach state listeners to this new network
+    watcher.tap(() => {
+      return [
+        ...createCDPSystemModel(addresses),
+        // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
+        ...ilkList
+          .map(({ key: ilk }) => [
+            cdpTypeModel.rateData(addresses)(ilk),
+            cdpTypeModel.liquidation(addresses)(ilk),
+            cdpTypeModel.flipper(addresses)(ilk)
+          ])
+          .flat()
+      ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
+    });
+  }, [addresses]);
+
+  return children;
 }

@@ -21,24 +21,18 @@ watcher.batch().subscribe(newStateEvents => {
   store.dispatch(batchActions(newStateEvents));
 });
 
-let _rpcUrl = null;
-export async function getOrRecreateWatcher({ rpcUrl, addresses }) {
-  let recreated = false;
+export function getWatcher() {
+  return watcher;
+}
 
-  if (_rpcUrl !== rpcUrl) {
-    if (addresses.MULTICALL === undefined)
-      throw new Error('No multicall address found');
+export async function recreateWatcher({ rpcUrl, addresses }) {
+  if (addresses.MULTICALL === undefined)
+    throw new Error('No multicall address found');
 
-    _rpcUrl = rpcUrl;
-
-    recreated = true;
-
-    watcher.reCreate([], {
-      rpcUrl,
-      multicallAddress: addresses.MULTICALL
-    });
-  }
-  return { watcher, recreated };
+  watcher.reCreate([], {
+    rpcUrl,
+    multicallAddress: addresses.MULTICALL
+  });
 }
 
 // watcher
