@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
@@ -98,7 +98,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
   }, []);
 
   return (
-    <Fragment>
+    <>
       <Flex justifyContent="flex-end">
         <Box onClick={onClose}>Close</Box>
       </Flex>
@@ -165,7 +165,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
           Confirm wallet
         </Button>
       </Grid>
-    </Fragment>
+    </>
   );
 }
 
