@@ -32,6 +32,8 @@ import { USD } from '@makerdao/dai';
 
 const { networkNames, defaultNetwork } = config;
 
+const USING_MEDIAN_PRICE_FEEDS = false;
+
 async function stageNetwork({ testchainId, network }) {
   // network will be ignored if testchainId is present
 
@@ -118,14 +120,22 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
       // FIXME: #0.2.2
       const gemList = getUnique(ilkList, 'gem');
       for (let { gem, currency } of gemList) {
-        const pipAddress = addresses[`PIP_${gem}`];
+        const name = `PIP_${gem}`;
+        const pipAddress = addresses[name];
         if (!pipAddress) continue;
-        const storage = await maker
-          .service('web3')
-          ._web3.eth.getStorageAt(pipAddress, 3);
-        const val = storage.substr(34);
         const ratio = createCurrencyRatio(USD, currency);
-        const price = ratio.wei(new BigNumber('0x' + val.toString()));
+        let val, price;
+        if (USING_MEDIAN_PRICE_FEEDS) {
+          const storage = await maker
+            .service('web3')
+            ._web3.eth.getStorageAt(pipAddress, 3);
+          val = storage.substr(34);
+          price = ratio.wei(new BigNumber('0x' + val.toString()));
+        } else {
+          const pip = maker.service('smartContract').getContract(name);
+          val = await pip.read();
+          price = ratio.wei(val);
+        }
         store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
       }
 

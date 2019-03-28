@@ -56,7 +56,7 @@ export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
     };
 
     for (let ilk of ilkList) {
-      const adapterName = `MCD_JOIN_${ilk.key}`;
+      const adapterName = `MCD_JOIN_${ilk.key.replace(/-/g, '_')}`;
       config.smartContract.addContracts[adapterName] = {
         abi: gemJoinAbi,
         address: addresses[adapterName]
