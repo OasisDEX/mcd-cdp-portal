@@ -46,16 +46,13 @@ const onConfirm = async (maker, address, closeModal, accType) => {
 
   mixpanelIdentify(connectedAddress, accType);
 
-  const {
-    network,
-    address: urlParamAddress
-  } = navigation.receivedRoute.url.query;
+  const { network } = navigation.receivedRoute.url.query;
 
-  const addressToView = urlParamAddress || connectedAddress;
+  const addressToView = connectedAddress;
 
   navigation.history.push({
-    pathname: '/overview/',
-    search: `?network=${network}&address=${addressToView}`
+    pathname: `owner/${addressToView}`,
+    search: `?network=${network}`
   });
   closeModal();
 };

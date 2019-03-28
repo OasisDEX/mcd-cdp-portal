@@ -109,7 +109,7 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ network, address }) => {
+const MobileNav = ({ network, connectedAddress, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
 
   return (
@@ -121,14 +121,18 @@ const MobileNav = ({ network, address }) => {
           </NavLink>
 
           <CDPDropdown>
-            <CDPList currentPath={url.pathname} currentQuery={url.search} />
+            <CDPList
+              currentPath={url.pathname}
+              currentQuery={url.search}
+              viewedAddress={viewedAddress}
+            />
           </CDPDropdown>
 
           <SidebarDrawerTrigger
             {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}
           />
           <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-            <Sidebar {...{ network, address }} />
+            <Sidebar {...{ network, connectedAddress }} />
           </SidebarDrawer>
         </Fragment>
       )}
