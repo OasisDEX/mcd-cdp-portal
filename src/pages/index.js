@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPage, createRedirect, createSwitch } from 'navi';
 
+import { Box } from '@makerdao/ui-components-core';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
@@ -159,7 +160,11 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
         )
       );
     } catch (errMsg) {
-      return <div>{errMsg.toString()}</div>;
+      return (
+        <Box m={8}>
+          <pre>{errMsg.stack}</pre>
+        </Box>
+      );
     }
   };
 }
