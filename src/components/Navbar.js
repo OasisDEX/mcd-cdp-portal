@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { NavLink, NavRoute } from 'react-navi';
 import CDPList from 'components/CDPList';
-import NavLogo from 'components/NavLogo';
 import { Flex, Grid } from '@makerdao/ui-components-core';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 

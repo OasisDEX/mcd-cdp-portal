@@ -12,6 +12,7 @@ const theme = {
     grayLight4: '#9AA3AD',
     grayLight5: '#F6F8F9',
     grayLight6: '#E9EAF3',
+    grayLight7: '#E4EAEE',
     greenPastel: '#1aab9b',
     greenVivid: '#24be9f',
     purple: '#690496',

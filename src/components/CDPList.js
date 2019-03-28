@@ -8,6 +8,7 @@ import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
+import { getColor } from 'styles/theme';
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
@@ -19,17 +20,24 @@ const DashedFakeButton = styled(Flex)`
   border-color: ${({ theme }) => theme.colors.blackLight};
 `;
 
-const NavbarItem = ({ href, label, ratio, active, ...props }) => (
+const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <Flex
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? 'greenPastel' : 'blackLight'}
+      bg={active ? 'greenPastel' : owned ? 'blackLight' : 'grayLight7'}
       borderRadius="4px"
       height="50px"
     >
-      <NavLabel t="p6">{label}</NavLabel>
+      <NavLabel
+        t="p6"
+        css={{
+          color: owned ? 'white' : getColor('black5')
+        }}
+      >
+        {label}
+      </NavLabel>
       <RatioDisplay ratio={ratio} active={active} />
     </Flex>
   </NavbarItemContainer>
@@ -78,6 +86,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
             key={idx}
             href={linkPath + currentQuery}
             label={cdp.ilk}
+            owned={account}
             active={active}
           />
         );
