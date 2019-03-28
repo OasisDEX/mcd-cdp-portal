@@ -12,7 +12,6 @@ import { addMkrAndEthBalance } from '../utils/ethereum';
 
 import useMaker from 'hooks/useMaker';
 import useMakerState from 'hooks/useMakerState';
-import useFn from 'hooks/useFn';
 
 import {
   AddressContainer,
@@ -65,7 +64,7 @@ const DEFAULT_ACCOUNTS_PER_PAGE = 5;
 function HardwareWalletModal({ onClose, type, isLedgerLive }) {
   const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState('');
-  const [accountCb, setAccountCb] = useFn(() => null);
+  const [accountCb, setAccountCb] = useState({});
   const { maker } = useMaker();
   const path =
     type === AccountTypes.TREZOR
@@ -88,7 +87,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
           })
         );
         setAddressList(await Promise.all(addressBalancePromises));
-        setAccountCb(address => cb(null, address));
+        setAccountCb({ fn: cb });
       }
     })
   );
@@ -158,7 +157,7 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
         <Button
           disabled={!selectedAddress}
           onClick={() => {
-            accountCb(selectedAddress);
+            accountCb.fn(null, selectedAddress);
             setTimeout(() => onConfirm(maker, selectedAddress, onClose, type));
           }}
         >
