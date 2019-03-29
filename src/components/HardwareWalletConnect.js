@@ -62,6 +62,19 @@ const renderAccountsSelection = ({
         modalProps: {
           addressList,
           closeModal: reset,
+          fetchAccounts: offset => {
+            return new Promise(resolve => {
+              maker.addAccount({
+                type,
+                path,
+                accountsOffset: offset,
+                accountsLength,
+                choose: addresses => {
+                  resolve(addresses);
+                }
+              });
+            });
+          },
           confirmAddress: address => {
             pickAccount(null, address);
             setTimeout(() => onConfirm(maker, address, reset, type), 0);

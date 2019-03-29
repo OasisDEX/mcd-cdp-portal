@@ -48,7 +48,12 @@ const calcPaginatedAddresses = (addresses, pageNumber) => {
   return addresses.slice(firstAddressIndex, lastAddressIndex);
 };
 
-function HardwareWalletModal({ addressList, closeModal, confirmAddress }) {
+function HardwareWalletModal({
+  addressList,
+  closeModal,
+  fetchAccounts,
+  confirmAddress
+}) {
   const [totalAddresses, setTotalAddresses] = useState(addressList);
   const [pageNumber, setPageNumber] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState('');
@@ -56,6 +61,7 @@ function HardwareWalletModal({ addressList, closeModal, confirmAddress }) {
     calcPaginatedAddresses(totalAddresses, pageNumber)
   );
   const [renderedAddresses, setRenderedAddresses] = useState({});
+  const [accOffset, setAccOffset] = useState(1);
 
   useEffect(() => {
     computeAddressBalances(paginatedAddresses).then(addresses =>
@@ -64,12 +70,15 @@ function HardwareWalletModal({ addressList, closeModal, confirmAddress }) {
   }, [paginatedAddresses]);
 
   useEffect(() => {
-    if (addressList.length + 1 - pageNumber * DEFAULT_ACCOUNT_OFFSET <= 0) {
-      // make request for more addresses
+    if (totalAddresses.length - pageNumber * DEFAULT_ACCOUNT_OFFSET <= 0) {
+      fetchAccounts(accOffset).then(moreAddresses => {
+        setAccOffset(accOffset + 1);
+        setTotalAddresses(totalAddresses.concat(moreAddresses));
+      });
     }
     const newAddresses = calcPaginatedAddresses(totalAddresses, pageNumber);
     setPaginatedAddresses(newAddresses);
-  }, [addressList, pageNumber]);
+  }, [totalAddresses, pageNumber]);
 
   return (
     !!renderedAddresses.length && (
@@ -95,14 +104,7 @@ function HardwareWalletModal({ addressList, closeModal, confirmAddress }) {
           >
             &#60;
           </Button>
-          <Button
-            disabled={
-              (pageNumber + 1) * DEFAULT_ACCOUNT_OFFSET >= totalAddresses.length
-            }
-            onClick={() => setPageNumber(pageNumber + 1)}
-          >
-            &#62;
-          </Button>
+          <Button onClick={() => setPageNumber(pageNumber + 1)}>&#62;</Button>
         </Grid>
         <AddressContainer>
           <Table>
