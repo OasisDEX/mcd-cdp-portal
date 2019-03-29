@@ -19,7 +19,7 @@ function CardTitle({ title }) {
 
 const TopContainerRow = ({ props }) => {
   const [title, value] = props;
-  const [titleText, titleCurrency] = title ? title.split(' ') : ['n/a', 'n/a'];
+  const [titleText, titleCurrency] = title.split(' ');
   return (
     <Flex flexWrap="wrap" alignItems="flex-end">
       <TextBlock t="headingL" fontWeight="medium">
