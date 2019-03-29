@@ -1,4 +1,4 @@
-import { ETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
+import { ETH, COL1 } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {

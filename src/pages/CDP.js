@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import lang from 'languages';
-import { getUsdPrice, calcCDPParams, cdpParamsAreValid } from 'utils/ui';
+import { calcCDPParams } from 'utils/ui';
 import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
@@ -19,7 +19,8 @@ function CardTitle({ title }) {
 
 const TopContainerRow = ({ props }) => {
   const [title, value] = props;
-  const [titleText, titleCurrency] = title ? title.split(' ') : ['n/a', 'n/a'];
+  const [titleText, titleCurrency] =
+    typeof title === 'string' ? title.split(' ') : ['n/a', 'n/a'];
   return (
     <Flex flexWrap="wrap" alignItems="flex-end">
       <TextBlock t="headingL" fontWeight="medium">
@@ -37,7 +38,8 @@ const TopContainerRow = ({ props }) => {
 
 const InfoContainerRow = ({ props }) => {
   const [title, value] = props;
-  const [rowInfoTitle, ...rowInfoLabel] = title.split(/( \()/g);
+  const [rowInfoTitle, ...rowInfoLabel] =
+    typeof title === 'string' ? title.split(/( \()/g) : ['n/a', 'n/a'];
   return (
     <Flex py="xs" flexWrap="wrap">
       <Flex flexGrow="1">
@@ -117,7 +119,7 @@ const CdpViewCard = ({ title, rows, isAction }) => {
   );
 };
 
-function CDPView({ cdpTypeSlug, getIlk }) {
+function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
@@ -129,7 +131,7 @@ function CDPView({ cdpTypeSlug, getIlk }) {
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(parseInt(cdpTypeSlug));
+      const cdp = await cdpManager.getCdp(parseInt(cdpId));
       setCDPState(cdp);
       setIlk(getIlk(cdp.ilk));
       setCollateralVal(await cdp.getCollateralValue());
@@ -138,7 +140,6 @@ function CDPView({ cdpTypeSlug, getIlk }) {
   }, [cdpId, maker]);
 
   console.log('CDP state to be rendered on the page:', cdpState);
-  window.cdpState = cdpState;
   let { liquidationPrice, collateralPrice, liquidationPenalty } = ['', 1, ''];
   let { collateralizationRatio, liquidationRatio, stabilityFee } = ['', '', ''];
   let {
@@ -147,28 +148,28 @@ function CDPView({ cdpTypeSlug, getIlk }) {
     lockedCollateral,
     freeCollateral
   } = [1, '', 1, 1];
-  let { debtInt, debtDenomination } = [0, 'DAI'];
+  let { debtInt, daiAvailable } = [0, 0];
   let generateAmount = 0;
   if (cdpState && collateralVal && debtVal && ilk) {
     collateralInt = collateralVal.toNumber();
     collateralDenomination = collateralVal.toString().split(' ')[1];
     debtInt = debtVal.toNumber();
-    debtDenomination = debtVal.toString().split(' ')[1];
     collateralPrice = ilk.feedValueUSD.toNumber();
     liquidationPenalty = ilk.liquidationPenalty;
     liquidationRatio = ilk.liquidationRatio;
-    liquidationPrice =
-      ((debtInt * (parseInt(liquidationRatio) / 100)) / collateralInt).toFixed(
-        2
-      ) + ' USD';
-    collateralizationRatio =
-      ((collateralPrice * collateralInt) / debtInt) * 100;
+    let cdpParams = calcCDPParams({
+      ilkData: ilk,
+      gemsToLock: collateralInt,
+      daiToDraw: debtInt
+    });
+    liquidationPrice = cdpParams.liquidationPrice;
+    collateralizationRatio = parseFloat(cdpParams.collateralizationRatio);
+    daiAvailable = parseFloat(cdpParams.daiAvailable);
     stabilityFee = parseFloat(ilk.rate) * 100 + '%';
     lockedCollateral =
       (debtInt * (parseInt(liquidationRatio) / 100)) / collateralPrice;
     freeCollateral = collateralInt - lockedCollateral;
-    generateAmount =
-      collateralPrice * collateralInt - (debtInt * liquidationRatio) / 100;
+    generateAmount = daiAvailable - debtInt;
   }
   return (
     <PageContentLayout>
@@ -212,7 +213,7 @@ function CDPView({ cdpTypeSlug, getIlk }) {
           title={`${cdpId} ${lang.cdp_page.collateral}`}
           rows={[
             [
-              collateralVal.toString(),
+              collateralVal && collateralVal.toString(),
               (collateralPrice * collateralInt).toFixed(2) + ' USD'
             ],
             [
@@ -263,6 +264,4 @@ function mapStateToProps(state) {
   };
 }
 
-CDPView = connect(mapStateToProps)(CDPView);
-
-export default hot(CDPView);
+export default hot(connect(mapStateToProps)(CDPView));
