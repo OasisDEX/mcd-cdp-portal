@@ -4,7 +4,6 @@ import LedgerType from 'components/LedgerType';
 import HardwareWalletModal from 'components/HardwareWalletModal';
 import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
-import { AccountTypes } from '../../utils/constants';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
@@ -25,19 +24,11 @@ const modals = {
     </Grid>
   ),
 
-  ledgertype: ({ onClose }) => <LedgerType onClose={onClose} />,
+  ledgertype: args => <LedgerType {...args} />,
 
-  ledger: ({ onClose, isLedgerLive }) => (
-    <HardwareWalletModal
-      isLedgerLive={isLedgerLive}
-      onClose={onClose}
-      type={AccountTypes.LEDGER}
-    />
-  ),
+  ledger: args => <HardwareWalletModal {...args} />,
 
-  trezor: ({ onClose }) => (
-    <HardwareWalletModal onClose={onClose} type={AccountTypes.TREZOR} />
-  )
+  trezor: args => <HardwareWalletModal {...args} />
 };
 
 export { templates };

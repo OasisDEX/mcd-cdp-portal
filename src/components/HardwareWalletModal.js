@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
 
-import { navigation } from '../index';
-
-import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle, copyToClipboard } from '../utils/ui';
-import { AccountTypes } from '../utils/constants';
-import { addMkrAndEthBalance } from '../utils/ethereum';
-
-import useMaker from 'hooks/useMaker';
-
 import {
   AddressContainer,
   Table,
@@ -38,63 +30,12 @@ export const StyledBlurb = styled.div`
   margin: 22px 0px 16px 0px;
 `;
 
-const onConfirm = async (maker, address, closeModal, accType) => {
-  maker.useAccountWithAddress(address);
-  const connectedAddress = maker.currentAddress();
-
-  mixpanelIdentify(connectedAddress, accType);
-
-  const { network } = navigation.receivedRoute.url.query;
-
-  const addressToView = connectedAddress;
-
-  navigation.history.push({
-    pathname: `owner/${addressToView}`,
-    search: `?network=${network}`
-  });
-  closeModal();
-};
-
-const TREZOR_PATH = "44'/60'/0'/0/0";
-const LEDGER_LIVE_PATH = "44'/60'/0'";
-const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
-const DEFAULT_ACCOUNTS_PER_PAGE = 5;
-
-function HardwareWalletModal({ onClose, type, isLedgerLive }) {
-  const [addressList, setAddressList] = useState([]);
+function HardwareWalletModal({ addressList, closeModal, confirmAddress }) {
   const [selectedAddress, setSelectedAddress] = useState('');
-  const [accountCb, setAccountCb] = useState({});
-  const { maker } = useMaker();
-  const path =
-    type === AccountTypes.TREZOR
-      ? TREZOR_PATH
-      : isLedgerLive
-      ? LEDGER_LIVE_PATH
-      : LEDGER_LEGACY_PATH;
-
-  useEffect(() => {
-    maker.addAccount({
-      type,
-      path,
-      accountsOffset: 0,
-      accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-      choose: async (addresses, cb) => {
-        const addressBalancePromises = addresses.map(address =>
-          addMkrAndEthBalance({
-            address,
-            type
-          })
-        );
-        setAddressList(await Promise.all(addressBalancePromises));
-        setAccountCb({ fn: cb });
-      }
-    });
-  }, []);
-
   return (
     <>
       <Flex justifyContent="flex-end">
-        <Box onClick={onClose}>Close</Box>
+        <Box onClick={closeModal}>Close</Box>
       </Flex>
       <StyledTop>
         <StyledTitle>Select address</StyledTitle>
@@ -146,15 +87,12 @@ function HardwareWalletModal({ onClose, type, isLedgerLive }) {
         gridTemplateColumns={['1fr', 'auto auto']}
         justifySelf={['stretch', 'center']}
       >
-        <Button variant="secondary-outline" onClick={onClose}>
+        <Button variant="secondary-outline" onClick={closeModal}>
           Change wallet
         </Button>
         <Button
           disabled={!selectedAddress}
-          onClick={() => {
-            accountCb.fn(null, selectedAddress);
-            setTimeout(() => onConfirm(maker, selectedAddress, onClose, type));
-          }}
+          onClick={() => confirmAddress(selectedAddress)}
         >
           Confirm wallet
         </Button>

@@ -8,8 +8,6 @@ import styled from 'styled-components';
 import { BreakableText } from './Typography';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 
-import useModal from 'hooks/useModal';
-
 // hack to get around button padding for now
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -23,9 +21,10 @@ export const StyledTitle = styled.div`
   font-size: 28px;
 `;
 
-function LedgerType({ onClose }) {
-  const { show } = useModal();
+const LEDGER_LIVE_PATH = "44'/60'/0'";
+const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
 
+function LedgerType({ onClose, renderByPath }) {
   return (
     <Grid gridRowGap="s" p="m">
       <Flex justifyContent="flex-end">
@@ -34,26 +33,14 @@ function LedgerType({ onClose }) {
       <StyledTitle>Connect Ledger Live or Legacy</StyledTitle>
       <ButtonCard
         icon={<StyledLedgerLogo />}
-        onClick={() => {
-          show({
-            modalType: 'ledger',
-            modalProps: { isLedgerLive: true },
-            modalTemplate: 'simple'
-          });
-        }}
+        onClick={() => renderByPath(LEDGER_LIVE_PATH)}
         title="Ledger live"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
         buttonText="Connect"
       />
       <ButtonCard
         icon={<StyledLedgerLogo />}
-        onClick={() => {
-          show({
-            modalType: 'ledger',
-            modalProps: { isLedgerLive: false },
-            modalTemplate: 'simple'
-          });
-        }}
+        onClick={() => renderByPath(LEDGER_LEGACY_PATH)}
         title="Ledger legacy"
         subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
         buttonText="Connect"
