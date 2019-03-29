@@ -135,7 +135,7 @@ function CDPView({ cdpTypeSlug, getIlk }) {
       setCollateralVal(await cdp.getCollateralValue());
       setDebtVal(await cdp.getDebtValue());
     })();
-  }, [cdpTypeSlug, maker]);
+  }, [cdpId, maker]);
 
   console.log('CDP state to be rendered on the page:', cdpState);
   window.cdpState = cdpState;
@@ -174,7 +174,7 @@ function CDPView({ cdpTypeSlug, getIlk }) {
     <PageContentLayout>
       <Box>
         <Title color="black2">
-          {lang.cdp} {cdpTypeSlug.toUpperCase()}
+          {lang.cdp} {cdpId}
         </Title>
       </Box>
       <Grid
@@ -209,9 +209,7 @@ function CDPView({ cdpTypeSlug, getIlk }) {
         />
 
         <CdpViewCard
-          title={`${cdpState && cdpState.ilk.toUpperCase()} ${
-            lang.cdp_page.collateral
-          }`}
+          title={`${cdpId} ${lang.cdp_page.collateral}`}
           rows={[
             [
               collateralVal.toString(),

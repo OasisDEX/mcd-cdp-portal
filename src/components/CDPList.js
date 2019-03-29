@@ -1,6 +1,6 @@
 import React, { memo, Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
+// import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
@@ -8,7 +8,7 @@ import { NavLink } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
-import qs from 'query-string';
+import { getColor } from 'styles/theme';
 
 const NavbarItemContainer = styled(NavLink)`
   display: block;
@@ -20,69 +20,78 @@ const DashedFakeButton = styled(Flex)`
   border-color: ${({ theme }) => theme.colors.blackLight};
 `;
 
-const NavbarItem = ({ href, label, ratio, active, ...props }) => (
+const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} precache={true} {...props}>
     <Flex
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? 'greenPastel' : 'blackLight'}
+      bg={active ? 'greenPastel' : owned ? 'blackLight' : 'grayLight7'}
       borderRadius="4px"
       height="50px"
     >
-      <NavLabel t="p6">{label}</NavLabel>
+      <NavLabel
+        t="p6"
+        css={{
+          color: owned ? 'white' : getColor('black5')
+        }}
+      >
+        {label}
+      </NavLabel>
       <RatioDisplay ratio={ratio} active={active} />
     </Flex>
   </NavbarItemContainer>
 );
 
-const CDPList = memo(function({ currentPath, currentQuery, isOwner }) {
-  const { maker } = useMaker();
+const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
+  const { maker, account } = useMaker();
   const [cdps, setCDPs] = useState([]);
 
-  const { address } = qs.parse(currentQuery);
   useEffect(() => {
     (async () => {
-      const proxy = await maker.service('proxy').getProxyAddress(address);
-      if (!proxy) {
-        return;
+      const address = account ? account.address : viewedAddress;
+      if (address) {
+        const proxy = await maker.service('proxy').getProxyAddress(address);
+        if (!proxy) {
+          return;
+        }
+        const cdpManager = maker.service('mcd:cdpManager');
+        const cdpIds = await cdpManager.getCdpIds(proxy);
+        const cdps = await Promise.all(
+          cdpIds.map(async ({ id }) => {
+            return await cdpManager.getCdp(id);
+          })
+        );
+        setCDPs(cdps);
       }
-      const cdpManager = maker.service('mcd:cdpManager');
-      const cdpIds = await cdpManager.getCdpIds(proxy);
-      const cdps = await Promise.all(
-        cdpIds.map(async ({ id }) => {
-          return await cdpManager.getCdp(id);
-        })
-      );
-      setCDPs(cdps);
     })();
-  }, [address, maker]);
+  }, [maker, viewedAddress, account]);
 
   const { show } = useModal();
 
   return (
     <Fragment>
-      <NavbarItem
+      {/* <NavbarItem
         key="overview"
-        href={`/overview/${currentQuery}`}
+        href={`/owner/${currentQuery}`}
         label="Overview"
         Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
-      />
+      /> */}
       {cdps.map((cdp, idx) => {
-        const linkPath = `/cdp/${cdp.id}/`;
+        const linkPath = `/${cdp.id}`;
         const active = currentPath.includes(linkPath);
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
             label={cdp.ilk}
-            // ratio={cdp.ratio}
+            owned={account}
             active={active}
           />
         );
       })}
-      {!isOwner ? null : (
+      {!account ? null : (
         <DashedFakeButton
           onClick={() =>
             show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })

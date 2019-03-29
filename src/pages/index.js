@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPage, createRedirect, createSwitch } from 'navi';
 
+import { Box } from '@makerdao/ui-components-core';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
@@ -80,7 +81,7 @@ async function stageNetwork({ testchainId, network }) {
 }
 
 // Any component that would like to change the network must replace url query params, re-running this function.
-function withAuthenticatedNetwork(getPage) {
+function withAuthenticatedNetwork(getPage, viewedAddress) {
   return async url => {
     try {
       // ensure our maker and watcher instances are connected to the correct network
@@ -98,6 +99,7 @@ function withAuthenticatedNetwork(getPage) {
 
       const withMakerProvider = children => (
         // the canonical maker source
+
         <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
@@ -135,19 +137,22 @@ function withAuthenticatedNetwork(getPage) {
                 network={{
                   id: maker.service('web3').networkId()
                 }}
-                address={connectedAddress}
+                connectedAddress={connectedAddress}
+                viewedAddress={viewedAddress}
               />
             }
-            navbar={<Navbar address={connectedAddress} />}
+            navbar={
+              <Navbar
+                connectedAddress={connectedAddress}
+                viewedAddress={viewedAddress}
+              />
+            }
             sidebar={
               <Sidebar
                 network={{
                   id: maker.service('web3').networkId()
                 }}
-                currentAccount={
-                  connectedAddress ? maker.currentAccount() : null
-                }
-                address={connectedAddress}
+                viewedAddress={viewedAddress}
               />
             }
             content={getPage()}
@@ -155,7 +160,11 @@ function withAuthenticatedNetwork(getPage) {
         )
       );
     } catch (errMsg) {
-      return <div>{errMsg.toString()}</div>;
+      return (
+        <Box m={8}>
+          <pre>{errMsg.stack}</pre>
+        </Box>
+      );
     }
   };
 }
@@ -171,24 +180,27 @@ export default createSwitch({
       });
     },
 
-    '/overview': url => {
+    '/owner/:viewedAddress': url => {
       if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
+
+      const { viewedAddress } = url.params;
 
       return createPage({
         title: 'Overview',
-        getContent: withAuthenticatedNetwork(() => <Overview />)
+        getContent: withAuthenticatedNetwork(
+          () => <Overview viewedAddress={viewedAddress} />,
+          viewedAddress
+        )
       });
     },
 
-    '/cdp/:type': url => {
+    '/:cdpId': url => {
       if (networkIsUndefined(url)) return createDefaultNetworkRedirect(url);
-      const cdpTypeSlug = url.params.type;
+      const { cdpId } = url.params;
 
       return createPage({
         title: 'CDP',
-        getContent: withAuthenticatedNetwork(() => (
-          <CDPPage cdpTypeSlug={cdpTypeSlug} />
-        ))
+        getContent: withAuthenticatedNetwork(() => <CDPPage cdpId={cdpId} />)
       });
     }
   }
@@ -199,12 +211,10 @@ function networkIsUndefined(url) {
 }
 
 function createDefaultNetworkRedirect(url) {
-  const { address } = url.query;
   const { pathname } = url;
-  const addressQuery = address === undefined ? '?' : `?address=${address}&`;
 
   return createRedirect(
-    `${pathname === '/' ? '' : pathname}/${addressQuery}network=${
+    `${pathname === '/' ? '' : pathname}/?network=${
       networkNames[defaultNetwork]
     }`
   );
