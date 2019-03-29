@@ -184,7 +184,7 @@ function CDPView({ cdpId }) {
         <CdpViewCard
           title={`DAI ${lang.cdp_page.position}`}
           rows={[
-            ['10,0001.01 DAI', lang.cdp_page.outstanding_debt],
+            ['10,001.01 DAI', lang.cdp_page.outstanding_debt],
             [
               `DAI ${lang.cdp_page.wallet_balance}`,
               '3.00 DAI',

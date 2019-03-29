@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import useMaker from 'hooks/useMaker';
+import { getColor } from 'styles/theme';
 
 import { mediaQueries } from 'styles/constants';
 const breakpoint = mediaQueries.m.min;
@@ -33,7 +35,7 @@ const SidebarWrap = styled.div`
 const NavbarWrap = styled.div`
   display: none;
   grid-area: navbar;
-  background: ${({ theme }) => theme.colors.black5};
+  background: ${({ theme, bgOverwrite }) => bgOverwrite || theme.colors.white};
   padding: 0 ${({ theme }) => theme.space.xs};
 
   ${breakpoint} {
@@ -54,13 +56,19 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => (
-  <ResponsiveWrap>
-    <MobileNavWrap>{mobileNav}</MobileNavWrap>
-    <NavbarWrap>{navbar}</NavbarWrap>
-    {content}
-    <SidebarWrap>{sidebar}</SidebarWrap>
-  </ResponsiveWrap>
-);
+const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => {
+  const { account } = useMaker();
+
+  return (
+    <ResponsiveWrap>
+      <MobileNavWrap>{mobileNav}</MobileNavWrap>
+      <NavbarWrap bgOverwrite={account ? getColor('black5') : null}>
+        {navbar}
+      </NavbarWrap>
+      {content}
+      <SidebarWrap>{sidebar}</SidebarWrap>
+    </ResponsiveWrap>
+  );
+};
 
 export default ResponsivePageLayout;

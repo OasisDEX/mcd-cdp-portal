@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPage, createRedirect, createSwitch } from 'navi';
 
+import { Box } from '@makerdao/ui-components-core';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
@@ -98,6 +99,7 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
 
       const withMakerProvider = children => (
         // the canonical maker source
+
         <MakerHooksProvider maker={maker}>{children}</MakerHooksProvider>
       );
 
@@ -150,10 +152,6 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
                 network={{
                   id: maker.service('web3').networkId()
                 }}
-                currentAccount={
-                  connectedAddress ? maker.currentAccount() : null
-                }
-                connectedAddress={connectedAddress}
                 viewedAddress={viewedAddress}
               />
             }
@@ -162,7 +160,11 @@ function withAuthenticatedNetwork(getPage, viewedAddress) {
         )
       );
     } catch (errMsg) {
-      return <div>{errMsg.toString()}</div>;
+      return (
+        <Box m={8}>
+          <pre>{errMsg.stack}</pre>
+        </Box>
+      );
     }
   };
 }
