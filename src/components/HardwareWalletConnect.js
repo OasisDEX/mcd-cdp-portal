@@ -12,7 +12,6 @@ import useModal from 'hooks/useModal';
 import { AccountTypes } from '../utils/constants';
 import { navigation } from '../index';
 import { mixpanelIdentify } from 'utils/analytics';
-import { addMkrAndEthBalance } from '../utils/ethereum';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -25,7 +24,7 @@ const StyledTrezorLogo = styled(TrezorLogo)`
 `;
 
 const TREZOR_PATH = "44'/60'/0'/0/0";
-const DEFAULT_ACCOUNTS_PER_PAGE = 5;
+const DEFAULT_ACCOUNTS_PER_PAGE = 25;
 
 const onConfirm = async (maker, address, closeModal, accType) => {
   maker.useAccountWithAddress(address);
@@ -57,15 +56,7 @@ const renderAccountsSelection = ({
     path,
     accountsOffset,
     accountsLength,
-    choose: async (addresses, pickAccount) => {
-      const addressList = await Promise.all(
-        addresses.map(address =>
-          addMkrAndEthBalance({
-            address,
-            type
-          })
-        )
-      );
+    choose: async (addressList, pickAccount) => {
       show({
         modalType: type,
         modalProps: {
