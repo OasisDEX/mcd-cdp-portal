@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import lang from 'languages';
 
 import styled from 'styled-components';
 
-import { Button, Modal, Box } from '@makerdao/ui-components-core';
+import { Button } from '@makerdao/ui-components-core';
+import useMaker from 'hooks/useMaker';
 
 const CustomButton = styled(Button)`
   height: 30px;
@@ -13,28 +14,16 @@ const CustomButton = styled(Button)`
 `;
 
 export default function AccountConnect() {
-  const [modalOpen, setModalBool] = useState(false);
+  const { connectMetamask } = useMaker();
+
+  const connectOnClick = async () => {
+    await connectMetamask();
+  };
 
   return (
     <>
-      <Modal
-        show={modalOpen}
-        onClose={() => {
-          setModalBool(false);
-        }}
-      >
-        <Box pa="m">
-          <h3>Modal Content</h3>
-        </Box>
-      </Modal>
-
       <span>{lang.sidebar.read_only_mode}</span>
-      <CustomButton
-        onClick={() => {
-          setModalBool(true);
-        }}
-        variant="secondary-outline"
-      >
+      <CustomButton onClick={connectOnClick} variant="secondary-outline">
         {lang.connect}
       </CustomButton>
     </>

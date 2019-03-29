@@ -1,8 +1,8 @@
 {
   "supportedNetworkIds": ["999", "42", "1"],
   "rpcUrls": {
-    "1": "https://mainnet.infura.io",
-    "42": "https://kovan.infura.io"
+    "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2"
   },
   "networkNames": {
     "1": "mainnet",
