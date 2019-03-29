@@ -1,33 +1,14 @@
 import { useContext, useEffect, useState } from 'react';
+import { checkEthereumProvider } from 'utils/ethereum';
 
 import { MakerObjectContext } from 'providers/MakerHooksProvider';
 
-function toNullableCb(cb) {
-  return () => {
-    try {
-      return cb();
-    } catch (err) {
-      return null;
-    }
-  };
-}
-
 function useMaker() {
-  const maker = useContext(MakerObjectContext);
+  const { maker, account } = useContext(MakerObjectContext);
   const [authenticated, setAuthenticated] = useState(false);
-
-  async function authenticatedMaker() {
-    await maker.authenticate();
-    return maker;
-  }
 
   useEffect(() => {
     if (maker) {
-      const currentAddressCb = maker.currentAddress;
-      const currentAccountCb = maker.currentAccount;
-      maker.currentAddress = toNullableCb(currentAddressCb);
-      maker.currentAccount = toNullableCb(currentAccountCb);
-
       maker.authenticate().then(() => {
         setAuthenticated(true);
       });
@@ -38,7 +19,45 @@ function useMaker() {
     }
   }, [maker]);
 
-  return { maker, authenticated, authenticatedMaker };
+  function isConnectedToProvider(provider) {
+    return (
+      maker.service('accounts').hasAccount() &&
+      !!provider.address &&
+      provider.address === maker.currentAddress()
+    );
+  }
+
+  const connectMetamask = async () => {
+    try {
+      const networkId = maker.service('web3').networkId();
+
+      const browserProvider = await checkEthereumProvider();
+
+      if (browserProvider.networkId !== networkId)
+        throw new Error(
+          'browser ethereum provider and URL network param do not match.'
+        );
+
+      if (!isConnectedToProvider(browserProvider))
+        await maker.addAccount({
+          type: 'browser'
+        });
+
+      const connectedAddress = maker.currentAddress();
+
+      return connectedAddress;
+    } catch (err) {
+      window.alert(err.toString());
+    }
+  };
+
+  return {
+    maker,
+    authenticated,
+    isConnectedToProvider,
+    connectMetamask,
+    account
+  };
 }
 
 export default useMaker;

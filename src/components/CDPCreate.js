@@ -78,7 +78,7 @@ function reducer(state, action) {
 }
 
 const CDPCreateHeader = ({ onClose }) => {
-  const { maker } = useMaker();
+  const { account } = useMaker();
   return (
     <Flex justifyContent="flex-end" alignItems="center" mr="xl" mb="m">
       <Grid
@@ -88,8 +88,8 @@ const CDPCreateHeader = ({ onClose }) => {
       >
         <Box width="auto">
           <WalletSelection
-            address={maker.currentAddress()}
-            currentAccount={maker.currentAccount()}
+            address={account.address}
+            currentAccount={account}
             textColor="steel"
             t="textM"
           />

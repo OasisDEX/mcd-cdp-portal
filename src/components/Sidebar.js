@@ -1,17 +1,18 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
-import useMaker from 'hooks/useMaker';
 
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import { getColor } from 'styles/theme';
 import SidebarFeeds from './SidebarFeeds';
 import SidebarSystem from './SidebarSystem';
 import AccountConnect from './SidebarAccountConnect';
 import config from 'references/config';
 import WalletSelection from 'components/WalletSelection';
+import useMaker from 'hooks/useMaker';
+
 const { networkDisplayNames } = config;
 
 const Section = styled.section`
@@ -63,11 +64,11 @@ function NetworkSection({ networkId }) {
   );
 }
 
-function AccountSection({ address = null, currentAccount } = {}) {
+function AccountSection({ currentAccount }) {
   return (
     <VerticallyPaddedSection>
-      {address ? (
-        <WalletSelection address={address} currentAccount={currentAccount} />
+      {currentAccount ? (
+        <WalletSelection currentAccount={currentAccount} />
       ) : (
         <Flex alignItems="center">
           <AccountConnect />
@@ -78,13 +79,12 @@ function AccountSection({ address = null, currentAccount } = {}) {
 }
 
 function Sidebar({ feeds, system, networkId }) {
-  const { maker } = useMaker();
+  const { account } = useMaker();
+
+  // if we want to change the sidebar color when connected vs. read-only mode.
   return (
-    <Fragment>
-      <AccountSection
-        address={maker.currentAddress()}
-        currentAccount={maker.currentAccount()}
-      />
+    <Box bg={account ? 'white' : 'white'}>
+      <AccountSection address={account.address} currentAccount={account} />
       <NetworkSection networkId={networkId} />
       <Section>
         <SidebarFeeds feeds={feeds} />
@@ -92,7 +92,7 @@ function Sidebar({ feeds, system, networkId }) {
       <Section>
         <SidebarSystem system={system} />
       </Section>
-    </Fragment>
+    </Box>
   );
 }
 

@@ -32,7 +32,6 @@
     "mixpanel-browser": "^2.26.0",
     "navi": "^0.12.4",
     "prop-types": "^15.7.2",
-    "query-string": "^6.4.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-ga": "^2.5.7",

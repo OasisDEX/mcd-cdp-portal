@@ -111,9 +111,9 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ networkId }) => {
-  const { maker } = useMaker();
+const MobileNav = ({ networkId, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
+  const { account } = useMaker();
   const { url } = useCurrentRoute();
 
   return (
@@ -123,12 +123,16 @@ const MobileNav = ({ networkId }) => {
       </Link>
 
       <CDPDropdown>
-        <CDPList currentPath={url.pathname} currentQuery={url.search} />
+        <CDPList
+          currentPath={url.pathname}
+          currentQuery={url.search}
+          viewedAddress={viewedAddress}
+        />
       </CDPDropdown>
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
       <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-        <Sidebar {...{ networkId, address: maker.currentAddress() }} />
+        <Sidebar {...{ networkId, connectedAddress: account.address }} />
       </SidebarDrawer>
     </Fragment>
   );

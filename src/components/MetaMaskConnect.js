@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { useNavigation } from 'react-navi';
 import { Button, Flex } from '@makerdao/ui-components-core';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
-import { mixpanelIdentify } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
 
 // hack to get around button padding for now
@@ -15,29 +14,8 @@ const MMLogo = styled(MetaMaskLogo)`
   margin-bottom: -5px;
 `;
 
-async function checkEthereumProvider() {
-  return new Promise(async (res, rej) => {
-    if (typeof window.ethereum !== 'undefined') {
-      await window.ethereum.enable();
-      const { selectedAddress, networkVersion } = window.ethereum;
-      res({
-        networkId: parseInt(networkVersion, 10),
-        address: selectedAddress
-      });
-    } else rej('No web3 provider detected');
-  });
-}
-
-function makerIsAlreadyConnected(maker, provider) {
-  return (
-    maker.service('accounts').hasAccount() &&
-    !!provider.address &&
-    provider.address === maker.currentAddress()
-  );
-}
-
 export default function MetaMaskConnect() {
-  const { maker, authenticated: makerAuthenticated } = useMaker();
+  const { authenticated: makerAuthenticated, connectMetamask } = useMaker();
   const navigation = useNavigation();
 
   return (
@@ -46,41 +24,20 @@ export default function MetaMaskConnect() {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        try {
-          const browserProvider = await checkEthereumProvider();
-          const connectedNetworkId = maker.service('web3').networkId();
+        const connectedAddress = await connectMetamask();
 
-          if (browserProvider.networkId !== connectedNetworkId)
-            throw new Error(
-              'browser ethereum provider and URL network param do not match.'
-            );
+        const {
+          network,
+          testchainId
+        } = (await navigation.getRoute()).url.query;
 
-          if (!makerIsAlreadyConnected(maker, browserProvider))
-            await maker.addAccount({
-              type: 'browser'
-            });
-
-          const connectedAddress = maker.currentAddress();
-
-          mixpanelIdentify(connectedAddress, 'metamask');
-
-          const {
-            network,
-            testchainId,
-            address: urlParamAddress
-          } = (await navigation.getRoute()).url.query;
-
-          const addressToView = connectedAddress || urlParamAddress;
-          navigation.navigate({
-            pathname: '/overview/',
-            search:
-              testchainId !== undefined
-                ? `?testchainId=${testchainId}&address=${addressToView}`
-                : `?network=${network}&address=${addressToView}`
-          });
-        } catch (err) {
-          window.alert(err.toString());
-        }
+        navigation.navigate({
+          pathname: `owner/${connectedAddress}`,
+          search:
+            testchainId !== undefined
+              ? `?testchainId=${testchainId}`
+              : `?network=${network}`
+        });
       }}
     >
       <Flex alignItems="center">

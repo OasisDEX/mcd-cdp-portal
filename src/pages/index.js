@@ -2,6 +2,7 @@ import React from 'react';
 import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
+import { Box } from '@makerdao/ui-components-core';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
@@ -36,7 +37,7 @@ const { networkNames, defaultNetwork } = config;
 
 const withDefaultLayout = route =>
   withView(async request => {
-    const { network } = request.query;
+    const { network, viewedAddress } = request.query;
     const { addresses, rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
     const networkId = networkNameToId(network);
@@ -46,8 +47,18 @@ const withDefaultLayout = route =>
           <RouteEffects addresses={addresses} network={network}>
             <AwaitMakerAuthentication>
               <PageLayout
-                mobileNav={<MobileNav networkId={networkId} />}
-                navbar={<Navbar />}
+                mobileNav={
+                  <MobileNav
+                    networkId={networkId}
+                    viewedAddress={viewedAddress}
+                  />
+                }
+                navbar={
+                  <Navbar
+                    connectedAddress={'0x0'}
+                    viewedAddress={viewedAddress}
+                  />
+                }
                 sidebar={<Sidebar networkId={networkId} />}
               >
                 <View />
@@ -57,6 +68,13 @@ const withDefaultLayout = route =>
         </MakerHooksProvider>
       </WatcherProvider>
     );
+    // } catch (errMsg) {
+    //   return (
+    //     <Box m={8}>
+    //       <pre>{errMsg.stack}</pre>
+    //     </Box>
+    //   );
+    // }
   }, route);
 
 const hasNetwork = route =>
@@ -90,22 +108,24 @@ export default hasNetwork(
       };
     }),
 
-    '/overview': withDefaultLayout(
-      route(() => {
+    '/owner/:viewedAddress': withDefaultLayout(
+      route(request => {
+        const { viewedAddress } = request.params;
+
         return {
           title: 'Overview',
-          view: <Overview />
+          view: <Overview viewedAddress={viewedAddress} />
         };
       })
     ),
 
-    '/cdp/:type': withDefaultLayout(
+    '/:cdpId': withDefaultLayout(
       route(request => {
-        const cdpTypeSlug = request.params.type;
+        const { cdpId } = request.params;
 
         return {
           title: 'CDP',
-          view: <CDPPage cdpTypeSlug={cdpTypeSlug} />
+          view: <CDPPage cdpId={cdpId} />
         };
       })
     )
@@ -169,7 +189,6 @@ function WatcherRouteEffects({ addresses, children }) {
     if (!addresses) return;
     // all bets are off wrt what contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    console.log('tap');
     // do our best to attach state listeners to this new network
     watcher.tap(() => {
       return [

@@ -1,23 +1,31 @@
-import React, { createContext } from 'react';
+import React, { createContext, useState } from 'react';
+import { mixpanelIdentify } from 'utils/analytics';
 import { instantiateMaker } from '../maker';
 import store from 'store';
 
 export const MakerObjectContext = createContext();
 
 function MakerHooksProvider({ children, rpcUrl, addresses }) {
-  const [maker, setMaker] = React.useState(null);
+  const [account, setAccount] = useState(null);
+  const [maker, setMaker] = useState(null);
 
   React.useEffect(() => {
     if (!rpcUrl || !addresses) return;
     instantiateMaker({ rpcUrl, addresses }).then(maker => {
-      store.dispatch({ type: 'addresses/set', payload: { addresses } });
       setMaker(maker);
+
+      maker.on('accounts/CHANGE', eventObj => {
+        const { account } = eventObj.payload;
+        mixpanelIdentify(account, 'metamask');
+        setAccount(account);
+      });
+
+      store.dispatch({ type: 'addresses/set', payload: { addresses } });
     });
-    // NOTE: returning a function here would be a good way to remove stale dai.js event listeners
   }, [rpcUrl, addresses]);
 
   return (
-    <MakerObjectContext.Provider value={maker}>
+    <MakerObjectContext.Provider value={{ maker, account }}>
       {children}
     </MakerObjectContext.Provider>
   );

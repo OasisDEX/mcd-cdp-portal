@@ -61,11 +61,11 @@ const onConfirm = async (maker, address, path, closeModal, navigation) => {
     address: urlParamAddress
   } = (await navigation.getRoute()).url.query;
 
-  const addressToView = urlParamAddress || connectedAddress;
+  const addressToView = connectedAddress;
 
   navigation.navigate({
-    pathname: '/overview/',
-    search: `?network=${network}&address=${addressToView}`
+    pathname: `owner/${addressToView}`,
+    search: `?network=${network}`
   });
   closeModal();
 };
