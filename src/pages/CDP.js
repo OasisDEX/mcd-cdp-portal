@@ -181,43 +181,39 @@ function CDPView({ cdpId, getIlk }) {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
       const ilkData = getIlk(cdp.ilk);
-      const debt = await cdp.getDebtValue();
-      const collateral = await cdp.getCollateralValue();
+      const [
+        debt,
+        collateral,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        lockedCollateral,
+        freeCollateral
+      ] = await Promise.all([
+        cdp.getDebtValue(),
+        cdp.getCollateralValue(),
+        cdp.getCollateralizationRatio(),
+        cdp.getLiquidationPrice(),
+        cdp.daiAvailable(),
+        cdp.getLockedCollateral(),
+        cdp.getFreeCollateral()
+      ]);
       setCDP({
-        ...cdp,
+        cdp,
         ilkData,
         debt,
-        collateral
+        collateral,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        lockedCollateral,
+        freeCollateral
       });
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdp) return <LoadingLayout background={getColor('backgroundGrey')} />;
-
-  const collateralInt = cdp.collateral.toNumber();
-  const collateralDenomination = cdp.ilkData.gem;
-  const debtInt = cdp.debt.toNumber();
-  const collateralPrice = getUsdPrice(cdp.ilkData);
-  const {
-    liquidationPrice,
-    collateralizationRatio,
-    daiAvailable
-  } = calcCDPParams({
-    ilkData: cdp.ilkData,
-    gemsToLock: collateralInt,
-    daiToDraw: debtInt
-  });
-  const stabilityFee = parseFloat(cdp.ilkData.rate) * 100 + '%';
-  const {
-    locked: lockedCollateral,
-    free: freeCollateral
-  } = getLockedAndFreeCollateral(cdp);
-  const generateAmount = parseFloat(daiAvailable) - debtInt;
-  // calls that will come from the mcd-plugin once functionality is implemented.
-  // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
-  // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
-
-  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
+  if (!cdp) return <LoadingLayout />;
+  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF'
   return (
     <PageContentLayout>
       <Box>
