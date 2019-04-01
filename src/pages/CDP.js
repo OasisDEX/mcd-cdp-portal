@@ -184,6 +184,7 @@ function CDPView({ cdpId, getIlk }) {
       const [
         debt,
         collateral,
+        collateralPrice,
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
@@ -192,6 +193,7 @@ function CDPView({ cdpId, getIlk }) {
       ] = await Promise.all([
         cdp.getDebtValue(),
         cdp.getCollateralValue(),
+        cdp._cdpType.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
         cdp.daiAvailable(),
@@ -203,6 +205,7 @@ function CDPView({ cdpId, getIlk }) {
         ilkData,
         debt,
         collateral,
+        collateralPrice,
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
