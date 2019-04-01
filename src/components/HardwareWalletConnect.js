@@ -26,8 +26,7 @@ const StyledTrezorLogo = styled(TrezorLogo)`
 const TREZOR_PATH = "44'/60'/0'/0/0";
 const DEFAULT_ACCOUNTS_PER_PAGE = 25;
 
-const onConfirm = async (maker, address, closeModal, accType) => {
-  maker.useAccountWithAddress(address);
+const onConfirm = async (maker, closeModal, accType) => {
   const connectedAddress = maker.currentAddress();
 
   mixpanelIdentify(connectedAddress, accType);
@@ -51,38 +50,39 @@ const renderAccountsSelection = ({
   show,
   reset
 }) => {
-  maker.addAccount({
-    type,
-    path,
-    accountsOffset,
-    accountsLength,
-    choose: async (addressList, pickAccount) => {
-      show({
-        modalType: type,
-        modalProps: {
-          addressList,
-          closeModal: reset,
-          fetchAccounts: offset => {
-            return new Promise(resolve => {
-              maker.addAccount({
-                type,
-                path,
-                accountsOffset: offset,
-                accountsLength,
-                choose: addresses => {
-                  resolve(addresses);
-                }
+  maker
+    .addAccount({
+      type,
+      path,
+      accountsOffset,
+      accountsLength,
+      choose: (addressList, pickAccount) => {
+        show({
+          modalType: type,
+          modalProps: {
+            addressList,
+            closeModal: reset,
+            fetchAccounts: offset => {
+              return new Promise(resolve => {
+                maker.addAccount({
+                  type,
+                  path,
+                  accountsOffset: offset,
+                  accountsLength,
+                  choose: addresses => {
+                    resolve(addresses);
+                  }
+                });
               });
-            });
-          },
-          confirmAddress: address => {
-            pickAccount(null, address);
-            setTimeout(() => onConfirm(maker, address, reset, type), 0);
+            },
+            confirmAddress: address => {
+              pickAccount(null, address);
+            }
           }
-        }
-      });
-    }
-  });
+        });
+      }
+    })
+    .then(() => onConfirm(maker, reset, type));
 };
 
 export default function HardwareWalletConnect({ type }) {
@@ -96,35 +96,33 @@ export default function HardwareWalletConnect({ type }) {
         variant="secondary-outline"
         width="225px"
         disabled={!makerAuthenticated}
-        onClick={() => {
-          if (isTrezor) {
-            renderAccountsSelection({
-              maker,
-              type,
-              path: TREZOR_PATH,
-              accountsOffset: 0,
-              accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-              show,
-              reset
-            });
-          } else {
-            show({
-              modalType: 'ledgertype',
-              modalProps: {
-                renderByPath: path =>
-                  renderAccountsSelection({
-                    maker,
-                    type,
-                    path,
-                    accountsOffset: 0,
-                    accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
-                    show,
-                    reset
-                  })
-              }
-            });
-          }
-        }}
+        onClick={() =>
+          isTrezor
+            ? renderAccountsSelection({
+                maker,
+                type,
+                path: TREZOR_PATH,
+                accountsOffset: 0,
+                accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
+                show,
+                reset
+              })
+            : show({
+                modalType: 'ledgertype',
+                modalProps: {
+                  renderByPath: path =>
+                    renderAccountsSelection({
+                      maker,
+                      type,
+                      path,
+                      accountsOffset: 0,
+                      accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
+                      show,
+                      reset
+                    })
+                }
+              })
+        }
       >
         <Flex alignItems="center">
           {isTrezor ? <StyledTrezorLogo /> : <StyledLedgerLogo />}

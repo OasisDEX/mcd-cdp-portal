@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Button, Grid, Flex, Box } from '@makerdao/ui-components-core';
+import { Button, Grid, Flex, Text, Box } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
 import Loader from './Loader';
 import { addMkrAndEthBalance } from '../utils/ethereum';
@@ -13,11 +13,6 @@ import {
   CopyBtnIcon
 } from './AddressTable';
 
-export const StyledTop = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
 export const StyledTitle = styled.div`
   font-weight: bold;
   color: #212536;
@@ -28,11 +23,10 @@ export const StyledTitle = styled.div`
 export const StyledBlurb = styled.div`
   line-height: 22px;
   font-size: 17px;
-  margin: 22px 0px 16px 0px;
 `;
 
-const computeAddressBalances = async addresses =>
-  await Promise.all(
+const computeAddressBalances = addresses =>
+  Promise.all(
     addresses.map(address =>
       addMkrAndEthBalance({
         address
@@ -84,18 +78,23 @@ function HardwareWalletModal({
   return !renderedAddresses.length ? (
     <Loader size={50} />
   ) : (
-    <>
-      <Flex justifyContent="flex-end">
-        <Box onClick={closeModal}>Close</Box>
-      </Flex>
-      <StyledTop>
-        <StyledTitle>Select address</StyledTitle>
-      </StyledTop>
-      <StyledBlurb style={{ textAlign: 'center', marginTop: '14px' }}>
-        Please select which address you would like to open
-      </StyledBlurb>
+    <Grid gridRowGap="xs">
+      <Box>
+        <Flex justifyContent="flex-end">
+          <Box onClick={closeModal}>Close</Box>
+        </Flex>
+        <Flex justifyContent="center">
+          <StyledTitle>Select address</StyledTitle>
+        </Flex>
+      </Box>
+      <Box m="m" textAlign="center">
+        <Text fontSize="1.8rem">
+          Please select which address you would like to open
+        </Text>
+      </Box>
+
       <Grid
-        gridRowGap="xs"
+        width="100%"
         gridColumnGap="s"
         gridTemplateColumns={['1fr', 'auto auto']}
         justifySelf={['stretch', 'center']}
@@ -148,6 +147,7 @@ function HardwareWalletModal({
         </Table>
       </AddressContainer>
       <Grid
+        width="100%"
         gridRowGap="xs"
         gridColumnGap="s"
         gridTemplateColumns={['1fr', 'auto auto']}
@@ -163,7 +163,7 @@ function HardwareWalletModal({
           Confirm wallet
         </Button>
       </Grid>
-    </>
+    </Grid>
   );
 }
 
