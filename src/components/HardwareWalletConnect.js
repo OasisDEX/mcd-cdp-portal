@@ -82,7 +82,8 @@ const renderAccountsSelection = ({
         });
       }
     })
-    .then(() => onConfirm(maker, reset, type));
+    .then(() => onConfirm(maker, reset, type))
+    .catch(err => console.error('Failed to add account', err));
 };
 
 export default function HardwareWalletConnect({ type }) {

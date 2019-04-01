@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, Grid, Flex, Text, Box } from '@makerdao/ui-components-core';
-import styled from 'styled-components';
 import Loader from './Loader';
 import { addMkrAndEthBalance } from '../utils/ethereum';
 import { cutMiddle, copyToClipboard } from '../utils/ui';
@@ -12,18 +11,6 @@ import {
   CopyBtn,
   CopyBtnIcon
 } from './AddressTable';
-
-export const StyledTitle = styled.div`
-  font-weight: bold;
-  color: #212536;
-  line-height: 22px;
-  font-size: 28px;
-`;
-
-export const StyledBlurb = styled.div`
-  line-height: 22px;
-  font-size: 17px;
-`;
 
 const computeAddressBalances = addresses =>
   Promise.all(
@@ -81,11 +68,13 @@ function HardwareWalletModal({
     <Grid gridRowGap="xs">
       <Box>
         <Flex justifyContent="flex-end">
-          <Box onClick={closeModal}>Close</Box>
+          <Text onClick={closeModal}>Close</Text>
         </Flex>
-        <Flex justifyContent="center">
-          <StyledTitle>Select address</StyledTitle>
-        </Flex>
+        <Box textAlign="center">
+          <Text fontWeight="bold" fontSize="3rem">
+            Select address
+          </Text>
+        </Box>
       </Box>
       <Box m="m" textAlign="center">
         <Text fontSize="1.8rem">
