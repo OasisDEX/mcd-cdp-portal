@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Table, Flex, Checkbox } from '@makerdao/ui-components-core';
+import { Box, Grid, Table, Flex, Radio } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { connect } from 'react-redux';
@@ -55,9 +55,9 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
     >
       <tr>
         <td>
-          <Checkbox
+          <Radio
             checked={checked}
-            onChange={() =>
+            onClick={() =>
               checked
                 ? dispatch({
                     type: 'reset-ilk'
