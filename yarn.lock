@@ -998,14 +998,14 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.13.1.tgz#b5ec49463cef213492b2156c5a58e5b85a7e7872"
-  integrity sha512-MZl1wjYujwambXbHHPNwUjJ9KwfoQRhuG6oriA0N3Y49hs2sEDyUxTqev9RIRty/7/LWkBKVD0leh33Y4j9oMg==
+"@makerdao/dai@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.14.0.tgz#a8918557006f934c79a57e5b28303f8ef6e34f11"
+  integrity sha512-Fdeo5q32wZhTZtQjFe45X7b02pjvWse3k32iExQHcIVVLDNMAGsRgy54+9DetwVaBapMziQYv/x0pt8s8l7qcQ==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
-    "@makerdao/services-core" "^0.9.4"
+    "@makerdao/services-core" "^0.9.5"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
     debug "^3.1.0"
@@ -1040,7 +1040,7 @@
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
-"@makerdao/services-core@^0.9.4", "@makerdao/services-core@^0.9.5":
+"@makerdao/services-core@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
   integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
+import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
+import { calcCDPParams } from 'utils/ui';
 import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
+import { getIlkData } from 'reducers/network/cdpTypes';
 
 function CardTitle({ title }) {
   return (
@@ -16,7 +20,8 @@ function CardTitle({ title }) {
 
 const TopContainerRow = ({ props }) => {
   const [title, value] = props;
-  const [titleText, titleCurrency] = title.split(' ');
+  const [titleText, titleCurrency] =
+    typeof title === 'string' ? title.split(' ') : ['n/a', 'n/a'];
   return (
     <Flex flexWrap="wrap" alignItems="flex-end">
       <TextBlock t="headingL" fontWeight="medium">
@@ -34,7 +39,8 @@ const TopContainerRow = ({ props }) => {
 
 const InfoContainerRow = ({ props }) => {
   const [title, value] = props;
-  const [rowInfoTitle, ...rowInfoLabel] = title.split(/( \()/g);
+  const [rowInfoTitle, ...rowInfoLabel] =
+    typeof title === 'string' ? title.split(/( \()/g) : ['n/a', 'n/a'];
   return (
     <Flex py="xs" flexWrap="wrap">
       <Flex flexGrow="1">
@@ -114,95 +120,163 @@ const CdpViewCard = ({ title, rows, isAction }) => {
   );
 };
 
-function CDPView({ cdpId }) {
+function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
-  const [cdpState, setCDPState] = useState(null);
+  const [cdp, setCDP] = useState(null);
 
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(cdpId);
-      setCDPState(cdp);
+      const cdp = await cdpManager.getCdp(parseInt(cdpId));
+      const ilkData = getIlk(cdp.ilk);
+      const debt = await cdp.getDebtValue();
+      const collateral = await cdp.getCollateralValue();
+      setCDP({
+        ...cdp,
+        ilkData,
+        debt,
+        collateral
+      });
     })();
   }, [cdpId, maker]);
 
-  console.log('CDP state to be rendered on the page:', cdpState);
-  return (
-    <PageContentLayout>
-      <Box>
-        <Title color="black2">
-          {lang.cdp} {cdpId}
-        </Title>
-      </Box>
-      <Grid
-        py="m"
-        gridColumnGap="l"
-        gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
-      >
-        <CdpViewCard
-          title={lang.cdp_page.liquidation_price}
-          rows={[
-            ['114.92 USD', '(ETH/USD)'],
-            [`${lang.cdp_page.current_price_info} (ETH/USD)`, '249.06 USD'],
-            [lang.cdp_page.liquidation_penalty, '15%']
-          ]}
-          isAction={false}
-        />
+  // console.log('CDP state to be rendered on the page:', cdp);
+  let collateralInt,
+    collateralDenomination,
+    collateralPrice,
+    collateralizationRatio,
+    liquidationPrice,
+    stabilityFee,
+    lockedCollateral,
+    freeCollateral,
+    debtInt,
+    daiAvailable,
+    generateAmount;
+  if (cdp) {
+    collateralInt = cdp.collateral.toNumber();
+    collateralDenomination = cdp.ilkData.gem;
+    debtInt = cdp.debt.toNumber();
+    collateralPrice = cdp.ilkData.feedValueUSD.toNumber();
+    ({ liquidationPrice, collateralizationRatio, daiAvailable } = calcCDPParams(
+      {
+        ilkData: cdp.ilkData,
+        gemsToLock: collateralInt,
+        daiToDraw: debtInt
+      }
+    ));
+    stabilityFee = parseFloat(cdp.ilkData.rate) * 100 + '%';
+    lockedCollateral =
+      (debtInt * (parseInt(cdp.ilkData.liquidationRatio) / 100)) /
+      collateralPrice;
+    freeCollateral = collateralInt - lockedCollateral;
+    generateAmount = parseFloat(daiAvailable) - debtInt;
+    // calls that will come from the mcd-plugin once functionality is implemented.
+    // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
+    // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
+  }
+  if ([cdp].includes(null)) {
+    return <LoadingLayout />;
+  } else {
+    return (
+      <PageContentLayout>
+        <Box>
+          <Title color="black2">
+            {lang.cdp} {cdpId}
+          </Title>
+        </Box>
+        <Grid
+          py="m"
+          gridColumnGap="l"
+          gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
+        >
+          <CdpViewCard
+            title={lang.cdp_page.liquidation_price}
+            rows={[
+              [liquidationPrice, `(${cdp.ilk}/USD)`],
+              [
+                `${lang.cdp_page.current_price_info} (ETH/USD)`,
+                collateralPrice.toFixed(2)
+              ],
+              [
+                lang.cdp_page.liquidation_penalty,
+                cdp.ilkData.liquidationPenalty + '%'
+              ]
+            ]}
+            isAction={false}
+          />
 
-        <CdpViewCard
-          title={lang.cdp_page.collateralization_ratio}
-          rows={[
-            ['171.65 %', '\u00A0'],
-            [lang.cdp_page.minimum_ratio, '150.00%'],
-            [lang.cdp_page.stability_fee, '2.500%']
-          ]}
-          isAction={false}
-        />
+          <CdpViewCard
+            title={lang.cdp_page.collateralization_ratio}
+            rows={[
+              [
+                collateralizationRatio &&
+                  parseFloat(collateralizationRatio).toFixed(2) + '%',
+                '\u00A0'
+              ],
+              [
+                lang.cdp_page.minimum_ratio,
+                cdp.ilkData.liquidationRatio + '.00%'
+              ],
+              [lang.cdp_page.stability_fee, stabilityFee]
+            ]}
+            isAction={false}
+          />
 
-        <CdpViewCard
-          title={`${cdpId} ${lang.cdp_page.collateral}`}
-          rows={[
-            ['5.5 ETH', '4,312.06 USD'],
-            [
-              lang.cdp_page.locked,
-              '3.00 ETH',
-              '2,352.03',
-              <ActionButton name={lang.actions.deposit} />
-            ],
-            [
-              lang.cdp_page.able_withdraw,
-              '2.50 ETH',
-              '1,960.03 USD',
-              <ActionButton name={lang.actions.withdraw} />
-            ]
-          ]}
-          isAction={true}
-        />
+          <CdpViewCard
+            title={`${cdpId} ${lang.cdp_page.collateral}`}
+            rows={[
+              [
+                cdp.collateral.toString(),
+                (collateralPrice * collateralInt).toFixed(2) + ' USD'
+              ],
+              [
+                lang.cdp_page.locked,
+                lockedCollateral && lockedCollateral.toFixed(2) + ` ${cdp.ilk}`,
+                `${(lockedCollateral * collateralPrice).toFixed(2)} USD`,
+                <ActionButton name={lang.actions.deposit} />
+              ],
+              [
+                lang.cdp_page.able_withdraw,
+                freeCollateral &&
+                  freeCollateral.toFixed(2) + ` ${collateralDenomination}`,
+                (freeCollateral * collateralPrice).toFixed(2) + ' USD',
+                <ActionButton name={lang.actions.withdraw} />
+              ]
+            ]}
+            isAction={true}
+          />
 
-        <CdpViewCard
-          title={`DAI ${lang.cdp_page.position}`}
-          rows={[
-            ['10,001.01 DAI', lang.cdp_page.outstanding_debt],
-            [
-              `DAI ${lang.cdp_page.wallet_balance}`,
-              '3.00 DAI',
-              '3.00 USD',
-              <ActionButton name={lang.actions.pay_back} />
-            ],
-            [
-              lang.cdp_page.able_generate,
-              '4,002.08 DAI',
-              '4,002.03 USD',
-              <ActionButton name={lang.actions.generate} />
-            ]
-          ]}
-          isAction={true}
-        />
-      </Grid>
-    </PageContentLayout>
-  );
+          <CdpViewCard
+            title={`DAI ${lang.cdp_page.position}`}
+            rows={[
+              [cdp.debt.toString(), lang.cdp_page.outstanding_debt],
+              [
+                `DAI ${lang.cdp_page.wallet_balance}`,
+                `${debtInt && debtInt.toFixed(2)} DAI`,
+                `${debtInt && debtInt.toFixed(2)} USD`,
+                <ActionButton name={lang.actions.pay_back} />
+              ],
+              [
+                lang.cdp_page.able_generate,
+                `${generateAmount && generateAmount.toFixed(2)} DAI`,
+                `${generateAmount && generateAmount.toFixed(2)} USD`,
+                <ActionButton name={lang.actions.generate} />
+              ]
+            ]}
+            isAction={true}
+          />
+        </Grid>
+      </PageContentLayout>
+    );
+  }
 }
 
-export default hot(CDPView);
+function mapStateToProps(state) {
+  return {
+    getIlk: key => getIlkData(state, key)
+  };
+}
+
+export default hot(connect(mapStateToProps)(CDPView));
