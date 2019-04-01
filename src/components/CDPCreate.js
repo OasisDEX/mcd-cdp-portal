@@ -88,7 +88,6 @@ const CDPCreateHeader = ({ onClose }) => {
       >
         <Box width="auto">
           <WalletSelection
-            address={account.address}
             currentAccount={account}
             textColor="steel"
             t="textM"

@@ -84,7 +84,7 @@ function Sidebar({ feeds, system, networkId }) {
   // if we want to change the sidebar color when connected vs. read-only mode.
   return (
     <Box bg={account ? 'white' : 'white'}>
-      <AccountSection address={account.address} currentAccount={account} />
+      <AccountSection currentAccount={account} />
       <NetworkSection networkId={networkId} />
       <Section>
         <SidebarFeeds feeds={feeds} />

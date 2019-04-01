@@ -3,36 +3,18 @@ import store from './store';
 
 import { batchActions } from 'utils/redux';
 
-import config from 'references/config.json';
-import addresses from 'references/addresses';
-
-const { defaultNetwork, rpcUrls } = config;
-
-const defaultAddresses = addresses[defaultNetwork];
-
-const watcher = createWatcher([], {
-  rpcUrl: rpcUrls[defaultNetwork],
-  multicallAddress: defaultAddresses.MULTICALL
-});
-
-window.watcher = watcher;
-
-watcher.batch().subscribe(newStateEvents => {
-  store.dispatch(batchActions(newStateEvents));
-});
-
-export function getWatcher() {
-  return watcher;
-}
-
-export async function recreateWatcher({ rpcUrl, addresses }) {
-  if (addresses.MULTICALL === undefined)
-    throw new Error('No multicall address found');
-
-  watcher.reCreate([], {
+export function instantiateWatcher({ rpcUrl, multicallAddress }) {
+  const watcher = createWatcher([], {
     rpcUrl,
-    multicallAddress: addresses.MULTICALL
+    multicallAddress
   });
+
+  watcher.batch().subscribe(newStateEvents => {
+    store.dispatch(batchActions(newStateEvents));
+  });
+
+  window.watcher = watcher;
+  return watcher;
 }
 
 // watcher
@@ -42,5 +24,3 @@ export async function recreateWatcher({ rpcUrl, addresses }) {
 //   .onResolution(() => {
 //     store.dispatch({ type: 'NETWORK_PROBLEMS_RESOLVED' });
 //   });
-
-export default watcher;

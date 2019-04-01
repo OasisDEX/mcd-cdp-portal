@@ -132,7 +132,9 @@ const MobileNav = ({ networkId, viewedAddress }) => {
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
       <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-        <Sidebar {...{ networkId, connectedAddress: account.address }} />
+        <Sidebar
+          {...{ networkId, connectedAddress: account ? account.address : null }}
+        />
       </SidebarDrawer>
     </Fragment>
   );

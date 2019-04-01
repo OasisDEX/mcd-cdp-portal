@@ -2,7 +2,6 @@ import React from 'react';
 import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
-import { Box } from '@makerdao/ui-components-core';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
@@ -10,7 +9,9 @@ import Landing from './Landing';
 import Overview from './Overview';
 import CDPPage from './CDP';
 
+import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
+import { ModalProvider } from 'providers/ModalProvider';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
 import WatcherProvider from 'providers/WatcherProvider';
 
@@ -36,59 +37,54 @@ import store from '../store';
 const { networkNames, defaultNetwork } = config;
 
 const withDefaultLayout = route =>
-  withView(async request => {
-    const { network, viewedAddress } = request.query;
-    const { addresses, rpcUrl } = await getOrFetchNetworkDetails(request.query);
+  hasNetwork(
+    withView(async request => {
+      const { network } = request.query;
+      const { viewedAddress } = request.params;
+      const { addresses, rpcUrl } = await getOrFetchNetworkDetails(
+        request.query
+      );
 
-    const networkId = networkNameToId(network);
-    return (
-      <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
-        <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
-          <RouteEffects addresses={addresses} network={network}>
-            <AwaitMakerAuthentication>
-              <PageLayout
-                mobileNav={
-                  <MobileNav
-                    networkId={networkId}
-                    viewedAddress={viewedAddress}
-                  />
-                }
-                navbar={
-                  <Navbar
-                    connectedAddress={'0x0'}
-                    viewedAddress={viewedAddress}
-                  />
-                }
-                sidebar={<Sidebar networkId={networkId} />}
-              >
-                <View />
-              </PageLayout>
-            </AwaitMakerAuthentication>
-          </RouteEffects>
-        </MakerHooksProvider>
-      </WatcherProvider>
-    );
-    // } catch (errMsg) {
-    //   return (
-    //     <Box m={8}>
-    //       <pre>{errMsg.stack}</pre>
-    //     </Box>
-    //   );
-    // }
-  }, route);
+      const networkId = networkNameToId(network);
+      return (
+        <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
+          <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+            <RouteEffects addresses={addresses} network={network}>
+              <AwaitMakerAuthentication>
+                <ModalProvider modals={modals} templates={templates}>
+                  <PageLayout
+                    mobileNav={
+                      <MobileNav
+                        networkId={networkId}
+                        viewedAddress={viewedAddress}
+                      />
+                    }
+                    navbar={<Navbar viewedAddress={viewedAddress} />}
+                    sidebar={<Sidebar networkId={networkId} />}
+                  >
+                    <View />
+                  </PageLayout>
+                </ModalProvider>
+              </AwaitMakerAuthentication>
+            </RouteEffects>
+          </MakerHooksProvider>
+        </WatcherProvider>
+      );
+    }, route)
+  );
 
 const hasNetwork = route =>
   map(request => {
     if (networkIsUndefined(request)) {
-      return createDefaultNetworkRedirect(request);
+      return redirect(`./?network=${networkNames[defaultNetwork]}`);
     } else {
       return route;
     }
   });
 
-export default hasNetwork(
-  mount({
-    '/': route(async request => {
+export default mount({
+  '/': hasNetwork(
+    route(async request => {
       const { network } = request.query;
       const { addresses, rpcUrl } = await getOrFetchNetworkDetails(
         request.query
@@ -100,55 +96,46 @@ export default hasNetwork(
           <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
             <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
               <RouteEffects addresses={addresses} network={network}>
-                <Landing />
+                <ModalProvider modals={modals} templates={templates}>
+                  <Landing />
+                </ModalProvider>
               </RouteEffects>
             </MakerHooksProvider>
           </WatcherProvider>
         )
       };
-    }),
+    })
+  ),
 
-    '/owner/:viewedAddress': withDefaultLayout(
-      route(request => {
-        const { viewedAddress } = request.params;
+  '/owner/:viewedAddress': withDefaultLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
 
-        return {
-          title: 'Overview',
-          view: <Overview viewedAddress={viewedAddress} />
-        };
-      })
-    ),
+      return {
+        title: 'Overview',
+        view: <Overview viewedAddress={viewedAddress} />
+      };
+    })
+  ),
 
-    '/:cdpId': withDefaultLayout(
-      route(request => {
-        const { cdpId } = request.params;
+  '/:cdpId': withDefaultLayout(
+    map(request => {
+      const { cdpId } = request.params;
 
-        return {
-          title: 'CDP',
-          view: <CDPPage cdpId={cdpId} />
-        };
-      })
-    )
-  })
-);
+      if (!/^\d+$/.test(cdpId))
+        return route({ view: <div>invalid cdp id</div> });
+
+      return route({
+        title: 'CDP',
+        view: <CDPPage cdpId={cdpId} />
+      });
+    })
+  )
+});
 
 function networkIsUndefined(request) {
-  return (
-    request.query.network === undefined &&
-    request.query.testchainId === undefined
-  );
-}
-
-function createDefaultNetworkRedirect(request) {
-  const { address } = request.query;
-  const { mountpath } = request;
-  const addressQuery = address === undefined ? '?' : `?address=${address}&`;
-
-  return redirect(
-    `${mountpath === '/' ? '' : mountpath}/${addressQuery}network=${
-      networkNames[defaultNetwork]
-    }`
-  );
+  const { query } = request;
+  return query.network === undefined && query.testchainId === undefined;
 }
 
 function RouteEffects({ children, addresses, network }) {
@@ -185,10 +172,12 @@ function RouteEffects({ children, addresses, network }) {
 
 function WatcherRouteEffects({ addresses, children }) {
   const { watcher } = useWatcher();
+
   React.useEffect(() => {
-    if (!addresses) return;
+    if (!addresses || !watcher) return;
     // all bets are off wrt what contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+    watcher.start();
     // do our best to attach state listeners to this new network
     watcher.tap(() => {
       return [
@@ -203,7 +192,7 @@ function WatcherRouteEffects({ addresses, children }) {
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
-  }, [addresses]);
+  }, [addresses, watcher]);
 
   return children;
 }

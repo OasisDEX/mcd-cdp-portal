@@ -12,9 +12,6 @@ import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
 
-import { ModalProvider } from 'providers/ModalProvider';
-import modals, { templates } from 'components/Modals';
-
 const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
 
 const Body = styled.div`
@@ -50,13 +47,13 @@ function App() {
 
   return (
     <Body>
-      <ErrorBoundary>
-        <NotFoundBoundary render={GenericNotFound}>
+      <NotFoundBoundary render={GenericNotFound}>
+        <ErrorBoundary>
           <Suspense fallback={<LoadingLayout text="Loading..." />}>
             <Router navigation={navigation} />
           </Suspense>
-        </NotFoundBoundary>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </NotFoundBoundary>
     </Body>
   );
 }
@@ -65,9 +62,7 @@ function AppWithContext() {
   return (
     <ThemeProvider theme={theme}>
       <ReduxProvider store={store}>
-        <ModalProvider modals={modals} templates={templates}>
-          <App />
-        </ModalProvider>
+        <App />
       </ReduxProvider>
     </ThemeProvider>
   );

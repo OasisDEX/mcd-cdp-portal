@@ -56,10 +56,7 @@ const onConfirm = async (maker, address, path, closeModal, navigation) => {
 
   mixpanelIdentify(connectedAddress, AccountTypes.LEDGER);
 
-  const {
-    network,
-    address: urlParamAddress
-  } = (await navigation.getRoute()).url.query;
+  const { network } = (await navigation.getRoute()).url.query;
 
   const addressToView = connectedAddress;
 
