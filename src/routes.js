@@ -5,9 +5,9 @@ import { View } from 'react-navi';
 import Navbar from 'components/Navbar';
 import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
-import Landing from './Landing';
-import Overview from './Overview';
-import CDPPage from './CDP';
+import Landing from 'pages/Landing';
+import Overview from 'pages/Overview';
+import CDPPage from 'pages/CDP';
 
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -32,7 +32,7 @@ import { isMissingContractAddress } from 'utils/ethereum';
 import BigNumber from 'bignumber.js';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { USD } from '@makerdao/dai';
-import store from '../store';
+import store from './store';
 
 const { networkNames, defaultNetwork } = config;
 

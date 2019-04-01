@@ -7,7 +7,7 @@ import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
 import store from './store';
 import theme from 'styles/theme';
-import pages from './pages';
+import routes from './routes';
 import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
@@ -27,7 +27,7 @@ const Body = styled.div`
 `;
 
 const navigation = createBrowserNavigation({
-  routes: pages
+  routes
 });
 
 function App() {
