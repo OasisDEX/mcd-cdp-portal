@@ -124,51 +124,46 @@ function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
-  const [cdp, setCDP] = useState(null);
+  const [cdpState, setCDP] = useState(null);
 
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
       const ilkData = getIlk(cdp.ilk);
-      const debt = await cdp.getDebtValue();
-      const collateral = await cdp.getCollateralValue();
+      const [
+        debt,
+        collateral,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        lockedCollateral,
+        freeCollateral
+      ] = await Promise.all([
+        cdp.getDebtValue(),
+        cdp.getCollateralValue(),
+        cdp.getCollateralizationRatio(),
+        cdp.getLiquidationPrice(),
+        cdp.daiAvailable(),
+        cdp.getLockedCollateral(),
+        cdp.getFreeCollateral()
+      ]);
       setCDP({
-        ...cdp,
+        cdp,
         ilkData,
         debt,
-        collateral
+        collateral,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        lockedCollateral,
+        freeCollateral
       });
     })();
   }, [cdpId, getIlk, maker]);
 
   if (!cdp) return <LoadingLayout />;
-
-  const collateralInt = cdp.collateral.toNumber();
-  const collateralDenomination = cdp.ilkData.gem;
-  const debtInt = cdp.debt.toNumber();
-  const collateralPrice = cdp.ilkData.feedSetUSD
-    ? cdp.ilkData.feedValueUSD.toNumber()
-    : 0;
-  const {
-    liquidationPrice,
-    collateralizationRatio,
-    daiAvailable
-  } = calcCDPParams({
-    ilkData: cdp.ilkData,
-    gemsToLock: collateralInt,
-    daiToDraw: debtInt
-  });
-  const stabilityFee = parseFloat(cdp.ilkData.rate) * 100 + '%';
-  const lockedCollateral =
-    (debtInt * (parseInt(cdp.ilkData.liquidationRatio) / 100)) /
-    collateralPrice;
-  const freeCollateral = collateralInt - lockedCollateral;
-  const generateAmount = parseFloat(daiAvailable) - debtInt;
-  // calls that will come from the mcd-plugin once functionality is implemented.
-  // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
-  // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
-
+  
   return (
     <PageContentLayout>
       <Box>
@@ -184,14 +179,16 @@ function CDPView({ cdpId, getIlk }) {
         <CdpViewCard
           title={lang.cdp_page.liquidation_price}
           rows={[
-            [liquidationPrice, `(${cdp.ilk}/USD)`],
+            [cdpState.liquidationPrice, `(${cdpState.ilkData.gem}/USD)`],
             [
-              `${lang.cdp_page.current_price_info} (ETH/USD)`,
-              collateralPrice.toFixed(2)
+              `${lang.cdp_page.current_price_info} (${
+                cdpState.ilkData.gem
+              }/USD)`,
+              cdpState.ilkData.feedValueUSD.toFixed(2) / 100
             ],
             [
               lang.cdp_page.liquidation_penalty,
-              cdp.ilkData.liquidationPenalty + '%'
+              cdpState.ilkData.liquidationPenalty + '%'
             ]
           ]}
           isAction={false}
@@ -201,15 +198,17 @@ function CDPView({ cdpId, getIlk }) {
           title={lang.cdp_page.collateralization_ratio}
           rows={[
             [
-              collateralizationRatio &&
-                parseFloat(collateralizationRatio).toFixed(2) + '%',
+              parseFloat(cdpState.collateralizationRatio).toFixed(2) + '%',
               '\u00A0'
             ],
             [
               lang.cdp_page.minimum_ratio,
-              cdp.ilkData.liquidationRatio + '.00%'
+              cdpState.ilkData.liquidationRatio + '.00%'
             ],
-            [lang.cdp_page.stability_fee, stabilityFee]
+            [
+              lang.cdp_page.stability_fee,
+              parseFloat(cdpState.ilkData.rate) * 100 + '%'
+            ]
           ]}
           isAction={false}
         />
@@ -218,20 +217,30 @@ function CDPView({ cdpId, getIlk }) {
           title={`${cdpId} ${lang.cdp_page.collateral}`}
           rows={[
             [
-              cdp.collateral.toString(),
-              (collateralPrice * collateralInt).toFixed(2) + ' USD'
+              cdpState.collateral.toString(),
+              cdpState.collateral
+                .times(cdpState.ilkData.feedValueUSD)
+                .toFixed(2) /
+                100 +
+                ' USD'
             ],
             [
               lang.cdp_page.locked,
-              lockedCollateral && lockedCollateral.toFixed(2) + ` ${cdp.ilk}`,
-              `${(lockedCollateral * collateralPrice).toFixed(2)} USD`,
+              cdpState.lockedCollateral.toFixed(2) +
+                ` ${cdpState.ilkData.gem}`,
+              `${(
+                cdpState.lockedCollateral *
+                cdpState.ilkData.feedValueUSD.toNumber()
+              ).toFixed(2)} USD`,
               <ActionButton name={lang.actions.deposit} />
             ],
             [
               lang.cdp_page.able_withdraw,
-              freeCollateral &&
-                freeCollateral.toFixed(2) + ` ${collateralDenomination}`,
-              (freeCollateral * collateralPrice).toFixed(2) + ' USD',
+              cdpState.freeCollateral.toFixed(2) + ` ${cdpState.ilkData.gem}`,
+              (
+                cdpState.freeCollateral *
+                cdpState.ilkData.feedValueUSD.toNumber()
+              ).toFixed(2) + ' USD',
               <ActionButton name={lang.actions.withdraw} />
             ]
           ]}
@@ -241,17 +250,17 @@ function CDPView({ cdpId, getIlk }) {
         <CdpViewCard
           title={`DAI ${lang.cdp_page.position}`}
           rows={[
-            [cdp.debt.toString(), lang.cdp_page.outstanding_debt],
+            [cdpState.debt.toString(), lang.cdp_page.outstanding_debt],
             [
               `DAI ${lang.cdp_page.wallet_balance}`,
-              `${debtInt && debtInt.toFixed(2)} DAI`,
-              `${debtInt && debtInt.toFixed(2)} USD`,
+              `${cdpState.debt.toNumber().toFixed(2)} DAI`,
+              `${cdpState.debt.toNumber().toFixed(2)} USD`,
               <ActionButton name={lang.actions.pay_back} />
             ],
             [
               lang.cdp_page.able_generate,
-              `${generateAmount && generateAmount.toFixed(2)} DAI`,
-              `${generateAmount && generateAmount.toFixed(2)} USD`,
+              `${parseFloat(cdpState.daiAvailable).toFixed(2)} DAI`,
+              `${parseFloat(cdpState.daiAvailable).toFixed(2)} USD`,
               <ActionButton name={lang.actions.generate} />
             ]
           ]}
