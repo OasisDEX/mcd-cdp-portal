@@ -134,6 +134,7 @@ function CDPView({ cdpId, getIlk }) {
       const [
         debt,
         collateral,
+        collateralPrice,
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
@@ -142,6 +143,7 @@ function CDPView({ cdpId, getIlk }) {
       ] = await Promise.all([
         cdp.getDebtValue(),
         cdp.getCollateralValue(),
+        cdp._cdpType.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
         cdp.daiAvailable(),
@@ -153,6 +155,7 @@ function CDPView({ cdpId, getIlk }) {
         ilkData,
         debt,
         collateral,
+        collateralPrice,
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
@@ -163,7 +166,7 @@ function CDPView({ cdpId, getIlk }) {
   }, [cdpId, getIlk, maker]);
 
   if (!cdpState) return <LoadingLayout />;
-
+  console.log(cdpState, 'hello');
   return (
     <PageContentLayout>
       <Box>
@@ -184,7 +187,7 @@ function CDPView({ cdpId, getIlk }) {
               `${lang.cdp_page.current_price_info} (${
                 cdpState.ilkData.gem
               }/USD)`,
-              cdpState.ilkData.feedValueUSD.toFixed(2) / 100
+              cdpState.collateralPrice.toFixed(2) / 100
             ],
             [
               lang.cdp_page.liquidation_penalty,
@@ -218,9 +221,7 @@ function CDPView({ cdpId, getIlk }) {
           rows={[
             [
               cdpState.collateral.toString(),
-              cdpState.collateral
-                .times(cdpState.ilkData.feedValueUSD)
-                .toFixed(2) /
+              cdpState.collateral.times(cdpState.collateralPrice).toFixed(2) /
                 100 +
                 ' USD'
             ],
@@ -228,8 +229,7 @@ function CDPView({ cdpId, getIlk }) {
               lang.cdp_page.locked,
               cdpState.lockedCollateral.toFixed(2) + ` ${cdpState.ilkData.gem}`,
               `${(
-                cdpState.lockedCollateral *
-                cdpState.ilkData.feedValueUSD.toNumber()
+                cdpState.lockedCollateral * cdpState.collateralPrice.toNumber()
               ).toFixed(2)} USD`,
               <ActionButton name={lang.actions.deposit} />
             ],
@@ -237,8 +237,7 @@ function CDPView({ cdpId, getIlk }) {
               lang.cdp_page.able_withdraw,
               cdpState.freeCollateral.toFixed(2) + ` ${cdpState.ilkData.gem}`,
               (
-                cdpState.freeCollateral *
-                cdpState.ilkData.feedValueUSD.toNumber()
+                cdpState.freeCollateral * cdpState.collateralPrice.toNumber()
               ).toFixed(2) + ' USD',
               <ActionButton name={lang.actions.withdraw} />
             ]
