@@ -9,10 +9,10 @@ import lang from 'languages';
 import MetaMaskConnect from 'components/MetaMaskConnect';
 import ReadOnlyConnect from 'components/ReadOnlyConnect';
 
-import LedgerConnect from 'components/LedgerConnect';
-import TrezorConnect from 'components/TrezorConnect';
+import HardwareWalletConnect from 'components/HardwareWalletConnect';
 import WalletConnect from 'components/WalletConnect';
 
+import { AccountTypes } from '../utils/constants';
 import LandingHeroLayout from 'layouts/LandingHeroLayout';
 import { Title, Subtitle } from 'components/Typography';
 
@@ -36,8 +36,8 @@ function Landing() {
           <Block px="m">
             {[
               <MetaMaskConnect key="mm" />,
-              <LedgerConnect key="le" />,
-              <TrezorConnect key="tre" />,
+              <HardwareWalletConnect key="le" type={AccountTypes.LEDGER} />,
+              <HardwareWalletConnect key="tre" type={AccountTypes.TREZOR} />,
               <WalletConnect key="wc" />,
               <ReadOnlyConnect key="ro" />
             ].map(comp => (

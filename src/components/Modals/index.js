@@ -1,7 +1,7 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
 import LedgerType from 'components/LedgerType';
-import LedgerAddresses from 'components/LedgerAddresses';
+import HardwareWalletModal from 'components/HardwareWalletModal';
 import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
 
@@ -24,13 +24,11 @@ const modals = {
     </Grid>
   ),
 
-  ledgertype: ({ onClose }) => {
-    return <LedgerType onClose={onClose} />;
-  },
+  ledgertype: args => <LedgerType {...args} />,
 
-  ledgeraddresses: ({ onClose, isLedgerLive }) => (
-    <LedgerAddresses isLedgerLive={isLedgerLive} onClose={onClose} />
-  )
+  ledger: args => <HardwareWalletModal {...args} />,
+
+  trezor: args => <HardwareWalletModal {...args} />
 };
 
 export { templates };
