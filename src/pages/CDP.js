@@ -162,8 +162,8 @@ function CDPView({ cdpId, getIlk }) {
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdp) return <LoadingLayout />;
-  
+  if (!cdpState) return <LoadingLayout />;
+
   return (
     <PageContentLayout>
       <Box>
@@ -226,8 +226,7 @@ function CDPView({ cdpId, getIlk }) {
             ],
             [
               lang.cdp_page.locked,
-              cdpState.lockedCollateral.toFixed(2) +
-                ` ${cdpState.ilkData.gem}`,
+              cdpState.lockedCollateral.toFixed(2) + ` ${cdpState.ilkData.gem}`,
               `${(
                 cdpState.lockedCollateral *
                 cdpState.ilkData.feedValueUSD.toNumber()
