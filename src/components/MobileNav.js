@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { NavLink, NavRoute } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import Sidebar from 'components/Sidebar';
@@ -13,6 +13,8 @@ import {
   Grid
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
+import useMaker from 'hooks/useMaker';
+
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
@@ -109,34 +111,32 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ network, connectedAddress, viewedAddress }) => {
+const MobileNav = ({ networkId, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
+  const { account } = useMaker();
+  const { url } = useCurrentRoute();
 
   return (
-    <NavRoute>
-      {({ url }) => (
-        <Fragment>
-          <NavLink href={`/${url.search}`} precache={true}>
-            <NavLogo />
-          </NavLink>
+    <Fragment>
+      <Link href={`/${url.search}`} prefetch={true}>
+        <NavLogo />
+      </Link>
 
-          <CDPDropdown>
-            <CDPList
-              currentPath={url.pathname}
-              currentQuery={url.search}
-              viewedAddress={viewedAddress}
-            />
-          </CDPDropdown>
+      <CDPDropdown>
+        <CDPList
+          currentPath={url.pathname}
+          currentQuery={url.search}
+          viewedAddress={viewedAddress}
+        />
+      </CDPDropdown>
 
-          <SidebarDrawerTrigger
-            {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}
-          />
-          <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-            <Sidebar {...{ network, connectedAddress }} />
-          </SidebarDrawer>
-        </Fragment>
-      )}
-    </NavRoute>
+      <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
+      <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
+        <Sidebar
+          {...{ networkId, connectedAddress: account ? account.address : null }}
+        />
+      </SidebarDrawer>
+    </Fragment>
   );
 };
 

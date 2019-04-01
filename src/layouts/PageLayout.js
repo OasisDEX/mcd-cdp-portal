@@ -56,7 +56,7 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => {
+const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => {
   const { account } = useMaker();
 
   return (
@@ -65,7 +65,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => {
       <NavbarWrap bgOverwrite={account ? getColor('black5') : null}>
         {navbar}
       </NavbarWrap>
-      {content}
+      {children}
       <SidebarWrap>{sidebar}</SidebarWrap>
     </ResponsiveWrap>
   );

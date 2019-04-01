@@ -10,7 +10,7 @@ import useMaker from 'hooks/useMaker';
 import useModal from 'hooks/useModal';
 
 import { AccountTypes } from '../utils/constants';
-import { navigation } from '../index';
+import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from 'utils/analytics';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -26,21 +26,6 @@ const StyledTrezorLogo = styled(TrezorLogo)`
 const TREZOR_PATH = "44'/60'/0'/0/0";
 const DEFAULT_ACCOUNTS_PER_PAGE = 25;
 
-const onConfirm = async (maker, closeModal, accType) => {
-  const connectedAddress = maker.currentAddress();
-
-  mixpanelIdentify(connectedAddress, accType);
-
-  const { network } = navigation.receivedRoute.url.query;
-  const addressToView = connectedAddress;
-  navigation.history.push({
-    pathname: `owner/${addressToView}`,
-    search: `?network=${network}`
-  });
-
-  closeModal();
-};
-
 const renderAccountsSelection = ({
   maker,
   type,
@@ -48,7 +33,8 @@ const renderAccountsSelection = ({
   accountsOffset,
   accountsLength,
   show,
-  reset
+  reset,
+  onConfirm
 }) => {
   maker
     .addAccount({
@@ -82,13 +68,28 @@ const renderAccountsSelection = ({
         });
       }
     })
-    .then(() => onConfirm(maker, reset, type))
+    .then(() => onConfirm(type))
     .catch(err => console.error('Failed to add account', err));
 };
 
 export default function HardwareWalletConnect({ type }) {
   const { maker, authenticated: makerAuthenticated } = useMaker();
+  const navigation = useNavigation();
   const { show, reset } = useModal();
+
+  async function onConfirm(accType) {
+    reset();
+    const connectedAddress = maker.currentAddress();
+
+    mixpanelIdentify(connectedAddress, accType);
+
+    const { network } = (await navigation.getRoute()).url.query;
+
+    navigation.navigate({
+      pathname: `owner/${connectedAddress}`,
+      search: `?network=${network}`
+    });
+  }
 
   const isTrezor = type === AccountTypes.TREZOR;
   return (
@@ -97,7 +98,7 @@ export default function HardwareWalletConnect({ type }) {
         variant="secondary-outline"
         width="225px"
         disabled={!makerAuthenticated}
-        onClick={() =>
+        onClick={() => {
           isTrezor
             ? renderAccountsSelection({
                 maker,
@@ -106,7 +107,8 @@ export default function HardwareWalletConnect({ type }) {
                 accountsOffset: 0,
                 accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
                 show,
-                reset
+                reset,
+                onConfirm
               })
             : show({
                 modalType: 'ledgertype',
@@ -119,11 +121,12 @@ export default function HardwareWalletConnect({ type }) {
                       accountsOffset: 0,
                       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
                       show,
-                      reset
+                      reset,
+                      onConfirm
                     })
                 }
-              })
-        }
+              });
+        }}
       >
         <Flex alignItems="center">
           {isTrezor ? <StyledTrezorLogo /> : <StyledLedgerLogo />}

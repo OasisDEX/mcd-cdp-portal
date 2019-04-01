@@ -12,6 +12,7 @@ import AccountConnect from './SidebarAccountConnect';
 import config from 'references/config';
 import WalletSelection from 'components/WalletSelection';
 import useMaker from 'hooks/useMaker';
+
 const { networkDisplayNames } = config;
 
 const Section = styled.section`
@@ -53,11 +54,11 @@ function netIdToDisplayName(networkId) {
   return 'Unkown network';
 }
 
-function NetworkSection({ networkID }) {
-  const networkDisplayName = netIdToDisplayName(networkID);
+function NetworkSection({ networkId }) {
+  const networkDisplayName = netIdToDisplayName(networkId);
   return (
     <Network py="xs" color="black3">
-      <Dot color={NETWORK_COLORS[networkID]} />
+      <Dot color={NETWORK_COLORS[networkId]} />
       <Text t="p6">{networkDisplayName}</Text>
     </Network>
   );
@@ -77,14 +78,14 @@ function AccountSection({ currentAccount }) {
   );
 }
 
-function Sidebar({ feeds, system, network }) {
+function Sidebar({ feeds, system, networkId }) {
   const { account } = useMaker();
 
   // if we want to change the sidebar color when connected vs. read-only mode.
   return (
     <Box bg={account ? 'white' : 'white'}>
       <AccountSection currentAccount={account} />
-      <NetworkSection networkID={network.id} swappable={network.swappable} />
+      <NetworkSection networkId={networkId} />
       <Section>
         <SidebarFeeds feeds={feeds} />
       </Section>

@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { NavLink } from 'react-navi';
+import { Link } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import { getColor } from 'styles/theme';
 
-const NavbarItemContainer = styled(NavLink)`
+const NavbarItemContainer = styled(Link)`
   display: block;
 `;
 
@@ -21,7 +21,7 @@ const DashedFakeButton = styled(Flex)`
 `;
 
 const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
-  <NavbarItemContainer href={href} active={active} precache={true} {...props}>
+  <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
     <Flex
       flexDirection="column"
       alignItems="center"
@@ -75,7 +75,6 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         key="overview"
         href={`/owner/${currentQuery}`}
         label="Overview"
-        Logo={MakerSmall}
         active={currentPath.includes('/overview/')}
       /> */}
       {cdps.map((cdp, idx) => {
