@@ -53,6 +53,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       if (address) {
         const proxy = await maker.service('proxy').getProxyAddress(address);
         if (!proxy) {
+          // every cold user hits this condition at first.
           return;
         }
         const cdpManager = maker.service('mcd:cdpManager');
