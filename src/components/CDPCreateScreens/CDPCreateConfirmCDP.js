@@ -21,6 +21,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -123,9 +124,8 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <TextBlock textAlign="center" fontSize="70px">
-            {emoji}
-          </TextBlock>
+          <SpaceshipIllustration />
+
           <Box my="l" textAlign="center">
             {isTestchain ? (
               <Text>{hash}</Text>
