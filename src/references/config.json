@@ -8,7 +8,7 @@
   "networkNames": {
     "1": "mainnet",
     "42": "kovan",
-    "999": "testchain"
+    "999": "test"
   },
   "networkDisplayNames": {
     "1": "Mainnet",
