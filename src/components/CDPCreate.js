@@ -91,19 +91,9 @@ const CDPCreateHeader = ({ onClose }) => {
             currentAccount={account}
             textColor="steel"
             t="textM"
+            readOnly
           />
         </Box>
-        <Grid
-          onClick={onClose}
-          gridTemplateColumns="auto auto"
-          alignItems="center"
-          gridColumnGap="xs"
-        >
-          <QuestionIcon />
-          <Text color="steel" t="textM" fontWeight="medium">
-            FAQ
-          </Text>
-        </Grid>
 
         <Grid
           onClick={onClose}
