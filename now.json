@@ -1,7 +1,7 @@
 {
   "version": 2,
   "name": "MCD CDP Portal",
-  "alias": "mcd-cdp-portal-staging",
+  "alias": "mcd-cdp-portal-test",
   "routes": [
     { "src": "^/static/(.*)", "dest": "/static/$1" },
     { "src": "^/favicon.ico", "dest": "/favicon.ico" },
