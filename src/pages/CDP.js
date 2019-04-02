@@ -192,13 +192,13 @@ function CDPView({ cdpId, getIlk }) {
         freeCollateral
       ] = await Promise.all([
         cdp.getDebtValue(),
-        cdp.getCollateralValue(),
+        cdp.getCollateralAmount(),
         cdp._cdpType.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
         cdp.daiAvailable(),
-        cdp.getLockedCollateral(),
-        cdp.getFreeCollateral()
+        cdp.getMinCollateralAmount(),
+        cdp.getCollateralAvailable()
       ]);
       setCDP({
         cdp,
