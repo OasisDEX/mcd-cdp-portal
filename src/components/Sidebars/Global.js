@@ -6,12 +6,13 @@ import { getAllFeeds } from 'reducers/network/cdpTypes';
 
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import { getColor } from 'styles/theme';
-import SidebarFeeds from './SidebarFeeds';
-import SidebarSystem from './SidebarSystem';
-import AccountConnect from './SidebarAccountConnect';
+import SidebarFeeds from '../SidebarFeeds';
+import SidebarSystem from '../SidebarSystem';
+import AccountConnect from '../SidebarAccountConnect';
 import config from 'references/config';
 import WalletSelection from 'components/WalletSelection';
 import useMaker from 'hooks/useMaker';
+import { networkNameToId } from 'utils/network';
 
 const { networkDisplayNames } = config;
 
@@ -78,8 +79,11 @@ function AccountSection({ currentAccount }) {
   );
 }
 
-function Sidebar({ feeds, system, networkId }) {
-  const { account } = useMaker();
+function Sidebar({ feeds, system }) {
+  const { account, network } = useMaker();
+
+  // TODO - we're converting the network string from the url to a number and back to a display name
+  const networkId = networkNameToId(network);
 
   // if we want to change the sidebar color when connected vs. read-only mode.
   return (

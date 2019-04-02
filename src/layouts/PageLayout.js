@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import useMaker from 'hooks/useMaker';
+import useSidebar from 'hooks/useSidebar';
 import { getColor } from 'styles/theme';
+import { hot } from 'react-hot-loader/root';
 
 import { mediaQueries } from 'styles/constants';
 const breakpoint = mediaQueries.m.min;
@@ -56,8 +58,10 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => {
+const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   const { account } = useMaker();
+  const { current } = useSidebar();
+  const { component: SidebarComponent, props } = current;
 
   return (
     <ResponsiveWrap>
@@ -66,9 +70,11 @@ const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => {
         {navbar}
       </NavbarWrap>
       {children}
-      <SidebarWrap>{sidebar}</SidebarWrap>
+      <SidebarWrap>
+        <SidebarComponent {...props} />
+      </SidebarWrap>
     </ResponsiveWrap>
   );
 };
 
-export default ResponsivePageLayout;
+export default hot(ResponsivePageLayout);

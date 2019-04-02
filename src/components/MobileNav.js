@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 
-import Sidebar from 'components/Sidebar';
+import Sidebar from 'components/Sidebars/Global';
 import NavLogo from 'components/NavLogo';
 import {
   Dropdown,

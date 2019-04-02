@@ -9,7 +9,6 @@ import {
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
-import { ReactComponent as QuestionIcon } from 'images/question-circle.svg';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
 import WalletSelection from './WalletSelection';
 import useMaker from 'hooks/useMaker';
