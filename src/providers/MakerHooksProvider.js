@@ -10,7 +10,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses }) {
   const [maker, setMaker] = useState(null);
 
   React.useEffect(() => {
-    if (!rpcUrl || !addresses) return;
+    if (!rpcUrl) return;
     instantiateMaker({ rpcUrl, addresses }).then(maker => {
       setMaker(maker);
 
