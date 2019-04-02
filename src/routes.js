@@ -13,26 +13,23 @@ import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
-import WatcherProvider from 'providers/WatcherProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
-import { getUnique } from 'utils/ui';
 import ilkList from 'references/ilkList';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
-import useWatcher from 'hooks/useWatcher';
 
 import { createCDPSystemModel } from 'reducers/network/system/model';
 import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
 import { isMissingContractAddress } from 'utils/ethereum';
 
-import BigNumber from 'bignumber.js';
-import { createCurrencyRatio } from '@makerdao/currency';
-import { USD } from '@makerdao/dai';
+import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
 import store from './store';
+import { instantiateWatcher } from './watch';
+import uniqBy from 'lodash.uniqby';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -47,28 +44,25 @@ const withDefaultLayout = route =>
 
       const networkId = networkNameToId(network);
       return (
-        <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
-          <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
-            <RouteEffects addresses={addresses} network={network}>
-              <AwaitMakerAuthentication>
-                <ModalProvider modals={modals} templates={templates}>
-                  <PageLayout
-                    mobileNav={
-                      <MobileNav
-                        networkId={networkId}
-                        viewedAddress={viewedAddress}
-                      />
-                    }
-                    navbar={<Navbar viewedAddress={viewedAddress} />}
-                    sidebar={<Sidebar networkId={networkId} />}
-                  >
-                    <View />
-                  </PageLayout>
-                </ModalProvider>
-              </AwaitMakerAuthentication>
-            </RouteEffects>
-          </MakerHooksProvider>
-        </WatcherProvider>
+        <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+          <RouteEffects network={network} />
+          <AwaitMakerAuthentication>
+            <ModalProvider modals={modals} templates={templates}>
+              <PageLayout
+                mobileNav={
+                  <MobileNav
+                    networkId={networkId}
+                    viewedAddress={viewedAddress}
+                  />
+                }
+                navbar={<Navbar viewedAddress={viewedAddress} />}
+                sidebar={<Sidebar networkId={networkId} />}
+              >
+                <View />
+              </PageLayout>
+            </ModalProvider>
+          </AwaitMakerAuthentication>
+        </MakerHooksProvider>
       );
     }, route)
   );
@@ -93,15 +87,12 @@ export default mount({
       return {
         title: 'Landing',
         view: (
-          <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
-            <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
-              <RouteEffects addresses={addresses} network={network}>
-                <ModalProvider modals={modals} templates={templates}>
-                  <Landing />
-                </ModalProvider>
-              </RouteEffects>
-            </MakerHooksProvider>
-          </WatcherProvider>
+          <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+            <RouteEffects network={network} />
+            <ModalProvider modals={modals} templates={templates}>
+              <Landing />
+            </ModalProvider>
+          </MakerHooksProvider>
         )
       };
     })
@@ -138,43 +129,34 @@ function networkIsUndefined(request) {
   return query.network === undefined && query.testchainId === undefined;
 }
 
-function RouteEffects({ children, addresses, network }) {
+function RouteEffects({ network }) {
   const { maker } = useMaker();
 
   React.useEffect(() => {
-    if (maker && addresses)
-      (async () => {
-        // FIXME: #0.2.2
-        await maker.authenticate();
-        const gemList = getUnique(ilkList, 'gem');
-        for (let { gem, currency } of gemList) {
-          const pipAddress = addresses[`PIP_${gem}`];
-          if (!pipAddress) continue;
-          const storage = await maker
-            .service('web3')
-            ._web3.eth.getStorageAt(pipAddress, 3);
-          const val = storage.substr(34);
-          const ratio = createCurrencyRatio(USD, currency);
-          const price = ratio.wei(new BigNumber('0x' + val.toString()));
-          store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
-        }
-      })();
-  }, [maker, addresses]);
+    if (!maker) return;
+    const { cdpTypes } = maker.service(ServiceRoles.CDP_TYPE);
+    uniqBy(cdpTypes, t => t.currency.symbol).forEach(type =>
+      // the fire-&-forget promises are intentional
+      type.getPrice().then(price => {
+        const gem = type.currency.symbol;
+        store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
+      })
+    );
+  }, [maker]);
 
   React.useEffect(() => {
     if (network !== 'mainnet') userSnapInit();
   }, [network]);
 
-  return (
-    <WatcherRouteEffects addresses={addresses}>{children}</WatcherRouteEffects>
-  );
-}
-
-function WatcherRouteEffects({ addresses, children }) {
-  const { watcher } = useWatcher();
-
   React.useEffect(() => {
-    if (!addresses || !watcher) return;
+    if (!maker) return;
+    const scs = maker.service('smartContract');
+    const addresses = scs.getContractAddresses();
+    const watcher = instantiateWatcher({
+      rpcUrl: maker.service('web3').rpcUrl,
+      multicallAddress: scs.getContractAddress('MULTICALL')
+    });
+
     // all bets are off wrt what contract state in our store
     store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     watcher.start();
@@ -192,7 +174,7 @@ function WatcherRouteEffects({ addresses, children }) {
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
-  }, [addresses, watcher]);
+  }, [maker]);
 
-  return children;
+  return null;
 }

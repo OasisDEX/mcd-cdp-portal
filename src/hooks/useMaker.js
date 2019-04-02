@@ -4,7 +4,7 @@ import { checkEthereumProvider } from 'utils/ethereum';
 import { MakerObjectContext } from 'providers/MakerHooksProvider';
 
 function useMaker() {
-  const { maker, account } = useContext(MakerObjectContext);
+  const { maker, account } = useContext(MakerObjectContext) || {};
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
