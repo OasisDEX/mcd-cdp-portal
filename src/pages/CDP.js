@@ -6,11 +6,6 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import {
-  getUsdPrice,
-  getLockedAndFreeCollateral,
-  calcCDPParams
-} from 'utils/cdp';
-import {
   Box,
   Grid,
   Flex,
