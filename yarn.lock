@@ -986,26 +986,26 @@
     "@makerdao/services-core" "^0.9.5"
     bignumber.js "^8.1.1"
 
-"@makerdao/dai-plugin-trezor-web@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-trezor-web/-/dai-plugin-trezor-web-0.9.5.tgz#9253b23d0e9b75edebdca07438e7c0692aeebbe2"
-  integrity sha512-T7e3WGuBTa4C9lh0x/rRGLPWRvHxSP+kE2hMz+eaflJrIA4YEe4LjKRSO8dxzo8/176419PWrp5ZC9TRTaz/Dw==
+"@makerdao/dai-plugin-trezor-web@^0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-trezor-web/-/dai-plugin-trezor-web-0.9.6.tgz#e966a6297be3108a5287ad75fb2ace8c4ea7f972"
+  integrity sha512-q16lu4f6MOaPxOVl7neeEAqogNuK/B+pufGcEG17AamplUrhmCLHzcIDU6nxe8NU2UxT2v+v5sqoOIvI2xaLqA==
   dependencies:
     babel-runtime "^6.26.0"
     ethereumjs-tx "^1.3.6"
     ethereumjs-util "^5.2.0"
     hdkey "^1.0.0"
-    trezor-connect "^6.0.4"
+    trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.13.1.tgz#b5ec49463cef213492b2156c5a58e5b85a7e7872"
-  integrity sha512-MZl1wjYujwambXbHHPNwUjJ9KwfoQRhuG6oriA0N3Y49hs2sEDyUxTqev9RIRty/7/LWkBKVD0leh33Y4j9oMg==
+"@makerdao/dai@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.14.0.tgz#a8918557006f934c79a57e5b28303f8ef6e34f11"
+  integrity sha512-Fdeo5q32wZhTZtQjFe45X7b02pjvWse3k32iExQHcIVVLDNMAGsRgy54+9DetwVaBapMziQYv/x0pt8s8l7qcQ==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
-    "@makerdao/services-core" "^0.9.4"
+    "@makerdao/services-core" "^0.9.5"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
     debug "^3.1.0"
@@ -1040,7 +1040,7 @@
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
-"@makerdao/services-core@^0.9.4", "@makerdao/services-core@^0.9.5":
+"@makerdao/services-core@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
   integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
@@ -1232,23 +1232,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.46.tgz#bb2eeb0eeb58e401ef9e4e29abc4f81003ee767c"
   integrity sha512-W8W76mPzOkN1KuzB25yFIqv1ESj2gp8MILJByUnLcDhOZsuSaDhY8vXLEP9+6OWCqNe7W+3zh2L+rb8kg9rsFA==
 
-"@types/prop-types@*":
-  version "15.7.0"
-  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.0.tgz#4c48fed958d6dcf9487195a0ef6456d5f6e0163a"
-  integrity sha512-eItQyV43bj4rR3JPV0Skpl1SncRCdziTEK9/v8VwXmV6d/qOUO8/EuWeHBbCZcsfSHfzI5UyMJLCSXtxxznyZg==
-
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
-
-"@types/react@^16.4.6":
-  version "16.8.8"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.8.tgz#4b60a469fd2469f7aa6eaa0f8cfbc51f6d76e662"
-  integrity sha512-xwEvyet96u7WnB96kqY0yY7qxx/pEpU51QeACkKFtrgjjXITQn0oO1iwPEraXVgh10ZFPix7gs1R4OJXF7P5sg==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^2.2.0"
 
 "@types/rimraf@^0.0.28":
   version "0.0.28"
@@ -3955,11 +3942,6 @@ cssstyle@1.2.1, cssstyle@^1.0.0:
   dependencies:
     cssom "0.3.x"
 
-csstype@^2.2.0:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.3.tgz#b701e5968245bf9b08d54ac83d00b624e622a9fa"
-  integrity sha512-rINUZXOkcBmoHWEyu7JdHu5JMzkGRoMX4ov9830WNgxf5UYxcBUO0QTKAqeJ5EZfSdlrcJYkC8WwfVW7JYi4yg==
-
 cyclist@~0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
@@ -5062,11 +5044,6 @@ eventemitter3@^3.0.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.1.0.tgz#090b4d6cdbd645ed10bf750d4b5407942d7ba163"
   integrity sha512-ivIvhpq/Y0uSjcHDcOIccjmYjGLcP09MFGE7ysAwkAvkXfpZlC985pH2/ui64DKazbTW/4kN3yqozUxlXzI6cA==
 
-events@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
-  integrity sha1-nr23Y1rQmccNzEwqH1AEKI6L2SQ=
-
 events@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.0.0.tgz#9a0a0dfaf62893d92b875b8f2698ca4114973e88"
@@ -5133,7 +5110,7 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-exenv@^1.2.2:
+exenv@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
   integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
@@ -8714,10 +8691,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navi@^0.10.7:
-  version "0.10.13"
-  resolved "https://registry.yarnpkg.com/navi/-/navi-0.10.13.tgz#eaf8d3df04300c6f5d50744a6c5da5684ebb071d"
-  integrity sha512-zy1lCk30ixzR5H0z06aKwM+0Tis/OwuAWTyHTY4ZNbM6AuvTQuU7+K3KYrx+N+LC3lY4o5IDOnwq9/zDscpWTg==
+navi@^0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/navi/-/navi-0.12.4.tgz#bec3d03bb3fe643c80d4b7cd700e9a161eccf7bc"
+  integrity sha512-TjH8h+Ql2UceWV0+lX2wy9xSoazzPfwBSqlMA+vPeYGZGqZt1YYtzmwiw+Kh7zwIHM3hqiaY/AOnnpTQNDToqg==
   dependencies:
     history "^4.7.2"
 
@@ -10590,6 +10567,16 @@ react-ga@^2.5.7:
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.7.tgz#1c80a289004bf84f84c26d46f3a6a6513081bf2e"
   integrity sha512-UmATFaZpEQDO96KFjB5FRLcT6hFcwaxOmAJZnjrSiFN/msTqylq9G+z5Z8TYzN/dbamDTiWf92m6MnXXJkAivQ==
 
+react-helmet@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-5.2.0.tgz#a81811df21313a6d55c5f058c4aeba5d6f3d97a7"
+  integrity sha1-qBgR3yExOm1VxfBYxK66XW89l6c=
+  dependencies:
+    deep-equal "^1.0.1"
+    object-assign "^4.1.1"
+    prop-types "^15.5.4"
+    react-side-effect "^1.1.0"
+
 react-hot-loader@^4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.0.tgz#0b7c7dd9407415e23eb8246fdd28b0b839f54cb6"
@@ -10632,14 +10619,13 @@ react-localization@^1.0.13:
     localized-strings "^0.2.00"
     react "^16.0.0"
 
-react-navi@^0.10.6:
-  version "0.10.13"
-  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.10.13.tgz#2b95625dce326fbad4a97e40759542f6e64910dc"
-  integrity sha512-sg0KQfhh8TjYgmnwTye71NxEBpyjQb6FDoUAaNvtBWUCVCazlVWM9HGTcHor+sYXomYWtFOeDxwED7Tyi5kDeg==
+react-navi@^0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.12.4.tgz#152d3d9314f3c9b304bdfc8649a3d0735dc64c7a"
+  integrity sha512-bAlHanQdpdIk4fcbxQqY12BgZHJA7l0SOQ40pvTHm8RfCVZo2bMFZemmXyixcy8buztasR/cKf6NzUcXv38omw==
   dependencies:
     "@types/history" "^4.6.2"
-    "@types/react" "^16.4.6"
-    exenv "^1.2.2"
+    react-helmet "^5.2.0"
 
 react-onclickoutside@^6.7.1:
   version "6.8.0"
@@ -10724,6 +10710,14 @@ react-scripts@2.1.5:
     workbox-webpack-plugin "3.6.3"
   optionalDependencies:
     fsevents "1.2.4"
+
+react-side-effect@^1.1.0:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-1.1.5.tgz#f26059e50ed9c626d91d661b9f3c8bb38cd0ff2d"
+  integrity sha512-Z2ZJE4p/jIfvUpiUMRydEVpQRf2f8GMHczT6qLcARmX7QRb28JDBTpnM2g/i5y/p7ZDEXYGHWg0RbhikE+hJRw==
+  dependencies:
+    exenv "^1.2.1"
+    shallowequal "^1.0.1"
 
 react-spring@^8.0.15:
   version "8.0.18"
@@ -11570,7 +11564,7 @@ shallow-clone@^1.0.0:
     kind-of "^5.0.0"
     mixin-object "^2.0.1"
 
-shallowequal@^1.0.2:
+shallowequal@^1.0.1, shallowequal@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
@@ -12528,14 +12522,14 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-trezor-connect@^6.0.4:
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-6.0.5.tgz#fcaf0b11cbec656cdef81feb42660929488326f4"
-  integrity sha512-U5D8bEkGCBFCwT3zg4WAQUUBfkG9sDhumTY2Mgj2VN+TrRwkrP7nFyK4d0XRzt4ZsLJxBAT/Qg4/ZKqKh0a+wg==
+trezor-connect@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/trezor-connect/-/trezor-connect-7.0.2.tgz#8b1b0d1b3b6dc6564bc3d22fe8f54ba826f2a242"
+  integrity sha512-KAFOqxEHHaFvrG8NGLFlM/QxHcwIa3gwfXcgTjCYM0g0zRpwIQBwe35AKsjAQO5yiTJQGa0Cu5MZufGJRGYjjw==
   dependencies:
-    babel-runtime "^6.26.0"
-    events "^1.1.1"
-    whatwg-fetch "^2.0.4"
+    "@babel/runtime" "^7.3.1"
+    events "^3.0.0"
+    whatwg-fetch "^3.0.0"
 
 trim-right@^1.0.1:
   version "1.0.1"
@@ -13416,12 +13410,12 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@2.0.4, whatwg-fetch@^2.0.4:
+whatwg-fetch@2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
   integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
-whatwg-fetch@3.0.0, whatwg-fetch@>=0.10.0:
+whatwg-fetch@3.0.0, whatwg-fetch@>=0.10.0, whatwg-fetch@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
   integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==

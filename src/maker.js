@@ -10,73 +10,61 @@ import gemJoinAbi from 'references/gemJoin.abi.json';
 import ilkList from 'references/ilkList';
 
 let _maker;
-let _rpcUrl;
 
 export function getMaker() {
   if (_maker === undefined) throw new Error('Maker has not been instatiated');
   return _maker;
 }
 
-/**
- * @desc if the rpcUrl has changed, instantiate a new maker instance.
- * Otherwise, return the current maker instance
- */
-export async function getOrReinstantiateMaker({ rpcUrl, addresses }) {
-  let reinstantiated = false;
-  if (rpcUrl !== _rpcUrl) {
-    reinstantiated = true;
+export async function instantiateMaker({ rpcUrl, addresses }) {
+  const config = {
+    log: false,
+    plugins: [
+      trezorPlugin,
+      ledgerPlugin,
+      [
+        McdPlugin,
+        {
+          // cdpTypes: ilkList.map(({ currency, key, gem }) => ({
+          //   currency,
+          //   ilk: key,
+          //   address: addresses[gem],
+          //   abi: dsTokenAbi
+          // })),
+          addressOverrides: { ...addresses }
+        }
+      ]
+    ],
+    smartContract: {
+      addContracts: {}
+    },
+    provider: {
+      url: rpcUrl,
+      type: 'HTTP'
+    }
+  };
 
-    _rpcUrl = rpcUrl;
-
-    const config = {
-      log: false,
-      plugins: [
-        trezorPlugin,
-        ledgerPlugin,
-        [
-          McdPlugin,
-          {
-            // cdpTypes: ilkList.map(({ currency, key, gem }) => ({
-            //   currency,
-            //   ilk: key,
-            //   address: addresses[gem],
-            //   abi: dsTokenAbi
-            // })),
-            addressOverrides: { ...addresses }
-          }
-        ]
-      ],
-      smartContract: {
-        addContracts: {}
-      },
-      provider: {
-        url: rpcUrl,
-        type: 'HTTP'
-      }
+  for (let ilk of ilkList) {
+    const adapterName = `MCD_JOIN_${ilk.key.replace(/-/g, '_')}`;
+    config.smartContract.addContracts[adapterName] = {
+      abi: gemJoinAbi,
+      address: addresses[adapterName]
     };
-
-    for (let ilk of ilkList) {
-      const adapterName = `MCD_JOIN_${ilk.key.replace(/-/g, '_')}`;
-      config.smartContract.addContracts[adapterName] = {
-        abi: gemJoinAbi,
-        address: addresses[adapterName]
-      };
-    }
-
-    if (addresses.PROXY_REGISTRY) {
-      config.smartContract.addContracts.PROXY_REGISTRY = {
-        address: addresses.PROXY_REGISTRY,
-        abi: proxyRegistryAbi
-      };
-    }
-
-    _maker = await Maker.create('http', config);
-
-    // for debugging
-    window.maker = _maker;
   }
 
-  return { maker: _maker, reinstantiated };
+  if (addresses.PROXY_REGISTRY) {
+    config.smartContract.addContracts.PROXY_REGISTRY = {
+      address: addresses.PROXY_REGISTRY,
+      abi: proxyRegistryAbi
+    };
+  }
+
+  const maker = await Maker.create('http', config);
+
+  // for debugging
+  window.maker = maker;
+
+  return maker;
 }
 
 export { USD, DAI, MKR, ETH };

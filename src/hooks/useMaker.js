@@ -7,19 +7,16 @@ function useMaker() {
   const { maker, account } = useContext(MakerObjectContext);
   const [authenticated, setAuthenticated] = useState(false);
 
-  async function authenticatedMaker() {
-    await maker.authenticate();
-    return maker;
-  }
-
   useEffect(() => {
-    maker.authenticate().then(() => {
-      setAuthenticated(true);
-    });
+    if (maker) {
+      maker.authenticate().then(() => {
+        setAuthenticated(true);
+      });
 
-    return () => {
-      setAuthenticated(false);
-    };
+      return () => {
+        setAuthenticated(false);
+      };
+    }
   }, [maker]);
 
   function isConnectedToProvider(provider) {
@@ -30,10 +27,10 @@ function useMaker() {
     );
   }
 
-  const networkId = maker.service('web3').networkId();
-
   const connectMetamask = async () => {
     try {
+      const networkId = maker.service('web3').networkId();
+
       const browserProvider = await checkEthereumProvider();
 
       if (browserProvider.networkId !== networkId)
@@ -57,9 +54,7 @@ function useMaker() {
   return {
     maker,
     authenticated,
-    authenticatedMaker,
     isConnectedToProvider,
-    networkId,
     connectMetamask,
     account
   };
