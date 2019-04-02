@@ -38,10 +38,10 @@ function useMaker() {
           'browser ethereum provider and URL network param do not match.'
         );
 
-      if (!isConnectedToProvider(browserProvider))
-        await maker.addAccount({
-          type: 'browser'
-        });
+      if (!isConnectedToProvider(browserProvider)) {
+        await maker.addAccount('browser', { type: 'browser' });
+        await maker.useAccount('browser');
+      }
 
       const connectedAddress = maker.currentAddress();
 
