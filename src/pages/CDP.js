@@ -18,6 +18,7 @@ import {
 
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
+import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import { etherscanLink } from '../utils/ethereum';
 
@@ -176,6 +177,7 @@ const AddrLink = ({ address }) => (
 
 function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
+  const { show: showSidebar } = useSidebar();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdpState, setCDP] = useState(null);
@@ -322,7 +324,14 @@ function CDPView({ cdpId, getIlk }) {
               lang.cdp_page.able_generate,
               `${parseFloat(cdpState.daiAvailable).toFixed(2)} DAI`,
               `${parseFloat(cdpState.daiAvailable).toFixed(2)} USD`,
-              <ActionButton name={lang.actions.generate} />
+              <ActionButton name={lang.actions.generate}
+                onClick={() =>
+                  showSidebar({
+                    sidebarType: 'generate',
+                    sidebarProps: { cdp }
+                  })
+                }
+              />
             ]
           ]}
           isAction={true}

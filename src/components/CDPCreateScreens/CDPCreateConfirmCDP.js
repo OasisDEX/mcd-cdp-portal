@@ -9,7 +9,6 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-import { TextBlock } from 'components/Typography';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
@@ -108,8 +107,6 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 
   const networkId = maker.service('web3').networkId();
   const isTestchain = ![1, 42].includes(networkId);
-
-  const emoji = '🔥🤑🔥';
 
   return (
     <Box
