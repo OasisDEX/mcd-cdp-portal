@@ -33,7 +33,6 @@ const renderAccountsSelection = ({
   accountsOffset,
   accountsLength,
   show,
-  reset,
   onConfirm
 }) => {
   maker
@@ -47,7 +46,6 @@ const renderAccountsSelection = ({
           modalType: type,
           modalProps: {
             addressList,
-            closeModal: reset,
             fetchAccounts: offset => {
               return new Promise(resolve => {
                 maker.addAccount({
@@ -75,10 +73,9 @@ const renderAccountsSelection = ({
 export default function HardwareWalletConnect({ type }) {
   const { maker, authenticated: makerAuthenticated } = useMaker();
   const navigation = useNavigation();
-  const { show, reset } = useModal();
+  const { show } = useModal();
 
   async function onConfirm(accType) {
-    reset();
     const connectedAddress = maker.currentAddress();
 
     mixpanelIdentify(connectedAddress, accType);
@@ -107,7 +104,6 @@ export default function HardwareWalletConnect({ type }) {
                 accountsOffset: 0,
                 accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
                 show,
-                reset,
                 onConfirm
               })
             : show({
@@ -121,7 +117,6 @@ export default function HardwareWalletConnect({ type }) {
                       accountsOffset: 0,
                       accountsLength: DEFAULT_ACCOUNTS_PER_PAGE,
                       show,
-                      reset,
                       onConfirm
                     })
                 }

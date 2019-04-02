@@ -9,7 +9,6 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-import { TextBlock } from 'components/Typography';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
@@ -21,6 +20,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -108,8 +108,6 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
   const networkId = maker.service('web3').networkId();
   const isTestchain = ![1, 42].includes(networkId);
 
-  const emoji = '🔥🤑🔥';
-
   return (
     <Box
       maxWidth="1040px"
@@ -123,9 +121,8 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <TextBlock textAlign="center" fontSize="70px">
-            {emoji}
-          </TextBlock>
+          <SpaceshipIllustration />
+
           <Box my="l" textAlign="center">
             {isTestchain ? (
               <Text>{hash}</Text>
