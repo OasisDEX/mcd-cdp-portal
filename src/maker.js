@@ -17,7 +17,10 @@ export function getMaker() {
 }
 
 export async function instantiateMaker({ rpcUrl, addresses }) {
-  const mcdPluginConfig = {};
+  const params = new URL(window.location).searchParams;
+  const mcdPluginConfig = {
+    simplePriceFeeds: !!params.get('simplePriceFeeds')
+  };
   const config = {
     log: false,
     plugins: [trezorPlugin, ledgerPlugin, [McdPlugin, mcdPluginConfig]],
