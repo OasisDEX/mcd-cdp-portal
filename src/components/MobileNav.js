@@ -115,7 +115,6 @@ const MobileNav = ({ networkId, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
-
   return (
     <Fragment>
       <Link href={`/${url.search}`} prefetch={true}>

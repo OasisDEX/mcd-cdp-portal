@@ -80,7 +80,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       /> */}
       {cdps.map((cdp, idx) => {
         const linkPath = `/${cdp.id}`;
-        const active = currentPath.includes(linkPath);
+        const active = currentPath === linkPath;
         return (
           <NavbarItem
             key={idx}
