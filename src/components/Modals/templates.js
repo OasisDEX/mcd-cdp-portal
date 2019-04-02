@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 
@@ -15,6 +15,7 @@ const animations = {
     }
   ]
 };
+
 const Bg = styled(animated.div)`
   display: flex;
   position: absolute;
@@ -29,21 +30,21 @@ const Bg = styled(animated.div)`
 
 const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   if (!show) return null;
-  const [closing, setClosing] = useState(false);
-  const [animationStart, animationEnd] = animations.fadeUp;
+  const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
 
-  const animationProps = useSpring({
-    to: closing ? animationStart : animationEnd,
-    from: animationStart,
-    config: config.stiff,
-    onRest: () => {
-      if (!closing) return false;
-      onClose();
-    }
-  });
+  const [animationProps, setBgAnimation] = useSpring(() => ({
+    to: fadeUpEnd,
+    from: fadeUpStart,
+    config: config.stiff
+  }));
 
   const onCloseAnimated = () => {
-    setClosing(true);
+    setBgAnimation({
+      to: fadeUpStart,
+      onRest() {
+        onClose();
+      }
+    });
   };
 
   return (
@@ -55,7 +56,6 @@ const FullscreenModal = ({ show, onClose, modalProps, children }) => {
 
 const BasicModal = ({ show, onClose, modalProps, children }) => {
   if (!show) return null;
-  const [closing, setClosing] = useState(false);
   const [fadeStart, fadeEnd] = animations.fade;
   const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
 
@@ -66,28 +66,29 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
     box-shadow: 0px 3px 13px rgba(67, 67, 67, 0.13);
   `;
 
-  const bgAnimation = useSpring({
-    to: closing ? fadeStart : fadeEnd,
+  const [bgAnimation, setBgAnimation] = useSpring(() => ({
+    to: fadeEnd,
     from: fadeStart,
-    config: config.stiff,
-    onRest: () => {
-      if (!closing) return false;
-      onClose();
-    }
-  });
+    config: config.stiff
+  }));
 
-  const contentAnimation = useSpring({
-    to: closing ? fadeUpStart : fadeUpEnd,
+  const [contentAnimation, setContentAnimation] = useSpring(() => ({
+    to: fadeUpEnd,
     from: fadeUpStart,
-    config: config.stiff,
-    onRest: () => {
-      if (!closing) return false;
-      onClose();
-    }
-  });
+    config: config.stiff
+  }));
 
   const onCloseAnimated = () => {
-    setClosing(true);
+    setBgAnimation({
+      to: fadeStart
+    });
+
+    setContentAnimation({
+      to: fadeUpStart,
+      onRest() {
+        onClose();
+      }
+    });
   };
 
   return (
@@ -106,7 +107,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
 };
 
 const templates = {
-  fullscreens: FullscreenModal,
+  fullscreen: FullscreenModal,
   basic: BasicModal,
   default: BasicModal
 };

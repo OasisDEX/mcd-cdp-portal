@@ -31,7 +31,7 @@ const calcPaginatedAddresses = (addresses, pageNumber) => {
 
 function HardwareWalletModal({
   addressList,
-  closeModal,
+  onClose,
   fetchAccounts,
   confirmAddress
 }) {
@@ -68,7 +68,7 @@ function HardwareWalletModal({
     <Grid gridRowGap="xs">
       <Box>
         <Flex justifyContent="flex-end">
-          <Text onClick={closeModal}>Close</Text>
+          <Text onClick={onClose}>Close</Text>
         </Flex>
         <Box textAlign="center">
           <Text fontWeight="bold" fontSize="3rem">
@@ -142,7 +142,7 @@ function HardwareWalletModal({
         gridTemplateColumns={['1fr', 'auto auto']}
         justifySelf={['stretch', 'center']}
       >
-        <Button variant="secondary-outline" onClick={closeModal}>
+        <Button variant="secondary-outline" onClick={onClose}>
           Change wallet
         </Button>
         <Button
