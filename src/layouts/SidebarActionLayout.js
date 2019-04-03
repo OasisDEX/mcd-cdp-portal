@@ -6,7 +6,7 @@ const Generate = ({ onClose, children }) => {
   return (
     <Box p="m">
       <Flex justifyContent="flex-end" pb="m">
-        <Box onClick={onClose}>
+        <Box onClick={onClose} css={{ cursor: 'pointer' }}>
           <CloseIcon />
         </Box>
       </Flex>

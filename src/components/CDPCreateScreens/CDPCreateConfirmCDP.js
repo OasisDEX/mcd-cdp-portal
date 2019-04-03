@@ -14,7 +14,8 @@ import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
-import { calcCDPParams } from 'utils/ui';
+import { calcCDPParams } from 'utils/cdp';
+import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
@@ -40,9 +41,12 @@ const CDPCreateConfirmSummary = ({
   const rows = [
     [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
     [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
-    [lang.collateralization_ratio, `${collateralizationRatio}%`],
+    [
+      lang.collateralization_ratio,
+      formatCollateralizationRatio(collateralizationRatio)
+    ],
     [lang.liquidation_ratio, `${liquidationRatio}%`],
-    [lang.liquidation_price, `$${liquidationPrice}`],
+    [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${rate}%`]
   ];

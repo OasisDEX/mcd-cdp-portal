@@ -61,6 +61,11 @@ const theme = {
       lineHeight: '22px'
     },
 
+    body: {
+      fontSize: '1.5rem',
+      color: '#48495F'
+    },
+
     smallCaps: {
       fontSize: '1.2rem',
       textTransform: 'uppercase',

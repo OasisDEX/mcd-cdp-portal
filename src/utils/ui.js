@@ -1,4 +1,17 @@
 import { greaterThanOrEqual } from './bignumber';
+import { calcDaiAvailable, getUsdPrice } from './cdp';
+
+export function formatCollateralizationRatio(ratio) {
+  if (ratio === Infinity) {
+    return 'Infinity';
+  } else {
+    return `${ratio.toFixed(2)}%`;
+  }
+}
+
+export function formatLiquidationPrice(price, ilkData) {
+  return `${price.toFixed(2)} ${ilkData.key}/USD`;
+}
 
 export function prettifyNumber(_num = null, truncate = false) {
   if (_num === null) return null;
@@ -33,57 +46,6 @@ export const copyToClipboard = string => {
   document.execCommand('Copy');
   textArea.remove();
 };
-
-export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
-  const { liquidationRatio } = ilkData;
-  const collateralizationRatio =
-    calcCollateralizationRatio({
-      deposited: parseFloat(gemsToLock),
-      price: getUsdPrice(ilkData),
-      generated: parseFloat(daiToDraw)
-    }) || 0;
-  const liquidationPrice =
-    calcLiquidationPrice({
-      liquidationRatio,
-      deposited: parseFloat(gemsToLock),
-      generated: parseFloat(daiToDraw),
-      price: getUsdPrice(ilkData)
-    }) || 0;
-  const daiAvailable = calcDaiAvailable({
-    liquidationRatio,
-    deposited: parseFloat(gemsToLock),
-    generated: parseFloat(daiToDraw),
-    price: getUsdPrice(ilkData)
-  });
-
-  return {
-    collateralizationRatio,
-    liquidationPrice,
-    daiAvailable
-  };
-}
-export function calcCollateralizationRatio({ deposited, price, generated }) {
-  const value = ((deposited * price) / generated) * 100;
-  return isNaN(value) ? 0 : value.toFixed(2);
-}
-
-export function calcLiquidationPrice({
-  liquidationRatio,
-  deposited,
-  generated
-}) {
-  const value = (liquidationRatio * generated) / (100 * deposited);
-  return isNaN(value) ? 0 : value.toFixed(2);
-}
-
-export function calcDaiAvailable({ deposited, price, liquidationRatio }) {
-  const value = deposited * price * (100 / liquidationRatio);
-  return isNaN(value) ? 0 : value.toFixed(2);
-}
-
-export function getUsdPrice(ilkData) {
-  return parseFloat(ilkData.feedValueUSD.toString()) || '---';
-}
 
 export function cdpParamsAreValid(
   { gemsToLock, daiToDraw },

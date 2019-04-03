@@ -4,7 +4,11 @@ import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
-import { calcCDPParams } from 'utils/ui';
+import {
+  getUsdPrice,
+  getLockedAndFreeCollateral,
+  calcCDPParams
+} from 'utils/cdp';
 import {
   Box,
   Grid,
@@ -285,7 +289,14 @@ function CDPView({ cdpId, getIlk }) {
                 cdpState.lockedCollateral.toNumber() *
                 cdpState.collateralPrice.toNumber()
               ).toFixed(2)} USD`,
-              <ActionButton name={lang.actions.deposit} />
+              <ActionButton name={lang.actions.deposit}
+                onClick={() =>
+                  showSidebar({
+                    sidebarType: 'deposit',
+                    sidebarProps: { cdp }
+                  })
+                }
+              />
             ],
             [
               lang.cdp_page.able_withdraw,
@@ -295,7 +306,14 @@ function CDPView({ cdpId, getIlk }) {
                 cdpState.freeCollateral.toNumber() *
                 cdpState.collateralPrice.toNumber()
               ).toFixed(2) + ' USD',
-              <ActionButton name={lang.actions.withdraw} />
+              <ActionButton name={lang.actions.withdraw}
+                onClick={() =>
+                  showSidebar({
+                    sidebarType: 'withdraw',
+                    sidebarProps: { cdp, collateralPrice, freeCollateral }
+                  })
+                }
+              />
             ]
           ]}
           isAction={true}
@@ -309,7 +327,14 @@ function CDPView({ cdpId, getIlk }) {
               `DAI ${lang.cdp_page.wallet_balance}`,
               `${cdpState.debt.toNumber().toFixed(2)} DAI`,
               `${cdpState.debt.toNumber().toFixed(2)} USD`,
-              <ActionButton name={lang.actions.pay_back} />
+              <ActionButton name={lang.actions.pay_back}
+                onClick={() =>
+                  showSidebar({
+                    sidebarType: 'payback',
+                    sidebarProps: { cdp }
+                  })
+                }
+              />
             ],
             [
               lang.cdp_page.able_generate,
