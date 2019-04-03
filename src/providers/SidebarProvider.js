@@ -7,7 +7,7 @@ function resolveSidebarTypeToComponent(sidebars, type) {
 }
 
 const initialState = {
-  sidebarType: 'global',
+  sidebarType: '',
   sidebarProps: {}
 };
 
