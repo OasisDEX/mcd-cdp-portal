@@ -24,20 +24,18 @@ export default function MetaMaskConnect() {
       width="225px"
       disabled={!makerAuthenticated}
       onClick={async () => {
-        const connectedAddress = await connectMetamask();
+        try {
+          const connectedAddress = await connectMetamask();
 
-        const {
-          network,
-          testchainId
-        } = (await navigation.getRoute()).url.query;
+          const { search } = (await navigation.getRoute()).url;
 
-        navigation.navigate({
-          pathname: `owner/${connectedAddress}`,
-          search:
-            testchainId !== undefined
-              ? `?testchainId=${testchainId}`
-              : `?network=${network}`
-        });
+          navigation.navigate({
+            pathname: `owner/${connectedAddress}`,
+            search
+          });
+        } catch (err) {
+          window.alert(err);
+        }
       }}
     >
       <Flex alignItems="center">

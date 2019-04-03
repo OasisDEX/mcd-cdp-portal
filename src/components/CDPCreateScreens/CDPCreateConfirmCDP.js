@@ -121,11 +121,15 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <SpaceshipIllustration />
-
+          <Box m="auto">
+            <SpaceshipIllustration />
+          </Box>
           <Box my="l" textAlign="center">
             {isTestchain ? (
-              <Text>{hash}</Text>
+              <Grid gridRowGap="s">
+                <Text>Transaction hash</Text>
+                <Text>{hash}</Text>
+              </Grid>
             ) : (
               <Link
                 t="textS"
