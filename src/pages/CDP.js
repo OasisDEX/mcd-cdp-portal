@@ -11,16 +11,13 @@ import {
   Flex,
   Card,
   Button,
-  Table,
-  Address,
-  Link
+  Table
 } from '@makerdao/ui-components-core';
-
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
-import { etherscanLink } from '../utils/ethereum';
+import ExternalLink from 'components/ExternalLink';
 
 function CardTitle({ title }) {
   return (
@@ -168,12 +165,6 @@ const CdpViewHistory = ({ title, rows }) => {
     </Box>
   );
 };
-
-const AddrLink = ({ address }) => (
-  <Link fontWeight="400" href={etherscanLink(address, 'kovan')} target="_blank">
-    <Address full={`${address}\u2B67`} shorten={true} />
-  </Link>
-);
 
 function CDPView({ cdpId, getIlk }) {
   const { maker } = useMaker();
@@ -345,36 +336,36 @@ function CDPView({ cdpId, getIlk }) {
             'ETH',
             'Paid back 1,000.00 DAI',
             'Feb 15, 2019',
-            <AddrLink address={mockAddr} />,
-            <AddrLink address={mockAddr} />
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Sent 1,000.00 DAI',
             'Feb 12, 2019',
-            <AddrLink address={mockAddr} />,
-            <AddrLink address={mockAddr} />
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Locked 1,000.00 DAI',
             'Feb 09, 2019',
-            <AddrLink address={mockAddr} />,
-            <AddrLink address={mockAddr} />
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Withdrew 3,468.72 ETH',
             'Feb 03, 2019',
-            <AddrLink address={mockAddr} />,
-            <AddrLink address={mockAddr} />
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Opened CDP',
             'Jan 15, 2019',
-            <AddrLink address={mockAddr} />,
-            <AddrLink address={mockAddr} />
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
           ]
         ]}
       />
