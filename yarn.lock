@@ -1022,10 +1022,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.14.0.tgz#a8918557006f934c79a57e5b28303f8ef6e34f11"
-  integrity sha512-Fdeo5q32wZhTZtQjFe45X7b02pjvWse3k32iExQHcIVVLDNMAGsRgy54+9DetwVaBapMziQYv/x0pt8s8l7qcQ==
+"@makerdao/dai@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.0.tgz#17887c5719eca319f2d198a4dc2267c79f833ff1"
+  integrity sha512-YafJfM9qqLti3XB0y/k6Qc9TOZuyVpm2Ljht84XzU+FYdHhgzlPcetvYQ49NYrbYEeD00fmQv56SkpEwrUHXPw==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
