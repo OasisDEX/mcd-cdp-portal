@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import useMaker from 'hooks/useMaker';
-import useSidebar from 'hooks/useSidebar';
 import { getColor } from 'styles/theme';
 import { hot } from 'react-hot-loader/root';
-
+import SidebarBase from 'components/SidebarBase';
 import { mediaQueries } from 'styles/constants';
 const breakpoint = mediaQueries.m.min;
 
@@ -18,7 +17,12 @@ const ResponsiveWrap = styled.div`
 
   ${breakpoint} {
     display: grid;
-    grid-template-columns: 80px 1fr 315px;
+    grid-template-columns: ${({ theme }) =>
+      [
+        theme.measurement.navbarWidth,
+        '1fr',
+        theme.measurement.sidebarWidth
+      ].join(' ')};
     grid-template-areas: 'navbar view sidebar';
   }
 `;
@@ -60,8 +64,6 @@ const MobileNavWrap = styled.div`
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   const { account } = useMaker();
-  const { current } = useSidebar();
-  const { component: SidebarComponent, props } = current;
 
   return (
     <ResponsiveWrap>
@@ -71,7 +73,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
       </NavbarWrap>
       {children}
       <SidebarWrap>
-        <SidebarComponent {...props} />
+        <SidebarBase />
       </SidebarWrap>
     </ResponsiveWrap>
   );
