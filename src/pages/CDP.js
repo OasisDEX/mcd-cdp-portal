@@ -295,7 +295,7 @@ function CDPView({ cdpId, getIlk }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp, collateralPrice, freeCollateral }
+                    sidebarProps: { cdp }
                   })
                 }
               />
