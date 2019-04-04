@@ -38,13 +38,35 @@ function useMaker() {
           'browser ethereum provider and URL network param do not match.'
         );
 
-      if (!isConnectedToProvider(browserProvider))
-        await maker.addAccount({
+      if (!browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/))
+        throw new Error(
+          'browser ethereum provider providing incorrect or non-existent address'
+        );
+
+      let metaMaskAccount;
+      if (!maker.service('accounts').hasAccount) {
+        metaMaskAccount = await maker.addAccount({
           type: 'browser'
         });
+      } else {
+        const matchedAccount = maker
+          .listAccounts()
+          .find(
+            acc =>
+              acc.address.toUpperCase() ===
+              browserProvider.address.toUpperCase()
+          );
+        if (!matchedAccount) {
+          metaMaskAccount = await maker.addAccount({
+            type: 'browser'
+          });
+        } else {
+          metaMaskAccount = matchedAccount;
+        }
+      }
 
+      maker.useAccountWithAddress(metaMaskAccount.address);
       const connectedAddress = maker.currentAddress();
-
       return connectedAddress;
     } catch (err) {
       window.alert(err.toString());

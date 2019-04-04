@@ -60,13 +60,22 @@ const renderAccountsSelection = ({
               });
             },
             confirmAddress: address => {
-              pickAccount(null, address);
+              const matchedAccount = maker
+                .listAccounts()
+                .find(
+                  acc => acc.address.toUpperCase() === address.toUpperCase()
+                );
+              if (matchedAccount) {
+                onConfirm(matchedAccount, type);
+              } else {
+                pickAccount(null, address);
+              }
             }
           }
         });
       }
     })
-    .then(() => onConfirm(type))
+    .then(account => onConfirm(account, type))
     .catch(err => console.error('Failed to add account', err));
 };
 
@@ -75,9 +84,9 @@ export default function HardwareWalletConnect({ type }) {
   const navigation = useNavigation();
   const { show } = useModal();
 
-  async function onConfirm(accType) {
+  async function onConfirm(account, accType) {
+    maker.useAccountWithAddress(account.address);
     const connectedAddress = maker.currentAddress();
-
     mixpanelIdentify(connectedAddress, accType);
 
     const { network } = (await navigation.getRoute()).url.query;
