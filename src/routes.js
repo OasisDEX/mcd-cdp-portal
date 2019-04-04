@@ -3,15 +3,15 @@ import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import Sidebar from 'components/Sidebar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import CDPPage from 'pages/CDP';
-
+import sidebars from 'components/Sidebars';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
+import { SidebarProvider } from 'providers/SidebarProvider';
 import MakerHooksProvider from 'providers/MakerHooksProvider';
 import WatcherProvider from 'providers/WatcherProvider';
 
@@ -48,22 +48,27 @@ const withDefaultLayout = route =>
       const networkId = networkNameToId(network);
       return (
         <WatcherProvider addresses={addresses} rpcUrl={rpcUrl}>
-          <MakerHooksProvider addresses={addresses} rpcUrl={rpcUrl}>
+          <MakerHooksProvider
+            addresses={addresses}
+            rpcUrl={rpcUrl}
+            network={network}
+          >
             <RouteEffects addresses={addresses} network={network}>
               <AwaitMakerAuthentication>
                 <ModalProvider modals={modals} templates={templates}>
-                  <PageLayout
-                    mobileNav={
-                      <MobileNav
-                        networkId={networkId}
-                        viewedAddress={viewedAddress}
-                      />
-                    }
-                    navbar={<Navbar viewedAddress={viewedAddress} />}
-                    sidebar={<Sidebar networkId={networkId} />}
-                  >
-                    <View />
-                  </PageLayout>
+                  <SidebarProvider sidebars={sidebars}>
+                    <PageLayout
+                      mobileNav={
+                        <MobileNav
+                          networkId={networkId}
+                          viewedAddress={viewedAddress}
+                        />
+                      }
+                      navbar={<Navbar viewedAddress={viewedAddress} />}
+                    >
+                      <View />
+                    </PageLayout>
+                  </SidebarProvider>
                 </ModalProvider>
               </AwaitMakerAuthentication>
             </RouteEffects>

@@ -5,7 +5,7 @@ import store from 'store';
 
 export const MakerObjectContext = createContext();
 
-function MakerHooksProvider({ children, rpcUrl, addresses }) {
+function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [account, setAccount] = useState(null);
   const [maker, setMaker] = useState(null);
 
@@ -25,7 +25,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses }) {
   }, [rpcUrl, addresses]);
 
   return (
-    <MakerObjectContext.Provider value={{ maker, account }}>
+    <MakerObjectContext.Provider value={{ maker, account, network }}>
       {children}
     </MakerObjectContext.Provider>
   );

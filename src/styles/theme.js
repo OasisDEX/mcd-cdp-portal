@@ -61,6 +61,11 @@ const theme = {
       lineHeight: '22px'
     },
 
+    body: {
+      fontSize: '1.5rem',
+      color: '#48495F'
+    },
+
     smallCaps: {
       fontSize: '1.2rem',
       textTransform: 'uppercase',
@@ -69,10 +74,18 @@ const theme = {
     },
 
     ...typography
+  },
+  measurement: {
+    sidebarWidth: '315px',
+    navbarWidth: '80px'
   }
 };
 
 export default theme;
+
+export function getMeasurement(key) {
+  return theme.measurement[key];
+}
 
 export function getSpace(key) {
   return theme.space[key];

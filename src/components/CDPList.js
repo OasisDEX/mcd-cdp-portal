@@ -80,7 +80,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       /> */}
       {cdps.map((cdp, idx) => {
         const linkPath = `/${cdp.id}`;
-        const active = currentPath.includes(linkPath);
+        const active = currentPath === linkPath;
         return (
           <NavbarItem
             key={idx}
@@ -94,7 +94,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       {!account ? null : (
         <DashedFakeButton
           onClick={() =>
-            show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
+            show({ modalType: 'cdpcreate', modalTemplate: 'basic' })
           }
           justifyContent="center"
           borderRadius="4px"

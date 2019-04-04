@@ -9,18 +9,19 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-import { TextBlock } from 'components/Typography';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
-import { calcCDPParams } from 'utils/ui';
+import { calcCDPParams } from 'utils/cdp';
+import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -40,9 +41,12 @@ const CDPCreateConfirmSummary = ({
   const rows = [
     [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
     [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
-    [lang.collateralization_ratio, `${collateralizationRatio}%`],
+    [
+      lang.collateralization_ratio,
+      formatCollateralizationRatio(collateralizationRatio)
+    ],
     [lang.liquidation_ratio, `${liquidationRatio}%`],
-    [lang.liquidation_price, `$${liquidationPrice}`],
+    [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${rate}%`]
   ];
@@ -108,8 +112,6 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
   const networkId = maker.service('web3').networkId();
   const isTestchain = ![1, 42].includes(networkId);
 
-  const emoji = '🔥🤑🔥';
-
   return (
     <Box
       maxWidth="1040px"
@@ -123,9 +125,8 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <TextBlock textAlign="center" fontSize="70px">
-            {emoji}
-          </TextBlock>
+          <SpaceshipIllustration />
+
           <Box my="l" textAlign="center">
             {isTestchain ? (
               <Text>{hash}</Text>

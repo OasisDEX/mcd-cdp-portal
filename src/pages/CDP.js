@@ -4,10 +4,19 @@ import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
-import { Box, Grid, Flex, Card, Button } from '@makerdao/ui-components-core';
+import {
+  Box,
+  Grid,
+  Flex,
+  Card,
+  Button,
+  Table
+} from '@makerdao/ui-components-core';
 import { Title, TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
+import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
+import ExternalLink from 'components/ExternalLink';
 
 function CardTitle({ title }) {
   return (
@@ -88,10 +97,10 @@ const ActionContainerRow = ({ props }) => {
   );
 };
 
-const ActionButton = ({ name, onClick }) => (
-  <Button width="100px" p="xs" variant="secondary" onClick={onClick}>
+const ActionButton = ({ children, ...props }) => (
+  <Button width="100px" p="xs" variant="secondary" {...props}>
     <TextBlock t="p5" color="black4">
-      {name}
+      {children}
     </TextBlock>
   </Button>
 );
@@ -119,8 +128,46 @@ const CdpViewCard = ({ title, rows, isAction }) => {
   );
 };
 
+const CdpViewHistory = ({ title, rows }) => {
+  return (
+    <Box>
+      <CardTitle title={title} />
+      <Card px="m" py="s" my="s">
+        <Table width="100%" variant="normal">
+          <thead>
+            <tr>
+              <th>{lang.table.type}</th>
+              <th>{lang.table.activity}</th>
+              <th>{lang.table.time}</th>
+              <th>{lang.table.sender_id}</th>
+              <th>{lang.table.tx_hash}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(
+              (
+                [collateralType, actionMsg, dateOfAction, senderId, txHash],
+                i
+              ) => (
+                <tr key={i}>
+                  <td>{collateralType}</td>
+                  <td>{actionMsg}</td>
+                  <td>{dateOfAction}</td>
+                  <td>{senderId}</td>
+                  <td>{txHash}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </Table>
+      </Card>
+    </Box>
+  );
+};
+
 function CDPView({ cdpId, getIlk }) {
-  const { maker } = useMaker();
+  const { maker, account } = useMaker();
+  const { show: showSidebar } = useSidebar();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdpState, setCDP] = useState(null);
@@ -166,6 +213,7 @@ function CDPView({ cdpId, getIlk }) {
 
   if (!cdpState) return <LoadingLayout />;
 
+  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
       <Box>
@@ -272,6 +320,47 @@ function CDPView({ cdpId, getIlk }) {
           isAction={true}
         />
       </Grid>
+
+      <CdpViewHistory
+        title={lang.cdp_page.tx_history}
+        rows={[
+          [
+            'ETH',
+            'Paid back 1,000.00 DAI',
+            'Feb 15, 2019',
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
+          ],
+          [
+            'ETH',
+            'Sent 1,000.00 DAI',
+            'Feb 12, 2019',
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
+          ],
+          [
+            'ETH',
+            'Locked 1,000.00 DAI',
+            'Feb 09, 2019',
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
+          ],
+          [
+            'ETH',
+            'Withdrew 3,468.72 ETH',
+            'Feb 03, 2019',
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
+          ],
+          [
+            'ETH',
+            'Opened CDP',
+            'Jan 15, 2019',
+            <ExternalLink address={mockAddr} network={'kovan'} />,
+            <ExternalLink address={mockAddr} network={'kovan'} />
+          ]
+        ]}
+      />
     </PageContentLayout>
   );
 }

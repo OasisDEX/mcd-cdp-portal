@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import useMaker from 'hooks/useMaker';
 import { getColor } from 'styles/theme';
-
+import { hot } from 'react-hot-loader/root';
+import SidebarBase from 'components/SidebarBase';
 import { mediaQueries } from 'styles/constants';
 const breakpoint = mediaQueries.m.min;
 
@@ -16,7 +17,12 @@ const ResponsiveWrap = styled.div`
 
   ${breakpoint} {
     display: grid;
-    grid-template-columns: 80px 1fr 315px;
+    grid-template-columns: ${({ theme }) =>
+      [
+        theme.measurement.navbarWidth,
+        '1fr',
+        theme.measurement.sidebarWidth
+      ].join(' ')};
     grid-template-areas: 'navbar view sidebar';
   }
 `;
@@ -56,7 +62,7 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => {
+const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   const { account } = useMaker();
 
   return (
@@ -66,9 +72,11 @@ const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, children }) => {
         {navbar}
       </NavbarWrap>
       {children}
-      <SidebarWrap>{sidebar}</SidebarWrap>
+      <SidebarWrap>
+        <SidebarBase />
+      </SidebarWrap>
     </ResponsiveWrap>
   );
 };
 
-export default ResponsivePageLayout;
+export default hot(ResponsivePageLayout);
