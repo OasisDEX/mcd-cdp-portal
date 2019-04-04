@@ -17,7 +17,11 @@ export default function AccountConnect() {
   const { connectMetamask } = useMaker();
 
   const connectOnClick = async () => {
-    await connectMetamask();
+    try {
+      await connectMetamask();
+    } catch (err) {
+      window.alert(err);
+    }
   };
 
   return (

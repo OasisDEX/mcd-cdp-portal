@@ -10,8 +10,8 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [maker, setMaker] = useState(null);
 
   React.useEffect(() => {
-    if (!rpcUrl || !addresses) return;
-    instantiateMaker({ rpcUrl, addresses }).then(maker => {
+    if (!rpcUrl) return;
+    instantiateMaker({ network, rpcUrl, addresses }).then(maker => {
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
