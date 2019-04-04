@@ -102,10 +102,10 @@ const ActionContainerRow = ({ props }) => {
   );
 };
 
-const ActionButton = ({ name, onClick }) => (
-  <Button width="100px" p="xs" variant="secondary" onClick={onClick}>
+const ActionButton = ({ children, ...props }) => (
+  <Button width="100px" p="xs" variant="secondary" {...props}>
     <TextBlock t="p5" color="black4">
-      {name}
+      {children}
     </TextBlock>
   </Button>
 );
@@ -171,7 +171,7 @@ const CdpViewHistory = ({ title, rows }) => {
 };
 
 function CDPView({ cdpId, getIlk }) {
-  const { maker } = useMaker();
+  const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
@@ -276,14 +276,16 @@ function CDPView({ cdpId, getIlk }) {
               lockedCollateral && lockedCollateral.toFixed(2) + ` ${cdp.ilk}`,
               `${(lockedCollateral * collateralPrice).toFixed(2)} USD`,
               <ActionButton
-                name={lang.actions.deposit}
+                disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
                     sidebarProps: { cdp }
                   })
                 }
-              />
+              >
+                {lang.actions.deposit}
+              </ActionButton>
             ],
             [
               lang.cdp_page.able_withdraw,
@@ -291,14 +293,16 @@ function CDPView({ cdpId, getIlk }) {
                 freeCollateral.toFixed(2) + ` ${collateralDenomination}`,
               (freeCollateral * collateralPrice).toFixed(2) + ' USD',
               <ActionButton
-                name={lang.actions.withdraw}
+                disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
                     sidebarProps: { cdp }
                   })
                 }
-              />
+              >
+                {lang.actions.withdraw}
+              </ActionButton>
             ]
           ]}
           isAction={true}
@@ -313,28 +317,32 @@ function CDPView({ cdpId, getIlk }) {
               `${debtInt && debtInt.toFixed(2)} DAI`,
               `${debtInt && debtInt.toFixed(2)} USD`,
               <ActionButton
-                name={lang.actions.pay_back}
+                disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'payback',
                     sidebarProps: { cdp }
                   })
                 }
-              />
+              >
+                {lang.actions.pay_back}
+              </ActionButton>
             ],
             [
               lang.cdp_page.able_generate,
               `${generateAmount && generateAmount.toFixed(2)} DAI`,
               `${generateAmount && generateAmount.toFixed(2)} USD`,
               <ActionButton
-                name={lang.actions.generate}
+                disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
                     sidebarProps: { cdp }
                   })
                 }
-              />
+              >
+                {lang.actions.generate}
+              </ActionButton>
             ]
           ]}
           isAction={true}
