@@ -15,11 +15,13 @@ const Payback = ({ cdp, reset }) => {
   const [daiBalance, setDaiBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
-  //
-  // maker.getToken('DAI').balanceOf(maker.currentAddress()).then((daiBalance) => {
-  //   console.log(daiBalance)
-  //   setDaiBalance(daiBalance.toNumber())
-  // })
+
+  maker
+    .getToken('MDAI')
+    .balanceOf(maker.currentAddress())
+    .then(daiBalance => {
+      setDaiBalance(daiBalance.toNumber());
+    });
 
   useEffect(() => {
     const amountToPayback = parseFloat(amount || 0);
@@ -76,7 +78,7 @@ const Payback = ({ cdp, reset }) => {
         </Grid>
         <Info
           title="Dai balance"
-          body={`${daiBalance && daiBalance.toFixed(2)} DAI`}
+          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
         />
         <Info
           title="Dai debt"
