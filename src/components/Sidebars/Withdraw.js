@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
+import useMaker from '../../hooks/useMaker';
 import {
   calcCDPParams,
   getLockedAndFreeCollateral,
@@ -13,6 +14,7 @@ import {
 } from '../../utils/ui';
 
 const Withdraw = ({ cdp, reset }) => {
+  const { maker } = useMaker();
   const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
@@ -39,6 +41,12 @@ const Withdraw = ({ cdp, reset }) => {
   const lessThanMax = amount === '' || parseFloat(amount) <= freeCollateral;
   const moreThanZero = amount !== '' && amount > 0;
   const valid = moreThanZero && lessThanMax;
+
+  const withdraw = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    managedCdp.freeCollateral(parseFloat(amount));
+    reset();
+  };
 
   return (
     <SidebarActionLayout onClose={reset}>
@@ -87,7 +95,9 @@ const Withdraw = ({ cdp, reset }) => {
           }
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Withdraw</Button>
+          <Button disabled={!valid} onClick={withdraw}>
+            Withdraw
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
             Cancel
           </Button>

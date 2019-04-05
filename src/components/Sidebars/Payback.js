@@ -39,6 +39,12 @@ const Payback = ({ cdp, reset }) => {
     setAmount(cdp.debt.toNumber());
   };
 
+  const payback = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    managedCdp.wipeDai(parseFloat(amount));
+    reset();
+  };
+
   const amt = parseFloat(amount);
   const isLessThanBalance = amt <= daiBalance;
   const isLessThanDebt = amt <= cdp.debt.toNumber();
@@ -93,7 +99,9 @@ const Payback = ({ cdp, reset }) => {
           body={formatCollateralizationRatio(collateralizationRatio)}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Payback</Button>
+          <Button disabled={!valid} onClick={payback}>
+            Payback
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
             Cancel
           </Button>

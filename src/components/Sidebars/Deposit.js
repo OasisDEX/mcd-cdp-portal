@@ -41,6 +41,12 @@ const Deposit = ({ cdp, reset }) => {
     setAmount(gemBalance);
   };
 
+  const deposit = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    managedCdp.lockCollateral(parseFloat(amount));
+    reset();
+  };
+
   const lessThanBalance = amount === '' || parseFloat(amount) <= gemBalance;
   const inputNotEmpty = amount !== '';
   const valid = inputNotEmpty && lessThanBalance;
@@ -86,7 +92,9 @@ const Deposit = ({ cdp, reset }) => {
           body={formatCollateralizationRatio(collateralizationRatio)}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Deposit</Button>
+          <Button onClick={deposit} disabled={!valid}>
+            Deposit
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
             Cancel
           </Button>
