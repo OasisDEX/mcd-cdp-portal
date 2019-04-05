@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button, Link } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import { calcCDPParams } from '../../utils/cdp';
@@ -38,6 +38,10 @@ const Generate = ({ cdp, reset }) => {
     collateralizationRatio < cdp.ilkData.liquidationRatio;
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
+  const setMax = () => {
+    setAmount(daiAvailable);
+  };
+
   const generate = async () => {
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
     managedCdp.drawDai(parseFloat(amount));
@@ -48,10 +52,10 @@ const Generate = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <h3>Generate DAI</h3>
+          <h3>{lang.action_sidebar.generate_title}</h3>
           <p>
             <Text color="text" t="body">
-              How much DAI would you like to generate?
+              {lang.action_sidebar.generate_description}
             </Text>
           </p>
           <Input
@@ -61,20 +65,27 @@ const Generate = ({ cdp, reset }) => {
             onChange={evt => setAmount(evt.target.value)}
             placeholder="0.00 DAI"
             errorMessage={
-              undercollateralized ? lang.cdp_create.draw_too_much_dai : null
+              undercollateralized
+                ? lang.action_sidebar.cdp_below_threshold
+                : null
+            }
+            after={
+              <Link fontWeight="medium" onClick={setMax}>
+                {lang.action_sidebar.set_max}
+              </Link>
             }
           />
         </Grid>
         <Info
-          title="Maximum available to generate"
+          title={lang.action_sidebar.maximum_available_to_generate}
           body={`${daiAvailable.toFixed(6)} DAI`}
         />
         <Info
-          title="New liquidation price"
+          title={lang.action_sidebar.new_liquidation_price}
           body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
         />
         <Info
-          title="New collateralization ratio"
+          title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <Text color={undercollateralized ? 'linkOrange' : null}>
               {formatCollateralizationRatio(collateralizationRatio)}
@@ -83,10 +94,10 @@ const Generate = ({ cdp, reset }) => {
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
           <Button onClick={generate} disabled={!valid}>
-            Generate
+            {lang.actions.generate}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>
-            Cancel
+            {lang.cancel}
           </Button>
         </Grid>
       </Grid>

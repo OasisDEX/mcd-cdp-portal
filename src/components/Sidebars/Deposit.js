@@ -8,6 +8,7 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
+import lang from 'languages';
 
 const Deposit = ({ cdp, reset }) => {
   const { maker } = useMaker();
@@ -41,6 +42,12 @@ const Deposit = ({ cdp, reset }) => {
     setAmount(gemBalance);
   };
 
+  const deposit = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    managedCdp.lockCollateral(parseFloat(amount));
+    reset();
+  };
+
   const lessThanBalance = amount === '' || parseFloat(amount) <= gemBalance;
   const inputNotEmpty = amount !== '';
   const valid = inputNotEmpty && lessThanBalance;
@@ -49,9 +56,19 @@ const Deposit = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <h3>Deposit {cdp.ilkData.gem}</h3>
+          <h3>
+            {lang.formatString(
+              lang.action_sidebar.deposit_title,
+              cdp.ilkData.gem
+            )}
+          </h3>
           <p>
-            <Text t="body">How much {cdp.ilk} would you like to deposit?</Text>
+            <Text t="body">
+              {lang.formatString(
+                lang.action_sidebar.deposit_description,
+                cdp.ilkData.gem
+              )}
+            </Text>
           </p>
           <Input
             type="number"
@@ -61,34 +78,44 @@ const Deposit = ({ cdp, reset }) => {
             placeholder={`0.00 ${cdp.ilkData.gem}`}
             after={
               <Link fontWeight="medium" onClick={setMax}>
-                Set max
+                {lang.action_sidebar.set_max}
               </Link>
             }
             errorMessage={
-              lessThanBalance ? null : 'Amount must be less than balance'
+              lessThanBalance
+                ? null
+                : lang.formatString(
+                    lang.action_sidebar.insufficient_balance,
+                    cdp.ilkData.gem
+                  )
             }
           />
         </Grid>
         <Info
-          title="Current account balance"
+          title={lang.action_sidebar.current_account_balance}
           body={`${gemBalance.toFixed(6)} ${cdp.ilkData.gem}`}
         />
         <Info
-          title={`${cdp.ilkData.gem}/USD price feed`}
+          title={lang.formatString(
+            lang.action_sidebar.gem_usd_price_feed,
+            cdp.ilkData.gem
+          )}
           body={`${priceFeed} ${cdp.ilkData.gem}/USD`}
         />
         <Info
-          title="New liquidation price"
+          title={lang.action_sidebar.new_liquidation_price}
           body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
         />
         <Info
-          title="New collateralization ratio"
+          title={lang.action_sidebar.new_collateralization_ratio}
           body={formatCollateralizationRatio(collateralizationRatio)}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Deposit</Button>
+          <Button onClick={deposit} disabled={!valid}>
+            {lang.actions.deposit}
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
-            Cancel
+            {lang.cancel}
           </Button>
         </Grid>
       </Grid>

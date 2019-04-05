@@ -5,11 +5,13 @@ export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
     return 'Infinity';
   } else {
+    if (ratio < 0) ratio = 0;
     return `${ratio.toFixed(2)}%`;
   }
 }
 
 export function formatLiquidationPrice(price, ilkData) {
+  if (price < 0) price = 0;
   return `${price.toFixed(2)} ${ilkData.key}/USD`;
 }
 

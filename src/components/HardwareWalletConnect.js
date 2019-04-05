@@ -89,11 +89,11 @@ export default function HardwareWalletConnect({ type }) {
     const connectedAddress = maker.currentAddress();
     mixpanelIdentify(connectedAddress, accType);
 
-    const { network } = (await navigation.getRoute()).url.query;
+    const { search } = (await navigation.getRoute()).url;
 
     navigation.navigate({
       pathname: `owner/${connectedAddress}`,
-      search: `?network=${network}`
+      search
     });
   }
 

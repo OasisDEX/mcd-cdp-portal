@@ -17,6 +17,11 @@ export function getMaker() {
 }
 
 export async function instantiateMaker({ rpcUrl, addresses }) {
+  const params = new URL(window.location).searchParams;
+  const mcdPluginConfig = {
+    simplePriceFeeds: !!params.get('simplePriceFeeds')
+  };
+
   const config = {
     log: false,
     // NOTE: gas price is temporarily hard coded
@@ -24,22 +29,7 @@ export async function instantiateMaker({ rpcUrl, addresses }) {
     gas: {
       price: 5000000000
     },
-    plugins: [
-      trezorPlugin,
-      ledgerPlugin,
-      [
-        McdPlugin,
-        {
-          // cdpTypes: ilkList.map(({ currency, key, gem }) => ({
-          //   currency,
-          //   ilk: key,
-          //   address: addresses[gem],
-          //   abi: dsTokenAbi
-          // })),
-          addressOverrides: { ...addresses }
-        }
-      ]
-    ],
+    plugins: [trezorPlugin, ledgerPlugin, [McdPlugin, mcdPluginConfig]],
     smartContract: {
       addContracts: {}
     },
@@ -49,19 +39,21 @@ export async function instantiateMaker({ rpcUrl, addresses }) {
     }
   };
 
-  for (let ilk of ilkList) {
-    const adapterName = `MCD_JOIN_${ilk.key}`;
-    config.smartContract.addContracts[adapterName] = {
-      abi: gemJoinAbi,
-      address: addresses[adapterName]
-    };
-  }
-
-  if (addresses.PROXY_REGISTRY) {
-    config.smartContract.addContracts.PROXY_REGISTRY = {
-      address: addresses.PROXY_REGISTRY,
-      abi: proxyRegistryAbi
-    };
+  if (addresses) {
+    mcdPluginConfig.addressOverrides = addresses;
+    for (let ilk of ilkList) {
+      const adapterName = `MCD_JOIN_${ilk.key.replace(/-/g, '_')}`;
+      config.smartContract.addContracts[adapterName] = {
+        abi: gemJoinAbi,
+        address: addresses[adapterName]
+      };
+    }
+    if (addresses.PROXY_REGISTRY) {
+      config.smartContract.addContracts.PROXY_REGISTRY = {
+        address: addresses.PROXY_REGISTRY,
+        abi: proxyRegistryAbi
+      };
+    }
   }
 
   const maker = await Maker.create('http', config);

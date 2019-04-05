@@ -8,6 +8,7 @@ import {
 } from '../../utils/ui';
 import { calcCDPParams } from '../../utils/cdp';
 import Info from './shared/Info';
+import lang from 'languages';
 
 const Payback = ({ cdp, reset }) => {
   const { maker } = useMaker();
@@ -36,28 +37,38 @@ const Payback = ({ cdp, reset }) => {
   }, [amount]);
 
   const setMax = () => {
-    setAmount(cdp.debt.toNumber());
+    setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
+  };
+
+  const payback = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    managedCdp.wipeDai(parseFloat(amount));
+    reset();
   };
 
   const amt = parseFloat(amount);
   const isLessThanBalance = amt <= daiBalance;
   const isLessThanDebt = amt <= cdp.debt.toNumber();
-  const isNonZero = amount !== 0 && amt > 0;
+  const isNonZero = amount !== '' && amt > 0;
   const valid = isNonZero && isLessThanDebt && isLessThanBalance;
 
   let errorMessage = null;
-  if (!isLessThanBalance && isNonZero) errorMessage = 'Insufficient balance';
+  if (!isLessThanBalance && isNonZero)
+    errorMessage = lang.formatString(
+      lang.action_sidebar.insufficient_balance,
+      'DAI'
+    );
   if (!isLessThanDebt && isNonZero)
-    errorMessage = 'Cannot payback more than owed';
+    errorMessage = lang.action_sidebar.cannot_payback_more_than_owed;
 
   return (
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <h3>Payback DAI</h3>
+          <h3>{lang.action_sidebar.payback_title}</h3>
           <p>
             <Text color="text" t="body">
-              How much DAI would you like to payback?
+              {lang.action_sidebar.payback_description}
             </Text>
           </p>
           <Input
@@ -70,32 +81,34 @@ const Payback = ({ cdp, reset }) => {
             after={
               <div>
                 <Link onClick={setMax} fontWeight="medium">
-                  Set max
+                  {lang.action_sidebar.set_max}
                 </Link>
               </div>
             }
           />
         </Grid>
         <Info
-          title="Dai balance"
+          title={lang.action_sidebar.dai_balance}
           body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
         />
         <Info
-          title="Dai debt"
+          title={lang.action_sidebar.dai_debt}
           body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
         />
         <Info
-          title="New liquidation price"
+          title={lang.action_sidebar.new_liquidation_price}
           body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
         />
         <Info
-          title="New collateralization ratio"
+          title={lang.action_sidebar.new_collateralization_ratio}
           body={formatCollateralizationRatio(collateralizationRatio)}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Payback</Button>
+          <Button disabled={!valid} onClick={payback}>
+            {lang.actions.pay_back}
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
-            Cancel
+            {lang.cancel}
           </Button>
         </Grid>
       </Grid>
