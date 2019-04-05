@@ -36,7 +36,7 @@ const Payback = ({ cdp, reset }) => {
   }, [amount]);
 
   const setMax = () => {
-    setAmount(cdp.debt.toNumber());
+    setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
   };
 
   const payback = async () => {

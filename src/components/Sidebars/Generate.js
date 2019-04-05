@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button, Link } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import { calcCDPParams } from '../../utils/cdp';
@@ -38,6 +38,10 @@ const Generate = ({ cdp, reset }) => {
     collateralizationRatio < cdp.ilkData.liquidationRatio;
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
+  const setMax = () => {
+    setAmount(daiAvailable);
+  };
+
   const generate = async () => {
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
     managedCdp.drawDai(parseFloat(amount));
@@ -62,6 +66,11 @@ const Generate = ({ cdp, reset }) => {
             placeholder="0.00 DAI"
             errorMessage={
               undercollateralized ? lang.cdp_create.draw_too_much_dai : null
+            }
+            after={
+              <Link fontWeight="medium" onClick={setMax}>
+                Set max
+              </Link>
             }
           />
         </Grid>
