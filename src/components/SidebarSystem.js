@@ -1,8 +1,6 @@
 import React from 'react';
-
 import lang from 'languages';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
-
 import { prettifyNumber } from 'utils/ui';
 
 const GLOBAL_DEBT_CEILING = system => [

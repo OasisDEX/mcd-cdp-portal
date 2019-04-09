@@ -42,20 +42,41 @@ const AnimatedWrap = styled(animated.div)`
   padding-right: ${({ theme }) => theme.space.s};
 `;
 
+const springConfig = { mass: 1, tension: 210, friction: 25 };
+
 function Sidebar() {
   const { account } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
-  const [slideAnimation, setAnimation] = useSpring(() => ({
+  const [faded, visible] = animations.fade;
+  const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
-    config: { mass: 1, tension: 210, friction: 25 }
+    config: springConfig
+  }));
+
+  const [p1FadeAnimation, setP1FadeAnimation] = useSpring(() => ({
+    to: visible,
+    config: springConfig
+  }));
+
+  const [p2FadeAnimation, setP2FadeAnimation] = useSpring(() => ({
+    to: faded,
+    config: springConfig
   }));
 
   const resetSidebarActionAnimated = () => {
     const { reset } = props;
 
-    setAnimation({
+    setP1FadeAnimation({
+      to: visible
+    });
+
+    setP2FadeAnimation({
+      to: faded
+    });
+
+    setSlideAnimation({
       to: slideStart,
       onRest() {
         reset();
@@ -65,14 +86,29 @@ function Sidebar() {
 
   useEffect(() => {
     if (SidebarComponent) {
-      setAnimation({
+      setP1FadeAnimation({
+        to: faded
+      });
+
+      setP2FadeAnimation({
+        to: visible
+      });
+
+      setSlideAnimation({
         to: slideEnd,
         onRest() {}
       });
     }
-  }, [SidebarComponent]);
+  }, [
+    SidebarComponent,
+    faded,
+    setP1FadeAnimation,
+    setP2FadeAnimation,
+    setSlideAnimation,
+    slideEnd,
+    visible
+  ]);
 
-  // if we want to change the sidebar color when connected vs. read-only mode.
   return (
     <Box>
       <Grid gridRowGap="s" py="s">
@@ -80,11 +116,17 @@ function Sidebar() {
           <AccountSection currentAccount={account} />
         </Box>
         <Flex css={'overflow:hidden;'}>
-          <AnimatedWrap style={slideAnimation} key="panel1">
+          <AnimatedWrap
+            style={{ ...slideAnimation, ...p1FadeAnimation }}
+            key="panel1"
+          >
             <GlobalSidebar />
           </AnimatedWrap>
 
-          <AnimatedWrap style={slideAnimation} key="panel2">
+          <AnimatedWrap
+            style={{ ...slideAnimation, ...p2FadeAnimation }}
+            key="panel2"
+          >
             {!!SidebarComponent && (
               <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
             )}
