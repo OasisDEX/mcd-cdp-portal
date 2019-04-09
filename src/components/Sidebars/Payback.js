@@ -65,7 +65,9 @@ const Payback = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <h3>{lang.action_sidebar.payback_title}</h3>
+          <Text color="text" t="headingS" fontWeight="medium">
+            {lang.action_sidebar.payback_title}
+          </Text>
           <p>
             <Text color="text" t="body">
               {lang.action_sidebar.payback_description}

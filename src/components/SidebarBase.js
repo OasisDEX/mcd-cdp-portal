@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex, Box } from '@makerdao/ui-components-core';
+import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
 import AccountConnect from './SidebarAccountConnect';
@@ -15,22 +15,9 @@ import sidebars from 'components/Sidebars';
 import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 
-const Section = styled.section`
-  padding: 0 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.grayLight3};
-  box-sizing: content-box;
-`;
-
-const VerticallyPaddedSection = styled(Section)`
-  box-sizing: border-box;
-  height: auto;
-  padding-top: ${({ theme }) => theme.space.s};
-  padding-bottom: ${({ theme }) => theme.space.s};
-`;
-
 function AccountSection({ currentAccount }) {
   return (
-    <VerticallyPaddedSection>
+    <Card p="s">
       {currentAccount ? (
         <WalletSelection currentAccount={currentAccount} />
       ) : (
@@ -38,7 +25,7 @@ function AccountSection({ currentAccount }) {
           <AccountConnect />
         </Flex>
       )}
-    </VerticallyPaddedSection>
+    </Card>
   );
 }
 
@@ -46,12 +33,13 @@ const animations = {
   fade: [{ opacity: 0 }, { opacity: 1 }],
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
-    { transform: `translate3d(-${getMeasurement('sidebarWidth')}, 0, 0)` }
+    { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` }
   ]
 };
 
 const AnimatedWrap = styled(animated.div)`
   width: 100%;
+  padding-right: ${({ theme }) => theme.space.s};
 `;
 
 function Sidebar() {
@@ -61,7 +49,7 @@ function Sidebar() {
   const [slideStart, slideEnd] = animations.slide;
   const [slideAnimation, setAnimation] = useSpring(() => ({
     to: slideStart,
-    config: { mass: 1, tension: 210, friction: 23 }
+    config: { mass: 1, tension: 210, friction: 25 }
   }));
 
   const resetSidebarActionAnimated = () => {
@@ -86,19 +74,23 @@ function Sidebar() {
 
   // if we want to change the sidebar color when connected vs. read-only mode.
   return (
-    <Box bg={account ? 'white' : 'white'}>
-      <AccountSection currentAccount={account} />
-      <Flex css={'overflow:hidden;'}>
-        <AnimatedWrap style={slideAnimation} key="panel1">
-          <GlobalSidebar />
-        </AnimatedWrap>
+    <Box>
+      <Grid gridRowGap="s" py="s">
+        <Box pr="s">
+          <AccountSection currentAccount={account} />
+        </Box>
+        <Flex css={'overflow:hidden;'}>
+          <AnimatedWrap style={slideAnimation} key="panel1">
+            <GlobalSidebar />
+          </AnimatedWrap>
 
-        <AnimatedWrap style={slideAnimation} key="panel2">
-          {!!SidebarComponent && (
-            <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
-          )}
-        </AnimatedWrap>
-      </Flex>
+          <AnimatedWrap style={slideAnimation} key="panel2">
+            {!!SidebarComponent && (
+              <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
+            )}
+          </AnimatedWrap>
+        </Flex>
+      </Grid>
     </Box>
   );
 }

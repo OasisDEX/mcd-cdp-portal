@@ -30,9 +30,6 @@ const ResponsiveWrap = styled.div`
 const SidebarWrap = styled.div`
   display: none;
   min-height: 1000px;
-  background: #fff;
-  box-shadow: -1px 0px 3px rgba(159, 159, 159, 0.25);
-
   ${breakpoint} {
     display: block;
   }

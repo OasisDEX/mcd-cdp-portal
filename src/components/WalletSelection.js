@@ -8,7 +8,8 @@ const WalletSection = ({
   currentAccount,
   textColor = 'black2',
   iconSize = 22,
-  t = 'p5',
+  t = 'body',
+  addressTextStyle = 'textS',
   readOnly
 }) => {
   if (!currentAccount) return null;
@@ -22,7 +23,7 @@ const WalletSection = ({
         </Text>
       </Box>
       <Box ml="m">
-        <Text t={t} color={textColor}>
+        <Text t={addressTextStyle} color={textColor}>
           {cutMiddle(address, 7, 5)}
         </Text>
       </Box>
