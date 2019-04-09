@@ -24,11 +24,6 @@ export async function instantiateMaker({ rpcUrl, addresses }) {
 
   const config = {
     log: false,
-    // NOTE: gas price is temporarily hard coded
-    // dynamic gas prices are currently being set too low
-    gas: {
-      price: 5000000000
-    },
     plugins: [trezorPlugin, ledgerPlugin, [McdPlugin, mcdPluginConfig]],
     smartContract: {
       addContracts: {}
