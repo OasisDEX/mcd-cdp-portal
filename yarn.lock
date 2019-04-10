@@ -1073,10 +1073,10 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.0.tgz#3f1517ab80426501bf21df14edd45cb571fd2b4a"
-  integrity sha512-EiwEs4xOsmnEjs/5emn8sDuZuDbtaeyzMD5NRWmNltyYPugllZ/l8I0hIMNaAoDqCeBH4uQ4iAu9LlNNnIjLzg==
+"@makerdao/ui-components-core@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.5.tgz#c8c226f2c34dfff653c2626f1db275e77897c900"
+  integrity sha512-v7dYIqBR7UfEIQUir7KxqcKJDpf5Va4f38YMQvSJF5yy/caw2PNwzSOb202rNwx3YZI8ioy+gK6DnUK6rx0jzw==
   dependencies:
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
@@ -13210,7 +13210,7 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
+web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
