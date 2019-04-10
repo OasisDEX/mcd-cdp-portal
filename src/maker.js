@@ -16,9 +16,10 @@ export function getMaker() {
   return _maker;
 }
 
-export async function instantiateMaker({ rpcUrl, addresses }) {
+export async function instantiateMaker({ rpcUrl, addresses, network }) {
   const params = new URL(window.location).searchParams;
   const mcdPluginConfig = {
+    network,
     simplePriceFeeds: !!params.get('simplePriceFeeds')
   };
 
