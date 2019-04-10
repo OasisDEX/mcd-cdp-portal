@@ -4,6 +4,7 @@ const { colors, typography } = themeLight;
 const theme = {
   ...themeLight,
   colors: {
+    white: '#fff',
     gray2: '#8D8EA7',
     grayLight: '#f8f8f8',
     grayLight2: '#c2c2c2',
@@ -11,6 +12,7 @@ const theme = {
     grayLight4: '#9AA3AD',
     grayLight5: '#F6F8F9',
     grayLight6: '#E9EAF3',
+    grayLight7: '#E4EAEE',
     greenPastel: '#1aab9b',
     greenVivid: '#24be9f',
     purple: '#690496',
@@ -59,6 +61,11 @@ const theme = {
       lineHeight: '22px'
     },
 
+    body: {
+      fontSize: '1.5rem',
+      color: '#48495F'
+    },
+
     smallCaps: {
       fontSize: '1.2rem',
       textTransform: 'uppercase',
@@ -67,10 +74,18 @@ const theme = {
     },
 
     ...typography
+  },
+  measurement: {
+    sidebarWidth: '315px',
+    navbarWidth: '80px'
   }
 };
 
 export default theme;
+
+export function getMeasurement(key) {
+  return theme.measurement[key];
+}
 
 export function getSpace(key) {
   return theme.space[key];

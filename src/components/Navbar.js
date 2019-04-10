@@ -1,28 +1,28 @@
 import React, { Fragment } from 'react';
-import { NavLink, NavRoute } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 import CDPList from 'components/CDPList';
-import NavLogo from 'components/NavLogo';
 import { Flex, Grid } from '@makerdao/ui-components-core';
+import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 
-const Navbar = ({ address }) => (
-  <NavRoute>
-    {({ url }) => (
-      <Fragment>
-        <NavLink href={`/${url.search}`} precache={true}>
-          <Flex alignItems="center" justifyContent="center" py="m">
-            <NavLogo />
-          </Flex>
-        </NavLink>
-        <Grid gridRowGap="xs">
-          <CDPList
-            currentPath={url.pathname}
-            currentQuery={url.search}
-            address={address}
-          />
-        </Grid>
-      </Fragment>
-    )}
-  </NavRoute>
-);
+const Navbar = ({ viewedAddress }) => {
+  const { url } = useCurrentRoute();
+
+  return (
+    <Fragment>
+      <Link href={`/${url.search}`} prefetch={true}>
+        <Flex alignItems="center" justifyContent="center" py="m">
+          <MakerLogo />
+        </Flex>
+      </Link>
+      <Grid gridRowGap="xs">
+        <CDPList
+          currentPath={url.pathname}
+          viewedAddress={viewedAddress}
+          currentQuery={url.search}
+        />
+      </Grid>
+    </Fragment>
+  );
+};
 
 export default Navbar;

@@ -6,29 +6,32 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 const WalletSection = ({
   currentAccount,
-  address,
   textColor = 'black2',
   iconSize = 22,
-  t = 'p5'
+  t = 'body',
+  addressTextStyle = 'textS',
+  readOnly
 }) => {
+  if (!currentAccount) return null;
+  const { address, type } = currentAccount;
   return (
     <Flex alignItems="center">
       <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
-      {!currentAccount ? null : (
-        <Box ml="xs" mr="auto">
-          <Text t={t} color={textColor}>
-            {currentAccount ? currentAccount.type : null}
-          </Text>
-        </Box>
-      )}
-      <Box ml="m">
+      <Box ml="xs" mr="auto">
         <Text t={t} color={textColor}>
+          {type}
+        </Text>
+      </Box>
+      <Box ml="m">
+        <Text t={addressTextStyle} color={textColor}>
           {cutMiddle(address, 7, 5)}
         </Text>
       </Box>
-      <Box ml="xs" mb="2px">
-        <CaratDownIcon />
-      </Box>
+      {readOnly ? null : (
+        <Box ml="xs" mb="2px">
+          <CaratDownIcon />
+        </Box>
+      )}
     </Flex>
   );
 };

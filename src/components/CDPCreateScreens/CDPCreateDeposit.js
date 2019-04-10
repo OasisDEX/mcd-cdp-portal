@@ -3,7 +3,8 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
-import { getUsdPrice, calcCDPParams, cdpParamsAreValid } from 'utils/ui';
+import { getUsdPrice, calcCDPParams } from 'utils/cdp';
+import { cdpParamsAreValid, formatCollateralizationRatio } from 'utils/ui';
 
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
@@ -89,7 +90,7 @@ function OpenCDPForm({
         <Box key="ba">
           <Text t="smallCaps" color="gray2" fontWeight="medium">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
-            <Text t="textS">{selectedIlk.data.liquidationRatio}%</Text>{' '}
+            <Text t="textS">{selectedIlk.data.liquidationRatio}</Text>{' '}
           </Text>
           <Text
             t="textS"
@@ -149,9 +150,12 @@ const CDPCreateDepositSidebar = ({
       <Card px="l" pb="m">
         <Box>
           {[
-            [lang.collateralization, `${collateralizationRatio}%`],
-            [lang.liquidation_price, `$${liquidationPrice}`],
-            ['Current Price', `$${getUsdPrice(selectedIlk.data)}`],
+            [
+              lang.collateralization,
+              formatCollateralizationRatio(collateralizationRatio)
+            ],
+            [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
+            ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
 
             [lang.stability_fee, `${rate}%`],
             [lang.liquidation_ratio, `${liquidationRatio}%`],

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import useMaker from 'hooks/useMaker';
+import { getColor } from 'styles/theme';
+import { hot } from 'react-hot-loader/root';
+import SidebarBase from 'components/SidebarBase';
 import { mediaQueries } from 'styles/constants';
 const breakpoint = mediaQueries.m.min;
 
@@ -14,7 +17,12 @@ const ResponsiveWrap = styled.div`
 
   ${breakpoint} {
     display: grid;
-    grid-template-columns: 80px 1fr 315px;
+    grid-template-columns: ${({ theme }) =>
+      [
+        theme.measurement.navbarWidth,
+        '1fr',
+        theme.measurement.sidebarWidth
+      ].join(' ')};
     grid-template-areas: 'navbar view sidebar';
   }
 `;
@@ -22,9 +30,6 @@ const ResponsiveWrap = styled.div`
 const SidebarWrap = styled.div`
   display: none;
   min-height: 1000px;
-  background: #fff;
-  box-shadow: -1px 0px 3px rgba(159, 159, 159, 0.25);
-
   ${breakpoint} {
     display: block;
   }
@@ -33,7 +38,7 @@ const SidebarWrap = styled.div`
 const NavbarWrap = styled.div`
   display: none;
   grid-area: navbar;
-  background: ${({ theme }) => theme.colors.black5};
+  background: ${({ theme, bgOverwrite }) => bgOverwrite || theme.colors.white};
   padding: 0 ${({ theme }) => theme.space.xs};
 
   ${breakpoint} {
@@ -54,13 +59,21 @@ const MobileNavWrap = styled.div`
   }
 `;
 
-const ResponsivePageLayout = ({ mobileNav, navbar, sidebar, content }) => (
-  <ResponsiveWrap>
-    <MobileNavWrap>{mobileNav}</MobileNavWrap>
-    <NavbarWrap>{navbar}</NavbarWrap>
-    {content}
-    <SidebarWrap>{sidebar}</SidebarWrap>
-  </ResponsiveWrap>
-);
+const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
+  const { account } = useMaker();
 
-export default ResponsivePageLayout;
+  return (
+    <ResponsiveWrap>
+      <MobileNavWrap>{mobileNav}</MobileNavWrap>
+      <NavbarWrap bgOverwrite={account ? getColor('black5') : null}>
+        {navbar}
+      </NavbarWrap>
+      {children}
+      <SidebarWrap>
+        <SidebarBase />
+      </SidebarWrap>
+    </ResponsiveWrap>
+  );
+};
+
+export default hot(ResponsivePageLayout);

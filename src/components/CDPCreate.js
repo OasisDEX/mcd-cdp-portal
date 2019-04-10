@@ -1,7 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import { connect } from 'react-redux';
-import { getActionableIlks } from 'reducers/addresses';
 import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
 import StepperUI from 'components/StepperUI';
 import {
@@ -9,7 +7,6 @@ import {
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
-import { ReactComponent as QuestionIcon } from 'images/question-circle.svg';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
 import WalletSelection from './WalletSelection';
 import useMaker from 'hooks/useMaker';
@@ -78,7 +75,7 @@ function reducer(state, action) {
 }
 
 const CDPCreateHeader = ({ onClose }) => {
-  const { maker } = useMaker();
+  const { account } = useMaker();
   return (
     <Flex justifyContent="flex-end" alignItems="center" mr="xl" mb="m">
       <Grid
@@ -88,23 +85,12 @@ const CDPCreateHeader = ({ onClose }) => {
       >
         <Box width="auto">
           <WalletSelection
-            address={maker.currentAddress()}
-            currentAccount={maker.currentAccount()}
+            currentAccount={account}
             textColor="steel"
             t="textM"
+            readOnly
           />
         </Box>
-        <Grid
-          onClick={onClose}
-          gridTemplateColumns="auto auto"
-          alignItems="center"
-          gridColumnGap="xs"
-        >
-          <QuestionIcon />
-          <Text color="steel" t="textM" fontWeight="medium">
-            FAQ
-          </Text>
-        </Grid>
 
         <Grid
           onClick={onClose}
@@ -123,14 +109,13 @@ const CDPCreateHeader = ({ onClose }) => {
   );
 };
 
-function CDPCreate({ actionableIlks, onClose }) {
+function CDPCreate({ onClose }) {
   const [{ step, selectedIlk, ...cdpParams }, dispatch] = React.useReducer(
     reducer,
     initialState
   );
 
   const screenProps = {
-    actionableIlks,
     selectedIlk,
     cdpParams,
     dispatch,
@@ -150,10 +135,4 @@ function CDPCreate({ actionableIlks, onClose }) {
   );
 }
 
-export default connect(
-  state => ({
-    // ie a list of ilks we have the right addresses for
-    actionableIlks: getActionableIlks(state)
-  }),
-  {}
-)(hot(CDPCreate));
+export default hot(CDPCreate);

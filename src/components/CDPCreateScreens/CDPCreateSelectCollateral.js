@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, Grid, Table, Flex, Checkbox } from '@makerdao/ui-components-core';
+import { Box, Grid, Table, Flex, Radio } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { connect } from 'react-redux';
 
 import { prettifyNumber } from 'utils/ui';
+import ilkList from 'references/ilkList';
 import { getIlkData } from 'reducers/network/cdpTypes';
 
 import useMaker from 'hooks/useMaker';
@@ -55,9 +56,9 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
     >
       <tr>
         <td>
-          <Checkbox
+          <Radio
             checked={checked}
-            onChange={() =>
+            onClick={() =>
               checked
                 ? dispatch({
                     type: 'reset-ilk'
@@ -99,11 +100,7 @@ const IlkTableRow = connect(
   {}
 )(IlkTableRowView);
 
-const CDPCreateSelectCollateral = ({
-  selectedIlk,
-  dispatch,
-  actionableIlks
-}) => {
+const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
   return (
     <Box
       maxWidth="1040px"
@@ -135,7 +132,7 @@ const CDPCreateSelectCollateral = ({
                     ))}
                   </tr>
                 </thead>
-                {actionableIlks.map(ilk => (
+                {ilkList.map(ilk => (
                   <IlkTableRow
                     key={ilk.key}
                     checked={ilk.key === selectedIlk.key}
