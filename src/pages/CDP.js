@@ -43,7 +43,7 @@ const TopContainerRow = ({ props }) => {
       <TextBlock t="textL" fontWeight="medium">
         {titleCurrency} &nbsp;
       </TextBlock>
-      <TextBlock m="m" t="textM" color="gray2">
+      <TextBlock t="textM" color="gray2">
         {value}
       </TextBlock>
     </Flex>
