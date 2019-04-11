@@ -36,29 +36,33 @@ const theme = {
 
     headingL: {
       fontSize: '3.2rem',
-      lineHeight: '31px',
+      lineHeight: '3.1rem',
       letterSpacing: '0.3px'
+    },
+
+    headingM: {
+      fontSize: '2.6rem'
     },
 
     headingS: {
       fontSize: '2rem',
-      lineHeight: '20px',
+      lineHeight: '2rem',
       letterSpacing: '0.3px'
     },
 
     textL: {
       fontSize: '1.8rem',
-      lineHeight: '22px'
+      lineHeight: '2.2rem'
     },
 
     textM: {
       fontSize: '1.6rem',
-      lineHeight: '20px'
+      lineHeight: '2rem'
     },
 
     textS: {
       fontSize: '1.4rem',
-      lineHeight: '22px'
+      lineHeight: '2.2rem'
     },
 
     body: {
