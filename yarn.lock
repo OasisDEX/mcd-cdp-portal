@@ -1073,10 +1073,10 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.5.tgz#c8c226f2c34dfff653c2626f1db275e77897c900"
-  integrity sha512-v7dYIqBR7UfEIQUir7KxqcKJDpf5Va4f38YMQvSJF5yy/caw2PNwzSOb202rNwx3YZI8ioy+gK6DnUK6rx0jzw==
+"@makerdao/ui-components-core@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.6.tgz#184cebde1f7f90127173c54a5c2c9909b9ead229"
+  integrity sha512-bweJKR0Gm3K5wACkdKcKyknlsaucB6H+pDQ6Puz/QAlhIOskDzrXNkC3mBtMyPzMIzUVhC+2izrce2BFXe9Pqg==
   dependencies:
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"

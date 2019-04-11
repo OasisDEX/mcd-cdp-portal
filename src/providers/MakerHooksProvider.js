@@ -7,6 +7,7 @@ export const MakerObjectContext = createContext();
 
 function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [account, setAccount] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [maker, setMaker] = useState(null);
 
   React.useEffect(() => {
@@ -24,8 +25,22 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
     });
   }, [rpcUrl, addresses]);
 
+  // todo - far from final
+  const newTxListener = transaction => {
+    // todo listen to tx events too
+    setTransactions([...transactions, transaction]);
+  };
+
+  // todo - far from final
+  const resetTx = transaction => {
+    // todo listen to tx events too
+    setTransactions([]);
+  };
+
   return (
-    <MakerObjectContext.Provider value={{ maker, account, network }}>
+    <MakerObjectContext.Provider
+      value={{ maker, account, network, transactions, newTxListener, resetTx }}
+    >
       {children}
     </MakerObjectContext.Provider>
   );

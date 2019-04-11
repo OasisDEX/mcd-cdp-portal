@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
+import { Flex, Box, Grid, Card, Text } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
 import AccountConnect from './SidebarAccountConnect';
@@ -15,6 +15,35 @@ import sidebars from 'components/Sidebars';
 import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 
+const txAnimation = {
+  fade: [{ opacity: 0 }, { opacity: 1 }],
+  slide: [{ top: `-100%` }, { top: 0 }]
+};
+
+// todo - far from final
+const TransactionManager = ({ transactions }) => {
+  const hasTransactions = !!transactions.length;
+
+  const [slideStart, slideEnd] = txAnimation.slide;
+
+  const [slideAnimation] = useSpring(() => ({
+    from: slideStart,
+    to: slideEnd,
+    config: springConfig
+  }));
+
+  if (!transactions.length) return null;
+
+  return (
+    <Box bg="red" style={slideAnimation}>
+      {hasTransactions && (
+        <Card mr="s" mt="s">
+          <Text>hello</Text>
+        </Card>
+      )}
+    </Box>
+  );
+};
 function AccountSection({ currentAccount }) {
   return (
     <Card p="s">
@@ -45,7 +74,7 @@ const AnimatedWrap = styled(animated.div)`
 const springConfig = { mass: 1, tension: 210, friction: 25 };
 
 function Sidebar() {
-  const { account } = useMaker();
+  const { account, transactions, newTxListener, resetTx } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
@@ -109,8 +138,21 @@ function Sidebar() {
     visible
   ]);
 
+  useEffect(() => {
+    window.pretendFakeTx = () => {
+      newTxListener({
+        text: 'im a fake tx!',
+        state: 'pending'
+      });
+    };
+
+    window.pretendResetTx = () => {
+      resetTx();
+    };
+  }, []);
   return (
     <Box>
+      <TransactionManager transactions={transactions} />
       <Grid gridRowGap="s" py="s">
         <Box pr="s">
           <AccountSection currentAccount={account} />
