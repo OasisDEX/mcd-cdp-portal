@@ -12,6 +12,7 @@ import WalletSelection from 'components/WalletSelection';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
+import ExternalLink from 'components/ExternalLink';
 import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 
@@ -21,9 +22,7 @@ const txAnimation = {
 };
 
 // todo - far from final
-const TransactionManager = ({ transactions }) => {
-  const hasTransactions = !!transactions.length;
-
+const TransactionManager = ({ transactions = [], removeTx, network } = {}) => {
   const [slideStart, slideEnd] = txAnimation.slide;
 
   const [slideAnimation] = useSpring(() => ({
@@ -35,12 +34,19 @@ const TransactionManager = ({ transactions }) => {
   if (!transactions.length) return null;
 
   return (
-    <Box bg="red" style={slideAnimation}>
-      {hasTransactions && (
-        <Card mr="s" mt="s">
-          <Text>hello</Text>
+    <Box bg="red" mr="s" style={slideAnimation}>
+      {transactions.map(tx => (
+        <Card mt="s" key={tx.id}>
+          <Flex m="s" flexDirection="column">
+            <Text>{tx.message}</Text>
+            <button onClick={() => removeTx(tx.id)}>close</button>
+            {tx.hash ? (
+              <ExternalLink address={tx.hash} network={network} />
+            ) : null}
+            <Text>{tx.state}</Text>
+          </Flex>
         </Card>
-      )}
+      ))}
     </Box>
   );
 };
@@ -74,7 +80,15 @@ const AnimatedWrap = styled(animated.div)`
 const springConfig = { mass: 1, tension: 210, friction: 25 };
 
 function Sidebar() {
-  const { account, transactions, newTxListener, resetTx } = useMaker();
+  const {
+    account,
+    maker,
+    transactions,
+    newTxListener,
+    resetTx,
+    removeTx,
+    network
+  } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
@@ -139,20 +153,27 @@ function Sidebar() {
   ]);
 
   useEffect(() => {
+    const ethToSend = '0.01';
+    const recipient = '0xfc5Fff3E913add2DC6C7b1Dd0B7946660Ed8ebEc';
+
     window.pretendFakeTx = () => {
-      newTxListener({
-        text: 'im a fake tx!',
-        state: 'pending'
-      });
+      newTxListener(maker.getToken('ETH').transfer(recipient, ethToSend))(
+        `Sending ${ethToSend} ETH`
+      );
     };
 
     window.pretendResetTx = () => {
       resetTx();
     };
   }, []);
+
   return (
     <Box>
-      <TransactionManager transactions={transactions} />
+      <TransactionManager
+        transactions={transactions}
+        network={network}
+        removeTx={removeTx}
+      />
       <Grid gridRowGap="s" py="s">
         <Box pr="s">
           <AccountSection currentAccount={account} />
