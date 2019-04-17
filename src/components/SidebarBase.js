@@ -21,8 +21,12 @@ const txAnimation = {
   slide: [{ top: `-100%` }, { top: 0 }]
 };
 
-// todo - far from final
-const TransactionManager = ({ transactions = [], removeTx, network } = {}) => {
+const TransactionManager = ({
+  transactions = [],
+  hideTx,
+  selectors,
+  network
+} = {}) => {
   const [slideStart, slideEnd] = txAnimation.slide;
 
   const [slideAnimation] = useSpring(() => ({
@@ -35,11 +39,11 @@ const TransactionManager = ({ transactions = [], removeTx, network } = {}) => {
 
   return (
     <Box bg="red" mr="s" style={slideAnimation}>
-      {transactions.map(tx => (
+      {selectors.getVisibleTransactions().map(tx => (
         <Card mt="s" key={tx.id}>
           <Flex m="s" flexDirection="column">
             <Text>{tx.message}</Text>
-            <button onClick={() => removeTx(tx.id)}>close</button>
+            <button onClick={() => hideTx(tx.id)}>close</button>
             {tx.hash ? (
               <ExternalLink address={tx.hash} network={network} />
             ) : null}
@@ -85,8 +89,9 @@ function Sidebar() {
     maker,
     transactions,
     newTxListener,
+    hideTx,
+    selectors,
     resetTx,
-    removeTx,
     network
   } = useMaker();
   const { current } = useSidebar();
@@ -170,9 +175,10 @@ function Sidebar() {
   return (
     <Box>
       <TransactionManager
+        selectors={selectors}
         transactions={transactions}
         network={network}
-        removeTx={removeTx}
+        hideTx={hideTx}
       />
       <Grid gridRowGap="s" py="s">
         <Box pr="s">

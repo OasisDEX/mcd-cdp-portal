@@ -34,9 +34,21 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
 
     const txId = id.current++;
 
+    transaction.catch(() =>
+      setTransactions(txs =>
+        txs.map(tx => (tx.id === txId ? { ...tx, state: 'error' } : tx))
+      )
+    );
+
     setTransactions(txs => [
       ...txs,
-      { state: 'initialized', id: txId, message: txMessage, hash: '' }
+      {
+        state: 'initialized',
+        id: txId,
+        message: txMessage,
+        hash: '',
+        hidden: false
+      }
     ]);
 
     maker.service('transactionManager').listen(transaction, {
@@ -60,14 +72,16 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
     });
   };
 
-  const removeTx = txId => {
-    setTransactions(txs => txs.filter(tx => tx.id !== txId));
+  const hideTx = txId => {
+    setTransactions(txs =>
+      txs.map(tx => (tx.id === txId ? { ...tx, hidden: true } : tx))
+    );
   };
 
-  // todo - far from final
-  const resetTx = transaction => {
-    // todo listen to tx events too
-    setTransactions([]);
+  const getVisibleTransactions = () => transactions.filter(tx => !tx.hidden);
+
+  const selectors = {
+    getVisibleTransactions
   };
 
   return (
@@ -78,8 +92,8 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
         network,
         transactions,
         newTxListener,
-        resetTx,
-        removeTx
+        hideTx,
+        selectors
       }}
     >
       {children}

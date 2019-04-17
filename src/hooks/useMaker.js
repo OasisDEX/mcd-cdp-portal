@@ -10,7 +10,8 @@ function useMaker() {
     transactions,
     newTxListener,
     resetTx,
-    removeTx,
+    hideTx,
+    selectors,
     network
   } = useContext(MakerObjectContext) || {};
   const [authenticated, setAuthenticated] = useState(false);
@@ -85,7 +86,8 @@ function useMaker() {
     transactions,
     newTxListener,
     resetTx,
-    removeTx,
+    hideTx,
+    selectors,
     network
   };
 }
