@@ -4,8 +4,16 @@ import { checkEthereumProvider } from 'utils/ethereum';
 import { MakerObjectContext } from 'providers/MakerHooksProvider';
 
 function useMaker() {
-  const { maker, account, transactions, newTxListener, resetTx } =
-    useContext(MakerObjectContext) || {};
+  const {
+    maker,
+    account,
+    transactions,
+    newTxListener,
+    resetTx,
+    hideTx,
+    selectors,
+    network
+  } = useContext(MakerObjectContext) || {};
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -77,7 +85,10 @@ function useMaker() {
     account,
     transactions,
     newTxListener,
-    resetTx
+    resetTx,
+    hideTx,
+    selectors,
+    network
   };
 }
 
