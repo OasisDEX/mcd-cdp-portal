@@ -1050,10 +1050,10 @@
     web3 "1.0.0-beta.34"
     web3-provider-engine makerdao/provider-engine#kovan-fix-dist
 
-"@makerdao/i18n-helper@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.5.tgz#4832cf252181b407bbe0480fe777bb080add0720"
-  integrity sha512-DShlZ64Qa/G33tnQsmAs8dqj9NO+lv9ADUBitnHztdiL/AldrkZKL9Io1uEXmZD5IIn10IPk0/wFNwOxRtFWtA==
+"@makerdao/i18n-helper@^0.1.6", "@makerdao/i18n-helper@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
+  integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
 "@makerdao/multicall@0.5.1-alpha.5":
   version "0.5.1-alpha.5"
@@ -1073,34 +1073,34 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.6.tgz#184cebde1f7f90127173c54a5c2c9909b9ead229"
-  integrity sha512-bweJKR0Gm3K5wACkdKcKyknlsaucB6H+pDQ6Puz/QAlhIOskDzrXNkC3mBtMyPzMIzUVhC+2izrce2BFXe9Pqg==
+"@makerdao/ui-components-core@0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.8.tgz#b7ae569ff847c65a8ca6ca5439cdf4dfbea8844e"
+  integrity sha512-ESf37OPLLeUA6xX09uFNuBVOlYusVO5VubOXkuKUbt6D7GAS055LjoH0nsDifKm77BpOanRr/Tk6X/c15HBxQw==
   dependencies:
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"
 
-"@makerdao/ui-components-footer@^0.1.0":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.7.tgz#c7e500428d1cd7aeefffb3391b27b62ad9adb96e"
-  integrity sha512-wuz4wIZkgOB+AFGRzWuzH9UtEOu86UPw0Vdv2z5ZQdq13+IUuTnQTyLaHganoG+z8wMXDrQOYOFcyDIke6mTGQ==
+"@makerdao/ui-components-footer@^0.1.7":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.8.tgz#f853b16ac6e54486213aad35a77cc99df8b50f78"
+  integrity sha512-3twk7DEvnuUij8EWSwO+G4SEC5K80NOj9B5Ah/HbWMwhSVNOdDTt32Jsrpms/WQ4fxeX1OdevaNTSqq0bDqjiA==
   dependencies:
-    "@makerdao/i18n-helper" "^0.1.5"
+    "@makerdao/i18n-helper" "^0.1.6"
     react-qr-svg "^2.2.1"
 
-"@makerdao/ui-components-header@^0.1.0":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.7.tgz#9b18274f4d62b6d23f0ee66af728744aa0e48ea4"
-  integrity sha512-5NPpmCy6RHK//NfcItWtOmDmnvpjf5yzUXNHdnqBLr63N8IOedGzD0cLPL1HjNkP/R6qXfzqMTb9EM7KBWdhlQ==
+"@makerdao/ui-components-header@^0.1.7":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.10.tgz#6b5a206656213723d8ddb3bb0e409e26bdfab92e"
+  integrity sha512-0VhCuaox4G6U48VhgSuKpwgzBPbZZptUOMYTO3HbNdHlXetALHzrpORaN9gnzXAyf+qOj2DVExKWzgFdkvOotA==
   dependencies:
-    "@makerdao/i18n-helper" "^0.1.5"
+    "@makerdao/i18n-helper" "^0.1.7"
 
-"@makerdao/ui-components-onboarding@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-onboarding/-/ui-components-onboarding-0.1.0.tgz#a31c32927afec06886451d1ccaf54d0400498165"
-  integrity sha512-LRDnWjRX7fwCAHTAq8FAibJ+Kjc/FEbWiYvt4oP/5KLm64zSJeDcEwrpJcpaiA5K2/xuoJ3zxdxNdv+StSr0Nw==
+"@makerdao/ui-components-onboarding@^0.1.2":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-onboarding/-/ui-components-onboarding-0.1.3.tgz#125f6db1448e390a619078f73315b5e6bf890bd5"
+  integrity sha512-9iQh9mR7syB5ElTUKjKF52+g2Qxk9bmoRevIOT5S7oFbrK8SZhkwDLJ00ve5TgygIKV7W9nlsrcfbX71AX47Fg==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -10774,6 +10774,11 @@ react-spring@^8.0.15:
   integrity sha512-DjrwjXqqVEitj6e6GqdW5dUp1BoVyeFQhEcXvPfoQxwyIVSJ9smNt8CNjSvoQqRujVllE7XKaJRWSZO/ewd1/A==
   dependencies:
     "@babel/runtime" "^7.3.1"
+
+react-useinterval@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-useinterval/-/react-useinterval-1.0.1.tgz#4bb90349d18b0fc04d6567edacf476d515b5cf49"
+  integrity sha512-+UxgKd7p7D3cBS6/o2uwBStsFcoKIagRdN21so/ud1k1e6r4WDCHsSjY36aT3n6WvVgpZPk3JtbN4IFfxt69Pg==
 
 react@^16.0.0, react@^16.8.0:
   version "16.8.6"

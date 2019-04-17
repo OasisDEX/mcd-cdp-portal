@@ -11,7 +11,7 @@ import Info from './shared/Info';
 import lang from 'languages';
 
 const Payback = ({ cdp, reset }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -42,7 +42,7 @@ const Payback = ({ cdp, reset }) => {
 
   const payback = async () => {
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
-    managedCdp.wipeDai(parseFloat(amount));
+    newTxListener(managedCdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
     reset();
   };
 

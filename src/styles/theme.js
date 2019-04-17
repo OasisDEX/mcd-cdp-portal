@@ -13,7 +13,9 @@ const theme = {
     grayLight5: '#F6F8F9',
     grayLight6: '#E9EAF3',
     grayLight7: '#E4EAEE',
+    greenDark: '#1A9083',
     greenPastel: '#1aab9b',
+    greenPastelLight: '#eaf7f6',
     greenVivid: '#24be9f',
     purple: '#690496',
     steel: '#708390',
@@ -24,6 +26,8 @@ const theme = {
     black5: '#222',
     blackLight: '#383838',
     redVivid: '#f65728',
+    redDark: '#994126',
+    redPastel: '#FFF0EB',
     yellowDark: '#A87807',
     yellowPastel: '#fee8b4',
     ...colors

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
@@ -13,20 +13,53 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import ExternalLink from 'components/ExternalLink';
-import { getMeasurement } from 'styles/theme';
+import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
+import { getMeasurement, getColor } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
+
+const resolveTxManagerState = states => {
+  // if any pending, force yellow.
+  if (states.includes('pending')) return 'pending';
+
+  // if no pending but any error, show red.
+  if (states.includes('error')) return 'error';
+
+  // no pending, mined/finished but still visible, show green.
+  return 'success';
+};
+const txManagerBgPalette = {
+  pending: getColor('yellowPastel'),
+  error: getColor('redPastel'),
+  success: getColor('greenDark')
+};
+
+const txManagerTextPalette = {
+  pending: getColor('yellowDark'),
+  error: getColor('redDark'),
+  success: getColor('greenDark')
+};
 
 const txAnimation = {
   fade: [{ opacity: 0 }, { opacity: 1 }],
   slide: [{ top: `-100%` }, { top: 0 }]
 };
 
-const TransactionManager = ({
-  transactions = [],
-  hideTx,
-  selectors,
-  network
-} = {}) => {
+const Circle = ({ size, color, ...props }) => (
+  <Box width={size} height={size} bg={color} borderRadius="50%" {...props} />
+);
+const TinyButton = props => (
+  <Box
+    bg="rgba(0, 0, 0, 0.03)"
+    p="xs"
+    py="4px"
+    borderRadius="3px"
+    display="inline-block"
+    {...props}
+  />
+);
+
+const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
+  const [expanded, setExpanded] = useState(false);
   const [slideStart, slideEnd] = txAnimation.slide;
 
   const [slideAnimation] = useSpring(() => ({
@@ -34,24 +67,76 @@ const TransactionManager = ({
     to: slideEnd,
     config: springConfig
   }));
+  const txCount = transactions.length;
 
-  if (!transactions.length) return null;
+  if (!txCount) return null;
 
+  const resolvedState = resolveTxManagerState(
+    transactions.map(({ tx }) => tx.state())
+  );
+  const bg = txManagerBgPalette[resolvedState];
+  const textColor = txManagerTextPalette[resolvedState];
   return (
-    <Box bg="red" mr="s" style={slideAnimation}>
-      {selectors.getVisibleTransactions().map(tx => (
-        <Card mt="s" key={tx.id}>
-          <Flex m="s" flexDirection="column">
-            <Text>{tx.message}</Text>
-            <button onClick={() => hideTx(tx.id)}>close</button>
-            {tx.hash ? (
-              <ExternalLink address={tx.hash} network={network} />
-            ) : null}
-            <Text>{tx.state}</Text>
-          </Flex>
-        </Card>
-      ))}
-    </Box>
+    <Card mr="s" p="s" mt="s" borderRadius="20px" style={slideAnimation}>
+      <Flex>
+        <Flex alignItems="flex-start">
+          <Circle color={bg} size={'24px'} mr="xs" mt="-1px" />
+
+          <Box>
+            <Flex alignItems="center">
+              <Text color={textColor} t="textM" fontWeight="medium">
+                {txCount} Transaction{txCount > 1 && 's'}
+              </Text>
+            </Flex>
+            <TinyButton mt="xs" onClick={() => setExpanded(!expanded)}>
+              <Text color={textColor} t="p6">
+                {expanded ? 'Hide' : 'Show'} transaction{txCount > 1 && 's'}
+              </Text>
+            </TinyButton>
+            {!expanded ? null : (
+              <Box>
+                {transactions.map(({ id, tx, message }) => {
+                  const { hash } = tx;
+                  const resolvedState = resolveTxManagerState([tx.state()]);
+                  const bg = txManagerBgPalette[resolvedState];
+                  const textColor = txManagerTextPalette[resolvedState];
+
+                  return (
+                    <Box key={`tx_${id}`}>
+                      <Flex mt="s" alignItems="center">
+                        <Circle color={bg} size={'14px'} mr="xs" />
+                        <Text t="textS" color={textColor}>
+                          {message}
+                        </Text>
+
+                        {hash ? (
+                          <TinyButton ml="xs">
+                            <ExternalLink
+                              address={hash}
+                              network={network}
+                              hideText
+                              fill={textColor}
+                            >
+                              <Text color={textColor} t="p6" mr="3px">
+                                View
+                              </Text>
+                            </ExternalLink>
+                          </TinyButton>
+                        ) : null}
+                        {/* <Text>{tx.state()}</Text> */}
+                      </Flex>
+                    </Box>
+                  );
+                })}
+              </Box>
+            )}
+          </Box>
+        </Flex>
+        <Box ml="auto" onClick={resetTx}>
+          <CloseIcon width="10" fill={textColor} />
+        </Box>
+      </Flex>
+    </Card>
   );
 };
 function AccountSection({ currentAccount }) {
@@ -87,11 +172,9 @@ function Sidebar() {
   const {
     account,
     maker,
-    transactions,
     newTxListener,
-    hideTx,
-    selectors,
     resetTx,
+    selectors,
     network
   } = useMaker();
   const { current } = useSidebar();
@@ -158,27 +241,23 @@ function Sidebar() {
   ]);
 
   useEffect(() => {
-    const ethToSend = '0.01';
-    const recipient = '0xfc5Fff3E913add2DC6C7b1Dd0B7946660Ed8ebEc';
-
-    window.pretendFakeTx = () => {
-      newTxListener(maker.getToken('ETH').transfer(recipient, ethToSend))(
+    window.pretendFakeTx = (
+      ethToSend = '0.01',
+      recipient = '0xBc5d63fFc63f28bE50EDc63D237151ef7A2d7E11'
+    ) => {
+      newTxListener(
+        maker.getToken('ETH').transfer(recipient, ethToSend),
         `Sending ${ethToSend} ETH`
       );
-    };
-
-    window.pretendResetTx = () => {
-      resetTx();
     };
   }, []);
 
   return (
     <Box>
       <TransactionManager
-        selectors={selectors}
-        transactions={transactions}
+        transactions={selectors.transactions()}
         network={network}
-        hideTx={hideTx}
+        resetTx={resetTx}
       />
       <Grid gridRowGap="s" py="s">
         <Box pr="s">

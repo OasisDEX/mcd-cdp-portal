@@ -11,7 +11,7 @@ import lang from 'languages';
 import useMaker from '../../hooks/useMaker';
 
 const Generate = ({ cdp, reset }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiAvailable, setDaiAvailable] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -44,7 +44,7 @@ const Generate = ({ cdp, reset }) => {
 
   const generate = async () => {
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
-    managedCdp.drawDai(parseFloat(amount));
+    newTxListener(managedCdp.drawDai(parseFloat(amount)), 'Drawing DAI');
     reset();
   };
 

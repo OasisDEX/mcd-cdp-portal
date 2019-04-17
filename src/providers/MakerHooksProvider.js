@@ -1,15 +1,19 @@
-import React, { createContext, useState, useRef } from 'react';
+import React, { createContext, useState } from 'react';
 import { mixpanelIdentify } from 'utils/analytics';
 import { instantiateMaker } from '../maker';
+import { uniqueId } from '@makerdao/dai/src/utils'; // TODO - export from dai.js properly if final.
 import store from 'store';
+import useInterval from 'react-useinterval';
+
+const ONE_MINUTE = 60 * 1000;
 
 export const MakerObjectContext = createContext();
 
 function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [account, setAccount] = useState(null);
-  const [transactions, setTransactions] = useState([]);
+  const [txReferences, setTxReferences] = useState([]);
+  const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
-  const id = useRef(0);
 
   React.useEffect(() => {
     if (!rpcUrl) return;
@@ -26,62 +30,37 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
     });
   }, [rpcUrl, addresses]);
 
-  const newTxListener = transaction => txMessage => {
-    if (!maker)
-      throw new Error(
-        'Cannot send a transaction before maker has been initialized'
-      );
-
-    const txId = id.current++;
-
-    transaction.catch(() =>
-      setTransactions(txs =>
-        txs.map(tx => (tx.id === txId ? { ...tx, state: 'error' } : tx))
-      )
-    );
-
-    setTransactions(txs => [
-      ...txs,
-      {
-        state: 'initialized',
-        id: txId,
-        message: txMessage,
-        hash: '',
-        hidden: false
-      }
+  const newTxListener = (transaction, txMessage) => {
+    setTxReferences(current => [
+      ...current,
+      [uniqueId(transaction), txMessage]
     ]);
 
-    maker.service('transactionManager').listen(transaction, {
-      pending({ hash }) {
-        setTransactions(txs =>
-          txs.map(tx =>
-            tx.id === txId ? { ...tx, hash, state: 'pending' } : tx
-          )
-        );
-      },
-      mined() {
-        setTransactions(txs =>
-          txs.map(tx => (tx.id === txId ? { ...tx, state: 'mined' } : tx))
-        );
-      },
-      error() {
-        setTransactions(txs =>
-          txs.map(tx => (tx.id === txId ? { ...tx, state: 'error' } : tx))
-        );
-      }
+    maker.service('transactionManager').listen(transaction, (tx, state) => {
+      setTxLastUpdate(Date.now());
     });
   };
 
-  const hideTx = txId => {
-    setTransactions(txs =>
-      txs.map(tx => (tx.id === txId ? { ...tx, hidden: true } : tx))
-    );
-  };
+  const resetTx = () => setTxReferences([]);
 
-  const getVisibleTransactions = () => transactions.filter(tx => !tx.hidden);
+  // This can be replaced with a SDK transaction manager event once its internal list of transactions changes.
+  useInterval(() => {
+    setTxLastUpdate(Date.now());
+  }, ONE_MINUTE);
 
   const selectors = {
-    getVisibleTransactions
+    transactions: () =>
+      txReferences
+        .map(([id, message]) => {
+          const txManager = maker.service('transactionManager');
+          try {
+            // we should be using a public interface instead of txManager._tracker.
+            return { tx: txManager._tracker.get(id), message, id };
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean)
   };
 
   return (
@@ -90,9 +69,10 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
         maker,
         account,
         network,
-        transactions,
+        txLastUpdate,
+        resetTx,
+        transactions: txReferences,
         newTxListener,
-        hideTx,
         selectors
       }}
     >

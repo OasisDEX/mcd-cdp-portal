@@ -43,6 +43,7 @@
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.5",
     "react-spring": "^8.0.15",
+    "react-useinterval": "^1.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
     "styled-components": "^4.1.3",

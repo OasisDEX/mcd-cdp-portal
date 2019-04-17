@@ -11,7 +11,7 @@ import {
 import lang from 'languages';
 
 const Deposit = ({ cdp, reset }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [gemBalance, setGemBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -44,7 +44,11 @@ const Deposit = ({ cdp, reset }) => {
 
   const deposit = async () => {
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
-    managedCdp.lockCollateral(parseFloat(amount));
+
+    newTxListener(
+      managedCdp.lockCollateral(parseFloat(amount)),
+      `Locking ${cdp.ilkData.gem}`
+    );
     reset();
   };
 

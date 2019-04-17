@@ -156,7 +156,7 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
@@ -174,6 +174,8 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         selectedIlk.currency(gemsToLock),
         daiToDraw
       );
+
+    newTxListener(txObject, 'Creating CDP');
 
     maker.service('transactionManager').listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash)
