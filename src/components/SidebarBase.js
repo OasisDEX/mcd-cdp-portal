@@ -68,6 +68,7 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
     config: springConfig
   }));
   const txCount = transactions.length;
+  const multipleTx = txCount > 1;
 
   if (!txCount) return null;
 
@@ -88,12 +89,14 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
                 {txCount} Transaction{txCount > 1 && 's'}
               </Text>
             </Flex>
-            <TinyButton mt="xs" onClick={() => setExpanded(!expanded)}>
-              <Text color={textColor} t="p6">
-                {expanded ? 'Hide' : 'Show'} transaction{txCount > 1 && 's'}
-              </Text>
-            </TinyButton>
-            {!expanded ? null : (
+            {multipleTx && (
+              <TinyButton mt="xs" onClick={() => setExpanded(!expanded)}>
+                <Text color={textColor} t="p6">
+                  {expanded ? 'Hide' : 'Show'} transaction{txCount > 1 && 's'}
+                </Text>
+              </TinyButton>
+            )}
+            {multipleTx && !expanded ? null : (
               <Box>
                 {transactions.map(({ id, tx, message }) => {
                   const { hash } = tx;
@@ -103,8 +106,10 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
 
                   return (
                     <Box key={`tx_${id}`}>
-                      <Flex mt="s" alignItems="center">
-                        <Circle color={bg} size={'14px'} mr="xs" />
+                      <Flex mt={multipleTx ? 's' : ''} alignItems="center">
+                        {multipleTx && (
+                          <Circle color={bg} size={'14px'} mr="xs" />
+                        )}
                         <Text t="textS" color={textColor}>
                           {message}
                         </Text>
