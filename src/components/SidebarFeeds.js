@@ -4,7 +4,7 @@ import { Box, Text, Card, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
 const SidebarFeeds = ({ feeds }) => (
-  <Card pt="s">
+  <Card pt="s" css={'overflow:hidden;'}>
     <Box px="s">
       <Text t="headingS" fontWeight="medium" color="heading">
         {lang.sidebar.price_feeds}

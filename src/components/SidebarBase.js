@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex, Box, Grid, Card, Text } from '@makerdao/ui-components-core';
+import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
 import AccountConnect from './SidebarAccountConnect';
@@ -12,138 +12,11 @@ import WalletSelection from 'components/WalletSelection';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
-import ExternalLink from 'components/ExternalLink';
-import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
-import { getMeasurement, getColor } from 'styles/theme';
+import TransactionManager from 'components/TransactionManager';
+import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
+const springConfig = { mass: 1, tension: 500, friction: 50 };
 
-const resolveTxManagerState = states => {
-  // if any pending, force yellow.
-  if (states.includes('pending')) return 'pending';
-
-  // if no pending but any error, show red.
-  if (states.includes('error')) return 'error';
-
-  // no pending, mined/finished but still visible, show green.
-  return 'success';
-};
-const txManagerBgPalette = {
-  pending: getColor('yellowPastel'),
-  error: getColor('redPastel'),
-  success: getColor('greenDark')
-};
-
-const txManagerTextPalette = {
-  pending: getColor('yellowDark'),
-  error: getColor('redDark'),
-  success: getColor('greenDark')
-};
-
-const txAnimation = {
-  fade: [{ opacity: 0 }, { opacity: 1 }],
-  slide: [{ top: `-100%` }, { top: 0 }]
-};
-
-const Circle = ({ size, color, ...props }) => (
-  <Box width={size} height={size} bg={color} borderRadius="50%" {...props} />
-);
-const TinyButton = props => (
-  <Box
-    bg="rgba(0, 0, 0, 0.03)"
-    p="xs"
-    py="4px"
-    borderRadius="3px"
-    display="inline-block"
-    {...props}
-  />
-);
-
-const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
-  const [expanded, setExpanded] = useState(false);
-  const [slideStart, slideEnd] = txAnimation.slide;
-
-  const [slideAnimation] = useSpring(() => ({
-    from: slideStart,
-    to: slideEnd,
-    config: springConfig
-  }));
-  const txCount = transactions.length;
-  const multipleTx = txCount > 1;
-
-  if (!txCount) return null;
-
-  const resolvedState = resolveTxManagerState(
-    transactions.map(({ tx }) => tx.state())
-  );
-  const bg = txManagerBgPalette[resolvedState];
-  const textColor = txManagerTextPalette[resolvedState];
-  return (
-    <Card mr="s" p="s" mt="s" borderRadius="20px" style={slideAnimation}>
-      <Flex>
-        <Flex alignItems="flex-start">
-          <Circle color={bg} size={'24px'} mr="xs" mt="-1px" />
-
-          <Box>
-            <Flex alignItems="center">
-              <Text color={textColor} t="textM" fontWeight="medium">
-                {txCount} Transaction{txCount > 1 && 's'}
-              </Text>
-            </Flex>
-            {multipleTx && (
-              <TinyButton mt="xs" onClick={() => setExpanded(!expanded)}>
-                <Text color={textColor} t="p6">
-                  {expanded ? 'Hide' : 'Show'} transaction{txCount > 1 && 's'}
-                </Text>
-              </TinyButton>
-            )}
-            {multipleTx && !expanded ? null : (
-              <Box>
-                {transactions.map(({ id, tx, message }) => {
-                  const { hash } = tx;
-                  const resolvedState = resolveTxManagerState([tx.state()]);
-                  const bg = txManagerBgPalette[resolvedState];
-                  const textColor = txManagerTextPalette[resolvedState];
-
-                  return (
-                    <Box key={`tx_${id}`}>
-                      <Flex mt={multipleTx ? 's' : ''} alignItems="center">
-                        {multipleTx && (
-                          <Circle color={bg} size={'14px'} mr="xs" />
-                        )}
-                        <Text t="textS" color={textColor}>
-                          {message}
-                        </Text>
-
-                        {hash ? (
-                          <TinyButton ml="xs">
-                            <ExternalLink
-                              address={hash}
-                              network={network}
-                              hideText
-                              fill={textColor}
-                            >
-                              <Text color={textColor} t="p6" mr="3px">
-                                View
-                              </Text>
-                            </ExternalLink>
-                          </TinyButton>
-                        ) : null}
-                        {/* <Text>{tx.state()}</Text> */}
-                      </Flex>
-                    </Box>
-                  );
-                })}
-              </Box>
-            )}
-          </Box>
-        </Flex>
-        <Box ml="auto" onClick={resetTx}>
-          <CloseIcon width="10" fill={textColor} />
-        </Box>
-      </Flex>
-    </Card>
-  );
-};
 function AccountSection({ currentAccount }) {
   return (
     <Card p="s">
@@ -159,7 +32,17 @@ function AccountSection({ currentAccount }) {
 }
 
 const animations = {
-  fade: [{ opacity: 0 }, { opacity: 1 }],
+  fade: [{ opacity: 0.9 }, { opacity: 1 }],
+  fadeAway: [
+    {
+      transform: 'scale(0.9)',
+      opacity: 0
+    },
+    {
+      transform: 'scale(1)',
+      opacity: 1
+    }
+  ],
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
     { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` }
@@ -170,8 +53,6 @@ const AnimatedWrap = styled(animated.div)`
   width: 100%;
   padding-right: ${({ theme }) => theme.space.s};
 `;
-
-const springConfig = { mass: 1, tension: 210, friction: 25 };
 
 function Sidebar() {
   const {
@@ -185,31 +66,33 @@ function Sidebar() {
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
-  const [faded, visible] = animations.fade;
+  const [p2off, p2on] = animations.fade;
+  const [p1off, p1on] = animations.fadeAway;
+
   const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
     config: springConfig
   }));
 
-  const [p1FadeAnimation, setP1FadeAnimation] = useSpring(() => ({
-    to: visible,
+  const [p1Animation, setP1Animation] = useSpring(() => ({
+    to: p1on,
     config: springConfig
   }));
 
-  const [p2FadeAnimation, setP2FadeAnimation] = useSpring(() => ({
-    to: faded,
+  const [p2Animation, setP2Animation] = useSpring(() => ({
+    to: p2off,
     config: springConfig
   }));
 
   const resetSidebarActionAnimated = () => {
     const { reset } = props;
 
-    setP1FadeAnimation({
-      to: visible
+    setP1Animation({
+      to: p1on
     });
 
-    setP2FadeAnimation({
-      to: faded
+    setP2Animation({
+      to: p2off
     });
 
     setSlideAnimation({
@@ -222,12 +105,12 @@ function Sidebar() {
 
   useEffect(() => {
     if (SidebarComponent) {
-      setP1FadeAnimation({
-        to: faded
+      setP1Animation({
+        to: p1off
       });
 
-      setP2FadeAnimation({
-        to: visible
+      setP2Animation({
+        to: p2on
       });
 
       setSlideAnimation({
@@ -237,12 +120,11 @@ function Sidebar() {
     }
   }, [
     SidebarComponent,
-    faded,
-    setP1FadeAnimation,
-    setP2FadeAnimation,
+
+    setP1Animation,
+    setP2Animation,
     setSlideAnimation,
-    slideEnd,
-    visible
+    slideEnd
   ]);
 
   useEffect(() => {
@@ -269,15 +151,12 @@ function Sidebar() {
           <AccountSection currentAccount={account} />
         </Box>
         <Flex css={'overflow:hidden;'}>
-          <AnimatedWrap
-            style={{ ...slideAnimation, ...p1FadeAnimation }}
-            key="panel1"
-          >
+          <AnimatedWrap style={{ ...p1Animation, zIndex: 1 }} key="panel1">
             <GlobalSidebar />
           </AnimatedWrap>
 
           <AnimatedWrap
-            style={{ ...slideAnimation, ...p2FadeAnimation }}
+            style={{ ...slideAnimation, ...p2Animation, zIndex: 2 }}
             key="panel2"
           >
             {!!SidebarComponent && (

@@ -41,7 +41,7 @@ const SidebarSystem = ({ system }) => {
   ].map(f => f(system));
 
   return (
-    <Card>
+    <Card css={'overflow:hidden;'}>
       <Box p="s" pb="0">
         <Text t="headingS" fontWeight="medium" color="heading">
           System Info
