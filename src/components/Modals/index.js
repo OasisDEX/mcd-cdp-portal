@@ -14,7 +14,7 @@ const modals = {
       maxWidth="100%"
       width="100vw"
       height="100vh"
-      bg="grayLight5"
+      bg="backgroundGrey"
       onClick={e => e.stopPropagation()}
       css={`
         overflow-y: auto;

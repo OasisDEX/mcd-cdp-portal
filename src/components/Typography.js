@@ -18,7 +18,7 @@ const Subtitle = styled(Text)`
 
 const NavLabel = styled(Text)`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.grayLight};
+  color: ${({ theme }) => theme.colors.grey['100']};
 `;
 
 const TextBlock = styled(Text)`

@@ -26,9 +26,12 @@ import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
 import { getColor } from '../styles/theme';
 
-const WithSeperators = styled.div`
-  &:not(:last-child) {
-    border-bottom: 1px solid ${getColor('grayLight3')};
+const WithSeperators = styled(Box).attrs(() => ({
+  borderBottom: '1px solid',
+  borderColor: 'grey.300'
+}))`
+  &:last-child {
+    border-bottom: none;
   }
 `;
 
@@ -189,7 +192,7 @@ function CDPView({ cdpId, getIlk }) {
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdp) return <LoadingLayout background={getColor('grayLight5')} />;
+  if (!cdp) return <LoadingLayout background={getColor('backgroundGrey')} />;
 
   const collateralInt = cdp.collateral.toNumber();
   const collateralDenomination = cdp.ilkData.gem;

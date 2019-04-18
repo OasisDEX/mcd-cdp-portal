@@ -21,15 +21,15 @@ const resolveTxManagerState = states => {
 };
 
 const txManagerBgPalette = {
-  pending: getColor('yellowPastel'),
-  error: getColor('redPastel'),
-  success: getColor('greenDark')
+  pending: getColor('yellow.500'),
+  error: getColor('orange.500'),
+  success: getColor('teal.600')
 };
 
 const txManagerTextPalette = {
-  pending: getColor('yellowDark'),
-  error: getColor('redDark'),
-  success: getColor('greenDark')
+  pending: getColor('yellow.600'),
+  error: getColor('orange.600'),
+  success: getColor('teal.600')
 };
 
 const txAnimations = {

@@ -16,7 +16,7 @@ const NavbarItemContainer = styled(Link)`
 const DashedFakeButton = styled(Flex)`
   border: 1px dashed;
   cursor: pointer;
-  border-color: ${({ theme }) => theme.colors.blackLight};
+  border-color: ${({ theme }) => theme.colors.blackLighter};
 `;
 
 const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
@@ -25,7 +25,7 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? 'greenPastel' : owned ? 'blackLight' : 'grayLight7'}
+      bg={active ? 'teal.500' : owned ? 'blackLighter' : 'coolGrey.100'}
       borderRadius="default"
       height="50px"
     >

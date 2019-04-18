@@ -4,30 +4,8 @@ const { colors, typography } = themeLight;
 const theme = {
   ...themeLight,
   colors: {
-    gray2: '#8D8EA7',
-    grayLight: '#f8f8f8',
-    grayLight2: '#c2c2c2',
-    grayLight3: '#e0e0e0',
-    grayLight4: '#9AA3AD',
-    grayLight5: '#F6F8F9',
-    grayLight6: '#E9EAF3',
-    grayLight7: '#E4EAEE',
-    greenDark: '#1A9083',
-    greenPastel: '#1aab9b',
-    greenPastelLight: '#eaf7f6',
-    greenVivid: '#24be9f',
-    purple: '#690496',
-    black: '#000',
-    black2: '#231536',
-    black3: '#48495f',
-    black4: '#4f445e',
-    black5: '#222',
-    blackLight: '#383838',
-    redVivid: '#f65728',
-    redDark: '#994126',
-    redPastel: '#FFF0EB',
-    yellowDark: '#A87807',
-    yellowPastel: '#fee8b4',
+    blackLight: '#222',
+    blackLighter: '#383838',
     ...colors
   },
   typography: {
@@ -53,14 +31,27 @@ const theme = {
 
 export default theme;
 
+// the following two functions are taken directly from styled-system
+// for a more flexible theme getter
+const is = n => n !== undefined && n !== null;
+
+function get(obj, ...paths) {
+  const value = paths.reduce((acc, path) => {
+    if (is(acc)) return acc;
+    const keys = typeof path === 'string' ? path.split('.') : [path];
+    return keys.reduce((a, key) => (a && is(a[key]) ? a[key] : null), obj);
+  }, null);
+  return is(value) ? value : paths[paths.length - 1];
+}
+
 export function getMeasurement(key) {
-  return theme.measurement[key];
+  return get(theme.measurement, key);
 }
 
 export function getSpace(key) {
-  return theme.space[key];
+  return get(theme.space, key);
 }
 
 export function getColor(key) {
-  return theme.colors[key];
+  return get(theme.colors, key);
 }

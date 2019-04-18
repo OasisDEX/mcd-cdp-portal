@@ -10,7 +10,6 @@ import {
   Link
 } from '@makerdao/ui-components-core';
 import LoadingLayout from 'layouts/LoadingLayout';
-import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
@@ -69,10 +68,8 @@ const CDPCreateConfirmSummary = ({
                   pt={!!index && 's'}
                   gridTemplateColumns="5fr 1fr"
                   justifyItems="start"
-                  css={{
-                    [index !== 0 ? 'borderTop' : '']: '1px solid',
-                    borderColor: getColor('grayLight6')
-                  }}
+                  borderTop={index !== 0 ? '1px solid' : null}
+                  color="grey.200"
                 >
                   <Text>{title}</Text>
                   <Text fontWeight="bold">{value}</Text>
