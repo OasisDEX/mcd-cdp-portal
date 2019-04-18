@@ -24,7 +24,7 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
-import theme from '../styles/theme';
+import { getColor } from '../styles/theme';
 
 function CardTitle({ title, ...props }) {
   return (
@@ -36,7 +36,7 @@ function CardTitle({ title, ...props }) {
 
 const WithSeperators = styled.div`
   &:not(:last-child) {
-    border-bottom: 1px solid ${theme.colors.grayLight3};
+    border-bottom: 1px solid ${getColor('grayLight3')};
   }
 `;
 
@@ -189,7 +189,7 @@ function CDPView({ cdpId, getIlk }) {
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdp) return <LoadingLayout />;
+  if (!cdp) return <LoadingLayout background={getColor('grayLight5')} />;
 
   const collateralInt = cdp.collateral.toNumber();
   const collateralDenomination = cdp.ilkData.gem;
