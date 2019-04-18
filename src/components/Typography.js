@@ -16,11 +16,6 @@ const Subtitle = styled(Text)`
   display: block;
 `;
 
-const NavLabel = styled(Text)`
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
-  color: ${({ theme }) => theme.colors.grey['100']};
-`;
-
 const TextBlock = styled(Text)`
   display: block;
 `;
@@ -30,4 +25,4 @@ const BreakableText = styled(Text)`
   word-break: break-word;
 `;
 
-export { Title, Subtitle, NavLabel, TextBlock, BreakableText };
+export { Title, Subtitle, TextBlock, BreakableText };
