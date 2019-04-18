@@ -19,7 +19,7 @@ const Payback = ({ cdp, reset }) => {
 
   maker
     .getToken('MDAI')
-    .balanceOf(maker.currentAddress())
+    .balance()
     .then(daiBalance => {
       setDaiBalance(daiBalance.toNumber());
     });

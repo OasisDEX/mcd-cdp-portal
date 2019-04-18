@@ -172,6 +172,19 @@ function CDPView({ cdpId, getIlk }) {
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdp, setCDP] = useState(null);
+  const [daiBalance, setDaiBalance] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setDaiBalance(await maker.getToken('MDAI').balance());
+      } catch (err) {
+        console.error(
+          `Unable to fetch dai balance, no account is currently connected`
+        );
+      }
+    })();
+  }, [account]);
 
   useEffect(() => {
     (async () => {
@@ -330,24 +343,26 @@ function CDPView({ cdpId, getIlk }) {
             />
             <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
           </Flex>
-          <ActionContainerRow
-            title={`DAI ${lang.cdp_page.wallet_balance}`}
-            value={`${debtInt && debtInt.toFixed(2)} DAI`}
-            conversion={`${debtInt && debtInt.toFixed(2)} USD`}
-            button={
-              <ActionButton
-                disabled={!account}
-                onClick={() =>
-                  showSidebar({
-                    sidebarType: 'payback',
-                    sidebarProps: { cdp }
-                  })
-                }
-              >
-                {lang.actions.pay_back}
-              </ActionButton>
-            }
-          />
+          {daiBalance ? (
+            <ActionContainerRow
+              title={`DAI ${lang.cdp_page.wallet_balance}`}
+              value={`${daiBalance.toNumber().toFixed(2)} DAI`}
+              conversion={`${daiBalance.toNumber().toFixed(2)} USD`}
+              button={
+                <ActionButton
+                  disabled={!account}
+                  onClick={() =>
+                    showSidebar({
+                      sidebarType: 'payback',
+                      sidebarProps: { cdp }
+                    })
+                  }
+                >
+                  {lang.actions.pay_back}
+                </ActionButton>
+              }
+            />
+          ) : null}
           <ActionContainerRow
             title={lang.cdp_page.able_generate}
             value={`${generateAmount && generateAmount.toFixed(2)} DAI`}
