@@ -87,7 +87,7 @@ const CDPCreateHeader = ({ onClose }) => {
           <WalletSelection
             currentAccount={account}
             textColor="steel"
-            t="textM"
+            t="1.6rem"
             readOnly
           />
         </Box>
@@ -100,7 +100,7 @@ const CDPCreateHeader = ({ onClose }) => {
           css={{ cursor: 'pointer' }}
         >
           <CloseIcon />
-          <Text color="steel" t="textM" fontWeight="medium">
+          <Text color="steel" t="1.6rem" fontWeight="medium">
             Close
           </Text>
         </Grid>

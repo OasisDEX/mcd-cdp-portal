@@ -25,12 +25,10 @@ const CDPCreateSelectCollateralSidebar = () => (
         ]
       ].map(([title, text]) => (
         <Grid mb="m" key={title} gridRowGap="xs">
-          <TextBlock t="textM" fontWeight="medium">
+          <TextBlock t="h5" lineHeight="normal">
             {title}
           </TextBlock>
-          <TextBlock t="textS" color="black3">
-            {text}
-          </TextBlock>
+          <TextBlock t="body">{text}</TextBlock>
         </Grid>
       ))}
     </Box>

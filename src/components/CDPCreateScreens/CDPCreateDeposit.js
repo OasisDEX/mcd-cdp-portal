@@ -53,11 +53,12 @@ function OpenCDPForm({
         }
       />,
       <Box key="ba">
-        <Text t="smallCaps" color="gray2" fontWeight="medium">
-          {lang.your_balance}{' '}
-        </Text>
+        <Text t="subheading">{lang.your_balance} </Text>
         <Text
-          t="textS"
+          t="caption"
+          display="inline-block"
+          ml="s"
+          color="darkLavender"
           onClick={() => {
             handleInputChange({
               target: {
@@ -88,12 +89,15 @@ function OpenCDPForm({
       />,
       <Grid gridRowGap="xs" key="keytodrawinfo">
         <Box key="ba">
-          <Text t="smallCaps" color="gray2" fontWeight="medium">
+          <Text t="subheading">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
-            <Text t="textS">{selectedIlk.data.liquidationRatio}</Text>{' '}
+            <Text t="subheading">{selectedIlk.data.liquidationRatio}</Text>{' '}
           </Text>
           <Text
-            t="textS"
+            display="inline-block"
+            ml="s"
+            t="caption"
+            color="darkLavender"
             onClick={() => {
               handleInputChange({
                 target: {
@@ -111,7 +115,7 @@ function OpenCDPForm({
   ];
 
   return (
-    <Grid gridRowGap="l" px="l" py="m" maxWidth="100%">
+    <Grid gridRowGap="l" px="xl" py="l" maxWidth="100%">
       <Grid
         gridTemplateColumns="auto"
         gridRowGap="l"
@@ -122,14 +126,12 @@ function OpenCDPForm({
           return (
             <Grid gridRowGap="s" key={title}>
               <Grid gridRowGap="xs">
-                <TextBlock t="textM" fontWeight="medium">
+                <TextBlock t="h5" lineHeight="normal">
                   {title}
                 </TextBlock>
-                <TextBlock t="textS" color="gray2">
-                  {text}
-                </TextBlock>
+                <TextBlock t="body">{text}</TextBlock>
               </Grid>
-              <Box>{input}</Box>
+              <Box py="2xs">{input}</Box>
               {renderAfter}
             </Grid>
           );
@@ -147,7 +149,7 @@ const CDPCreateDepositSidebar = ({
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   return (
     <Fragment>
-      <Card px="l" pb="m">
+      <Card px="l" pb="l">
         <Box>
           {[
             [
@@ -162,12 +164,10 @@ const CDPCreateDepositSidebar = ({
             [lang.liquidation_penalty, `${liquidationPenalty}%`]
           ].map(([title, value]) => (
             <Grid mt="m" gridRowGap="xs" key={title}>
-              <TextBlock t="textM" fontWeight="medium">
+              <TextBlock t="h5" lineHeight="normal">
                 {title}
               </TextBlock>
-              <TextBlock t="textS" color="black3">
-                {value}
-              </TextBlock>
+              <TextBlock t="body">{value}</TextBlock>
             </Grid>
           ))}
         </Box>

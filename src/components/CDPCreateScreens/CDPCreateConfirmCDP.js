@@ -87,10 +87,10 @@ const CDPCreateConfirmSummary = ({
                 onChange={() => setHasReadTOS(state => !state)}
                 mr="xs"
               />
-              <Text color="gray2">
+              <Text color="grey.500">
                 {lang.formatString(
                   lang.terms_of_service_text,
-                  <Link color="greenPastel">{lang.terms_of_service}</Link>
+                  <Link>{lang.terms_of_service}</Link>
                 )}
               </Text>
             </Box>
@@ -136,7 +136,6 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
               </Grid>
             ) : (
               <Link
-                t="textS"
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >

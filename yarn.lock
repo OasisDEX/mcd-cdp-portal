@@ -1050,6 +1050,11 @@
     web3 "1.0.0-beta.34"
     web3-provider-engine makerdao/provider-engine#kovan-fix-dist
 
+"@makerdao/design-system-constants@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/design-system-constants/-/design-system-constants-0.1.0.tgz#ec5c0f112c0f353661ad25a7fb13a8d7154651df"
+  integrity sha512-hva0/d5cI7gx70I9Dqe0RLkvqDVQuzLFdijJS679rrKDGbnbAu6797IpDtrIpfTaPFg1gjAbSYlxCpN6uimA+g==
+
 "@makerdao/i18n-helper@^0.1.6", "@makerdao/i18n-helper@^0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
@@ -1073,11 +1078,12 @@
     lodash.values "^4.3.0"
     toposort "^2.0.2"
 
-"@makerdao/ui-components-core@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.1.8.tgz#b7ae569ff847c65a8ca6ca5439cdf4dfbea8844e"
-  integrity sha512-ESf37OPLLeUA6xX09uFNuBVOlYusVO5VubOXkuKUbt6D7GAS055LjoH0nsDifKm77BpOanRr/Tk6X/c15HBxQw==
+"@makerdao/ui-components-core@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.0.tgz#f0379565b2ad287e4d4928faa9fa85a3a3bf161d"
+  integrity sha512-6AGDGQKYa0dgv2ehFpWQXItPE5mbIf3pGw5aIIZaSWr2U7CxMwJsKIAXBKBbGRl8qsJIkmIumf20vKGceWdxyQ==
   dependencies:
+    "@makerdao/design-system-constants" "0.1.0"
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"

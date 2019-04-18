@@ -19,20 +19,12 @@ import {
   Table,
   Text
 } from '@makerdao/ui-components-core';
-import { Title, TextBlock } from 'components/Typography';
+import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
 import { getColor } from '../styles/theme';
-
-function CardTitle({ title, ...props }) {
-  return (
-    <TextBlock t="headingS" fontWeight="medium" {...props}>
-      {title}
-    </TextBlock>
-  );
-}
 
 const WithSeperators = styled.div`
   &:not(:last-child) {
@@ -44,12 +36,8 @@ const InfoContainerRow = ({ title, value }) => {
   return (
     <WithSeperators>
       <Grid py="xs" gridTemplateColumns="1fr auto">
-        <TextBlock color="text" fontSize="1.5rem">
-          {title}
-        </TextBlock>
-        <TextBlock t="p3" color="text">
-          {value}
-        </TextBlock>
+        <TextBlock t="body">{title}</TextBlock>
+        <TextBlock t="body">{value}</TextBlock>
       </Grid>
     </WithSeperators>
   );
@@ -60,7 +48,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
     <WithSeperators>
       <Flex flexWrap="wrap" justifyContent="space-between" py="s">
         <Box alignSelf="center" width="140px">
-          <TextBlock color="text" fontSize="1.5rem">
+          <TextBlock color="darkLavender" fontSize="m">
             {title}
           </TextBlock>
         </Box>
@@ -71,9 +59,10 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
             <Box alignSelf="center">
               <Flex flexDirection="column" width="150px" pr="m">
                 <TextBlock
-                  t="p2"
+                  t="h5"
+                  lineHeight="normal"
                   fontWeight="medium"
-                  color="text"
+                  color="darkLavender"
                   textAlign="right"
                 >
                   {value}
@@ -91,7 +80,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
 
 const ActionButton = ({ children, ...props }) => (
   <Button width="100px" p="xs" variant="secondary" {...props}>
-    <TextBlock t="p5" color="black4">
+    <TextBlock fontSize="s" color="darkLavender">
       {children}
     </TextBlock>
   </Button>
@@ -100,7 +89,7 @@ const ActionButton = ({ children, ...props }) => (
 const CdpViewCard = ({ title, children }) => {
   return (
     <Box my="s">
-      <CardTitle title={title} />
+      <Text.h4>{title}</Text.h4>
       <Card px="l" pt="m" pb="s" my="s">
         {children}
       </Card>
@@ -111,19 +100,17 @@ const CdpViewCard = ({ title, children }) => {
 const AmountDisplay = ({ amount, denomination }) => {
   return (
     <>
-      <TextBlock t="headingM" lineHeight="1" fontWeight="medium">
+      <TextBlock t="h3" lineHeight="1">
         {amount}&nbsp;
       </TextBlock>
-      <TextBlock fontSize="1.6rem" fontWeight="medium">
-        {denomination} &nbsp;
-      </TextBlock>
+      <TextBlock t="h5">{denomination} &nbsp;</TextBlock>
     </>
   );
 };
 
 const ExtraInfo = ({ children, ...props }) => {
   return (
-    <Text fontSize="1.4rem" color="steel" {...props}>
+    <Text t="caption" lineHeight="none" color="steel" {...props}>
       {children}
     </Text>
   );
@@ -132,7 +119,7 @@ const ExtraInfo = ({ children, ...props }) => {
 const CdpViewHistory = ({ title, rows }) => {
   return (
     <Box>
-      <CardTitle title={title} />
+      <Text.h4>{title}</Text.h4>
       <Card px="m" py="s" my="s">
         <Table width="100%" variant="normal">
           <thead>
@@ -231,9 +218,9 @@ function CDPView({ cdpId, getIlk }) {
   return (
     <PageContentLayout>
       <Box>
-        <Title color="black2">
+        <Text.h2>
           {lang.cdp} {cdpId}
-        </Title>
+        </Text.h2>
       </Box>
       <Grid
         py="m"
@@ -246,7 +233,7 @@ function CDPView({ cdpId, getIlk }) {
               amount={liquidationPrice.toFixed(2)}
               denomination="USD"
             />
-            <ExtraInfo>(${cdp.ilk}/USD)</ExtraInfo>
+            <ExtraInfo>({cdp.ilk}/USD)</ExtraInfo>
           </Flex>
           <InfoContainerRow
             title={

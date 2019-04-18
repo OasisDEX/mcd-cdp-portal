@@ -9,13 +9,6 @@ const Title = styled(Text)`
   display: block;
 `;
 
-const Heading = styled(Text)`
-  display: block;
-  font-weight: 600;
-  font-size: 28px;
-  letter-spacing: -1pt;
-`;
-
 const Subtitle = styled(Text)`
   font-size: 20px;
   letter-spacing: 0.2px;
@@ -37,4 +30,4 @@ const BreakableText = styled(Text)`
   word-break: break-word;
 `;
 
-export { Title, Subtitle, NavLabel, Heading, TextBlock, BreakableText };
+export { Title, Subtitle, NavLabel, TextBlock, BreakableText };

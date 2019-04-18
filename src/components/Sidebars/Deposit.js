@@ -60,7 +60,7 @@ const Deposit = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <Text color="text" t="headingS" fontWeight="medium">
+          <Text color="darkLavender" t="h4">
             {lang.formatString(
               lang.action_sidebar.deposit_title,
               cdp.ilkData.gem

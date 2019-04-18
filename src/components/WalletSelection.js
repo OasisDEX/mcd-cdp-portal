@@ -9,7 +9,7 @@ const WalletSection = ({
   textColor = 'black2',
   iconSize = 22,
   t = 'body',
-  addressTextStyle = 'textS',
+  addressTextStyle = 'body',
   readOnly
 }) => {
   if (!currentAccount) return null;

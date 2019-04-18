@@ -56,7 +56,7 @@ const Withdraw = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <Text color="text" t="headingS" fontWeight="medium">
+          <Text t="h4">
             {lang.formatString(
               lang.action_sidebar.withdraw_title,
               cdp.ilkData.gem

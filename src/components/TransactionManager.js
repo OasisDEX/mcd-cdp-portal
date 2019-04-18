@@ -97,7 +97,7 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
 
             <Box>
               <Flex alignItems="center">
-                <Text color={textColor} t="textM" fontWeight="medium">
+                <Text color={textColor} t="h5">
                   {txCount} Transaction{txCount > 1 && 's'}
                 </Text>
               </Flex>
@@ -122,7 +122,7 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
                           {multipleTx && (
                             <Circle color={bg} size={'14px'} mr="xs" />
                           )}
-                          <Text t="textS" color={textColor}>
+                          <Text t="body" color={textColor}>
                             {message}
                           </Text>
 

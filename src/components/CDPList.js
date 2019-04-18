@@ -8,7 +8,6 @@ import { Link } from 'react-navi';
 import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
-import { getColor } from 'styles/theme';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -27,15 +26,10 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       alignItems="center"
       justifyContent="center"
       bg={active ? 'greenPastel' : owned ? 'blackLight' : 'grayLight7'}
-      borderRadius="4px"
+      borderRadius="default"
       height="50px"
     >
-      <NavLabel
-        t="p6"
-        css={{
-          color: owned ? 'white' : getColor('black5')
-        }}
-      >
+      <NavLabel t="p6" color={owned ? 'white' : 'darkPurple'}>
         {label}
       </NavLabel>
       <RatioDisplay ratio={ratio} active={active} />

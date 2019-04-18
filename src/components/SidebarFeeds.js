@@ -6,12 +6,10 @@ import { prettifyNumber } from 'utils/ui';
 const SidebarFeeds = ({ feeds }) => (
   <Card pt="s" css={'overflow:hidden;'}>
     <Box px="s">
-      <Text t="headingS" fontWeight="medium" color="heading">
-        {lang.sidebar.price_feeds}
-      </Text>
+      <Text t="h4">{lang.sidebar.price_feeds}</Text>
     </Box>
 
-    <Box>
+    <Box mt="xs">
       {feeds.map(({ pair, value }, index) => (
         <Flex
           key={`feed_${pair}`}
@@ -20,12 +18,12 @@ const SidebarFeeds = ({ feeds }) => (
           width="100%"
           py="xs"
           px="s"
-          bg={index % 2 ? 'grayLight5' : 'white'}
+          bg={index % 2 ? 'coolGrey.100' : 'white'}
         >
-          <Text t="smallCaps" fontWeight="bold" color="black4">
+          <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
             {pair}
           </Text>
-          <Text t="p5" fontWeight="normal">
+          <Text fontSize="1.4rem" color="darkPurple">
             {prettifyNumber(value)}
           </Text>
         </Flex>

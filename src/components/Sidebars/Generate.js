@@ -52,9 +52,7 @@ const Generate = ({ cdp, reset }) => {
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="l">
         <Grid gridRowGap="s">
-          <Text color="text" t="headingS" fontWeight="medium">
-            {lang.action_sidebar.generate_title}
-          </Text>
+          <Text t="h4">{lang.action_sidebar.generate_title}</Text>
           <p>
             <Text color="text" t="body">
               {lang.action_sidebar.generate_description}
