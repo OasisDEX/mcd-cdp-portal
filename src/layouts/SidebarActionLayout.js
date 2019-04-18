@@ -4,9 +4,14 @@ import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 
 const Generate = ({ onClose, children }) => {
   return (
-    <Card p="s">
+    <Card p="m" mr="s">
       <Flex justifyContent="flex-end" pb="xs">
-        <Box onClick={onClose} css={{ cursor: 'pointer' }}>
+        <Box
+          onClick={onClose}
+          position="absolute"
+          zIndex="2"
+          css={{ cursor: 'pointer' }}
+        >
           <CloseIcon />
         </Box>
       </Flex>

@@ -8,6 +8,7 @@ import {
 } from '../../utils/ui';
 import { calcCDPParams } from '../../utils/cdp';
 import Info from './shared/Info';
+import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 
 const Payback = ({ cdp, reset }) => {
@@ -63,14 +64,12 @@ const Payback = ({ cdp, reset }) => {
 
   return (
     <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="l">
+      <Grid gridRowGap="m">
         <Grid gridRowGap="s">
-          <Text t="h4">{lang.action_sidebar.payback_title}</Text>
-          <p>
-            <Text color="text" t="body">
-              {lang.action_sidebar.payback_description}
-            </Text>
-          </p>
+          <Text.h4 color="darkLavender">
+            {lang.action_sidebar.payback_title}
+          </Text.h4>
+          <Text.p t="body">{lang.action_sidebar.payback_description}</Text.p>
           <Input
             type="number"
             value={amount}
@@ -79,31 +78,13 @@ const Payback = ({ cdp, reset }) => {
             placeholder="0.00 DAI"
             errorMessage={errorMessage}
             after={
-              <div>
-                <Link onClick={setMax} fontWeight="medium">
-                  {lang.action_sidebar.set_max}
-                </Link>
-              </div>
+              <Link onClick={setMax} fontWeight="medium">
+                {lang.action_sidebar.set_max}
+              </Link>
             }
           />
         </Grid>
-        <Info
-          title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
-        />
-        <Info
-          title={lang.action_sidebar.dai_debt}
-          body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
-        />
-        <Info
-          title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
-        />
-        <Info
-          title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
-        />
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
           <Button disabled={!valid} onClick={payback}>
             {lang.actions.pay_back}
           </Button>
@@ -111,6 +92,24 @@ const Payback = ({ cdp, reset }) => {
             {lang.cancel}
           </Button>
         </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.dai_balance}
+            body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.dai_debt}
+            body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={formatCollateralizationRatio(collateralizationRatio)}
+          />
+        </InfoContainer>
       </Grid>
     </SidebarActionLayout>
   );

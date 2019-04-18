@@ -24,7 +24,7 @@ const theme = {
     ...typography
   },
   measurement: {
-    sidebarWidth: '315px',
+    sidebarWidth: '330px',
     navbarWidth: '80px'
   }
 };

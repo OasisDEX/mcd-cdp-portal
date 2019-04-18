@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
+import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
 import { getUsdPrice, calcCDPParams } from '../../utils/cdp';
 import {
@@ -58,7 +59,7 @@ const Deposit = ({ cdp, reset }) => {
 
   return (
     <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="l">
+      <Grid gridRowGap="m">
         <Grid gridRowGap="s">
           <Text color="darkLavender" t="h4">
             {lang.formatString(
@@ -95,26 +96,7 @@ const Deposit = ({ cdp, reset }) => {
             }
           />
         </Grid>
-        <Info
-          title={lang.action_sidebar.current_account_balance}
-          body={`${gemBalance.toFixed(6)} ${cdp.ilkData.gem}`}
-        />
-        <Info
-          title={lang.formatString(
-            lang.action_sidebar.gem_usd_price_feed,
-            cdp.ilkData.gem
-          )}
-          body={`${priceFeed} ${cdp.ilkData.gem}/USD`}
-        />
-        <Info
-          title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
-        />
-        <Info
-          title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
-        />
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
           <Button onClick={deposit} disabled={!valid}>
             {lang.actions.deposit}
           </Button>
@@ -122,6 +104,27 @@ const Deposit = ({ cdp, reset }) => {
             {lang.cancel}
           </Button>
         </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.current_account_balance}
+            body={`${gemBalance.toFixed(6)} ${cdp.ilkData.gem}`}
+          />
+          <Info
+            title={lang.formatString(
+              lang.action_sidebar.gem_usd_price_feed,
+              cdp.ilkData.gem
+            )}
+            body={`${priceFeed} ${cdp.ilkData.gem}/USD`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={formatCollateralizationRatio(collateralizationRatio)}
+          />
+        </InfoContainer>
       </Grid>
     </SidebarActionLayout>
   );
