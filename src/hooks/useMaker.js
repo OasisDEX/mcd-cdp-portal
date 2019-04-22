@@ -4,7 +4,16 @@ import { checkEthereumProvider } from 'utils/ethereum';
 import { MakerObjectContext } from 'providers/MakerHooksProvider';
 
 function useMaker() {
-  const { maker, account } = useContext(MakerObjectContext);
+  const {
+    maker,
+    account,
+    transactions,
+    newTxListener,
+    resetTx,
+    hideTx,
+    selectors,
+    network
+  } = useContext(MakerObjectContext) || {};
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -27,28 +36,45 @@ function useMaker() {
     );
   }
 
+  const _getMatchedAccount = address =>
+    maker
+      .listAccounts()
+      .find(acc => acc.address.toUpperCase() === address.toUpperCase());
+
   const connectMetamask = async () => {
-    try {
-      const networkId = maker.service('web3').networkId();
+    const networkId = maker.service('web3').networkId();
 
-      const browserProvider = await checkEthereumProvider();
+    const browserProvider = await checkEthereumProvider();
 
-      if (browserProvider.networkId !== networkId)
-        throw new Error(
-          'browser ethereum provider and URL network param do not match.'
-        );
+    if (browserProvider.networkId !== networkId)
+      throw new Error(
+        'browser ethereum provider and URL network param do not match.'
+      );
 
-      if (!isConnectedToProvider(browserProvider))
-        await maker.addAccount({
+    if (!browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/))
+      throw new Error(
+        'browser ethereum provider providing incorrect or non-existent address'
+      );
+
+    let metaMaskAccount;
+    if (maker.service('accounts').hasAccount) {
+      const matchedAccount = _getMatchedAccount(browserProvider.address);
+      if (!matchedAccount) {
+        metaMaskAccount = await maker.addAccount({
           type: 'browser'
         });
-
-      const connectedAddress = maker.currentAddress();
-
-      return connectedAddress;
-    } catch (err) {
-      window.alert(err.toString());
+      } else {
+        metaMaskAccount = matchedAccount;
+      }
+    } else {
+      metaMaskAccount = await maker.addAccount({
+        type: 'browser'
+      });
     }
+
+    maker.useAccountWithAddress(metaMaskAccount.address);
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
   };
 
   return {
@@ -56,7 +82,13 @@ function useMaker() {
     authenticated,
     isConnectedToProvider,
     connectMetamask,
-    account
+    account,
+    transactions,
+    newTxListener,
+    resetTx,
+    hideTx,
+    selectors,
+    network
   };
 }
 

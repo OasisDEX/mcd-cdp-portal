@@ -10,7 +10,6 @@ import {
   Link
 } from '@makerdao/ui-components-core';
 import LoadingLayout from 'layouts/LoadingLayout';
-import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
@@ -69,10 +68,8 @@ const CDPCreateConfirmSummary = ({
                   pt={!!index && 's'}
                   gridTemplateColumns="5fr 1fr"
                   justifyItems="start"
-                  css={{
-                    [index !== 0 ? 'borderTop' : '']: '1px solid',
-                    borderColor: getColor('grayLight6')
-                  }}
+                  borderTop={index !== 0 ? '1px solid' : null}
+                  color="grey.200"
                 >
                   <Text>{title}</Text>
                   <Text fontWeight="bold">{value}</Text>
@@ -87,10 +84,10 @@ const CDPCreateConfirmSummary = ({
                 onChange={() => setHasReadTOS(state => !state)}
                 mr="xs"
               />
-              <Text color="gray2">
+              <Text color="grey.500">
                 {lang.formatString(
                   lang.terms_of_service_text,
-                  <Link color="greenPastel">{lang.terms_of_service}</Link>
+                  <Link>{lang.terms_of_service}</Link>
                 )}
               </Text>
             </Box>
@@ -125,14 +122,17 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <SpaceshipIllustration />
-
+          <Box m="auto">
+            <SpaceshipIllustration />
+          </Box>
           <Box my="l" textAlign="center">
             {isTestchain ? (
-              <Text>{hash}</Text>
+              <Grid gridRowGap="s">
+                <Text>Transaction hash</Text>
+                <Text>{hash}</Text>
+              </Grid>
             ) : (
               <Link
-                t="textS"
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
@@ -152,7 +152,7 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
@@ -171,6 +171,8 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         daiToDraw
       );
 
+    newTxListener(txObject, 'Creating CDP');
+
     maker.service('transactionManager').listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash)
     });
@@ -178,14 +180,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   async function ensureProxyWithGemApprovals() {
     try {
-      let proxyAddress = await maker.service('proxy').currentProxy();
-      if (!proxyAddress) {
-        await maker.service('proxy').build();
-        await new Promise(res => setTimeout(res, 2500));
-        while (!proxyAddress) {
-          proxyAddress = await maker.service('proxy').getProxyAddress();
-        }
-      }
+      const proxyAddress = await maker.service('proxy').ensureProxy();
       if (selectedIlk.currency.symbol !== 'ETH') {
         const gemToken = maker.getToken(selectedIlk.currency.symbol);
         const gemAllowanceSet = (await gemToken.allowance(

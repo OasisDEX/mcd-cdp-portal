@@ -76,6 +76,28 @@
     "pay_back": "Pay back",
     "generate": "Generate"
   },
+  "action_sidebar": {
+    "deposit_title": "Deposit {0}",
+    "deposit_description": "How much {0} would you like to deposit?",
+    "withdraw_title": "Withdraw {0}",
+    "withdraw_description": "How much {0} would you like to withdraw?",
+    "generate_title": "Generate DAI",
+    "generate_description": "How much DAI would you like to generate?",
+    "payback_title": "Payback DAI",
+    "payback_description": "How much DAI would you like to payback?",
+    "cdp_below_threshold": "CDP below liquidation threshold",
+    "insufficient_balance": "Insufficient {0} balance",
+    "cannot_payback_more_than_owed": "Cannot payback more than owed",
+    "dai_balance": "Your Dai balance",
+    "dai_debt": "Dai debt",
+    "maximum_available_to_generate": "Maximum available to generate",
+    "maximum_available_to_withdraw": "Maximum available to withdraw",
+    "current_account_balance": "Current account balance",
+    "gem_usd_price_feed": "{0}/USD Price feed",
+    "new_liquidation_price": "New liquidation price",
+    "new_collateralization_ratio": "New collateralization ratio",
+    "set_max": "Set max"
+  },
   "verbs": {
     "depositing": "Depositing",
     "generating": "Generating"
@@ -93,6 +115,7 @@
   "unknown": "Unknown",
   "cdp": "CDP",
   "connect": "Connect",
+  "cancel": "Cancel",
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",
   "liquidation_ratio": "Minimum liquidation ratio",

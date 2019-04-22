@@ -1,8 +1,6 @@
 import React from 'react';
-
 import lang from 'languages';
-import { Text, Box } from '@makerdao/ui-components-core';
-
+import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
 const GLOBAL_DEBT_CEILING = system => [
@@ -43,25 +41,31 @@ const SidebarSystem = ({ system }) => {
   ].map(f => f(system));
 
   return (
-    <Box py="m">
-      <Box pb="s">
-        <Text t="p2" fontWeight="bold" color="heading">
-          System Information
-        </Text>
+    <Card css={'overflow:hidden;'} pt="2xs">
+      <Box p="s" pb="0" mb="xs">
+        <Text t="h4">System Info</Text>
       </Box>
       {systemParams.map(([param, value], idx) => (
-        <Box key={idx} pt="xs" pb="m">
-          <Text color="black4" fontWeight="semibold" t="p5">
+        <Flex
+          key={`system_${param}`}
+          justifyContent="space-between"
+          alignItems="center"
+          width="100%"
+          py="xs"
+          px="s"
+          bg={idx % 2 ? 'coolGrey.100' : 'white'}
+        >
+          <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
             {param}
           </Text>
           <Box pt="2xs">
-            <Text color="heading" fontWeight="normal" t="p6">
+            <Text fontSize="s" color="darkPurple">
               {value}
             </Text>
           </Box>
-        </Box>
+        </Flex>
       ))}
-    </Box>
+    </Card>
   );
 };
 

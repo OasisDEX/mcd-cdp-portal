@@ -35,14 +35,16 @@ function LedgerType({ onClose, renderByPath }) {
         icon={<StyledLedgerLogo />}
         onClick={() => renderByPath(LEDGER_LIVE_PATH)}
         title="Ledger live"
-        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        subtitle={
+          <BreakableText color="grey">{"m/44'/60'/0'/x"}</BreakableText>
+        }
         buttonText="Connect"
       />
       <ButtonCard
         icon={<StyledLedgerLogo />}
         onClick={() => renderByPath(LEDGER_LEGACY_PATH)}
         title="Ledger legacy"
-        subtitle={<BreakableText color="grey">{"44'/60'/0'/0"}</BreakableText>}
+        subtitle={<BreakableText color="grey">{"m/44'/x'/0/0"}</BreakableText>}
         buttonText="Connect"
       />
       <Box justifySelf="center">

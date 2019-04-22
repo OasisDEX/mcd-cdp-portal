@@ -1,7 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import { connect } from 'react-redux';
-import { getActionableIlks } from 'reducers/addresses';
 import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
 import StepperUI from 'components/StepperUI';
 import {
@@ -89,7 +87,7 @@ const CDPCreateHeader = ({ onClose }) => {
           <WalletSelection
             currentAccount={account}
             textColor="steel"
-            t="textM"
+            t="1.6rem"
             readOnly
           />
         </Box>
@@ -102,7 +100,7 @@ const CDPCreateHeader = ({ onClose }) => {
           css={{ cursor: 'pointer' }}
         >
           <CloseIcon />
-          <Text color="steel" t="textM" fontWeight="medium">
+          <Text color="steel" t="1.6rem" fontWeight="medium">
             Close
           </Text>
         </Grid>
@@ -111,14 +109,13 @@ const CDPCreateHeader = ({ onClose }) => {
   );
 };
 
-function CDPCreate({ actionableIlks, onClose }) {
+function CDPCreate({ onClose }) {
   const [{ step, selectedIlk, ...cdpParams }, dispatch] = React.useReducer(
     reducer,
     initialState
   );
 
   const screenProps = {
-    actionableIlks,
     selectedIlk,
     cdpParams,
     dispatch,
@@ -138,10 +135,4 @@ function CDPCreate({ actionableIlks, onClose }) {
   );
 }
 
-export default connect(
-  state => ({
-    // ie a list of ilks we have the right addresses for
-    actionableIlks: getActionableIlks(state)
-  }),
-  {}
-)(hot(CDPCreate));
+export default hot(CDPCreate);

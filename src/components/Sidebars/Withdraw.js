@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
+import InfoContainer from './shared/InfoContainer';
+import useMaker from '../../hooks/useMaker';
 import {
   calcCDPParams,
   getLockedAndFreeCollateral,
@@ -11,8 +13,10 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
+import lang from 'languages';
 
 const Withdraw = ({ cdp, reset }) => {
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
@@ -40,16 +44,31 @@ const Withdraw = ({ cdp, reset }) => {
   const moreThanZero = amount !== '' && amount > 0;
   const valid = moreThanZero && lessThanMax;
 
+  const withdraw = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    newTxListener(
+      managedCdp.freeCollateral(parseFloat(amount)),
+      `Withdrawing ${cdp.ilkData.gem}`
+    );
+    reset();
+  };
+
   return (
     <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="l">
+      <Grid gridRowGap="m">
         <Grid gridRowGap="s">
-          <h3>Withdraw {cdp.ilkData.gem}</h3>
-          <p>
-            <Text t="body">
-              How much {cdp.ilkData.gem} would you like to withdraw?
-            </Text>
-          </p>
+          <Text.h4 color="darkLavender">
+            {lang.formatString(
+              lang.action_sidebar.withdraw_title,
+              cdp.ilkData.gem
+            )}
+          </Text.h4>
+          <Text.p t="body">
+            {lang.formatString(
+              lang.action_sidebar.withdraw_description,
+              cdp.ilkData.gem
+            )}
+          </Text.p>
           <Input
             type="number"
             placeholder={`0.00 ${cdp.ilk}`}
@@ -58,40 +77,47 @@ const Withdraw = ({ cdp, reset }) => {
             onChange={evt => setAmount(evt.target.value)}
             after={
               <Link fontWeight="medium" onClick={setMax}>
-                Set max
+                {lang.action_sidebar.set_max}
               </Link>
             }
             errorMessage={
-              lessThanMax ? null : 'Cannot withdraw more than available'
+              lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
             }
           />
         </Grid>
-        <Info
-          title="Maximum available to withdraw"
-          body={`${freeCollateral.toFixed(6)} ${cdp.ilkData.gem}`}
-        />
-        <Info
-          title="ETH/USD price feed"
-          body={`${collateralPrice} ${cdp.ilkData.gem}/USD`}
-        />
-        <Info
-          title="New liquidation price"
-          body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
-        />
-        <Info
-          title="New collateralization ratio"
-          body={
-            <Text color={lessThanMax ? null : 'linkOrange'}>
-              {formatCollateralizationRatio(collateralizationRatio)}
-            </Text>
-          }
-        />
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Withdraw</Button>
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+          <Button disabled={!valid} onClick={withdraw}>
+            {lang.actions.withdraw}
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
-            Cancel
+            {lang.cancel}
           </Button>
         </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.maximum_available_to_withdraw}
+            body={`${freeCollateral.toFixed(6)} ${cdp.ilkData.gem}`}
+          />
+          <Info
+            title={lang.formatString(
+              lang.action_sidebar.gem_usd_price_feed,
+              cdp.ilkData.gem
+            )}
+            body={`${collateralPrice} ${cdp.ilkData.gem}/USD`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={
+              <Text color={lessThanMax ? null : 'linkOrange'}>
+                {formatCollateralizationRatio(collateralizationRatio)}
+              </Text>
+            }
+          />
+        </InfoContainer>
       </Grid>
     </SidebarActionLayout>
   );

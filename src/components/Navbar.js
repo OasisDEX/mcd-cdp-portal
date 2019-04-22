@@ -14,7 +14,7 @@ const Navbar = ({ viewedAddress }) => {
           <MakerLogo />
         </Flex>
       </Link>
-      <Grid gridRowGap="xs">
+      <Grid gridRowGap="xs" mx="xs">
         <CDPList
           currentPath={url.pathname}
           viewedAddress={viewedAddress}

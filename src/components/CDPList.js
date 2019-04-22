@@ -2,13 +2,11 @@ import React, { memo, Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
-import { Flex } from '@makerdao/ui-components-core';
+import { Flex, Text } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { Link } from 'react-navi';
-import { NavLabel } from 'components/Typography';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
-import { getColor } from 'styles/theme';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -17,7 +15,7 @@ const NavbarItemContainer = styled(Link)`
 const DashedFakeButton = styled(Flex)`
   border: 1px dashed;
   cursor: pointer;
-  border-color: ${({ theme }) => theme.colors.blackLight};
+  border-color: ${({ theme }) => theme.colors.blackLighter};
 `;
 
 const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
@@ -26,18 +24,13 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? 'greenPastel' : owned ? 'blackLight' : 'grayLight7'}
-      borderRadius="4px"
+      bg={active ? 'teal.500' : owned ? 'blackLighter' : 'grey.200'}
+      borderRadius="default"
       height="50px"
     >
-      <NavLabel
-        t="p6"
-        css={{
-          color: owned ? 'white' : getColor('black5')
-        }}
-      >
+      <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
-      </NavLabel>
+      </Text>
       <RatioDisplay ratio={ratio} active={active} />
     </Flex>
   </NavbarItemContainer>

@@ -6,11 +6,9 @@ const ScreenHeader = ({ title, text }) => {
   return (
     <Box textAlign="center" pt="m">
       <Box pb="m">
-        <TextBlock t="headingL" fontWeight="medium">
-          {title}
-        </TextBlock>
+        <TextBlock t="h2">{title}</TextBlock>
       </Box>
-      <TextBlock t="textL" color="gray2">
+      <TextBlock t="body" fontSize="1.8rem">
         {text}
       </TextBlock>
     </Box>

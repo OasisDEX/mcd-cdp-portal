@@ -1,31 +1,32 @@
 import React from 'react';
-
 import lang from 'languages';
-
-import styled from 'styled-components';
-
-import { Button } from '@makerdao/ui-components-core';
+import { Button, Text } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
-
-const CustomButton = styled(Button)`
-  height: 30px;
-  margin-left: 30px;
-  padding: 0px 26px;
-`;
 
 export default function AccountConnect() {
   const { connectMetamask } = useMaker();
 
   const connectOnClick = async () => {
-    await connectMetamask();
+    try {
+      await connectMetamask();
+    } catch (err) {
+      window.alert(err);
+    }
   };
 
   return (
     <>
-      <span>{lang.sidebar.read_only_mode}</span>
-      <CustomButton onClick={connectOnClick} variant="secondary-outline">
+      <Text t="p5">{lang.sidebar.read_only_mode}</Text>
+      <Button
+        ml="auto"
+        px="s"
+        py="xs"
+        height="auto"
+        onClick={connectOnClick}
+        variant="secondary-outline"
+      >
         {lang.connect}
-      </CustomButton>
+      </Button>
     </>
   );
 }

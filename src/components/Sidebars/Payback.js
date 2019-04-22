@@ -8,9 +8,11 @@ import {
 } from '../../utils/ui';
 import { calcCDPParams } from '../../utils/cdp';
 import Info from './shared/Info';
+import InfoContainer from './shared/InfoContainer';
+import lang from 'languages';
 
 const Payback = ({ cdp, reset }) => {
-  const { maker } = useMaker();
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -18,7 +20,7 @@ const Payback = ({ cdp, reset }) => {
 
   maker
     .getToken('MDAI')
-    .balanceOf(maker.currentAddress())
+    .balance()
     .then(daiBalance => {
       setDaiBalance(daiBalance.toNumber());
     });
@@ -36,30 +38,38 @@ const Payback = ({ cdp, reset }) => {
   }, [amount]);
 
   const setMax = () => {
-    setAmount(cdp.debt.toNumber());
+    setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
+  };
+
+  const payback = async () => {
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    newTxListener(managedCdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
+    reset();
   };
 
   const amt = parseFloat(amount);
   const isLessThanBalance = amt <= daiBalance;
   const isLessThanDebt = amt <= cdp.debt.toNumber();
-  const isNonZero = amount !== 0 && amt > 0;
+  const isNonZero = amount !== '' && amt > 0;
   const valid = isNonZero && isLessThanDebt && isLessThanBalance;
 
   let errorMessage = null;
-  if (!isLessThanBalance && isNonZero) errorMessage = 'Insufficient balance';
+  if (!isLessThanBalance && isNonZero)
+    errorMessage = lang.formatString(
+      lang.action_sidebar.insufficient_balance,
+      'DAI'
+    );
   if (!isLessThanDebt && isNonZero)
-    errorMessage = 'Cannot payback more than owed';
+    errorMessage = lang.action_sidebar.cannot_payback_more_than_owed;
 
   return (
     <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="l">
+      <Grid gridRowGap="m">
         <Grid gridRowGap="s">
-          <h3>Payback DAI</h3>
-          <p>
-            <Text color="text" t="body">
-              How much DAI would you like to payback?
-            </Text>
-          </p>
+          <Text.h4 color="darkLavender">
+            {lang.action_sidebar.payback_title}
+          </Text.h4>
+          <Text.p t="body">{lang.action_sidebar.payback_description}</Text.p>
           <Input
             type="number"
             value={amount}
@@ -68,36 +78,38 @@ const Payback = ({ cdp, reset }) => {
             placeholder="0.00 DAI"
             errorMessage={errorMessage}
             after={
-              <div>
-                <Link onClick={setMax} fontWeight="medium">
-                  Set max
-                </Link>
-              </div>
+              <Link onClick={setMax} fontWeight="medium">
+                {lang.action_sidebar.set_max}
+              </Link>
             }
           />
         </Grid>
-        <Info
-          title="Dai balance"
-          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
-        />
-        <Info
-          title="Dai debt"
-          body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
-        />
-        <Info
-          title="New liquidation price"
-          body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
-        />
-        <Info
-          title="New collateralization ratio"
-          body={formatCollateralizationRatio(collateralizationRatio)}
-        />
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="s">
-          <Button disabled={!valid}>Payback</Button>
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+          <Button disabled={!valid} onClick={payback}>
+            {lang.actions.pay_back}
+          </Button>
           <Button variant="secondary-outline" onClick={reset}>
-            Cancel
+            {lang.cancel}
           </Button>
         </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.dai_balance}
+            body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.dai_debt}
+            body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={formatCollateralizationRatio(collateralizationRatio)}
+          />
+        </InfoContainer>
       </Grid>
     </SidebarActionLayout>
   );
