@@ -98,7 +98,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           <Plus />
         </DashedFakeButton>
       )}
-      // delete once we finalize migration buttons
+      {/* delete once we finalize migration buttons */}
       {!account || !SHOW_MIGRATE_BUTTON ? null : (
         <DashedFakeButton
           onClick={() =>
