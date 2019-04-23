@@ -1001,10 +1001,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.1.2.tgz#1010fa852067920dd23e3d3f856b335416b5374a"
-  integrity sha512-2sw03K5FlaapD0nJ2YBCv9SAEKqtQ1B9h31lKjVmHinF5Bp84xUerRJAXXDzdWhTpaZaTq6FuciZRfwOysVUJA==
+"@makerdao/dai-plugin-mcd@0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.1.3.tgz#2c6c344a0007ee0de69ca974e67567f08110c99b"
+  integrity sha512-yylfdCWdx7aVGTK01AWb5cge8kJO7i2K6vl12/EBkaH1AOVpv4M+6+D+JfQoSFPpF6ZI2/2VtkUGDm+BukLYbQ==
   dependencies:
     "@makerdao/currency" "^0.9.0"
     "@makerdao/services-core" "^0.9.5"
@@ -1022,14 +1022,15 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.15.1-kovan.1":
-  version "0.15.1-kovan.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.1-kovan.1.tgz#211e93741b2697deb7a17ff68524e1f958cd7181"
-  integrity sha512-fE2+8aG91WQYBPWk15LMeAT7V3sXSMk1pLceOvHOUiB3Zvm6+Ilq4A8P8RnLS+jUTYO8I4++jhWlXXrRLQbU5g==
+"@makerdao/dai@0.15.1-kovan.2":
+  version "0.15.1-kovan.2"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.1-kovan.2.tgz#0eda79e5148ca9f1094392075967b48700506fd0"
+  integrity sha512-njsfZSQ3Oy6oNti1OGBfIC1rWKYtzV3huOFRvhBjNGBZdaHm91IM34AJQqbcodSspjsX9avViSZ34DfuaxG5bw==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
     "@makerdao/services-core" "^0.9.5"
+    assert "^1.4.1"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
     debug "^3.1.0"
@@ -1808,7 +1809,7 @@ assert-plus@1.0.0, assert-plus@^1.0.0:
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
   integrity sha1-8S4PPF13sLHN2RRpQuTpbB5N1SU=
 
-assert@^1.1.1:
+assert@^1.1.1, assert@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/assert/-/assert-1.4.1.tgz#99912d591836b5a6f5b345c0f07eefc08fc65d91"
   integrity sha1-mZEtWRg2tab1s0XA8H7vwI/GXZE=
