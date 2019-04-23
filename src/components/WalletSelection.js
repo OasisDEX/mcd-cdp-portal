@@ -6,10 +6,10 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 const WalletSection = ({
   currentAccount,
-  textColor = 'black2',
+  textColor = 'darkPurple',
   iconSize = 22,
   t = 'body',
-  addressTextStyle = 'textS',
+  addressTextStyle = 'body',
   readOnly
 }) => {
   if (!currentAccount) return null;

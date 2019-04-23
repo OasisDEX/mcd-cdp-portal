@@ -4,10 +4,10 @@ import { CDP_SAFETY_LEVELS } from 'utils/constants';
 import { Text } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
-const CDP_SAFETY_COLOR_PALETE = {
-  [CDP_SAFETY_LEVELS.DANGER]: getColor('redVivid'),
-  [CDP_SAFETY_LEVELS.NEUTRAL]: getColor('grayLight2'),
-  [CDP_SAFETY_LEVELS.SAFE]: getColor('greenVivid')
+const CDP_SAFETY_COLOR_PALETTE = {
+  [CDP_SAFETY_LEVELS.DANGER]: getColor('orange.500'),
+  [CDP_SAFETY_LEVELS.NEUTRAL]: getColor('grey.300'),
+  [CDP_SAFETY_LEVELS.SAFE]: getColor('teal.500')
 };
 
 function lookupCDPSafetyLevel(ratio) {
@@ -24,7 +24,7 @@ export default function RatioDisplay({ ratio, active }) {
   return (
     <Text
       t="p6"
-      color={active ? 'white' : CDP_SAFETY_COLOR_PALETE[safetyLevel]}
+      color={active ? 'white' : CDP_SAFETY_COLOR_PALETTE[safetyLevel]}
     >
       {prettifyNumber(ratio, true)}%
     </Text>

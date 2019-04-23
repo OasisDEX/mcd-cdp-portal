@@ -25,12 +25,10 @@ const CDPCreateSelectCollateralSidebar = () => (
         ]
       ].map(([title, text]) => (
         <Grid mb="m" key={title} gridRowGap="xs">
-          <TextBlock t="textM" fontWeight="medium">
+          <TextBlock t="h5" lineHeight="normal">
             {title}
           </TextBlock>
-          <TextBlock t="textS" color="black3">
-            {text}
-          </TextBlock>
+          <TextBlock t="body">{text}</TextBlock>
         </Grid>
       ))}
     </Box>
@@ -48,12 +46,7 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
   }, []);
 
   return (
-    <tbody
-      css={`
-        border-bottom: 1px solid;
-        border-bottom-color: ${({ theme }) => theme.colors.grayLight6};
-      `}
-    >
+    <Table.tbody borderBottom="1px solid" borderColor="grey.200">
       <tr>
         <td>
           <Radio
@@ -82,7 +75,7 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
         <td>{ilk.data.liquidationPenalty} %</td>
         <td>{prettifyNumber(userGemBalance)}</td>
       </tr>
-    </tbody>
+    </Table.tbody>
   );
 }
 

@@ -12,7 +12,7 @@ export function formatCollateralizationRatio(ratio) {
 
 export function formatLiquidationPrice(price, ilkData) {
   if (price < 0) price = 0;
-  return `${price.toFixed(2)} ${ilkData.key}/USD`;
+  return `${price.toFixed(2)} ${ilkData.gem}/USD`;
 }
 
 export function prettifyNumber(_num = null, truncate = false) {

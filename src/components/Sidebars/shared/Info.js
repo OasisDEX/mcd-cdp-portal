@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text, Grid } from '@makerdao/ui-components-core';
 
-const Info = ({ title, body }) => {
+const Info = ({ title, body, ...rest }) => {
   return (
-    <Grid gridRowGap="xs" key={title}>
+    <Grid gridRowGap="2xs" key={title} py="s" {...rest}>
       <div>
-        <Text fontWeight="medium">{title}</Text>
+        <Text t="subheading" color="darkLavender">
+          {title}
+        </Text>
       </div>
       <div>
         <Text color="text">{body}</Text>

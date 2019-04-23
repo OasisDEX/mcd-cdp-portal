@@ -65,7 +65,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (
     <ResponsiveWrap>
       <MobileNavWrap>{mobileNav}</MobileNavWrap>
-      <NavbarWrap bgOverwrite={account ? getColor('black5') : null}>
+      <NavbarWrap bgOverwrite={account ? getColor('blackLight') : null}>
         {navbar}
       </NavbarWrap>
       {children}

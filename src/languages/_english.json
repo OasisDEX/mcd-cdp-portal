@@ -88,7 +88,7 @@
     "cdp_below_threshold": "CDP below liquidation threshold",
     "insufficient_balance": "Insufficient {0} balance",
     "cannot_payback_more_than_owed": "Cannot payback more than owed",
-    "dai_balance": "Dai balance",
+    "dai_balance": "Your Dai balance",
     "dai_debt": "Dai debt",
     "maximum_available_to_generate": "Maximum available to generate",
     "maximum_available_to_withdraw": "Maximum available to withdraw",

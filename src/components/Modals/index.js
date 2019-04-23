@@ -1,5 +1,6 @@
 import React from 'react';
 import CDPCreate from 'components/CDPCreate';
+import CDPMigrate from 'components/CDPMigrate';
 import LedgerType from 'components/LedgerType';
 import HardwareWalletModal from 'components/HardwareWalletModal';
 import { Grid } from '@makerdao/ui-components-core';
@@ -14,13 +15,31 @@ const modals = {
       maxWidth="100%"
       width="100vw"
       height="100vh"
-      bg="grayLight5"
+      bg="backgroundGrey"
       onClick={e => e.stopPropagation()}
       css={`
         overflow-y: auto;
       `}
     >
       <CDPCreate onClose={onClose} />
+    </Grid>
+  ),
+
+  cdpmigrate: ({ onClose }) => (
+    <Grid
+      gridRowGap="s"
+      gridTemplateRows="auto 1fr"
+      p="m"
+      maxWidth="100%"
+      width="100vw"
+      height="100vh"
+      bg="backgroundGrey"
+      onClick={e => e.stopPropagation()}
+      css={`
+        overflow-y: auto;
+      `}
+    >
+      <CDPMigrate onClose={onClose} />
     </Grid>
   ),
 

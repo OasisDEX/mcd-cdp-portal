@@ -14,7 +14,7 @@ function mapStateToProps(state) {
 
 const SidebarGlobalPanel = ({ feeds, system }) => {
   return (
-    <Box>
+    <Box mr="s">
       <Grid gridRowGap="s">
         <SidebarFeeds feeds={feeds} />
         <SidebarSystem system={system} />

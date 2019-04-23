@@ -41,11 +41,9 @@ const SidebarSystem = ({ system }) => {
   ].map(f => f(system));
 
   return (
-    <Card>
-      <Box p="s" pb="0">
-        <Text t="headingS" fontWeight="medium" color="heading">
-          System Info
-        </Text>
+    <Card css={'overflow:hidden;'} pt="2xs">
+      <Box p="s" pb="0" mb="xs">
+        <Text t="h4">System Info</Text>
       </Box>
       {systemParams.map(([param, value], idx) => (
         <Flex
@@ -55,13 +53,13 @@ const SidebarSystem = ({ system }) => {
           width="100%"
           py="xs"
           px="s"
-          bg={idx % 2 ? 'grayLight5' : 'white'}
+          bg={idx % 2 ? 'coolGrey.100' : 'white'}
         >
-          <Text color="black4" fontWeight="semibold" t="smallCaps">
+          <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
             {param}
           </Text>
           <Box pt="2xs">
-            <Text color="heading" fontWeight="normal" t="p5">
+            <Text fontSize="s" color="darkPurple">
               {value}
             </Text>
           </Box>

@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import Footer from '@makerdao/ui-components-footer';
 import Header from '@makerdao/ui-components-header';
 import { Box } from '@makerdao/ui-components-core';
-import { Block } from 'components/Primitives';
 import lang from 'languages';
 
 import MetaMaskConnect from 'components/MetaMaskConnect';
@@ -18,11 +17,11 @@ import { Title, Subtitle } from 'components/Typography';
 
 function Landing() {
   return (
-    <Block width="100%">
+    <Box width="100%">
       <Header />
-      <Block bg="backgroundGrey">
+      <Box bg="backgroundGrey">
         <LandingHeroLayout>
-          <Block
+          <Box
             pb="m"
             css={`
               max-width: 500px;
@@ -32,8 +31,8 @@ function Landing() {
               <Title display="block">{lang.landing_page.title}</Title>
             </Box>
             <Subtitle>{lang.landing_page.subtitle}</Subtitle>
-          </Block>
-          <Block px="m">
+          </Box>
+          <Box px="m">
             {[
               <MetaMaskConnect key="mm" />,
               <HardwareWalletConnect key="le" type={AccountTypes.LEDGER} />,
@@ -41,15 +40,15 @@ function Landing() {
               <WalletConnect key="wc" />,
               <ReadOnlyConnect key="ro" />
             ].map(comp => (
-              <Block py="xs" key={`wrap-${comp.key}`}>
+              <Box py="xs" key={`wrap-${comp.key}`}>
                 {comp}
-              </Block>
+              </Box>
             ))}
-          </Block>
+          </Box>
         </LandingHeroLayout>
-      </Block>
+      </Box>
       <Footer />
-    </Block>
+    </Box>
   );
 }
 

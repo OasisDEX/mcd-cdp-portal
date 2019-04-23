@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Grid, Stepper } from '@makerdao/ui-components-core';
+import { Grid, Stepper, Box } from '@makerdao/ui-components-core';
 
 const FadeIn = styled.div`
   opacity: 0;
@@ -40,12 +40,20 @@ class StepperUI extends React.Component {
       <Fragment>
         {this.props.renderStepperHeader()}
 
-        <Grid maxWidth="1600px" m="0 auto">
-          <Stepper
-            style={{ margin: '0 auto' }}
-            steps={this.props.steps}
-            selected={this.props.step}
-          />
+        <Grid
+          maxWidth="1600px"
+          m="0 auto"
+          alignItems="start"
+          alignContent="start"
+          gridRowGap={{ s: 'm', m: '2xl' }}
+        >
+          <Box m="0 auto">
+            <Stepper
+              minWidth="200px"
+              steps={this.props.steps}
+              selected={this.props.step}
+            />
+          </Box>
           <div style={{ width: '100%', position: 'relative' }}>
             {React.Children.map(this.props.children, (child, index) => {
               return (

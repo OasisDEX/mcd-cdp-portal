@@ -32,7 +32,7 @@ const CDPDropdown = ({ children }) => {
             justifyContent="center"
             px="m"
             py="s"
-            bg="greenPastel"
+            bg="teal.500"
             borderRadius="4px"
           >
             <Text t="p6" fontWeight="bold">
