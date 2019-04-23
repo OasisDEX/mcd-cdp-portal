@@ -96,6 +96,19 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           <Plus />
         </DashedFakeButton>
       )}
+      {!account ? null : (
+        <DashedFakeButton
+          onClick={() =>
+            show({ modalType: 'cdpmigrate', modalTemplate: 'basic' })
+          }
+          justifyContent="center"
+          borderRadius="4px"
+          py="s"
+          color="grey.300"
+        >
+          Mig
+        </DashedFakeButton>
+      )}
     </Fragment>
   );
 });
