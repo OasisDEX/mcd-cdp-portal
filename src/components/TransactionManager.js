@@ -110,14 +110,14 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
               )}
               {multipleTx && !expanded ? null : (
                 <Box>
-                  {transactions.map(({ id, tx, message }) => {
+                  {transactions.map(({ tx, message }, i) => {
                     const { hash } = tx;
                     const resolvedState = resolveTxManagerState([tx.state()]);
                     const bg = txManagerBgPalette[resolvedState];
                     const textColor = txManagerTextPalette[resolvedState];
 
                     return (
-                      <Box key={`tx_${id}`}>
+                      <Box key={`tx_${i}`}>
                         <Flex mt={multipleTx ? 's' : ''} alignItems="center">
                           {multipleTx && (
                             <Circle color={bg} size={'14px'} mr="xs" />
