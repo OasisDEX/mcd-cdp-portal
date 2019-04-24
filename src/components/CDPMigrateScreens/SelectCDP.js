@@ -1,10 +1,11 @@
 import React from 'react';
+import lang from 'languages';
 import { Text, Grid, Card, Button } from '@makerdao/ui-components-core';
 
 export default ({ dispatch }) => {
   return (
     <Grid maxWidth="912px" gridRowGap="m">
-      <Text.h2 textAlign="center">Select CDP to Migrate</Text.h2>
+      <Text.h2 textAlign="center">{lang.cdp_migrate.select_title}</Text.h2>
       <Text.p
         textAlign="center"
         t="body"
@@ -12,8 +13,7 @@ export default ({ dispatch }) => {
         maxWidth="498px"
         m="0 auto"
       >
-        Select a CDP and pay back the stability fee in DAI or MKR to migrate it
-        to Multi-collateral Dai and the new CDP Portal.
+        {lang.cdp_migrate.select_text}
       </Text.p>
       <Grid gridRowGap="m" mt="xs">
         <Grid
@@ -24,11 +24,11 @@ export default ({ dispatch }) => {
           fontWeight="medium"
           color="steelLight"
         >
-          <span>CDP ID</span>
-          <span>Current Ratio</span>
-          <span>Dai Debt</span>
-          <span>Stability Fee</span>
-          <span>Stability Fee</span>
+          <span>{lang.cdp_id}</span>
+          <span>{lang.cdp_migrate.current_ratio}</span>
+          <span>{lang.cdp_migrate.dai_debt}</span>
+          <span>{lang.stability_fee} (DAI)</span>
+          <span>{lang.stability_fee} (MKR)</span>
           <span />
         </Grid>
         <Card p="l">
@@ -59,7 +59,7 @@ export default ({ dispatch }) => {
             <span>13.34 DAI</span>
             <span>0.23 MKR</span>
             <Button onClick={() => dispatch({ type: 'increment-step' })}>
-              Migrate
+              {lang.cdp_migrate.migrate}
             </Button>
           </Grid>
         </Card>

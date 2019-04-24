@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import lang from 'languages';
 import {
   Text,
   Grid,
@@ -15,10 +16,11 @@ import CardTabs from '../CardTabs';
 const Migrated = ({ onClose, dispatch }) => {
   return (
     <Grid gridRowGap="m">
-      <Text.h2 textAlign="center">CDP Migration complete</Text.h2>
+      <Text.h2 textAlign="center">
+        {lang.cdp_migrate.migrate_complete_header}
+      </Text.h2>
       <Text.p fontSize="1.7rem" color="darkLavender">
-        CDP #3228 has been successfully migrated to Multi-collateral Dai and the
-        new CDP Portal.
+        {lang.formatString(lang.cdp_migrate.migrate_complete_text, '3228')}
       </Text.p>
       <Button
         my="xs"
@@ -28,14 +30,14 @@ const Migrated = ({ onClose, dispatch }) => {
         px="s"
         variant="secondary"
       >
-        View transaction details
+        {lang.cdp_migrate.view_transaction_details}
       </Button>
       <Card px="l" py="s" width="100%" maxWidth="400px" justifySelf="center">
         <Table width="100%">
           <tbody>
             <Table.tr>
               <Table.td>
-                <Text color="darkPurple">CDP ID</Text>
+                <Text color="darkPurple">{lang.cdp_id}</Text>
               </Table.td>
               <Table.td textAlign="right">
                 <Link fontWeight="medium">#3228</Link>
@@ -43,7 +45,9 @@ const Migrated = ({ onClose, dispatch }) => {
             </Table.tr>
             <Table.tr>
               <Table.td>
-                <Text color="darkPurple">Payment: Stability Fee</Text>
+                <Text color="darkPurple">
+                  {lang.cdp_page.payment}: {lang.stability_fee}
+                </Text>
               </Table.td>
               <Table.td textAlign="right">
                 <Text fontWeight="medium" color="darkPurple">
@@ -59,7 +63,7 @@ const Migrated = ({ onClose, dispatch }) => {
         justifySelf="center"
         onClick={() => dispatch({ type: 'reset' })}
       >
-        Migrate another CDP
+        {lang.cdp_migrate.migrate_another_cdp}
       </Button>
       <Text.a
         textAlign="center"
@@ -68,7 +72,7 @@ const Migrated = ({ onClose, dispatch }) => {
         css={{ cursor: 'pointer' }}
         onClick={onClose}
       >
-        Exit to CDP Portal
+        {lang.cdp_migrate.exit_to_cdp_portal}
       </Text.a>
     </Grid>
   );
@@ -80,10 +84,11 @@ const Migrating = ({ onClose, dispatch, onNext }) => {
 
   return (
     <Grid gridRowGap="m">
-      <Text.h2 textAlign="center">Your CDP is being migrated</Text.h2>
+      <Text.h2 textAlign="center">
+        {lang.cdp_migrate.migrate_in_progress_header}
+      </Text.h2>
       <Text.p fontSize="1.7rem" color="darkLavender">
-        The estimated time is 8 minutes. You can safely leave this page and
-        return.
+        {lang.cdp_migrate.migrate_in_progress_text}
       </Text.p>
       <Button
         justifySelf="center"
@@ -92,10 +97,10 @@ const Migrating = ({ onClose, dispatch, onNext }) => {
         px="s"
         variant="secondary"
       >
-        View transaction details
+        {lang.cdp_migrate.view_transaction_details}
       </Button>
       <Button justifySelf="center" onClick={() => dispatch({ type: 'reset' })}>
-        Migrate another CDP
+        {lang.cdp_migrate.migrate_another_cdp}
       </Button>
       <Text.a
         textAlign="center"
@@ -104,7 +109,7 @@ const Migrating = ({ onClose, dispatch, onNext }) => {
         css={{ cursor: 'pointer' }}
         onClick={onClose}
       >
-        Exit to CDP Portal
+        {lang.cdp_migrate.exit_to_cdp_portal}
       </Text.a>
     </Grid>
   );
@@ -121,7 +126,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
             <Table.tbody>
               <Table.tr>
                 <Table.td>
-                  <Text>CDP ID</Text>
+                  <Text>{lang.cdp_id}</Text>
                 </Table.td>
                 <Table.td textAlign="right">
                   <Text fontWeight="medium">
@@ -131,7 +136,9 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               </Table.tr>
               <Table.tr>
                 <Table.td>
-                  <Text>Stability Fee Payment</Text>
+                  <Text>
+                    {lang.stability_fee} {lang.cdp_migrate.payment}
+                  </Text>
                 </Table.td>
                 <Table.td textAlign="right">
                   <Text fontWeight="medium">23.32 DAI</Text>
@@ -142,7 +149,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
           <Flex alignItems="center">
             <Checkbox mr="s" fontSize="l" />
             <Text t="caption" color="steel">
-              Trust this site with my DAI <Tooltip fontSize="l" />
+              {lang.cdp_migrate.trust_site_with_dai} <Tooltip fontSize="l" />
             </Text>
           </Flex>
           <Flex alignItems="center">
@@ -153,7 +160,10 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               onChange={evt => setHasReadTOS(evt.target.checked)}
             />
             <Text t="caption" color="steel">
-              I have read and accept the <Link>Terms of Service</Link>.
+              {lang.formatString(
+                lang.terms_of_service_text,
+                <Link>{lang.terms_of_service}</Link>
+              )}
             </Text>
           </Flex>
         </Grid>
@@ -162,7 +172,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
             <Table.tbody>
               <Table.tr>
                 <Table.td>
-                  <Text>CDP ID</Text>
+                  <Text>{lang.cdp_id}</Text>
                 </Table.td>
                 <Table.td textAlign="right">
                   <Text fontWeight="medium">
@@ -172,7 +182,9 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               </Table.tr>
               <Table.tr>
                 <Table.td>
-                  <Text>Stability Fee Payment</Text>
+                  <Text>
+                    {lang.stability_fee} {lang.cdp_migrate.payment}
+                  </Text>
                 </Table.td>
                 <Table.td textAlign="right">
                   <Text fontWeight="medium">23.32 MKR</Text>
@@ -188,7 +200,10 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               onChange={evt => setHasReadTOS(evt.target.checked)}
             />
             <Text t="caption" color="steel">
-              I have read and accept the <Link>Terms of Service</Link>.
+              {lang.formatString(
+                lang.terms_of_service_text,
+                <Link>{lang.terms_of_service}</Link>
+              )}
             </Text>
           </Flex>
         </Grid>
@@ -203,10 +218,10 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
           variant="secondary-outline"
           onClick={() => dispatch({ type: 'decrement-step' })}
         >
-          Cancel
+          {lang.cancel}
         </Button>
         <Button justifySelf="center" disabled={!hasReadTOS} onClick={onNext}>
-          Pay and Migrate
+          {lang.cdp_migrate.pay_and_migrate}
         </Button>
       </Grid>
     </Grid>
