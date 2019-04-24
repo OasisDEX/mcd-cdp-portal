@@ -8,8 +8,9 @@ cache:
   timeout: 9000
 install:
   - yarn install
+script:
+  - yarn cover
 before_deploy:
-  - yarn build
   - npm install now --no-save
 deploy:
   - provider: script

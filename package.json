@@ -53,7 +53,8 @@
     "start:https": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco build",
     "precommit": "lint-staged",
-    "test": "echo \"Live long or Dai hard\"",
+    "test": "jest",
+    "cover": "jest --coverage",
     "deploy": "yarn build && now ./build -A ../now.json",
     "now-build": "yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
@@ -62,6 +63,17 @@
     "*.{js,json}": [
       "prettier --write --single-quote",
       "git add"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "jest": {
+    "modulePaths": [
+      "src",
+      "test"
     ]
   },
   "eslintConfig": {
@@ -78,6 +90,8 @@
     "lighthouse": "^4.0.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
+    "react-testing-library": "^6.1.2",
+    "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
   }
 }
