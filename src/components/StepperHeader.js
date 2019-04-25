@@ -1,5 +1,5 @@
-import React from 'react'
-import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core'
+import React from 'react';
+import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
 import WalletSelection from './WalletSelection';
 import useMaker from 'hooks/useMaker';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
@@ -39,4 +39,4 @@ const StepperHeader = ({ onClose }) => {
   );
 };
 
-export default StepperHeader
+export default StepperHeader;
