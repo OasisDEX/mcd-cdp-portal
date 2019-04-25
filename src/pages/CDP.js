@@ -192,8 +192,8 @@ function CDPView({ cdpId, getIlk }) {
         cdp.type.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
-        cdp.daiAvailable(),
-        cdp.getMinCollateralAmount(),
+        cdp.getDaiAvailable(),
+        cdp.minCollateral(),
         cdp.getCollateralAvailable()
       ]);
       setCDP({
