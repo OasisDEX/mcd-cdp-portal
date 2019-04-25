@@ -7,9 +7,9 @@ cache:
     - node_modules
   timeout: 9000
 install:
-  - npm install
+  - yarn install
 before_deploy:
-  - npm run build
+  - yarn build
   - npm install now --no-save
 deploy:
   - provider: script
