@@ -193,7 +193,7 @@ function CDPView({ cdpId, getIlk }) {
       ] = await Promise.all([
         cdp.getDebtValue(),
         cdp.getCollateralAmount(),
-        cdp._cdpType.getPrice(),
+        cdp.type.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
         cdp.daiAvailable(),
@@ -216,7 +216,7 @@ function CDPView({ cdpId, getIlk }) {
   }, [cdpId, getIlk, maker]);
 
   if (!cdp) return <LoadingLayout />;
-  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF'
+  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
       <Box>
