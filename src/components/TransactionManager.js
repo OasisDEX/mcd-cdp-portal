@@ -87,7 +87,8 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
     <animated.div
       style={{
         ...txAnimation,
-        height: txCount ? '' : `${PLACEHOLDER_HEIGHT}px`
+        height: txCount ? '' : `${PLACEHOLDER_HEIGHT}px`,
+        pointerEvents: expanded ? 'unset' : 'none'
       }}
     >
       <Card mr="s" p="s" mt="s">

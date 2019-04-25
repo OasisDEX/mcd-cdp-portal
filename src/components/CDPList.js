@@ -8,8 +8,6 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 
-const SHOW_MIGRATE_BUTTON = true;
-
 const NavbarItemContainer = styled(Link)`
   display: block;
 `;
@@ -96,20 +94,6 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           py="s"
         >
           <Plus />
-        </DashedFakeButton>
-      )}
-      {/* delete once we finalize migration buttons */}
-      {!account || !SHOW_MIGRATE_BUTTON ? null : (
-        <DashedFakeButton
-          onClick={() =>
-            show({ modalType: 'cdpmigrate', modalTemplate: 'basic' })
-          }
-          justifyContent="center"
-          borderRadius="4px"
-          py="s"
-          color="grey.300"
-        >
-          Mig
         </DashedFakeButton>
       )}
     </Fragment>

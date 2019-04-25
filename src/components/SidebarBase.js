@@ -13,9 +13,12 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
+import NotificationManager from 'components/NotificationManager';
 import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
+
+const SHOW_MIGRATE_BUTTON = false;
 
 function AccountSection({ currentAccount }) {
   return (
@@ -141,6 +144,7 @@ function Sidebar() {
 
   return (
     <Box>
+      {SHOW_MIGRATE_BUTTON && <NotificationManager />}
       <TransactionManager
         transactions={selectors.transactions()}
         network={network}
