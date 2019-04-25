@@ -14,7 +14,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     case 'increment-step':
       return {
