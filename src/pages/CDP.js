@@ -6,11 +6,6 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import {
-  getUsdPrice,
-  getLockedAndFreeCollateral,
-  calcCDPParams
-} from 'utils/cdp';
-import {
   Box,
   Grid,
   Flex,
@@ -181,7 +176,6 @@ function CDPView({ cdpId, getIlk }) {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
       const ilkData = getIlk(cdp.ilk);
-      window.cdp = cdp;
       const [
         debt,
         collateral,
