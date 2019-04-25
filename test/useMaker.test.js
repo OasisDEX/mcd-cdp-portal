@@ -20,15 +20,18 @@ function testHookWithMakerProvider(callback) {
   );
 }
 
+let useMakerHookValue;
+beforeAll(() => {
+  testHookWithMakerProvider(() => (useMakerHookValue = useMaker()));
+});
+
 afterEach(cleanup);
 
+// we allow up to 10 seconds for this
 test('maker is properly instantiated and authenticated within the maker provider', async () => {
-  let authenticated, maker;
-  testHookWithMakerProvider(() => ({ authenticated, maker } = useMaker()));
-
-  expect(authenticated).toBe(false);
+  expect(useMakerHookValue.authenticated).toBe(false);
   await waitForExpect(() => {
-    expect(authenticated).toBe(true);
-    expect(maker).not.toBe(null);
-  });
-});
+    expect(useMakerHookValue.authenticated).toBe(true);
+    expect(useMakerHookValue.maker).not.toBe(null);
+  }, 10000);
+}, 10500);

@@ -53,8 +53,9 @@
     "start:https": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco build",
     "precommit": "lint-staged",
-    "test": "jest",
-    "cover": "jest --coverage",
+    "test": "./testchain/scripts/launch -s mcd-step-4 --fast --ci jest",
+    "cover": "./testchain/scripts/launch -s mcd-step-4 --fast --ci jest --coverage",
+    "jest": "jest",
     "deploy": "yarn build && now ./build -A ../now.json",
     "now-build": "yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
