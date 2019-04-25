@@ -6,9 +6,10 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 const WalletSection = ({
   currentAccount,
-  textColor = 'black2',
+  textColor = 'darkPurple',
   iconSize = 22,
-  t = 'p5',
+  t = 'body',
+  addressTextStyle = 'body',
   readOnly
 }) => {
   if (!currentAccount) return null;
@@ -22,7 +23,7 @@ const WalletSection = ({
         </Text>
       </Box>
       <Box ml="m">
-        <Text t={t} color={textColor}>
+        <Text t={addressTextStyle} color={textColor}>
           {cutMiddle(address, 7, 5)}
         </Text>
       </Box>

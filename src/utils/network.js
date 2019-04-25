@@ -1,5 +1,4 @@
 import config from 'references/config';
-import localAddressConfig from 'references/addresses.json';
 
 const {
   exTestchainApiUrl,
@@ -53,8 +52,7 @@ export async function getOrFetchNetworkDetails({ network, testchainId }) {
       throw new Error(`Unsupported network: ${network}`);
 
     _cache[serializedKey] = {
-      rpcUrl: rpcUrls[networkId],
-      addresses: localAddressConfig[networkId]
+      rpcUrl: rpcUrls[networkId]
     };
   }
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import { getAllFeeds } from 'reducers/network/cdpTypes';
 
-import { Flex, Box } from '@makerdao/ui-components-core';
+import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
 import AccountConnect from './SidebarAccountConnect';
@@ -12,25 +12,17 @@ import WalletSelection from 'components/WalletSelection';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
+import TransactionManager from 'components/TransactionManager';
+import NotificationManager from 'components/NotificationManager';
 import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
+const springConfig = { mass: 1, tension: 500, friction: 50 };
 
-const Section = styled.section`
-  padding: 0 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.grayLight3};
-  box-sizing: content-box;
-`;
-
-const VerticallyPaddedSection = styled(Section)`
-  box-sizing: border-box;
-  height: auto;
-  padding-top: ${({ theme }) => theme.space.s};
-  padding-bottom: ${({ theme }) => theme.space.s};
-`;
+const SHOW_MIGRATE_BUTTON = false;
 
 function AccountSection({ currentAccount }) {
   return (
-    <VerticallyPaddedSection>
+    <Card p="s">
       {currentAccount ? (
         <WalletSelection currentAccount={currentAccount} />
       ) : (
@@ -38,36 +30,75 @@ function AccountSection({ currentAccount }) {
           <AccountConnect />
         </Flex>
       )}
-    </VerticallyPaddedSection>
+    </Card>
   );
 }
 
 const animations = {
-  fade: [{ opacity: 0 }, { opacity: 1 }],
+  fade: [{ opacity: 0.9 }, { opacity: 1 }],
+  fadeAway: [
+    {
+      transform: 'scale(0.9)',
+      opacity: 0
+    },
+    {
+      transform: 'scale(1)',
+      opacity: 1
+    }
+  ],
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
-    { transform: `translate3d(-${getMeasurement('sidebarWidth')}, 0, 0)` }
+    { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` }
   ]
 };
 
 const AnimatedWrap = styled(animated.div)`
   width: 100%;
+  padding-right: ${({ theme }) => theme.space.s};
 `;
 
 function Sidebar() {
-  const { account } = useMaker();
+  const {
+    account,
+    maker,
+    newTxListener,
+    resetTx,
+    selectors,
+    network
+  } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
-  const [slideAnimation, setAnimation] = useSpring(() => ({
+  const [p2off, p2on] = animations.fade;
+  const [p1off, p1on] = animations.fadeAway;
+
+  const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
-    config: { mass: 1, tension: 210, friction: 23 }
+    config: springConfig
+  }));
+
+  const [p1Animation, setP1Animation] = useSpring(() => ({
+    to: p1on,
+    config: springConfig
+  }));
+
+  const [p2Animation, setP2Animation] = useSpring(() => ({
+    to: p2off,
+    config: springConfig
   }));
 
   const resetSidebarActionAnimated = () => {
     const { reset } = props;
 
-    setAnimation({
+    setP1Animation({
+      to: p1on
+    });
+
+    setP2Animation({
+      to: p2off
+    });
+
+    setSlideAnimation({
       to: slideStart,
       onRest() {
         reset();
@@ -77,28 +108,67 @@ function Sidebar() {
 
   useEffect(() => {
     if (SidebarComponent) {
-      setAnimation({
+      setP1Animation({
+        to: p1off
+      });
+
+      setP2Animation({
+        to: p2on
+      });
+
+      setSlideAnimation({
         to: slideEnd,
         onRest() {}
       });
     }
-  }, [SidebarComponent]);
+  }, [
+    SidebarComponent,
 
-  // if we want to change the sidebar color when connected vs. read-only mode.
+    setP1Animation,
+    setP2Animation,
+    setSlideAnimation,
+    slideEnd
+  ]);
+
+  useEffect(() => {
+    window.pretendFakeTx = (
+      ethToSend = '0.01',
+      recipient = '0xBc5d63fFc63f28bE50EDc63D237151ef7A2d7E11'
+    ) => {
+      newTxListener(
+        maker.getToken('ETH').transfer(recipient, ethToSend),
+        `Sending ${ethToSend} ETH`
+      );
+    };
+  }, []);
+
   return (
-    <Box bg={account ? 'white' : 'white'}>
-      <AccountSection currentAccount={account} />
-      <Flex css={'overflow:hidden;'}>
-        <AnimatedWrap style={slideAnimation} key="panel1">
-          <GlobalSidebar />
-        </AnimatedWrap>
+    <Box>
+      {SHOW_MIGRATE_BUTTON && <NotificationManager />}
+      <TransactionManager
+        transactions={selectors.transactions()}
+        network={network}
+        resetTx={resetTx}
+      />
+      <Grid gridRowGap="s" py="s">
+        <Box pr="s">
+          <AccountSection currentAccount={account} />
+        </Box>
+        <Flex css={'overflow:hidden;'}>
+          <AnimatedWrap style={{ ...p1Animation, zIndex: 1 }} key="panel1">
+            <GlobalSidebar />
+          </AnimatedWrap>
 
-        <AnimatedWrap style={slideAnimation} key="panel2">
-          {!!SidebarComponent && (
-            <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
-          )}
-        </AnimatedWrap>
-      </Flex>
+          <AnimatedWrap
+            style={{ ...slideAnimation, ...p2Animation, zIndex: 2 }}
+            key="panel2"
+          >
+            {!!SidebarComponent && (
+              <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
+            )}
+          </AnimatedWrap>
+        </Flex>
+      </Grid>
     </Box>
   );
 }

@@ -1,137 +1,128 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import {
+  getUsdPrice,
+  getLockedAndFreeCollateral,
+  calcCDPParams
+} from 'utils/cdp';
+import {
   Box,
   Grid,
   Flex,
   Card,
   Button,
-  Table
+  Table,
+  Text
 } from '@makerdao/ui-components-core';
-import { Title, TextBlock } from 'components/Typography';
+import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
+import { getColor } from '../styles/theme';
 
-function CardTitle({ title }) {
-  return (
-    <TextBlock t="headingS" fontWeight="medium">
-      {title}
-    </TextBlock>
-  );
-}
+const WithSeperators = styled(Box).attrs(() => ({
+  borderBottom: '1px solid',
+  borderColor: 'grey.300'
+}))`
+  &:last-child {
+    border-bottom: none;
+  }
+`;
 
-const TopContainerRow = ({ props }) => {
-  const [title, value] = props;
-  const [titleText, titleCurrency] =
-    typeof title === 'string' ? title.split(' ') : ['n/a', 'n/a'];
+const InfoContainerRow = ({ title, value }) => {
   return (
-    <Flex flexWrap="wrap" alignItems="flex-end">
-      <TextBlock t="headingL" fontWeight="medium">
-        {titleText} &nbsp;
-      </TextBlock>
-      <TextBlock t="textL" fontWeight="medium">
-        {titleCurrency} &nbsp;
-      </TextBlock>
-      <TextBlock m="m" t="textM" color="gray2">
-        {value}
-      </TextBlock>
-    </Flex>
+    <WithSeperators>
+      <Grid py="xs" gridTemplateColumns="1fr auto">
+        <TextBlock t="body">{title}</TextBlock>
+        <TextBlock t="body">{value}</TextBlock>
+      </Grid>
+    </WithSeperators>
   );
 };
 
-const InfoContainerRow = ({ props }) => {
-  const [title, value] = props;
-  const [rowInfoTitle, ...rowInfoLabel] =
-    typeof title === 'string' ? title.split(/( \()/g) : ['n/a', 'n/a'];
+const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
-    <Flex py="xs" flexWrap="wrap">
-      <Flex flexGrow="1">
-        <TextBlock t="p3" color="black4">
-          {rowInfoTitle}
-        </TextBlock>
-        <TextBlock t="p3" color="gray2">
-          {rowInfoLabel}
-        </TextBlock>
-      </Flex>
-      <Box>
-        <TextBlock t="p2" color="black4">
-          {value}
-        </TextBlock>
-      </Box>
-    </Flex>
-  );
-};
-
-const ActionContainerRow = ({ props }) => {
-  const [title, value, conversion, button] = props;
-  return (
-    <Flex flexWrap="wrap" justifyContent="space-between" py="s">
-      <Box alignSelf="center" width="140px">
-        <TextBlock t="p3" color="black4">
-          {title}
-        </TextBlock>
-      </Box>
-      <Box flexGrow="1">
-        <Box display="flex">
-          <Box flexGrow="1" />
-          <Box alignSelf="center">
-            <Flex flexDirection="column" width="150px" pr="15px">
-              <TextBlock t="p2" textAlign="right">
-                {value}
-              </TextBlock>
-              <TextBlock t="p3" textAlign="right">
-                {conversion}
-              </TextBlock>
-            </Flex>
-          </Box>
-          <Box alignSelf="center">{button}</Box>
+    <WithSeperators>
+      <Flex flexWrap="wrap" justifyContent="space-between" py="s">
+        <Box alignSelf="center" width="140px">
+          <TextBlock color="darkLavender" fontSize="m">
+            {title}
+          </TextBlock>
         </Box>
-      </Box>
-    </Flex>
+
+        <Box flexGrow="1">
+          <Box display="flex">
+            <Box flexGrow="1" />
+            <Box alignSelf="center">
+              <Flex flexDirection="column" width="150px" pr="m">
+                <TextBlock
+                  t="h5"
+                  lineHeight="normal"
+                  fontWeight="medium"
+                  color="darkLavender"
+                  textAlign="right"
+                >
+                  {value}
+                </TextBlock>
+                <ExtraInfo textAlign="right">{conversion}</ExtraInfo>
+              </Flex>
+            </Box>
+            <Box alignSelf="center">{button}</Box>
+          </Box>
+        </Box>
+      </Flex>
+    </WithSeperators>
   );
 };
 
 const ActionButton = ({ children, ...props }) => (
   <Button width="100px" p="xs" variant="secondary" {...props}>
-    <TextBlock t="p5" color="black4">
+    <TextBlock fontSize="s" color="darkLavender">
       {children}
     </TextBlock>
   </Button>
 );
 
-const CdpViewCard = ({ title, rows, isAction }) => {
-  const [titleRow, middleRow, bottomRow] = rows;
+const CdpViewCard = ({ title, children }) => {
   return (
     <Box my="s">
-      <CardTitle title={title} />
-      <Card px="m" py="s" my="s">
-        <TopContainerRow props={titleRow} />
-        {isAction ? (
-          <ActionContainerRow props={middleRow} />
-        ) : (
-          <InfoContainerRow props={middleRow} />
-        )}
-        <Box borderBottom="1px solid" borderColor="grayLight4" />
-        {isAction ? (
-          <ActionContainerRow props={bottomRow} />
-        ) : (
-          <InfoContainerRow props={bottomRow} />
-        )}
+      <Text.h4>{title}</Text.h4>
+      <Card px="l" pt="m" pb="s" my="s">
+        {children}
       </Card>
     </Box>
+  );
+};
+
+const AmountDisplay = ({ amount, denomination }) => {
+  return (
+    <>
+      <TextBlock t="h3" lineHeight="1">
+        {amount}&nbsp;
+      </TextBlock>
+      <TextBlock t="h5">{denomination} &nbsp;</TextBlock>
+    </>
+  );
+};
+
+const ExtraInfo = ({ children, ...props }) => {
+  return (
+    <Text t="caption" lineHeight="none" color="steel" {...props}>
+      {children}
+    </Text>
   );
 };
 
 const CdpViewHistory = ({ title, rows }) => {
   return (
     <Box>
-      <CardTitle title={title} />
+      <Text.h4>{title}</Text.h4>
       <Card px="m" py="s" my="s">
         <Table width="100%" variant="normal">
           <thead>
@@ -170,7 +161,20 @@ function CDPView({ cdpId, getIlk }) {
   const { show: showSidebar } = useSidebar();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
-  const [cdpState, setCDP] = useState(null);
+  const [cdp, setCDP] = useState(null);
+  const [daiBalance, setDaiBalance] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setDaiBalance(await maker.getToken('MDAI').balance());
+      } catch (err) {
+        console.error(
+          `Unable to fetch dai balance, no account is currently connected`
+        );
+      }
+    })();
+  }, [account]);
 
   useEffect(() => {
     (async () => {
@@ -212,82 +216,107 @@ function CDPView({ cdpId, getIlk }) {
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdpState) return <LoadingLayout />;
-  const { cdp } = cdpState;
+  if (!cdp) return <LoadingLayout background={getColor('backgroundGrey')} />;
+
+  const collateralInt = cdp.collateral.toNumber();
+  const collateralDenomination = cdp.ilkData.gem;
+  const debtInt = cdp.debt.toNumber();
+  const collateralPrice = getUsdPrice(cdp.ilkData);
+  const {
+    liquidationPrice,
+    collateralizationRatio,
+    daiAvailable
+  } = calcCDPParams({
+    ilkData: cdp.ilkData,
+    gemsToLock: collateralInt,
+    daiToDraw: debtInt
+  });
+  const stabilityFee = parseFloat(cdp.ilkData.rate) * 100 + '%';
+  const {
+    locked: lockedCollateral,
+    free: freeCollateral
+  } = getLockedAndFreeCollateral(cdp);
+  const generateAmount = parseFloat(daiAvailable) - debtInt;
+  // calls that will come from the mcd-plugin once functionality is implemented.
+  // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
+  // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
+
   const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
       <Box>
-        <Title color="black2">
+        <Text.h2>
           {lang.cdp} {cdpId}
-        </Title>
+        </Text.h2>
       </Box>
       <Grid
         py="m"
         gridColumnGap="l"
         gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
       >
-        <CdpViewCard
-          title={lang.cdp_page.liquidation_price}
-          rows={[
-            [
-              cdpState.liquidationPrice.toString(),
-              `(${cdpState.ilkData.gem}/USD)`
-            ],
-            [
-              `${lang.cdp_page.current_price_info} (${
-                cdpState.ilkData.gem
-              }/USD)`,
-              cdpState.collateralPrice.toFixed(2) / 100
-            ],
-            [
-              lang.cdp_page.liquidation_penalty,
-              cdpState.ilkData.liquidationPenalty + '%'
-            ]
-          ]}
-          isAction={false}
-        />
+        <CdpViewCard title={lang.cdp_page.liquidation_price}>
+          <Flex alignItems="flex-end" mb="xs">
+            <AmountDisplay
+              amount={liquidationPrice.toFixed(2)}
+              denomination="USD"
+            />
+            <ExtraInfo>({cdp.ilk}/USD)</ExtraInfo>
+          </Flex>
+          <InfoContainerRow
+            title={
+              <TextBlock>
+                {lang.cdp_page.current_price_info}
+                <ExtraInfo ml="s">(ETH/USD)</ExtraInfo>
+              </TextBlock>
+            }
+            value={collateralPrice.toFixed(2)}
+          />
+          <InfoContainerRow
+            title={lang.cdp_page.liquidation_penalty}
+            value={cdp.ilkData.liquidationPenalty + '%'}
+          />
+        </CdpViewCard>
 
-        <CdpViewCard
-          title={lang.cdp_page.collateralization_ratio}
-          rows={[
-            [
-              (parseFloat(cdpState.collateralizationRatio) * 100).toFixed(2) +
-                '%',
-              '\u00A0'
-            ],
-            [
-              lang.cdp_page.minimum_ratio,
-              cdpState.ilkData.liquidationRatio + '.00%'
-            ],
-            [
-              lang.cdp_page.stability_fee,
-              parseFloat(cdpState.ilkData.rate) * 100 + '%'
-            ]
-          ]}
-          isAction={false}
-        />
+        <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
+          <Flex alignItems="flex-end" mb="xs">
+            <AmountDisplay
+              amount={
+                collateralizationRatio &&
+                parseFloat(collateralizationRatio).toFixed(2)
+              }
+              denomination="%"
+            />
+          </Flex>
+          <InfoContainerRow
+            title={lang.cdp_page.minimum_ratio}
+            value={cdp.ilkData.liquidationRatio + '.00%'}
+          />
+          <InfoContainerRow
+            title={lang.cdp_page.stability_fee}
+            value={stabilityFee}
+          />
+        </CdpViewCard>
 
-        <CdpViewCard
-          title={`${cdpId} ${lang.cdp_page.collateral}`}
-          rows={[
-            [
-              cdpState.collateral.toString(),
-              cdpState.collateral.times(cdpState.collateralPrice).toFixed(2) /
-                100 +
-                ' USD'
-            ],
-            [
-              lang.cdp_page.locked,
-              cdpState.lockedCollateral.toNumber().toFixed(4) +
-                ` ${cdpState.ilkData.gem}`,
-              `${(
-                cdpState.lockedCollateral.toNumber() *
-                cdpState.collateralPrice.toNumber()
-              ).toFixed(2)} USD`,
+        <CdpViewCard title={`${cdpId} ${lang.cdp_page.collateral}`}>
+          <Flex alignItems="flex-end" mb="xs">
+            <AmountDisplay
+              amount={cdp.collateral.toNumber().toFixed(2)}
+              denomination={cdp.collateral.symbol}
+            />
+            <ExtraInfo>{`${(collateralPrice * collateralInt).toFixed(
+              2
+            )} USD`}</ExtraInfo>
+          </Flex>
+          <ActionContainerRow
+            title={lang.cdp_page.locked}
+            value={`${lockedCollateral &&
+              lockedCollateral.toFixed(2)} ${collateralDenomination}`}
+            conversion={`${(lockedCollateral * collateralPrice).toFixed(
+              2
+            )} USD`}
+            button={
               <ActionButton
                 disabled={!account}
-                name={lang.actions.deposit}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
@@ -297,17 +326,15 @@ function CDPView({ cdpId, getIlk }) {
               >
                 {lang.actions.deposit}
               </ActionButton>
-            ],
-            [
-              lang.cdp_page.able_withdraw,
-              cdpState.freeCollateral.toNumber().toFixed(2) +
-                ` ${cdpState.ilkData.gem}`,
-              (
-                cdpState.freeCollateral.toNumber() *
-                cdpState.collateralPrice.toNumber()
-              ).toFixed(2) + ' USD',
+            }
+          />
+          <ActionContainerRow
+            title={lang.cdp_page.able_withdraw}
+            value={`${freeCollateral &&
+              freeCollateral.toFixed(2)} ${collateralDenomination}`}
+            conversion={`${(freeCollateral * collateralPrice).toFixed(2)} USD`}
+            button={
               <ActionButton
-                name={lang.actions.withdraw}
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
@@ -318,38 +345,44 @@ function CDPView({ cdpId, getIlk }) {
               >
                 {lang.actions.withdraw}
               </ActionButton>
-            ]
-          ]}
-          isAction={true}
-        />
+            }
+          />
+        </CdpViewCard>
 
-        <CdpViewCard
-          title={`DAI ${lang.cdp_page.position}`}
-          rows={[
-            [cdpState.debt.toString(), lang.cdp_page.outstanding_debt],
-            [
-              `DAI ${lang.cdp_page.wallet_balance}`,
-              `${cdpState.debt.toNumber().toFixed(2)} DAI`,
-              `${cdpState.debt.toNumber().toFixed(2)} USD`,
+        <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
+          <Flex alignItems="flex-end" mb="xs">
+            <AmountDisplay
+              amount={cdp.debt.toNumber().toFixed(2)}
+              denomination={cdp.debt.symbol}
+            />
+            <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
+          </Flex>
+          {daiBalance ? (
+            <ActionContainerRow
+              title={`DAI ${lang.cdp_page.wallet_balance}`}
+              value={`${daiBalance.toNumber().toFixed(2)} DAI`}
+              conversion={`${daiBalance.toNumber().toFixed(2)} USD`}
+              button={
+                <ActionButton
+                  disabled={!account}
+                  onClick={() =>
+                    showSidebar({
+                      sidebarType: 'payback',
+                      sidebarProps: { cdp }
+                    })
+                  }
+                >
+                  {lang.actions.pay_back}
+                </ActionButton>
+              }
+            />
+          ) : null}
+          <ActionContainerRow
+            title={lang.cdp_page.able_generate}
+            value={`${generateAmount && generateAmount.toFixed(2)} DAI`}
+            conversion={`${generateAmount && generateAmount.toFixed(2)} USD`}
+            button={
               <ActionButton
-                name={lang.actions.pay_back}
-                disabled={!account}
-                onClick={() =>
-                  showSidebar({
-                    sidebarType: 'payback',
-                    sidebarProps: { cdp }
-                  })
-                }
-              >
-                {lang.actions.pay_back}
-              </ActionButton>
-            ],
-            [
-              lang.cdp_page.able_generate,
-              `${parseFloat(cdpState.daiAvailable).toFixed(2)} DAI`,
-              `${parseFloat(cdpState.daiAvailable).toFixed(2)} USD`,
-              <ActionButton
-                name={lang.actions.generate}
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
@@ -360,10 +393,9 @@ function CDPView({ cdpId, getIlk }) {
               >
                 {lang.actions.generate}
               </ActionButton>
-            ]
-          ]}
-          isAction={true}
-        />
+            }
+          />
+        </CdpViewCard>
       </Grid>
 
       <CdpViewHistory
