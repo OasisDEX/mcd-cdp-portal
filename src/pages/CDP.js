@@ -176,6 +176,7 @@ function CDPView({ cdpId, getIlk }) {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
       const ilkData = getIlk(cdp.ilk);
+      window.cdp = cdp;
       const [
         debt,
         collateral,
@@ -183,7 +184,7 @@ function CDPView({ cdpId, getIlk }) {
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
-        lockedCollateral,
+        minCollateral,
         freeCollateral
       ] = await Promise.all([
         cdp.getDebtValue(),
@@ -204,7 +205,7 @@ function CDPView({ cdpId, getIlk }) {
         collateralizationRatio,
         liquidationPrice,
         daiAvailable,
-        lockedCollateral,
+        minCollateral,
         freeCollateral
       });
     })();
@@ -212,6 +213,7 @@ function CDPView({ cdpId, getIlk }) {
 
   if (!cdp) return <LoadingLayout />;
   const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
+  window.test = cdp;
   return (
     <PageContentLayout>
       <Box>
@@ -227,19 +229,19 @@ function CDPView({ cdpId, getIlk }) {
         <CdpViewCard title={lang.cdp_page.liquidation_price}>
           <Flex alignItems="flex-end" mb="xs">
             <AmountDisplay
-              amount={liquidationPrice.toFixed(2)}
+              amount={cdp.liquidationPrice.toNumber().toFixed(2)}
               denomination="USD"
             />
-            <ExtraInfo>({cdp.ilk}/USD)</ExtraInfo>
+            <ExtraInfo>({cdp.ilkData.gem}/USD)</ExtraInfo>
           </Flex>
           <InfoContainerRow
             title={
               <TextBlock>
                 {lang.cdp_page.current_price_info}
-                <ExtraInfo ml="s">(ETH/USD)</ExtraInfo>
+                <ExtraInfo ml="s">{`(${cdp.ilkData.gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={collateralPrice.toFixed(2)}
+            value={cdp.collateralPrice.toFixed(2) / 100}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
@@ -251,8 +253,8 @@ function CDPView({ cdpId, getIlk }) {
           <Flex alignItems="flex-end" mb="xs">
             <AmountDisplay
               amount={
-                collateralizationRatio &&
-                parseFloat(collateralizationRatio).toFixed(2)
+                cdp.collateralizationRatio &&
+                (parseFloat(cdp.collateralizationRatio) * 100).toFixed(2)
               }
               denomination="%"
             />
@@ -263,7 +265,7 @@ function CDPView({ cdpId, getIlk }) {
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={stabilityFee}
+            value={cdp.ilkData.rate * 100 + '%'}
           />
         </CdpViewCard>
 
@@ -273,17 +275,17 @@ function CDPView({ cdpId, getIlk }) {
               amount={cdp.collateral.toNumber().toFixed(2)}
               denomination={cdp.collateral.symbol}
             />
-            <ExtraInfo>{`${(collateralPrice * collateralInt).toFixed(
-              2
-            )} USD`}</ExtraInfo>
+            <ExtraInfo>{`${(
+              cdp.collateralPrice.toNumber() * cdp.collateral.toNumber()
+            ).toFixed(2)} USD`}</ExtraInfo>
           </Flex>
           <ActionContainerRow
             title={lang.cdp_page.locked}
-            value={`${lockedCollateral &&
-              lockedCollateral.toFixed(2)} ${collateralDenomination}`}
-            conversion={`${(lockedCollateral * collateralPrice).toFixed(
-              2
-            )} USD`}
+            value={`${cdp.minCollateral &&
+              cdp.minCollateral.toFixed(2) / 100} ${cdp.ilkData.gem}`}
+            conversion={`${cdp.minCollateral
+              .times(cdp.collateralPrice)
+              .toFixed(2) / 100} USD`}
             button={
               <ActionButton
                 disabled={!account}
@@ -300,9 +302,12 @@ function CDPView({ cdpId, getIlk }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${freeCollateral &&
-              freeCollateral.toFixed(2)} ${collateralDenomination}`}
-            conversion={`${(freeCollateral * collateralPrice).toFixed(2)} USD`}
+            value={`${cdp.freeCollateral && cdp.freeCollateral.toFixed(2)} ${
+              cdp.ilkData.gem
+            }`}
+            conversion={`${cdp.freeCollateral
+              .times(cdp.collateralPrice)
+              .toFixed(2) / 100} USD`}
             button={
               <ActionButton
                 disabled={!account}
@@ -327,11 +332,11 @@ function CDPView({ cdpId, getIlk }) {
             />
             <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
           </Flex>
-          {daiBalance ? (
+          {cdp.debt ? (
             <ActionContainerRow
               title={`DAI ${lang.cdp_page.wallet_balance}`}
-              value={`${daiBalance.toNumber().toFixed(2)} DAI`}
-              conversion={`${daiBalance.toNumber().toFixed(2)} USD`}
+              value={`${cdp.debt.toNumber().toFixed(2)} DAI`}
+              conversion={`${cdp.debt.toNumber().toFixed(2)} USD`}
               button={
                 <ActionButton
                   disabled={!account}
@@ -349,8 +354,10 @@ function CDPView({ cdpId, getIlk }) {
           ) : null}
           <ActionContainerRow
             title={lang.cdp_page.able_generate}
-            value={`${generateAmount && generateAmount.toFixed(2)} DAI`}
-            conversion={`${generateAmount && generateAmount.toFixed(2)} USD`}
+            value={`${cdp.daiAvailable &&
+              cdp.daiAvailable.toFixed(2) / 100} DAI`}
+            conversion={`${cdp.daiAvailable &&
+              cdp.daiAvailable.toFixed(2) / 100} USD`}
             button={
               <ActionButton
                 disabled={!account}
