@@ -8,7 +8,7 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 
-const SHOW_MIGRATE_BUTTON = false;
+const SHOW_MIGRATE_BUTTON = true;
 
 const NavbarItemContainer = styled(Link)`
   display: block;

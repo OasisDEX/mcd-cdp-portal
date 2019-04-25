@@ -72,6 +72,8 @@
     "select_text": "Select a CDP and pay back the stability fee in DAI or MKR to migrate it to Multi-collateral Dai and the new CDP Portal.",
     "current_ratio": "Current Ratio",
     "dai_debt": "Dai debt",
+    "fee_in_dai": "Fee in Dai",
+    "fee_in_mkr": "Fee in MKR",
     "migrate": "Migrate",
     "payment": "Payment",
     "trust_site_with_dai": "Trust this site with my DAI",

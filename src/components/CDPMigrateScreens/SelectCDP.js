@@ -1,8 +1,12 @@
 import React from 'react';
 import lang from 'languages';
-import { Text, Grid, Card, Button } from '@makerdao/ui-components-core';
+import { Text, Grid, Card, Button, Radio } from '@makerdao/ui-components-core';
 
-export default ({ dispatch }) => {
+const RADIO_WIDTH = '2rem';
+const RADIO_CONTAINER_WIDTH = '4rem';
+const AESTHETIC_ROW_PADDING = '4rem';
+
+export default ({ dispatch, onClose }) => {
   return (
     <Grid maxWidth="912px" gridRowGap="m">
       <Text.h2 textAlign="center">{lang.cdp_migrate.select_title}</Text.h2>
@@ -19,50 +23,63 @@ export default ({ dispatch }) => {
         <Grid
           p="l"
           pb="0"
-          gridTemplateColumns="repeat(6, 1fr)"
+          gridTemplateColumns={`${RADIO_CONTAINER_WIDTH} repeat(5, 1fr) ${AESTHETIC_ROW_PADDING}`}
+          gridColumnGap="m"
           alignItems="center"
           fontWeight="medium"
           color="steelLight"
         >
-          <span>{lang.cdp_id}</span>
-          <span>{lang.cdp_migrate.current_ratio}</span>
-          <span>{lang.cdp_migrate.dai_debt}</span>
-          <span>{lang.stability_fee} (DAI)</span>
-          <span>{lang.stability_fee} (MKR)</span>
           <span />
+          <Text t="subheading">{lang.cdp_id}</Text>
+          <Text t="subheading">{lang.cdp_migrate.current_ratio}</Text>
+          <Text t="subheading">{lang.cdp_migrate.dai_debt}</Text>
+          <Text t="subheading">{lang.cdp_migrate.fee_in_dai}</Text>
+          <Text t="subheading">{lang.cdp_migrate.fee_in_mkr}</Text>
         </Grid>
-        <Card p="l">
+        <Card px="l" py="m">
           <Grid
-            gridTemplateColumns="repeat(6, 1fr)"
+            gridTemplateColumns={`${RADIO_CONTAINER_WIDTH} repeat(5, 1fr) ${AESTHETIC_ROW_PADDING}`}
+            gridColumnGap="m"
             alignItems="center"
-            fontWeight="bold"
+            fontSize="m"
+            color="darkPurple"
           >
+            <Radio fontSize={RADIO_WIDTH} />
             <span>#3223</span>
             <span>168.50%</span>
             <span>425.72 DAI</span>
             <span>13.34 DAI</span>
             <span>0.23 MKR</span>
-            <Button onClick={() => dispatch({ type: 'increment-step' })}>
-              Migrate
-            </Button>
           </Grid>
         </Card>
-        <Card p="l">
+        <Card px="l" py="m">
           <Grid
-            gridTemplateColumns="repeat(6, 1fr)"
+            gridTemplateColumns={`${RADIO_CONTAINER_WIDTH} repeat(5, 1fr) ${AESTHETIC_ROW_PADDING}`}
+            gridColumnGap="m"
             alignItems="center"
-            fontWeight="bold"
+            fontSize="m"
+            color="darkPurple"
           >
+            <Radio fontSize={RADIO_WIDTH} />
             <span>#3223</span>
             <span>168.50%</span>
             <span>425.72 DAI</span>
             <span>13.34 DAI</span>
             <span>0.23 MKR</span>
-            <Button onClick={() => dispatch({ type: 'increment-step' })}>
-              {lang.cdp_migrate.migrate}
-            </Button>
           </Grid>
         </Card>
+      </Grid>
+      <Grid
+        justifySelf="center"
+        gridTemplateColumns="auto auto"
+        gridColumnGap="m"
+      >
+        <Button variant="secondary-outline" onClick={onClose}>
+          {lang.cancel}
+        </Button>
+        <Button onClick={() => dispatch({ type: 'increment-step' })}>
+          {lang.cdp_migrate.migrate}
+        </Button>
       </Grid>
     </Grid>
   );
