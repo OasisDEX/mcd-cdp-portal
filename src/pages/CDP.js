@@ -5,11 +5,6 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import {
-  getUsdPrice,
-  getLockedAndFreeCollateral,
-  calcCDPParams
-} from 'utils/cdp';
-import {
   Box,
   Grid,
   Flex,
@@ -182,6 +177,7 @@ function CDPView({ cdpId, getIlk }) {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
       const ilkData = getIlk(cdp.ilk);
+      window.cdp = cdp;
       const [
         debt,
         collateral,
@@ -194,11 +190,11 @@ function CDPView({ cdpId, getIlk }) {
       ] = await Promise.all([
         cdp.getDebtValue(),
         cdp.getCollateralAmount(),
-        cdp._cdpType.getPrice(),
+        cdp.type.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
-        cdp.daiAvailable(),
-        cdp.getMinCollateralAmount(),
+        cdp.getDaiAvailable(),
+        cdp.minCollateral(),
         cdp.getCollateralAvailable()
       ]);
       setCDP({
@@ -217,7 +213,7 @@ function CDPView({ cdpId, getIlk }) {
   }, [cdpId, getIlk, maker]);
 
   if (!cdpState) return <LoadingLayout />;
-
+  const { cdp } = cdpState;
   const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
@@ -310,7 +306,8 @@ function CDPView({ cdpId, getIlk }) {
                 cdpState.freeCollateral.toNumber() *
                 cdpState.collateralPrice.toNumber()
               ).toFixed(2) + ' USD',
-              <ActionButton name={lang.actions.withdraw}
+              <ActionButton
+                name={lang.actions.withdraw}
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
@@ -334,7 +331,8 @@ function CDPView({ cdpId, getIlk }) {
               `DAI ${lang.cdp_page.wallet_balance}`,
               `${cdpState.debt.toNumber().toFixed(2)} DAI`,
               `${cdpState.debt.toNumber().toFixed(2)} USD`,
-              <ActionButton name={lang.actions.pay_back}
+              <ActionButton
+                name={lang.actions.pay_back}
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
@@ -350,7 +348,8 @@ function CDPView({ cdpId, getIlk }) {
               lang.cdp_page.able_generate,
               `${parseFloat(cdpState.daiAvailable).toFixed(2)} DAI`,
               `${parseFloat(cdpState.daiAvailable).toFixed(2)} USD`,
-              <ActionButton name={lang.actions.generate}
+              <ActionButton
+                name={lang.actions.generate}
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
