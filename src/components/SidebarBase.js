@@ -14,11 +14,11 @@ import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
 import NotificationManager from 'components/NotificationManager';
-import { getMeasurement } from 'styles/theme';
+import theme, { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
-const SHOW_MIGRATE_BUTTON = false;
+const SHOW_MIGRATE_BUTTON = true;
 
 function AccountSection({ currentAccount }) {
   return (
@@ -48,13 +48,15 @@ const animations = {
   ],
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
-    { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` }
+    {
+      transform: `translate3d(-${getMeasurement('sidebarWidth') -
+        theme.space.s}px, 0, 0)`
+    }
   ]
 };
 
 const AnimatedWrap = styled(animated.div)`
   width: 100%;
-  padding-right: ${({ theme }) => theme.space.s};
 `;
 
 function Sidebar() {
@@ -143,7 +145,7 @@ function Sidebar() {
   }, []);
 
   return (
-    <Box>
+    <Box pr="s">
       {SHOW_MIGRATE_BUTTON && <NotificationManager />}
       <TransactionManager
         transactions={selectors.transactions()}
@@ -151,7 +153,7 @@ function Sidebar() {
         resetTx={resetTx}
       />
       <Grid gridRowGap="s" py="s">
-        <Box pr="s">
+        <Box>
           <AccountSection currentAccount={account} />
         </Box>
         <Flex css={'overflow:hidden;'}>

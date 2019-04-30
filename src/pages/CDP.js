@@ -125,7 +125,7 @@ const CdpViewHistory = ({ title, rows }) => {
     <Box>
       <Text.h4>{title}</Text.h4>
       <Card px="l" pt="m" pb="l" my="s">
-        <Overflow x="scroll" y="scroll">
+        <Overflow x="scroll" y="visible">
           <Table
             width="100%"
             variant="normal"

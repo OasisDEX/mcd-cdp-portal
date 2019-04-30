@@ -36,6 +36,7 @@ const FadeIn = styled.div`
 
 class StepperUI extends React.Component {
   render() {
+    // return <Box minHeight="100vh" height="1200px"/>
     return (
       <Grid gridTemplateRows="auto 1fr" gridRowGap="m" mb="xl">
         {this.props.renderStepperHeader()}

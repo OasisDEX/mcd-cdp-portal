@@ -3,6 +3,10 @@ const { colors, typography } = themeLight;
 
 const theme = {
   ...themeLight,
+  breakpoints: {
+    ...themeLight.breakpoints,
+    xl: '1150px'
+  },
   colors: {
     blackLight: '#222',
     blackLighter: '#383838',
@@ -24,8 +28,9 @@ const theme = {
     ...typography
   },
   measurement: {
-    sidebarWidth: '330px',
-    navbarWidth: '80px'
+    sidebarWidth: 330,
+    navbarWidth: 80,
+    mobileNavHeight: 80
   }
 };
 

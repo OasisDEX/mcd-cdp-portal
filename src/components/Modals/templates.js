@@ -34,27 +34,16 @@ const SimpleBg = styled(Bg)`
 
 const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   if (!show) return null;
-  const [fadeStart, fadeEnd] = animations.fade;
   const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
 
-  const [bgAnimation, setBgAnimation] = useSpring(() => ({
-    to: fadeEnd,
-    from: fadeStart,
-    config: config.stiff
-  }));
-
-  const [contentAnimation, setContentAnimation] = useSpring(() => ({
+  const [animation, setAnimation] = useSpring(() => ({
     to: fadeUpEnd,
     from: fadeUpStart,
     config: config.stiff
   }));
 
   const onCloseAnimated = () => {
-    setBgAnimation({
-      to: fadeStart
-    });
-
-    setContentAnimation({
+    setAnimation({
       to: fadeUpStart,
       onRest() {
         onClose();
@@ -63,10 +52,8 @@ const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   };
 
   return (
-    <Bg onClick={onCloseAnimated} style={bgAnimation}>
-      <div style={contentAnimation}>
-        {children({ ...modalProps, onClose: onCloseAnimated })}
-      </div>
+    <Bg onClick={onCloseAnimated} style={animation}>
+      {children({ ...modalProps, onClose: onCloseAnimated })}
     </Bg>
   );
 };

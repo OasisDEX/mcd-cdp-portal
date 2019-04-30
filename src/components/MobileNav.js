@@ -1,9 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import Sidebar from 'components/Sidebars/Global';
-import NavLogo from 'components/NavLogo';
+import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 import {
   Dropdown,
   DefaultDropdown,
@@ -14,6 +14,7 @@ import {
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
 import useMaker from 'hooks/useMaker';
+import theme from '../styles/theme';
 
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
@@ -76,7 +77,9 @@ const DrawerBg = styled.div`
   left: 0;
   right: 0;
   top: 80px;
-  z-index: 999;
+  width: 100vw;
+  z-index: 99;
+  height: 100%;
   background-color: rgba(72, 73, 95, 0.25);
   ${({ sidebarDrawerOpen }) =>
     sidebarDrawerOpen
@@ -99,11 +102,11 @@ const SidebarDrawer = ({
       onClick={() => setSidebarDrawerOpen(false)}
     >
       <Box
+        width="330px"
+        ml="auto"
+        p="s"
         css={{
-          maxWidth: '320px',
-          backgroundColor: 'white',
-          overflow: 'scroll',
-          marginLeft: 'auto'
+          overflow: 'scroll'
         }}
       >
         {children}
@@ -116,9 +119,16 @@ const MobileNav = ({ networkId, viewedAddress }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   return (
-    <Fragment>
+    <Flex
+      height={theme.measurement.mobileNavHeight}
+      bg="blackLight"
+      px="m"
+      alignItems="center"
+      width="100%"
+      position="relative"
+    >
       <Link href={`/${url.search}`} prefetch={true}>
-        <NavLogo />
+        <MakerLogo />
       </Link>
 
       <CDPDropdown>
@@ -130,12 +140,13 @@ const MobileNav = ({ networkId, viewedAddress }) => {
       </CDPDropdown>
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
+
       <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
         <Sidebar
           {...{ networkId, connectedAddress: account ? account.address : null }}
         />
       </SidebarDrawer>
-    </Fragment>
+    </Flex>
   );
 };
 

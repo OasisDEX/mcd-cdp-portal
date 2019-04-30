@@ -9,7 +9,6 @@ const NotificationManager = () => {
   return (
     <Card
       p="s"
-      mr="s"
       mt="s"
       css={{ cursor: 'pointer' }}
       onClick={() => show({ modalType: 'cdpmigrate', modalTemplate: 'basic' })}
