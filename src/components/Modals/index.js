@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@makerdao/ui-components-core';
 import CDPCreate from 'components/CDPCreate';
 import CDPMigrate from 'components/CDPMigrate';
 import LedgerType from 'components/LedgerType';
@@ -7,27 +8,25 @@ import templates from './templates';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
-    <Grid
+    <Box
       bg="backgroundGrey"
       minHeight="100vh"
       p="m"
       onClick={e => e.stopPropagation()}
     >
       <CDPCreate onClose={onClose} />
-    </Grid>
+    </Box>
   ),
 
   cdpmigrate: ({ onClose }) => (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="auto 1fr"
-      p="m"
-      minHeight="100vh"
+    <Box
       bg="backgroundGrey"
+      minHeight="100vh"
+      p="m"
       onClick={e => e.stopPropagation()}
     >
       <CDPMigrate onClose={onClose} />
-    </Grid>
+    </Box>
   ),
 
   ledgertype: args => <LedgerType {...args} />,
