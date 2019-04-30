@@ -11,7 +11,9 @@ const NotificationManager = () => {
       p="s"
       mt="s"
       css={{ cursor: 'pointer' }}
-      onClick={() => show({ modalType: 'cdpmigrate', modalTemplate: 'basic' })}
+      onClick={() =>
+        show({ modalType: 'cdpmigrate', modalTemplate: 'fullscreen' })
+      }
     >
       2 CDPs to migrate
     </Card>
