@@ -10,19 +10,20 @@ const WalletSection = ({
   iconSize = 22,
   t = 'body',
   addressTextStyle = 'body',
-  readOnly
+  readOnly,
+  ...rest
 }) => {
   if (!currentAccount) return null;
   const { address, type } = currentAccount;
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" {...rest}>
       <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
       <Box ml="xs" mr="auto">
         <Text t={t} color={textColor}>
           {type}
         </Text>
       </Box>
-      <Box ml="m">
+      <Box ml="s">
         <Text t={addressTextStyle} color={textColor}>
           {cutMiddle(address, 7, 5)}
         </Text>

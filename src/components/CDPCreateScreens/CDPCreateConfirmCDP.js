@@ -57,43 +57,46 @@ const CDPCreateConfirmSummary = ({
       `}
     >
       <ScreenHeader title={lang.cdp_create.confirm_title} />
-      <Box my="l">
-        <Card p="l" px="xl">
-          <Grid>
-            {rows.map(([title, value], index) => {
-              return (
-                <Grid
-                  key={title + value}
-                  mt={!!index && 's'}
-                  pt={!!index && 's'}
-                  gridTemplateColumns="5fr 1fr"
-                  justifyItems="start"
-                  borderTop={index !== 0 ? '1px solid' : null}
-                  color="grey.200"
-                >
-                  <Text>{title}</Text>
-                  <Text fontWeight="bold">{value}</Text>
-                </Grid>
-              );
-            })}
-          </Grid>
-          <Flex>
-            <Box m="auto" mt="l">
-              <Checkbox
-                checked={hasReadTOS}
-                onChange={() => setHasReadTOS(state => !state)}
-                mr="xs"
-              />
-              <Text color="grey.500">
-                {lang.formatString(
-                  lang.terms_of_service_text,
-                  <Link>{lang.terms_of_service}</Link>
-                )}
-              </Text>
-            </Box>
-          </Flex>
-        </Card>
-      </Box>
+      <Card py={{ s: 'm', m: 'l' }} px={{ s: 'm', m: 'xl' }} my="l">
+        <Grid>
+          {rows.map(([title, value], index) => {
+            return (
+              <Grid
+                key={title + value}
+                mt={!!index && 's'}
+                pt={!!index && 's'}
+                gridTemplateColumns="5fr 1fr"
+                justifyItems="start"
+                borderTop={index !== 0 ? '1px solid' : null}
+                color="grey.200"
+              >
+                <Text>{title}</Text>
+                <Text fontWeight="bold" css="white-space: nowrap">
+                  {value}
+                </Text>
+              </Grid>
+            );
+          })}
+        </Grid>
+        <Grid
+          justifyContent="center"
+          mt="l"
+          alignItems="center"
+          gridColumnGap="xs"
+          gridTemplateColumns="auto auto"
+        >
+          <Checkbox
+            checked={hasReadTOS}
+            onChange={() => setHasReadTOS(state => !state)}
+          />
+          <Text color="grey.500">
+            {lang.formatString(
+              lang.terms_of_service_text,
+              <Link>{lang.terms_of_service}</Link>
+            )}
+          </Text>
+        </Grid>
+      </Card>
       <ScreenFooter
         canProgress={hasReadTOS}
         dispatch={capturedDispatch}

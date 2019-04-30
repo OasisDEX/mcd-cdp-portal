@@ -9,17 +9,11 @@ import templates from './templates';
 const modals = {
   cdpcreate: ({ onClose }) => (
     <Grid
-      gridRowGap="s"
-      gridTemplateRows="auto 1fr"
-      p="m"
-      maxWidth="100%"
-      width="100vw"
       height="100vh"
+      width="100%"
       bg="backgroundGrey"
+      p="m"
       onClick={e => e.stopPropagation()}
-      css={`
-        overflow-y: auto;
-      `}
     >
       <CDPCreate onClose={onClose} />
     </Grid>

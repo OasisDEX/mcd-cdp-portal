@@ -7,18 +7,19 @@ import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
 const StepperHeader = ({ onClose }) => {
   const { account } = useMaker();
   return (
-    <Flex justifyContent="flex-end" alignItems="center" mr="xl" mb="m">
+    <Flex justifyContent="flex-end" mb="m">
       <Grid
-        gridColumnGap="l"
-        gridTemplateColumns="auto auto auto"
+        gridColumnGap="xl"
+        gridTemplateColumns="auto auto"
         alignItems="center"
       >
-        <Box width="auto">
+        <Box>
           <WalletSelection
             currentAccount={account}
             textColor="steel"
             t="1.6rem"
             readOnly
+            maxWidth="250px"
           />
         </Box>
 

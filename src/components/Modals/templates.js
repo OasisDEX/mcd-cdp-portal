@@ -17,22 +17,33 @@ const animations = {
 };
 
 const Bg = styled(animated.div)`
-  display: flex;
-  position: absolute;
-  justify-content: center;
-  align-items: center;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   top: 0;
   left: 0;
   z-index: 10;
+  overflow-y: scroll;
+`;
+
+const SimpleBg = styled(Bg)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   if (!show) return null;
+  const [fadeStart, fadeEnd] = animations.fade;
   const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
 
-  const [animationProps, setBgAnimation] = useSpring(() => ({
+  const [bgAnimation, setBgAnimation] = useSpring(() => ({
+    to: fadeEnd,
+    from: fadeStart,
+    config: config.stiff
+  }));
+
+  const [contentAnimation, setContentAnimation] = useSpring(() => ({
     to: fadeUpEnd,
     from: fadeUpStart,
     config: config.stiff
@@ -40,6 +51,10 @@ const FullscreenModal = ({ show, onClose, modalProps, children }) => {
 
   const onCloseAnimated = () => {
     setBgAnimation({
+      to: fadeStart
+    });
+
+    setContentAnimation({
       to: fadeUpStart,
       onRest() {
         onClose();
@@ -48,8 +63,10 @@ const FullscreenModal = ({ show, onClose, modalProps, children }) => {
   };
 
   return (
-    <Bg onClick={onCloseAnimated}>
-      {children({ ...modalProps, onClose: onCloseAnimated, animationProps })}
+    <Bg onClick={onCloseAnimated} style={bgAnimation}>
+      <div style={contentAnimation}>
+        {children({ ...modalProps, onClose: onCloseAnimated })}
+      </div>
     </Bg>
   );
 };
@@ -62,7 +79,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
   const ModalContent = styled(animated.div)`
     background-color: white;
     border-radius: 6px;
-    padding: ${({ theme }) => theme.space.m};
+    padding: ${({ theme }) => theme.space.m}px;
     box-shadow: 0px 3px 13px rgba(67, 67, 67, 0.13);
   `;
 
@@ -92,7 +109,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
   };
 
   return (
-    <Bg
+    <SimpleBg
       onClick={onCloseAnimated}
       css={{
         backgroundColor: 'rgba(0, 0, 0, 0.2)'
@@ -102,7 +119,7 @@ const BasicModal = ({ show, onClose, modalProps, children }) => {
       <ModalContent style={contentAnimation} onClick={e => e.stopPropagation()}>
         {children({ ...modalProps, onClose: onCloseAnimated })}
       </ModalContent>
-    </Bg>
+    </SimpleBg>
   );
 };
 
