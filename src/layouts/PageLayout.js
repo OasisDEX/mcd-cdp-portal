@@ -15,6 +15,10 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
           theme.measurement.sidebarWidth
         }px`
       }}
+      gridTemplateRows={{
+        s: 'auto 1fr',
+        xl: 'auto'
+      }}
       width="100%"
     >
       <Box display={{ s: 'block', xl: 'none' }}>{mobileNav}</Box>

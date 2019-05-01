@@ -17,8 +17,7 @@ import {
   Card,
   Button,
   Table,
-  Text,
-  Overflow
+  Text
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
@@ -124,69 +123,67 @@ const CdpViewHistory = ({ title, rows }) => {
   return (
     <Box>
       <Text.h4>{title}</Text.h4>
-      <Card px="l" pt="m" pb="l" my="s">
-        <Overflow x="scroll" y="visible">
-          <Table
-            width="100%"
-            variant="normal"
-            css={`
-              td,
-              th {
-                padding-right: 10px;
-              }
-            `}
-          >
-            <thead>
-              <tr>
-                <th>{lang.table.type}</th>
-                <th>{lang.table.activity}</th>
-                <th>{lang.table.time}</th>
-                <th>{lang.table.sender_id}</th>
-                <th>{lang.table.tx_hash}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(
-                (
-                  [collateralType, actionMsg, dateOfAction, senderId, txHash],
-                  i
-                ) => (
-                  <tr key={i}>
-                    <td>
-                      <Text color="darkPurple" t="body">
-                        {collateralType}
-                      </Text>
-                    </td>
-                    <td
-                      css={`
-                        white-space: nowrap;
-                      `}
-                    >
-                      <Text color="darkLavender" t="caption">
-                        {actionMsg}
-                      </Text>
-                    </td>
-                    <td
-                      css={`
-                        white-space: nowrap;
-                      `}
-                    >
-                      <Text color="darkLavender" t="caption">
-                        {dateOfAction}
-                      </Text>
-                    </td>
-                    <td>
-                      <Text t="caption">{senderId}</Text>
-                    </td>
-                    <td>
-                      <Text t="caption">{txHash}</Text>
-                    </td>
-                  </tr>
-                )
-              )}
-            </tbody>
-          </Table>
-        </Overflow>
+      <Card px="l" pt="m" pb="l" my="s" css={{ overflowX: 'scroll' }}>
+        <Table
+          width="100%"
+          variant="normal"
+          css={`
+            td,
+            th {
+              padding-right: 10px;
+            }
+          `}
+        >
+          <thead>
+            <tr>
+              <th>{lang.table.type}</th>
+              <th>{lang.table.activity}</th>
+              <th>{lang.table.time}</th>
+              <th>{lang.table.sender_id}</th>
+              <th>{lang.table.tx_hash}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(
+              (
+                [collateralType, actionMsg, dateOfAction, senderId, txHash],
+                i
+              ) => (
+                <tr key={i}>
+                  <td>
+                    <Text color="darkPurple" t="body">
+                      {collateralType}
+                    </Text>
+                  </td>
+                  <td
+                    css={`
+                      white-space: nowrap;
+                    `}
+                  >
+                    <Text color="darkLavender" t="caption">
+                      {actionMsg}
+                    </Text>
+                  </td>
+                  <td
+                    css={`
+                      white-space: nowrap;
+                    `}
+                  >
+                    <Text color="darkLavender" t="caption">
+                      {dateOfAction}
+                    </Text>
+                  </td>
+                  <td>
+                    <Text t="caption">{senderId}</Text>
+                  </td>
+                  <td>
+                    <Text t="caption">{txHash}</Text>
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </Table>
       </Card>
     </Box>
   );
