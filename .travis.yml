@@ -9,6 +9,7 @@ cache:
 install:
   - yarn install
 before_deploy:
+  - yarn write-git-version
   - yarn build
   - npm install now --no-save
 deploy:

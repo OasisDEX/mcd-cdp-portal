@@ -57,7 +57,8 @@
     "test": "echo \"Live long or Dai hard\"",
     "deploy": "yarn build && now ./build -A ../now.json",
     "now-build": "yarn build",
-    "remove-sourcemaps": "rm -rf build/static/js/*.map"
+    "remove-sourcemaps": "rm -rf build/static/js/*.map",
+    "write-git-version": "printf '{\"message\":\"%s\"}\n' \"$(git show --oneline -s)\" > ./src/static/version.json"
   },
   "lint-staged": {
     "*.{js,json}": [

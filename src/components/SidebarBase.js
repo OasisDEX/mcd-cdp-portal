@@ -14,6 +14,7 @@ import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
 import NotificationManager from 'components/NotificationManager';
+import SiteVersion from 'components/SiteVersion';
 import theme, { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
@@ -171,6 +172,7 @@ function Sidebar() {
           </AnimatedWrap>
         </Flex>
       </Grid>
+      <SiteVersion />
     </Box>
   );
 }
