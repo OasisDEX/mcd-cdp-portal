@@ -19,6 +19,6 @@
     "autoAlias": false
   },
   "env": {
-    "BLANK_SECRET": "@blankSecret"
+    "BLANK_SECRET": "@blank-secret"
   }
 }
