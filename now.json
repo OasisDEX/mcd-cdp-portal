@@ -17,5 +17,8 @@
   ],
   "github": {
     "autoAlias": false
+  },
+  "env": {
+    "BLANK_SECRET": "@blankSecret"
   }
 }
