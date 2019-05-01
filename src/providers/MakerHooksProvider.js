@@ -14,10 +14,12 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   React.useEffect(() => {
     if (!rpcUrl) return;
     instantiateMaker({ network, rpcUrl, addresses }).then(maker => {
+      console.log('addresses', addresses);
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
+        console.log('account', account);
         mixpanelIdentify(account, 'metamask');
         setAccount(account);
       });

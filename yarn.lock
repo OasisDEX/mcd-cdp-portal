@@ -10782,11 +10782,6 @@ react-spring@^8.0.15:
   dependencies:
     "@babel/runtime" "^7.3.1"
 
-react-useinterval@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-useinterval/-/react-useinterval-1.0.1.tgz#4bb90349d18b0fc04d6567edacf476d515b5cf49"
-  integrity sha512-+UxgKd7p7D3cBS6/o2uwBStsFcoKIagRdN21so/ud1k1e6r4WDCHsSjY36aT3n6WvVgpZPk3JtbN4IFfxt69Pg==
-
 react@^16.0.0, react@^16.8.0:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
