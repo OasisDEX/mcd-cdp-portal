@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks
+} from 'body-scroll-lock';
 
 import Sidebar from 'components/Sidebars/Global';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
@@ -14,7 +19,7 @@ import {
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
 import useMaker from 'hooks/useMaker';
-import theme from '../styles/theme';
+import { getMeasurement } from '../styles/theme';
 
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
@@ -76,7 +81,7 @@ const DrawerBg = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  top: 80px;
+  top: ${getMeasurement('mobileNavHeight')}px;
   width: 100vw;
   z-index: 99;
   height: 100%;
@@ -104,9 +109,10 @@ const SidebarDrawer = ({
       <Box
         width="330px"
         ml="auto"
+        height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
         p="s"
         css={{
-          overflow: 'scroll'
+          overflowY: 'scroll'
         }}
       >
         {children}
@@ -115,12 +121,23 @@ const SidebarDrawer = ({
   );
 };
 const MobileNav = ({ networkId, viewedAddress }) => {
+  const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+
+  useEffect(() => {
+    if (sidebarDrawerOpen) {
+      ref && ref.current && disableBodyScroll(ref.current);
+    } else {
+      ref && ref.current && enableBodyScroll(ref.current);
+    }
+    return clearAllBodyScrollLocks;
+  }, [sidebarDrawerOpen]);
+
   return (
     <Flex
-      height={theme.measurement.mobileNavHeight}
+      height={getMeasurement('mobileNavHeight')}
       bg="blackLight"
       px="m"
       alignItems="center"
@@ -141,11 +158,16 @@ const MobileNav = ({ networkId, viewedAddress }) => {
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
 
-      <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-        <Sidebar
-          {...{ networkId, connectedAddress: account ? account.address : null }}
-        />
-      </SidebarDrawer>
+      <div ref={ref}>
+        <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
+          <Sidebar
+            {...{
+              networkId,
+              connectedAddress: account ? account.address : null
+            }}
+          />
+        </SidebarDrawer>
+      </div>
     </Flex>
   );
 };
