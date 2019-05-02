@@ -11,6 +11,7 @@ import routes from './routes';
 import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
+import Security from './Security';
 
 const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
 
@@ -32,6 +33,7 @@ function App() {
   useEffect(() => {
     const reactGa = gaInit(navigation);
     const mixpanel = mixpanelInit(navigation);
+    const security = new Security();
     navigation.subscribe(route => {
       if (route.type === 'ready') {
         console.debug(`[Mixpanel] Tracked: ${route.title}`);
@@ -39,6 +41,8 @@ function App() {
 
         console.debug(`[GA] Tracked pageview: ${route.url.href}`);
         reactGa.pageview(route.url.href);
+
+        security.printConsoleInjectionWarning();
       }
     });
   }, []);
