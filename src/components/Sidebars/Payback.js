@@ -10,6 +10,7 @@ import { calcCDPParams } from '../../utils/cdp';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
+import { MAX_UINT_BN } from '../../utils/units';
 
 const Payback = ({ cdp, reset }) => {
   const { maker, newTxListener } = useMaker();
@@ -42,6 +43,18 @@ const Payback = ({ cdp, reset }) => {
   };
 
   const payback = async () => {
+    const proxyAddress = await maker.service('proxy').ensureProxy();
+    const daiToken = maker.getToken('MDAI');
+
+    const daiAllowanceSet = (await daiToken.allowance(
+      maker.currentAddress(),
+      proxyAddress
+    )).eq(MAX_UINT_BN);
+
+    if (!daiAllowanceSet) {
+      await daiToken.approveUnlimited(proxyAddress);
+    }
+
     const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
     newTxListener(managedCdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
     reset();
