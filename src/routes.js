@@ -148,6 +148,7 @@ function RouteEffects({ network }) {
       // the fire-&-forget promises are intentional
       type.getPrice().then(price => {
         const gem = type.currency.symbol;
+        console.log('gem from getprice', gem);
         store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
       })
     );
@@ -161,6 +162,7 @@ function RouteEffects({ network }) {
     if (!maker) return;
     const scs = maker.service('smartContract');
     const addresses = scs.getContractAddresses();
+    console.log('addresses in routes reducer', addresses);
     const watcher = instantiateWatcher({
       rpcUrl: maker.service('web3').rpcUrl,
       multicallAddress: scs.getContractAddress('MULTICALL')
