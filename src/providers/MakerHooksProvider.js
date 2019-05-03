@@ -1,7 +1,6 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { mixpanelIdentify } from 'utils/analytics';
 import { instantiateMaker } from '../maker';
-import store from 'store';
 
 export const MakerObjectContext = createContext();
 
@@ -11,7 +10,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!rpcUrl) return;
     instantiateMaker({ network, rpcUrl, addresses }).then(maker => {
       setMaker(maker);
@@ -21,8 +20,6 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
         mixpanelIdentify(account, 'metamask');
         setAccount(account);
       });
-
-      store.dispatch({ type: 'addresses/set', payload: { addresses } });
     });
   }, [rpcUrl, addresses]);
 

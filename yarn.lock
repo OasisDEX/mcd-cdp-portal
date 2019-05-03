@@ -1061,10 +1061,10 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@0.5.1-alpha.5":
-  version "0.5.1-alpha.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.5.1-alpha.5.tgz#46a684b1bc043cd73060e1ea3f86f86e7cec7935"
-  integrity sha512-r76jrKRSuQhEyfLDklMHoF3jBL4Qc9pTDow326qKHGtGrl61m6MxXJfAiklfBTOTGkmPFckWZ6wg9VfhoniX0Q==
+"@makerdao/multicall@0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.6.1.tgz#39c34d8364b1b72e2c281431859763b0719720e7"
+  integrity sha512-hD5gluapIzl1r+RlHnRIwBFBcSZ1l7EbwmHWZjcy1qjlccKwJ95AdD/YYwZyhPTLqilwhvCLb1FJ2QM6jSpn2g==
   dependencies:
     cross-fetch "^3.0.1"
     ethers "^4.0.6"
@@ -6470,6 +6470,11 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
+immer@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-3.1.1.tgz#eddd2c28403f494df604992c554eade8d9e5c2bb"
+  integrity sha512-8mH3vMqkvCy0jADoJGJR/+RNsIJOsrVhN1/8NBSLGV+Y4S8bSQ5i2VsDHu+1fm+IFhd8cZFX0shms2nsTBJUbA==
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-cwd/-/import-cwd-2.1.0.tgz#aa6cf36e722761285cb371ec6519f53e2435b0a9"
@@ -10645,7 +10650,7 @@ react-hot-loader@^4.8.0:
     shallowequal "^1.0.2"
     source-map "^0.7.3"
 
-react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
+react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
@@ -10704,18 +10709,6 @@ react-qr-svg@^2.2.1:
   dependencies:
     prop-types "^15.5.8"
     qr.js "0.0.0"
-
-react-redux@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-6.0.1.tgz#0d423e2c1cb10ada87293d47e7de7c329623ba4d"
-  integrity sha512-T52I52Kxhbqy/6TEfBv85rQSDz6+Y28V/pf52vDWs1YRXG19mcFOGfHnY2HsNFHyhP+ST34Aih98fvt6tqwVcQ==
-  dependencies:
-    "@babel/runtime" "^7.3.1"
-    hoist-non-react-statics "^3.3.0"
-    invariant "^2.2.4"
-    loose-envify "^1.4.0"
-    prop-types "^15.7.2"
-    react-is "^16.8.2"
 
 react-scripts@2.1.5:
   version "2.1.5"
@@ -10905,11 +10898,6 @@ recursive-readdir@2.2.2:
   dependencies:
     minimatch "3.0.4"
 
-redux-devtools-extension@^2.13.7:
-  version "2.13.8"
-  resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
-  integrity sha512-8qlpooP2QqPtZHQZRhx3x3OP5skEV1py/zUdMY28WNAocbafxdG2tRD1MWE7sp8obGMNYuLWanhhQ7EQvT1FBg==
-
 redux@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"
@@ -11063,6 +11051,13 @@ rehype-parse@^6.0.0:
     hast-util-from-parse5 "^5.0.0"
     parse5 "^5.0.0"
     xtend "^4.0.1"
+
+reinspect@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/reinspect/-/reinspect-1.0.1.tgz#49948455fb1cafdf8878ca552c609e0bff746ff8"
+  integrity sha512-vzg/xHLgeHczBZhJ1K1xXOSD+vtQoJaH1K16sD32+V4hjaBYgQJb5up3oBYUDy+37OXTiyvM8O98PHthmSO1gA==
+  dependencies:
+    redux "^4.0.1"
 
 relateurl@0.2.x:
   version "0.2.7"

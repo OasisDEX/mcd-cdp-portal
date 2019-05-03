@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
@@ -22,7 +21,8 @@ import {
 import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
-import { getIlkData } from 'reducers/network/cdpTypes';
+import useStore from 'hooks/useStore';
+import { getIlkData } from 'reducers/feeds';
 import ExternalLink from 'components/ExternalLink';
 import { getColor } from '../styles/theme';
 
@@ -189,9 +189,10 @@ const CdpViewHistory = ({ title, rows }) => {
   );
 };
 
-function CDPView({ cdpId, getIlk }) {
+function CDPView({ cdpId }) {
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
+  const [{ feeds }] = useStore();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdp, setCDP] = useState(null);
@@ -210,12 +211,16 @@ function CDPView({ cdpId, getIlk }) {
   }, [account]);
 
   useEffect(() => {
+    let didCancel = false;
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(parseInt(cdpId));
-      const ilkData = getIlk(cdp.ilk);
+      if (didCancel) return;
+      const ilkData = getIlkData(feeds, cdp.ilk);
       const debt = await cdp.getDebtValue();
+      if (didCancel) return;
       const collateral = await cdp.getCollateralValue();
+      if (didCancel) return;
       setCDP({
         ...cdp,
         ilkData,
@@ -223,7 +228,8 @@ function CDPView({ cdpId, getIlk }) {
         collateral
       });
     })();
-  }, [cdpId, getIlk, maker]);
+    return () => (didCancel = true);
+  }, [cdpId, feeds, maker]);
 
   if (!cdp) return <LoadingLayout background={getColor('backgroundGrey')} />;
 
@@ -451,10 +457,4 @@ function CDPView({ cdpId, getIlk }) {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    getIlk: key => getIlkData(state, key)
-  };
-}
-
-export default hot(connect(mapStateToProps)(CDPView));
+export default hot(CDPView);

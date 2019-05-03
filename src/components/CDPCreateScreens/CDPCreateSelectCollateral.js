@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -8,13 +8,13 @@ import {
   Card
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
-import { connect } from 'react-redux';
 
 import { prettifyNumber } from 'utils/ui';
 import ilkList from 'references/ilkList';
-import { getIlkData } from 'reducers/network/cdpTypes';
+import { getIlkData } from 'reducers/feeds';
 
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
@@ -41,11 +41,14 @@ const CDPCreateSelectCollateralSidebar = () => (
   </Box>
 );
 
-function IlkTableRowView({ ilk, checked, dispatch }) {
+function IlkTableRow({ ilk, checked, dispatch }) {
   const { maker } = useMaker();
-  const [userGemBalance, setUserGemBalance] = React.useState(null);
+  const [{ feeds }] = useStore();
+  const [userGemBalance, setUserGemBalance] = useState(null);
 
-  React.useEffect(() => {
+  ilk.data = getIlkData(feeds, ilk.key);
+
+  useEffect(() => {
     (async () => {
       setUserGemBalance(await maker.getToken(ilk.currency).balance());
     })();
@@ -82,20 +85,6 @@ function IlkTableRowView({ ilk, checked, dispatch }) {
     </tr>
   );
 }
-
-function mapStateToProps(state, { ilk }) {
-  return {
-    ilk: {
-      ...ilk,
-      data: getIlkData(state, ilk.key)
-    }
-  };
-}
-
-const IlkTableRow = connect(
-  mapStateToProps,
-  {}
-)(IlkTableRowView);
 
 const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
   return (
