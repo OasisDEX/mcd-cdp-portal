@@ -1,3 +1,4 @@
+import { enableBatching } from 'utils/redux';
 import systemReducer from 'reducers/system';
 import feedsReducer from 'reducers/feeds';
 
@@ -6,4 +7,4 @@ const rootReducer = ({ system, feeds }, action) => ({
   feeds: feedsReducer(feeds, action)
 });
 
-export default rootReducer;
+export default enableBatching(rootReducer);

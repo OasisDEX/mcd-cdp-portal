@@ -30,6 +30,7 @@ import { isMissingContractAddress } from 'utils/ethereum';
 import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
 import { instantiateWatcher } from './watch';
 import uniqBy from 'lodash.uniqby';
+import { batchActions } from 'utils/redux';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -145,14 +146,21 @@ function RouteEffects({ network }) {
   useEffect(() => {
     if (!maker) return;
     const { cdpTypes } = maker.service(ServiceRoles.CDP_TYPE);
-    uniqBy(cdpTypes, t => t.currency.symbol).forEach(type =>
-      // the fire-&-forget promises are intentional
-      type.getPrice().then(price => {
-        const gem = type.currency.symbol;
-        dispatch({ type: `${gem}.feedValueUSD`, value: price });
-      })
+    const gems = uniqBy(cdpTypes, t => t.currency.symbol).map(type => ({
+      price: type.getPrice(),
+      symbol: type.currency.symbol
+    }));
+    Promise.all(gems.map(({ price }) => price)).then(prices =>
+      dispatch(
+        batchActions(
+          prices.map((price, idx) => ({
+            type: `${gems[idx].symbol}.feedValueUSD`,
+            value: price
+          }))
+        )
+      )
     );
-  }, [maker]);
+  }, [dispatch, maker]);
 
   useEffect(() => {
     if (network !== 'mainnet') userSnapInit();
@@ -167,9 +175,7 @@ function RouteEffects({ network }) {
       multicallAddress: scs.getContractAddress('MULTICALL')
     });
 
-    watcher.subscribe(({ type, value }) => {
-      dispatch({ type, value });
-    });
+    watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
 
     // all bets are off wrt what contract state in our store
     dispatch({ type: 'CLEAR_CONTRACT_STATE' });
@@ -188,7 +194,7 @@ function RouteEffects({ network }) {
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
-  }, [maker]);
+  }, [dispatch, maker]);
 
   return null;
 }

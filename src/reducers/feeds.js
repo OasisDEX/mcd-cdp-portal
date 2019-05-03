@@ -30,12 +30,10 @@ const defaultIlkState = {
 
 export function getIlkData(feeds, ilkKey) {
   if (!feeds) return {};
-  // console.log('[feeds.js] getIlkData', feeds);
   return feeds.find(({ key }) => ilkKey === key) || {};
 }
 
 export function getAllFeeds(feeds) {
-  console.log('[feeds.js] getAllFeeds', feeds);
   return getUnique(feeds, 'gem').reduce((acc, cdpType) => {
     // this will get usd feeds only
     if (!cdpType[FEED_VALUE_USD]) return acc;
