@@ -1023,10 +1023,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.15.1-kovan.2":
-  version "0.15.1-kovan.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.1-kovan.2.tgz#0eda79e5148ca9f1094392075967b48700506fd0"
-  integrity sha512-njsfZSQ3Oy6oNti1OGBfIC1rWKYtzV3huOFRvhBjNGBZdaHm91IM34AJQqbcodSspjsX9avViSZ34DfuaxG5bw==
+"@makerdao/dai@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.2.tgz#2896576a6f89c1a8779ea3c2fc696c20699052fd"
+  integrity sha512-tBhvmp9+pBMqLxLPaXNnl8RraJLWvcdIVG1Eu7oZPt2w8jxjjrYdbs17K9XK5ELpvfV0LkJSyE9c9itCmt/4Sg==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
@@ -1860,7 +1860,7 @@ async-eventemitter@^0.2.2:
   dependencies:
     async "^2.4.0"
 
-"async-eventemitter@github:ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c":
+async-eventemitter@ahultgren/async-eventemitter#fa06e39e56786ba541c180061dbf2c0a5bbf951c:
   version "0.2.3"
   resolved "https://codeload.github.com/ahultgren/async-eventemitter/tar.gz/fa06e39e56786ba541c180061dbf2c0a5bbf951c"
   dependencies:
