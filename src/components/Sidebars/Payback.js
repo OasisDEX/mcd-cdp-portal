@@ -12,7 +12,7 @@ import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 
-const Payback = ({ cdp, reset }) => {
+const Payback = ({ cdp, cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
@@ -55,7 +55,7 @@ const Payback = ({ cdp, reset }) => {
       await daiToken.approveUnlimited(proxyAddress);
     }
 
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
     newTxListener(managedCdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
     reset();
   };

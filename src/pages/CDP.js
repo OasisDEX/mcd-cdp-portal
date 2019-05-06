@@ -187,7 +187,8 @@ const CdpViewHistory = ({ title, rows }) => {
   );
 };
 
-function CDPView({ cdpId, getIlk }) {
+function CDPView({ cdpId: _cdpId, getIlk }) {
+  const cdpId = parseInt(_cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
 
@@ -210,7 +211,7 @@ function CDPView({ cdpId, getIlk }) {
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(parseInt(cdpId));
+      const cdp = await cdpManager.getCdp(cdpId);
       const ilkData = getIlk(cdp.ilk);
       const [
         debt,
@@ -342,7 +343,7 @@ function CDPView({ cdpId, getIlk }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
@@ -360,7 +361,7 @@ function CDPView({ cdpId, getIlk }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
@@ -386,7 +387,7 @@ function CDPView({ cdpId, getIlk }) {
                   onClick={() =>
                     showSidebar({
                       sidebarType: 'payback',
-                      sidebarProps: { cdp }
+                      sidebarProps: { cdp, cdpId }
                     })
                   }
                 >
@@ -405,7 +406,7 @@ function CDPView({ cdpId, getIlk }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
