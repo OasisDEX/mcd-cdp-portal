@@ -19,7 +19,6 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
-import { getColor } from '../styles/theme';
 
 function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
@@ -376,11 +375,11 @@ function CDPView({ cdpId, getIlk }) {
             <AmountDisplay amount={debtAmount} denomination={debtSymbol} />
             <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
           </Flex>
-          {cdp.debt ? (
+          {daiBalance ? (
             <ActionContainerRow
               title={`DAI ${lang.cdp_page.wallet_balance}`}
-              value={`${debtAmount} DAI`}
-              conversion={`${debtAmount} USD`}
+              value={`${parseFloat(daiBalance)} DAI`}
+              conversion={`${parseFloat(daiBalance)} USD`} // TODO - this assumes a perfect peg :)
               button={
                 <ActionButton
                   disabled={!account}
