@@ -86,7 +86,7 @@ StepperUI.propTypes = {
   step: PropTypes.number,
   /** A callback when the onboarding screen is closed. */
   onClose: PropTypes.func,
-  children: PropTypes.element
+  children: PropTypes.arrayOf(PropTypes.element)
 };
 
 StepperUI.defaultProps = {
