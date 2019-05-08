@@ -210,6 +210,7 @@ function CDPView({ cdpId: _cdpId }) {
   }, [account]);
 
   useEffect(() => {
+    let didCancel = false;
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(cdpId);
@@ -233,6 +234,8 @@ function CDPView({ cdpId: _cdpId }) {
         cdp.minCollateral(),
         cdp.getCollateralAvailable()
       ]);
+
+      if (didCancel) return;
       setCDP({
         cdp,
         ilkData,
@@ -245,6 +248,7 @@ function CDPView({ cdpId: _cdpId }) {
         minCollateral,
         freeCollateral
       });
+      return () => (didCancel = true);
     })();
   }, [cdpId, feeds, maker]);
 
