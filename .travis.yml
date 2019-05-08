@@ -8,6 +8,8 @@ cache:
   timeout: 9000
 install:
   - yarn install
+script:
+  - yarn test --coverage
 before_deploy:
   - yarn write-git-version
   - yarn build
