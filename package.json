@@ -83,7 +83,8 @@
     "lighthouse": "^4.0.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
-    "react-test-renderer": "^16.8.6",
+    "react-testing-library": "^6.1.2",
+    "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
   }
 }
