@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import { Box } from '@makerdao/ui-components-core';
 
 const Pill = ({ bg, children, ...props }) => {
@@ -19,4 +17,4 @@ const Pill = ({ bg, children, ...props }) => {
     </Box>
   );
 };
-export { Block, Pill };
+export { Pill };

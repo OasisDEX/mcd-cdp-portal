@@ -19,7 +19,7 @@ const Migrated = ({ onClose, dispatch }) => {
       <Text.h2 textAlign="center">
         {lang.cdp_migrate.migrate_complete_header}
       </Text.h2>
-      <Text.p fontSize="1.7rem" color="darkLavender">
+      <Text.p fontSize="1.7rem" color="darkLavender" textAlign="center">
         {lang.formatString(lang.cdp_migrate.migrate_complete_text, '3228')}
       </Text.p>
       <Button
@@ -152,7 +152,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               {lang.cdp_migrate.trust_site_with_dai} <Tooltip fontSize="l" />
             </Text>
           </Flex>
-          <Flex alignItems="center">
+          <Grid alignItems="center" gridTemplateColumns="auto 1fr">
             <Checkbox
               mr="s"
               fontSize="l"
@@ -165,7 +165,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
                 <Link>{lang.terms_of_service}</Link>
               )}
             </Text>
-          </Flex>
+          </Grid>
         </Grid>
         <Grid gridRowGap="m" color="darkPurple" pt="2xs" pb="l" px="l">
           <Table width="100%">
@@ -192,7 +192,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
               </Table.tr>
             </Table.tbody>
           </Table>
-          <Flex alignItems="center">
+          <Grid alignItems="center" gridTemplateColumns="auto 1fr">
             <Checkbox
               mr="s"
               fontSize="l"
@@ -205,7 +205,7 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
                 <Link>{lang.terms_of_service}</Link>
               )}
             </Text>
-          </Flex>
+          </Grid>
         </Grid>
       </CardTabs>
       <Grid

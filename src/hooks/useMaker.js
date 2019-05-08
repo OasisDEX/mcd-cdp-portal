@@ -61,14 +61,16 @@ function useMaker() {
       const matchedAccount = _getMatchedAccount(browserProvider.address);
       if (!matchedAccount) {
         metaMaskAccount = await maker.addAccount({
-          type: 'browser'
+          type: 'browser',
+          autoSwitch: true
         });
       } else {
         metaMaskAccount = matchedAccount;
       }
     } else {
       metaMaskAccount = await maker.addAccount({
-        type: 'browser'
+        type: 'browser',
+        autoSwitch: true
       });
     }
 

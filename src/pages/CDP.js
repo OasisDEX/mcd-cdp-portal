@@ -6,11 +6,6 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import lang from 'languages';
 import {
-  getUsdPrice,
-  getLockedAndFreeCollateral,
-  calcCDPParams
-} from 'utils/cdp';
-import {
   Box,
   Grid,
   Flex,
@@ -24,9 +19,12 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import { getIlkData } from 'reducers/network/cdpTypes';
 import ExternalLink from 'components/ExternalLink';
-import { getColor } from '../styles/theme';
 
-const WithSeperators = styled(Box).attrs(() => ({
+function round(value, decimals) {
+  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}
+
+const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
   borderColor: 'grey.300'
 }))`
@@ -37,18 +35,18 @@ const WithSeperators = styled(Box).attrs(() => ({
 
 const InfoContainerRow = ({ title, value }) => {
   return (
-    <WithSeperators>
+    <WithSeparators>
       <Grid py="xs" gridTemplateColumns="1fr auto">
         <TextBlock t="body">{title}</TextBlock>
         <TextBlock t="body">{value}</TextBlock>
       </Grid>
-    </WithSeperators>
+    </WithSeparators>
   );
 };
 
 const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
-    <WithSeperators>
+    <WithSeparators>
       <Flex flexWrap="wrap" justifyContent="space-between" py="s">
         <Box alignSelf="center" width="140px">
           <TextBlock color="darkLavender" fontSize="m">
@@ -77,7 +75,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
           </Box>
         </Box>
       </Flex>
-    </WithSeperators>
+    </WithSeparators>
   );
 };
 
@@ -124,8 +122,17 @@ const CdpViewHistory = ({ title, rows }) => {
   return (
     <Box>
       <Text.h4>{title}</Text.h4>
-      <Card px="m" py="s" my="s">
-        <Table width="100%" variant="normal">
+      <Card px="l" pt="m" pb="l" my="s" css={{ overflowX: 'scroll' }}>
+        <Table
+          width="100%"
+          variant="normal"
+          css={`
+            td,
+            th {
+              padding-right: 10px;
+            }
+          `}
+        >
           <thead>
             <tr>
               <th>{lang.table.type}</th>
@@ -142,11 +149,35 @@ const CdpViewHistory = ({ title, rows }) => {
                 i
               ) => (
                 <tr key={i}>
-                  <td>{collateralType}</td>
-                  <td>{actionMsg}</td>
-                  <td>{dateOfAction}</td>
-                  <td>{senderId}</td>
-                  <td>{txHash}</td>
+                  <td>
+                    <Text color="darkPurple" t="body">
+                      {collateralType}
+                    </Text>
+                  </td>
+                  <td
+                    css={`
+                      white-space: nowrap;
+                    `}
+                  >
+                    <Text color="darkLavender" t="caption">
+                      {actionMsg}
+                    </Text>
+                  </td>
+                  <td
+                    css={`
+                      white-space: nowrap;
+                    `}
+                  >
+                    <Text color="darkLavender" t="caption">
+                      {dateOfAction}
+                    </Text>
+                  </td>
+                  <td>
+                    <Text t="caption">{senderId}</Text>
+                  </td>
+                  <td>
+                    <Text t="caption">{txHash}</Text>
+                  </td>
                 </tr>
               )
             )}
@@ -157,7 +188,8 @@ const CdpViewHistory = ({ title, rows }) => {
   );
 };
 
-function CDPView({ cdpId, getIlk }) {
+function CDPView({ cdpId: _cdpId, getIlk }) {
+  const cdpId = parseInt(_cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
 
@@ -171,7 +203,7 @@ function CDPView({ cdpId, getIlk }) {
         setDaiBalance(await maker.getToken('MDAI').balance());
       } catch (err) {
         console.error(
-          `Unable to fetch dai balance, no account is currently connected`
+          'Unable to fetch dai balance, no account is currently connected'
         );
       }
     })();
@@ -180,43 +212,72 @@ function CDPView({ cdpId, getIlk }) {
   useEffect(() => {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(parseInt(cdpId));
+      const cdp = await cdpManager.getCdp(cdpId);
       const ilkData = getIlk(cdp.ilk);
-      const debt = await cdp.getDebtValue();
-      const collateral = await cdp.getCollateralValue();
+      const [
+        debt,
+        collateral,
+        collateralPrice,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        minCollateral,
+        freeCollateral
+      ] = await Promise.all([
+        cdp.getDebtValue(),
+        cdp.getCollateralAmount(),
+        cdp.type.getPrice(),
+        cdp.getCollateralizationRatio(),
+        cdp.getLiquidationPrice(),
+        cdp.getDaiAvailable(),
+        cdp.minCollateral(),
+        cdp.getCollateralAvailable()
+      ]);
       setCDP({
-        ...cdp,
+        cdp,
         ilkData,
         debt,
-        collateral
+        collateral,
+        collateralPrice,
+        collateralizationRatio,
+        liquidationPrice,
+        daiAvailable,
+        minCollateral,
+        freeCollateral
       });
     })();
   }, [cdpId, getIlk, maker]);
 
-  if (!cdp) return <LoadingLayout background={getColor('backgroundGrey')} />;
+  if (!cdp) return <LoadingLayout />;
 
-  const collateralInt = cdp.collateral.toNumber();
-  const collateralDenomination = cdp.ilkData.gem;
-  const debtInt = cdp.debt.toNumber();
-  const collateralPrice = getUsdPrice(cdp.ilkData);
-  const {
-    liquidationPrice,
-    collateralizationRatio,
-    daiAvailable
-  } = calcCDPParams({
-    ilkData: cdp.ilkData,
-    gemsToLock: collateralInt,
-    daiToDraw: debtInt
-  });
-  const stabilityFee = parseFloat(cdp.ilkData.rate) * 100 + '%';
-  const {
-    locked: lockedCollateral,
-    free: freeCollateral
-  } = getLockedAndFreeCollateral(cdp);
-  const generateAmount = parseFloat(daiAvailable) - debtInt;
-  // calls that will come from the mcd-plugin once functionality is implemented.
-  // cdpState.getCollateralizationRatio().then((val, err) => console.log(val, err))
-  // cdpState.getLiquidationPrice().then((val, err) => console.log(val, err))
+  const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
+  const gem = cdp.ilkData.gem;
+  const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
+  const liquidationPenalty = cdp.ilkData.liquidationPenalty + '%';
+  const collateralizationRatio = (
+    parseFloat(cdp.collateralizationRatio) * 100
+  ).toFixed(2);
+  const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
+  const stabilityFee = cdp.ilkData.rate * 100 + '%';
+  const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
+  const collateralSymbol = cdp.collateral.symbol;
+  const collateralUSDValue = round(
+    cdp.collateral.times(cdp.collateralPrice).toNumber(),
+    2
+  );
+  const minCollateralAmount = round(cdp.minCollateral.toNumber(), 2);
+  const minCollateralValue = round(
+    cdp.minCollateral.times(cdp.collateralPrice).toNumber(),
+    2
+  ).toFixed(2);
+  const freeCollateralAmount = round(cdp.freeCollateral.toNumber(), 2);
+  const freeCollateralValue = round(
+    cdp.freeCollateral.times(cdp.collateralPrice).toNumber(),
+    2
+  );
+  const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
+  const debtSymbol = cdp.debt.symbol;
+  const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
 
   const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
@@ -233,40 +294,31 @@ function CDPView({ cdpId, getIlk }) {
       >
         <CdpViewCard title={lang.cdp_page.liquidation_price}>
           <Flex alignItems="flex-end" mb="xs">
-            <AmountDisplay
-              amount={liquidationPrice.toFixed(2)}
-              denomination="USD"
-            />
-            <ExtraInfo>({cdp.ilk}/USD)</ExtraInfo>
+            <AmountDisplay amount={liquidationPrice} denomination="USD" />
+            <ExtraInfo>({gem}/USD)</ExtraInfo>
           </Flex>
           <InfoContainerRow
             title={
               <TextBlock>
                 {lang.cdp_page.current_price_info}
-                <ExtraInfo ml="s">(ETH/USD)</ExtraInfo>
+                <ExtraInfo ml="s">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={collateralPrice.toFixed(2)}
+            value={collateralPrice}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={cdp.ilkData.liquidationPenalty + '%'}
+            value={liquidationPenalty}
           />
         </CdpViewCard>
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
           <Flex alignItems="flex-end" mb="xs">
-            <AmountDisplay
-              amount={
-                collateralizationRatio &&
-                parseFloat(collateralizationRatio).toFixed(2)
-              }
-              denomination="%"
-            />
+            <AmountDisplay amount={collateralizationRatio} denomination="%" />
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={cdp.ilkData.liquidationRatio + '.00%'}
+            value={liquidationRatio}
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
@@ -274,30 +326,25 @@ function CDPView({ cdpId, getIlk }) {
           />
         </CdpViewCard>
 
-        <CdpViewCard title={`${cdpId} ${lang.cdp_page.collateral}`}>
+        <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <Flex alignItems="flex-end" mb="xs">
             <AmountDisplay
-              amount={cdp.collateral.toNumber().toFixed(2)}
-              denomination={cdp.collateral.symbol}
+              amount={collateralAmount}
+              denomination={collateralSymbol}
             />
-            <ExtraInfo>{`${(collateralPrice * collateralInt).toFixed(
-              2
-            )} USD`}</ExtraInfo>
+            <ExtraInfo>{`${collateralUSDValue} USD`}</ExtraInfo>
           </Flex>
           <ActionContainerRow
-            title={lang.cdp_page.locked}
-            value={`${lockedCollateral &&
-              lockedCollateral.toFixed(2)} ${collateralDenomination}`}
-            conversion={`${(lockedCollateral * collateralPrice).toFixed(
-              2
-            )} USD`}
+            title={lang.cdp_page.required_for_safety}
+            value={`${minCollateralAmount} ${gem}`}
+            conversion={`${minCollateralValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
@@ -307,16 +354,15 @@ function CDPView({ cdpId, getIlk }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${freeCollateral &&
-              freeCollateral.toFixed(2)} ${collateralDenomination}`}
-            conversion={`${(freeCollateral * collateralPrice).toFixed(2)} USD`}
+            value={`${freeCollateralAmount} ${gem}`}
+            conversion={`${freeCollateralValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
@@ -328,24 +374,21 @@ function CDPView({ cdpId, getIlk }) {
 
         <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
           <Flex alignItems="flex-end" mb="xs">
-            <AmountDisplay
-              amount={cdp.debt.toNumber().toFixed(2)}
-              denomination={cdp.debt.symbol}
-            />
+            <AmountDisplay amount={debtAmount} denomination={debtSymbol} />
             <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
           </Flex>
           {daiBalance ? (
             <ActionContainerRow
               title={`DAI ${lang.cdp_page.wallet_balance}`}
-              value={`${daiBalance.toNumber().toFixed(2)} DAI`}
-              conversion={`${daiBalance.toNumber().toFixed(2)} USD`}
+              value={`${parseFloat(daiBalance)} DAI`}
+              conversion={`${parseFloat(daiBalance)} USD`} // TODO - this assumes a perfect peg :)
               button={
                 <ActionButton
                   disabled={!account}
                   onClick={() =>
                     showSidebar({
                       sidebarType: 'payback',
-                      sidebarProps: { cdp }
+                      sidebarProps: { cdp, cdpId }
                     })
                   }
                 >
@@ -356,15 +399,15 @@ function CDPView({ cdpId, getIlk }) {
           ) : null}
           <ActionContainerRow
             title={lang.cdp_page.able_generate}
-            value={`${generateAmount && generateAmount.toFixed(2)} DAI`}
-            conversion={`${generateAmount && generateAmount.toFixed(2)} USD`}
+            value={`${daiAvailable} DAI`}
+            conversion={`${daiAvailable} USD`}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdp, cdpId }
                   })
                 }
               >
@@ -382,36 +425,36 @@ function CDPView({ cdpId, getIlk }) {
             'ETH',
             'Paid back 1,000.00 DAI',
             'Feb 15, 2019',
-            <ExternalLink address={mockAddr} network={'kovan'} />,
-            <ExternalLink address={mockAddr} network={'kovan'} />
+            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Sent 1,000.00 DAI',
             'Feb 12, 2019',
-            <ExternalLink address={mockAddr} network={'kovan'} />,
-            <ExternalLink address={mockAddr} network={'kovan'} />
+            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Locked 1,000.00 DAI',
             'Feb 09, 2019',
-            <ExternalLink address={mockAddr} network={'kovan'} />,
-            <ExternalLink address={mockAddr} network={'kovan'} />
+            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Withdrew 3,468.72 ETH',
             'Feb 03, 2019',
-            <ExternalLink address={mockAddr} network={'kovan'} />,
-            <ExternalLink address={mockAddr} network={'kovan'} />
+            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
           ],
           [
             'ETH',
             'Opened CDP',
             'Jan 15, 2019',
-            <ExternalLink address={mockAddr} network={'kovan'} />,
-            <ExternalLink address={mockAddr} network={'kovan'} />
+            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
           ]
         ]}
       />

@@ -4,7 +4,7 @@ import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 
 const Generate = ({ onClose, children }) => {
   return (
-    <Card p="m" mr="s">
+    <Card p="m">
       <Flex justifyContent="flex-end" pb="xs">
         <Box
           onClick={onClose}

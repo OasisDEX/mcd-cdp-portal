@@ -1,46 +1,32 @@
 import React from 'react';
+import { Box } from '@makerdao/ui-components-core';
 import CDPCreate from 'components/CDPCreate';
 import CDPMigrate from 'components/CDPMigrate';
 import LedgerType from 'components/LedgerType';
 import HardwareWalletModal from 'components/HardwareWalletModal';
-import { Grid } from '@makerdao/ui-components-core';
 import templates from './templates';
 
 const modals = {
   cdpcreate: ({ onClose }) => (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="auto 1fr"
-      p="m"
-      maxWidth="100%"
-      width="100vw"
-      height="100vh"
+    <Box
       bg="backgroundGrey"
+      minHeight="100vh"
+      p="m"
       onClick={e => e.stopPropagation()}
-      css={`
-        overflow-y: auto;
-      `}
     >
       <CDPCreate onClose={onClose} />
-    </Grid>
+    </Box>
   ),
 
   cdpmigrate: ({ onClose }) => (
-    <Grid
-      gridRowGap="s"
-      gridTemplateRows="auto 1fr"
-      p="m"
-      maxWidth="100%"
-      width="100vw"
-      height="100vh"
+    <Box
       bg="backgroundGrey"
+      minHeight="100vh"
+      p="m"
       onClick={e => e.stopPropagation()}
-      css={`
-        overflow-y: auto;
-      `}
     >
       <CDPMigrate onClose={onClose} />
-    </Grid>
+    </Box>
   ),
 
   ledgertype: args => <LedgerType {...args} />,

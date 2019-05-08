@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import { cdpParamsAreValid, formatCollateralizationRatio } from 'utils/ui';
 
@@ -115,7 +114,7 @@ function OpenCDPForm({
   ];
 
   return (
-    <Grid gridRowGap="l" px="xl" py="l" maxWidth="100%">
+    <Grid gridRowGap="l" maxWidth="100%">
       <Grid
         gridTemplateColumns="auto"
         gridRowGap="l"
@@ -148,31 +147,27 @@ const CDPCreateDepositSidebar = ({
 }) => {
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   return (
-    <Fragment>
-      <Card px="l" pb="l">
-        <Box>
-          {[
-            [
-              lang.collateralization,
-              formatCollateralizationRatio(collateralizationRatio)
-            ],
-            [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-            ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
+    <Grid gridRowGap="m">
+      {[
+        [
+          lang.collateralization,
+          formatCollateralizationRatio(collateralizationRatio)
+        ],
+        [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
+        ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
 
-            [lang.stability_fee, `${rate}%`],
-            [lang.liquidation_ratio, `${liquidationRatio}%`],
-            [lang.liquidation_penalty, `${liquidationPenalty}%`]
-          ].map(([title, value]) => (
-            <Grid mt="m" gridRowGap="xs" key={title}>
-              <TextBlock t="h5" lineHeight="normal">
-                {title}
-              </TextBlock>
-              <TextBlock t="body">{value}</TextBlock>
-            </Grid>
-          ))}
-        </Box>
-      </Card>
-    </Fragment>
+        [lang.stability_fee, `${rate}%`],
+        [lang.liquidation_ratio, `${liquidationRatio}%`],
+        [lang.liquidation_penalty, `${liquidationPenalty}%`]
+      ].map(([title, value]) => (
+        <Grid gridRowGap="xs" key={title}>
+          <TextBlock t="h5" lineHeight="normal">
+            {title}
+          </TextBlock>
+          <TextBlock t="body">{value}</TextBlock>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 
@@ -205,27 +200,27 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         )}
         text={lang.cdp_create.deposit_text}
       />
-      <Box my="l">
-        <TwoColumnCardsLayout
-          mainContent={
-            <OpenCDPForm
-              cdpParams={cdpParams}
-              handleInputChange={handleInputChange}
-              selectedIlk={selectedIlk}
-              daiAvailable={daiAvailable}
-            />
-          }
-          ratio={[4, 2]}
-          sideContent={
-            <CDPCreateDepositSidebar
-              selectedIlk={selectedIlk}
-              collateralizationRatio={collateralizationRatio}
-              liquidationPrice={liquidationPrice}
-            />
-          }
-          SidebarComponent={Box}
-        />
-      </Box>
+      <Grid
+        gridTemplateColumns={{ s: 'minmax(0, 1fr)', l: '2fr 1fr' }}
+        gridGap="m"
+        my="l"
+      >
+        <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
+          <OpenCDPForm
+            cdpParams={cdpParams}
+            handleInputChange={handleInputChange}
+            selectedIlk={selectedIlk}
+            daiAvailable={daiAvailable}
+          />
+        </Card>
+        <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
+          <CDPCreateDepositSidebar
+            selectedIlk={selectedIlk}
+            collateralizationRatio={collateralizationRatio}
+            liquidationPrice={liquidationPrice}
+          />
+        </Card>
+      </Grid>
       <ScreenFooter
         dispatch={dispatch}
         canProgress={cdpParamsAreValid(
