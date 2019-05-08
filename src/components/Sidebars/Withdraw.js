@@ -15,7 +15,7 @@ import {
 } from '../../utils/ui';
 import lang from 'languages';
 
-const Withdraw = ({ cdp, reset }) => {
+const Withdraw = ({ cdp, cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -45,7 +45,7 @@ const Withdraw = ({ cdp, reset }) => {
   const valid = moreThanZero && lessThanMax;
 
   const withdraw = async () => {
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdp.id);
+    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
     newTxListener(
       managedCdp.freeCollateral(parseFloat(amount)),
       `Withdrawing ${cdp.ilkData.gem}`

@@ -19,6 +19,8 @@ import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
+import { prettifyNumber } from 'utils/ui';
+
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
@@ -38,8 +40,11 @@ const CDPCreateConfirmSummary = ({
   });
 
   const rows = [
-    [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
-    [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
+    [
+      lang.verbs.depositing,
+      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.key}`
+    ],
+    [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)

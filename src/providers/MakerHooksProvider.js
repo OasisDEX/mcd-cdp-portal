@@ -17,7 +17,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
-        mixpanelIdentify(account, 'metamask');
+        mixpanelIdentify(account.address, 'metamask');
         setAccount(account);
       });
     });
