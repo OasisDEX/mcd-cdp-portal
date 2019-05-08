@@ -11,6 +11,7 @@
     "position": "position",
     "collateral": "collateral",
     "locked": "Locked",
+    "required_for_safety": "Required for safety",
     "able_withdraw": "Able to withdraw",
     "able_generate": "Able to generate",
     "outstanding_debt": "Outstanding debt",

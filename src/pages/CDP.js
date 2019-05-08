@@ -24,7 +24,7 @@ function round(value, decimals) {
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
-const WithSeperators = styled(Box).attrs(() => ({
+const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
   borderColor: 'grey.300'
 }))`
@@ -35,18 +35,18 @@ const WithSeperators = styled(Box).attrs(() => ({
 
 const InfoContainerRow = ({ title, value }) => {
   return (
-    <WithSeperators>
+    <WithSeparators>
       <Grid py="xs" gridTemplateColumns="1fr auto">
         <TextBlock t="body">{title}</TextBlock>
         <TextBlock t="body">{value}</TextBlock>
       </Grid>
-    </WithSeperators>
+    </WithSeparators>
   );
 };
 
 const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
-    <WithSeperators>
+    <WithSeparators>
       <Flex flexWrap="wrap" justifyContent="space-between" py="s">
         <Box alignSelf="center" width="140px">
           <TextBlock color="darkLavender" fontSize="m">
@@ -75,7 +75,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
           </Box>
         </Box>
       </Flex>
-    </WithSeperators>
+    </WithSeparators>
   );
 };
 
@@ -202,7 +202,7 @@ function CDPView({ cdpId: _cdpId, getIlk }) {
         setDaiBalance(await maker.getToken('MDAI').balance());
       } catch (err) {
         console.error(
-          `Unable to fetch dai balance, no account is currently connected`
+          'Unable to fetch dai balance, no account is currently connected'
         );
       }
     })();
@@ -325,7 +325,7 @@ function CDPView({ cdpId: _cdpId, getIlk }) {
           />
         </CdpViewCard>
 
-        <CdpViewCard title={`${cdpId} ${lang.cdp_page.collateral}`}>
+        <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <Flex alignItems="flex-end" mb="xs">
             <AmountDisplay
               amount={collateralAmount}
@@ -334,7 +334,7 @@ function CDPView({ cdpId: _cdpId, getIlk }) {
             <ExtraInfo>{`${collateralUSDValue} USD`}</ExtraInfo>
           </Flex>
           <ActionContainerRow
-            title={lang.cdp_page.locked}
+            title={lang.cdp_page.required_for_safety}
             value={`${minCollateralAmount} ${gem}`}
             conversion={`${minCollateralValue} USD`}
             button={
