@@ -12,7 +12,7 @@ import {
 const totalDebt = addresses => ({
   target: addresses.MCD_VAT,
   call: ['debt()(uint256)'],
-  returns: [[TOTAL_DEBT, val => DAI(val, -45)]]
+  returns: [[TOTAL_DEBT, val => DAI.rad(val)]]
 });
 
 const baseRate = addresses => ({
@@ -30,13 +30,13 @@ const globalDebtCeiling = addresses => ({
 const debtAuctionLotSzie = addresses => ({
   target: addresses.MCD_VOW,
   call: ['sump()(uint256)'],
-  returns: [[DEBT_AUCTION_LOT_SIZE, val => DAI(val, -18)]]
+  returns: [[DEBT_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
 });
 
 const surplusAuctionLotSize = addresses => ({
   target: addresses.MCD_VOW,
   call: ['bump()(uint256)'],
-  returns: [[SURPLUS_AUCTION_LOT_SIZE, val => DAI(val, -18)]]
+  returns: [[SURPLUS_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
 });
 
 const numberOfLiquidations = addresses => ({
