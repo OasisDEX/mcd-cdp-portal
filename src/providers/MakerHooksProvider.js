@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { mixpanelIdentify } from 'utils/analytics';
+import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 
 export const MakerObjectContext = createContext();

@@ -3,11 +3,11 @@ import McdPlugin, { ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 
-import proxyRegistryAbi from 'references/proxyRegistry.abi.json';
-import gemJoinAbi from 'references/gemJoin.abi.json';
+import proxyRegistryAbi from './references/proxyRegistry.abi.json';
+import gemJoinAbi from './references/gemJoin.abi.json';
 // import dsTokenAbi from 'references/dsToken.abi.json';
 
-import ilkList from 'references/ilkList';
+import ilkList from './references/ilkList';
 
 let _maker;
 

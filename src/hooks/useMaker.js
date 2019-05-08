@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { checkEthereumProvider } from 'utils/ethereum';
+import { checkEthereumProvider } from '../utils/ethereum';
 
-import { MakerObjectContext } from 'providers/MakerHooksProvider';
+import { MakerObjectContext } from '../providers/MakerHooksProvider';
 
 function useMaker() {
   const {
