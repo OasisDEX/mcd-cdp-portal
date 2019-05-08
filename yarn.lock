@@ -1329,10 +1329,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.1.5.tgz#35e842d0e4e448870bb727d6e60f6a9528585aa5"
-  integrity sha512-JpUoM61jSYOZ1beutAJiwzI5RblLUWIKM1BcnajdR9Fe0JAcxW7NYDfUc0DJfPPzdqJn6Y3QF3zM7BCGRFZGag==
+"@makerdao/dai-plugin-mcd@0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.1.6.tgz#6275bda3c1d3f24de73939c1e0fa98cdd2269403"
+  integrity sha512-qru1rCUilSgUzU6zpAPSzhKnR0EfEkcSuTgbvoK4/boYIbDu+Zt13UujOx5D4xKPubHXgjpKF7R5PWPSfw1cvA==
   dependencies:
     "@makerdao/currency" "^0.9.0"
     "@makerdao/services-core" "^0.9.5"
@@ -1350,10 +1350,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.15.2":
-  version "0.15.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.2.tgz#2896576a6f89c1a8779ea3c2fc696c20699052fd"
-  integrity sha512-tBhvmp9+pBMqLxLPaXNnl8RraJLWvcdIVG1Eu7oZPt2w8jxjjrYdbs17K9XK5ELpvfV0LkJSyE9c9itCmt/4Sg==
+"@makerdao/dai@0.15.3":
+  version "0.15.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.3.tgz#11148b7980732b73f6fba3ddff0a5c0ff6708ded"
+  integrity sha512-WjGJyieUtOMuQNsbButmEjMztyvsRbOhPcSvxgOnDElXiNewJl6reMdWGnFHJO6HtDDT/W0OeWqR/e3cdzFh5A==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.0"
@@ -1368,12 +1368,6 @@
     invariant "^2.2.2"
     isomorphic-fetch "^2.2.1"
     lodash "^4.17.11"
-    lodash.intersection "^4.4.0"
-    lodash.isequal "^4.5.0"
-    lodash.merge "^4.6.1"
-    lodash.times "^4.3.2"
-    lodash.uniq "^4.5.0"
-    lodash.values "^4.3.0"
     promise-props "^1.0.0"
     toposort "^2.0.2"
     web3 "1.0.0-beta.34"
@@ -8482,11 +8476,6 @@ lodash.camelcase@^4.3.0:
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
-lodash.intersection@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/lodash.intersection/-/lodash.intersection-4.4.0.tgz#0a11ba631d0e95c23c7f2f4cbb9a692ed178e705"
-  integrity sha1-ChG6Yx0OlcI8fy9Mu5ppLtF45wU=
-
 lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
@@ -8501,11 +8490,6 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
   integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
-
-lodash.merge@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
-  integrity sha512-AOYza4+Hf5z1/0Hztxpm2/xiPZgi/cjMqdnKTUWTBSKchJlxXXuUSxCCl8rJlf4g6yww/j6mA8nC8Hw/EZWxKQ==
 
 lodash.mergewith@4.6.1:
   version "4.6.1"
@@ -8541,11 +8525,6 @@ lodash.templatesettings@^4.0.0:
   integrity sha1-K01OlbpEDZFf8IvImeRVNmZxMxY=
   dependencies:
     lodash._reinterpolate "~3.0.0"
-
-lodash.times@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/lodash.times/-/lodash.times-4.3.2.tgz#3e1f2565c431754d54ab57f2ed1741939285ca1d"
-  integrity sha1-Ph8lZcQxdU1Uq1fy7RdBk5KFyh0=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
