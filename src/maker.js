@@ -17,10 +17,8 @@ export function getMaker() {
 }
 
 export async function instantiateMaker({ rpcUrl, addresses, network }) {
-  const params = new URL(window.location).searchParams;
   const mcdPluginConfig = {
-    network: network === 'test' ? 'testnet' : network,
-    simplePriceFeeds: !!params.get('simplePriceFeeds')
+    network: network === 'test' ? 'testnet' : network
   };
 
   const config = {
