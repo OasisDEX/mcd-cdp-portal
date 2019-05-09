@@ -160,7 +160,7 @@ function RouteEffects({ network }) {
         )
       )
     );
-  }, [dispatch, maker]);
+  }, [maker]);
 
   useEffect(() => {
     if (network !== 'mainnet') userSnapInit();
@@ -194,7 +194,7 @@ function RouteEffects({ network }) {
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
-  }, [dispatch, maker]);
+  }, [maker]);
 
   return null;
 }
