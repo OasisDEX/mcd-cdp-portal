@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import SidebarFeeds from 'components/SidebarFeeds';
 import SidebarSystem from 'components/SidebarSystem';
 import { Box, Grid } from '@makerdao/ui-components-core';
@@ -6,11 +6,8 @@ import { getAllFeeds } from 'reducers/feeds';
 import useStore from 'hooks/useStore';
 
 const SidebarGlobalPanel = () => {
-  const [uniqueFeeds, setUniqueFeeds] = useState([]);
   const [{ system, feeds }] = useStore();
-  useMemo(() => {
-    setUniqueFeeds(getAllFeeds(feeds));
-  }, [feeds]);
+  const uniqueFeeds = useMemo(() => getAllFeeds(feeds), [feeds]);
 
   return (
     <Box>
