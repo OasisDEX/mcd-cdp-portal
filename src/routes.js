@@ -194,7 +194,7 @@ function RouteEffects({ network }) {
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
     });
-  }, [dispatch, maker]);
+  }, [maker]);
 
   return null;
 }
