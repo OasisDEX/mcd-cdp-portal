@@ -160,7 +160,7 @@ function RouteEffects({ network }) {
         )
       )
     );
-  }, [dispatch, maker]);
+  }, [maker]);
 
   useEffect(() => {
     if (network !== 'mainnet') userSnapInit();
