@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
@@ -21,15 +21,16 @@ import { userSnapInit } from 'utils/analytics';
 import ilkList from 'references/ilkList';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 
-import { createCDPSystemModel } from 'reducers/network/system/model';
-import * as cdpTypeModel from 'reducers/network/cdpTypes/model';
+import { createCDPSystemModel } from 'reducers/multicall/system';
+import * as cdpTypeModel from 'reducers/multicall/feeds';
+
 import { isMissingContractAddress } from 'utils/ethereum';
-
 import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
-import store from './store';
 import { instantiateWatcher } from './watch';
 import uniqBy from 'lodash.uniqby';
+import { batchActions } from 'utils/redux';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -140,24 +141,32 @@ function networkIsUndefined(request) {
 
 function RouteEffects({ network }) {
   const { maker } = useMaker();
+  const [, dispatch] = useStore();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!maker) return;
     const { cdpTypes } = maker.service(ServiceRoles.CDP_TYPE);
-    uniqBy(cdpTypes, t => t.currency.symbol).forEach(type =>
-      // the fire-&-forget promises are intentional
-      type.getPrice().then(price => {
-        const gem = type.currency.symbol;
-        store.dispatch({ type: `${gem}.feedValueUSD`, value: price });
-      })
+    const gems = uniqBy(cdpTypes, t => t.currency.symbol).map(type => ({
+      price: type.getPrice(),
+      symbol: type.currency.symbol
+    }));
+    Promise.all(gems.map(({ price }) => price)).then(prices =>
+      dispatch(
+        batchActions(
+          prices.map((price, idx) => ({
+            type: `${gems[idx].symbol}.feedValueUSD`,
+            value: price
+          }))
+        )
+      )
     );
   }, [maker]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (network !== 'mainnet') userSnapInit();
   }, [network]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!maker) return;
     const scs = maker.service('smartContract');
     const addresses = scs.getContractAddresses();
@@ -166,8 +175,10 @@ function RouteEffects({ network }) {
       multicallAddress: scs.getContractAddress('MULTICALL')
     });
 
+    watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
+
     // all bets are off wrt what contract state in our store
-    store.dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     watcher.start();
     // do our best to attach state listeners to this new network
     watcher.tap(() => {

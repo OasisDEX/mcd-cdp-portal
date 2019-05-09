@@ -1,5 +1,5 @@
 import round from 'lodash.round';
-import { MKR, ETH } from 'maker';
+import { MKR, ETH } from '../maker';
 
 export function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');

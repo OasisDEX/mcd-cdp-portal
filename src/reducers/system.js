@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 export const TOTAL_DEBT = 'totalDebt';
 export const BASE_RATE = 'baseRate';
 export const GLOBAL_DEBT_CEILING = 'globalDebtCeiling';
@@ -5,7 +7,7 @@ export const DEBT_AUCTION_LOT_SIZE = 'debtAuctionLotSize';
 export const SURPLUS_AUCTION_LOT_SIZE = 'surplusAuctionLotSize';
 export const NUMBER_OF_LIQUIDATIONS = 'numberOfLiquidations';
 
-const initialState = {
+export const initialState = {
   [BASE_RATE]: '0',
   [TOTAL_DEBT]: '0',
   [GLOBAL_DEBT_CEILING]: '0',
@@ -14,12 +16,10 @@ const initialState = {
   [SURPLUS_AUCTION_LOT_SIZE]: '0'
 };
 
-function system(state = initialState, action) {
-  const { value, type } = action;
+const reducer = produce((draft, { type, value }) => {
+  if (!type) return;
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
-  if (Object.keys(initialState).includes(type))
-    return { ...state, [type]: value };
-  else return state;
-}
+  if (initialState.hasOwnProperty(type)) draft[type] = value;
+}, initialState);
 
-export default system;
+export default reducer;

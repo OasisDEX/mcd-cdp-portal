@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -29,7 +29,7 @@ const CDPCreateConfirmSummary = ({
   selectedIlk,
   capturedDispatch
 }) => {
-  const [hasReadTOS, setHasReadTOS] = React.useState(false);
+  const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -164,8 +164,8 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
-  const [canCreateCDP, setCanCreateCDP] = React.useState(false);
-  const [openCDPTxHash, setOpenCDPTxHash] = React.useState(null);
+  const [canCreateCDP, setCanCreateCDP] = useState(false);
+  const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
     const { type } = payload;
@@ -204,7 +204,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     ensureProxyWithGemApprovals();
   }, []);
 

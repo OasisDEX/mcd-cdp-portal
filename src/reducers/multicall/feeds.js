@@ -15,7 +15,7 @@ import {
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING
-} from 'reducers/network/cdpTypes';
+} from 'reducers/feeds';
 
 export const priceFeed = addresses => (name, { decimals = 18 } = {}) => ({
   target: addresses[`PIP_${name}`],

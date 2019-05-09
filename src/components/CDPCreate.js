@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -72,7 +72,7 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
-  const [{ step, selectedIlk, ...cdpParams }, dispatch] = React.useReducer(
+  const [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
     reducer,
     initialState
   );

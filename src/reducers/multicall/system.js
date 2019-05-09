@@ -7,7 +7,7 @@ import {
   DEBT_AUCTION_LOT_SIZE,
   SURPLUS_AUCTION_LOT_SIZE,
   NUMBER_OF_LIQUIDATIONS
-} from 'reducers/network/system';
+} from 'reducers/system';
 
 const totalDebt = addresses => ({
   target: addresses.MCD_VAT,

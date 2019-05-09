@@ -9,7 +9,7 @@ cache:
 install:
   - yarn install
 script:
-  - yarn test --coverage
+  - yarn ci
 before_deploy:
   - yarn write-git-version
   - yarn build

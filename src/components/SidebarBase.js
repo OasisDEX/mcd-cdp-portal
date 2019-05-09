@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
-import { getAllFeeds } from 'reducers/network/cdpTypes';
 
 import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
@@ -175,11 +173,4 @@ function Sidebar() {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    feeds: getAllFeeds(state),
-    system: state.network.system
-  };
-}
-
-export default hot(connect(mapStateToProps)(Sidebar));
+export default hot(Sidebar);
