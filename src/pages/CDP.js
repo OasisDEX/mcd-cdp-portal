@@ -207,7 +207,7 @@ function CDPView({ cdpId: _cdpId }) {
         );
       }
     })();
-  }, [account]);
+  }, [account, maker]);
 
   useEffect(() => {
     let didCancel = false;
@@ -252,8 +252,20 @@ function CDPView({ cdpId: _cdpId }) {
     })();
   }, [cdpId, feeds, maker]);
 
-  if (!cdp) return <LoadingLayout />;
+  return cdp ? (
+    <CDPViewPresentation
+      cdp={cdp}
+      showSidebar={showSidebar}
+      account={account}
+      daiBalance={daiBalance}
+    />
+  ) : (
+    <LoadingLayout />
+  );
+}
 
+function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
+  const cdpId = cdp.cdp.id; // FIXME
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.ilkData.gem;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
