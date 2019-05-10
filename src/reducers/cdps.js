@@ -1,7 +1,5 @@
 import produce from 'immer';
 
-import { getMaker } from '../maker';
-
 const FETCHED_CDPS = 'cdps/FETCHED_CDPS';
 
 export const initialState = {
