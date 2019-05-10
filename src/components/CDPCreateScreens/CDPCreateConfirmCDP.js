@@ -11,6 +11,7 @@ import {
 } from '@makerdao/ui-components-core';
 import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/cdp';
@@ -20,6 +21,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { fetchCdps } from 'reducers/cdps';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
@@ -160,7 +162,8 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker, newTxListener } = useMaker();
+  const { maker, account, newTxListener } = useMaker();
+  const [, storeDispatch] = useStore();
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
@@ -182,7 +185,10 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     newTxListener(txObject, 'Creating CDP');
 
     maker.service('transactionManager').listen(txObject, {
-      pending: tx => setOpenCDPTxHash(tx.hash)
+      pending: tx => setOpenCDPTxHash(tx.hash),
+      mined: async tx => {
+        storeDispatch(await fetchCdps(maker, account.address));
+      }
     });
   }
 

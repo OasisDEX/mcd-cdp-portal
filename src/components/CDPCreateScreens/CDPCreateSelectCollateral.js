@@ -59,7 +59,7 @@ function IlkTableRow({ ilk, checked, dispatch }) {
       <td>
         <Radio
           checked={checked}
-          onClick={() =>
+          onChange={() =>
             checked
               ? dispatch({
                   type: 'reset-ilk'
