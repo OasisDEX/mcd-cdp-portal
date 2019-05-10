@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { checkEthereumProvider } from 'utils/ethereum';
+import { checkEthereumProvider } from '../utils/ethereum';
 
-import { MakerObjectContext } from 'providers/MakerHooksProvider';
+import { MakerObjectContext } from '../providers/MakerHooksProvider';
 
 function useMaker() {
   const {
@@ -61,14 +61,16 @@ function useMaker() {
       const matchedAccount = _getMatchedAccount(browserProvider.address);
       if (!matchedAccount) {
         metaMaskAccount = await maker.addAccount({
-          type: 'browser'
+          type: 'browser',
+          autoSwitch: true
         });
       } else {
         metaMaskAccount = matchedAccount;
       }
     } else {
       metaMaskAccount = await maker.addAccount({
-        type: 'browser'
+        type: 'browser',
+        autoSwitch: true
       });
     }
 

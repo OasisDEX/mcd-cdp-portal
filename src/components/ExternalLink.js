@@ -10,7 +10,12 @@ const ExternalLink = ({
   hideText,
   fill = '#447afb'
 }) => (
-  <Link fontWeight="400" href={etherscanLink(address, network)} target="_blank">
+  <Link
+    fontWeight="400"
+    href={etherscanLink(address, network)}
+    target="_blank"
+    css={{ whiteSpace: 'nowrap' }}
+  >
     {children}
     {!hideText && <Address full={address} shorten={true} expandable={false} />}
     <ExternalLinkIcon fill={fill} />

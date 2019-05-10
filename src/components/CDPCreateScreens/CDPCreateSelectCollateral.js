@@ -1,14 +1,20 @@
-import React from 'react';
-import { Box, Grid, Table, Flex, Radio } from '@makerdao/ui-components-core';
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Grid,
+  Table,
+  Radio,
+  Overflow,
+  Card
+} from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
-import TwoColumnCardsLayout from 'layouts/TwoColumnCardsLayout';
-import { connect } from 'react-redux';
 
 import { prettifyNumber } from 'utils/ui';
 import ilkList from 'references/ilkList';
-import { getIlkData } from 'reducers/network/cdpTypes';
+import { getIlkData } from 'reducers/feeds';
 
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
@@ -35,63 +41,50 @@ const CDPCreateSelectCollateralSidebar = () => (
   </Box>
 );
 
-function IlkTableRowView({ ilk, checked, dispatch }) {
+function IlkTableRow({ ilk, checked, dispatch }) {
   const { maker } = useMaker();
-  const [userGemBalance, setUserGemBalance] = React.useState(null);
+  const [{ feeds }] = useStore();
+  const [userGemBalance, setUserGemBalance] = useState(null);
 
-  React.useEffect(() => {
+  ilk.data = getIlkData(feeds, ilk.key);
+
+  useEffect(() => {
     (async () => {
       setUserGemBalance(await maker.getToken(ilk.currency).balance());
     })();
   }, []);
 
   return (
-    <Table.tbody borderBottom="1px solid" borderColor="grey.200">
-      <tr>
-        <td>
-          <Radio
-            checked={checked}
-            onClick={() =>
-              checked
-                ? dispatch({
-                    type: 'reset-ilk'
-                  })
-                : dispatch({
-                    type: 'set-ilk',
-                    payload: {
-                      key: ilk.key,
-                      gemBalance: userGemBalance.toNumber(),
-                      currency: ilk.currency,
-                      data: ilk.data
-                    }
-                  })
-            }
-            mr="xs"
-          />
-        </td>
-        <td>{ilk.symbol}</td>
-        <td>{ilk.data.rate} %</td>
-        <td>{ilk.data.liquidationRatio} %</td>
-        <td>{ilk.data.liquidationPenalty} %</td>
-        <td>{prettifyNumber(userGemBalance)}</td>
-      </tr>
-    </Table.tbody>
+    <tr css="white-space: nowrap;">
+      <td>
+        <Radio
+          checked={checked}
+          onChange={() =>
+            checked
+              ? dispatch({
+                  type: 'reset-ilk'
+                })
+              : dispatch({
+                  type: 'set-ilk',
+                  payload: {
+                    key: ilk.key,
+                    gemBalance: userGemBalance.toNumber(),
+                    currency: ilk.currency,
+                    data: ilk.data
+                  }
+                })
+          }
+          mr="xs"
+        />
+      </td>
+      <td>{ilk.symbol}</td>
+      <td>{ilk.data.rate} %</td>
+      <td>{ilk.data.liquidationRatio} %</td>
+      <td>{ilk.data.liquidationPenalty} %</td>
+      <td css="text-align: right">{prettifyNumber(userGemBalance)}</td>
+    </tr>
   );
 }
-
-function mapStateToProps(state, { ilk }) {
-  return {
-    ilk: {
-      ...ilk,
-      data: getIlkData(state, ilk.key)
-    }
-  };
-}
-
-const IlkTableRow = connect(
-  mapStateToProps,
-  {}
-)(IlkTableRowView);
 
 const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
   return (
@@ -105,26 +98,33 @@ const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Box my="l">
-        <TwoColumnCardsLayout
-          ratio={[6, 3]}
-          mainContent={
-            <Flex justifyContent="center" px="l" py="m">
-              <Table width="100%">
-                <thead>
-                  <tr>
-                    <th />
-                    {[
-                      lang.collateral_type,
-                      lang.stability_fee,
-                      lang.liquidation_ratio_shortened,
-                      lang.liquidation_penalty_shortened,
-                      lang.your_balance
-                    ].map(t => (
-                      <th key={t}>{t}</th>
-                    ))}
-                  </tr>
-                </thead>
+      <Grid
+        gridTemplateColumns={{ s: 'minmax(0, 1fr)', l: '2fr 1fr' }}
+        gridGap="m"
+        my="l"
+      >
+        <Card px="l" py="m">
+          <Overflow x="scroll" y="visible">
+            <Table
+              width="100%"
+              css={`
+                th,
+                td {
+                  padding-right: 10px;
+                }
+              `}
+            >
+              <thead>
+                <tr css="white-space: nowrap;">
+                  <th />
+                  <th>{lang.collateral_type}</th>
+                  <th>{lang.stability_fee}</th>
+                  <th>{lang.liquidation_ratio_shortened}</th>
+                  <th>{lang.liquidation_penalty_shortened}</th>
+                  <th css="text-align: right">{lang.your_balance}</th>
+                </tr>
+              </thead>
+              <tbody>
                 {ilkList.map(ilk => (
                   <IlkTableRow
                     key={ilk.key}
@@ -133,12 +133,14 @@ const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
                     ilk={ilk}
                   />
                 ))}
-              </Table>
-            </Flex>
-          }
-          sideContent={<CDPCreateSelectCollateralSidebar />}
-        />
-      </Box>
+              </tbody>
+            </Table>
+          </Overflow>
+        </Card>
+        <Card>
+          <CDPCreateSelectCollateralSidebar />
+        </Card>
+      </Grid>
       <ScreenFooter
         dispatch={dispatch}
         canGoBack={false}

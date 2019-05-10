@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -11,6 +11,7 @@ import {
 } from '@makerdao/ui-components-core';
 import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/cdp';
@@ -19,6 +20,9 @@ import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
+import { prettifyNumber } from 'utils/ui';
+import { fetchCdps } from 'reducers/cdps';
+
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
@@ -27,7 +31,7 @@ const CDPCreateConfirmSummary = ({
   selectedIlk,
   capturedDispatch
 }) => {
-  const [hasReadTOS, setHasReadTOS] = React.useState(false);
+  const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -38,8 +42,11 @@ const CDPCreateConfirmSummary = ({
   });
 
   const rows = [
-    [lang.verbs.depositing, `${cdpParams.gemsToLock} ${selectedIlk.key}`],
-    [lang.verbs.generating, `${cdpParams.daiToDraw} DAI`],
+    [
+      lang.verbs.depositing,
+      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.key}`
+    ],
+    [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)
@@ -57,43 +64,46 @@ const CDPCreateConfirmSummary = ({
       `}
     >
       <ScreenHeader title={lang.cdp_create.confirm_title} />
-      <Box my="l">
-        <Card p="l" px="xl">
-          <Grid>
-            {rows.map(([title, value], index) => {
-              return (
-                <Grid
-                  key={title + value}
-                  mt={!!index && 's'}
-                  pt={!!index && 's'}
-                  gridTemplateColumns="5fr 1fr"
-                  justifyItems="start"
-                  borderTop={index !== 0 ? '1px solid' : null}
-                  color="grey.200"
-                >
-                  <Text>{title}</Text>
-                  <Text fontWeight="bold">{value}</Text>
-                </Grid>
-              );
-            })}
-          </Grid>
-          <Flex>
-            <Box m="auto" mt="l">
-              <Checkbox
-                checked={hasReadTOS}
-                onChange={() => setHasReadTOS(state => !state)}
-                mr="xs"
-              />
-              <Text color="grey.500">
-                {lang.formatString(
-                  lang.terms_of_service_text,
-                  <Link>{lang.terms_of_service}</Link>
-                )}
-              </Text>
-            </Box>
-          </Flex>
-        </Card>
-      </Box>
+      <Card py={{ s: 'm', m: 'l' }} px={{ s: 'm', m: 'xl' }} my="l">
+        <Grid>
+          {rows.map(([title, value], index) => {
+            return (
+              <Grid
+                key={title + value}
+                mt={!!index && 's'}
+                pt={!!index && 's'}
+                gridTemplateColumns="5fr 1fr"
+                justifyItems="start"
+                borderTop={index !== 0 ? '1px solid' : null}
+                color="grey.200"
+              >
+                <Text>{title}</Text>
+                <Text fontWeight="bold" css="white-space: nowrap">
+                  {value}
+                </Text>
+              </Grid>
+            );
+          })}
+        </Grid>
+        <Grid
+          justifyContent="center"
+          mt="l"
+          alignItems="center"
+          gridColumnGap="xs"
+          gridTemplateColumns="auto auto"
+        >
+          <Checkbox
+            checked={hasReadTOS}
+            onChange={() => setHasReadTOS(state => !state)}
+          />
+          <Text color="grey.500">
+            {lang.formatString(
+              lang.terms_of_service_text,
+              <Link>{lang.terms_of_service}</Link>
+            )}
+          </Text>
+        </Grid>
+      </Card>
       <ScreenFooter
         canProgress={hasReadTOS}
         dispatch={capturedDispatch}
@@ -152,12 +162,13 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker, newTxListener } = useMaker();
+  const { maker, account, newTxListener } = useMaker();
+  const [, storeDispatch] = useStore();
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
-  const [canCreateCDP, setCanCreateCDP] = React.useState(false);
-  const [openCDPTxHash, setOpenCDPTxHash] = React.useState(null);
+  const [canCreateCDP, setCanCreateCDP] = useState(false);
+  const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
     const { type } = payload;
@@ -174,7 +185,10 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     newTxListener(txObject, 'Creating CDP');
 
     maker.service('transactionManager').listen(txObject, {
-      pending: tx => setOpenCDPTxHash(tx.hash)
+      pending: tx => setOpenCDPTxHash(tx.hash),
+      mined: async tx => {
+        storeDispatch(await fetchCdps(maker, account.address));
+      }
     });
   }
 
@@ -196,7 +210,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     ensureProxyWithGemApprovals();
   }, []);
 

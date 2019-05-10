@@ -1,5 +1,5 @@
-import React from 'react'
-import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core'
+import React from 'react';
+import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
 import WalletSelection from './WalletSelection';
 import useMaker from 'hooks/useMaker';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
@@ -7,18 +7,19 @@ import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
 const StepperHeader = ({ onClose }) => {
   const { account } = useMaker();
   return (
-    <Flex justifyContent="flex-end" alignItems="center" mr="xl" mb="m">
+    <Flex justifyContent="flex-end" mb="m">
       <Grid
-        gridColumnGap="l"
-        gridTemplateColumns="auto auto auto"
+        gridColumnGap="xl"
+        gridTemplateColumns="auto auto"
         alignItems="center"
       >
-        <Box width="auto">
+        <Box>
           <WalletSelection
             currentAccount={account}
             textColor="steel"
             t="1.6rem"
             readOnly
+            maxWidth="250px"
           />
         </Box>
 
@@ -39,4 +40,4 @@ const StepperHeader = ({ onClose }) => {
   );
 };
 
-export default StepperHeader
+export default StepperHeader;

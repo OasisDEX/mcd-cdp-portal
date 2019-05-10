@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Grid, Stepper, Box } from '@makerdao/ui-components-core';
@@ -36,8 +36,9 @@ const FadeIn = styled.div`
 
 class StepperUI extends React.Component {
   render() {
+    // return <Box minHeight="100vh" height="1200px"/>
     return (
-      <Fragment>
+      <Grid gridTemplateRows="auto 1fr" gridRowGap="m" mb="xl">
         {this.props.renderStepperHeader()}
 
         <Grid
@@ -54,7 +55,10 @@ class StepperUI extends React.Component {
               selected={this.props.step}
             />
           </Box>
-          <div style={{ width: '100%', position: 'relative' }}>
+
+          <div
+            style={{ width: '100%', maxWidth: '100vw', position: 'relative' }}
+          >
             {React.Children.map(this.props.children, (child, index) => {
               return (
                 <FadeIn
@@ -68,7 +72,7 @@ class StepperUI extends React.Component {
             })}
           </div>
         </Grid>
-      </Fragment>
+      </Grid>
     );
   }
 }
@@ -82,7 +86,7 @@ StepperUI.propTypes = {
   step: PropTypes.number,
   /** A callback when the onboarding screen is closed. */
   onClose: PropTypes.func,
-  children: PropTypes.element
+  children: PropTypes.arrayOf(PropTypes.element)
 };
 
 StepperUI.defaultProps = {

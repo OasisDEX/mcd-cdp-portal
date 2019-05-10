@@ -1,4 +1,9 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useRef, useEffect } from 'react';
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks
+} from 'body-scroll-lock';
 
 function resolveModalTypeToComponent(modals, type) {
   if (!modals || !type || !modals[type]) return null;
@@ -30,6 +35,7 @@ function resolveModalTemplateToComponent(templates, template) {
 }
 
 function ModalProvider({ children, modals, templates }) {
+  const ref = useRef();
   const [{ modalType, modalTemplate, modalProps }, dispatch] = useReducer(
     reducer,
     initialState
@@ -37,13 +43,22 @@ function ModalProvider({ children, modals, templates }) {
 
   const shouldShow = !!modalType;
 
-  const reset = () => dispatch({ type: 'reset' });
+  const reset = () => {
+    if (ref && ref.current) enableBodyScroll(ref.current);
+    dispatch({ type: 'reset' });
+  };
 
-  const show = ({ modalType, modalProps, modalTemplate }) =>
+  const show = ({ modalType, modalProps, modalTemplate }) => {
+    if (ref && ref.current) disableBodyScroll(ref.current);
     dispatch({
       type: 'show',
       payload: { modalType, modalProps, modalTemplate }
     });
+  };
+
+  useEffect(() => {
+    return () => clearAllBodyScrollLocks();
+  }, []);
 
   const ModalTemplateComponent = resolveModalTemplateToComponent(
     templates,
@@ -52,13 +67,15 @@ function ModalProvider({ children, modals, templates }) {
 
   return (
     <ModalStateContext.Provider value={{ show, reset }}>
-      <ModalTemplateComponent
-        show={shouldShow}
-        onClose={reset}
-        modalProps={modalProps}
-      >
-        {resolveModalTypeToComponent(modals, modalType)}
-      </ModalTemplateComponent>
+      <div ref={ref}>
+        <ModalTemplateComponent
+          show={shouldShow}
+          onClose={reset}
+          modalProps={modalProps}
+        >
+          {resolveModalTypeToComponent(modals, modalType)}
+        </ModalTemplateComponent>
+      </div>
       {children}
     </ModalStateContext.Provider>
   );

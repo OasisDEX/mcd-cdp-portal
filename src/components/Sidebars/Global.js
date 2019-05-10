@@ -1,26 +1,22 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import SidebarFeeds from 'components/SidebarFeeds';
 import SidebarSystem from 'components/SidebarSystem';
 import { Box, Grid } from '@makerdao/ui-components-core';
-import { connect } from 'react-redux';
-import { getAllFeeds } from 'reducers/network/cdpTypes';
+import { getAllFeeds } from 'reducers/feeds';
+import useStore from 'hooks/useStore';
 
-function mapStateToProps(state) {
-  return {
-    feeds: getAllFeeds(state),
-    system: state.network.system
-  };
-}
+const SidebarGlobalPanel = () => {
+  const [{ system, feeds }] = useStore();
+  const uniqueFeeds = useMemo(() => getAllFeeds(feeds), [feeds]);
 
-const SidebarGlobalPanel = ({ feeds, system }) => {
   return (
-    <Box mr="s">
+    <Box>
       <Grid gridRowGap="s">
-        <SidebarFeeds feeds={feeds} />
+        <SidebarFeeds feeds={uniqueFeeds} />
         <SidebarSystem system={system} />
       </Grid>
     </Box>
   );
 };
 
-export default connect(mapStateToProps)(SidebarGlobalPanel);
+export default SidebarGlobalPanel;

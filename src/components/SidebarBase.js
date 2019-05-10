@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader/root';
-import { getAllFeeds } from 'reducers/network/cdpTypes';
 
 import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
@@ -13,9 +11,12 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
-import { getMeasurement } from 'styles/theme';
+import NotificationManager from 'components/NotificationManager';
+import theme, { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
+
+const SHOW_MIGRATE_BUTTON = true;
 
 function AccountSection({ currentAccount }) {
   return (
@@ -45,13 +46,15 @@ const animations = {
   ],
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
-    { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` }
+    {
+      transform: `translate3d(-${getMeasurement('sidebarWidth') -
+        theme.space.s}px, 0, 0)`
+    }
   ]
 };
 
 const AnimatedWrap = styled(animated.div)`
   width: 100%;
-  padding-right: ${({ theme }) => theme.space.s};
 `;
 
 function Sidebar() {
@@ -140,14 +143,15 @@ function Sidebar() {
   }, []);
 
   return (
-    <Box>
+    <Box pr="s">
+      {SHOW_MIGRATE_BUTTON && <NotificationManager />}
       <TransactionManager
         transactions={selectors.transactions()}
         network={network}
         resetTx={resetTx}
       />
       <Grid gridRowGap="s" py="s">
-        <Box pr="s">
+        <Box>
           <AccountSection currentAccount={account} />
         </Box>
         <Flex css={'overflow:hidden;'}>
@@ -169,11 +173,4 @@ function Sidebar() {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    feeds: getAllFeeds(state),
-    system: state.network.system
-  };
-}
-
-export default hot(connect(mapStateToProps)(Sidebar));
+export default hot(Sidebar);

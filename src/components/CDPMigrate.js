@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -14,7 +14,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     case 'increment-step':
       return {
@@ -34,7 +34,7 @@ function reducer(state, action) {
 }
 
 function CDPMigrate({ onClose }) {
-  const [{ step }, dispatch] = React.useReducer(reducer, initialState);
+  const [{ step }, dispatch] = useReducer(reducer, initialState);
 
   const screenProps = {
     dispatch,

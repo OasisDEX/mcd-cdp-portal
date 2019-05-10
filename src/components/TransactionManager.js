@@ -57,6 +57,9 @@ const TinyButton = props => (
     py="4px"
     borderRadius="3px"
     display="inline-block"
+    css={{
+      cursor: 'pointer'
+    }}
     {...props}
   />
 );
@@ -87,10 +90,12 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
     <animated.div
       style={{
         ...txAnimation,
-        height: txCount ? '' : `${PLACEHOLDER_HEIGHT}px`
+        height: txCount ? '' : `${PLACEHOLDER_HEIGHT}px`,
+        pointerEvents: txCount ? 'unset' : 'none',
+        zIndex: txCount ? '1' : '-1'
       }}
     >
-      <Card mr="s" p="s" mt="s">
+      <Card p="s" mt="s">
         <Flex>
           <Flex alignItems="flex-start">
             <Circle color={bg} size={'24px'} mr="xs" mt="-1px" />
