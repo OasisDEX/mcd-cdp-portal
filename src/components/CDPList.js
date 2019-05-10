@@ -7,6 +7,8 @@ import RatioDisplay from './RatioDisplay';
 import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
+import { fetchCdps } from 'reducers/cdps';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -38,26 +40,13 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [cdps, setCDPs] = useState([]);
+  const [{ cdps }, dispatch] = useStore();
 
   useEffect(() => {
     (async () => {
       const address = account ? account.address : viewedAddress;
-      if (address) {
-        const proxy = await maker.service('proxy').getProxyAddress(address);
-        if (!proxy) {
-          // every cold user hits this condition at first.
-          return;
-        }
-        const cdpManager = maker.service('mcd:cdpManager');
-        const cdpIds = await cdpManager.getCdpIds(proxy);
-        const cdps = await Promise.all(
-          cdpIds.map(async ({ id }) => {
-            return await cdpManager.getCdp(id);
-          })
-        );
-        setCDPs(cdps);
-      }
+      const action = await fetchCdps(maker, address);
+      dispatch(action);
     })();
   }, [maker, viewedAddress, account]);
 
@@ -71,14 +60,14 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         label="Overview"
         active={currentPath.includes('/overview/')}
       /> */}
-      {cdps.map((cdp, idx) => {
-        const linkPath = `/${cdp.id}`;
+      {cdps.items.map((cdp, idx) => {
+        const linkPath = `/${cdp.cdp.id}`;
         const active = currentPath === linkPath;
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
-            label={cdp.ilk}
+            label={cdp.cdp.ilk}
             owned={account}
             active={active}
           />

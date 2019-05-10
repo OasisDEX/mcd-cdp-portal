@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -11,6 +11,7 @@ import {
 } from '@makerdao/ui-components-core';
 import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
+import useStore from 'hooks/useStore';
 import lang from 'languages';
 import { MAX_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/cdp';
@@ -20,6 +21,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { fetchCdps } from 'reducers/cdps';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
@@ -29,7 +31,7 @@ const CDPCreateConfirmSummary = ({
   selectedIlk,
   capturedDispatch
 }) => {
-  const [hasReadTOS, setHasReadTOS] = React.useState(false);
+  const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -160,12 +162,13 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker, newTxListener } = useMaker();
+  const { maker, account, newTxListener } = useMaker();
+  const [, storeDispatch] = useStore();
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
-  const [canCreateCDP, setCanCreateCDP] = React.useState(false);
-  const [openCDPTxHash, setOpenCDPTxHash] = React.useState(null);
+  const [canCreateCDP, setCanCreateCDP] = useState(false);
+  const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
     const { type } = payload;
@@ -182,7 +185,10 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     newTxListener(txObject, 'Creating CDP');
 
     maker.service('transactionManager').listen(txObject, {
-      pending: tx => setOpenCDPTxHash(tx.hash)
+      pending: tx => setOpenCDPTxHash(tx.hash),
+      mined: async tx => {
+        storeDispatch(await fetchCdps(maker, account.address));
+      }
     });
   }
 
@@ -204,7 +210,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     ensureProxyWithGemApprovals();
   }, []);
 
