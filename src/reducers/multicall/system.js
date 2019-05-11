@@ -27,7 +27,7 @@ const globalDebtCeiling = addresses => ({
   returns: [[GLOBAL_DEBT_CEILING, val => fromRad(val)]]
 });
 
-const debtAuctionLotSzie = addresses => ({
+const debtAuctionLotSize = addresses => ({
   target: addresses.MCD_VOW,
   call: ['sump()(uint256)'],
   returns: [[DEBT_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
@@ -50,7 +50,7 @@ export function createCDPSystemModel(addresses) {
     totalDebt,
     baseRate,
     globalDebtCeiling,
-    debtAuctionLotSzie,
+    debtAuctionLotSize,
     surplusAuctionLotSize,
     numberOfLiquidations
   ].map(f => f(addresses));
