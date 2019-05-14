@@ -55,7 +55,7 @@
     "deposit_form_field3_title": "How much DAI would you like to generate?",
     "deposit_form_field3_text": "You should generate an amount that is safely above the liquidation ratio.",
     "deposit_form_field3_after1": "Max at target ratio",
-    "deposit_form_field3_after2": "Max at liq. ratio",
+    "deposit_form_field3_after2": "Max avail to generate",
 
     "confirm_title": "Confirm CDP",
     "confirmed_title": "Your CDP is being created",

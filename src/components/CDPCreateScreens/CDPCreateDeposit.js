@@ -90,7 +90,6 @@ function OpenCDPForm({
         <Box key="ba">
           <Text t="subheading">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
-            <Text t="subheading">{selectedIlk.data.liquidationRatio}</Text>{' '}
           </Text>
           <Text
             display="inline-block"
