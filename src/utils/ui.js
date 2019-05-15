@@ -1,4 +1,4 @@
-import { greaterThanOrEqual } from './bignumber';
+import { greaterThan } from './bignumber';
 import { calcDaiAvailable, getUsdPrice } from './cdp';
 
 export function formatCollateralizationRatio(ratio) {
@@ -61,15 +61,15 @@ export function cdpParamsAreValid(
   // must be positive
   if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
   // must have enough tokens
-  if (greaterThanOrEqual(gemsToLock, userGemBalance)) return false;
+  if (greaterThan(gemsToLock, userGemBalance)) return false;
 
   const daiAvailable = calcDaiAvailable({
-    gemsToLock: parseFloat(gemsToLock),
+    deposited: parseFloat(gemsToLock),
     price: getUsdPrice(ilkData),
     liquidationRatio: parseFloat(ilkData.liquidationRatio)
   });
   // must open a cdp above the liquidation threshold
-  if (greaterThanOrEqual(daiAvailable, daiToDraw)) return false;
+  if (greaterThan(daiToDraw, daiAvailable)) return false;
   return true;
 }
 
