@@ -4,12 +4,14 @@ import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
 import {
   CDPCreateSelectCollateral,
+  CDPCreateSetAllowance,
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
 
 const screens = [
   ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
+  ['Deploy Proxy', props => <CDPCreateSetAllowance {...props} />],
   ['Generate Dai', props => <CDPCreateDeposit {...props} />],
   ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
 ];
