@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useEffect } from 'react';
+import React, { memo, Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
@@ -41,6 +41,7 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
   const [{ cdps }, dispatch] = useStore();
+  const [ratios, setRatios] = useState();
 
   useEffect(() => {
     (async () => {
@@ -49,6 +50,15 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       dispatch(action);
     })();
   }, [maker, viewedAddress, account]);
+
+  useEffect(() => {
+    (async () => {
+      const ratios = await Promise.all(
+        cdps.items.map(cdp => cdp.cdp.getCollateralizationRatio())
+      );
+      setRatios(ratios);
+    })();
+  }, [cdps]);
 
   const { show } = useModal();
 
@@ -61,6 +71,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         active={currentPath.includes('/overview/')}
       /> */}
       {cdps.items.map((cdp, idx) => {
+        const ratio = (parseFloat(ratios[idx]) * 100).toFixed(2);
         const linkPath = `/${cdp.cdp.id}`;
         const active = currentPath === linkPath;
         return (
@@ -70,6 +81,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
             label={cdp.cdp.ilk}
             owned={account}
             active={active}
+            ratio={ratio}
           />
         );
       })}
