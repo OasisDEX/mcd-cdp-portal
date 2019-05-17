@@ -9,6 +9,7 @@ import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { fetchCdps } from 'reducers/cdps';
+import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -49,7 +50,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       const action = await fetchCdps(maker, address);
       dispatch(action);
     })();
-  }, [maker, viewedAddress, account]);
+  }, [maker, viewedAddress, account, dispatch]);
 
   useEffect(() => {
     (async () => {
@@ -71,7 +72,9 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         active={currentPath.includes('/overview/')}
       /> */}
       {cdps.items.map((cdp, idx) => {
-        const ratio = (parseFloat(ratios[idx]) * 100).toFixed(2);
+        const ratio = ratios[idx]
+          ? round(ratios[idx].times(100).toFixed(0))
+          : null;
         const linkPath = `/${cdp.cdp.id}`;
         const active = currentPath === linkPath;
         return (
