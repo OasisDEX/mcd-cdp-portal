@@ -19,10 +19,7 @@ import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
 import { getIlkData } from 'reducers/feeds';
 import ExternalLink from 'components/ExternalLink';
-
-function round(value, decimals) {
-  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+import round from 'lodash/round';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -270,9 +267,10 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
   const gem = cdp.ilkData.gem;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
   const liquidationPenalty = cdp.ilkData.liquidationPenalty + '%';
-  const collateralizationRatio = (
-    parseFloat(cdp.collateralizationRatio) * 100
-  ).toFixed(2);
+  const collateralizationRatio = round(
+    cdp.collateralizationRatio.times(100).toNumber(),
+    2
+  );
   const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
   const stabilityFee = cdp.ilkData.rate * 100 + '%';
   const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
