@@ -1,4 +1,4 @@
-import round from 'lodash.round';
+import round from 'lodash/round';
 import { MKR, ETH } from '../maker';
 
 export function padRight(string, chars, sign) {
