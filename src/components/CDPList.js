@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useState, useEffect } from 'react';
+import React, { memo, Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
@@ -9,6 +9,7 @@ import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { fetchCdps } from 'reducers/cdps';
+import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -41,6 +42,7 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
   const [{ cdps }, dispatch] = useStore();
+  const [ratios, setRatios] = useState();
 
   useEffect(() => {
     (async () => {
@@ -48,7 +50,16 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       const action = await fetchCdps(maker, address);
       dispatch(action);
     })();
-  }, [maker, viewedAddress, account]);
+  }, [maker, viewedAddress, account, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      const ratios = await Promise.all(
+        cdps.items.map(cdp => cdp.getCollateralizationRatio())
+      );
+      setRatios(ratios);
+    })();
+  }, [cdps]);
 
   const { show } = useModal();
 
@@ -61,15 +72,19 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         active={currentPath.includes('/overview/')}
       /> */}
       {cdps.items.map((cdp, idx) => {
-        const linkPath = `/${cdp.cdp.id}`;
+        const ratio = ratios[idx]
+          ? round(ratios[idx].times(100).toFixed(0))
+          : null;
+        const linkPath = `/${cdp.id}`;
         const active = currentPath === linkPath;
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
-            label={cdp.cdp.ilk}
+            label={cdp.ilk}
             owned={account}
             active={active}
+            ratio={ratio}
           />
         );
       })}

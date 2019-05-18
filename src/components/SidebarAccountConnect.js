@@ -4,11 +4,11 @@ import { Button, Text } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
 
 export default function AccountConnect() {
-  const { connectMetamask } = useMaker();
+  const { connectBrowserProvider } = useMaker();
 
   const connectOnClick = async () => {
     try {
-      await connectMetamask();
+      await connectBrowserProvider();
     } catch (err) {
       window.alert(err);
     }

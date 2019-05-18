@@ -2,7 +2,6 @@ import React from 'react';
 import { getColor } from 'styles/theme';
 import { CDP_SAFETY_LEVELS } from 'utils/constants';
 import { Text } from '@makerdao/ui-components-core';
-import { prettifyNumber } from 'utils/ui';
 
 const CDP_SAFETY_COLOR_PALETTE = {
   [CDP_SAFETY_LEVELS.DANGER]: getColor('orange.500'),
@@ -26,7 +25,7 @@ export default function RatioDisplay({ ratio, active }) {
       t="p6"
       color={active ? 'white' : CDP_SAFETY_COLOR_PALETTE[safetyLevel]}
     >
-      {prettifyNumber(ratio, true)}%
+      {ratio}%
     </Text>
   );
 }

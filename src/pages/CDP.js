@@ -19,10 +19,7 @@ import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
 import { getIlkData } from 'reducers/feeds';
 import ExternalLink from 'components/ExternalLink';
-
-function round(value, decimals) {
-  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-}
+import round from 'lodash/round';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -224,7 +221,7 @@ function CDPView({ cdpId: _cdpId }) {
         liquidationPrice,
         daiAvailable,
         minCollateral,
-        freeCollateral
+        collateralAvailable
       ] = await Promise.all([
         cdp.getDebtValue(),
         cdp.getCollateralAmount(),
@@ -235,10 +232,10 @@ function CDPView({ cdpId: _cdpId }) {
         cdp.minCollateral(),
         cdp.getCollateralAvailable()
       ]);
-
       if (didCancel) return;
-      setCDP({
-        cdp,
+
+      // FIXME well this is an interesting way to store local state
+      Object.assign(cdp, {
         ilkData,
         debt,
         collateral,
@@ -247,8 +244,10 @@ function CDPView({ cdpId: _cdpId }) {
         liquidationPrice,
         daiAvailable,
         minCollateral,
-        freeCollateral
+        collateralAvailable
       });
+
+      setCDP(cdp);
       return () => (didCancel = true);
     })();
   }, [cdpId, feeds, maker]);
@@ -266,14 +265,14 @@ function CDPView({ cdpId: _cdpId }) {
 }
 
 function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
-  const cdpId = cdp.cdp.id; // FIXME
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
-  const gem = cdp.ilkData.gem;
+  const gem = cdp.type.currency.symbol;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
   const liquidationPenalty = cdp.ilkData.liquidationPenalty + '%';
-  const collateralizationRatio = (
-    parseFloat(cdp.collateralizationRatio) * 100
-  ).toFixed(2);
+  const collateralizationRatio = round(
+    cdp.collateralizationRatio.times(100).toNumber(),
+    2
+  );
   const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
   const stabilityFee = cdp.ilkData.rate * 100 + '%';
   const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
@@ -287,21 +286,23 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
     cdp.minCollateral.times(cdp.collateralPrice).toNumber(),
     2
   ).toFixed(2);
-  const freeCollateralAmount = round(cdp.freeCollateral.toNumber(), 2);
-  const freeCollateralValue = round(
-    cdp.freeCollateral.times(cdp.collateralPrice).toNumber(),
+  const collateralAvailableAmount = round(
+    cdp.collateralAvailable.toNumber(),
+    2
+  );
+  const collateralAvailableValue = round(
+    cdp.collateralAvailable.times(cdp.collateralPrice).toNumber(),
     2
   );
   const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
   const debtSymbol = cdp.debt.symbol;
   const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
 
-  const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
   return (
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {lang.cdp} {cdpId}
+          {lang.cdp} {cdp.id}
         </Text.h2>
       </Box>
       <Grid
@@ -361,7 +362,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
-                    sidebarProps: { cdp, cdpId }
+                    sidebarProps: { cdp }
                   })
                 }
               >
@@ -371,15 +372,15 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${freeCollateralAmount} ${gem}`}
-            conversion={`${freeCollateralValue} USD`}
+            value={`${collateralAvailableAmount} ${gem}`}
+            conversion={`${collateralAvailableValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp, cdpId }
+                    sidebarProps: { cdp }
                   })
                 }
               >
@@ -405,7 +406,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
                   onClick={() =>
                     showSidebar({
                       sidebarType: 'payback',
-                      sidebarProps: { cdp, cdpId }
+                      sidebarProps: { cdp }
                     })
                   }
                 >
@@ -424,7 +425,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
-                    sidebarProps: { cdp, cdpId }
+                    sidebarProps: { cdp }
                   })
                 }
               >
@@ -435,48 +436,48 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
         </CdpViewCard>
       </Grid>
 
-      <CdpViewHistory
-        title={lang.cdp_page.tx_history}
-        rows={[
-          [
-            'ETH',
-            'Paid back 1,000.00 DAI',
-            'Feb 15, 2019',
-            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-          ],
-          [
-            'ETH',
-            'Sent 1,000.00 DAI',
-            'Feb 12, 2019',
-            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-          ],
-          [
-            'ETH',
-            'Locked 1,000.00 DAI',
-            'Feb 09, 2019',
-            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-          ],
-          [
-            'ETH',
-            'Withdrew 3,468.72 ETH',
-            'Feb 03, 2019',
-            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-          ],
-          [
-            'ETH',
-            'Opened CDP',
-            'Jan 15, 2019',
-            <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-            <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-          ]
-        ]}
-      />
+      <CdpViewHistory title={lang.cdp_page.tx_history} rows={mockHistoryData} />
     </PageContentLayout>
   );
 }
 
 export default hot(CDPView);
+
+const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
+const mockHistoryData = [
+  [
+    'ETH',
+    'Paid back 1,000.00 DAI',
+    'Feb 15, 2019',
+    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
+  ],
+  [
+    'ETH',
+    'Sent 1,000.00 DAI',
+    'Feb 12, 2019',
+    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
+  ],
+  [
+    'ETH',
+    'Locked 1,000.00 DAI',
+    'Feb 09, 2019',
+    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
+  ],
+  [
+    'ETH',
+    'Withdrew 3,468.72 ETH',
+    'Feb 03, 2019',
+    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
+  ],
+  [
+    'ETH',
+    'Opened CDP',
+    'Jan 15, 2019',
+    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
+    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
+  ]
+];

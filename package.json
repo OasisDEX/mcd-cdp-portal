@@ -1,7 +1,7 @@
 {
   "name": "mcd-cdp-portal",
   "description": "The primary web interface for interacting with the Multi-Collateral Dai smart contract system.",
-  "version": "0.2.4-rc.1",
+  "version": "0.2.5-rc.1",
   "license": "MIT",
   "private": true,
   "homepage": "https://mcd.makerdao.com",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@craco/craco": "^3.4.1",
     "@hot-loader/react-dom": "^16.8.4",
-    "@makerdao/currency": "^0.9.3",
+    "@makerdao/currency": "^0.9.5",
     "@makerdao/dai": "0.15.3",
     "@makerdao/dai-plugin-config": "^0.0.3",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
@@ -30,8 +30,7 @@
     "body-scroll-lock": "^2.6.1",
     "eslint-plugin-react-hooks": "^1.5.0",
     "immer": "^3.1.1",
-    "lodash.round": "^4.0.4",
-    "lodash.uniqby": "^4.7.0",
+    "lodash": "^4.17.11",
     "mixpanel-browser": "^2.26.0",
     "navi": "^0.12.4",
     "prop-types": "^15.7.2",

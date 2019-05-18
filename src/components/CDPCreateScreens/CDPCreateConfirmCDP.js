@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Grid,
@@ -9,11 +9,9 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import lang from 'languages';
-import { MAX_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
@@ -167,7 +165,6 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
-  const [canCreateCDP, setCanCreateCDP] = useState(false);
   const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
@@ -191,30 +188,6 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       }
     });
   }
-
-  async function ensureProxyWithGemApprovals() {
-    try {
-      const proxyAddress = await maker.service('proxy').ensureProxy();
-      if (selectedIlk.currency.symbol !== 'ETH') {
-        const gemToken = maker.getToken(selectedIlk.currency.symbol);
-        const gemAllowanceSet = (await gemToken.allowance(
-          maker.currentAddress(),
-          proxyAddress
-        )).eq(MAX_UINT_BN);
-
-        if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
-      }
-      setCanCreateCDP(true);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  useEffect(() => {
-    ensureProxyWithGemApprovals();
-  }, []);
-
-  if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 
   if (openCDPTxHash)
     return <CDPCreateConfirmed hash={openCDPTxHash} onClose={onClose} />;

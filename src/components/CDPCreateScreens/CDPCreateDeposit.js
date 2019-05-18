@@ -3,7 +3,11 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
-import { cdpParamsAreValid, formatCollateralizationRatio } from 'utils/ui';
+import {
+  cdpParamsAreValid,
+  formatCollateralizationRatio,
+  prettifyNumber
+} from 'utils/ui';
 
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
@@ -67,7 +71,7 @@ function OpenCDPForm({
             });
           }}
         >
-          {selectedIlk.userGemBalance} {selectedIlk.data.gem}
+          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.data.gem}
         </Text>
       </Box>
     ],
@@ -90,7 +94,6 @@ function OpenCDPForm({
         <Box key="ba">
           <Text t="subheading">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
-            <Text t="subheading">{selectedIlk.data.liquidationRatio}</Text>{' '}
           </Text>
           <Text
             display="inline-block"
@@ -106,7 +109,7 @@ function OpenCDPForm({
               });
             }}
           >
-            {daiAvailable} DAI
+            {prettifyNumber(daiAvailable)} DAI
           </Text>
         </Box>
       </Grid>

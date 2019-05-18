@@ -29,7 +29,7 @@ import * as cdpTypeModel from 'reducers/multicall/feeds';
 import { isMissingContractAddress } from 'utils/ethereum';
 import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
 import { instantiateWatcher } from './watch';
-import uniqBy from 'lodash.uniqby';
+import uniqBy from 'lodash/uniqBy';
 import { batchActions } from 'utils/redux';
 
 const { networkNames, defaultNetwork } = config;
