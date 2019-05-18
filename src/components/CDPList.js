@@ -55,7 +55,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   useEffect(() => {
     (async () => {
       const ratios = await Promise.all(
-        cdps.items.map(cdp => cdp.cdp.getCollateralizationRatio())
+        cdps.items.map(cdp => cdp.getCollateralizationRatio())
       );
       setRatios(ratios);
     })();
@@ -75,13 +75,13 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         const ratio = ratios[idx]
           ? round(ratios[idx].times(100).toFixed(0))
           : null;
-        const linkPath = `/${cdp.cdp.id}`;
+        const linkPath = `/${cdp.id}`;
         const active = currentPath === linkPath;
         return (
           <NavbarItem
             key={idx}
             href={linkPath + currentQuery}
-            label={cdp.cdp.ilk}
+            label={cdp.ilk}
             owned={account}
             active={active}
             ratio={ratio}

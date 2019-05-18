@@ -14,9 +14,7 @@ export async function fetchCdps(maker, address) {
     const cdpManager = maker.service('mcd:cdpManager');
     const cdpIds = await cdpManager.getCdpIds(proxy);
     const cdps = await Promise.all(
-      cdpIds.map(async ({ id }) => {
-        return await cdpManager.getCdp(id);
-      })
+      cdpIds.map(({ id }) => cdpManager.getCdp(id))
     );
     return { type: FETCHED_CDPS, payload: { cdps } };
   } catch (err) {
@@ -27,7 +25,7 @@ export async function fetchCdps(maker, address) {
 const reducer = produce((draft, { type, payload }) => {
   switch (type) {
     case FETCHED_CDPS:
-      draft.items = payload.cdps.map(cdp => ({ id: cdp.id, cdp })) || [];
+      draft.items = payload.cdps || [];
       break;
     default:
       break;
