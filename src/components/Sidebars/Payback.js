@@ -12,7 +12,7 @@ import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 
-const Payback = ({ cdp, cdpId, reset }) => {
+const Payback = ({ cdp, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
@@ -22,9 +22,7 @@ const Payback = ({ cdp, cdpId, reset }) => {
   maker
     .getToken('MDAI')
     .balance()
-    .then(daiBalance => {
-      setDaiBalance(daiBalance.toNumber());
-    });
+    .then(daiBalance => setDaiBalance(daiBalance.toNumber()));
 
   useEffect(() => {
     const amountToPayback = parseFloat(amount || 0);
@@ -36,11 +34,9 @@ const Payback = ({ cdp, cdpId, reset }) => {
 
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount]);
+  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
 
-  const setMax = () => {
-    setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
-  };
+  const setMax = () => setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
 
   const payback = async () => {
     const proxyAddress = await maker.service('proxy').ensureProxy();
@@ -55,8 +51,7 @@ const Payback = ({ cdp, cdpId, reset }) => {
       await daiToken.approveUnlimited(proxyAddress);
     }
 
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
-    newTxListener(managedCdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
+    newTxListener(cdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
     reset();
   };
 
