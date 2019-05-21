@@ -63,7 +63,7 @@
 
     "confirm_title": "Confirm CDP",
     "confirmed_title": "Your CDP is being created",
-    "confirmed_text": "The estimated time is 8 minutes. You can safely leave this page.",
+    "confirmed_text": "The estimated time is {0}. You can safely leave this page.",
     "proxy_title": "Creating a proxy",
     "proxy_text": "Before creating your first CDP, you must create a personal proxy contract.",
     "insufficient_ilk_balance": "Insufficient {0} balance",
