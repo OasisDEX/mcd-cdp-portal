@@ -33,10 +33,26 @@ const WithSeparators = styled(Box).attrs(() => ({
 const InfoContainerRow = ({ title, value }) => {
   return (
     <WithSeparators>
-      <Grid py="xs" gridTemplateColumns="1fr auto">
-        <TextBlock t="body">{title}</TextBlock>
-        <TextBlock t="body">{value}</TextBlock>
-      </Grid>
+      <Flex py="xs" justifyContent="space-between" flexWrap="wrap">
+        <Box>
+          <TextBlock fontSize="l" width="270px">
+            {title}
+          </TextBlock>
+        </Box>
+        <Box flexGrow="1">
+          <Box display="flex">
+            <Box flexGrow={['0', '1', '1']} />
+            <TextBlock
+              fontSize="l"
+              width="110px"
+              textAlign={['left', 'right', 'right']}
+            >
+              {value}
+            </TextBlock>
+            <Box flexGrow={['1', '0', '0']} />
+          </Box>
+        </Box>
+      </Flex>
     </WithSeparators>
   );
 };
@@ -45,29 +61,32 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
     <WithSeparators>
       <Flex flexWrap="wrap" justifyContent="space-between" py="s">
-        <Box alignSelf="center" width="140px">
-          <TextBlock color="darkLavender" fontSize="m">
+        <Box alignSelf="center" width="200px">
+          <TextBlock color="darkLavender" fontSize="l">
             {title}
           </TextBlock>
         </Box>
-
         <Box flexGrow="1">
           <Box display="flex">
-            <Box flexGrow="1" />
-            <Box alignSelf="center">
-              <Flex flexDirection="column" width="150px" pr="m">
-                <TextBlock
-                  t="h5"
-                  lineHeight="normal"
-                  fontWeight="medium"
-                  color="darkLavender"
-                  textAlign="right"
-                >
-                  {value}
-                </TextBlock>
-                <ExtraInfo textAlign="right">{conversion}</ExtraInfo>
-              </Flex>
-            </Box>
+            <Box flexGrow={['0', '1', '1']} />
+            <Flex flexDirection="column" pr="m" alignSelf="center">
+              <TextBlock
+                width="90px"
+                t="h5"
+                lineHeight="normal"
+                fontWeight="medium"
+                color="darkLavender"
+                textAlign={['left', 'right', 'right']}
+              >
+                {value}
+              </TextBlock>
+              {conversion ? (
+                <ExtraInfo textAlign={['left', 'right', 'right']}>
+                  {conversion}
+                </ExtraInfo>
+              ) : null}
+            </Flex>
+            <Box flexGrow={['1', '0', '0']} />
             <Box alignSelf="center">{button}</Box>
           </Box>
         </Box>
@@ -78,7 +97,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
 
 const ActionButton = ({ children, ...props }) => (
   <Button width="100px" p="xs" variant="secondary" {...props}>
-    <TextBlock fontSize="s" color="darkLavender">
+    <TextBlock fontSize="s" fontWeight="medium" color="darkLavender">
       {children}
     </TextBlock>
   </Button>
@@ -88,7 +107,7 @@ const CdpViewCard = ({ title, children }) => {
   return (
     <Box my="s">
       <Text.h4>{title}</Text.h4>
-      <Card px="l" pt="m" pb="s" my="s">
+      <Card px="l" pt="s" pb="s" my="s">
         {children}
       </Card>
     </Box>
@@ -192,19 +211,6 @@ function CDPView({ cdpId: _cdpId }) {
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdp, setCDP] = useState(null);
-  const [daiBalance, setDaiBalance] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setDaiBalance(await maker.getToken('MDAI').balance());
-      } catch (err) {
-        console.error(
-          'Unable to fetch dai balance, no account is currently connected'
-        );
-      }
-    })();
-  }, [account, maker]);
 
   useEffect(() => {
     let didCancel = false;
@@ -256,14 +262,13 @@ function CDPView({ cdpId: _cdpId }) {
       cdp={cdp}
       showSidebar={showSidebar}
       account={account}
-      daiBalance={daiBalance}
     />
   ) : (
     <LoadingLayout />
   );
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
+function CDPViewPresentation({ cdp, showSidebar, account }) {
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.type.currency.symbol;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
@@ -273,7 +278,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
     2
   );
   const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
-  const stabilityFee = cdp.ilkData.rate * 100 + '%';
+  const stabilityFee = cdp.ilkData.rate * 100 + '00%';
   const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
   const collateralSymbol = cdp.collateral.symbol;
   const collateralUSDValue = round(
@@ -310,18 +315,18 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
         gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
       >
         <CdpViewCard title={lang.cdp_page.liquidation_price}>
-          <Flex alignItems="flex-end" mb="xs">
+          <Flex alignItems="flex-end" mt="s" mb="xs">
             <AmountDisplay amount={liquidationPrice} denomination="USD" />
             <ExtraInfo>({gem}/USD)</ExtraInfo>
           </Flex>
           <InfoContainerRow
             title={
-              <TextBlock>
+              <TextBlock fontSize="l">
                 {lang.cdp_page.current_price_info}
                 <ExtraInfo ml="s">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={collateralPrice}
+            value={`${collateralPrice} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
@@ -330,7 +335,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
         </CdpViewCard>
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
-          <Flex alignItems="flex-end" mb="xs">
+          <Flex alignItems="flex-end" mt="s" mb="xs">
             <AmountDisplay amount={collateralizationRatio} denomination="%" />
           </Flex>
           <InfoContainerRow
@@ -344,15 +349,8 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
         </CdpViewCard>
 
         <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
-          <Flex alignItems="flex-end" mb="xs">
-            <AmountDisplay
-              amount={collateralAmount}
-              denomination={collateralSymbol}
-            />
-            <ExtraInfo>{`${collateralUSDValue} USD`}</ExtraInfo>
-          </Flex>
           <ActionContainerRow
-            title={lang.cdp_page.required_for_safety}
+            title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
             value={`${minCollateralAmount} ${gem}`}
             conversion={`${minCollateralValue} USD`}
             button={
@@ -390,34 +388,26 @@ function CDPViewPresentation({ cdp, showSidebar, account, daiBalance }) {
         </CdpViewCard>
 
         <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
-          <Flex alignItems="flex-end" mb="xs">
-            <AmountDisplay amount={debtAmount} denomination={debtSymbol} />
-            <ExtraInfo>{lang.cdp_page.outstanding_debt}</ExtraInfo>
-          </Flex>
-          {daiBalance ? (
-            <ActionContainerRow
-              title={`DAI ${lang.cdp_page.wallet_balance}`}
-              value={`${parseFloat(daiBalance)} DAI`}
-              conversion={`${parseFloat(daiBalance)} USD`} // TODO - this assumes a perfect peg :)
-              button={
-                <ActionButton
-                  disabled={!account}
-                  onClick={() =>
-                    showSidebar({
-                      sidebarType: 'payback',
-                      sidebarProps: { cdp }
-                    })
-                  }
-                >
-                  {lang.actions.pay_back}
-                </ActionButton>
-              }
-            />
-          ) : null}
           <ActionContainerRow
-            title={lang.cdp_page.able_generate}
+            title={lang.cdp_page.outstanding_dai_debt}
+            value={`${parseFloat(debtAmount)} DAI`}
+            button={
+              <ActionButton
+                disabled={!account}
+                onClick={() =>
+                  showSidebar({
+                    sidebarType: 'payback',
+                    sidebarProps: { cdp }
+                  })
+                }
+              >
+                {lang.actions.pay_back}
+              </ActionButton>
+            }
+          />
+          <ActionContainerRow
+            title={lang.cdp_page.available_generate}
             value={`${daiAvailable} DAI`}
-            conversion={`${daiAvailable} USD`}
             button={
               <ActionButton
                 disabled={!account}

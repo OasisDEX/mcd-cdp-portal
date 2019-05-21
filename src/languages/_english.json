@@ -13,10 +13,11 @@
     "locked": "Locked",
     "required_for_safety": "Required for safety",
     "able_withdraw": "Able to withdraw",
-    "able_generate": "Able to generate",
+    "available_generate": "Available to generate",
     "outstanding_debt": "Outstanding debt",
     "wallet_balance": "wallet balance",
-    "tx_history": "Transaction history"
+    "tx_history": "Transaction history",
+    "outstanding_dai_debt": "Outstanding DAI Debt"
   },
   "landing_page": {
     "title": "Spend crypto without leaving your position.",
@@ -103,7 +104,7 @@
     "create_cdp": "Create CDP",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
-    "pay_back": "Pay back",
+    "pay_back": "Payback",
     "generate": "Generate"
   },
   "action_sidebar": {
