@@ -9,6 +9,7 @@ import {
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 
+import { MAX_UINT_BN } from 'utils/units';
 import { prettifyNumber } from 'utils/ui';
 import ilkList from 'references/ilkList';
 import { getIlkData } from 'reducers/feeds';
@@ -54,28 +55,22 @@ function IlkTableRow({ ilk, checked, dispatch }) {
     })();
   }, []);
 
+  function selectIlk() {
+    dispatch({
+      type: 'set-ilk',
+      payload: {
+        key: ilk.key,
+        gemBalance: userGemBalance.toNumber(),
+        currency: ilk.currency,
+        data: ilk.data
+      }
+    });
+  }
+
   return (
     <tr css="white-space: nowrap;">
       <td>
-        <Radio
-          checked={checked}
-          onChange={() =>
-            checked
-              ? dispatch({
-                  type: 'reset-ilk'
-                })
-              : dispatch({
-                  type: 'set-ilk',
-                  payload: {
-                    key: ilk.key,
-                    gemBalance: userGemBalance.toNumber(),
-                    currency: ilk.currency,
-                    data: ilk.data
-                  }
-                })
-          }
-          mr="xs"
-        />
+        <Radio checked={checked} onChange={selectIlk} mr="xs" />
       </td>
       <td>{ilk.symbol}</td>
       <td>{ilk.data.rate} %</td>
@@ -86,7 +81,31 @@ function IlkTableRow({ ilk, checked, dispatch }) {
   );
 }
 
-const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
+const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
+  const { maker, account } = useMaker();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const gemToken = maker.getToken(selectedIlk.currency.symbol);
+        const hasAllowance =
+          selectedIlk.currency.symbol === 'ETH' ||
+          (await gemToken.allowance(maker.currentAddress(), proxyAddress)).eq(
+            MAX_UINT_BN
+          );
+        dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance } });
+      } catch (err) {
+        dispatch({
+          type: 'set-ilk-allowance',
+          payload: { hasAllowance: false }
+        });
+      }
+      setLoading(false);
+    })();
+  }, [maker, account, selectedIlk.key]);
+
   return (
     <Box
       maxWidth="1040px"
@@ -103,40 +122,42 @@ const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
         gridGap="m"
         my="l"
       >
-        <Card px="l" py="m">
-          <Overflow x="scroll" y="visible">
-            <Table
-              width="100%"
-              css={`
-                th,
-                td {
-                  padding-right: 10px;
-                }
-              `}
-            >
-              <thead>
-                <tr css="white-space: nowrap;">
-                  <th />
-                  <th>{lang.collateral_type}</th>
-                  <th>{lang.stability_fee}</th>
-                  <th>{lang.liquidation_ratio_shortened}</th>
-                  <th>{lang.liquidation_penalty_shortened}</th>
-                  <th css="text-align: right">{lang.your_balance}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ilkList.map(ilk => (
-                  <IlkTableRow
-                    key={ilk.key}
-                    checked={ilk.key === selectedIlk.key}
-                    dispatch={dispatch}
-                    ilk={ilk}
-                  />
-                ))}
-              </tbody>
-            </Table>
-          </Overflow>
-        </Card>
+        <div>
+          <Card px="l" py="l">
+            <Overflow x="scroll" y="visible">
+              <Table
+                width="100%"
+                css={`
+                  th,
+                  td {
+                    padding-right: 10px;
+                  }
+                `}
+              >
+                <thead>
+                  <tr css="white-space: nowrap;">
+                    <th />
+                    <th>{lang.collateral_type}</th>
+                    <th>{lang.stability_fee}</th>
+                    <th>{lang.liquidation_ratio_shortened}</th>
+                    <th>{lang.liquidation_penalty_shortened}</th>
+                    <th css="text-align: right">{lang.your_balance}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ilkList.map(ilk => (
+                    <IlkTableRow
+                      key={ilk.key}
+                      checked={ilk.key === selectedIlk.key}
+                      dispatch={dispatch}
+                      ilk={ilk}
+                    />
+                  ))}
+                </tbody>
+              </Table>
+            </Overflow>
+          </Card>
+        </div>
         <Card>
           <CDPCreateSelectCollateralSidebar />
         </Card>
@@ -144,7 +165,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, dispatch }) => {
       <ScreenFooter
         dispatch={dispatch}
         canGoBack={false}
-        canProgress={!!selectedIlk.key}
+        canProgress={!loading && !!selectedIlk.key}
       />
     </Box>
   );

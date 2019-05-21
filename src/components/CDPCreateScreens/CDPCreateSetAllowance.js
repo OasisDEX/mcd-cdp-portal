@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Text, Card, Button, Grid } from '@makerdao/ui-components-core';
 
+import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useMaker from 'hooks/useMaker';
-import { MAX_UINT_BN } from 'utils/units';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 
@@ -15,42 +15,24 @@ const SuccessButton = () => {
   );
 };
 
-const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
-  const { maker, account } = useMaker();
-  const [loading, setLoading] = useState(true);
+const CDPCreateSetAllowance = ({
+  selectedIlk,
+  proxyAddress,
+  hasAllowance,
+  dispatch
+}) => {
+  const { maker } = useMaker();
   const [isDeployingProxy, setIsDeployingProxy] = useState(false);
   const [isSettingAllowance, setIsSettingAllowance] = useState(false);
-  const [proxyAddress, setProxyAddress] = useState('');
-  const [hasAllowance, setHasAllowance] = useState(false);
-
-  useEffect(() => {
-    const checkProxyAndAllowance = async () => {
-      setLoading(true);
-      try {
-        const proxyAddress = await maker.service('proxy').currentProxy();
-        setProxyAddress(proxyAddress);
-        if (selectedIlk.currency.symbol !== 'ETH') {
-          const gemToken = maker.getToken(selectedIlk.currency.symbol);
-          const gemAllowanceSet = (await gemToken.allowance(
-            maker.currentAddress(),
-            proxyAddress
-          )).eq(MAX_UINT_BN);
-          setHasAllowance(gemAllowanceSet);
-        } else {
-          setHasAllowance(true);
-        }
-      } catch (err) {}
-      setLoading(false);
-    };
-
-    checkProxyAndAllowance();
-  }, [maker, account]);
 
   async function deployProxy() {
     setIsDeployingProxy(true);
     try {
       const proxyAddress = await maker.service('proxy').ensureProxy();
-      setProxyAddress(proxyAddress);
+      dispatch({
+        type: 'set-proxy-address',
+        payload: { address: proxyAddress }
+      });
     } catch (err) {}
     setIsDeployingProxy(false);
   }
@@ -60,7 +42,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
     try {
       const gemToken = maker.getToken(selectedIlk.currency.symbol);
       await gemToken.approveUnlimited(proxyAddress);
-      setHasAllowance(true);
+      dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance: true } });
     } catch (err) {}
     setIsSettingAllowance(false);
   }
@@ -68,15 +50,13 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
   return (
     <Box maxWidth="71.8rem">
       <Text.h2 textAlign="center" mb="xl">
-        Deploy Proxy and Set Allowance
+        {lang.cdp_create.setup_proxy_title}
       </Text.h2>
       <Card px="2xl" py="l" mb="xl">
         <Grid gridRowGap="xs">
           <Text.h4>Deploy proxy</Text.h4>
           <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
-            Proxies are used in the CDP Portal to bundle multiple transactions
-            into one, saving transaction time and gas costs. This only has to be
-            done once.
+            {lang.cdp_create.setup_proxy_proxy_text}
           </Text.p>
           {proxyAddress ? (
             <SuccessButton />
@@ -85,18 +65,20 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
               width="13.0rem"
               mt="xs"
               onClick={deployProxy}
-              disabled={loading || isDeployingProxy || isSettingAllowance}
+              disabled={isDeployingProxy || isSettingAllowance}
               loading={isDeployingProxy}
             >
-              Deploy
+              {lang.cdp_create.setup_proxy_proxy_button}
             </Button>
           )}
         </Grid>
         <Grid gridRowGap="xs" mt="l">
           <Text.h4>Set allowance</Text.h4>
           <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
-            This permission allows Maker smart contracts to interact with your
-            ETH. This has to be done once for each new collateral type.
+            {lang.formatString(
+              lang.cdp_create.setup_proxy_allowance_text,
+              selectedIlk.currency.symbol
+            )}
           </Text.p>
           {hasAllowance ? (
             <SuccessButton />
@@ -105,17 +87,17 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
               width="13.0rem"
               mt="xs"
               onClick={setAllowance}
-              disabled={loading || isDeployingProxy || isSettingAllowance}
+              disabled={isDeployingProxy || isSettingAllowance}
               loading={isSettingAllowance}
             >
-              Set
+              {lang.cdp_create.setup_proxy_allowance_button}
             </Button>
           )}
         </Grid>
       </Card>
       <ScreenFooter
         dispatch={dispatch}
-        canProgress={!loading && proxyAddress && hasAllowance}
+        canProgress={proxyAddress && hasAllowance}
       />
     </Box>
   );
