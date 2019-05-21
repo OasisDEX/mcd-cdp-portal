@@ -1,21 +1,26 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
 import {
   CDPCreateSelectCollateral,
+  CDPCreateSetAllowance,
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
+import useMaker from 'hooks/useMaker';
 
 const screens = [
   ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
+  ['Proxy Setup', props => <CDPCreateSetAllowance {...props} />],
   ['Generate Dai', props => <CDPCreateDeposit {...props} />],
   ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
 ];
 
 const initialState = {
   step: 0,
+  proxyAddress: null,
+  hasAllowance: null,
   selectedIlk: {
     userGemBalance: '',
     currency: null,
@@ -31,14 +36,28 @@ function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
     case 'increment-step':
+      const skipProxySetupForward =
+        state.step === 0 && state.proxyAddress && state.hasAllowance;
       return {
         ...state,
-        step: state.step + 1
+        step: state.step + (skipProxySetupForward ? 2 : 1)
       };
     case 'decrement-step':
+      const skipProxySetupBackwards =
+        state.step === 2 && state.proxyAddress && state.hasAllowance;
       return {
         ...state,
-        step: state.step - 1
+        step: state.step - (skipProxySetupBackwards ? 2 : 1)
+      };
+    case 'set-proxy-address':
+      return {
+        ...state,
+        proxyAddress: payload.address
+      };
+    case 'set-ilk-allowance':
+      return {
+        ...state,
+        hasAllowance: payload.hasAllowance
       };
     case 'set-ilk':
       return {
@@ -72,13 +91,27 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
-  const [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const { maker, account } = useMaker();
+  const [
+    { step, selectedIlk, proxyAddress, hasAllowance, ...cdpParams },
+    dispatch
+  ] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const checkProxy = async () => {
+      try {
+        const address = await maker.service('proxy').currentProxy();
+        dispatch({ type: 'set-proxy-address', payload: { address } });
+      } catch (err) {}
+    };
+
+    checkProxy();
+  }, [maker, account]);
 
   const screenProps = {
     selectedIlk,
+    proxyAddress,
+    hasAllowance,
     cdpParams,
     dispatch,
     onClose

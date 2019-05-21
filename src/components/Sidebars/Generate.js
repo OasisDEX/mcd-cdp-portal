@@ -11,8 +11,8 @@ import {
 import lang from 'languages';
 import useMaker from '../../hooks/useMaker';
 
-const Generate = ({ cdp, cdpId, reset }) => {
-  const { maker, newTxListener } = useMaker();
+const Generate = ({ cdp, reset }) => {
+  const { newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiAvailable, setDaiAvailable] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -33,19 +33,16 @@ const Generate = ({ cdp, cdpId, reset }) => {
     setDaiAvailable(daiAvailable - cdp.debt.toNumber());
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount]);
+  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
 
   const undercollateralized =
     collateralizationRatio < cdp.ilkData.liquidationRatio;
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
-  const setMax = () => {
-    setAmount(daiAvailable);
-  };
+  const setMax = () => setAmount(daiAvailable);
 
   const generate = async () => {
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
-    newTxListener(managedCdp.drawDai(parseFloat(amount)), 'Drawing DAI');
+    newTxListener(cdp.drawDai(parseFloat(amount)), 'Drawing DAI');
     reset();
   };
 

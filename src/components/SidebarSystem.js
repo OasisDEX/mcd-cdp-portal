@@ -16,11 +16,6 @@ const CURRENT_DEBT = system => [
 
 const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
 
-const NUMBER_OF_LIQUIDATIONS = system => [
-  lang.sidebar.number_of_liquidations,
-  prettifyNumber(system.numberOfLiquidations)
-];
-
 const SURPLUS_AUCTION_LOT_SIZE = system => [
   lang.sidebar.buy_and_burn_lot_size,
   prettifyNumber(system.surplusAuctionLotSize)
@@ -36,7 +31,6 @@ const SidebarSystem = ({ system }) => {
     GLOBAL_DEBT_CEILING,
     CURRENT_DEBT,
     BASE_RATE,
-    NUMBER_OF_LIQUIDATIONS,
     SURPLUS_AUCTION_LOT_SIZE,
     DEBT_AUCTION_LOT_SIZE
   ].map(f => f(system));

@@ -9,11 +9,9 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import lang from 'languages';
-import { MAX_UINT_BN } from 'utils/units';
 import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
@@ -115,9 +113,25 @@ const CDPCreateConfirmSummary = ({
 
 const CDPCreateConfirmed = ({ hash, onClose }) => {
   const { maker } = useMaker();
+  const [waitTime, setWaitTime] = useState('8 minutes');
 
   const networkId = maker.service('web3').networkId();
   const isTestchain = ![1, 42].includes(networkId);
+  useEffect(() => {
+    (async () => {
+      // this is the default transaction speed
+      const waitInMinutes = await maker.service('gas').getWaitTime('fast');
+      const roundedWaitInMinutes = Math.round(waitInMinutes);
+      const roundedWaitInSeconds = Math.round(waitInMinutes * 6) * 10;
+
+      const waitTime =
+        roundedWaitInMinutes === 0
+          ? `${roundedWaitInSeconds} seconds`
+          : `${roundedWaitInMinutes} minutes`;
+
+      setWaitTime(waitTime);
+    })();
+  });
 
   return (
     <Box
@@ -128,7 +142,7 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
     >
       <ScreenHeader
         title={lang.cdp_create.confirmed_title}
-        text={lang.cdp_create.confirmed_text}
+        text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
@@ -167,7 +181,6 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   const { gemsToLock, daiToDraw } = cdpParams;
 
-  const [canCreateCDP, setCanCreateCDP] = useState(false);
   const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
@@ -191,30 +204,6 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       }
     });
   }
-
-  async function ensureProxyWithGemApprovals() {
-    try {
-      const proxyAddress = await maker.service('proxy').ensureProxy();
-      if (selectedIlk.currency.symbol !== 'ETH') {
-        const gemToken = maker.getToken(selectedIlk.currency.symbol);
-        const gemAllowanceSet = (await gemToken.allowance(
-          maker.currentAddress(),
-          proxyAddress
-        )).eq(MAX_UINT_BN);
-
-        if (!gemAllowanceSet) await gemToken.approveUnlimited(proxyAddress);
-      }
-      setCanCreateCDP(true);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  useEffect(() => {
-    ensureProxyWithGemApprovals();
-  }, []);
-
-  if (!canCreateCDP) return <LoadingLayout background="#F6F8F9" />;
 
   if (openCDPTxHash)
     return <CDPCreateConfirmed hash={openCDPTxHash} onClose={onClose} />;

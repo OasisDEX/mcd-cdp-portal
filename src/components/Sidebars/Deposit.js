@@ -11,15 +11,16 @@ import {
 } from '../../utils/ui';
 import lang from 'languages';
 
-const Deposit = ({ cdp, cdpId, reset }) => {
+const Deposit = ({ cdp, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [gemBalance, setGemBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+  const { symbol } = cdp.type.currency;
 
   maker
-    .getToken(cdp.ilkData.gem)
+    .getToken(symbol)
     .balance()
     .then(balance => {
       setGemBalance(balance.toNumber());
@@ -37,22 +38,14 @@ const Deposit = ({ cdp, cdpId, reset }) => {
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount]);
-
-  const setMax = () => {
-    setAmount(gemBalance);
-  };
+  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
 
   const deposit = async () => {
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
-
-    newTxListener(
-      managedCdp.lockCollateral(parseFloat(amount)),
-      `Locking ${cdp.ilkData.gem}`
-    );
+    newTxListener(cdp.lockCollateral(parseFloat(amount)), `Locking ${symbol}`);
     reset();
   };
 
+  const setMax = () => setAmount(gemBalance);
   const lessThanBalance = amount === '' || parseFloat(amount) <= gemBalance;
   const inputNotEmpty = amount !== '';
   const valid = inputNotEmpty && lessThanBalance;
@@ -62,16 +55,13 @@ const Deposit = ({ cdp, cdpId, reset }) => {
       <Grid gridRowGap="m">
         <Grid gridRowGap="s">
           <Text color="darkLavender" t="h4">
-            {lang.formatString(
-              lang.action_sidebar.deposit_title,
-              cdp.ilkData.gem
-            )}
+            {lang.formatString(lang.action_sidebar.deposit_title, symbol)}
           </Text>
           <p>
             <Text t="body">
               {lang.formatString(
                 lang.action_sidebar.deposit_description,
-                cdp.ilkData.gem
+                symbol
               )}
             </Text>
           </p>
@@ -80,7 +70,7 @@ const Deposit = ({ cdp, cdpId, reset }) => {
             min="0"
             value={amount}
             onChange={evt => setAmount(evt.target.value)}
-            placeholder={`0.00 ${cdp.ilkData.gem}`}
+            placeholder={`0.00 ${symbol}`}
             after={
               <Link fontWeight="medium" onClick={setMax}>
                 {lang.action_sidebar.set_max}
@@ -91,7 +81,7 @@ const Deposit = ({ cdp, cdpId, reset }) => {
                 ? null
                 : lang.formatString(
                     lang.action_sidebar.insufficient_balance,
-                    cdp.ilkData.gem
+                    symbol
                   )
             }
           />
@@ -107,14 +97,14 @@ const Deposit = ({ cdp, cdpId, reset }) => {
         <InfoContainer>
           <Info
             title={lang.action_sidebar.current_account_balance}
-            body={`${gemBalance.toFixed(6)} ${cdp.ilkData.gem}`}
+            body={`${gemBalance.toFixed(6)} ${symbol}`}
           />
           <Info
             title={lang.formatString(
               lang.action_sidebar.gem_usd_price_feed,
-              cdp.ilkData.gem
+              symbol
             )}
-            body={`${priceFeed} ${cdp.ilkData.gem}/USD`}
+            body={`${priceFeed} ${symbol}/USD`}
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}

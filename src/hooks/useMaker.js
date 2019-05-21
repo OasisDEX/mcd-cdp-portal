@@ -41,7 +41,7 @@ function useMaker() {
       .listAccounts()
       .find(acc => acc.address.toUpperCase() === address.toUpperCase());
 
-  const connectMetamask = async () => {
+  const connectBrowserProvider = async () => {
     const networkId = maker.service('web3').networkId();
 
     const browserProvider = await checkEthereumProvider();
@@ -56,25 +56,25 @@ function useMaker() {
         'browser ethereum provider providing incorrect or non-existent address'
       );
 
-    let metaMaskAccount;
+    let account;
     if (maker.service('accounts').hasAccount) {
       const matchedAccount = _getMatchedAccount(browserProvider.address);
       if (!matchedAccount) {
-        metaMaskAccount = await maker.addAccount({
+        account = await maker.addAccount({
           type: 'browser',
           autoSwitch: true
         });
       } else {
-        metaMaskAccount = matchedAccount;
+        account = matchedAccount;
       }
     } else {
-      metaMaskAccount = await maker.addAccount({
+      account = await maker.addAccount({
         type: 'browser',
         autoSwitch: true
       });
     }
 
-    maker.useAccountWithAddress(metaMaskAccount.address);
+    maker.useAccountWithAddress(account.address);
     const connectedAddress = maker.currentAddress();
     return connectedAddress;
   };
@@ -83,7 +83,7 @@ function useMaker() {
     maker,
     authenticated,
     isConnectedToProvider,
-    connectMetamask,
+    connectBrowserProvider,
     account,
     transactions,
     newTxListener,

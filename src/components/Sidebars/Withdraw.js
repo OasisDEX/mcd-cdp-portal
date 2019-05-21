@@ -15,14 +15,15 @@ import {
 } from '../../utils/ui';
 import lang from 'languages';
 
-const Withdraw = ({ cdp, cdpId, reset }) => {
-  const { maker, newTxListener } = useMaker();
+const Withdraw = ({ cdp, reset }) => {
+  const { newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
   const collateralPrice = getUsdPrice(cdp.ilkData);
   const { free: freeCollateral } = getLockedAndFreeCollateral(cdp);
+  const { symbol } = cdp.type.currency;
 
   useEffect(() => {
     let val = parseFloat(amount);
@@ -34,21 +35,17 @@ const Withdraw = ({ cdp, cdpId, reset }) => {
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount]);
+  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
 
-  const setMax = () => {
-    setAmount(freeCollateral);
-  };
-
+  const setMax = () => setAmount(freeCollateral);
   const lessThanMax = amount === '' || parseFloat(amount) <= freeCollateral;
   const moreThanZero = amount !== '' && amount > 0;
   const valid = moreThanZero && lessThanMax;
 
   const withdraw = async () => {
-    const managedCdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
     newTxListener(
-      managedCdp.freeCollateral(parseFloat(amount)),
-      `Withdrawing ${cdp.ilkData.gem}`
+      cdp.freeCollateral(parseFloat(amount)),
+      `Withdrawing ${symbol}`
     );
     reset();
   };
@@ -58,15 +55,12 @@ const Withdraw = ({ cdp, cdpId, reset }) => {
       <Grid gridRowGap="m">
         <Grid gridRowGap="s">
           <Text.h4 color="darkLavender">
-            {lang.formatString(
-              lang.action_sidebar.withdraw_title,
-              cdp.ilkData.gem
-            )}
+            {lang.formatString(lang.action_sidebar.withdraw_title, symbol)}
           </Text.h4>
           <Text.p t="body">
             {lang.formatString(
               lang.action_sidebar.withdraw_description,
-              cdp.ilkData.gem
+              symbol
             )}
           </Text.p>
           <Input
@@ -96,14 +90,14 @@ const Withdraw = ({ cdp, cdpId, reset }) => {
         <InfoContainer>
           <Info
             title={lang.action_sidebar.maximum_available_to_withdraw}
-            body={`${freeCollateral.toFixed(6)} ${cdp.ilkData.gem}`}
+            body={`${freeCollateral.toFixed(6)} ${symbol}`}
           />
           <Info
             title={lang.formatString(
               lang.action_sidebar.gem_usd_price_feed,
-              cdp.ilkData.gem
+              symbol
             )}
-            body={`${collateralPrice} ${cdp.ilkData.gem}/USD`}
+            body={`${collateralPrice} ${symbol}/USD`}
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
