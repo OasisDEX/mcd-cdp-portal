@@ -176,7 +176,9 @@ function RouteEffects({ network }) {
       multicallAddress: scs.getContractAddress('MULTICALL')
     });
 
-    watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
+    // For easier debugging with redux tools:
+    //watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
+    watcher.subscribe(update => dispatch(update));
 
     // all bets are off wrt what contract state in our store
     dispatch({ type: 'CLEAR_CONTRACT_STATE' });
@@ -190,7 +192,8 @@ function RouteEffects({ network }) {
           .map(({ key: ilk }) => [
             cdpTypeModel.rateData(addresses)(ilk),
             cdpTypeModel.liquidation(addresses)(ilk),
-            cdpTypeModel.flipper(addresses)(ilk)
+            cdpTypeModel.flipper(addresses)(ilk),
+            cdpTypeModel.lineData(addresses)(ilk)
           ])
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)

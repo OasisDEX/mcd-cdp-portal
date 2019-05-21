@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
-import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
+import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 import {
   ADAPTER_BALANCE,
   MAX_AUCTION_LOT_SIZE,
@@ -55,6 +55,25 @@ export const pitData = addresses => name => ({
   ]
 });
 
+export const lineData = addresses => name =>
+  console.log('line data', addresses, name) || {
+    target: addresses.MCD_VAT,
+    call: [
+      'ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)',
+      toHex(name)
+    ],
+    returns: [
+      [],
+      [],
+      [],
+      [
+        `${name}.${DEBT_CEILING}`,
+        val => console.log(`debtCeiling for ${name}`, val) || fromRad(val, 5)
+      ],
+      []
+    ]
+  };
+
 export const liquidation = addresses => name => ({
   target: addresses[`MCD_SPOT`],
   call: ['ilks(bytes32)(address,uint256)', toHex(name)],
@@ -90,7 +109,8 @@ export function createCDPTypeModel(cdpKey, addresses) {
     pitData,
     liquidation,
     flipper,
-    adapterBalance
+    adapterBalance,
+    lineData
   ].map(f => f(addresses)(cdpKey));
   return cdpModel;
 }
