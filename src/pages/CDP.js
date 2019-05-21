@@ -280,16 +280,10 @@ function CDPViewPresentation({ cdp, showSidebar, account }) {
   const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
   const stabilityFee = cdp.ilkData.rate * 100 + '00%';
   const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
-  const collateralSymbol = cdp.collateral.symbol;
   const collateralUSDValue = round(
     cdp.collateral.times(cdp.collateralPrice).toNumber(),
     2
   );
-  const minCollateralAmount = round(cdp.minCollateral.toNumber(), 2);
-  const minCollateralValue = round(
-    cdp.minCollateral.times(cdp.collateralPrice).toNumber(),
-    2
-  ).toFixed(2);
   const collateralAvailableAmount = round(
     cdp.collateralAvailable.toNumber(),
     2
@@ -299,7 +293,6 @@ function CDPViewPresentation({ cdp, showSidebar, account }) {
     2
   );
   const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
-  const debtSymbol = cdp.debt.symbol;
   const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
 
   return (
@@ -351,8 +344,8 @@ function CDPViewPresentation({ cdp, showSidebar, account }) {
         <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
-            value={`${minCollateralAmount} ${gem}`}
-            conversion={`${minCollateralValue} USD`}
+            value={`${collateralAmount} ${gem}`}
+            conversion={`${collateralUSDValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
