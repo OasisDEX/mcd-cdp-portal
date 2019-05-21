@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -113,9 +113,25 @@ const CDPCreateConfirmSummary = ({
 
 const CDPCreateConfirmed = ({ hash, onClose }) => {
   const { maker } = useMaker();
+  const [waitTime, setWaitTime] = useState('8 minutes');
 
   const networkId = maker.service('web3').networkId();
   const isTestchain = ![1, 42].includes(networkId);
+  useEffect(() => {
+    (async () => {
+      // this is the default transaction speed
+      const waitInMinutes = await maker.service('gas').getWaitTime('fast');
+      const roundedWaitInMinutes = Math.round(waitInMinutes);
+      const roundedWaitInSeconds = Math.round(waitInMinutes * 6) * 10;
+
+      const waitTime =
+        roundedWaitInMinutes === 0
+          ? `${roundedWaitInSeconds} seconds`
+          : `${roundedWaitInMinutes} minutes`;
+
+      setWaitTime(waitTime);
+    })();
+  });
 
   return (
     <Box
@@ -126,7 +142,7 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
     >
       <ScreenHeader
         title={lang.cdp_create.confirmed_title}
-        text={lang.cdp_create.confirmed_text}
+        text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
