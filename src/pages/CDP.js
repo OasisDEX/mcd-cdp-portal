@@ -61,7 +61,7 @@ const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
     <WithSeparators>
       <Flex flexWrap="wrap" justifyContent="space-between" py="s">
-        <Box alignSelf="center" width="200px">
+        <Box alignSelf="center" maxWidth="33%">
           <TextBlock color="darkLavender" fontSize="l">
             {title}
           </TextBlock>
