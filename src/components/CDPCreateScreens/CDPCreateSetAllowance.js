@@ -40,8 +40,11 @@ const CDPCreateSetAllowance = ({
   async function setAllowance() {
     setIsSettingAllowance(true);
     try {
-      const gemToken = maker.getToken(selectedIlk.currency.symbol);
-      await gemToken.approveUnlimited(proxyAddress);
+      const symbol =
+        selectedIlk.currency.symbol === 'ETH'
+          ? 'WETH'
+          : selectedIlk.currency.symbol;
+      await maker.service('allowance').requireAllowance(symbol, proxyAddress);
       dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance: true } });
     } catch (err) {}
     setIsSettingAllowance(false);
@@ -87,7 +90,7 @@ const CDPCreateSetAllowance = ({
               width="13.0rem"
               mt="xs"
               onClick={setAllowance}
-              disabled={isDeployingProxy || isSettingAllowance}
+              disabled={!proxyAddress || isDeployingProxy || isSettingAllowance}
               loading={isSettingAllowance}
             >
               {lang.cdp_create.setup_proxy_allowance_button}

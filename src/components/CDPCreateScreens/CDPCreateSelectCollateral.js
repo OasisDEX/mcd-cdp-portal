@@ -89,12 +89,15 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
     (async () => {
       setLoading(true);
       try {
-        const gemToken = maker.getToken(selectedIlk.currency.symbol);
-        const hasAllowance =
-          selectedIlk.currency.symbol === 'ETH' ||
-          (await gemToken.allowance(maker.currentAddress(), proxyAddress)).eq(
-            MAX_UINT_BN
-          );
+        const gemToken =
+          selectedIlk.currency.symbol === 'ETH'
+            ? maker.getToken('WETH')
+            : maker.getToken(selectedIlk.currency.symbol);
+
+        const hasAllowance = (await gemToken.allowance(
+          maker.currentAddress(),
+          proxyAddress
+        )).eq(MAX_UINT_BN);
         dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance } });
       } catch (err) {
         dispatch({
