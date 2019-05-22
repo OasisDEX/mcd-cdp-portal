@@ -163,7 +163,8 @@ function RouteEffects({ network }) {
   }, [maker]);
 
   useEffect(() => {
-    if (network !== 'mainnet') userSnapInit();
+    if (network !== 'mainnet' && window.location.hostname !== 'localhost')
+      userSnapInit();
   }, [network]);
 
   useEffect(() => {
