@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -257,18 +257,23 @@ function CDPView({ cdpId: _cdpId }) {
     })();
   }, [cdpId, feeds, maker]);
 
-  return cdp ? (
-    <CDPViewPresentation
-      cdp={cdp}
-      showSidebar={showSidebar}
-      account={account}
-    />
-  ) : (
-    <LoadingLayout />
+  return useMemo(
+    () =>
+      cdp ? (
+        <CDPViewPresentation
+          cdp={cdp}
+          showSidebar={showSidebar}
+          account={account}
+        />
+      ) : (
+        <LoadingLayout />
+      ),
+    [cdp, showSidebar, account]
   );
 }
 
 function CDPViewPresentation({ cdp, showSidebar, account }) {
+  console.log('CDPViewPresentation rendering');
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.type.currency.symbol;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
