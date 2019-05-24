@@ -207,11 +207,10 @@ function CDPView({ cdpId: _cdpId }) {
   const cdpId = parseInt(_cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ feeds }] = useStore();
+  const [{ feeds, cdps }] = useStore();
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdp, setCDP] = useState(null);
-
   useEffect(() => {
     let didCancel = false;
     (async () => {
@@ -255,7 +254,7 @@ function CDPView({ cdpId: _cdpId }) {
       setCDP(cdp);
       return () => (didCancel = true);
     })();
-  }, [cdpId, feeds, maker]);
+  }, [cdpId, feeds, maker, cdps]);
 
   return useMemo(
     () =>
@@ -264,6 +263,7 @@ function CDPView({ cdpId: _cdpId }) {
           cdp={cdp}
           showSidebar={showSidebar}
           account={account}
+          owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
         />
       ) : (
         <LoadingLayout />
@@ -272,7 +272,7 @@ function CDPView({ cdpId: _cdpId }) {
   );
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account }) {
+function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
   console.log('CDPViewPresentation rendering');
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.type.currency.symbol;
@@ -371,7 +371,7 @@ function CDPViewPresentation({ cdp, showSidebar, account }) {
             conversion={`${collateralAvailableValue} USD`}
             button={
               <ActionButton
-                disabled={!account}
+                disabled={!account || !owner}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
@@ -408,7 +408,7 @@ function CDPViewPresentation({ cdp, showSidebar, account }) {
             value={`${daiAvailable} DAI`}
             button={
               <ActionButton
-                disabled={!account}
+                disabled={!account || !owner}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
