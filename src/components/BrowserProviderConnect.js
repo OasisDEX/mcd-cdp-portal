@@ -65,7 +65,7 @@ export default function BrowserProviderConnect({ provider }) {
           <img src={alphaWalletLogo} width="20px" height="20px" alt="" />
         )}
         <span style={{ margin: 'auto' }}>
-          {lang.landing_page[provider] || 'Active Wallet'}
+          {lang.providers[provider] || 'Active Wallet'}
         </span>
       </Flex>
     </Button>

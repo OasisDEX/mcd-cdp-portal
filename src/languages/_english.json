@@ -22,13 +22,6 @@
   "landing_page": {
     "title": "Spend crypto without leaving your position.",
     "subtitle": "Leverage your crypto assets to generate Dai, a decentralized cryptocurrency pegged at the value of 1 US dollar.",
-    "metamask": "MetaMask",
-    "trust": "Trust",
-    "coinbase": "Coinbase Wallet",
-    "imtoken": "ImToken",
-    "alphawallet": "Alpha Wallet",
-    "ledger_nano": "Ledger Nano",
-    "trezor": "Trezor",
     "read_only": "Read-Only",
     "wallet_connect": "Wallet Connect"
   },
@@ -161,5 +154,14 @@
   "your_balance": "Your balance",
   "risk_parameters": "Risk Parameters",
   "terms_of_service_text": "I have read and accepted the {0}",
-  "terms_of_service": "Terms of Service"
+  "terms_of_service": "Terms of Service",
+  "providers": {
+    "metamask": "MetaMask",
+    "trust": "Trust",
+    "coinbase": "Coinbase Wallet",
+    "imtoken": "ImToken",
+    "alphawallet": "Alpha Wallet",
+    "ledger_nano": "Ledger Nano",
+    "trezor": "Trezor"
+  }
 }

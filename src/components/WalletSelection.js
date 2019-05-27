@@ -1,8 +1,12 @@
 import React from 'react';
-import { cutMiddle } from 'utils/ui';
+import lang from 'languages';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
+
+import { getWebClientProviderName } from 'utils/web3';
+import { cutMiddle } from 'utils/ui';
 
 const WalletSection = ({
   currentAccount,
@@ -20,7 +24,7 @@ const WalletSection = ({
       <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
       <Box ml="xs" mr="auto">
         <Text t={t} color={textColor}>
-          {type}
+          {lang.providers[getWebClientProviderName(type)]}
         </Text>
       </Box>
       <Box ml="s">

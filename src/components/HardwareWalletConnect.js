@@ -135,9 +135,7 @@ export default function HardwareWalletConnect({ type }) {
         <Flex alignItems="center">
           {isTrezor ? <StyledTrezorLogo /> : <StyledLedgerLogo />}
           <span style={{ margin: 'auto' }}>
-            {isTrezor
-              ? lang.landing_page.trezor
-              : lang.landing_page.ledger_nano}
+            {isTrezor ? lang.providers.trezor : lang.providers.ledger_nano}
           </span>
         </Flex>
       </Button>
