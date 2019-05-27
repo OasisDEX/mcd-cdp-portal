@@ -171,15 +171,12 @@ function RouteEffects({ network }) {
     if (!maker) return;
     const scs = maker.service('smartContract');
     const addresses = scs.getContractAddresses();
-    console.log('addresses in routes reducer', addresses);
     const watcher = instantiateWatcher({
       rpcUrl: maker.service('web3').rpcUrl,
       multicallAddress: scs.getContractAddress('MULTICALL')
     });
 
-    // For easier debugging with redux tools:
-    //watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
-    watcher.subscribe(update => dispatch(update));
+    watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
 
     // all bets are off wrt what contract state in our store
     dispatch({ type: 'CLEAR_CONTRACT_STATE' });
