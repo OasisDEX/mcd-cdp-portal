@@ -13,7 +13,7 @@ const ButtonCard = ({
     <Card py="s" px="m" {...props}>
       <Grid
         alignItems="center"
-        gridTemplateColumns={['auto 1fr', 'auto 1fr auto']}
+        gridTemplateColumns="auto 1fr auto"
         gridRowGap="s"
         gridColumnGap="s"
       >
@@ -33,9 +33,7 @@ const ButtonCard = ({
           </Box>
         </Box>
         <Box gridColumn={'3'} alignSelf="center">
-          <Button width="100%" onClick={onClick}>
-            {buttonText}
-          </Button>
+          <Button onClick={onClick}>{buttonText}</Button>
         </Box>
       </Grid>
     </Card>
