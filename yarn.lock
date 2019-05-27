@@ -1308,14 +1308,6 @@
     "@ledgerhq/errors" "^4.54.0"
     events "^3.0.0"
 
-"@makerdao/currency@^0.9.0":
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/@makerdao/currency/-/currency-0.9.3.tgz#27510303771506b4b64998ce3b15c39b2d558fd9"
-  integrity sha512-WNf8x+aJBErpj/PAzcr91PseQ3P9/f34Hey+qvndWEQ+LAr7LOWgcpTMryLZK1f2rn/k2zBcuWSbwe4XkrxRhA==
-  dependencies:
-    babel-runtime "^6.26.0"
-    bignumber.js "^8.1.1"
-
 "@makerdao/currency@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/currency/-/currency-0.9.5.tgz#ec51811bcb669a669a103bde18b5fcc78b197c72"
@@ -1366,13 +1358,13 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.15.3.tgz#11148b7980732b73f6fba3ddff0a5c0ff6708ded"
-  integrity sha512-WjGJyieUtOMuQNsbButmEjMztyvsRbOhPcSvxgOnDElXiNewJl6reMdWGnFHJO6HtDDT/W0OeWqR/e3cdzFh5A==
+"@makerdao/dai@^0.16.1":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.16.1.tgz#8555c721a66ed71cac21ed8a4d5a3ea085bbca33"
+  integrity sha512-UAUp87hdrwEpMJh/3VdbqkFJyLeg8R0GKtp45aVPKTdvl5WDmUJfSRMCyLCoYLBVvj5yBMpFrZlDgWFxXXlu1Q==
   dependencies:
     "@babel/runtime" "^7.3.4"
-    "@makerdao/currency" "^0.9.0"
+    "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.5"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
@@ -13728,7 +13720,7 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
+web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
