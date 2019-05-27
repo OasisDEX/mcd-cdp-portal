@@ -1,20 +1,23 @@
 {
-  "supportedNetworkIds": ["999", "42", "1"],
+  "supportedNetworkIds": ["1337", "999", "42", "1"],
   "rpcUrls": {
     "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "999": "http://localhost:2000"
+    "999": "http://localhost:2000",
+    "1337": "http://localhost:2000"
   },
   "networkNames": {
     "1": "mainnet",
     "42": "kovan",
-    "999": "test"
+    "999": "testnet",
+    "1337": "testnet"
   },
   "networkDisplayNames": {
     "1": "Mainnet",
     "42": "Kovan Testnet",
-    "999": "Testchain"
+    "999": "Testchain",
+    "1337": "Ex_Testchain"
   },
   "defaultNetwork": "42",
-  "exTestchainApiUrl": "https://testchain-backendgatway.makerfoundation.com:4001/chain"
+  "exTestchainApiUrl": "http://localhost:4000/chain"
 }
