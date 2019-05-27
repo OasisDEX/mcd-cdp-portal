@@ -2,7 +2,6 @@ export function getUsdPrice(ilkData) {
   // return cdp.ilkData.feedSetUSD
   //   ? cdp.ilkData.feedValueUSD.toNumber()
   //   : 0;
-  console.log('ilk data', ilkData);
   return (ilkData.feedValueUSD && ilkData.feedValueUSD.toNumber()) || 0;
 }
 

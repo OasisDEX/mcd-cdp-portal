@@ -115,7 +115,6 @@ const CdpViewCard = ({ title, children }) => {
 };
 
 const AmountDisplay = ({ amount, denomination }) => {
-  console.log('amount display', amount, denomination);
   return (
     <>
       <TextBlock t="h3" lineHeight="1">

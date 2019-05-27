@@ -1,5 +1,5 @@
 {
-  "supportedNetworkIds": ["999", "42", "1"],
+  "supportedNetworkIds": ["1337", "999", "42", "1"],
   "rpcUrls": {
     "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
@@ -19,5 +19,5 @@
     "1337": "Ex_Testchain"
   },
   "defaultNetwork": "42",
-  "exTestchainApiUrl": "https://testchain-backendgatway.makerfoundation.com:4001/chain"
+  "exTestchainApiUrl": "http://localhost:4000/chain"
 }

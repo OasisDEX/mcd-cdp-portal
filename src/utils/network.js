@@ -8,12 +8,8 @@ const {
 } = config;
 
 export async function getTestchainDetails(testchainId) {
-  console.log('testchainId', testchainId);
   try {
-    console.log('fetchurl', `${exTestchainApiUrl}/${testchainId}`);
-    const rawRes = await fetch(`http://localhost:4000/chain/${testchainId}`);
-    // const rawRes = await fetch(`${exTestchainApiUrl}/${testchainId}`);
-    console.log('raw res', rawRes);
+    const rawRes = await fetch(`${exTestchainApiUrl}/${testchainId}`);
     const { details } = await rawRes.json();
     const addresses = details.deploy_data;
     const rpcUrl = details.chain_details.rpc_url;

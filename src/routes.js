@@ -193,8 +193,7 @@ function RouteEffects({ network }) {
           .map(({ key: ilk }) => [
             cdpTypeModel.rateData(addresses)(ilk),
             cdpTypeModel.liquidation(addresses)(ilk),
-            cdpTypeModel.flipper(addresses)(ilk),
-            cdpTypeModel.lineData(addresses)(ilk)
+            cdpTypeModel.flipper(addresses)(ilk)
           ])
           .flat()
       ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
