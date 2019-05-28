@@ -120,16 +120,16 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
   useEffect(() => {
     (async () => {
       // this is the default transaction speed
-      const waitInMinutes = await maker.service('gas').getWaitTime('fast');
-      const roundedWaitInMinutes = Math.round(waitInMinutes);
-      const roundedWaitInSeconds = Math.round(waitInMinutes * 6) * 10;
+      const waitTime = await maker.service('gas').getWaitTime('fast');
+      const minutes = Math.round(waitTime);
+      const seconds = Math.round(waitTime * 6) * 10;
 
-      const waitTime =
-        roundedWaitInMinutes === 0
-          ? `${roundedWaitInSeconds} seconds`
-          : `${roundedWaitInMinutes} minutes`;
+      const waitTimeText =
+        waitTime < 1
+          ? `${seconds} seconds`
+          : `${minutes} minute${minutes === 1 ? '' : 's'}`;
 
-      setWaitTime(waitTime);
+      setWaitTime(waitTimeText);
     })();
   });
 
