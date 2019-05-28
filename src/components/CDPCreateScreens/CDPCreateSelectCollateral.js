@@ -43,6 +43,7 @@ const CDPCreateSelectCollateralSidebar = () => (
 );
 
 function IlkTableRow({ ilk, checked, dispatch }) {
+  console.log(process.env);
   const { maker } = useMaker();
   const [{ feeds }] = useStore();
   const [userGemBalance, setUserGemBalance] = useState(null);
