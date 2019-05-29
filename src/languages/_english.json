@@ -36,7 +36,10 @@
     "base_rate": "BASE RATE",
     "number_of_liquidations": "NUMBER OF LIQUIDATIONS",
     "buy_and_burn_lot_size": "BUY & BURN LOT SIZE",
-    "inflate_and_sell_lot_size": "INFLATE & SELL LOT SIZE"
+    "inflate_and_sell_lot_size": "INFLATE & SELL LOT SIZE",
+    "view_price_feeds": "View price feeds",
+    "view_more": "View more",
+    "view_less": "View less"
   },
   "cdp_create": {
     "select_title": "Select a collateral type",
