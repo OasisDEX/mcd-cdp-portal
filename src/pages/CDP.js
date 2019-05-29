@@ -224,6 +224,7 @@ function CDPView({ cdpId: _cdpId }) {
       const ilkData = getIlkData(feeds, cdp.ilk);
       const [
         debt,
+        collateral,
         collateralPrice,
         collateralizationRatio,
         liquidationPrice,
@@ -232,6 +233,7 @@ function CDPView({ cdpId: _cdpId }) {
         collateralAvailable
       ] = await Promise.all([
         cdp.getDebtValue(),
+        cdp.getCollateralAmount(),
         cdp.type.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
@@ -245,6 +247,7 @@ function CDPView({ cdpId: _cdpId }) {
       Object.assign(cdp, {
         ilkData,
         debt,
+        collateral,
         collateralPrice,
         collateralizationRatio,
         liquidationPrice,
