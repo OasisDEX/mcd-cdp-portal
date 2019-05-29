@@ -7,6 +7,7 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 import { getWebClientProviderName } from 'utils/web3';
 import { cutMiddle } from 'utils/ui';
+import WalletConnectDropdown from 'components/WalletConnectDropdown';
 
 const WalletSection = ({
   currentAccount,
@@ -17,27 +18,31 @@ const WalletSection = ({
   readOnly,
   ...rest
 }) => {
-  if (!currentAccount) return null;
   const { address, type } = currentAccount;
+  if (!currentAccount) return null;
+  const providerType =
+    type === 'browser' ? getWebClientProviderName(type) : type;
   return (
-    <Flex alignItems="center" {...rest}>
-      <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
-      <Box ml="xs" mr="auto">
-        <Text t={t} color={textColor}>
-          {lang.providers[getWebClientProviderName(type)]}
-        </Text>
-      </Box>
-      <Box ml="s">
-        <Text t={addressTextStyle} color={textColor}>
-          {cutMiddle(address, 7, 5)}
-        </Text>
-      </Box>
-      {readOnly ? null : (
-        <Box ml="xs" mb="2px">
-          <CaratDownIcon />
+    <WalletConnectDropdown>
+      <Flex alignItems="center" {...rest}>
+        <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
+        <Box ml="xs" mr="auto">
+          <Text t={t} color={textColor}>
+            {lang.providers[providerType]}
+          </Text>
         </Box>
-      )}
-    </Flex>
+        <Box ml="s">
+          <Text t={addressTextStyle} color={textColor}>
+            {cutMiddle(address, 7, 5)}
+          </Text>
+        </Box>
+        {readOnly ? null : (
+          <Box ml="xs" mb="2px">
+            <CaratDownIcon />
+          </Box>
+        )}
+      </Flex>
+    </WalletConnectDropdown>
   );
 };
 

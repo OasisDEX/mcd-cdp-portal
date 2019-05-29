@@ -162,6 +162,7 @@
     "imtoken": "ImToken",
     "alphawallet": "Alpha Wallet",
     "ledger_nano": "Ledger Nano",
-    "trezor": "Trezor"
+    "trezor": "Trezor",
+    "other": "Active Wallet"
   }
 }

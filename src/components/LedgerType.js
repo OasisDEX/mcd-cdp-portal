@@ -17,7 +17,7 @@ const StyledLedgerLogo = styled(LedgerLogo)`
 const LEDGER_LIVE_PATH = "44'/60'/0'";
 const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
 
-function LedgerType({ onClose, renderByPath }) {
+function LedgerType({ onClose, onPathSelect }) {
   return (
     <Grid gridRowGap="m" px="m" py="s" width={['auto', '52rem']}>
       <Flex justifyContent="flex-end">
@@ -31,7 +31,7 @@ function LedgerType({ onClose, renderByPath }) {
         <Grid gridRowGap="s">
           <ButtonCard
             icon={<StyledLedgerLogo />}
-            onClick={() => renderByPath(LEDGER_LIVE_PATH)}
+            onClick={() => onPathSelect(LEDGER_LIVE_PATH)}
             title="Ledger live"
             subtitle={
               <BreakableText color="grey">{"m/44'/60'/0'/x"}</BreakableText>
@@ -40,7 +40,7 @@ function LedgerType({ onClose, renderByPath }) {
           />
           <ButtonCard
             icon={<StyledLedgerLogo />}
-            onClick={() => renderByPath(LEDGER_LEGACY_PATH)}
+            onClick={() => onPathSelect(LEDGER_LEGACY_PATH)}
             title="Ledger legacy"
             subtitle={
               <BreakableText color="grey">{"m/44'/x'/0/0"}</BreakableText>
