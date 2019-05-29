@@ -9,7 +9,6 @@ import { ETH } from '@makerdao/dai-plugin-mcd';
 const SidebarGlobalPanel = () => {
   const [{ system, feeds }] = useStore();
   return useMemo(() => {
-    console.log('SidebarGlobalPanel rendering');
     const uniqueFeeds = getAllFeeds(feeds, [feeds]);
     return (
       <Box>

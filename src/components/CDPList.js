@@ -8,7 +8,7 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
-import { fetchCdps } from 'reducers/cdps';
+import { fetchCdpsByAddress } from 'reducers/cdps';
 import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
@@ -47,7 +47,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   useEffect(() => {
     (async () => {
       const address = account ? account.address : viewedAddress;
-      const action = await fetchCdps(maker, address);
+      const action = await fetchCdpsByAddress(maker, address);
       dispatch(action);
     })();
   }, [maker, viewedAddress, account, dispatch]);

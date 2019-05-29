@@ -19,7 +19,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
-import { fetchCdps } from 'reducers/cdps';
+import { fetchCdpsByAddress } from 'reducers/cdps';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
@@ -200,7 +200,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     maker.service('transactionManager').listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),
       mined: async tx => {
-        storeDispatch(await fetchCdps(maker, account.address));
+        storeDispatch(await fetchCdpsByAddress(maker, account.address));
       }
     });
   }

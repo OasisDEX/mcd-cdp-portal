@@ -14,10 +14,13 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
+import { multiply, divide, subtract } from 'utils/bignumber';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
 import { getIlkData } from 'reducers/feeds';
+import { getCdp } from 'reducers/cdps';
+import { fetchCdpById } from 'reducers/cdps';
 import ExternalLink from 'components/ExternalLink';
 import round from 'lodash/round';
 
@@ -208,6 +211,7 @@ function CDPView({ cdpId: _cdpId }) {
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ feeds, cdps }] = useStore();
+  const { ink, art } = getCdp(cdpId, cdps);
 
   // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
   const [cdp, setCDP] = useState(null);
@@ -216,10 +220,10 @@ function CDPView({ cdpId: _cdpId }) {
     (async () => {
       const cdpManager = maker.service('mcd:cdpManager');
       const cdp = await cdpManager.getCdp(cdpId);
+      await fetchCdpById(maker, cdpId);
       const ilkData = getIlkData(feeds, cdp.ilk);
       const [
         debt,
-        collateral,
         collateralPrice,
         collateralizationRatio,
         liquidationPrice,
@@ -228,7 +232,6 @@ function CDPView({ cdpId: _cdpId }) {
         collateralAvailable
       ] = await Promise.all([
         cdp.getDebtValue(),
-        cdp.getCollateralAmount(),
         cdp.type.getPrice(),
         cdp.getCollateralizationRatio(),
         cdp.getLiquidationPrice(),
@@ -242,7 +245,6 @@ function CDPView({ cdpId: _cdpId }) {
       Object.assign(cdp, {
         ilkData,
         debt,
-        collateral,
         collateralPrice,
         collateralizationRatio,
         liquidationPrice,
@@ -261,6 +263,8 @@ function CDPView({ cdpId: _cdpId }) {
       cdp ? (
         <CDPViewPresentation
           cdp={cdp}
+          ink={ink}
+          art={art}
           showSidebar={showSidebar}
           account={account}
           owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
@@ -272,8 +276,7 @@ function CDPView({ cdpId: _cdpId }) {
   );
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
-  console.log('CDPViewPresentation rendering');
+function CDPViewPresentation({ cdp, ink, art, showSidebar, account, owner }) {
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.type.currency.symbol;
   const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
@@ -284,9 +287,9 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
   );
   const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
   const stabilityFee = cdp.ilkData.rate * 100 + '00%';
-  const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
+  const collateralAmount = round(ink, 2).toFixed(2);
   const collateralUSDValue = round(
-    cdp.collateral.times(cdp.collateralPrice).toNumber(),
+    multiply(collateralAmount, cdp.collateralPrice.toNumber()),
     2
   );
   const collateralAvailableAmount = round(
@@ -297,8 +300,15 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
     cdp.collateralAvailable.times(cdp.collateralPrice).toNumber(),
     2
   );
-  const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
-  const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
+  // FIXME: the ilk's `rate` needs to be taken into account as well
+  const debtAmount = round(art, 2).toFixed(2);
+  const daiAvailable = round(
+    subtract(
+      divide(collateralUSDValue, cdp.ilkData.liquidationRatio / 100),
+      debtAmount
+    ),
+    2
+  ).toFixed(2);
 
   return (
     <PageContentLayout>
