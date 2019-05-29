@@ -79,7 +79,7 @@ export function useTrezor({ onAccountChosen }) {
         }
       });
     },
-    [show]
+    [show, onAccountChosen]
   );
 
   return { connectTrezorWallet };
@@ -101,7 +101,7 @@ export function useLedger({ onAccountChosen }) {
         }
       });
     },
-    [show]
+    [show, onAccountChosen]
   );
 
   const connectLedgerWallet = useCallback(

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import Footer from '@makerdao/ui-components-footer';
@@ -39,20 +39,23 @@ function Landing() {
     authenticated: makerAuthenticated,
     connectBrowserProvider
   } = useMaker();
-  const { connectTrezorWallet } = useTrezor({ onAccountChosen });
-  const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const navigation = useNavigation();
 
-  async function onAccountChosen({ address }, type) {
-    maker.useAccountWithAddress(address);
-    mixpanelIdentify(address, type);
-    const { search } = (await navigation.getRoute()).url;
+  const onAccountChosen = useCallback(
+    async ({ address }, type) => {
+      maker.useAccountWithAddress(address);
+      mixpanelIdentify(address, type);
+      const { search } = (await navigation.getRoute()).url;
 
-    navigation.navigate({
-      pathname: `owner/${address}`,
-      search
-    });
-  }
+      navigation.navigate({
+        pathname: `owner/${address}`,
+        search
+      });
+    },
+    [maker, navigation]
+  );
+  const { connectTrezorWallet } = useTrezor({ onAccountChosen });
+  const { connectLedgerWallet } = useLedger({ onAccountChosen });
 
   async function connectBrowserWallet() {
     try {
