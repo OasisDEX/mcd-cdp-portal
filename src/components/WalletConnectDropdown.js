@@ -36,7 +36,7 @@ const Option = ({ children, ...props }) => {
 };
 
 const WalletConnectDropdown = ({ children }) => {
-  const { maker, account } = useMaker();
+  const { maker, account, connectBrowserProvider } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const [otherAccounts, setOtherAccounts] = useState([]);
@@ -52,13 +52,16 @@ const WalletConnectDropdown = ({ children }) => {
     setOtherAccounts(otherAccounts);
   }, [maker, account]);
 
+  const hasBrowserAccount =
+    account.type === 'browser' || otherAccounts.some(a => a.type === 'browser');
+
   return (
     <Dropdown trigger={children} offset={`-${theme.space.s}`}>
       <Card width={getMeasurement('sidebarWidth') - getSpace('s')}>
         {otherAccounts.map(account => {
           const providerType =
             account.type === 'browser'
-              ? getWebClientProviderName(account.type)
+              ? getWebClientProviderName()
               : account.type;
           return (
             <Option
@@ -77,11 +80,16 @@ const WalletConnectDropdown = ({ children }) => {
                   seed={jsNumberForAddress(account.address)}
                 />
                 <Text t="body">{lang.providers[providerType]}</Text>
-                <Text t="body">{cutMiddle(account.address)}</Text>
+                <Text t="body">{cutMiddle(account.address, 7, 5)}</Text>
               </Grid>
             </Option>
           );
         })}
+        {!hasBrowserAccount && (
+          <Option onClick={connectBrowserProvider}>
+            Connect to {lang.providers[getWebClientProviderName()]}
+          </Option>
+        )}
         <Option onClick={connectLedgerWallet}>Connect to Ledger Nano</Option>
         <Option onClick={connectTrezorWallet}>Connect to Trezor</Option>
         {/* <Option>Wallet Connect</Option> */}
