@@ -1415,10 +1415,10 @@
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
-"@makerdao/ui-components-core@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.1.tgz#91b6b9f7ea92b794ab79c5fcb91b8064a8e217e7"
-  integrity sha512-uHxpXlzxIAFWeXoiSQgYYJjcDM3uaH8Ql6mlgqips+akW8mKiBalEJ5nPHmsSEvByi1LuYxo+iuDJTzuTLZ2ww==
+"@makerdao/ui-components-core@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/@makerdao/ui-components-core/-/ui-components-core-0.2.2.tgz#ff3bc272b978bb10fd6ae09e157da8dcb5de1032"
+  integrity sha512-7RndtpiwsuCx2ZfBWkPee/TbyUJLgbTfvVfFOow6l06YYech02YzrfAc+eCwmNTPIiIzVkLp51lFRpzdwjyi6g==
   dependencies:
     "@makerdao/design-system-constants" "0.1.0"
     react-onclickoutside "^6.7.1"
@@ -13720,7 +13720,7 @@ web3-net@1.0.0-beta.34:
     web3-core-method "1.0.0-beta.34"
     web3-utils "1.0.0-beta.34"
 
-web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
+web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:

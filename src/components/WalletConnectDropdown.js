@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import lang from 'languages';
-import {
-  Card,
-  Dropdown,
-  Box,
-  Text,
-  Flex,
-  Grid
-} from '@makerdao/ui-components-core';
+import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 import { mixpanelIdentify } from 'utils/analytics';
