@@ -284,12 +284,21 @@ function cleanSymbol(s) {
   return s;
 }
 
+const actionToText = {
+  lock: lang.actions_past_tense.deposit,
+  free: lang.actions_past_tense.withdraw,
+  wipe: lang.actions_past_tense.pay_back,
+  draw: lang.actions_past_tense.generate
+};
+
 function activityString(action, amount, lowercase) {
   const and = lowercase ? ' and ' : '';
-  const actionText = lowercase ? firstLetterLowercase(action) : action;
+  const formattedAction = lowercase
+    ? firstLetterLowercase(actionToText[action])
+    : actionToText[action];
   return (
     and +
-    actionText +
+    formattedAction +
     ' ' +
     prettifyNumber(amount.toNumber()) +
     ' ' +
@@ -311,7 +320,7 @@ function formatEventHistory(events) {
     return [
       e.changeInCollateral.symbol,
       fullActivityString(e),
-      e.time.toLocaleDateString('en-US', {
+      e.time.toLocaleDateString(lang.getInterfaceLanguage(), {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
