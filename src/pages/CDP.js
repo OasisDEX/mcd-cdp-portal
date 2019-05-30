@@ -21,7 +21,7 @@ import { getIlkData } from 'reducers/feeds';
 import ExternalLink from 'components/ExternalLink';
 import round from 'lodash/round';
 import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
-import { prettifyNumber } from 'utils/ui';
+import { fullActivityString, formatDate } from 'utils/ui';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -275,56 +275,12 @@ function CDPView({ cdpId: _cdpId }) {
   );
 }
 
-function firstLetterLowercase(str) {
-  return str.charAt(0).toLowerCase() + str.slice(1);
-}
-
-function cleanSymbol(s) {
-  if (s === 'MDAI') return 'DAI';
-  return s;
-}
-
-const actionToText = {
-  lock: lang.actions_past_tense.deposit,
-  free: lang.actions_past_tense.withdraw,
-  wipe: lang.actions_past_tense.pay_back,
-  draw: lang.actions_past_tense.generate
-};
-
-function activityString(action, amount, lowercase) {
-  const and = lowercase ? ' and ' : '';
-  const formattedAction = lowercase
-    ? firstLetterLowercase(actionToText[action])
-    : actionToText[action];
-  return (
-    and +
-    formattedAction +
-    ' ' +
-    prettifyNumber(amount.toNumber()) +
-    ' ' +
-    cleanSymbol(amount.symbol)
-  );
-}
-
-function fullActivityString(e) {
-  let str = '';
-  if (e.collateralAction)
-    str += activityString(e.collateralAction, e.changeInCollateral);
-  if (e.daiAction)
-    str += activityString(e.daiAction, e.changeInDebt, e.collateralAction);
-  return str;
-}
-
 function formatEventHistory(events) {
   return events.map(e => {
     return [
       e.changeInCollateral.symbol,
       fullActivityString(e),
-      e.time.toLocaleDateString(lang.getInterfaceLanguage(), {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      }),
+      formatDate(e.time),
       <ExternalLink key={1} address={e.senderAddress} network={'kovan'} />,
       <ExternalLink key={1} address={e.transactionHash} network={'kovan'} />
     ];
