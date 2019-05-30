@@ -445,55 +445,28 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
 
 export default hot(CDPView);
 
-const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
-const mockHistoryData = [
-  [
-    'ETH',
-    'Paid back 1,000.00 DAI',
-    'Feb 15, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Sent 1,000.00 DAI',
-    'Feb 12, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Locked 1,000.00 DAI',
-    'Feb 09, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Withdrew 3,468.72 ETH',
-    'Feb 03, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Opened CDP',
-    'Jan 15, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ]
-];
 const mockHistoryDataFromSDK = [
   {
     transactionHash:
       '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
-    changeInCollateral: ETH(0),
-    changeInDebt: MDAI(12),
-    daiAction: 'wipe',
+    changeInCollateral: ETH(99.5),
+    collateralAction: 'free',
     time: new Date(Date.now()),
     senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(5.33619021597704),
-    resultingDebt: MDAI(6.84919174870238),
+    resultingCollateral: ETH(900.5),
+    resultingDebt: MDAI(10090),
+    ilk: 'ETH-A'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(0),
+    changeInDebt: MDAI(1000),
+    daiAction: 'wipe',
+    time: new Date(Date.now() - 10000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(1000),
+    resultingDebt: MDAI(10045),
     ilk: 'ETH-A'
   },
   {
@@ -503,10 +476,10 @@ const mockHistoryDataFromSDK = [
     collateralAction: 'lock',
     changeInDebt: MDAI(120000),
     daiAction: 'draw',
-    time: new Date(Date.now() - 10000000000),
+    time: new Date(Date.now() - 20000000000),
     senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(5.33619021597704),
-    resultingDebt: MDAI(6.84919174870238),
+    resultingCollateral: ETH(1000),
+    resultingDebt: MDAI(1100),
     ilk: 'ETH-A'
   }
 ];
