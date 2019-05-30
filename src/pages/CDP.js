@@ -20,6 +20,8 @@ import useStore from 'hooks/useStore';
 import { getIlkData } from 'reducers/feeds';
 import ExternalLink from 'components/ExternalLink';
 import round from 'lodash/round';
+import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
+import { prettifyNumber } from 'utils/ui';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -236,8 +238,8 @@ function CDPView({ cdpId: _cdpId }) {
         cdp.minCollateral(),
         cdp.getCollateralAvailable()
       ]);
+      const eventHistory = mockHistoryDataFromSDK; //use dummy data since kovan vdb isn't working yet
       if (didCancel) return;
-
       // FIXME well this is an interesting way to store local state
       Object.assign(cdp, {
         ilkData,
@@ -248,7 +250,8 @@ function CDPView({ cdpId: _cdpId }) {
         liquidationPrice,
         daiAvailable,
         minCollateral,
-        collateralAvailable
+        collateralAvailable,
+        eventHistory
       });
 
       setCDP(cdp);
@@ -270,6 +273,53 @@ function CDPView({ cdpId: _cdpId }) {
       ),
     [cdp, showSidebar, account]
   );
+}
+
+function firstLetterLowercase(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+function cleanSymbol(s) {
+  if (s === 'MDAI') return 'DAI';
+  return s;
+}
+
+function activityString(action, amount, lowercase) {
+  const and = lowercase ? ' and ' : '';
+  const actionText = lowercase ? firstLetterLowercase(action) : action;
+  return (
+    and +
+    actionText +
+    ' ' +
+    prettifyNumber(amount.toNumber()) +
+    ' ' +
+    cleanSymbol(amount.symbol)
+  );
+}
+
+function fullActivityString(e) {
+  let str = '';
+  if (e.collateralAction)
+    str += activityString(e.collateralAction, e.changeInCollateral);
+  if (e.daiAction)
+    str += activityString(e.daiAction, e.changeInDebt, e.collateralAction);
+  return str;
+}
+
+function formatEventHistory(events) {
+  return events.map(e => {
+    return [
+      e.changeInCollateral.symbol,
+      fullActivityString(e),
+      e.time.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+      <ExternalLink key={1} address={e.senderAddress} network={'kovan'} />,
+      <ExternalLink key={1} address={e.transactionHash} network={'kovan'} />
+    ];
+  });
 }
 
 function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
@@ -299,7 +349,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
   );
   const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
   const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
-
+  const eventHistory = formatEventHistory(cdp.eventHistory);
   return (
     <PageContentLayout>
       <Box>
@@ -423,7 +473,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
         </CdpViewCard>
       </Grid>
 
-      <CdpViewHistory title={lang.cdp_page.tx_history} rows={mockHistoryData} />
+      <CdpViewHistory title={lang.cdp_page.tx_history} rows={eventHistory} />
     </PageContentLayout>
   );
 }
@@ -467,4 +517,31 @@ const mockHistoryData = [
     <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
     <ExternalLink key={2} address={mockAddr} network={'kovan'} />
   ]
+];
+const mockHistoryDataFromSDK = [
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(0),
+    changeInDebt: MDAI(12),
+    daiAction: 'wipe',
+    time: new Date(Date.now()),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(5.33619021597704),
+    resultingDebt: MDAI(6.84919174870238),
+    ilk: 'ETH-A'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(10000),
+    collateralAction: 'lock',
+    changeInDebt: MDAI(120000),
+    daiAction: 'draw',
+    time: new Date(Date.now() - 10000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(5.33619021597704),
+    resultingDebt: MDAI(6.84919174870238),
+    ilk: 'ETH-A'
+  }
 ];

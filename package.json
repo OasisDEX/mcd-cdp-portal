@@ -17,7 +17,7 @@
     "@makerdao/dai": "^0.16.1",
     "@makerdao/dai-plugin-config": "^0.0.3",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "0.1.8",
+    "@makerdao/dai-plugin-mcd": "0.1.12",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/multicall": "0.6.1",
     "@makerdao/ui-components-core": "0.2.1",
