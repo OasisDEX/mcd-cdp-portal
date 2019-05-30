@@ -134,7 +134,7 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
                           {hash ? (
                             <TinyButton ml="xs">
                               <ExternalLink
-                                address={hash}
+                                string={hash}
                                 network={network}
                                 hideText
                                 fill={textColor}

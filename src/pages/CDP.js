@@ -207,7 +207,7 @@ const CdpViewHistory = ({ title, rows }) => {
 
 function CDPView({ cdpId: _cdpId }) {
   const cdpId = parseInt(_cdpId, 10);
-  const { maker, account } = useMaker();
+  const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ feeds, cdps }] = useStore();
 
@@ -267,6 +267,7 @@ function CDPView({ cdpId: _cdpId }) {
           showSidebar={showSidebar}
           account={account}
           owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
+          network={network}
         />
       ) : (
         <LoadingLayout />
@@ -275,19 +276,19 @@ function CDPView({ cdpId: _cdpId }) {
   );
 }
 
-function formatEventHistory(events) {
+function formatEventHistory(events, network) {
   return events.map(e => {
     return [
       e.changeInCollateral.symbol,
       fullActivityString(e),
       formatDate(e.time),
-      <ExternalLink key={1} address={e.senderAddress} network={'kovan'} />,
-      <ExternalLink key={1} address={e.transactionHash} network={'kovan'} />
+      <ExternalLink key={1} string={e.senderAddress} network={network} />,
+      <ExternalLink key={2} string={e.transactionHash} network={network} />
     ];
   });
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
+function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
   console.log('CDPViewPresentation rendering');
   const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
   const gem = cdp.type.currency.symbol;
@@ -314,7 +315,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
   );
   const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
   const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
-  const eventHistory = formatEventHistory(cdp.eventHistory);
+  const eventHistory = formatEventHistory(cdp.eventHistory, network);
   return (
     <PageContentLayout>
       <Box>
