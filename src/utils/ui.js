@@ -1,3 +1,4 @@
+import round from 'lodash/round';
 import { greaterThan } from './bignumber';
 import { calcDaiAvailable, getUsdPrice } from './cdp';
 
@@ -10,9 +11,9 @@ export function formatCollateralizationRatio(ratio) {
   }
 }
 
-export function formatLiquidationPrice(price, ilkData) {
+export function formatLiquidationPrice(price, symbol) {
   if (price < 0) price = 0;
-  return `${price.toFixed(2)} ${ilkData.gem}/USD`;
+  return `${round(price, 2).toLocaleString()} ${symbol}/USD`;
 }
 
 export function prettifyNumber(_num = null, truncate = false) {

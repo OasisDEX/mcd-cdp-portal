@@ -15,7 +15,7 @@ export const urn = addresses => (ilk, urn, urnId) => ({
   target: addresses.MCD_VAT,
   call: ['urns(bytes32,address)(uint256,uint256)', toHex(ilk), urn],
   returns: [
-    [`${urnId}.${INK}`, val => fromWei(val)],
-    [`${urnId}.${ART}`, val => fromWei(val)]
+    [`${urnId}.${INK}.${ilk}`, val => fromWei(val)],
+    [`${urnId}.${ART}.${ilk}`, val => fromWei(val)]
   ]
 });

@@ -5,6 +5,7 @@ import { getUnique } from 'utils/ui';
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
 export const RATE = 'rate';
+export const ILK_RATE = 'ilkRate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
 export const DEBT_CEILING = 'debtCeiling';
@@ -16,6 +17,7 @@ export const ADAPTER_BALANCE = 'adapterBalance';
 
 const defaultIlkState = {
   [RATE]: '',
+  [ILK_RATE]: '',
   [LAST_DRIP]: '',
   [FEED_VALUE_USD]: '',
   [DEBT_CEILING]: '',
@@ -30,7 +32,16 @@ const defaultIlkState = {
 
 export function getIlkData(feeds, ilkKey) {
   if (!feeds) return {};
-  return feeds.find(({ key }) => ilkKey === key) || {};
+  const ilkData = feeds.find(({ key }) => ilkKey === key);
+  if (!ilkData) return {};
+  return {
+    ...ilkData,
+    price: ilkData[FEED_VALUE_USD],
+    liquidationRatio: ilkData[LIQUIDATION_RATIO],
+    liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
+    ilkRate: ilkData[ILK_RATE],
+    stabilityFee: ilkData[RATE]
+  };
 }
 
 export function getAllFeeds(feeds) {
