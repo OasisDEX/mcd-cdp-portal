@@ -1,19 +1,17 @@
 import produce from 'immer';
 import round from 'lodash/round';
+import { trackCdpById } from './multicall/cdps';
 import { multiply, divide, subtract } from 'utils/bignumber';
-import { getWatcher } from '../watch';
-import { urn } from './multicall/cdps';
 import { getIlkData } from './feeds';
 
 const FETCHED_CDPS = 'cdps/FETCHED_CDPS';
 export const INK = 'ink';
 export const ART = 'art';
 
-export const initialState = {
-  items: []
-};
+export const initialState = {};
 
 const defaultCdpState = {
+  inited: false,
   [INK]: '',
   [ART]: '',
   ilk: ''
@@ -29,40 +27,13 @@ export async function fetchCdpsByAddress(maker, address) {
     const cdps = await Promise.all(
       cdpIds.map(({ id }) => cdpManager.getCdp(id))
     );
-    const cdpAddressHandlers = await Promise.all(
-      cdpIds.map(({ id }) => cdpManager.getUrn(id))
-    );
-    const addresses = maker.service('smartContract').getContractAddresses();
 
-    getWatcher().tap(calls =>
-      calls.concat(
-        cdpAddressHandlers.map((addressHandler, idx) => {
-          const ilk = cdpIds[idx].ilk;
-          const cdpId = cdpIds[idx].id;
-          return urn(addresses)(ilk, addressHandler, cdpId);
-        })
-      )
-    );
+    // add each cdp to multicall so that the state can be tracked
+    cdps.forEach(cdp => trackCdpById(maker, cdp.id, cdp));
 
     return { type: FETCHED_CDPS, payload: { cdps } };
   } catch (err) {
     return { type: FETCHED_CDPS, payload: { cdps: [] } };
-  }
-}
-
-export async function fetchCdpById(maker, cdpId) {
-  try {
-    const cdpManager = maker.service('mcd:cdpManager');
-    const cdp = await cdpManager.getCdp(cdpId);
-    const cdpAddressHandler = await cdpManager.getUrn(cdpId);
-
-    const addresses = maker.service('smartContract').getContractAddresses();
-
-    getWatcher().tap(calls =>
-      calls.concat([urn(addresses)(cdp.ilk, cdpAddressHandler, cdpId)])
-    );
-  } catch (err) {
-    console.error('failed to add cdps to state watcher', err);
   }
 }
 
@@ -166,14 +137,7 @@ export function getDaiAvailable(cdp) {
   );
 }
 
-const reducer = produce((draft, { type, payload, value }) => {
-  switch (type) {
-    case FETCHED_CDPS:
-      draft.items = payload.cdps || [];
-      break;
-    default:
-      break;
-  }
+const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   const [cdpId, valueType, ilk] = type.split('.');
   if (defaultCdpState.hasOwnProperty(valueType)) {
@@ -181,6 +145,7 @@ const reducer = produce((draft, { type, payload, value }) => {
     else
       draft[cdpId] = {
         ...defaultCdpState,
+        inited: true,
         [valueType]: value,
         ilk
       };

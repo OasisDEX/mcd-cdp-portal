@@ -8,7 +8,8 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
-import { fetchCdpsByAddress } from 'reducers/cdps';
+import { trackCdpById } from 'reducers/multicall/cdps';
+import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
@@ -41,29 +42,28 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [{ cdps }, dispatch] = useStore();
+  const [{ cdps, feeds }] = useStore();
   const [ratios, setRatios] = useState();
 
   useEffect(() => {
-    (async () => {
-      const address = account ? account.address : viewedAddress;
-      const action = await fetchCdpsByAddress(maker, address);
-      dispatch(action);
-    })();
-  }, [maker, viewedAddress, account, dispatch]);
+    if (account) {
+      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+    }
+  }, [maker, account]);
 
   useEffect(() => {
-    (async () => {
-      const ratios = await Promise.all(
-        cdps.items.map(cdp => cdp.getCollateralizationRatio())
-      );
+    if (account) {
+      const ratios = account.cdps.map(({ id: cdpId }) => {
+        const cdp = getCdp(cdpId, { cdps, feeds });
+        return getCollateralizationRatio(cdp);
+      });
       setRatios(ratios);
-    })();
-  }, [cdps]);
+    }
+  }, [account, cdps, feeds]);
 
   const { show } = useModal();
 
-  return (
+  return account ? (
     <Fragment>
       {/* <NavbarItem
         key="overview"
@@ -71,10 +71,8 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         label="Overview"
         active={currentPath.includes('/overview/')}
       /> */}
-      {cdps.items.map((cdp, idx) => {
-        const ratio = ratios[idx]
-          ? round(ratios[idx].times(100).toFixed(0))
-          : null;
+      {account.cdps.map((cdp, idx) => {
+        const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
         const linkPath = `/${cdp.id}`;
         const active = currentPath === linkPath;
         return (
@@ -101,7 +99,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         </DashedFakeButton>
       )}
     </Fragment>
-  );
+  ) : null;
 });
 
 export default CDPList;

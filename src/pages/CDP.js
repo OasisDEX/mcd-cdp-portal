@@ -29,7 +29,8 @@ import {
   getCollateralAvailableValue,
   getDaiAvailable
 } from 'reducers/cdps';
-import { fetchCdpById } from 'reducers/cdps';
+import { trackCdpById } from 'reducers/multicall/cdps';
+
 import ExternalLink from 'components/ExternalLink';
 
 const WithSeparators = styled(Box).attrs(() => ({
@@ -218,7 +219,7 @@ function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ feeds, cdps }] = useStore();
+  const [{ cdps, feeds }] = useStore();
   const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
     cdpId,
     cdps,
@@ -226,19 +227,18 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    fetchCdpById(maker, cdpId);
+    trackCdpById(maker, cdpId);
   }, [cdpId, maker]);
 
-  console.log(account ? account.address : null, cdp, cdps, 'cdps');
   return useMemo(
     () =>
-      cdp.ilk ? (
+      cdp.inited ? (
         <CDPViewPresentation
           cdp={cdp}
           cdpId={cdpId}
           showSidebar={showSidebar}
           account={account}
-          owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
+          owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
         />
       ) : (
         <LoadingLayout />

@@ -18,7 +18,18 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
         mixpanelIdentify(account.address, 'metamask');
-        setAccount(account);
+        setAccount({ ...account, cdps: [] });
+        (async () => {
+          const proxy = await maker
+            .service('proxy')
+            .getProxyAddress(account.address);
+          if (proxy) {
+            const cdpIds = await maker
+              .service('mcd:cdpManager')
+              .getCdpIds(proxy);
+            setAccount({ ...account, cdps: cdpIds });
+          }
+        })();
       });
     });
   }, [rpcUrl, addresses]);
