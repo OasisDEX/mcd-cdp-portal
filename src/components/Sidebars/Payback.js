@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import useMaker from '../../hooks/useMaker';
@@ -7,40 +8,48 @@ import {
   formatLiquidationPrice
 } from '../../utils/ui';
 import { calcCDPParams } from '../../utils/cdp';
+import useStore from 'hooks/useStore';
+import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 
-const Payback = ({ cdp, reset }) => {
+const Payback = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
+  const [storeState] = useStore();
+  const cdp = getCdp(cdpId, storeState);
+
+  const collateralAmount = getCollateralAmount(cdp);
+  const debtAmount = getDebtAmount(cdp);
+
   maker
-    .getToken('MDAI')
+    .getToken(MDAI)
     .balance()
     .then(daiBalance => setDaiBalance(daiBalance.toNumber()));
 
   useEffect(() => {
     const amountToPayback = parseFloat(amount || 0);
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp.ilkData,
-      gemsToLock: cdp.collateral.toNumber(),
-      daiToDraw: Math.max(cdp.debt.toNumber() - amountToPayback, 0)
+      ilkData: cdp,
+      gemsToLock: collateralAmount,
+      daiToDraw: Math.max(debtAmount - amountToPayback, 0)
     });
 
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
+  }, [amount, cdp]);
 
-  const setMax = () => setAmount(Math.min(cdp.debt.toNumber(), daiBalance));
+  const setMax = () => setAmount(Math.min(debtAmount, daiBalance));
 
   const payback = async () => {
     const proxyAddress = await maker.service('proxy').ensureProxy();
-    const daiToken = maker.getToken('MDAI');
+    const daiToken = maker.getToken(MDAI);
 
     const daiAllowanceSet = (await daiToken.allowance(
       maker.currentAddress(),
@@ -51,13 +60,18 @@ const Payback = ({ cdp, reset }) => {
       await daiToken.approveUnlimited(proxyAddress);
     }
 
-    newTxListener(cdp.wipeDai(parseFloat(amount)), 'Paying Back DAI');
+    newTxListener(
+      maker
+        .service('mcd:cdpManager')
+        .wipeAndFree(cdpId, cdp.ilk, MDAI(parseFloat(amount)), cdp.currency(0)),
+      'Paying Back DAI'
+    );
     reset();
   };
 
   const amt = parseFloat(amount);
   const isLessThanBalance = amt <= daiBalance;
-  const isLessThanDebt = amt <= cdp.debt.toNumber();
+  const isLessThanDebt = amt <= debtAmount;
   const isNonZero = amount !== '' && amt > 0;
   const valid = isNonZero && isLessThanDebt && isLessThanBalance;
 
@@ -107,11 +121,11 @@ const Payback = ({ cdp, reset }) => {
           />
           <Info
             title={lang.action_sidebar.dai_debt}
-            body={`${cdp.debt && cdp.debt.toNumber().toFixed(2)} DAI`}
+            body={`${debtAmount} DAI`}
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
           />
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}

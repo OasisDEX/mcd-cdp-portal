@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
-import { getUsdPrice, calcCDPParams } from '../../utils/cdp';
+import useStore from 'hooks/useStore';
+import {
+  getCdp,
+  getDebtAmount,
+  getCollateralPrice,
+  getCollateralAmount
+} from 'reducers/cdps';
+import { calcCDPParams } from '../../utils/cdp';
 import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
 import lang from 'languages';
 
-const Deposit = ({ cdp, reset }) => {
+const Deposit = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [gemBalance, setGemBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
-  const { symbol } = cdp.type.currency;
+
+  const [storeState] = useStore();
+  const cdp = getCdp(cdpId, storeState);
+
+  const collateralPrice = getCollateralPrice(cdp);
+  const collateralAmount = getCollateralAmount(cdp);
+  const debtAmount = getDebtAmount(cdp);
+
+  const { symbol } = cdp.currency;
 
   maker
     .getToken(symbol)
@@ -26,22 +42,25 @@ const Deposit = ({ cdp, reset }) => {
       setGemBalance(balance.toNumber());
     });
 
-  const priceFeed = getUsdPrice(cdp.ilkData);
-
   useEffect(() => {
     let val = parseFloat(amount);
     val = isNaN(val) ? 0 : val;
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp.ilkData,
-      gemsToLock: cdp.collateral.toNumber() + val,
-      daiToDraw: cdp.debt.toNumber()
+      ilkData: cdp,
+      gemsToLock: collateralAmount + val,
+      daiToDraw: debtAmount
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
+  }, [amount, cdp]);
 
-  const deposit = async () => {
-    newTxListener(cdp.lockCollateral(parseFloat(amount)), `Locking ${symbol}`);
+  const deposit = () => {
+    newTxListener(
+      maker
+        .service('mcd:cdpManager')
+        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
+      `Locking ${symbol}`
+    );
     reset();
   };
 
@@ -104,11 +123,11 @@ const Deposit = ({ cdp, reset }) => {
               lang.action_sidebar.gem_usd_price_feed,
               symbol
             )}
-            body={`${priceFeed} ${symbol}/USD`}
+            body={`${collateralPrice} ${symbol}/USD`}
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+            body={formatLiquidationPrice(liquidationPrice, symbol)}
           />
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}

@@ -1,50 +1,64 @@
 import React, { useState, useEffect } from 'react';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
+import { calcCDPParams } from '../../utils/cdp';
+import useStore from 'hooks/useStore';
 import {
-  calcCDPParams,
-  getLockedAndFreeCollateral,
-  getUsdPrice
-} from '../../utils/cdp';
+  getCdp,
+  getDebtAmount,
+  getCollateralAmount,
+  getCollateralPrice,
+  getCollateralAvailableAmount
+} from 'reducers/cdps';
 import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
 import lang from 'languages';
 
-const Withdraw = ({ cdp, reset }) => {
-  const { newTxListener } = useMaker();
+const Withdraw = ({ cdpId, reset }) => {
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
-  const collateralPrice = getUsdPrice(cdp.ilkData);
-  const { free: freeCollateral } = getLockedAndFreeCollateral(cdp);
-  const { symbol } = cdp.type.currency;
+  const [storeState] = useStore();
+  const cdp = getCdp(cdpId, storeState);
+
+  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
+  const collateralPrice = getCollateralPrice(cdp);
+  const collateralAmount = getCollateralAmount(cdp);
+  const debtAmount = getDebtAmount(cdp);
+
+  const { symbol } = cdp.currency;
 
   useEffect(() => {
     let val = parseFloat(amount);
     val = isNaN(val) ? 0 : val;
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp.ilkData,
-      gemsToLock: cdp.collateral.toNumber() - val,
-      daiToDraw: cdp.debt.toNumber()
+      ilkData: cdp,
+      gemsToLock: collateralAmount - val,
+      daiToDraw: debtAmount
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
+  }, [amount, cdp]);
 
-  const setMax = () => setAmount(freeCollateral);
-  const lessThanMax = amount === '' || parseFloat(amount) <= freeCollateral;
+  const setMax = () => setAmount(collateralAvailableAmount);
+  const lessThanMax =
+    amount === '' || parseFloat(amount) <= collateralAvailableAmount;
   const moreThanZero = amount !== '' && amount > 0;
   const valid = moreThanZero && lessThanMax;
 
-  const withdraw = async () => {
+  const withdraw = () => {
     newTxListener(
-      cdp.freeCollateral(parseFloat(amount)),
+      maker
+        .service('mcd:cdpManager')
+        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(parseFloat(amount))),
       `Withdrawing ${symbol}`
     );
     reset();
@@ -90,7 +104,7 @@ const Withdraw = ({ cdp, reset }) => {
         <InfoContainer>
           <Info
             title={lang.action_sidebar.maximum_available_to_withdraw}
-            body={`${freeCollateral.toFixed(6)} ${symbol}`}
+            body={`${collateralAvailableAmount} ${symbol}`}
           />
           <Info
             title={lang.formatString(
@@ -101,7 +115,7 @@ const Withdraw = ({ cdp, reset }) => {
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
           />
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}
