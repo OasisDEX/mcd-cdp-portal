@@ -3,7 +3,7 @@ import { Box } from '@makerdao/ui-components-core';
 import CDPCreate from 'components/CDPCreate';
 import CDPMigrate from 'components/CDPMigrate';
 import LedgerType from 'components/LedgerType';
-import HardwareWalletModal from 'components/HardwareWalletModal';
+import HardwareAccountSelect from 'components/HardwareAccountSelect';
 import templates from './templates';
 
 const modals = {
@@ -31,9 +31,7 @@ const modals = {
 
   ledgertype: args => <LedgerType {...args} />,
 
-  ledger: args => <HardwareWalletModal {...args} />,
-
-  trezor: args => <HardwareWalletModal {...args} />
+  hardwareaccountselect: args => <HardwareAccountSelect {...args} />
 };
 
 export { templates };

@@ -37,18 +37,17 @@ const { networkNames, defaultNetwork } = config;
 const withDefaultLayout = route =>
   hasNetwork(
     withView(async request => {
-      const { network } = request.query;
+      const { network, testchainId, backendEnv } = request.query;
       const { viewedAddress } = request.params;
-      const { addresses, rpcUrl } = await getOrFetchNetworkDetails(
-        request.query
-      );
+      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       const networkId = networkNameToId(network);
       return (
         <MakerHooksProvider
-          addresses={addresses}
           rpcUrl={rpcUrl}
           network={network}
+          testchainId={testchainId}
+          backendEnv={backendEnv}
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
@@ -85,18 +84,17 @@ const hasNetwork = route =>
 export default mount({
   '/': hasNetwork(
     route(async request => {
-      const { network } = request.query;
-      const { addresses, rpcUrl } = await getOrFetchNetworkDetails(
-        request.query
-      );
+      const { network, testchainId, backendEnv } = request.query;
+      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       return {
         title: 'Landing',
         view: (
           <MakerHooksProvider
-            addresses={addresses}
             rpcUrl={rpcUrl}
             network={network}
+            testchainId={testchainId}
+            backendEnv={backendEnv}
           >
             <RouteEffects network={network} />
             <ModalProvider modals={modals} templates={templates}>

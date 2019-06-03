@@ -27,16 +27,15 @@ function OpenCDPForm({
     daiAvailable,
     cdpParams.daiToDraw
   );
-
   const fields = [
     [
       lang.formatString(
         lang.cdp_create.deposit_form_field1_title,
-        selectedIlk.key
+        selectedIlk.currency.symbol
       ),
       lang.formatString(
         lang.cdp_create.deposit_form_field1_text,
-        selectedIlk.key
+        selectedIlk.currency.symbol
       ),
       <Input
         key="collinput"
@@ -51,7 +50,7 @@ function OpenCDPForm({
             ? null
             : lang.formatString(
                 lang.cdp_create.insufficient_ilk_balance,
-                selectedIlk.key
+                selectedIlk.currency.symbol
               )
         }
       />,
