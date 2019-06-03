@@ -12,7 +12,8 @@ function useMaker() {
     resetTx,
     hideTx,
     selectors,
-    network
+    network,
+    checkForNewCdps
   } = useContext(MakerObjectContext) || {};
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -84,6 +85,7 @@ function useMaker() {
     authenticated,
     isConnectedToProvider,
     connectBrowserProvider,
+    checkForNewCdps,
     account,
     transactions,
     newTxListener,

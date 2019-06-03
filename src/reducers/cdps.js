@@ -1,10 +1,8 @@
 import produce from 'immer';
 import round from 'lodash/round';
-import { trackCdpById } from './multicall/cdps';
 import { multiply, divide, subtract } from 'utils/bignumber';
 import { getIlkData } from './feeds';
 
-const FETCHED_CDPS = 'cdps/FETCHED_CDPS';
 export const INK = 'ink';
 export const ART = 'art';
 
@@ -16,26 +14,6 @@ const defaultCdpState = {
   [ART]: '',
   ilk: ''
 };
-
-export async function fetchCdpsByAddress(maker, address) {
-  try {
-    const proxy = await maker.service('proxy').getProxyAddress(address);
-    if (!proxy) return { type: FETCHED_CDPS, payload: { cdps: [] } };
-
-    const cdpManager = maker.service('mcd:cdpManager');
-    const cdpIds = await cdpManager.getCdpIds(proxy);
-    const cdps = await Promise.all(
-      cdpIds.map(({ id }) => cdpManager.getCdp(id))
-    );
-
-    // add each cdp to multicall so that the state can be tracked
-    cdps.forEach(cdp => trackCdpById(maker, cdp.id, cdp));
-
-    return { type: FETCHED_CDPS, payload: { cdps } };
-  } catch (err) {
-    return { type: FETCHED_CDPS, payload: { cdps: [] } };
-  }
-}
 
 export function getCdp(cdpId, state) {
   cdpId = cdpId.toString();

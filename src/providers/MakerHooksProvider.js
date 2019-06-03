@@ -1,4 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
+import isEqual from 'lodash/isEqual';
+import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 
@@ -9,6 +11,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (!rpcUrl) return;
@@ -33,6 +36,33 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
       });
     });
   }, [rpcUrl, addresses]);
+
+  const checkForNewCdps = async (numTries = 3, timeout = 500) => {
+    const proxy = await maker.service('proxy').getProxyAddress(account.address);
+    if (proxy) {
+      // FIXME: clear the cached ids
+      maker.service('mcd:cdpManager')._getCdpIdsPromises[proxy] = null;
+
+      const _checkForNewCdps = async triesRemaining => {
+        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+        if (isEqual(account.cdps, cdps) && triesRemaining > 0) {
+          setTimeout(() => {
+            _checkForNewCdps(triesRemaining - 1, timeout);
+          }, timeout);
+        } else {
+          const newId = cdps
+            .map(cdp => cdp.id)
+            .filter(
+              cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
+            )[0];
+          setAccount({ ...account, cdps: cdps });
+          navigation.navigate(`/${newId}?network=${network}`);
+        }
+      };
+
+      _checkForNewCdps(numTries - 1);
+    }
+  };
 
   const newTxListener = (transaction, txMessage) => {
     setTxReferences(current => [...current, [transaction, txMessage]]);
@@ -68,6 +98,7 @@ function MakerHooksProvider({ children, rpcUrl, addresses, network }) {
         resetTx,
         transactions: txReferences,
         newTxListener,
+        checkForNewCdps,
         selectors
       }}
     >

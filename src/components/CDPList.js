@@ -43,27 +43,39 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
   const [{ cdps, feeds }] = useStore();
-  const [ratios, setRatios] = useState();
+  const [ratios, setRatios] = useState([]);
+  const [navbarCdps, setNavbarCdps] = useState([]);
 
   useEffect(() => {
     if (account) {
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+      setNavbarCdps(account.cdps);
+    } else if (viewedAddress) {
+      (async () => {
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(viewedAddress);
+        if (!proxy) return;
+        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+        cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+        setNavbarCdps(cdps);
+      })();
     }
   }, [maker, account]);
 
   useEffect(() => {
-    if (account) {
-      const ratios = account.cdps.map(({ id: cdpId }) => {
+    if (account || viewedAddress) {
+      const ratios = navbarCdps.map(({ id: cdpId }) => {
         const cdp = getCdp(cdpId, { cdps, feeds });
         return getCollateralizationRatio(cdp);
       });
       setRatios(ratios);
     }
-  }, [account, cdps, feeds]);
+  }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
   const { show } = useModal();
 
-  return account ? (
+  return (
     <Fragment>
       {/* <NavbarItem
         key="overview"
@@ -71,7 +83,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         label="Overview"
         active={currentPath.includes('/overview/')}
       /> */}
-      {account.cdps.map((cdp, idx) => {
+      {navbarCdps.map((cdp, idx) => {
         const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
         const linkPath = `/${cdp.id}`;
         const active = currentPath === linkPath;
@@ -99,7 +111,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         </DashedFakeButton>
       )}
     </Fragment>
-  ) : null;
+  );
 });
 
 export default CDPList;
