@@ -30,7 +30,7 @@ const Deposit = ({ cdpId, reset }) => {
   const cdp = getCdp(cdpId, storeState);
 
   const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
   const { symbol } = cdp.currency;

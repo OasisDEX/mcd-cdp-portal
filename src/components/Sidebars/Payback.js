@@ -97,7 +97,7 @@ const Payback = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const collateralAmount = getCollateralAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
   maker

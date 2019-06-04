@@ -29,6 +29,7 @@ import {
   getCollateralAvailableValue,
   getDaiAvailable
 } from 'reducers/cdps';
+import { formatCollateralizationRatio } from 'utils/ui';
 import { trackCdpById } from 'reducers/multicall/cdps';
 
 import ExternalLink from 'components/ExternalLink';
@@ -293,7 +294,10 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
-            <AmountDisplay amount={collateralizationRatio} denomination="%" />
+            <AmountDisplay
+              amount={formatCollateralizationRatio(collateralizationRatio)}
+              denomination="%"
+            />
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}

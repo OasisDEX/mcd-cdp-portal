@@ -29,9 +29,9 @@ const Withdraw = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
+  const collateralAvailableAmount = getCollateralAvailableAmount(cdp, true, 9);
   const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
   const { symbol } = cdp.currency;
@@ -48,7 +48,7 @@ const Withdraw = ({ cdpId, reset }) => {
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp]);
 
-  const setMax = () => setAmount(collateralAvailableAmount);
+  const setMax = () => setAmount(collateralAvailableAmount.toFixed(9));
   const lessThanMax =
     amount === '' || parseFloat(amount) <= collateralAvailableAmount;
   const moreThanZero = amount !== '' && amount > 0;

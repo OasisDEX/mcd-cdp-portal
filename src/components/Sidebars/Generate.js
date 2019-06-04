@@ -5,6 +5,7 @@ import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
+import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
 import {
@@ -24,7 +25,7 @@ const Generate = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const collateralAmount = getCollateralAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
   useEffect(() => {
@@ -44,8 +45,10 @@ const Generate = ({ cdpId, reset }) => {
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp]);
 
-  const undercollateralized =
-    collateralizationRatio < parseFloat(cdp.liquidationRatio);
+  const undercollateralized = greaterThan(
+    cdp.liquidationRatio,
+    collateralizationRatio
+  );
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
   const setMax = () => setAmount(daiAvailable);

@@ -51,9 +51,7 @@ function MakerHooksProvider({
   const checkForNewCdps = async (numTries = 3, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
     if (proxy) {
-      // FIXME: clear the cached ids
-      maker.service('mcd:cdpManager')._getCdpIdsPromises[proxy] = null;
-
+      maker.service('mcd:cdpManager').reset();
       const _checkForNewCdps = async triesRemaining => {
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
         if (isEqual(account.cdps, cdps) && triesRemaining > 0) {

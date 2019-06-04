@@ -5,6 +5,8 @@ import { calcDaiAvailable, getUsdPrice } from './cdp';
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
     return 'Infinity';
+  } else if (isNaN(ratio)) {
+    return '---';
   } else {
     if (ratio < 0) ratio = 0;
     return `${ratio.toFixed(2)}%`;
