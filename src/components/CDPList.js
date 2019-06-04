@@ -8,7 +8,8 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
-import { fetchCdps } from 'reducers/cdps';
+import { trackCdpById } from 'reducers/multicall/cdps';
+import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
@@ -41,25 +42,36 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [{ cdps }, dispatch] = useStore();
-  const [ratios, setRatios] = useState();
+  const [{ cdps, feeds }] = useStore();
+  const [ratios, setRatios] = useState([]);
+  const [navbarCdps, setNavbarCdps] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      const address = account ? account.address : viewedAddress;
-      const action = await fetchCdps(maker, address);
-      dispatch(action);
-    })();
-  }, [maker, viewedAddress, account, dispatch]);
+    if (account) {
+      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+      setNavbarCdps(account.cdps);
+    } else if (viewedAddress) {
+      (async () => {
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(viewedAddress);
+        if (!proxy) return;
+        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+        cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+        setNavbarCdps(cdps);
+      })();
+    }
+  }, [maker, account]);
 
   useEffect(() => {
-    (async () => {
-      const ratios = await Promise.all(
-        cdps.items.map(cdp => cdp.getCollateralizationRatio())
-      );
+    if (account || viewedAddress) {
+      const ratios = navbarCdps.map(({ id: cdpId }) => {
+        const cdp = getCdp(cdpId, { cdps, feeds });
+        return getCollateralizationRatio(cdp);
+      });
       setRatios(ratios);
-    })();
-  }, [cdps]);
+    }
+  }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
   const { show } = useModal();
 
@@ -71,10 +83,8 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         label="Overview"
         active={currentPath.includes('/overview/')}
       /> */}
-      {cdps.items.map((cdp, idx) => {
-        const ratio = ratios[idx]
-          ? round(ratios[idx].times(100).toFixed(0))
-          : null;
+      {navbarCdps.map((cdp, idx) => {
+        const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
         const linkPath = `/${cdp.id}`;
         const active = currentPath === linkPath;
         return (

@@ -12,6 +12,7 @@ import {
   FEED_SET_USD,
   FEED_VALUE_USD,
   RATE,
+  ILK_RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING
@@ -44,6 +45,12 @@ export const rateData = addresses => name => ({
     ],
     [`${name}.${LAST_DRIP}`]
   ]
+});
+
+export const ilkVatData = addresses => name => ({
+  target: addresses.MCD_VAT,
+  call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
+  returns: [[], [`${name}.${ILK_RATE}`, val => fromRay(val, 5)], [], [], []]
 });
 
 export const pitData = addresses => name => ({
@@ -83,14 +90,15 @@ export const adapterBalance = addresses => name => ({
   returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
 });
 
-export function createCDPTypeModel(cdpKey, addresses) {
+export function createCDPTypeModel(ilk, addresses) {
   const cdpModel = [
     priceFeed,
     rateData,
     pitData,
     liquidation,
     flipper,
+    ilkVatData,
     adapterBalance
-  ].map(f => f(addresses)(cdpKey));
+  ].map(f => f(addresses)(ilk));
   return cdpModel;
 }

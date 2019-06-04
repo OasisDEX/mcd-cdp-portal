@@ -187,6 +187,7 @@ function RouteEffects({ network }) {
         ...ilkList
           .map(({ key: ilk }) => [
             cdpTypeModel.rateData(addresses)(ilk),
+            cdpTypeModel.ilkVatData(addresses)(ilk),
             cdpTypeModel.liquidation(addresses)(ilk),
             cdpTypeModel.flipper(addresses)(ilk)
           ])

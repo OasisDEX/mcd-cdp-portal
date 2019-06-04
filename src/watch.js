@@ -1,12 +1,18 @@
 import { createWatcher } from '@makerdao/multicall';
 
+let watcher = null;
+
 export function instantiateWatcher({ rpcUrl, multicallAddress }) {
-  const watcher = createWatcher([], {
+  watcher = createWatcher([], {
     rpcUrl,
     multicallAddress
   });
 
   window.watcher = watcher;
+  return watcher;
+}
+
+export function getWatcher() {
   return watcher;
 }
 

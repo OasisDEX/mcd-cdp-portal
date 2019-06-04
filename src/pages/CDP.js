@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -17,9 +17,22 @@ import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
-import { getIlkData } from 'reducers/feeds';
+import {
+  getCdp,
+  getDebtAmount,
+  getLiquidationPrice,
+  getCollateralPrice,
+  getCollateralAmount,
+  getCollateralValueUSD,
+  getCollateralizationRatio,
+  getCollateralAvailableAmount,
+  getCollateralAvailableValue,
+  getDaiAvailable
+} from 'reducers/cdps';
+import { formatCollateralizationRatio } from 'utils/ui';
+import { trackCdpById } from 'reducers/multicall/cdps';
+
 import ExternalLink from 'components/ExternalLink';
-import round from 'lodash/round';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -203,108 +216,55 @@ const CdpViewHistory = ({ title, rows }) => {
   );
 };
 
-function CDPView({ cdpId: _cdpId }) {
-  const cdpId = parseInt(_cdpId, 10);
+function CDPView({ cdpId }) {
+  cdpId = parseInt(cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ feeds, cdps }] = useStore();
+  const [{ cdps, feeds }] = useStore();
+  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
+    cdpId,
+    cdps,
+    feeds
+  ]);
 
-  // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
-  const [cdp, setCDP] = useState(null);
   useEffect(() => {
-    let didCancel = false;
-    (async () => {
-      const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(cdpId);
-      const ilkData = getIlkData(feeds, cdp.ilk);
-      const [
-        debt,
-        collateral,
-        collateralPrice,
-        collateralizationRatio,
-        liquidationPrice,
-        daiAvailable,
-        minCollateral,
-        collateralAvailable
-      ] = await Promise.all([
-        cdp.getDebtValue(),
-        cdp.getCollateralAmount(),
-        cdp.type.getPrice(),
-        cdp.getCollateralizationRatio(),
-        cdp.getLiquidationPrice(),
-        cdp.getDaiAvailable(),
-        cdp.minCollateral(),
-        cdp.getCollateralAvailable()
-      ]);
-      if (didCancel) return;
-
-      // FIXME well this is an interesting way to store local state
-      Object.assign(cdp, {
-        ilkData,
-        debt,
-        collateral,
-        collateralPrice,
-        collateralizationRatio,
-        liquidationPrice,
-        daiAvailable,
-        minCollateral,
-        collateralAvailable
-      });
-
-      setCDP(cdp);
-      return () => (didCancel = true);
-    })();
-  }, [cdpId, feeds, maker, cdps]);
+    trackCdpById(maker, cdpId);
+  }, [cdpId, maker]);
 
   return useMemo(
     () =>
-      cdp ? (
+      cdp.inited ? (
         <CDPViewPresentation
           cdp={cdp}
+          cdpId={cdpId}
           showSidebar={showSidebar}
           account={account}
-          owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
+          owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
         />
       ) : (
         <LoadingLayout />
       ),
-    [cdp, showSidebar, account]
+    [cdp, showSidebar, cdps, account]
   );
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
-  console.log('CDPViewPresentation rendering');
-  const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
-  const gem = cdp.type.currency.symbol;
-  const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
-  const liquidationPenalty = cdp.ilkData.liquidationPenalty + '%';
-  const collateralizationRatio = round(
-    cdp.collateralizationRatio.times(100).toNumber(),
-    2
-  );
-  const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
-  const stabilityFee = cdp.ilkData.rate * 100 + '00%';
-  const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
-  const collateralUSDValue = round(
-    cdp.collateral.times(cdp.collateralPrice).toNumber(),
-    2
-  );
-  const collateralAvailableAmount = round(
-    cdp.collateralAvailable.toNumber(),
-    2
-  );
-  const collateralAvailableValue = round(
-    cdp.collateralAvailable.times(cdp.collateralPrice).toNumber(),
-    2
-  );
-  const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
-  const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
+function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
+  const gem = cdp.currency.symbol;
+  const debtAmount = getDebtAmount(cdp);
+  const liquidationPrice = getLiquidationPrice(cdp);
+  const collateralPrice = getCollateralPrice(cdp);
+  const collateralAmount = getCollateralAmount(cdp);
+  const collateralUSDValue = getCollateralValueUSD(cdp);
+  const collateralizationRatio = getCollateralizationRatio(cdp);
+  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
+  const collateralAvailableValue = getCollateralAvailableValue(cdp);
+  const daiAvailable = getDaiAvailable(cdp);
 
   return (
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {lang.cdp} {cdp.id}
+          {lang.cdp} {cdpId}
         </Text.h2>
       </Box>
       <Grid
@@ -328,21 +288,24 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={liquidationPenalty}
+            value={cdp.liquidationPenalty + '%'}
           />
         </CdpViewCard>
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
-            <AmountDisplay amount={collateralizationRatio} denomination="%" />
+            <AmountDisplay
+              amount={formatCollateralizationRatio(collateralizationRatio)}
+              denomination="%"
+            />
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={liquidationRatio}
+            value={cdp.liquidationRatio + '.00%'}
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={stabilityFee}
+            value={cdp.stabilityFee + '%'}
           />
         </CdpViewCard>
 
@@ -357,7 +320,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -375,7 +338,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -388,14 +351,14 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
         <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={`${parseFloat(debtAmount)} DAI`}
+            value={debtAmount + ' DAI'}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'payback',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -412,7 +375,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
