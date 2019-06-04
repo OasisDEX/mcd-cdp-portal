@@ -34,6 +34,16 @@ import { trackCdpById } from 'reducers/multicall/cdps';
 
 import ExternalLink from 'components/ExternalLink';
 
+import {
+  collateralAmount,
+  collateralValue,
+  daiAvailable,
+  debtValue
+} from '@makerdao/dai-plugin-mcd/dist/math';
+import { USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { createCurrencyRatio } from '@makerdao/currency';
+import BigNumber from 'bignumber.js';
+
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
   borderColor: 'grey.300'
@@ -244,8 +254,22 @@ function CDPView({ cdpId }) {
       ) : (
         <LoadingLayout />
       ),
-    [cdp, showSidebar, cdps, account]
+    [cdp, cdpId, showSidebar, account]
   );
+}
+
+function calcFromSdk(cdp) {
+  const collateralAmount_ = collateralAmount(
+    cdp.currency,
+    BigNumber(cdp.ink).shiftedBy(18)
+  );
+  const collateralValue_ = collateralValue(collateralAmount_, cdp.price);
+  const lr = createCurrencyRatio(USD, MDAI)(cdp.liquidationRatio / 100);
+  const debtValue_ = debtValue(
+    BigNumber(cdp.art).shiftedBy(18),
+    BigNumber(cdp.ilkRate).shiftedBy(27)
+  );
+  return daiAvailable(collateralValue_, debtValue_, lr);
 }
 
 function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
@@ -259,6 +283,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
+  const daiAvailable2 = calcFromSdk(cdp);
 
   return (
     <PageContentLayout>
@@ -368,7 +393,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.available_generate}
-            value={`${daiAvailable} DAI`}
+            value={`${daiAvailable} DAI; ${daiAvailable2}`}
             button={
               <ActionButton
                 disabled={!account || !owner}
