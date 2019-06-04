@@ -71,7 +71,11 @@ const Payback = ({ cdp, reset }) => {
       });
       const daiToken = maker.getToken('MDAI');
       const { proxyAddress: address } = allowanceState;
-      await daiToken.approveUnlimited(address);
+
+      const txPromise = daiToken.approveUnlimited(address);
+      newTxListener(txPromise, 'Setting DAI Allowance');
+      await txPromise;
+
       const allowance = await checkAllowance({ address });
       if (allowance) {
         setAllowanceState({
