@@ -20,7 +20,6 @@ export const rateData = addresses => name => ({
   returns: [[`${name}.${DUTY}`], [`${name}.${LAST_DRIP}`]]
 });
 
-// FIXME it's redundant to call this for each ilk; once per gem would suffice
 export const ilkVatData = addresses => name => ({
   target: addresses.MCD_VAT,
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
