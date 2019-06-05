@@ -29,7 +29,6 @@ import {
   getCollateralAvailableValue,
   getDaiAvailable
 } from 'reducers/cdps';
-import { formatCollateralizationRatio } from 'utils/ui';
 import { trackCdpById } from 'reducers/multicall/cdps';
 
 import ExternalLink from 'components/ExternalLink';
@@ -244,14 +243,15 @@ function CDPView({ cdpId }) {
       ) : (
         <LoadingLayout />
       ),
-    [cdp, showSidebar, cdps, account]
+    [cdp, cdpId, showSidebar, account]
   );
 }
 
 function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
-  const liquidationPrice = getLiquidationPrice(cdp);
+  let liquidationPrice = getLiquidationPrice(cdp);
+  if (liquidationPrice) liquidationPrice = liquidationPrice.toFixed(2);
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp);
   const collateralUSDValue = getCollateralValueUSD(cdp);
@@ -294,10 +294,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
-            <AmountDisplay
-              amount={formatCollateralizationRatio(collateralizationRatio)}
-              denomination="%"
-            />
+            <AmountDisplay amount={collateralizationRatio} denomination="%" />
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}

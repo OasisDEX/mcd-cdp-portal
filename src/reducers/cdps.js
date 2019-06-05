@@ -36,12 +36,8 @@ export function getLiquidationPrice(cdp, rounded = true, precision = 2) {
   if (!cdp.liquidationRatio || !cdp.ink) return '';
   const debtAmount = getDebtAmount(cdp, false);
   if (!debtAmount) return '';
-  return rounded
-    ? round(
-        divide(multiply(debtAmount, cdp.liquidationRatio), cdp.ink),
-        precision
-      )
-    : divide(multiply(debtAmount, cdp.liquidationRatio), cdp.ink);
+  const val = divide(multiply(debtAmount, cdp.liquidationRatio / 100), cdp.ink);
+  return rounded ? round(val, precision) : val;
 }
 
 export function getCollateralPrice(cdp, rounded = true, precision = 2) {
