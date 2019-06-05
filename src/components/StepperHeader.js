@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
-import WalletSelection from './WalletSelection';
+import ActiveAccount from './ActiveAccount';
 import useMaker from 'hooks/useMaker';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
 
@@ -14,7 +14,7 @@ const StepperHeader = ({ onClose }) => {
         alignItems="center"
       >
         <Box>
-          <WalletSelection
+          <ActiveAccount
             currentAccount={account}
             textColor="steel"
             t="1.6rem"

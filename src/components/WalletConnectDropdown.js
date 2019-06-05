@@ -10,7 +10,7 @@ import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
-import theme, { getMeasurement, getSpace, getColor } from 'styles/theme';
+import { getMeasurement, getSpace, getColor } from 'styles/theme';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -30,7 +30,12 @@ const Option = ({ children, ...props }) => {
   );
 };
 
-const WalletConnectDropdown = ({ children, close, ...props }) => {
+const WalletConnectDropdown = ({
+  trigger,
+  children,
+  close = () => {},
+  ...props
+}) => {
   const { maker, account, connectBrowserProvider } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
@@ -54,14 +59,12 @@ const WalletConnectDropdown = ({ children, close, ...props }) => {
   }, [maker, account, activeAccountAddress]);
 
   const hasBrowserAccount =
-    account.type === 'browser' || otherAccounts.some(a => a.type === 'browser');
+    account &&
+    (account.type === 'browser' ||
+      otherAccounts.some(a => a.type === 'browser'));
 
   return (
-    <Dropdown
-      trigger={children}
-      offset={`-${theme.space.s + 1}, 5px`}
-      {...props}
-    >
+    <Dropdown trigger={trigger} display="block" {...props}>
       <Card
         width={getMeasurement('sidebarWidth') - getSpace('s')}
         css={`
@@ -100,7 +103,12 @@ const WalletConnectDropdown = ({ children, close, ...props }) => {
           );
         })}
         {!hasBrowserAccount && (
-          <Option onClick={connectBrowserProvider}>
+          <Option
+            onClick={() => {
+              connectBrowserProvider();
+              close();
+            }}
+          >
             Connect to {lang.providers[getWebClientProviderName()]}
           </Option>
         )}

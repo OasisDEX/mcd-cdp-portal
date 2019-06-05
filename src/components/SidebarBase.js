@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
@@ -6,28 +6,41 @@ import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
 import AccountConnect from './SidebarAccountConnect';
-import WalletSelection from 'components/WalletSelection';
+import ActiveAccount from 'components/ActiveAccount';
+import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
 import NotificationManager from 'components/NotificationManager';
-import theme, { getMeasurement } from 'styles/theme';
+import theme, { getMeasurement, getSpace } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
 const SHOW_MIGRATE_BUTTON = true;
 
 function AccountSection({ currentAccount }) {
+  const [open, setOpen] = useState(false);
+  const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
+  const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
+  const yOffset = currentAccount ? '5px' : '0px';
+
   return (
     <Card p="s">
-      {currentAccount ? (
-        <WalletSelection currentAccount={currentAccount} />
-      ) : (
-        <Flex alignItems="center">
-          <AccountConnect />
-        </Flex>
-      )}
+      <WalletConnectDropdown
+        show={open}
+        offset={`-${getSpace('s') + 1}, ${yOffset}`}
+        openOnHover={false}
+        onClick={toggleDropdown}
+        close={closeDropdown}
+        trigger={
+          currentAccount ? (
+            <ActiveAccount currentAccount={currentAccount} />
+          ) : (
+            <AccountConnect />
+          )
+        }
+      />
     </Card>
   );
 }
