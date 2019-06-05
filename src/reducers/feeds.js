@@ -1,6 +1,6 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
-import { getUnique } from 'utils/ui';
+import uniqBy from 'lodash/uniqBy';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -45,7 +45,7 @@ export function getIlkData(feeds, ilkKey) {
 }
 
 export function getAllFeeds(feeds) {
-  return getUnique(feeds, 'gem').reduce((acc, cdpType) => {
+  return uniqBy(feeds, 'gem').reduce((acc, cdpType) => {
     // this will get usd feeds only
     if (!cdpType[FEED_VALUE_USD]) return acc;
     return acc.concat({
