@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import lang from 'languages';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -18,12 +18,21 @@ const WalletSection = ({
   readOnly,
   ...rest
 }) => {
+  const [open, setOpen] = useState(false);
+  const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
+  const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
+
   const { address, type } = currentAccount;
   if (!currentAccount) return null;
   const providerType =
     type === 'browser' ? getWebClientProviderName(type) : type;
   return (
-    <WalletConnectDropdown>
+    <WalletConnectDropdown
+      show={open}
+      openOnHover={false}
+      onClick={toggleDropdown}
+      close={closeDropdown}
+    >
       <Flex alignItems="center" {...rest}>
         <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
         <Box ml="xs" mr="auto">

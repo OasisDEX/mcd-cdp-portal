@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import lang from 'languages';
-import {
-  Card,
-  Dropdown,
-  Box,
-  Text,
-  Flex,
-  Grid
-} from '@makerdao/ui-components-core';
+import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 import { mixpanelIdentify } from 'utils/analytics';
@@ -36,7 +29,7 @@ const Option = ({ children, ...props }) => {
   );
 };
 
-const WalletConnectDropdown = ({ children }) => {
+const WalletConnectDropdown = ({ children, close, ...props }) => {
   const { maker, account, connectBrowserProvider } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
@@ -57,8 +50,18 @@ const WalletConnectDropdown = ({ children }) => {
     account.type === 'browser' || otherAccounts.some(a => a.type === 'browser');
 
   return (
-    <Dropdown trigger={children} offset={`-${theme.space.s}`}>
-      <Card width={getMeasurement('sidebarWidth') - getSpace('s')}>
+    <Dropdown
+      trigger={children}
+      offset={`-${theme.space.s + 1}, 5px`}
+      {...props}
+    >
+      <Card
+        width={getMeasurement('sidebarWidth') - getSpace('s')}
+        css={`
+          border-top-right-radius: 0;
+          border-top-left-radius: 0;
+        `}
+      >
         {otherAccounts.map(account => {
           const providerType =
             account.type === 'browser'
@@ -67,7 +70,10 @@ const WalletConnectDropdown = ({ children }) => {
           return (
             <Option
               key={account.address}
-              onClick={() => onAccountChosen(account, account.type)}
+              onClick={() => {
+                onAccountChosen(account, account.type);
+                close();
+              }}
             >
               <Grid
                 justifyContent="start"
@@ -91,9 +97,30 @@ const WalletConnectDropdown = ({ children }) => {
             Connect to {lang.providers[getWebClientProviderName()]}
           </Option>
         )}
-        <Option onClick={connectLedgerWallet}>Connect to Ledger Nano</Option>
-        <Option onClick={connectTrezorWallet}>Connect to Trezor</Option>
-        <Option onClick={getWalletConnectAccounts}>Wallet Connect</Option>
+        <Option
+          onClick={() => {
+            connectLedgerWallet();
+            close();
+          }}
+        >
+          Connect to Ledger Nano
+        </Option>
+        <Option
+          onClick={() => {
+            connectTrezorWallet();
+            close();
+          }}
+        >
+          Connect to Trezor
+        </Option>
+        <Option
+          onClick={() => {
+            getWalletConnectAccounts();
+            close();
+          }}
+        >
+          Wallet Connect
+        </Option>
       </Card>
     </Dropdown>
   );
