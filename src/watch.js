@@ -2,7 +2,12 @@ import { createWatcher } from '@makerdao/multicall';
 import { batchActions } from './utils/redux';
 import ilkList from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
-import * as cdpTypeModel from './reducers/multicall/feeds';
+import {
+  flipper,
+  ilkVatData,
+  liquidation,
+  rateData
+} from './reducers/multicall/feeds';
 import { isMissingContractAddress } from './utils/ethereum';
 
 let watcher = null;
@@ -16,7 +21,10 @@ export function startWatcher({
   watcher = createWatcher([], { rpcUrl, multicallAddress });
   window.watcher = watcher;
 
-  watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
+  watcher.batch().subscribe(updates => {
+    console.log('watcher updates:', updates);
+    dispatch(batchActions(updates));
+  });
 
   // all bets are off wrt what contract state in our store
   dispatch({ type: 'CLEAR_CONTRACT_STATE' });
@@ -25,13 +33,12 @@ export function startWatcher({
   watcher.tap(() => {
     return [
       ...createCDPSystemModel(addresses),
-      // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
       ...ilkList
         .map(({ key: ilk }) => [
-          cdpTypeModel.rateData(addresses)(ilk),
-          cdpTypeModel.ilkVatData(addresses)(ilk),
-          cdpTypeModel.liquidation(addresses)(ilk),
-          cdpTypeModel.flipper(addresses)(ilk)
+          rateData(addresses)(ilk),
+          ilkVatData(addresses)(ilk),
+          liquidation(addresses)(ilk),
+          flipper(addresses)(ilk)
         ])
         .flat()
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)

@@ -38,12 +38,19 @@ const surplusAuctionLotSize = addresses => ({
   returns: [[SURPLUS_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
 });
 
+const par = addresses => ({
+  target: addresses.MCD_SPOT,
+  call: ['par()(uint256)'],
+  returns: [['par']]
+});
+
 export function createCDPSystemModel(addresses) {
   return [
     totalDebt,
     baseRate,
     globalDebtCeiling,
     debtAuctionLotSize,
-    surplusAuctionLotSize
+    surplusAuctionLotSize,
+    par
   ].map(f => f(addresses));
 }
