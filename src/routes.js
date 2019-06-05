@@ -18,17 +18,12 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
-import ilkList from 'references/ilkList';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 
-import { createCDPSystemModel } from 'reducers/multicall/system';
-import * as cdpTypeModel from 'reducers/multicall/feeds';
-
-import { isMissingContractAddress } from 'utils/ethereum';
 import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
-import { instantiateWatcher } from './watch';
+import { startWatcher } from './watch';
 import uniqBy from 'lodash/uniqBy';
 import { batchActions } from 'utils/redux';
 
@@ -168,31 +163,11 @@ function RouteEffects({ network }) {
   useEffect(() => {
     if (!maker) return;
     const scs = maker.service('smartContract');
-    const addresses = scs.getContractAddresses();
-    const watcher = instantiateWatcher({
+    startWatcher({
       rpcUrl: maker.service('web3').rpcUrl,
-      multicallAddress: scs.getContractAddress('MULTICALL')
-    });
-
-    watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
-
-    // all bets are off wrt what contract state in our store
-    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    watcher.start();
-    // do our best to attach state listeners to this new network
-    watcher.tap(() => {
-      return [
-        ...createCDPSystemModel(addresses),
-        // cdpTypeModel.priceFeed(addresses)('WETH', { decimals: 18 }), // price feeds are by gem
-        ...ilkList
-          .map(({ key: ilk }) => [
-            cdpTypeModel.rateData(addresses)(ilk),
-            cdpTypeModel.ilkVatData(addresses)(ilk),
-            cdpTypeModel.liquidation(addresses)(ilk),
-            cdpTypeModel.flipper(addresses)(ilk)
-          ])
-          .flat()
-      ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
+      multicallAddress: scs.getContractAddress('MULTICALL'),
+      addresses: scs.getContractAddresses(),
+      dispatch
     });
   }, [maker]);
 
