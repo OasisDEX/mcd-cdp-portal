@@ -9,6 +9,7 @@ import { getWebClientProviderName } from 'utils/web3';
 import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import useBrowserProvider from 'hooks/useBrowserProvider';
 import theme, { getMeasurement, getSpace, getColor } from 'styles/theme';
 
 const Option = ({ children, ...props }) => {
@@ -33,6 +34,7 @@ const WalletConnectDropdown = ({ children, close, ...props }) => {
   const { maker, account, connectBrowserProvider } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
+  const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
 
   function onAccountChosen({ address }, type) {
@@ -42,9 +44,14 @@ const WalletConnectDropdown = ({ children, close, ...props }) => {
 
   useEffect(() => {
     const accounts = maker.listAccounts();
-    const otherAccounts = accounts.filter(a => a.address !== account.address);
+    const otherAccounts = accounts.filter(
+      a =>
+        a.address !== account.address &&
+        (account.type !== 'browser' || a.type !== 'browser') &&
+        (account.type === 'browser' || a.address === activeAccountAddress)
+    );
     setOtherAccounts(otherAccounts);
-  }, [maker, account]);
+  }, [maker, account, activeAccountAddress]);
 
   const hasBrowserAccount =
     account.type === 'browser' || otherAccounts.some(a => a.type === 'browser');
