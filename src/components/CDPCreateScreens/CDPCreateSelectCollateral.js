@@ -62,8 +62,8 @@ function IlkTableRow({ ilk, checked, dispatch }) {
         key: ilk.key,
         gemBalance:
           userGemBalance === null
-            ? userGemBalance.toNumber()
-            : await maker.getToken(ilk.currency).balance(),
+            ? (await maker.getToken(ilk.currency).balance()).toNumber()
+            : userGemBalance.toNumber(),
         currency: ilk.currency,
         data: ilk.data
       }

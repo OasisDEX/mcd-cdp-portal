@@ -48,13 +48,15 @@ function MakerHooksProvider({
     });
   }, [rpcUrl]);
 
-  const checkForNewCdps = async (numTries = 3, timeout = 500) => {
+  const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
     if (proxy) {
       maker.service('mcd:cdpManager').reset();
+
       const _checkForNewCdps = async triesRemaining => {
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        if (isEqual(account.cdps, cdps) && triesRemaining > 0) {
+        if (isEqual(account.cdps, cdps)) {
+          if (triesRemaining === 0) return;
           setTimeout(() => {
             _checkForNewCdps(triesRemaining - 1, timeout);
           }, timeout);
