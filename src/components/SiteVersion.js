@@ -1,8 +1,8 @@
 import React from 'react';
 
-const deployment = process.env.NOW_GITHUB_DEPLOYMENT;
+const env = process.env;
 const SiteVersion = () => {
-  console.log(deployment);
+  console.log(env);
   return <div>ugfiuy</div>;
 };
 
