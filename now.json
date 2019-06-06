@@ -16,7 +16,6 @@
     { "src": "^/(.*)", "dest": "/index.html" }
   ],
   "github": {
-    "enabled": true,
     "autoAlias": false
   },
   "env": {
