@@ -14,7 +14,7 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
-import theme from 'styles/theme';
+import theme, { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
@@ -270,7 +270,7 @@ function CDPView({ cdpId }) {
           owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
         />
       ) : (
-        <LoadingLayout />
+        <LoadingLayout background={getColor('backgroundGrey')} />
       ),
     [cdp, cdpId, showSidebar, account]
   );

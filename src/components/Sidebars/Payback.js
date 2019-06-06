@@ -7,7 +7,8 @@ import {
   Grid,
   Link,
   Button,
-  Toggle
+  Toggle,
+  Loader
 } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import useMaker from '../../hooks/useMaker';
@@ -16,13 +17,13 @@ import {
   formatLiquidationPrice
 } from '../../utils/ui';
 import { calcCDPParams } from '../../utils/cdp';
+import { getColor } from 'styles/theme';
 import useStore from 'hooks/useStore';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
-import Loader from '../Loader';
 
 const Payback = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
@@ -182,7 +183,7 @@ const Payback = ({ cdpId, reset }) => {
 
             {loading ? (
               <Box alignSelf="center" justifySelf="end">
-                <Loader size="20" />
+                <Loader size="2rem" color={getColor('makerTeal')} />
               </Box>
             ) : (
               <Toggle
