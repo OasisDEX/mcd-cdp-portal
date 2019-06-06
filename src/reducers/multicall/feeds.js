@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
-import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
+import { fromWei, fromRad, fromRay, sub, mul, RAY } from 'utils/units';
 import {
   ADAPTER_BALANCE,
   MAX_AUCTION_LOT_SIZE,
@@ -58,7 +58,11 @@ export const pitData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint256)', toHex(name)],
   returns: [
     [`${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
-    [`${name}.${DEBT_CEILING}`, val => fromWei(val, 5)]
+    [
+      `${name}.${DEBT_CEILING}`,
+      val =>
+        console.log(`***PIT debtCeiling for ${name}`, val) || fromWei(val, 5)
+    ]
   ]
 });
 
@@ -90,6 +94,27 @@ export const adapterBalance = addresses => name => ({
   returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
 });
 
+export const lineData = addresses => name =>
+  console.log('line data', addresses, name) || {
+    target: addresses.MCD_VAT,
+    call: [
+      'ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)',
+      toHex(name)
+    ],
+    returns: [
+      [],
+      [],
+      [],
+      [
+        `${name}.${DEBT_CEILING}`,
+        val =>
+          console.log(`debtCeiling for ${name}`, val, fromRad(val, 5)) ||
+          fromRad(val, 5)
+      ],
+      []
+    ]
+  };
+
 export function createCDPTypeModel(ilk, addresses) {
   const cdpModel = [
     priceFeed,
@@ -98,7 +123,8 @@ export function createCDPTypeModel(ilk, addresses) {
     liquidation,
     flipper,
     ilkVatData,
-    adapterBalance
+    adapterBalance,
+    lineData
   ].map(f => f(addresses)(ilk));
   return cdpModel;
 }
