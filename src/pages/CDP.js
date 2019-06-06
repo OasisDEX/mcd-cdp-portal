@@ -14,6 +14,7 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
+import theme from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
@@ -33,6 +34,11 @@ import { trackCdpById } from 'reducers/multicall/cdps';
 
 import ExternalLink from 'components/ExternalLink';
 
+const mediumScreenMinBreakpoint = theme.breakpoints.xl;
+const mediumScreenMaxBreakpoint = '1425px';
+
+const mediaMediumScreen = `@media (min-width: ${mediumScreenMinBreakpoint}) and (max-width: ${mediumScreenMaxBreakpoint})`;
+
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
   borderColor: 'grey.300'
@@ -45,26 +51,15 @@ const WithSeparators = styled(Box).attrs(() => ({
 const InfoContainerRow = ({ title, value }) => {
   return (
     <WithSeparators>
-      <Flex py="xs" justifyContent="space-between" flexWrap="wrap">
-        <Box>
-          <TextBlock fontSize="l" width="270px">
-            {title}
-          </TextBlock>
-        </Box>
-        <Box flexGrow="1">
-          <Box display="flex">
-            <Box flexGrow={['0', '1', '1']} />
-            <TextBlock
-              fontSize="l"
-              width="110px"
-              textAlign={['left', 'right', 'right']}
-            >
-              {value}
-            </TextBlock>
-            <Box flexGrow={['1', '0', '0']} />
-          </Box>
-        </Box>
-      </Flex>
+      <Grid
+        gridTemplateColumns="1fr auto"
+        py="xs"
+        gridColumnGap="s"
+        alignItems="center"
+      >
+        <Text t="body">{title}</Text>
+        <Text t="body">{value}</Text>
+      </Grid>
     </WithSeparators>
   );
 };
@@ -72,67 +67,101 @@ const InfoContainerRow = ({ title, value }) => {
 const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
     <WithSeparators>
-      <Flex flexWrap="wrap" justifyContent="space-between" py="s">
-        <Box alignSelf="center" maxWidth="33%">
-          <TextBlock color="darkLavender" fontSize="l">
-            {title}
-          </TextBlock>
+      <Grid
+        py="s"
+        gridTemplateColumns="1fr auto auto"
+        alignItems="center"
+        gridColumnGap="s"
+        gridAutoRows="min-content"
+        gridRowGap="2xs"
+      >
+        <Text
+          css={`
+            grid-column: 1;
+            grid-row: span 2;
+
+            ${mediaMediumScreen} {
+              grid-row: 1;
+              grid-column: span 3;
+            }
+          `}
+          t="body"
+        >
+          {title}
+        </Text>
+        <Text
+          css={`
+            grid-column: 2;
+            grid-row: ${conversion ? '1' : 'span 2'};
+
+            ${mediaMediumScreen} {
+              grid-row: 2;
+            }
+          `}
+          t="h5"
+          color="darkLavender"
+          justifySelf="end"
+        >
+          {value}
+        </Text>
+        {conversion ? (
+          <ExtraInfo
+            css={`
+              grid-row: 2;
+              grid-column: 2;
+
+              ${mediaMediumScreen} {
+                grid-row: 3;
+              }
+            `}
+            justifySelf="end"
+          >
+            {conversion}
+          </ExtraInfo>
+        ) : null}
+        <Box
+          css={`
+            grid-column: 3;
+            grid-row: span 2;
+
+            ${mediaMediumScreen} {
+              grid-row: ${conversion ? 'span 2' : '2'};
+            }
+          `}
+        >
+          {button}
         </Box>
-        <Box flexGrow="1">
-          <Box display="flex">
-            <Box flexGrow={['0', '1', '1']} />
-            <Flex flexDirection="column" pr="m" alignSelf="center">
-              <TextBlock
-                width="90px"
-                t="h5"
-                lineHeight="normal"
-                fontWeight="medium"
-                color="darkLavender"
-                textAlign={['left', 'right', 'right']}
-              >
-                {value}
-              </TextBlock>
-              {conversion ? (
-                <ExtraInfo textAlign={['left', 'right', 'right']}>
-                  {conversion}
-                </ExtraInfo>
-              ) : null}
-            </Flex>
-            <Box flexGrow={['1', '0', '0']} />
-            <Box alignSelf="center">{button}</Box>
-          </Box>
-        </Box>
-      </Flex>
+      </Grid>
     </WithSeparators>
   );
 };
 
 const ActionButton = ({ children, ...props }) => (
   <Button width="100px" p="xs" variant="secondary" {...props}>
-    <TextBlock fontSize="s" fontWeight="medium" color="darkLavender">
+    <Text fontSize="s" fontWeight="medium" color="darkLavender">
       {children}
-    </TextBlock>
+    </Text>
   </Button>
 );
 
 const CdpViewCard = ({ title, children }) => {
   return (
-    <Box my="s">
+    <Flex py="s" height="100%" flexDirection="column">
       <Text.h4>{title}</Text.h4>
-      <Card px="l" pt="s" pb="s" my="s">
+      <Card px={{ s: 'm', m: 'l' }} py="s" mt="s" flexGrow="1">
         {children}
       </Card>
-    </Box>
+    </Flex>
   );
 };
 
 const AmountDisplay = ({ amount, denomination }) => {
   return (
     <>
-      <TextBlock t="h3" lineHeight="1">
+      <Text t="h3" lineHeight="1">
         {amount}&nbsp;
-      </TextBlock>
-      <TextBlock t="h5">{denomination} &nbsp;</TextBlock>
+      </Text>
+      <Text t="h5">{denomination} &nbsp;</Text>
     </>
   );
 };
@@ -281,7 +310,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
             title={
               <TextBlock fontSize="l">
                 {lang.cdp_page.current_price_info}
-                <ExtraInfo ml="s">{`(${gem}/USD)`}</ExtraInfo>
+                <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
             value={`${collateralPrice} USD`}
