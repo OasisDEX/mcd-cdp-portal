@@ -2,12 +2,7 @@ import Maker, { USD, DAI } from '@makerdao/dai';
 import McdPlugin, { ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
-
-import proxyRegistryAbi from './references/proxyRegistry.abi.json';
-import gemJoinAbi from './references/gemJoin.abi.json';
-// import dsTokenAbi from 'references/dsToken.abi.json';
-
-import ilkList from './references/ilkList';
+import configPlugin from '@makerdao/dai-plugin-config';
 
 let _maker;
 
@@ -16,7 +11,12 @@ export function getMaker() {
   return _maker;
 }
 
-export async function instantiateMaker({ rpcUrl, addresses, network }) {
+export async function instantiateMaker({
+  rpcUrl,
+  network,
+  testchainId,
+  backendEnv
+}) {
   const mcdPluginConfig = {
     network: network === 'test' ? 'testnet' : network
   };
@@ -33,21 +33,10 @@ export async function instantiateMaker({ rpcUrl, addresses, network }) {
     }
   };
 
-  if (addresses) {
-    mcdPluginConfig.addressOverrides = addresses;
-    for (let ilk of ilkList) {
-      const adapterName = `MCD_JOIN_${ilk.key.replace(/-/g, '_')}`;
-      config.smartContract.addContracts[adapterName] = {
-        abi: gemJoinAbi,
-        address: addresses[adapterName]
-      };
-    }
-    if (addresses.PROXY_REGISTRY) {
-      config.smartContract.addContracts.PROXY_REGISTRY = {
-        address: addresses.PROXY_REGISTRY,
-        abi: proxyRegistryAbi
-      };
-    }
+  // Use the config plugin, if we have a testchainConfigId
+  if (testchainId) {
+    delete config.provider;
+    config.plugins.push([configPlugin, { testchainId, backendEnv }]);
   }
 
   const maker = await Maker.create('http', config);

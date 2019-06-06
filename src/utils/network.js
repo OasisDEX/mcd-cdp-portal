@@ -1,23 +1,6 @@
 import config from 'references/config';
 
-const {
-  exTestchainApiUrl,
-  rpcUrls,
-  supportedNetworkIds,
-  networkNames
-} = config;
-
-export async function getTestchainDetails(testchainId) {
-  try {
-    const rawRes = await fetch(`${exTestchainApiUrl}/${testchainId}`);
-    const { details } = await rawRes.json();
-    const addresses = details.deploy_data;
-    const rpcUrl = details.chain_details.rpc_url;
-    return { rpcUrl, addresses, notFound: false };
-  } catch (_) {
-    return { rpcUrl: '', addresses: {}, notFound: true };
-  }
-}
+const { rpcUrls, supportedNetworkIds, networkNames } = config;
 
 export function networkNameToId(networkName) {
   for (let [id, name] of Object.entries(networkNames)) {
@@ -36,25 +19,14 @@ export async function getOrFetchNetworkDetails({ network, testchainId }) {
   const serializedKey = JSON.stringify({ network, testchainId });
   if (_cache[serializedKey] !== undefined) return _cache[serializedKey];
 
-  // if we have a testchain id, try to connect to an ex testchain instance
-  if (testchainId !== undefined) {
-    const { rpcUrl, addresses, notFound } = await getTestchainDetails(
-      testchainId
-    );
+  const networkId = networkNameToId(network);
 
-    if (notFound) throw new Error(`Testchain id ${testchainId} not found`);
+  if (!supportedNetworkIds.includes(networkId))
+    throw new Error(`Unsupported network: ${network}`);
 
-    _cache[serializedKey] = { rpcUrl, addresses };
-  } else {
-    const networkId = networkNameToId(network);
-
-    if (!supportedNetworkIds.includes(networkId))
-      throw new Error(`Unsupported network: ${network}`);
-
-    _cache[serializedKey] = {
-      rpcUrl: rpcUrls[networkId]
-    };
-  }
+  _cache[serializedKey] = {
+    rpcUrl: rpcUrls[networkId]
+  };
 
   return _cache[serializedKey];
 }

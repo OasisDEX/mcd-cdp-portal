@@ -55,12 +55,15 @@ function IlkTableRow({ ilk, checked, dispatch }) {
     })();
   }, []);
 
-  function selectIlk() {
+  async function selectIlk() {
     dispatch({
       type: 'set-ilk',
       payload: {
         key: ilk.key,
-        gemBalance: userGemBalance.toNumber(),
+        gemBalance:
+          userGemBalance === null
+            ? (await maker.getToken(ilk.currency).balance()).toNumber()
+            : userGemBalance.toNumber(),
         currency: ilk.currency,
         data: ilk.data
       }

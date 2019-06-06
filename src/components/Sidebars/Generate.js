@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button, Link } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
+import useStore from 'hooks/useStore';
+import { greaterThan } from '../../utils/bignumber';
+import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
 import {
   formatCollateralizationRatio,
@@ -11,12 +15,18 @@ import {
 import lang from 'languages';
 import useMaker from '../../hooks/useMaker';
 
-const Generate = ({ cdp, reset }) => {
-  const { newTxListener } = useMaker();
+const Generate = ({ cdpId, reset }) => {
+  const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiAvailable, setDaiAvailable] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+
+  const [storeState] = useStore();
+  const cdp = getCdp(cdpId, storeState);
+
+  const collateralAmount = getCollateralAmount(cdp, true, 9);
+  const debtAmount = getDebtAmount(cdp);
 
   useEffect(() => {
     const amountToGenerate = parseFloat(amount || 0);
@@ -25,24 +35,31 @@ const Generate = ({ cdp, reset }) => {
       collateralizationRatio,
       daiAvailable
     } = calcCDPParams({
-      ilkData: cdp.ilkData,
-      gemsToLock: cdp.collateral.toNumber(),
-      daiToDraw: cdp.debt.toNumber() + amountToGenerate
+      ilkData: cdp,
+      gemsToLock: collateralAmount,
+      daiToDraw: debtAmount + amountToGenerate
     });
 
-    setDaiAvailable(daiAvailable - cdp.debt.toNumber());
+    setDaiAvailable(daiAvailable - debtAmount);
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp.collateral, cdp.debt, cdp.ilkData]);
+  }, [amount, cdp]);
 
-  const undercollateralized =
-    collateralizationRatio < cdp.ilkData.liquidationRatio;
+  const undercollateralized = greaterThan(
+    cdp.liquidationRatio,
+    collateralizationRatio
+  );
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
   const setMax = () => setAmount(daiAvailable);
 
   const generate = async () => {
-    newTxListener(cdp.drawDai(parseFloat(amount)), 'Drawing DAI');
+    newTxListener(
+      maker
+        .service('mcd:cdpManager')
+        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
+      'Drawing DAI'
+    );
     reset();
   };
 
@@ -87,7 +104,7 @@ const Generate = ({ cdp, reset }) => {
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.ilkData)}
+            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
           />
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}

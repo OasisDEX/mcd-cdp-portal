@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -14,14 +14,32 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
+import theme, { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
-import { getIlkData } from 'reducers/feeds';
+import {
+  getCdp,
+  getDebtAmount,
+  getLiquidationPrice,
+  getCollateralPrice,
+  getCollateralAmount,
+  getCollateralValueUSD,
+  getCollateralizationRatio,
+  getCollateralAvailableAmount,
+  getCollateralAvailableValue,
+  getDaiAvailable,
+  getEventHistory
+} from 'reducers/cdps';
+import { trackCdpById } from 'reducers/multicall/cdps';
+
 import ExternalLink from 'components/ExternalLink';
-import round from 'lodash/round';
-import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
 import { fullActivityString, formatDate } from 'utils/ui';
+
+const mediumScreenMinBreakpoint = theme.breakpoints.xl;
+const mediumScreenMaxBreakpoint = '1425px';
+
+const mediaMediumScreen = `@media (min-width: ${mediumScreenMinBreakpoint}) and (max-width: ${mediumScreenMaxBreakpoint})`;
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -35,26 +53,15 @@ const WithSeparators = styled(Box).attrs(() => ({
 const InfoContainerRow = ({ title, value }) => {
   return (
     <WithSeparators>
-      <Flex py="xs" justifyContent="space-between" flexWrap="wrap">
-        <Box>
-          <TextBlock fontSize="l" width="270px">
-            {title}
-          </TextBlock>
-        </Box>
-        <Box flexGrow="1">
-          <Box display="flex">
-            <Box flexGrow={['0', '1', '1']} />
-            <TextBlock
-              fontSize="l"
-              width="110px"
-              textAlign={['left', 'right', 'right']}
-            >
-              {value}
-            </TextBlock>
-            <Box flexGrow={['1', '0', '0']} />
-          </Box>
-        </Box>
-      </Flex>
+      <Grid
+        gridTemplateColumns="1fr auto"
+        py="xs"
+        gridColumnGap="s"
+        alignItems="center"
+      >
+        <Text t="body">{title}</Text>
+        <Text t="body">{value}</Text>
+      </Grid>
     </WithSeparators>
   );
 };
@@ -62,67 +69,101 @@ const InfoContainerRow = ({ title, value }) => {
 const ActionContainerRow = ({ title, value, conversion, button }) => {
   return (
     <WithSeparators>
-      <Flex flexWrap="wrap" justifyContent="space-between" py="s">
-        <Box alignSelf="center" maxWidth="33%">
-          <TextBlock color="darkLavender" fontSize="l">
-            {title}
-          </TextBlock>
+      <Grid
+        py="s"
+        gridTemplateColumns="1fr auto auto"
+        alignItems="center"
+        gridColumnGap="s"
+        gridAutoRows="min-content"
+        gridRowGap="2xs"
+      >
+        <Text
+          css={`
+            grid-column: 1;
+            grid-row: span 2;
+
+            ${mediaMediumScreen} {
+              grid-row: 1;
+              grid-column: span 3;
+            }
+          `}
+          t="body"
+        >
+          {title}
+        </Text>
+        <Text
+          css={`
+            grid-column: 2;
+            grid-row: ${conversion ? '1' : 'span 2'};
+
+            ${mediaMediumScreen} {
+              grid-row: 2;
+            }
+          `}
+          t="h5"
+          color="darkLavender"
+          justifySelf="end"
+        >
+          {value}
+        </Text>
+        {conversion ? (
+          <ExtraInfo
+            css={`
+              grid-row: 2;
+              grid-column: 2;
+
+              ${mediaMediumScreen} {
+                grid-row: 3;
+              }
+            `}
+            justifySelf="end"
+          >
+            {conversion}
+          </ExtraInfo>
+        ) : null}
+        <Box
+          css={`
+            grid-column: 3;
+            grid-row: span 2;
+
+            ${mediaMediumScreen} {
+              grid-row: ${conversion ? 'span 2' : '2'};
+            }
+          `}
+        >
+          {button}
         </Box>
-        <Box flexGrow="1">
-          <Box display="flex">
-            <Box flexGrow={['0', '1', '1']} />
-            <Flex flexDirection="column" pr="m" alignSelf="center">
-              <TextBlock
-                width="90px"
-                t="h5"
-                lineHeight="normal"
-                fontWeight="medium"
-                color="darkLavender"
-                textAlign={['left', 'right', 'right']}
-              >
-                {value}
-              </TextBlock>
-              {conversion ? (
-                <ExtraInfo textAlign={['left', 'right', 'right']}>
-                  {conversion}
-                </ExtraInfo>
-              ) : null}
-            </Flex>
-            <Box flexGrow={['1', '0', '0']} />
-            <Box alignSelf="center">{button}</Box>
-          </Box>
-        </Box>
-      </Flex>
+      </Grid>
     </WithSeparators>
   );
 };
 
 const ActionButton = ({ children, ...props }) => (
   <Button width="100px" p="xs" variant="secondary" {...props}>
-    <TextBlock fontSize="s" fontWeight="medium" color="darkLavender">
+    <Text fontSize="s" fontWeight="medium" color="darkLavender">
       {children}
-    </TextBlock>
+    </Text>
   </Button>
 );
 
 const CdpViewCard = ({ title, children }) => {
   return (
-    <Box my="s">
+    <Flex py="s" height="100%" flexDirection="column">
       <Text.h4>{title}</Text.h4>
-      <Card px="l" pt="s" pb="s" my="s">
+      <Card px={{ s: 'm', m: 'l' }} py="s" mt="s" flexGrow="1">
         {children}
       </Card>
-    </Box>
+    </Flex>
   );
 };
 
 const AmountDisplay = ({ amount, denomination }) => {
   return (
     <>
-      <TextBlock t="h3" lineHeight="1">
+      <Text t="h3" lineHeight="1">
         {amount}&nbsp;
-      </TextBlock>
-      <TextBlock t="h5">{denomination} &nbsp;</TextBlock>
+      </Text>
+      <Text t="h5">{denomination} &nbsp;</Text>
     </>
   );
 };
@@ -205,74 +246,36 @@ const CdpViewHistory = ({ title, rows }) => {
   );
 };
 
-function CDPView({ cdpId: _cdpId }) {
-  const cdpId = parseInt(_cdpId, 10);
+function CDPView({ cdpId }) {
+  cdpId = parseInt(cdpId, 10);
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ feeds, cdps }] = useStore();
+  const [{ cdps, feeds }] = useStore();
+  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
+    cdpId,
+    cdps,
+    feeds
+  ]);
 
-  // TODO cdpTypeSlug should become `id` or we should have both cdpTypeSlug AND id.
-  const [cdp, setCDP] = useState(null);
   useEffect(() => {
-    let didCancel = false;
-    (async () => {
-      const cdpManager = maker.service('mcd:cdpManager');
-      const cdp = await cdpManager.getCdp(cdpId);
-      const ilkData = getIlkData(feeds, cdp.ilk);
-      const [
-        debt,
-        collateral,
-        collateralPrice,
-        collateralizationRatio,
-        liquidationPrice,
-        daiAvailable,
-        minCollateral,
-        collateralAvailable
-      ] = await Promise.all([
-        cdp.getDebtValue(),
-        cdp.getCollateralAmount(),
-        cdp.type.getPrice(),
-        cdp.getCollateralizationRatio(),
-        cdp.getLiquidationPrice(),
-        cdp.getDaiAvailable(),
-        cdp.minCollateral(),
-        cdp.getCollateralAvailable()
-      ]);
-      const eventHistory = mockHistoryDataFromSDK; //use dummy data since kovan vdb isn't working yet
-      if (didCancel) return;
-      // FIXME well this is an interesting way to store local state
-      Object.assign(cdp, {
-        ilkData,
-        debt,
-        collateral,
-        collateralPrice,
-        collateralizationRatio,
-        liquidationPrice,
-        daiAvailable,
-        minCollateral,
-        collateralAvailable,
-        eventHistory
-      });
-
-      setCDP(cdp);
-      return () => (didCancel = true);
-    })();
-  }, [cdpId, feeds, maker, cdps]);
+    trackCdpById(maker, cdpId);
+  }, [cdpId, maker]);
 
   return useMemo(
     () =>
-      cdp ? (
+      cdp.inited ? (
         <CDPViewPresentation
           cdp={cdp}
+          cdpId={cdpId}
           showSidebar={showSidebar}
           account={account}
-          owner={cdps.items.some(userCdp => userCdp.id === cdpId)}
+          owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
           network={network}
         />
       ) : (
-        <LoadingLayout />
+        <LoadingLayout background={getColor('backgroundGrey')} />
       ),
-    [cdp, showSidebar, account]
+    [cdp, cdpId, showSidebar, account]
   );
 }
 
@@ -288,39 +291,32 @@ function formatEventHistory(events, network) {
   });
 }
 
-function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
-  console.log('CDPViewPresentation rendering');
-  const liquidationPrice = round(cdp.liquidationPrice.toNumber(), 2).toFixed(2);
-  const gem = cdp.type.currency.symbol;
-  const collateralPrice = round(cdp.collateralPrice.toNumber(), 2);
-  const liquidationPenalty = cdp.ilkData.liquidationPenalty + '%';
-  const collateralizationRatio = round(
-    cdp.collateralizationRatio.times(100).toNumber(),
-    2
-  );
-  const liquidationRatio = cdp.ilkData.liquidationRatio + '.00%';
-  const stabilityFee = cdp.ilkData.rate * 100 + '00%';
-  const collateralAmount = round(cdp.collateral.toNumber(), 2).toFixed(2);
-  const collateralUSDValue = round(
-    cdp.collateral.times(cdp.collateralPrice).toNumber(),
-    2
-  );
-  const collateralAvailableAmount = round(
-    cdp.collateralAvailable.toNumber(),
-    2
-  );
-  const collateralAvailableValue = round(
-    cdp.collateralAvailable.times(cdp.collateralPrice).toNumber(),
-    2
-  );
-  const debtAmount = round(cdp.debt.toNumber(), 2).toFixed(2);
-  const daiAvailable = round(cdp.daiAvailable.toNumber(), 2).toFixed(2);
-  const eventHistory = formatEventHistory(cdp.eventHistory, network);
+function CDPViewPresentation({
+  cdpId,
+  cdp,
+  showSidebar,
+  account,
+  owner,
+  network
+}) {
+  const gem = cdp.currency.symbol;
+  const debtAmount = getDebtAmount(cdp);
+  let liquidationPrice = getLiquidationPrice(cdp);
+  if (liquidationPrice) liquidationPrice = liquidationPrice.toFixed(2);
+  const collateralPrice = getCollateralPrice(cdp);
+  const collateralAmount = getCollateralAmount(cdp);
+  const collateralUSDValue = getCollateralValueUSD(cdp);
+  const collateralizationRatio = getCollateralizationRatio(cdp);
+  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
+  const collateralAvailableValue = getCollateralAvailableValue(cdp);
+  const daiAvailable = getDaiAvailable(cdp);
+  const eventHistory = formatEventHistory(getEventHistory(cdp), network);
+
   return (
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {lang.cdp} {cdp.id}
+          {lang.cdp} {cdpId}
         </Text.h2>
       </Box>
       <Grid
@@ -337,14 +333,14 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
             title={
               <TextBlock fontSize="l">
                 {lang.cdp_page.current_price_info}
-                <ExtraInfo ml="s">{`(${gem}/USD)`}</ExtraInfo>
+                <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
             value={`${collateralPrice} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={liquidationPenalty}
+            value={cdp.liquidationPenalty + '%'}
           />
         </CdpViewCard>
 
@@ -354,11 +350,11 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={liquidationRatio}
+            value={cdp.liquidationRatio + '.00%'}
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={stabilityFee}
+            value={cdp.stabilityFee + '%'}
           />
         </CdpViewCard>
 
@@ -373,7 +369,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'deposit',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -391,7 +387,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -404,14 +400,14 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
         <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={`${parseFloat(debtAmount)} DAI`}
+            value={debtAmount + ' DAI'}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'payback',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -428,7 +424,7 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',
-                    sidebarProps: { cdp }
+                    sidebarProps: { cdpId }
                   })
                 }
               >
@@ -445,42 +441,3 @@ function CDPViewPresentation({ cdp, showSidebar, account, owner, network }) {
 }
 
 export default hot(CDPView);
-
-const mockHistoryDataFromSDK = [
-  {
-    transactionHash:
-      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
-    changeInCollateral: ETH(99.5),
-    collateralAction: 'free',
-    time: new Date(Date.now()),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(900.5),
-    resultingDebt: MDAI(10090),
-    ilk: 'ETH-A'
-  },
-  {
-    transactionHash:
-      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
-    changeInCollateral: ETH(0),
-    changeInDebt: MDAI(1000),
-    daiAction: 'wipe',
-    time: new Date(Date.now() - 10000000000),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(1000),
-    resultingDebt: MDAI(10045),
-    ilk: 'ETH-A'
-  },
-  {
-    transactionHash:
-      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
-    changeInCollateral: ETH(10000),
-    collateralAction: 'lock',
-    changeInDebt: MDAI(120000),
-    daiAction: 'draw',
-    time: new Date(Date.now() - 20000000000),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(1000),
-    resultingDebt: MDAI(1100),
-    ilk: 'ETH-A'
-  }
-];

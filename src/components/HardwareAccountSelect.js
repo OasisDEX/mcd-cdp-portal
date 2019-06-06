@@ -6,11 +6,12 @@ import {
   Flex,
   Text,
   Box,
-  Table
+  Table,
+  Loader
 } from '@makerdao/ui-components-core';
-import Loader from './Loader';
 import useHardwareWallet from 'hooks/useHardwareWallet';
 import { cutMiddle, copyToClipboard } from 'utils/ui';
+import { getColor } from 'styles/theme';
 import { CopyBtn, CopyBtnIcon } from './AddressTable';
 import { ReactComponent as Cross } from 'images/cross.svg';
 
@@ -26,7 +27,6 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
 
   useEffect(() => {
     connect().then(address => {
-      console.log(address);
       confirmAddress(address);
       onClose();
     }, onClose);
@@ -58,7 +58,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);
 
   return !renderedAccounts.length ? (
-    <Loader size={50} />
+    <Loader size="5rem" color={getColor('makerTeal')} />
   ) : (
     <Grid gridRowGap="m" width={['100%', '53rem']}>
       <Flex justifyContent="flex-end">

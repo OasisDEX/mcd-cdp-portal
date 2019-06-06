@@ -13,16 +13,9 @@ import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
 import rootReducer from 'reducers';
 
-const NOT_PRODUCTION_READY_MODAL_SCROLLING = false;
-
 const Body = styled.div`
   display: flex;
   min-height: 100vh;
-  ${NOT_PRODUCTION_READY_MODAL_SCROLLING
-    ? `  div {
-    overflow-y: auto;
-  }`
-    : ''}
 `;
 
 const navigation = createBrowserNavigation({

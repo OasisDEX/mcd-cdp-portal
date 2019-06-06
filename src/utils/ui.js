@@ -1,3 +1,4 @@
+import round from 'lodash/round';
 import { greaterThan } from './bignumber';
 import { calcDaiAvailable, getUsdPrice } from './cdp';
 import lang from 'languages';
@@ -5,15 +6,17 @@ import lang from 'languages';
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
     return 'Infinity';
+  } else if (isNaN(ratio)) {
+    return '---';
   } else {
     if (ratio < 0) ratio = 0;
     return `${ratio.toFixed(2)}%`;
   }
 }
 
-export function formatLiquidationPrice(price, ilkData) {
+export function formatLiquidationPrice(price, symbol) {
   if (price < 0) price = 0;
-  return `${price.toFixed(2)} ${ilkData.gem}/USD`;
+  return `${round(price, 2).toLocaleString()} ${symbol}/USD`;
 }
 
 export function prettifyNumber(_num = null, truncate = false) {
@@ -72,14 +75,6 @@ export function cdpParamsAreValid(
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
   return true;
-}
-
-export function getUnique(arr, comp) {
-  return arr
-    .map(e => e[comp])
-    .map((e, i, final) => final.indexOf(e) === i && i)
-    .filter(e => arr[e])
-    .map(e => arr[e]);
 }
 
 export function firstLetterLowercase(str) {

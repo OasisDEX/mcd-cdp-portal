@@ -12,15 +12,16 @@ import LandingHeroLayout from 'layouts/LandingHeroLayout';
 
 import BrowserProviderButton from 'components/BrowserProviderButton';
 import ReadOnlyConnect from 'components/ReadOnlyConnect';
-import WalletConnect from 'components/WalletConnect';
 import { Title, Subtitle } from 'components/Typography';
 import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import { getWalletConnectAccounts } from 'utils/walletconnect';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -28,6 +29,11 @@ const StyledLedgerLogo = styled(LedgerLogo)`
 `;
 
 const StyledTrezorLogo = styled(TrezorLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
+
+const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
 `;
@@ -102,7 +108,12 @@ function Landing() {
             >
               {lang.providers.ledger_nano}
             </IconButton>
-            <WalletConnect />
+            <IconButton
+              onClick={getWalletConnectAccounts}
+              icon={<StyledWalletConnectLogo />}
+            >
+              {lang.landing_page.wallet_connect}
+            </IconButton>
             <ReadOnlyConnect />
           </Grid>
         </LandingHeroLayout>
