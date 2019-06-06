@@ -154,7 +154,7 @@ export function getEventHistory(cdp) {
   return mockHistoryDataFromSDK; //TODO switch to real data
 }
 
-const mockHistoryDataFromSDK = [
+export const mockHistoryDataFromSDK = [
   {
     transactionHash:
       '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
