@@ -1,5 +1,4 @@
 import {
-  activityString,
   fullActivityString,
   firstLetterLowercase,
   formatDate
