@@ -1,63 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button, Link } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
-import { greaterThan } from '../../utils/bignumber';
-import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
-import { calcCDPParams } from '../../utils/cdp';
-import {
-  formatCollateralizationRatio,
-  formatLiquidationPrice
-} from '../../utils/ui';
+import getCdpData, { formatValue } from '../../reducers/selectors/getCdpData';
+import { calcCDPParams, getCurrency } from '../../utils/cdp';
 import lang from 'languages';
 import useMaker from '../../hooks/useMaker';
+import round from 'lodash/round';
 
 const Generate = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
-  const [amount, setAmount] = useState('');
-  const [daiAvailable, setDaiAvailable] = useState(0);
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
-
+  const [amount, setAmount] = useState(0);
   const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
+  const cdp = getCdpData(cdpId, storeState);
+  const {
+    ilk: { name: ilkName, price, liquidationRatio },
+    collateralAmount,
+    daiAvailable,
+    debtValue
+  } = cdp;
+  const max = round(daiAvailable.toNumber(), 2);
 
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp);
+  const [liquidationPrice, setLiquidationPrice] = useState(
+    cdp.liquidationPrice
+  );
+  const [collateralizationRatio, setCollateralizationRatio] = useState(
+    cdp.collateralizationRatio
+  );
 
-  useEffect(() => {
-    const amountToGenerate = parseFloat(amount || 0);
-    const {
-      liquidationPrice,
-      collateralizationRatio,
-      daiAvailable
-    } = calcCDPParams({
-      ilkData: cdp,
+  const updateAmount = value => {
+    const newAmount = Math.min(value, max);
+    const { liquidationPrice, collateralizationRatio } = calcCDPParams({
+      liquidationRatio,
+      price,
       gemsToLock: collateralAmount,
-      daiToDraw: debtAmount + amountToGenerate
+      daiToDraw: debtValue.plus(newAmount || 0)
     });
 
-    setDaiAvailable(daiAvailable - debtAmount);
+    setAmount(newAmount);
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp]);
+  };
 
-  const undercollateralized = greaterThan(
-    cdp.liquidationRatio,
-    collateralizationRatio
-  );
+  const undercollateralized =
+    collateralizationRatio && liquidationRatio.gt(collateralizationRatio);
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
-  const setMax = () => setAmount(daiAvailable);
-
   const generate = async () => {
+    const currency = getCurrency(cdp);
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
+        .lockAndDraw(cdpId, ilkName, currency(0), MDAI(parseFloat(amount))),
       'Drawing DAI'
     );
     reset();
@@ -75,7 +72,7 @@ const Generate = ({ cdpId, reset }) => {
             type="number"
             value={amount}
             min="0"
-            onChange={evt => setAmount(evt.target.value)}
+            onChange={evt => updateAmount(evt.target.value)}
             placeholder="0.00 DAI"
             errorMessage={
               undercollateralized
@@ -83,7 +80,7 @@ const Generate = ({ cdpId, reset }) => {
                 : null
             }
             after={
-              <Link fontWeight="medium" onClick={setMax}>
+              <Link fontWeight="medium" onClick={() => updateAmount(max)}>
                 {lang.action_sidebar.set_max}
               </Link>
             }
@@ -100,17 +97,17 @@ const Generate = ({ cdpId, reset }) => {
         <InfoContainer>
           <Info
             title={lang.action_sidebar.maximum_available_to_generate}
-            body={`${daiAvailable.toFixed(6)} DAI`}
+            body={`${max} DAI`}
           />
           <Info
             title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+            body={formatValue(liquidationPrice)}
           />
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}
             body={
               <Text color={undercollateralized ? 'linkOrange' : null}>
-                {formatCollateralizationRatio(collateralizationRatio)}
+                {formatValue(collateralizationRatio, 'collateralizationRatio')}%
               </Text>
             }
           />

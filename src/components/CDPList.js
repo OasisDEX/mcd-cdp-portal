@@ -61,13 +61,15 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         setNavbarCdps(cdps);
       })();
     }
-  }, [maker, account]);
+  }, [maker, account, viewedAddress, dispatch]);
 
   useEffect(() => {
     if (account || viewedAddress) {
-      const ratios = navbarCdps.map(({ id: cdpId }) => {
-        const cdp = getCdpData(cdpId, { urns, ilks }, true);
-        if (cdp) return cdp.collateralizationRatio;
+      const ratios = navbarCdps.map(({ id }) => {
+        const cdp = getCdpData(id, { urns, ilks });
+        return cdp
+          ? (cdp.collateralizationRatio.toNumber() * 100).toFixed(0)
+          : '';
       });
       setRatios(ratios);
     }

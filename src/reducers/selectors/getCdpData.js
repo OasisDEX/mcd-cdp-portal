@@ -60,24 +60,29 @@ export default function getCdpData(id, store, formatted) {
 }
 
 function formatValues(data) {
-  return mapValues(data, (value, key) => {
-    switch (key) {
-      case 'ilk':
-        return formatValues(value);
-      case 'stabilityFee':
-        return (value * 100).toFixed(1);
-      case 'collateralizationRatio':
-      case 'liquidationRatio':
-        return (value.toNumber() * 100).toFixed(0);
-      case 'liquidationPenalty':
-        return (value * 100).toFixed(0);
-    }
+  return mapValues(data, (value, key) =>
+    key === 'ilk' ? formatValues(value) : formatValue(value, key)
+  );
+}
 
-    if (value instanceof Currency) {
-      const newValue = value.toNumber().toFixed(2);
-      return newValue;
-    }
+export function formatValue(value, key) {
+  if (!value && value !== 0) return '';
 
-    return value;
-  });
+  switch (key) {
+    case 'stabilityFee':
+      return (value * 100).toFixed(1);
+    case 'collateralizationRatio':
+    case 'liquidationRatio':
+      return (value.toNumber() * 100).toFixed(2);
+    case 'liquidationPenalty':
+      return (value * 100).toFixed(0);
+    default: // do nothing
+  }
+
+  if (value instanceof Currency) {
+    const newValue = value.toNumber().toFixed(2);
+    return newValue;
+  }
+
+  return value;
 }
