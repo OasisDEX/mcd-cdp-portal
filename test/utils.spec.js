@@ -7,7 +7,7 @@ import {
 import { mockHistoryDataFromSDK } from '../src/reducers/cdps';
 
 test('fullActivityString', () => {
-  expect(fullActivityString(mockHistoryDataFromSDK[0])).toBe(
+  expect(fullActivityString(mockHistoryDataFromSDK[2])).toBe(
     'Deposited 10,000 ETH and generated 120,000 DAI'
   );
 });

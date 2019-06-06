@@ -103,7 +103,6 @@ export function activityString(action, amount, lowercase) {
     formattedAction +
     ' ' +
     prettifyNumber(amount.toNumber()) +
-    ' ' +
     cleanSymbol(amount.symbol)
   );
 }
