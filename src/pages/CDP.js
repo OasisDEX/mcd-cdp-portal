@@ -17,20 +17,8 @@ import { TextBlock } from 'components/Typography';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
-import {
-  getCdp,
-  getDebtAmount,
-  getLiquidationPrice,
-  getCollateralPrice,
-  getCollateralAmount,
-  getCollateralValueUSD,
-  getCollateralizationRatio,
-  getCollateralAvailableAmount,
-  getCollateralAvailableValue,
-  getDaiAvailable
-} from 'reducers/cdps';
+import getCdpData from '../reducers/selectors/getCdpData';
 import { trackCdpById } from 'reducers/multicall/cdps';
-
 import ExternalLink from 'components/ExternalLink';
 
 const WithSeparators = styled(Box).attrs(() => ({
@@ -219,20 +207,17 @@ function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
   const { maker, account } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ cdps, feeds }] = useStore();
-  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
-    cdpId,
-    cdps,
-    feeds
-  ]);
+  const [store, dispatch] = useStore();
+
+  const cdp = getCdpData(cdpId, store, true);
 
   useEffect(() => {
-    trackCdpById(maker, cdpId);
+    trackCdpById(maker, cdpId, dispatch);
   }, [cdpId, maker]);
 
   return useMemo(
     () =>
-      cdp.inited ? (
+      cdp ? (
         <CDPViewPresentation
           cdp={cdp}
           cdpId={cdpId}
@@ -248,17 +233,18 @@ function CDPView({ cdpId }) {
 }
 
 function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
-  const gem = cdp.currency.symbol;
-  const debtAmount = getDebtAmount(cdp);
-  let liquidationPrice = getLiquidationPrice(cdp);
-  if (liquidationPrice) liquidationPrice = liquidationPrice.toFixed(2);
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp);
-  const collateralUSDValue = getCollateralValueUSD(cdp);
-  const collateralizationRatio = getCollateralizationRatio(cdp);
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
-  const collateralAvailableValue = getCollateralAvailableValue(cdp);
-  const daiAvailable = getDaiAvailable(cdp);
+  const {
+    collateralAmount,
+    collateralValue,
+    collateralAvailableAmount,
+    collateralAvailableValue,
+    collateralizationRatio,
+    daiAvailable,
+    debtValue,
+    gem,
+    ilk,
+    liquidationPrice
+  } = cdp;
 
   return (
     <PageContentLayout>
@@ -284,11 +270,11 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
                 <ExtraInfo ml="s">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={`${collateralPrice} USD`}
+            value={`${ilk.price} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={cdp.liquidationPenalty + '%'}
+            value={ilk.liquidationPenalty + '%'}
           />
         </CdpViewCard>
 
@@ -298,11 +284,11 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={cdp.liquidationRatio + '.00%'}
+            value={ilk.liquidationRatio + '%'}
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={cdp.stabilityFee + '%'}
+            value={ilk.stabilityFee + '%'}
           />
         </CdpViewCard>
 
@@ -310,7 +296,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
             value={`${collateralAmount} ${gem}`}
-            conversion={`${collateralUSDValue} USD`}
+            conversion={`${collateralValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
@@ -348,7 +334,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
         <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={debtAmount + ' DAI'}
+            value={debtValue + ' DAI'}
             button={
               <ActionButton
                 disabled={!account}

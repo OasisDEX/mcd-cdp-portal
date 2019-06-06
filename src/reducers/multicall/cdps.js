@@ -1,12 +1,15 @@
 import { getWatcher } from '../../watch';
 
 import { toHex } from 'utils/ethereum';
-import { fromWei } from 'utils/units';
 import { INK, ART } from 'reducers/cdps';
 
-export async function trackCdpById(maker, cdpId, _cdp = null) {
+export async function trackCdpById(maker, cdpId, dispatch) {
   const addresses = maker.service('smartContract').getContractAddresses();
-  const cdp = _cdp ? _cdp : await maker.service('mcd:cdpManager').getCdp(cdpId);
+  const cdp = await maker.service('mcd:cdpManager').getCdp(cdpId);
+  dispatch({
+    type: 'watcherUpdates',
+    payload: [{ type: `urn.${cdp.id}.ilk`, value: cdp.ilk }]
+  });
   const cdpHandlerAddress = await cdp.getUrn();
 
   const urnStateCall = urnState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
@@ -21,8 +24,5 @@ export async function trackCdpById(maker, cdpId, _cdp = null) {
 export const urnState = addresses => (ilk, urn, urnId) => ({
   target: addresses.MCD_VAT,
   call: ['urns(bytes32,address)(uint256,uint256)', toHex(ilk), urn],
-  returns: [
-    [`${urnId}.${INK}.${ilk}`, val => fromWei(val)],
-    [`${urnId}.${ART}.${ilk}`, val => fromWei(val)]
-  ]
+  returns: [[`urn.${urnId}.${INK}`], [`urn.${urnId}.${ART}`]]
 });

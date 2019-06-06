@@ -4,7 +4,7 @@ import uniqBy from 'lodash/uniqBy';
 import { price } from '@makerdao/dai-plugin-mcd/dist/math';
 
 export const FEED_SET_USD = 'feedSetUSD';
-export const FEED_VALUE_USD = 'feedValueUSD';
+export const FEED_VALUE_USD = 'price';
 export const DUTY = 'duty';
 export const RATE = 'rate';
 export const LAST_DRIP = 'lastDrip';
@@ -88,9 +88,6 @@ const reducer = produce((draft, { type, value }) => {
           ilk[LIQUIDATION_RATIO]
         );
         ilk[FEED_VALUE_USD] = newPrice;
-        console.log(
-          `set new price ${newPrice} for ${ilk.key} due to change in ${type}`
-        );
       }
     });
   }

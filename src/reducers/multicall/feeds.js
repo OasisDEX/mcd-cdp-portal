@@ -1,4 +1,7 @@
-import { liquidationRatio } from '@makerdao/dai-plugin-mcd/dist/math';
+import {
+  liquidationPenalty,
+  liquidationRatio
+} from '@makerdao/dai-plugin-mcd/dist/math';
 import { toHex } from 'utils/ethereum';
 import { fromWei } from 'utils/units';
 import {
@@ -17,7 +20,7 @@ import {
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
-  returns: [[`${name}.${DUTY}`], [`${name}.${LAST_DRIP}`]]
+  returns: [[`ilk.${name}.${DUTY}`], [`ilk.${name}.${LAST_DRIP}`]]
 });
 
 export const ilkVatData = addresses => name => ({
@@ -25,9 +28,9 @@ export const ilkVatData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
   returns: [
     [],
-    [`${name}.${RATE}`],
-    [`${name}.${SPOT}`],
-    [`${name}.${DEBT_CEILING}`],
+    [`ilk.${name}.${RATE}`],
+    [`ilk.${name}.${SPOT}`],
+    [`ilk.${name}.${DEBT_CEILING}`],
     []
   ]
 });
@@ -36,8 +39,8 @@ export const liquidation = addresses => name => ({
   target: addresses.MCD_SPOT,
   call: ['ilks(bytes32)(address,uint256)', toHex(name)],
   returns: [
-    [`pip${name}`],
-    [`${name}.${LIQUIDATION_RATIO}`, mat => liquidationRatio(mat)]
+    [`ilk.${name}.pip`],
+    [`ilk.${name}.${LIQUIDATION_RATIO}`, mat => liquidationRatio(mat)]
   ]
 });
 
@@ -45,16 +48,16 @@ export const flipper = addresses => name => ({
   target: addresses.MCD_CAT,
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
-    [`${name}.${LIQUIDATOR_ADDRESS}`],
-    [`${name}.${LIQUIDATION_PENALTY}`],
-    [`${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
+    [`ilk.${name}.${LIQUIDATOR_ADDRESS}`],
+    [`ilk.${name}.${LIQUIDATION_PENALTY}`, chop => liquidationPenalty(chop)],
+    [`ilk.${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
   ]
 });
 
 export const adapterBalance = addresses => name => ({
   target: addresses[name],
   call: ['balanceOf(address)(uint256)', addresses[`MCD_JOIN_${name}`]],
-  returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
+  returns: [[`ilk.${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
 });
 
 export function createCDPTypeModel(ilk, addresses) {

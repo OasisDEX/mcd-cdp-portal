@@ -9,7 +9,7 @@ import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { trackCdpById } from 'reducers/multicall/cdps';
-import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
+import getCdpData from '../reducers/selectors/getCdpData';
 import round from 'lodash/round';
 
 const NavbarItemContainer = styled(Link)`
@@ -42,13 +42,13 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [{ cdps, feeds }] = useStore();
+  const [{ urns, ilks }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
 
   useEffect(() => {
     if (account) {
-      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
     } else if (viewedAddress) {
       (async () => {
@@ -57,7 +57,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           .getProxyAddress(viewedAddress);
         if (!proxy) return;
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+        cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
         setNavbarCdps(cdps);
       })();
     }
@@ -66,12 +66,12 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   useEffect(() => {
     if (account || viewedAddress) {
       const ratios = navbarCdps.map(({ id: cdpId }) => {
-        const cdp = getCdp(cdpId, { cdps, feeds });
-        return getCollateralizationRatio(cdp);
+        const cdp = getCdpData(cdpId, { urns, ilks }, true);
+        if (cdp) return cdp.collateralizationRatio;
       });
       setRatios(ratios);
     }
-  }, [account, navbarCdps, cdps, feeds, viewedAddress]);
+  }, [account, navbarCdps, urns, ilks, viewedAddress]);
 
   const { show } = useModal();
 

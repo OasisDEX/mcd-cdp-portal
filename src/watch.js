@@ -1,5 +1,4 @@
 import { createWatcher } from '@makerdao/multicall';
-import { batchActions } from './utils/redux';
 import ilkList from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import {
@@ -22,8 +21,8 @@ export function startWatcher({
   window.watcher = watcher;
 
   watcher.batch().subscribe(updates => {
-    console.log('watcher updates:', updates);
-    dispatch(batchActions(updates));
+    dispatch({ type: 'watcherUpdates', payload: updates });
+    // dispatch(batchActions(updates));
   });
 
   // all bets are off wrt what contract state in our store
@@ -47,6 +46,10 @@ export function startWatcher({
 }
 
 export function getWatcher() {
+  if (!watcher) {
+    console.warn('missing watcher... trying to recreate...');
+    return startWatcher();
+  }
   return watcher;
 }
 

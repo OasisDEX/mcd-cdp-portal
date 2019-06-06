@@ -2,36 +2,25 @@ import React, { useMemo } from 'react';
 import SidebarFeeds from 'components/SidebarFeeds';
 import SidebarSystem from 'components/SidebarSystem';
 import { Box, Grid } from '@makerdao/ui-components-core';
-import { getAllFeeds } from 'reducers/feeds';
+import getPrices from '../../reducers/selectors/getPrices';
 import useStore from 'hooks/useStore';
 import { ETH } from '@makerdao/dai-plugin-mcd';
 
 const SidebarGlobalPanel = () => {
-  const [{ system, feeds }] = useStore();
+  const [{ system, ilks }] = useStore();
   return useMemo(() => {
-    const uniqueFeeds = getAllFeeds(feeds, [feeds]);
-
-    /* Mocking extra feed data */
-    const dummyFeeds = [
-      ...uniqueFeeds,
-      ...uniqueFeeds,
-      ...uniqueFeeds,
-      ...uniqueFeeds
-    ].map((feed, idx) => {
-      if (idx < 2) return feed;
-      return { pair: `DUM${idx - 1}/USD`, value: feed.value };
-    });
+    const feeds = getPrices({ ilks });
 
     return (
       <Box>
         <Grid gridRowGap="s">
-          <SidebarFeeds feeds={dummyFeeds} />
+          <SidebarFeeds feeds={feeds} />
           <SidebarSystem system={system} />
         </Grid>
         <Dev />
       </Box>
     );
-  }, [system, feeds]);
+  }, [system, ilks]);
 };
 
 export default SidebarGlobalPanel;
@@ -41,7 +30,7 @@ const Dev = () => {
 
   window.randomizeEthPrice = () => {
     const num = 200 + Math.random() * 50;
-    dispatch({ type: 'ETH.feedValueUSD', value: ETH(num) });
+    dispatch({ type: 'ETH.price', value: ETH(num) });
   };
 
   window.updateCdps = () => {

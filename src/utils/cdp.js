@@ -1,8 +1,8 @@
 export function getUsdPrice(ilkData) {
   // return cdp.ilkData.feedSetUSD
-  //   ? cdp.ilkData.feedValueUSD.toNumber()
+  //   ? cdp.ilkData.price.toNumber()
   //   : 0;
-  return (ilkData.feedValueUSD && ilkData.feedValueUSD.toNumber()) || 0;
+  return (ilkData.price && ilkData.price.toNumber()) || 0;
 }
 
 export function getLockedAndFreeCollateral(cdp) {
