@@ -18,15 +18,16 @@ const VersionLink = styled(Link)`
     }
   }
 `;
-const {
-  NOW_GITHUB_REPO,
-  NOW_GITHUB_ORG,
-  NOW_GITHUB_COMMIT_SHA,
-  NOW_GITHUB_COMMIT_AUTHOR_NAME,
-  NOW_GITHUB_COMMIT_REF
-} = require('../static/version.json');
 
 const SiteVersion = () => {
+  const {
+    NOW_GITHUB_REPO,
+    NOW_GITHUB_ORG,
+    NOW_GITHUB_COMMIT_SHA,
+    NOW_GITHUB_COMMIT_AUTHOR_NAME,
+    NOW_GITHUB_COMMIT_REF
+  } = require('../static/version.json');
+
   const [commitMsg, setCommitMsg] = useState('');
   const [commitDate, setCommitDate] = useState('');
   const apiUrl = `https://api.github.com/repos/${NOW_GITHUB_ORG}/${NOW_GITHUB_REPO}/git/commits/${NOW_GITHUB_COMMIT_SHA}`;
@@ -40,19 +41,12 @@ const SiteVersion = () => {
         committer: { date }
       } = commitObj;
       const d = new Date(date);
-      setCommitDate(d.toUTCString());
+      setCommitDate(d.toLocaleString());
       setCommitMsg(message);
     };
     fetchCommitMsg();
   }, [apiUrl]);
 
-  console.log(
-    NOW_GITHUB_REPO,
-    NOW_GITHUB_ORG,
-    NOW_GITHUB_COMMIT_SHA,
-    NOW_GITHUB_COMMIT_AUTHOR_NAME,
-    NOW_GITHUB_COMMIT_REF
-  );
   const commitUrl = `https://github.com/${NOW_GITHUB_ORG}/${NOW_GITHUB_REPO}/commit/${NOW_GITHUB_COMMIT_SHA}`;
   return (
     <Box>
@@ -64,8 +58,13 @@ const SiteVersion = () => {
 
             <VersionText>Commit:</VersionText>
             <VersionText>{commitMsg}</VersionText>
+
             <VersionText>Hash:</VersionText>
             <VersionText>{NOW_GITHUB_COMMIT_SHA.substring(0, 10)}</VersionText>
+
+            <VersionText>Branch:</VersionText>
+            <VersionText>{NOW_GITHUB_COMMIT_REF}</VersionText>
+
             <VersionText>Uploaded:</VersionText>
             <VersionText>{commitDate}</VersionText>
           </Grid>
