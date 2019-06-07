@@ -17,7 +17,8 @@
     "outstanding_debt": "Outstanding debt",
     "wallet_balance": "wallet balance",
     "tx_history": "Transaction history",
-    "outstanding_dai_debt": "Outstanding Dai debt"
+    "outstanding_dai_debt": "Outstanding Dai debt",
+    "not_applicable": "N/A"
   },
   "landing_page": {
     "title": "Spend crypto without leaving your position.",
