@@ -1,6 +1,7 @@
 import round from 'lodash/round';
 import { greaterThan } from './bignumber';
 import { calcDaiAvailable, getUsdPrice } from './cdp';
+import lang from 'languages';
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
@@ -74,4 +75,51 @@ export function cdpParamsAreValid(
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
   return true;
+}
+
+export function firstLetterLowercase(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+export function cleanSymbol(s) {
+  if (s === 'MDAI') return 'DAI';
+  return s;
+}
+
+export const actionToText = {
+  lock: lang.actions_past_tense.deposit,
+  free: lang.actions_past_tense.withdraw,
+  wipe: lang.actions_past_tense.pay_back,
+  draw: lang.actions_past_tense.generate
+};
+
+export function activityString(action, amount, lowercase) {
+  const and = lowercase ? ' and ' : '';
+  const formattedAction = lowercase
+    ? firstLetterLowercase(actionToText[action])
+    : actionToText[action];
+  return (
+    and +
+    formattedAction +
+    ' ' +
+    prettifyNumber(amount.toNumber()) +
+    cleanSymbol(amount.symbol)
+  );
+}
+
+export function fullActivityString(e) {
+  let str = '';
+  if (e.collateralAction)
+    str += activityString(e.collateralAction, e.changeInCollateral);
+  if (e.daiAction)
+    str += activityString(e.daiAction, e.changeInDebt, e.collateralAction);
+  return str;
+}
+
+export function formatDate(d) {
+  return d.toLocaleDateString(lang.getInterfaceLanguage(), {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 }

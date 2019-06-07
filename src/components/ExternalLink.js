@@ -5,19 +5,19 @@ import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 
 const ExternalLink = ({
   children,
-  address,
+  string,
   network,
   hideText,
   fill = '#447afb'
 }) => (
   <Link
     fontWeight="400"
-    href={etherscanLink(address, network)}
+    href={etherscanLink(string, network)}
     target="_blank"
     css={{ whiteSpace: 'nowrap' }}
   >
     {children}
-    {!hideText && <Address full={address} shorten={true} expandable={false} />}
+    {!hideText && <Address full={string} shorten={true} expandable={false} />}
     <ExternalLinkIcon fill={fill} />
   </Link>
 );

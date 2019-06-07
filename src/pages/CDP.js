@@ -28,11 +28,13 @@ import {
   getCollateralizationRatio,
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
-  getDaiAvailable
+  getDaiAvailable,
+  getEventHistory
 } from 'reducers/cdps';
 import { trackCdpById } from 'reducers/multicall/cdps';
 
 import ExternalLink from 'components/ExternalLink';
+import { fullActivityString, formatDate } from 'utils/ui';
 
 const mediumScreenMinBreakpoint = theme.breakpoints.xl;
 const mediumScreenMaxBreakpoint = '1425px';
@@ -246,7 +248,7 @@ const CdpViewHistory = ({ title, rows }) => {
 
 function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
-  const { maker, account } = useMaker();
+  const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ cdps, feeds }] = useStore();
   const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
@@ -268,6 +270,7 @@ function CDPView({ cdpId }) {
           showSidebar={showSidebar}
           account={account}
           owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
+          network={network}
         />
       ) : (
         <LoadingLayout background={getColor('backgroundGrey')} />
@@ -276,7 +279,26 @@ function CDPView({ cdpId }) {
   );
 }
 
-function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
+function formatEventHistory(events, network) {
+  return events.map(e => {
+    return [
+      e.changeInCollateral.symbol,
+      fullActivityString(e),
+      formatDate(e.time),
+      <ExternalLink key={1} string={e.senderAddress} network={network} />,
+      <ExternalLink key={2} string={e.transactionHash} network={network} />
+    ];
+  });
+}
+
+function CDPViewPresentation({
+  cdpId,
+  cdp,
+  showSidebar,
+  account,
+  owner,
+  network
+}) {
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
@@ -288,6 +310,7 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
+  const eventHistory = formatEventHistory(getEventHistory(cdp), network);
 
   return (
     <PageContentLayout>
@@ -412,48 +435,9 @@ function CDPViewPresentation({ cdpId, cdp, showSidebar, account, owner }) {
         </CdpViewCard>
       </Grid>
 
-      <CdpViewHistory title={lang.cdp_page.tx_history} rows={mockHistoryData} />
+      <CdpViewHistory title={lang.cdp_page.tx_history} rows={eventHistory} />
     </PageContentLayout>
   );
 }
 
 export default hot(CDPView);
-
-const mockAddr = '0xDEADBEEFDEADBEEFDEADBEEFDEADBEEFDEADBEEF';
-const mockHistoryData = [
-  [
-    'ETH',
-    'Paid back 1,000.00 DAI',
-    'Feb 15, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Sent 1,000.00 DAI',
-    'Feb 12, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Locked 1,000.00 DAI',
-    'Feb 09, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Withdrew 3,468.72 ETH',
-    'Feb 03, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ],
-  [
-    'ETH',
-    'Opened CDP',
-    'Jan 15, 2019',
-    <ExternalLink key={1} address={mockAddr} network={'kovan'} />,
-    <ExternalLink key={2} address={mockAddr} network={'kovan'} />
-  ]
-];

@@ -2,6 +2,7 @@ import produce from 'immer';
 import round from 'lodash/round';
 import { multiply, divide, subtract } from 'utils/bignumber';
 import { getIlkData } from './feeds';
+import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from 'utils/units';
 
 export const INK = 'ink';
@@ -148,6 +149,50 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
         debtAmount
       );
 }
+
+export function getEventHistory(cdp) {
+  //return cdp.getEventHistory();
+  return mockHistoryDataFromSDK; //TODO switch to real data
+}
+
+export const mockHistoryDataFromSDK = [
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(99.5),
+    collateralAction: 'free',
+    time: new Date(Date.now()),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(900.5),
+    resultingDebt: MDAI(10090),
+    ilk: 'ETH-A'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(0),
+    changeInDebt: MDAI(1000),
+    daiAction: 'wipe',
+    time: new Date(Date.now() - 10000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(1000),
+    resultingDebt: MDAI(10045),
+    ilk: 'ETH-A'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(10000),
+    collateralAction: 'lock',
+    changeInDebt: MDAI(120000),
+    daiAction: 'draw',
+    time: new Date(Date.now() - 20000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
+    resultingCollateral: ETH(1000),
+    resultingDebt: MDAI(1100),
+    ilk: 'ETH-A'
+  }
+];
 
 function convert(valueType, value) {
   switch (valueType) {

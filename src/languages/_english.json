@@ -103,6 +103,12 @@
     "pay_back": "Pay back",
     "generate": "Generate"
   },
+  "actions_past_tense": {
+    "deposit": "Deposited",
+    "withdraw": "Withdrew",
+    "pay_back": "Paid back",
+    "generate": "Generated"
+  },
   "action_sidebar": {
     "deposit_title": "Deposit {0}",
     "deposit_description": "How much {0} would you like to deposit?",
