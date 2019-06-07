@@ -2,7 +2,7 @@ import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
 import BigNumber from 'bignumber.js';
-import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
+import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -74,6 +74,7 @@ function convert(valueType, value) {
     case PRICE_WITH_SAFETY_MARGIN:
       return fromRay(value, 5);
     case DEBT_CEILING:
+      return fromRad(value, 0);
     case MAX_AUCTION_LOT_SIZE:
     case ADAPTER_BALANCE:
       return fromWei(value, 5);

@@ -52,35 +52,13 @@ export const adapterBalance = addresses => name => ({
   returns: [[`ilk.${name}.${ADAPTER_BALANCE}`]]
 });
 
-export const lineData = addresses => name =>
-  console.log('line data', addresses, name) || {
-    target: addresses.MCD_VAT,
-    call: [
-      'ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)',
-      toHex(name)
-    ],
-    returns: [
-      [],
-      [],
-      [],
-      [
-        `${name}.${DEBT_CEILING}`,
-        val =>
-          console.log(`debtCeiling for ${name}`, val, fromRad(val, 5)) ||
-          fromRad(val, 5)
-      ],
-      []
-    ]
-  };
-
 export function createCDPTypeModel(ilk, addresses) {
   const cdpModel = [
     rateData,
     liquidation,
     flipper,
     ilkVatData,
-    adapterBalance,
-    lineData
+    adapterBalance
   ].map(f => f(addresses)(ilk));
   return cdpModel;
 }

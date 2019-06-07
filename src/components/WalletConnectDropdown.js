@@ -49,12 +49,16 @@ const WalletConnectDropdown = ({
 
   useEffect(() => {
     const accounts = maker.listAccounts();
-    const otherAccounts = accounts.filter(
-      a =>
-        a.address !== account.address &&
-        (account.type !== 'browser' || a.type !== 'browser') &&
-        (account.type === 'browser' || a.address === activeAccountAddress)
-    );
+    // best way to handle this?
+    const otherAccounts =
+      accounts.length > 1
+        ? accounts.filter(
+            a =>
+              a.address !== account.address &&
+              (account.type !== 'browser' || a.type !== 'browser') &&
+              (account.type === 'browser' || a.address === activeAccountAddress)
+          )
+        : [];
     setOtherAccounts(otherAccounts);
   }, [maker, account, activeAccountAddress]);
 

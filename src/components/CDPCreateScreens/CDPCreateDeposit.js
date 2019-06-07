@@ -189,11 +189,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
 
   function handleInputChange({ target }) {
-    if (
-      parseFloat(target.value) < 0 ||
-      parseFloat(target.value) > parseFloat(selectedIlk.debtCeiling)
-    )
-      return;
+    if (parseFloat(target.value) < 0) return;
     dispatch({
       type: `form/set-${target.name}`,
       payload: { value: target.value }
