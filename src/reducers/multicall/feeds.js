@@ -20,7 +20,7 @@ export const rateData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
   returns: [
     [
-      `${name}.${RATE}`,
+      `ilk.${name}.${RATE}`,
       val => {
         const taxBigNumber = new BigNumber(val.toString()).dividedBy(RAY);
         const secondsPerYear = 60 * 60 * 24 * 365;
@@ -31,7 +31,7 @@ export const rateData = addresses => name => ({
           .toFixed(3);
       }
     ],
-    [`${name}.${LAST_DRIP}`]
+    [`ilk.${name}.${LAST_DRIP}`]
   ]
 });
 
@@ -40,9 +40,9 @@ export const ilkVatData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
   returns: [
     [],
-    [`${name}.${ILK_RATE}`, val => fromRay(val, 5)],
-    [`${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
-    [`${name}.${DEBT_CEILING}`, val => fromWei(val, 5)],
+    [`ilk.${name}.${ILK_RATE}`, val => fromRay(val, 5)],
+    [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
+    [`ilk.${name}.${DEBT_CEILING}`, val => fromWei(val, 5)],
     []
   ]
 });
@@ -51,8 +51,8 @@ export const liquidation = addresses => name => ({
   target: addresses.MCD_SPOT,
   call: ['ilks(bytes32)(address,uint256)', toHex(name)],
   returns: [
-    [`${name}.pip`],
-    [`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 0)]
+    [`ilk.${name}.pip`],
+    [`ilk.${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 0)]
   ]
 });
 
@@ -60,19 +60,19 @@ export const flipper = addresses => name => ({
   target: addresses.MCD_CAT,
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
-    [`${name}.${LIQUIDATOR_ADDRESS}`],
+    [`ilk.${name}.${LIQUIDATOR_ADDRESS}`],
     [
-      `${name}.${LIQUIDATION_PENALTY}`,
+      `ilk.${name}.${LIQUIDATION_PENALTY}`,
       val => fromRay(mul(sub(val, RAY), 100), 2)
     ],
-    [`${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
+    [`ilk.${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
   ]
 });
 
 export const adapterBalance = addresses => name => ({
   target: addresses[name],
   call: ['balanceOf(address)(uint256)', addresses[`MCD_JOIN_${name}`]],
-  returns: [[`${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
+  returns: [[`ilk.${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
 });
 
 export function createCDPTypeModel(ilk, addresses) {

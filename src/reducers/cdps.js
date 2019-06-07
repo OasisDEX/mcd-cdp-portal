@@ -150,8 +150,8 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
 
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
-  const [cdpId, valueType, ilk] = type.split('.');
-  if (defaultCdpState.hasOwnProperty(valueType)) {
+  const [label, cdpId, valueType, ilk] = type.split('.');
+  if (label === 'cdp') {
     if (draft[cdpId]) draft[cdpId][valueType] = value;
     else
       draft[cdpId] = {

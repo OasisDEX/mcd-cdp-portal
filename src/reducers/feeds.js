@@ -61,8 +61,8 @@ const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
   // example type: ETH.debtCeiling
-  const [key, valueType] = type.split('.');
-  if (defaultIlkState.hasOwnProperty(valueType)) {
+  const [label, key, valueType] = type.split('.');
+  if (label === 'ilk') {
     if (valueType === FEED_VALUE_USD) {
       // the feed value is keyed off of gem so we can mix it into all ilks that share that gem
       draft.forEach(ilkData => {

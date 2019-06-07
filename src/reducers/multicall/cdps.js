@@ -22,7 +22,7 @@ export const urnState = addresses => (ilk, urn, urnId) => ({
   target: addresses.MCD_VAT,
   call: ['urns(bytes32,address)(uint256,uint256)', toHex(ilk), urn],
   returns: [
-    [`${urnId}.${INK}.${ilk}`, val => fromWei(val)],
-    [`${urnId}.${ART}.${ilk}`, val => fromWei(val)]
+    [`cdp.${urnId}.${INK}.${ilk}`, val => fromWei(val)],
+    [`cdp.${urnId}.${ART}.${ilk}`, val => fromWei(val)]
   ]
 });

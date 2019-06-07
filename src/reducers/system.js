@@ -19,7 +19,8 @@ export const initialState = {
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
-  if (initialState.hasOwnProperty(type)) draft[type] = value;
+  const [label, valueType] = type.split('.');
+  if (label === 'system') draft[valueType] = value;
 }, initialState);
 
 export default reducer;
