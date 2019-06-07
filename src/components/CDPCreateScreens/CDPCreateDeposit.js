@@ -167,7 +167,7 @@ const CDPCreateDepositSidebar = ({
         [lang.stability_fee, `${rate}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
         [lang.liquidation_penalty, `${liquidationPenalty}%`],
-        [lang.collateral_debt_ceiling, `${debtCeiling}`]
+        [lang.collateral_debt_ceiling, debtCeiling]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">

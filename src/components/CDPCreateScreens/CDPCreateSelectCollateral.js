@@ -48,7 +48,6 @@ function IlkTableRow({ ilk, checked, dispatch }) {
   const [userGemBalance, setUserGemBalance] = useState(null);
 
   ilk.data = getIlkData(feeds, ilk.key);
-  console.log('****ILK DATA', ilk.data);
 
   useEffect(() => {
     (async () => {
