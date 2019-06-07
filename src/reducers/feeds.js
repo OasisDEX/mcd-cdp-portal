@@ -1,6 +1,8 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
+import BigNumber from 'bignumber.js';
+import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -57,20 +59,48 @@ export function getAllFeeds(feeds) {
 
 const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
 
+function convert(valueType, value) {
+  switch (valueType) {
+    case RATE: {
+      const taxBigNumber = new BigNumber(value.toString()).dividedBy(RAY);
+      const secondsPerYear = 60 * 60 * 24 * 365;
+      BigNumber.config({ POW_PRECISION: 100 });
+      return taxBigNumber
+        .pow(secondsPerYear)
+        .minus(1)
+        .toFixed(3);
+    }
+    case ILK_RATE:
+    case PRICE_WITH_SAFETY_MARGIN:
+      return fromRay(value, 5);
+    case DEBT_CEILING:
+    case MAX_AUCTION_LOT_SIZE:
+    case ADAPTER_BALANCE:
+      return fromWei(value, 5);
+    case LIQUIDATION_RATIO:
+      return fromRay(mul(value, 100), 0);
+    case LIQUIDATION_PENALTY:
+      return fromRay(mul(sub(value, RAY), 100), 2);
+    default:
+      return value;
+  }
+}
+
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
   // example type: ETH.debtCeiling
-  const [key, valueType] = type.split('.');
-  if (defaultIlkState.hasOwnProperty(valueType)) {
+  const [label, key, valueType] = type.split('.');
+  if (label === 'ilk') {
+    const convertedValue = convert(valueType, value);
     if (valueType === FEED_VALUE_USD) {
       // the feed value is keyed off of gem so we can mix it into all ilks that share that gem
       draft.forEach(ilkData => {
-        if (ilkData.gem === key) ilkData[valueType] = value;
+        if (ilkData.gem === key) ilkData[valueType] = convertedValue;
       });
     } else {
       const idx = draft.findIndex(({ key: ilkKey }) => ilkKey === key);
-      draft[idx] = { ...draft[idx], [valueType]: value };
+      draft[idx] = { ...draft[idx], [valueType]: convertedValue };
     }
   }
 }, initialState);

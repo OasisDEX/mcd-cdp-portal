@@ -103,6 +103,12 @@
     "pay_back": "Pay back",
     "generate": "Generate"
   },
+  "actions_past_tense": {
+    "deposit": "Deposited",
+    "withdraw": "Withdrew",
+    "pay_back": "Paid back",
+    "generate": "Generated"
+  },
   "action_sidebar": {
     "deposit_title": "Deposit {0}",
     "deposit_description": "How much {0} would you like to deposit?",
@@ -126,7 +132,10 @@
     "gem_usd_price_feed": "{0}/USD Price feed",
     "new_liquidation_price": "New liquidation price",
     "new_collateralization_ratio": "New collateralization ratio",
-    "set_max": "Set max"
+    "set_max": "Set max",
+    "create_proxy": "Create Proxy to continue",
+    "creating_proxy": "Creating Proxy ...",
+    "proxy_created": "Proxy Created"
   },
   "verbs": {
     "depositing": "Depositing",
