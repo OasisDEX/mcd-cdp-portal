@@ -40,6 +40,10 @@ export function startWatcher({
 }
 
 export function getWatcher() {
+  if (!watcher) {
+    console.log('recreating watcher... this should only happen in development');
+    return startWatcher();
+  }
   return watcher;
 }
 

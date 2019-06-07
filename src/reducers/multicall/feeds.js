@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 
-import { USD } from 'maker';
 import { toHex } from 'utils/ethereum';
 import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
 import {
@@ -9,23 +8,12 @@ import {
   LIQUIDATION_PENALTY,
   LIQUIDATOR_ADDRESS,
   LIQUIDATION_RATIO,
-  FEED_SET_USD,
-  FEED_VALUE_USD,
   RATE,
   ILK_RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING
 } from 'reducers/feeds';
-
-export const priceFeed = addresses => (name, { decimals = 18 } = {}) => ({
-  target: addresses[`PIP_${name}`],
-  call: ['peek()(uint256,bool)'],
-  returns: [
-    [`${name}.${FEED_VALUE_USD}`, val => USD(val, -decimals)],
-    [`${name}.${FEED_SET_USD}`, liveness => (liveness ? 'live' : 'ded')]
-  ]
-});
 
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
@@ -50,23 +38,20 @@ export const rateData = addresses => name => ({
 export const ilkVatData = addresses => name => ({
   target: addresses.MCD_VAT,
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
-  returns: [[], [`${name}.${ILK_RATE}`, val => fromRay(val, 5)], [], [], []]
-});
-
-export const pitData = addresses => name => ({
-  target: addresses.MCD_PIT,
-  call: ['ilks(bytes32)(uint256,uint256)', toHex(name)],
   returns: [
+    [],
+    [`${name}.${ILK_RATE}`, val => fromRay(val, 5)],
     [`${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
-    [`${name}.${DEBT_CEILING}`, val => fromWei(val, 5)]
+    [`${name}.${DEBT_CEILING}`, val => fromWei(val, 5)],
+    []
   ]
 });
 
 export const liquidation = addresses => name => ({
-  target: addresses[`MCD_SPOT`],
+  target: addresses.MCD_SPOT,
   call: ['ilks(bytes32)(address,uint256)', toHex(name)],
   returns: [
-    [`pip${name}`],
+    [`${name}.pip`],
     [`${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 0)]
   ]
 });
@@ -92,9 +77,7 @@ export const adapterBalance = addresses => name => ({
 
 export function createCDPTypeModel(ilk, addresses) {
   const cdpModel = [
-    priceFeed,
     rateData,
-    pitData,
     liquidation,
     flipper,
     ilkVatData,
