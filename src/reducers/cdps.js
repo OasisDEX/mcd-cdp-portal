@@ -3,6 +3,7 @@ import round from 'lodash/round';
 import { multiply, divide, subtract } from 'utils/bignumber';
 import { getIlkData } from './feeds';
 import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
+import { fromWei } from 'utils/units';
 
 export const INK = 'ink';
 export const ART = 'art';
@@ -193,16 +194,26 @@ export const mockHistoryDataFromSDK = [
   }
 ];
 
+function convert(valueType, value) {
+  switch (valueType) {
+    case INK:
+    case ART:
+      return fromWei(value);
+    default:
+      return value;
+  }
+}
+
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
-  const [cdpId, valueType, ilk] = type.split('.');
-  if (defaultCdpState.hasOwnProperty(valueType)) {
-    if (draft[cdpId]) draft[cdpId][valueType] = value;
+  const [label, cdpId, valueType, ilk] = type.split('.');
+  if (label === 'cdp') {
+    if (draft[cdpId]) draft[cdpId][valueType] = convert(valueType, value);
     else
       draft[cdpId] = {
         ...defaultCdpState,
         inited: true,
-        [valueType]: value,
+        [valueType]: convert(valueType, value),
         ilk
       };
   }

@@ -147,7 +147,7 @@ function RouteEffects({ network }) {
       dispatch(
         batchActions(
           prices.map((price, idx) => ({
-            type: `${gems[idx].symbol}.feedValueUSD`,
+            type: `ilk.${gems[idx].symbol}.feedValueUSD`,
             value: price
           }))
         )
