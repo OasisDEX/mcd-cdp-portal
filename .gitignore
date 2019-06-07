@@ -25,5 +25,3 @@ yarn-debug.log*
 yarn-error.log*
 .yalc/
 yalc.lock
-
-src/static/version.json
