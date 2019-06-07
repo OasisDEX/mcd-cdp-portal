@@ -16,7 +16,13 @@ export function startWatcher({
   watcher = createWatcher([], { rpcUrl, multicallAddress });
   window.watcher = watcher;
 
-  watcher.batch().subscribe(updates => dispatch(batchActions(updates)));
+  watcher.batch().subscribe(updates => {
+    dispatch(batchActions(updates));
+
+    // the advantage of this is that the entire list of updates is available in
+    // a single reducer call
+    dispatch({ type: 'watcherUpdates', payload: updates });
+  });
 
   // all bets are off wrt what contract state in our store
   dispatch({ type: 'CLEAR_CONTRACT_STATE' });

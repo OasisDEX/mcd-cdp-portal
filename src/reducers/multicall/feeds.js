@@ -1,7 +1,4 @@
-import BigNumber from 'bignumber.js';
-
 import { toHex } from 'utils/ethereum';
-import { fromWei, fromRay, sub, mul, RAY } from 'utils/units';
 import {
   ADAPTER_BALANCE,
   MAX_AUCTION_LOT_SIZE,
@@ -18,21 +15,7 @@ import {
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
-  returns: [
-    [
-      `ilk.${name}.${RATE}`,
-      val => {
-        const taxBigNumber = new BigNumber(val.toString()).dividedBy(RAY);
-        const secondsPerYear = 60 * 60 * 24 * 365;
-        BigNumber.config({ POW_PRECISION: 100 });
-        return taxBigNumber
-          .pow(secondsPerYear)
-          .minus(1)
-          .toFixed(3);
-      }
-    ],
-    [`ilk.${name}.${LAST_DRIP}`]
-  ]
+  returns: [[`ilk.${name}.${RATE}`], [`ilk.${name}.${LAST_DRIP}`]]
 });
 
 export const ilkVatData = addresses => name => ({
@@ -40,9 +23,9 @@ export const ilkVatData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
   returns: [
     [],
-    [`ilk.${name}.${ILK_RATE}`, val => fromRay(val, 5)],
-    [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`, val => fromRay(val, 5)],
-    [`ilk.${name}.${DEBT_CEILING}`, val => fromWei(val, 5)],
+    [`ilk.${name}.${ILK_RATE}`],
+    [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`],
+    [`ilk.${name}.${DEBT_CEILING}`],
     []
   ]
 });
@@ -50,10 +33,7 @@ export const ilkVatData = addresses => name => ({
 export const liquidation = addresses => name => ({
   target: addresses.MCD_SPOT,
   call: ['ilks(bytes32)(address,uint256)', toHex(name)],
-  returns: [
-    [`ilk.${name}.pip`],
-    [`ilk.${name}.${LIQUIDATION_RATIO}`, val => fromRay(mul(val, 100), 0)]
-  ]
+  returns: [[`ilk.${name}.pip`], [`ilk.${name}.${LIQUIDATION_RATIO}`]]
 });
 
 export const flipper = addresses => name => ({
@@ -61,18 +41,15 @@ export const flipper = addresses => name => ({
   call: ['ilks(bytes32)(address,uint256,uint256)', toHex(name)],
   returns: [
     [`ilk.${name}.${LIQUIDATOR_ADDRESS}`],
-    [
-      `ilk.${name}.${LIQUIDATION_PENALTY}`,
-      val => fromRay(mul(sub(val, RAY), 100), 2)
-    ],
-    [`ilk.${name}.${MAX_AUCTION_LOT_SIZE}`, val => fromWei(val, 5)]
+    [`ilk.${name}.${LIQUIDATION_PENALTY}`],
+    [`ilk.${name}.${MAX_AUCTION_LOT_SIZE}`]
   ]
 });
 
 export const adapterBalance = addresses => name => ({
   target: addresses[name],
   call: ['balanceOf(address)(uint256)', addresses[`MCD_JOIN_${name}`]],
-  returns: [[`ilk.${name}.${ADAPTER_BALANCE}`, val => fromWei(val, 5)]]
+  returns: [[`ilk.${name}.${ADAPTER_BALANCE}`]]
 });
 
 export function createCDPTypeModel(ilk, addresses) {

@@ -1,7 +1,5 @@
 import { getWatcher } from '../../watch';
-
 import { toHex } from 'utils/ethereum';
-import { fromWei } from 'utils/units';
 import { INK, ART } from 'reducers/cdps';
 
 export async function trackCdpById(maker, cdpId, _cdp = null) {
@@ -21,8 +19,5 @@ export async function trackCdpById(maker, cdpId, _cdp = null) {
 export const urnState = addresses => (ilk, urn, urnId) => ({
   target: addresses.MCD_VAT,
   call: ['urns(bytes32,address)(uint256,uint256)', toHex(ilk), urn],
-  returns: [
-    [`cdp.${urnId}.${INK}.${ilk}`, val => fromWei(val)],
-    [`cdp.${urnId}.${ART}.${ilk}`, val => fromWei(val)]
-  ]
+  returns: [[`cdp.${urnId}.${INK}.${ilk}`], [`cdp.${urnId}.${ART}.${ilk}`]]
 });

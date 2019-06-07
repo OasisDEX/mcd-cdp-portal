@@ -2,6 +2,7 @@ import produce from 'immer';
 import round from 'lodash/round';
 import { multiply, divide, subtract } from 'utils/bignumber';
 import { getIlkData } from './feeds';
+import { fromWei } from 'utils/units';
 
 export const INK = 'ink';
 export const ART = 'art';
@@ -148,16 +149,26 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
       );
 }
 
+function convert(valueType, value) {
+  switch (valueType) {
+    case INK:
+    case ART:
+      return fromWei(value);
+    default:
+      return value;
+  }
+}
+
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   const [label, cdpId, valueType, ilk] = type.split('.');
   if (label === 'cdp') {
-    if (draft[cdpId]) draft[cdpId][valueType] = value;
+    if (draft[cdpId]) draft[cdpId][valueType] = convert(valueType, value);
     else
       draft[cdpId] = {
         ...defaultCdpState,
         inited: true,
-        [valueType]: value,
+        [valueType]: convert(valueType, value),
         ilk
       };
   }
