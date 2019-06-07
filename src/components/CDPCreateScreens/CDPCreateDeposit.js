@@ -147,7 +147,13 @@ const CDPCreateDepositSidebar = ({
   liquidationPrice,
   collateralizationRatio
 }) => {
-  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
+  const {
+    liquidationPenalty,
+    liquidationRatio,
+    rate,
+    debtCeiling
+  } = selectedIlk.data;
+
   return (
     <Grid gridRowGap="m">
       {[
@@ -160,7 +166,8 @@ const CDPCreateDepositSidebar = ({
 
         [lang.stability_fee, `${rate}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
-        [lang.liquidation_penalty, `${liquidationPenalty}%`]
+        [lang.liquidation_penalty, `${liquidationPenalty}%`],
+        [lang.collateral_debt_ceiling, `${debtCeiling}`]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">
@@ -182,7 +189,11 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
 
   function handleInputChange({ target }) {
-    if (parseFloat(target.value) < 0) return;
+    if (
+      parseFloat(target.value) < 0 ||
+      parseFloat(target.value) > parseFloat(selectedIlk.debtCeiling)
+    )
+      return;
     dispatch({
       type: `form/set-${target.name}`,
       payload: { value: target.value }
