@@ -112,7 +112,7 @@ export function fullActivityString(e) {
   if (e.collateralAction)
     str += activityString(e.collateralAction, e.changeInCollateral);
   if (e.daiAction)
-    str += activityString(e.daiAction, e.changeInDebt, e.collateralAction);
+    str += activityString(e.daiAction, e.changeInDai, e.collateralAction);
   return str;
 }
 

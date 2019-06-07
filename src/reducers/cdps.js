@@ -171,7 +171,7 @@ export const mockHistoryDataFromSDK = [
     transactionHash:
       '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
     changeInCollateral: ETH(0),
-    changeInDebt: MDAI(1000),
+    changeInDai: MDAI(1000),
     daiAction: 'wipe',
     time: new Date(Date.now() - 10000000000),
     senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
@@ -184,7 +184,7 @@ export const mockHistoryDataFromSDK = [
       '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
     changeInCollateral: ETH(10000),
     collateralAction: 'lock',
-    changeInDebt: MDAI(120000),
+    changeInDai: MDAI(120000),
     daiAction: 'draw',
     time: new Date(Date.now() - 20000000000),
     senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
