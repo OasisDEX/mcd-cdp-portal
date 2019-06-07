@@ -13,7 +13,7 @@ env:
 script:
   - yarn ci
 before_deploy:
-  - yarn write-git-version
+  - yarn write-env-variables
   - yarn build
   - npm install now --no-save
 deploy:
