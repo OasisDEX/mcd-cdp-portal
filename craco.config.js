@@ -1,16 +1,8 @@
 const alias = {};
-const webpack = require('webpack');
-const dotenv = require('dotenv');
-
 if (process.env.NODE_ENV === 'development') {
   alias['react-dom'] = '@hot-loader/react-dom';
 }
-const envData = () => {
-  const env = dotenv.config().parsed;
-  return Object.keys(env).reduce((prev, next) => {
-    prev[`process.env.${next}`] = JSON.stringify(env[next]);
-  });
-};
+
 module.exports = {
   webpack: {
     alias,
@@ -20,13 +12,7 @@ module.exports = {
             analyzerMode: 'static',
             reportFilename: './report.html'
           })
-        : () => {},
-      new webpack.DefinePlugin(() => {
-        const env = dotenv.config().parsed;
-        return Object.keys(env).reduce((prev, next) => {
-          prev[`process.env.${next}`] = JSON.stringify(env[next]);
-        }, {});
-      })
+        : () => {}
     ],
     configure: {
       output: {

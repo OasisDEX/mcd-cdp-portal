@@ -55,9 +55,9 @@
     "test": "jest",
     "ci": "./node_modules/@makerdao/testchain/scripts/launch -s mcd-step-4 --fast --ci jest --coverage",
     "deploy": "yarn build && now ./build -A ../now.json",
-    "now-build": "yarn build",
+    "now-build": "yarn write-env-variables && yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map",
-    "write-git-version": "printf '{\"message\":\"%s\"}\n' \"$(git show --oneline -s)\" > ./src/static/version.json"
+    "write-env-variables": "./src/scripts/write-env-vars.sh"
   },
   "lint-staged": {
     "*.{js,json}": [

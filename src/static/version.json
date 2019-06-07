@@ -1,1 +1,7 @@
-{ "message": "1454d08 Use autoSwitch flag when adding browser account" }
+{
+  "NOW_GITHUB_REPO": "mcd-cdp-portal",
+  "NOW_GITHUB_COMMIT_SHA": "1454d08",
+  "NOW_GITHUB_ORG": "makerdao",
+  "NOW_GITHUB_COMMIT_REF": "add-commit-hash",
+  "NOW_GITHUB_DEPLOYMENT": "deployment-123"
+}
