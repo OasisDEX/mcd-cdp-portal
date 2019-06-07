@@ -8,6 +8,8 @@ cache:
   timeout: 9000
 install:
   - yarn install
+env:
+  - NODE_PATH=src/
 script:
   - yarn ci
 before_deploy:
