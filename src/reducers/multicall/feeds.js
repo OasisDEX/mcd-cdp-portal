@@ -4,18 +4,19 @@ import {
 } from '@makerdao/dai-plugin-mcd/dist/math';
 import { toHex } from 'utils/ethereum';
 import { fromWei } from 'utils/units';
-import {
-  ADAPTER_BALANCE,
-  MAX_AUCTION_LOT_SIZE,
-  LIQUIDATION_PENALTY,
-  LIQUIDATOR_ADDRESS,
-  LIQUIDATION_RATIO,
-  DUTY,
-  RATE,
-  LAST_DRIP,
-  SPOT,
-  DEBT_CEILING
-} from 'reducers/feeds';
+
+export const FEED_SET_USD = 'feedSetUSD';
+export const FEED_VALUE_USD = 'price';
+export const DUTY = 'duty';
+export const RATE = 'rate';
+export const LAST_DRIP = 'lastDrip';
+export const SPOT = 'spot';
+export const DEBT_CEILING = 'debtCeiling';
+export const LIQUIDATION_RATIO = 'liquidationRatio';
+export const LIQUIDATOR_ADDRESS = 'liquidatorAddress';
+export const LIQUIDATION_PENALTY = 'liquidationPenalty';
+export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
+export const ADAPTER_BALANCE = 'adapterBalance';
 
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,

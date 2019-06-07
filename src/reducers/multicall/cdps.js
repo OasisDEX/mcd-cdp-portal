@@ -1,7 +1,8 @@
 import { getWatcher } from '../../watch';
-
 import { toHex } from 'utils/ethereum';
-import { INK, ART } from 'reducers/cdps';
+
+export const INK = 'ink';
+export const ART = 'art';
 
 export async function trackCdpById(maker, cdpId, dispatch) {
   const addresses = maker.service('smartContract').getContractAddresses();

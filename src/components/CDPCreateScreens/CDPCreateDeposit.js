@@ -2,12 +2,13 @@ import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import { getUsdPrice, calcCDPParams } from 'utils/cdp';
+import { calcCDPParams, cdpParamsAreValid } from 'utils/cdp';
 import {
-  cdpParamsAreValid,
   formatCollateralizationRatio,
-  prettifyNumber
+  prettifyNumber,
+  formatValue
 } from 'utils/ui';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
@@ -20,13 +21,14 @@ function OpenCDPForm({
   daiAvailable
 }) {
   const userHasSufficientGemBalance = greaterThanOrEqual(
-    selectedIlk.userGemBalance,
+    selectedIlk.userGemBalance || 0,
     cdpParams.gemsToLock
   );
   const userCanDrawDaiAmount = greaterThanOrEqual(
     daiAvailable,
     cdpParams.daiToDraw
   );
+
   const fields = [
     [
       lang.formatString(
@@ -40,7 +42,7 @@ function OpenCDPForm({
       <Input
         key="collinput"
         name="gemsToLock"
-        after={selectedIlk.data.gem}
+        after={selectedIlk.gem}
         type="number"
         value={cdpParams.gemsToLock}
         onChange={handleInputChange}
@@ -70,7 +72,7 @@ function OpenCDPForm({
             });
           }}
         >
-          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.data.gem}
+          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.gem}
         </Text>
       </Box>
     ],
@@ -108,7 +110,7 @@ function OpenCDPForm({
               });
             }}
           >
-            {prettifyNumber(daiAvailable)} DAI
+            {formatValue(daiAvailable)} DAI
           </Text>
         </Box>
       </Grid>
@@ -147,7 +149,7 @@ const CDPCreateDepositSidebar = ({
   liquidationPrice,
   collateralizationRatio
 }) => {
-  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
+  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk;
   return (
     <Grid gridRowGap="m">
       {[
@@ -156,7 +158,7 @@ const CDPCreateDepositSidebar = ({
           formatCollateralizationRatio(collateralizationRatio)
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-        ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
+        ['Current Price', `$${formatValue(selectedIlk.price)}`],
 
         [lang.stability_fee, `${rate}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
@@ -174,12 +176,24 @@ const CDPCreateDepositSidebar = ({
 };
 
 const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
-  const { gemsToLock, daiToDraw } = cdpParams;
+  let { gemsToLock, daiToDraw } = cdpParams;
+
   const {
     liquidationPrice,
     collateralizationRatio,
     daiAvailable
-  } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
+  } = calcCDPParams({
+    liquidationRatio: selectedIlk.liquidationRatio,
+    price: selectedIlk.price,
+    gemsToLock: selectedIlk.currency(gemsToLock),
+    daiToDraw: MDAI(daiToDraw)
+  });
+
+  const canProgress = cdpParamsAreValid(
+    { gemsToLock, daiToDraw },
+    selectedIlk.userGemBalance,
+    selectedIlk
+  );
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -188,6 +202,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
+
   return (
     <Box
       maxWidth="1040px"
@@ -223,14 +238,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
           />
         </Card>
       </Grid>
-      <ScreenFooter
-        dispatch={dispatch}
-        canProgress={cdpParamsAreValid(
-          cdpParams,
-          selectedIlk.userGemBalance,
-          selectedIlk.data
-        )}
-      />
+      <ScreenFooter dispatch={dispatch} canProgress={canProgress} />
     </Box>
   );
 };

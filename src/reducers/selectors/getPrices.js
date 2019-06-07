@@ -1,4 +1,4 @@
-import { FEED_VALUE_USD } from '../feeds';
+import { FEED_VALUE_USD } from '../multicall/feeds';
 import values from 'lodash/values';
 import uniqBy from 'lodash/uniqBy';
 

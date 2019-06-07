@@ -1,12 +1,12 @@
 import { DAI } from 'maker';
 import { fromRad } from 'utils/units';
-import {
-  TOTAL_DEBT,
-  BASE_RATE,
-  GLOBAL_DEBT_CEILING,
-  DEBT_AUCTION_LOT_SIZE,
-  SURPLUS_AUCTION_LOT_SIZE
-} from 'reducers/system';
+
+export const TOTAL_DEBT = 'totalDebt';
+export const BASE_RATE = 'baseRate';
+export const GLOBAL_DEBT_CEILING = 'globalDebtCeiling';
+export const DEBT_AUCTION_LOT_SIZE = 'debtAuctionLotSize';
+export const SURPLUS_AUCTION_LOT_SIZE = 'surplusAuctionLotSize';
+export const NUMBER_OF_LIQUIDATIONS = 'numberOfLiquidations';
 
 const totalDebt = addresses => ({
   target: addresses.MCD_VAT,

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useMemo, useReducer, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -8,7 +8,9 @@ import {
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
+import useStore from '../hooks/useStore';
 import useMaker from 'hooks/useMaker';
+import ilkList from '../references/ilkList';
 
 const screens = [
   ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
@@ -21,14 +23,9 @@ const initialState = {
   step: 0,
   proxyAddress: null,
   hasAllowance: null,
-  selectedIlk: {
-    userGemBalance: '',
-    currency: null,
-    data: {},
-    key: ''
-  },
-  gemsToLock: '',
-  daiToDraw: '',
+  selectedIlk: ilkList[0],
+  gemsToLock: 0,
+  daiToDraw: 0,
   targetCollateralizationRatio: ''
 };
 
@@ -63,10 +60,8 @@ function reducer(state, action) {
       return {
         ...state,
         selectedIlk: {
-          userGemBalance: payload.gemBalance,
-          currency: payload.currency,
-          data: payload.data,
-          key: payload.key
+          ...payload,
+          userGemBalance: payload.gemBalance
         }
       };
     case 'reset-ilk':
@@ -92,6 +87,7 @@ function reducer(state, action) {
 
 function CDPCreate({ onClose }) {
   const { maker, account } = useMaker();
+  const [{ ilks }] = useStore();
   const [
     { step, selectedIlk, proxyAddress, hasAllowance, ...cdpParams },
     dispatch
@@ -109,7 +105,10 @@ function CDPCreate({ onClose }) {
   }, [maker, account]);
 
   const screenProps = {
-    selectedIlk,
+    selectedIlk: {
+      ...selectedIlk,
+      ...ilks[selectedIlk.key]
+    },
     proxyAddress,
     hasAllowance,
     cdpParams,
@@ -117,16 +116,19 @@ function CDPCreate({ onClose }) {
     onClose
   };
 
-  return (
-    <StepperUI
-      step={step}
-      steps={screens.map(([title]) => title)}
-      renderStepperHeader={() => <StepperHeader onClose={onClose} />}
-    >
-      {screens.map(([, getComponent], screenIndex) =>
-        getComponent({ ...screenProps, screenIndex, key: screenIndex })
-      )}
-    </StepperUI>
+  return useMemo(
+    () => (
+      <StepperUI
+        step={step}
+        steps={screens.map(([title]) => title)}
+        renderStepperHeader={() => <StepperHeader onClose={onClose} />}
+      >
+        {screens.map(([, getComponent], screenIndex) =>
+          getComponent({ ...screenProps, screenIndex, key: screenIndex })
+        )}
+      </StepperUI>
+    ),
+    [onClose, screenProps, step]
   );
 }
 

@@ -10,9 +10,9 @@ import {
 import { TextBlock } from 'components/Typography';
 
 import { MAX_UINT_BN } from 'utils/units';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatValue } from 'utils/ui';
 import ilkList from 'references/ilkList';
-import { getIlkData } from 'reducers/feeds';
+import getIlkData from '../../reducers/selectors/getIlkData';
 
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
@@ -44,30 +44,37 @@ const CDPCreateSelectCollateralSidebar = () => (
 
 function IlkTableRow({ ilk, checked, dispatch }) {
   const { maker } = useMaker();
-  const [{ feeds }] = useStore();
+  const [{ ilks }] = useStore();
   const [userGemBalance, setUserGemBalance] = useState(null);
 
-  ilk.data = getIlkData(feeds, ilk.key);
+  ilk = {
+    ...ilk,
+    ...getIlkData(ilk.key, { ilks })
+  };
 
+  // FIXME move this to multicall
   useEffect(() => {
     (async () => {
       setUserGemBalance(await maker.getToken(ilk.currency).balance());
     })();
-  }, []);
+  }, [ilk.currency, maker]);
 
-  async function selectIlk() {
-    dispatch({
-      type: 'set-ilk',
-      payload: {
-        key: ilk.key,
-        gemBalance:
-          userGemBalance === null
-            ? (await maker.getToken(ilk.currency).balance()).toNumber()
-            : userGemBalance.toNumber(),
-        currency: ilk.currency,
-        data: ilk.data
-      }
-    });
+  function selectIlk() {
+    // first dispatch the basic ilk data
+    dispatch({ type: 'set-ilk', payload: ilk });
+
+    // then update the balance when it becomes available
+    (async () =>
+      dispatch({
+        type: 'set-ilk',
+        payload: {
+          ...ilk,
+          gemBalance:
+            userGemBalance === null
+              ? (await maker.getToken(ilk.currency).balance()).toNumber()
+              : userGemBalance.toNumber()
+        }
+      }))();
   }
 
   return (
@@ -75,10 +82,10 @@ function IlkTableRow({ ilk, checked, dispatch }) {
       <td>
         <Radio checked={checked} onChange={selectIlk} mr="xs" />
       </td>
-      <td>{ilk.symbol}</td>
-      <td>{ilk.data.rate} %</td>
-      <td>{ilk.data.liquidationRatio} %</td>
-      <td>{ilk.data.liquidationPenalty} %</td>
+      <td>{ilk.currency.symbol}</td>
+      <td>{formatValue(ilk.stabilityFee, 'stabilityFee')} %</td>
+      <td>{formatValue(ilk.liquidationRatio, 'liquidationRatio')} %</td>
+      <td>{formatValue(ilk.liquidationPenalty, 'liquidationPenalty')} %</td>
       <td css="text-align: right">{prettifyNumber(userGemBalance)}</td>
     </tr>
   );
@@ -107,7 +114,14 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
       }
       setLoading(false);
     })();
-  }, [maker, account, selectedIlk.key]);
+  }, [
+    maker,
+    account,
+    selectedIlk.key,
+    selectedIlk.currency.symbol,
+    proxyAddress,
+    dispatch
+  ]);
 
   return (
     <Box

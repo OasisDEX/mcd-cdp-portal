@@ -1,13 +1,9 @@
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import ilkList from '../references/ilkList';
 import assert from 'assert';
-
-export function getUsdPrice(ilkData) {
-  // return cdp.ilkData.feedSetUSD
-  //   ? cdp.ilkData.price.toNumber()
-  //   : 0;
-  return (ilkData.price && ilkData.price.toNumber()) || 0;
-}
+import { greaterThan } from './bignumber';
+import { liquidationPrice } from '@makerdao/dai-plugin-mcd/dist/math';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 export function calcCDPParams({
   liquidationRatio,
@@ -40,4 +36,29 @@ export function getCurrency(cdp) {
   const ilk = ilkList.find(i => i.key === ilkName);
   assert(ilk && ilk.currency, `could not find currency for ${ilkName}`);
   return ilk.currency;
+}
+
+export function cdpParamsAreValid(
+  { gemsToLock, daiToDraw },
+  userGemBalance,
+  ilk
+) {
+  // must not open empty cdp
+  // we technically can do this, but TODO figure out if we should
+  if (!gemsToLock) return false;
+  // must lock collateral in order to draw dai
+  if (!!daiToDraw && !gemsToLock) return false;
+  // must be positive
+  if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
+  // must have enough tokens
+  if (greaterThan(gemsToLock, userGemBalance)) return false;
+
+  const safePrice = liquidationPrice(
+    ilk.currency(gemsToLock),
+    MDAI(daiToDraw),
+    ilk.liquidationRatio
+  );
+
+  console.log(safePrice.toString(), ilk.price.toString());
+  return ilk.price.gt(safePrice);
 }

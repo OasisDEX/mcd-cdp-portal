@@ -1,6 +1,5 @@
 import round from 'lodash/round';
-import { greaterThan } from './bignumber';
-import { calcDaiAvailable, getUsdPrice } from './cdp';
+import { Currency } from '@makerdao/currency';
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
@@ -52,26 +51,24 @@ export const copyToClipboard = string => {
   textArea.remove();
 };
 
-export function cdpParamsAreValid(
-  { gemsToLock, daiToDraw },
-  userGemBalance,
-  ilkData
-) {
-  // must not open empty cdp
-  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
-  // must lock collateral in order to draw dai
-  if (!!daiToDraw && !gemsToLock) return false;
-  // must be positive
-  if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
-  // must have enough tokens
-  if (greaterThan(gemsToLock, userGemBalance)) return false;
+export function formatValue(value, key) {
+  if (!value && value !== 0) return '';
 
-  const daiAvailable = calcDaiAvailable({
-    deposited: parseFloat(gemsToLock),
-    price: getUsdPrice(ilkData),
-    liquidationRatio: parseFloat(ilkData.liquidationRatio)
-  });
-  // must open a cdp above the liquidation threshold
-  if (greaterThan(daiToDraw, daiAvailable)) return false;
-  return true;
+  switch (key) {
+    case 'stabilityFee':
+      return (value * 100).toFixed(1);
+    case 'collateralizationRatio':
+    case 'liquidationRatio':
+      return (value.toNumber() * 100).toFixed(2);
+    case 'liquidationPenalty':
+      return (value * 100).toFixed(0);
+    default: // do nothing
+  }
+
+  if (value instanceof Currency) {
+    const newValue = value.toNumber().toFixed(2);
+    return newValue;
+  }
+
+  return value;
 }
