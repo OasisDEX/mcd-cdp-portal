@@ -250,7 +250,7 @@ function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ cdps, feeds }] = useStore();
+  const [{ cdps, feeds }, dispatch] = useStore();
   const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
     cdpId,
     cdps,
@@ -258,7 +258,7 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    trackCdpById(maker, cdpId);
+    trackCdpById(maker, cdpId, dispatch);
   }, [cdpId, maker]);
 
   return useMemo(

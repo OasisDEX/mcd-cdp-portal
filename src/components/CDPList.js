@@ -42,13 +42,13 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [{ cdps, feeds }] = useStore();
+  const [{ cdps, feeds }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
 
   useEffect(() => {
     if (account) {
-      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+      account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
     } else if (viewedAddress) {
       (async () => {
@@ -57,7 +57,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           .getProxyAddress(viewedAddress);
         if (!proxy) return;
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        cdps.forEach(cdp => trackCdpById(maker, cdp.id));
+        cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
         setNavbarCdps(cdps);
       })();
     }

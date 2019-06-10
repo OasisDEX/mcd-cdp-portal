@@ -207,15 +207,14 @@ function convert(valueType, value) {
 
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
-  const [label, cdpId, valueType, ilk] = type.split('.');
+  const [label, cdpId, valueType] = type.split('.');
   if (label === 'cdp') {
     if (draft[cdpId]) draft[cdpId][valueType] = convert(valueType, value);
     else
       draft[cdpId] = {
         ...defaultCdpState,
         inited: true,
-        [valueType]: convert(valueType, value),
-        ilk
+        [valueType]: convert(valueType, value)
       };
   }
 }, initialState);
