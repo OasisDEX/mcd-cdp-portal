@@ -19,7 +19,7 @@ function lookupCDPSafetyLevel(ratio, inverse) {
 }
 
 export default function RatioDisplay({ ratio, active, inverse, t }) {
-  if (!ratio) return null;
+  if (!ratio || ratio === Infinity) return null;
   const safetyLevel = lookupCDPSafetyLevel(ratio, inverse);
 
   return (
