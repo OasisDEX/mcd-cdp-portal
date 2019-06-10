@@ -15,7 +15,7 @@ export function getLockedAndFreeCollateral(cdp) {
 }
 
 export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
-  const { liquidationRatio } = ilkData;
+  const { liquidationRatio, debtCeiling } = ilkData;
   const collateralizationRatio = calcCollateralizationRatio({
     deposited: parseFloat(gemsToLock),
     price: getUsdPrice(ilkData),
@@ -31,7 +31,8 @@ export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
     liquidationRatio,
     deposited: parseFloat(gemsToLock),
     generated: parseFloat(daiToDraw),
-    price: getUsdPrice(ilkData)
+    price: getUsdPrice(ilkData),
+    debtCeiling: parseFloat(debtCeiling)
   });
 
   return {
@@ -55,7 +56,13 @@ export function calcLiquidationPrice({
   return isNaN(value) ? 0 : value;
 }
 
-export function calcDaiAvailable({ deposited, price, liquidationRatio }) {
+export function calcDaiAvailable({
+  deposited,
+  price,
+  liquidationRatio,
+  debtCeiling
+}) {
   const value = deposited * price * (100 / liquidationRatio);
-  return isNaN(value) ? 0 : value;
+  const daiAvailable = isNaN(value) ? 0 : value;
+  return daiAvailable >= debtCeiling ? debtCeiling : daiAvailable;
 }

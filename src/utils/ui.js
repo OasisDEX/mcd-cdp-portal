@@ -70,7 +70,8 @@ export function cdpParamsAreValid(
   const daiAvailable = calcDaiAvailable({
     deposited: parseFloat(gemsToLock),
     price: getUsdPrice(ilkData),
-    liquidationRatio: parseFloat(ilkData.liquidationRatio)
+    liquidationRatio: parseFloat(ilkData.liquidationRatio),
+    debtCeiling: parseFloat(ilkData.debtCeiling)
   });
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;

@@ -158,6 +158,7 @@
   "cancel": "Cancel",
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",
+  "collateral_debt_ceiling": "Collateral debt ceiling",
   "liquidation_ratio": "Minimum liquidation ratio",
   "liquidation_price": "Liquidation price",
   "liquidation_penalty_shortened": "Liq Fee",

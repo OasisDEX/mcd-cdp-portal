@@ -147,7 +147,13 @@ const CDPCreateDepositSidebar = ({
   liquidationPrice,
   collateralizationRatio
 }) => {
-  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
+  const {
+    liquidationPenalty,
+    liquidationRatio,
+    rate,
+    debtCeiling
+  } = selectedIlk.data;
+
   return (
     <Grid gridRowGap="m">
       {[
@@ -160,7 +166,8 @@ const CDPCreateDepositSidebar = ({
 
         [lang.stability_fee, `${rate}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
-        [lang.liquidation_penalty, `${liquidationPenalty}%`]
+        [lang.liquidation_penalty, `${liquidationPenalty}%`],
+        [lang.collateral_debt_ceiling, debtCeiling]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">
