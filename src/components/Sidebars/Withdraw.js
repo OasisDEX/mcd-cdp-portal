@@ -63,7 +63,6 @@ const Withdraw = ({ cdpId, reset }) => {
     );
     reset();
   };
-
   return (
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="m">
@@ -84,9 +83,11 @@ const Withdraw = ({ cdpId, reset }) => {
             min="0"
             onChange={evt => setAmount(evt.target.value)}
             after={
-              <Link fontWeight="medium" onClick={setMax}>
-                {lang.action_sidebar.set_max}
-              </Link>
+              debtAmount === 0 ? (
+                <Link fontWeight="medium" onClick={setMax}>
+                  {lang.action_sidebar.set_max}
+                </Link>
+              ) : null
             }
             errorMessage={
               lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
