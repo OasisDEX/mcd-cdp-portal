@@ -51,8 +51,6 @@ const Generate = ({ cdpId, reset }) => {
   );
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
-  const setMax = () => setAmount(daiAvailable);
-
   const generate = async () => {
     newTxListener(
       maker
@@ -81,11 +79,6 @@ const Generate = ({ cdpId, reset }) => {
               undercollateralized
                 ? lang.action_sidebar.cdp_below_threshold
                 : null
-            }
-            after={
-              <Link fontWeight="medium" onClick={setMax}>
-                {lang.action_sidebar.set_max}
-              </Link>
             }
           />
         </Grid>
