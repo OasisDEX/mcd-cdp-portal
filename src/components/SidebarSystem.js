@@ -63,7 +63,7 @@ const SidebarSystem = ({ system }) => {
         ))}
       </Card>
       <Box px="s">
-        <SiteVersion />
+        {process.env.NODE_ENV === 'production' ? <SiteVersion /> : null}
       </Box>
     </Fragment>
   );

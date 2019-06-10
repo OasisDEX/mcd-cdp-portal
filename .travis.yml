@@ -8,10 +8,12 @@ cache:
   timeout: 9000
 install:
   - yarn install
+env:
+  - NODE_PATH=src/
 script:
   - yarn ci
 before_deploy:
-  - yarn write-git-version
+  - yarn write-env-variables
   - yarn build
   - npm install now --no-save
 deploy:

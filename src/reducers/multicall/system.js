@@ -1,5 +1,3 @@
-import { DAI } from 'maker';
-import { fromRad } from 'utils/units';
 import {
   TOTAL_DEBT,
   BASE_RATE,
@@ -11,31 +9,31 @@ import {
 const totalDebt = addresses => ({
   target: addresses.MCD_VAT,
   call: ['debt()(uint256)'],
-  returns: [[TOTAL_DEBT, val => DAI.rad(val)]]
+  returns: [[`system.${TOTAL_DEBT}`]]
 });
 
 const baseRate = addresses => ({
   target: addresses.MCD_JUG,
   call: ['base()(uint256)'],
-  returns: [[BASE_RATE]]
+  returns: [[`system.${BASE_RATE}`]]
 });
 
 const globalDebtCeiling = addresses => ({
   target: addresses.MCD_VAT,
   call: ['Line()(uint256)'],
-  returns: [[GLOBAL_DEBT_CEILING, val => fromRad(val)]]
+  returns: [[`system.${GLOBAL_DEBT_CEILING}`]]
 });
 
 const debtAuctionLotSize = addresses => ({
   target: addresses.MCD_VOW,
   call: ['sump()(uint256)'],
-  returns: [[DEBT_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
+  returns: [[`system.${DEBT_AUCTION_LOT_SIZE}`]]
 });
 
 const surplusAuctionLotSize = addresses => ({
   target: addresses.MCD_VOW,
   call: ['bump()(uint256)'],
-  returns: [[SURPLUS_AUCTION_LOT_SIZE, val => DAI.rad(val)]]
+  returns: [[`system.${SURPLUS_AUCTION_LOT_SIZE}`]]
 });
 
 export function createCDPSystemModel(addresses) {

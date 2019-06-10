@@ -1,5 +1,4 @@
 const alias = {};
-
 if (process.env.NODE_ENV === 'development') {
   alias['react-dom'] = '@hot-loader/react-dom';
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import {
   Box,
@@ -25,73 +25,95 @@ import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 
+const initialState = {
+  proxyAddress: null,
+  allowance: null,
+  startedWithoutProxy: false,
+  startedWithoutAllowance: false,
+  allowanceLoading: false,
+  proxyLoading: false
+};
+
 const Payback = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
-  const [allowanceState, setAllowanceState] = useState({
-    proxyAddress: '',
-    userStartedWithoutAllowance: false,
-    allowance: null,
-    loading: false
-  });
+
+  const [userState, updateUserState] = useReducer(
+    (state, updates) => ({ ...state, ...updates }),
+    initialState
+  );
 
   useEffect(() => {
-    const checkProxy = async () => {
-      const proxy = await maker.service('proxy').ensureProxy();
-      return proxy;
-    };
-
     const init = async () => {
-      const proxy = await checkProxy();
-      const allowance = await checkAllowance({ address: proxy });
-      setAllowanceState({
-        ...allowanceState,
-        proxyAddress: proxy,
-        userStartedWithoutAllowance: !allowance,
-        allowance
-      });
+      const proxyAddress = await checkProxy();
+      if (proxyAddress) {
+        const allowance = await checkAllowance(proxyAddress);
+        updateUserState({
+          proxyAddress,
+          allowance,
+          startedWithoutAllowance: !allowance
+        });
+      } else {
+        updateUserState({
+          startedWithoutProxy: true,
+          startedWithoutAllowance: true
+        });
+      }
     };
     init();
   }, []);
 
-  const checkAllowance = async ({ address }) => {
+  const checkAllowance = async address => {
     const daiToken = maker.getToken('MDAI');
     return (await daiToken.allowance(maker.currentAddress(), address)).eq(
       MAX_UINT_BN
     );
   };
 
-  const setAllowance = async () => {
-    // if allowance is already set, do nothing
-    if (allowanceState.allowance) return;
+  const checkProxy = async () => {
+    const proxy = await maker.service('proxy').getProxyAddress();
+    return proxy;
+  };
 
+  const setProxy = async () => {
     try {
-      setAllowanceState({
-        ...allowanceState,
-        loading: true
-      });
-      const daiToken = maker.getToken('MDAI');
-      const { proxyAddress: address } = allowanceState;
-
-      const txPromise = daiToken.approveUnlimited(address);
-      newTxListener(txPromise, 'Setting DAI Allowance');
+      updateUserState({ proxyLoading: true });
+      const txPromise = maker.service('proxy').ensureProxy();
+      newTxListener(txPromise, 'Setting Proxy Address');
       await txPromise;
 
-      const allowance = await checkAllowance({ address });
-      if (allowance) {
-        setAllowanceState({
-          ...allowanceState,
-          allowance,
-          loading: false
-        });
+      const proxyAddress = await checkProxy();
+      if (proxyAddress) {
+        updateUserState({ proxyAddress, proxyLoading: false });
       } else {
-        setAllowanceState({ ...allowanceState, loading: false });
+        updateUserState({ proxyLoading: false });
       }
     } catch (e) {
-      setAllowanceState({ ...allowanceState, loading: false });
+      updateUserState({ proxyLoading: false });
+    }
+  };
+
+  const setAllowance = async () => {
+    const { proxyAddress } = userState;
+    try {
+      updateUserState({ allowanceLoading: true });
+
+      const daiToken = maker.getToken('MDAI');
+      const txPromise = daiToken.approveUnlimited(proxyAddress);
+      newTxListener(txPromise, 'Setting DAI Allowance');
+      await txPromise;
+      const allowance = await checkAllowance(proxyAddress);
+
+      if (allowance) {
+        updateUserState({ allowance, allowanceLoading: false });
+      } else {
+        updateUserState({ allowanceLoading: false });
+      }
+    } catch (e) {
+      updateUserState({ allowanceLoading: false });
     }
   };
 
@@ -130,7 +152,14 @@ const Payback = ({ cdpId, reset }) => {
     reset();
   };
 
-  const { allowance, userStartedWithoutAllowance, loading } = allowanceState;
+  const {
+    proxyAddress,
+    proxyLoading,
+    allowance,
+    allowanceLoading,
+    startedWithoutProxy,
+    startedWithoutAllowance
+  } = userState;
   const amt = parseFloat(amount);
   const isLessThanBalance = amt <= daiBalance;
   const isLessThanDebt = amt <= debtAmount;
@@ -147,6 +176,14 @@ const Payback = ({ cdpId, reset }) => {
   if (!isLessThanDebt && isNonZero)
     errorMessage = lang.action_sidebar.cannot_payback_more_than_owed;
 
+  const {
+    create_proxy,
+    creating_proxy,
+    proxy_created,
+    unlock_dai,
+    unlocking_dai,
+    dai_unlocked
+  } = lang.action_sidebar;
   return (
     <SidebarActionLayout onClose={reset}>
       <Grid gridRowGap="m">
@@ -169,26 +206,46 @@ const Payback = ({ cdpId, reset }) => {
             }
           />
         </Grid>
-        {userStartedWithoutAllowance && (
+        {startedWithoutProxy && (
           <Grid gridTemplateColumns="2fr 1fr" gridColumnGap="s">
-            {!allowance && !loading && (
-              <Text.p t="body">{lang.action_sidebar.unlock_dai}</Text.p>
+            <Text.p t="body">
+              {proxyAddress
+                ? proxy_created
+                : proxyLoading
+                ? creating_proxy
+                : create_proxy}
+            </Text.p>
+            {proxyLoading ? (
+              <Box alignSelf="center" justifySelf="end">
+                <Loader size="20" color={getColor('makerTeal')} />
+              </Box>
+            ) : (
+              <Toggle
+                active={!!proxyAddress}
+                onClick={() => !proxyAddress && setProxy()}
+                justifySelf="end"
+              />
             )}
-            {!allowance && loading && (
-              <Text.p t="body">{lang.action_sidebar.unlocking_dai}</Text.p>
-            )}
-            {allowance && !loading && (
-              <Text.p t="body">{lang.action_sidebar.dai_unlocked}</Text.p>
-            )}
+          </Grid>
+        )}
 
-            {loading ? (
+        {startedWithoutAllowance && (
+          <Grid gridTemplateColumns="2fr 1fr" gridColumnGap="s">
+            <Text.p t="body">
+              {allowance
+                ? dai_unlocked
+                : allowanceLoading
+                ? unlocking_dai
+                : unlock_dai}
+            </Text.p>
+            {allowanceLoading ? (
               <Box alignSelf="center" justifySelf="end">
                 <Loader size="2rem" color={getColor('makerTeal')} />
               </Box>
             ) : (
               <Toggle
-                active={allowance}
-                onClick={setAllowance}
+                active={!!allowance}
+                onClick={() => !allowance && proxyAddress && setAllowance()}
                 justifySelf="end"
               />
             )}

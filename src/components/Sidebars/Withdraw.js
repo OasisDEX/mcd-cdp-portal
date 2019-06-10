@@ -79,7 +79,7 @@ const Withdraw = ({ cdpId, reset }) => {
           </Text.p>
           <Input
             type="number"
-            placeholder={`0.00 ${cdp.ilk}`}
+            placeholder={`0.00 ${symbol}`}
             value={amount}
             min="0"
             onChange={evt => setAmount(evt.target.value)}

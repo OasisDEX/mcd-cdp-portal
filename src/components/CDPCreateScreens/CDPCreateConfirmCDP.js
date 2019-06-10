@@ -40,7 +40,7 @@ const CDPCreateConfirmSummary = ({
   const rows = [
     [
       lang.verbs.depositing,
-      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.key}`
+      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.currency.symbol}`
     ],
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
