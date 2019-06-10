@@ -12,10 +12,19 @@ import {
   Flex
 } from '@makerdao/ui-components-core';
 import { Link, useCurrentRoute } from 'react-navi';
-import useStore from 'hooks/useStore';
+import useMaker from 'hooks/useMaker';
 import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
 import styled from 'styled-components';
+import useStore from 'hooks/useStore';
+import {
+  getCdp,
+  getDebtAmount,
+  getCollateralAmount,
+  getCollateralValueUSD,
+  getCollateralizationRatio,
+  getCollateralAvailableAmount
+} from 'reducers/cdps';
 
 const TableButton = styled(Button)`
   padding: 6px 12px 6px 12px;
@@ -27,40 +36,6 @@ const TableButton = styled(Button)`
     border-color: #708390;
   }
 `;
-
-const cdpKeys = ['token', 'id', 'ratio', 'deposited', 'withdraw', 'debt'];
-
-const gatherCDPData = async cdp => {
-  return (await Promise.all([
-    cdp.type.currency.symbol,
-    cdp.id,
-    cdp.getCollateralizationRatio(),
-    cdp.getCollateralAmount(),
-    cdp.getCollateralAvailable(),
-    cdp.getDebtValue(),
-    (async () =>
-      (await cdp.getCollateralAmount()).times(await cdp.type.getPrice()))()
-  ])).reduce((acc, val, i) => {
-    acc[[...cdpKeys, 'depositedUSD'][i]] = val;
-    return acc;
-  }, {});
-};
-
-const furbishCDPData = cdp =>
-  cdpKeys.map(cdpKey => {
-    switch (cdpKey) {
-      case 'debt':
-        return `${round(cdp[cdpKey].toNumber(), 2)} DAI`;
-      case 'ratio':
-        return round(cdp[cdpKey].times(100).toNumber());
-      case 'id':
-        return cdp[cdpKey];
-      case 'depositedUSD':
-        return null;
-      default:
-        return cdp[cdpKey].toString();
-    }
-  });
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card p="l">
@@ -78,31 +53,61 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview() {
-  const [{ cdps }] = useStore();
+  const { account } = useMaker();
+  const [{ cdps, feeds }] = useStore();
   const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);
   const [totalDaiDebt, setTotalDaiDebt] = useState(0);
   const [cdpContent, setCdpContent] = useState(null);
   const { url } = useCurrentRoute();
 
   useEffect(() => {
-    buildCdpOverview();
-  }, [cdps]);
+    if (((account || {}).cdps || {}).length) {
+      buildCdpOverview();
+    }
+  }, [account, cdps, feeds]);
 
   const buildCdpOverview = async () => {
     try {
       const cdpData = await Promise.all(
-        cdps.items.map(cdp => gatherCDPData(cdp))
+        account.cdps.map(({ id }) => {
+          const cdp = getCdp(id, { cdps, feeds });
+          return {
+            token: cdp.gem,
+            id,
+            ratio: getCollateralizationRatio(cdp),
+            deposited: getCollateralAmount(cdp),
+            withdraw: getCollateralAvailableAmount(cdp),
+            debt: getDebtAmount(cdp),
+            depositedUSD: getCollateralValueUSD(cdp)
+          };
+        })
       );
-
+      console.log(cdpData);
       const sumDeposits = cdpData.reduce(
-        (acc, { depositedUSD }) => depositedUSD.plus(acc),
+        (acc, { depositedUSD }) => depositedUSD + acc,
         0
       );
-      const sumDebt = cdpData.reduce((acc, { debt }) => debt.plus(acc), 0);
-      const cleanedCDP = cdpData.map(cdp => furbishCDPData(cdp));
-
-      setTotalCollateralUSD(round(sumDeposits.toNumber(), 2).toFixed(2));
-      setTotalDaiDebt(round(sumDebt.toNumber(), 2).toFixed(2));
+      const sumDebt = cdpData.reduce((acc, { debt }) => debt + acc, 0);
+      const cleanedCDP = cdpData.map(cdp => {
+        return Object.keys(cdp)
+          .map(k => {
+            switch (k) {
+              case 'deposited':
+                return `${cdp[k].toFixed(2)} ${cdp['token']}`;
+              case 'withdraw':
+                return `${cdp[k].toFixed(2)} ${cdp['token']}`;
+              case 'debt':
+                return `${cdp[k].toFixed(2)} DAI`;
+              case 'depositedUSD':
+                return null;
+              default:
+                return cdp[k];
+            }
+          })
+          .filter(e => e !== null);
+      });
+      setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
+      setTotalDaiDebt(sumDebt);
       setCdpContent(cleanedCDP);
     } catch (e) {
       return null;
@@ -143,7 +148,14 @@ function Overview() {
               >
                 <thead>
                   <tr>
-                    {[...cdpKeys, null].map((k, i) => (
+                    {[
+                      'token',
+                      'id',
+                      'ratio',
+                      'deposited',
+                      'withdraw',
+                      'debt'
+                    ].map((k, i) => (
                       <Table.th key={i}>{lang.overview_page[k]}</Table.th>
                     ))}
                   </tr>
@@ -158,9 +170,9 @@ function Overview() {
                           <RatioDisplay t="p3" ratio={ratio} inverse={true} />
                         </td>
                         <td width="15%">{deposited}</td>
-                        <td width="20%">{withdraw}</td>
+                        <td width="15%">{withdraw}</td>
                         <td width="15%">{debt}</td>
-                        <td width="15%">
+                        <td width="10%">
                           <TableButton>
                             <Link href={`/${id}${url.search}`} prefetch={true}>
                               <Text t="p4" color="steel">
