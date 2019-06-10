@@ -26,7 +26,17 @@
     "wallet_connect": "Wallet Connect"
   },
   "overview_page": {
-    "title": "Overview"
+    "title": "Overview",
+    "your_cdps": "Your CDPs",
+    "token": "TOKEN",
+    "id": "CDP ID",
+    "ratio": "CURRENT RATIO",
+    "deposited": "DEPOSITED",
+    "withdraw": "AVAIL. TO WITHDRAW",
+    "debt": "DAI DEBT",
+    "view_cdp": "View CDP",
+    "total_collateral_locked": "total collateral locked",
+    "total_dai_debt": "total dai debt"
   },
   "sidebar": {
     "read_only_mode": "Read-Only Mode",
