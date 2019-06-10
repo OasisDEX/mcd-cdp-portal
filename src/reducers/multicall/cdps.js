@@ -2,9 +2,11 @@ import { getWatcher } from '../../watch';
 import { toHex } from 'utils/ethereum';
 import { INK, ART } from 'reducers/cdps';
 
-export async function trackCdpById(maker, cdpId, _cdp = null) {
+export async function trackCdpById(maker, cdpId) {
   const addresses = maker.service('smartContract').getContractAddresses();
-  const cdp = _cdp ? _cdp : await maker.service('mcd:cdpManager').getCdp(cdpId);
+  const cdp = await maker
+    .service('mcd:cdpManager')
+    .getCdp(cdpId, { prefetch: false });
   const cdpHandlerAddress = await cdp.getUrn();
 
   const urnStateCall = urnState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
