@@ -15,7 +15,7 @@
     "@hot-loader/react-dom": "^16.8.4",
     "@makerdao/currency": "^0.9.5",
     "@makerdao/dai": "^0.16.1",
-    "@makerdao/dai-plugin-config": "^0.2.7-rc.2",
+    "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
     "@makerdao/dai-plugin-mcd": "0.1.12",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
