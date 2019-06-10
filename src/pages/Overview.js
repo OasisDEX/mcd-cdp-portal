@@ -107,7 +107,7 @@ function Overview() {
           .filter(e => e !== null);
       });
       setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
-      setTotalDaiDebt(sumDebt);
+      setTotalDaiDebt(sumDebt.toFixed(2));
       setCdpContent(cleanedCDP);
     } catch (e) {
       return null;
