@@ -11,21 +11,10 @@ const SidebarGlobalPanel = () => {
   return useMemo(() => {
     const uniqueFeeds = getAllFeeds(feeds, [feeds]);
 
-    /* Mocking extra feed data */
-    const dummyFeeds = [
-      ...uniqueFeeds,
-      ...uniqueFeeds,
-      ...uniqueFeeds,
-      ...uniqueFeeds
-    ].map((feed, idx) => {
-      if (idx < 2) return feed;
-      return { pair: `DUM${idx - 1}/USD`, value: feed.value };
-    });
-
     return (
       <Box>
         <Grid gridRowGap="s">
-          <SidebarFeeds feeds={dummyFeeds} />
+          <SidebarFeeds feeds={uniqueFeeds} />
           <SidebarSystem system={system} />
         </Grid>
         <Dev />
