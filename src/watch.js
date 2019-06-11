@@ -17,6 +17,8 @@ export function startWatcher({
   window.watcher = watcher;
 
   watcher.batch().subscribe(updates => {
+    console.log('watcher got updates:', { updates });
+
     dispatch(batchActions(updates));
 
     // the advantage of this is that the entire list of updates is available in

@@ -6,7 +6,7 @@ import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
-export const RATE = 'rate';
+export const RATE = 'rate'; // this is ilk.duty in jug.sol
 export const ILK_RATE = 'ilkRate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
@@ -93,16 +93,7 @@ const reducer = produce((draft, { type, value }) => {
   // example type: ETH.debtCeiling
   const [label, key, valueType] = type.split('.');
   if (label === 'ilk') {
-    const convertedValue = convert(valueType, value);
-    if (valueType === FEED_VALUE_USD) {
-      // the feed value is keyed off of gem so we can mix it into all ilks that share that gem
-      draft.forEach(ilkData => {
-        if (ilkData.gem === key) ilkData[valueType] = convertedValue;
-      });
-    } else {
-      const idx = draft.findIndex(({ key: ilkKey }) => ilkKey === key);
-      draft[idx] = { ...draft[idx], [valueType]: convertedValue };
-    }
+    draft.find(f => f.key === key)[valueType] = convert(valueType, value);
   }
 }, initialState);
 
