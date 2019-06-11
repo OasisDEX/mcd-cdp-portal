@@ -1,3 +1,5 @@
+import { greaterThan } from './bignumber';
+
 export function getUsdPrice(ilkData) {
   // return cdp.ilkData.feedSetUSD
   //   ? cdp.ilkData.feedValueUSD.toNumber()
@@ -65,4 +67,29 @@ export function calcDaiAvailable({
   const value = deposited * price * (100 / liquidationRatio);
   const daiAvailable = isNaN(value) ? 0 : value;
   return daiAvailable >= debtCeiling ? debtCeiling : daiAvailable;
+}
+
+export function cdpParamsAreValid(
+  { gemsToLock, daiToDraw },
+  userGemBalance,
+  ilkData
+) {
+  // must not open empty cdp
+  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
+  // must lock collateral in order to draw dai
+  if (!!daiToDraw && !gemsToLock) return false;
+  // must be positive
+  if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
+  // must have enough tokens
+  if (greaterThan(gemsToLock, userGemBalance)) return false;
+
+  const daiAvailable = calcDaiAvailable({
+    deposited: parseFloat(gemsToLock),
+    price: getUsdPrice(ilkData),
+    liquidationRatio: parseFloat(ilkData.liquidationRatio),
+    debtCeiling: parseFloat(ilkData.debtCeiling)
+  });
+  // must open a cdp above the liquidation threshold
+  if (greaterThan(daiToDraw, daiAvailable)) return false;
+  return true;
 }

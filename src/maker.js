@@ -18,7 +18,8 @@ export async function instantiateMaker({
   backendEnv
 }) {
   const mcdPluginConfig = {
-    network: network === 'test' ? 'testnet' : network
+    network: network === 'test' ? 'testnet' : network,
+    prefetch: false
   };
 
   const config = {

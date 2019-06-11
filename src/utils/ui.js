@@ -1,11 +1,9 @@
 import round from 'lodash/round';
-import { greaterThan } from './bignumber';
-import { calcDaiAvailable, getUsdPrice } from './cdp';
 import lang from 'languages';
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
-    return 'Infinity';
+    return lang.cdp_page.not_applicable;
   } else if (isNaN(ratio)) {
     return '---';
   } else {
@@ -52,31 +50,6 @@ export const copyToClipboard = string => {
   document.execCommand('Copy');
   textArea.remove();
 };
-
-export function cdpParamsAreValid(
-  { gemsToLock, daiToDraw },
-  userGemBalance,
-  ilkData
-) {
-  // must not open empty cdp
-  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
-  // must lock collateral in order to draw dai
-  if (!!daiToDraw && !gemsToLock) return false;
-  // must be positive
-  if (parseFloat(daiToDraw) < 0 || parseFloat(gemsToLock) < 0) return false;
-  // must have enough tokens
-  if (greaterThan(gemsToLock, userGemBalance)) return false;
-
-  const daiAvailable = calcDaiAvailable({
-    deposited: parseFloat(gemsToLock),
-    price: getUsdPrice(ilkData),
-    liquidationRatio: parseFloat(ilkData.liquidationRatio),
-    debtCeiling: parseFloat(ilkData.debtCeiling)
-  });
-  // must open a cdp above the liquidation threshold
-  if (greaterThan(daiToDraw, daiAvailable)) return false;
-  return true;
-}
 
 export function firstLetterLowercase(str) {
   return str.charAt(0).toLowerCase() + str.slice(1);

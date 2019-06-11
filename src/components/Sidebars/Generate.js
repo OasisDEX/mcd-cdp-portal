@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import { Text, Input, Grid, Button, Link } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';

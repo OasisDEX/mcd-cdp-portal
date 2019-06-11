@@ -2,7 +2,7 @@
 
 NOW_VARS=$(printenv | grep '^NOW')
 NOW_VARS_ARR=(`echo ${NOW_VARS}`);
-JSON_STRING='{'
+JSON_STRING='{ '
 for var in "${NOW_VARS_ARR[@]}"
 do
     var_str=$(echo $var | tr '=' '\n')

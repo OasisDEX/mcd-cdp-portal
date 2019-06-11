@@ -250,7 +250,7 @@ function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ cdps, feeds }] = useStore();
+  const [{ cdps, feeds }, dispatch] = useStore();
   const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
     cdpId,
     cdps,
@@ -258,7 +258,7 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    trackCdpById(maker, cdpId);
+    trackCdpById(maker, cdpId, dispatch);
   }, [cdpId, maker]);
 
   return useMemo(
@@ -303,10 +303,14 @@ function CDPViewPresentation({
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
   if (liquidationPrice) liquidationPrice = liquidationPrice.toFixed(2);
+  if (liquidationPrice === 'Infinity')
+    liquidationPrice = lang.cdp_page.not_applicable;
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp);
   const collateralUSDValue = getCollateralValueUSD(cdp);
-  const collateralizationRatio = getCollateralizationRatio(cdp);
+  let collateralizationRatio = getCollateralizationRatio(cdp);
+  if (collateralizationRatio === Infinity)
+    collateralizationRatio = lang.cdp_page.not_applicable;
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);

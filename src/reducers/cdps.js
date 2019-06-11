@@ -38,6 +38,7 @@ export function getLiquidationPrice(cdp, rounded = true, precision = 2) {
   if (!cdp.liquidationRatio || !cdp.ink) return '';
   const debtAmount = getDebtAmount(cdp, false);
   if (!debtAmount) return '';
+  if (!parseFloat(cdp.ink)) return Infinity;
   const val = divide(multiply(debtAmount, cdp.liquidationRatio / 100), cdp.ink);
   return rounded ? round(val, precision) : val;
 }
@@ -67,7 +68,7 @@ export function getCollateralizationRatio(cdp, rounded = true, precision = 2) {
   const collateralValueUSD = getCollateralValueUSD(cdp, false);
   if (!collateralValueUSD) return '';
   const debtAmount = getDebtAmount(cdp, false);
-  if (!debtAmount) return '';
+  if (!parseFloat(debtAmount)) return Infinity;
   return rounded
     ? round(multiply(divide(collateralValueUSD, debtAmount), 100), precision)
     : multiply(divide(collateralValueUSD, debtAmount), 100);
@@ -206,15 +207,14 @@ function convert(valueType, value) {
 
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
-  const [label, cdpId, valueType, ilk] = type.split('.');
+  const [label, cdpId, valueType] = type.split('.');
   if (label === 'cdp') {
     if (draft[cdpId]) draft[cdpId][valueType] = convert(valueType, value);
     else
       draft[cdpId] = {
         ...defaultCdpState,
         inited: true,
-        [valueType]: convert(valueType, value),
-        ilk
+        [valueType]: convert(valueType, value)
       };
   }
 }, initialState);

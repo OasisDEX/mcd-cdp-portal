@@ -10,8 +10,11 @@ install:
   - yarn install
 env:
   - NODE_PATH=src/
+before_script:
+  - npm install -g codecov
 script:
   - yarn ci
+  - codecov
 before_deploy:
   - yarn write-env-variables
   - yarn build
