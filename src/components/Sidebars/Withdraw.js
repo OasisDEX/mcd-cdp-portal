@@ -121,7 +121,7 @@ const Withdraw = ({ cdpId, reset }) => {
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}
             body={
-              <Text color={lessThanMax ? null : 'linkOrange'}>
+              <Text color={lessThanMax ? null : 'orange.600'}>
                 {formatCollateralizationRatio(collateralizationRatio)}
               </Text>
             }

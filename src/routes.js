@@ -12,7 +12,7 @@ import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
-import MakerHooksProvider from 'providers/MakerHooksProvider';
+import MakerProvider from 'providers/MakerProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
@@ -34,7 +34,7 @@ const withDefaultLayout = route =>
 
       const networkId = networkNameToId(network);
       return (
-        <MakerHooksProvider
+        <MakerProvider
           rpcUrl={rpcUrl}
           network={network}
           testchainId={testchainId}
@@ -58,7 +58,7 @@ const withDefaultLayout = route =>
               </SidebarProvider>
             </ModalProvider>
           </AwaitMakerAuthentication>
-        </MakerHooksProvider>
+        </MakerProvider>
       );
     }, route)
   );
@@ -81,7 +81,7 @@ export default mount({
       return {
         title: 'Landing',
         view: (
-          <MakerHooksProvider
+          <MakerProvider
             rpcUrl={rpcUrl}
             network={network}
             testchainId={testchainId}
@@ -91,7 +91,7 @@ export default mount({
             <ModalProvider modals={modals} templates={templates}>
               <Landing />
             </ModalProvider>
-          </MakerHooksProvider>
+          </MakerProvider>
         )
       };
     })

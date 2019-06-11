@@ -6,13 +6,7 @@ import { instantiateMaker } from '../maker';
 
 export const MakerObjectContext = createContext();
 
-function MakerHooksProvider({
-  children,
-  rpcUrl,
-  network,
-  testchainId,
-  backendEnv
-}) {
+function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
   const [account, setAccount] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
@@ -118,4 +112,4 @@ function MakerHooksProvider({
   );
 }
 
-export default MakerHooksProvider;
+export default MakerProvider;

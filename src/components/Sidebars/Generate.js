@@ -102,7 +102,7 @@ const Generate = ({ cdpId, reset }) => {
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}
             body={
-              <Text color={undercollateralized ? 'linkOrange' : null}>
+              <Text color={undercollateralized ? 'orange.600' : null}>
                 {formatCollateralizationRatio(collateralizationRatio)}
               </Text>
             }
