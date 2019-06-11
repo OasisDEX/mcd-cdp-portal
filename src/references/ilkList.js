@@ -1,4 +1,14 @@
-import { ETH, COL1 } from '@makerdao/dai-plugin-mcd';
+import { ETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
+
+console.log(
+  'ETH, COL1, COL2, COL3, COL4, COL5',
+  ETH,
+  COL1,
+  COL2,
+  COL3,
+  COL4,
+  COL5
+);
 
 export default [
   {
@@ -22,33 +32,33 @@ export default [
     key: 'COL1-A',
     gem: 'COL1',
     currency: COL1
+  },
+  {
+    slug: 'col2-a',
+    symbol: 'COL2-A',
+    key: 'COL2-A',
+    gem: 'COL2',
+    currency: COL2
+  },
+  {
+    slug: 'col3-a',
+    symbol: 'COL3-A',
+    key: 'COL3-A',
+    gem: 'COL3',
+    currency: COL3
+  },
+  {
+    slug: 'col4-a',
+    symbol: 'COL4-A',
+    key: 'COL4-A',
+    gem: 'COL4',
+    currency: COL4
+  },
+  {
+    slug: 'col5-a',
+    symbol: 'COL5-A',
+    key: 'COL5-A',
+    gem: 'COL5',
+    currency: COL5
   }
-  // {
-  //   slug: 'col2-a',
-  //   symbol: 'COL2-A',
-  //   key: 'COL2-A',
-  //   gem: 'COL2',
-  //   currency: COL2
-  // },
-  // {
-  //   slug: 'col3-a',
-  //   symbol: 'COL3-A',
-  //   key: 'COL3-A',
-  //   gem: 'COL3',
-  //   currency: COL3
-  // },
-  // {
-  //   slug: 'col4-a',
-  //   symbol: 'COL4-A',
-  //   key: 'COL4-A',
-  //   gem: 'COL4',
-  //   currency: COL4
-  // },
-  // {
-  //   slug: 'col5-a',
-  //   symbol: 'COL5-A',
-  //   key: 'COL5-A',
-  //   gem: 'COL5',
-  //   currency: COL5
-  // }
 ];
