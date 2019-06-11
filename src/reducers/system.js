@@ -8,6 +8,7 @@ export const GLOBAL_DEBT_CEILING = 'globalDebtCeiling';
 export const DEBT_AUCTION_LOT_SIZE = 'debtAuctionLotSize';
 export const SURPLUS_AUCTION_LOT_SIZE = 'surplusAuctionLotSize';
 export const NUMBER_OF_LIQUIDATIONS = 'numberOfLiquidations';
+export const PAR = 'par';
 
 export const initialState = {
   [BASE_RATE]: '0',
@@ -15,7 +16,8 @@ export const initialState = {
   [GLOBAL_DEBT_CEILING]: '0',
   [DEBT_AUCTION_LOT_SIZE]: '0',
   [NUMBER_OF_LIQUIDATIONS]: '0',
-  [SURPLUS_AUCTION_LOT_SIZE]: '0'
+  [SURPLUS_AUCTION_LOT_SIZE]: '0',
+  [PAR]: '0'
 };
 
 function convert(valueType, value) {

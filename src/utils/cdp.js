@@ -1,4 +1,6 @@
 import { greaterThan } from './bignumber';
+import ilkList from '../references/ilkList';
+import assert from 'assert';
 
 export function getUsdPrice(ilkData) {
   // return cdp.ilkData.feedSetUSD
@@ -92,4 +94,11 @@ export function cdpParamsAreValid(
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
   return true;
+}
+
+export function getCurrency(cdp) {
+  const ilkName = cdp.ilk.name || cdp.ilk;
+  const ilk = ilkList.find(i => i.key === ilkName);
+  assert(ilk && ilk.currency, `could not find currency for ${ilkName}`);
+  return ilk.currency;
 }

@@ -21,11 +21,7 @@ import { userSnapInit } from 'utils/analytics';
 import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
-
-import { ServiceRoles } from '@makerdao/dai-plugin-mcd';
 import { startWatcher } from './watch';
-import uniqBy from 'lodash/uniqBy';
-import { batchActions } from 'utils/redux';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -135,25 +131,6 @@ function networkIsUndefined(request) {
 function RouteEffects({ network }) {
   const { maker } = useMaker();
   const [, dispatch] = useStore();
-
-  useEffect(() => {
-    if (!maker) return;
-    const { cdpTypes } = maker.service(ServiceRoles.CDP_TYPE);
-    const gems = uniqBy(cdpTypes, t => t.currency.symbol).map(type => ({
-      price: type.getPrice(),
-      symbol: type.currency.symbol
-    }));
-    Promise.all(gems.map(({ price }) => price)).then(prices =>
-      dispatch(
-        batchActions(
-          prices.map((price, idx) => ({
-            type: `ilk.${gems[idx].symbol}.feedValueUSD`,
-            value: price
-          }))
-        )
-      )
-    );
-  }, [maker]);
 
   useEffect(() => {
     if (network !== 'mainnet' && window.location.hostname !== 'localhost')
