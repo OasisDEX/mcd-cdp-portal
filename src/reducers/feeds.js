@@ -68,6 +68,7 @@ function convert(valueType, value) {
       return taxBigNumber
         .pow(secondsPerYear)
         .minus(1)
+        .times(100)
         .toFixed(3);
     }
     case ILK_RATE:
