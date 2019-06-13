@@ -16,8 +16,6 @@ script:
   - yarn ci
   - codecov
 before_deploy:
-  - yarn write-env-variables
-  - yarn build
   - npm install now --no-save
 deploy:
   - provider: script
