@@ -134,9 +134,9 @@
     "cannot_payback_more_than_owed": "Cannot pay back more than owed",
     "dai_balance": "Your Dai balance",
     "dai_debt": "Dai debt",
-    "unlock_dai": "Unlock Dai to continue",
-    "unlocking_dai": "Unlocking dai ...",
-    "dai_unlocked": "Dai unlocked",
+    "unlock_token": "Unlock {0} to continue",
+    "unlocking_token": "Unlocking {0}...",
+    "token_unlocked": "{0} unlocked",
     "maximum_available_to_generate": "Maximum available to generate",
     "maximum_available_to_withdraw": "Maximum available to withdraw",
     "current_account_balance": "Current account balance",
@@ -145,7 +145,7 @@
     "new_collateralization_ratio": "New collateralization ratio",
     "set_max": "Set max",
     "create_proxy": "Create Proxy to continue",
-    "creating_proxy": "Creating Proxy ...",
+    "creating_proxy": "Creating Proxy...",
     "proxy_created": "Proxy Created"
   },
   "verbs": {
@@ -158,6 +158,15 @@
     "time": "Time",
     "sender_id": "Sender ID",
     "tx_hash": "Tx Hash"
+  },
+  "transactions": {
+    "unlocking_token": "Unlocking {0}",
+    "setting_up_proxy": "Setting up proxy",
+    "creating_cdp": "Creating CDP",
+    "generate_dai": "Generating DAI",
+    "pay_back_dai": "Paying back DAI",
+    "withdrawing_gem": "Withdrawing {0}",
+    "depositing_gem": "Depositing {0}"
   },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",

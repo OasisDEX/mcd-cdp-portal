@@ -56,7 +56,7 @@ const Generate = ({ cdpId, reset }) => {
       maker
         .service('mcd:cdpManager')
         .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
-      'Drawing DAI'
+      lang.transactions.generating_dai
     );
     reset();
   };

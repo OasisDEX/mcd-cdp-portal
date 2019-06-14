@@ -59,7 +59,7 @@ const Withdraw = ({ cdpId, reset }) => {
       maker
         .service('mcd:cdpManager')
         .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(parseFloat(amount))),
-      `Withdrawing ${symbol}`
+      lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();
   };
