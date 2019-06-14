@@ -132,7 +132,7 @@ const Payback = ({ cdpId, reset }) => {
       maker
         .service('mcd:cdpManager')
         .wipeAndFree(cdpId, cdp.ilk, MDAI(parseFloat(amount)), cdp.currency(0)),
-      'Paying Back DAI'
+      lang.transactions.pay_back_dai
     );
     reset();
   };
