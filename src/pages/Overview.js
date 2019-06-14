@@ -11,12 +11,10 @@ import {
   Button,
   Flex
 } from '@makerdao/ui-components-core';
-import { getColor } from 'styles/theme';
 import { Link, useCurrentRoute } from 'react-navi';
 import useMaker from 'hooks/useMaker';
 import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
-import styled from 'styled-components';
 import useStore from 'hooks/useStore';
 import {
   getCdp,
