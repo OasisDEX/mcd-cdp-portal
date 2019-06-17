@@ -1,5 +1,14 @@
 import produce from 'immer';
 import setWith from 'lodash/setWith';
+import {
+  FEED_VALUE_USD,
+  LIQUIDATION_RATIO,
+  PRICE_WITH_SAFETY_MARGIN,
+  RATE
+} from './feeds';
+import { PAR } from './system';
+import { getCurrency } from '../utils/cdp';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 
 const mathReducer = produce((draft, action) => {
   if (action.type === 'CLEAR_CONTRACT_STATE') draft.raw = {};
@@ -14,15 +23,75 @@ const mathReducer = produce((draft, action) => {
       setWith(
         draft.raw,
         type.replace(/^cdp/, 'cdps').replace(/^ilk/, 'ilks'),
-        value,
+        convertValue(type, value),
         Object
       );
 
-      // TODO: this is where we could notice changes in raw values that would
-      // cause changes in expensive-to-calculate derived values, and update
-      // their values as well
+      // here we can monitor changes to raw values that would affect
+      // expensive-to-calculate derived values, and update their values as well
+
+      if (type.startsWith('ilk')) {
+        const [, name, prop] = type.split('.');
+
+        // update the price for an ilk if `spot` or `mat` changes
+        if ([PRICE_WITH_SAFETY_MARGIN, LIQUIDATION_RATIO].includes(prop)) {
+          const feed = draft.feeds.find(f => f.key === name);
+          feed[FEED_VALUE_USD] = recalculatePrice(
+            draft.raw.ilks[name],
+            name,
+            draft.system[PAR]
+          );
+        }
+      }
+
+      // if `par` changes (which is unlikely) all the prices need to change
+      if (type === `system.${PAR}` && draft.raw.ilks) {
+        draft.feeds.forEach(feed => {
+          feed[FEED_VALUE_USD] = recalculatePrice(
+            draft.raw.ilks[feed.key],
+            feed.key,
+            value
+          );
+        });
+      }
     });
   }
 });
 
 export default mathReducer;
+
+function convertValue(type, value) {
+  const [label, ...others] = type.split('.');
+  if (label === 'ilk') {
+    const valueType = others[1];
+    switch (valueType) {
+      case LIQUIDATION_RATIO:
+        return math.liquidationRatio(value);
+      case RATE:
+        return math.annualStabilityFee(value);
+      default:
+      // fall through to final return
+    }
+  }
+  return value;
+}
+
+function recalculatePrice(ilk, name, par) {
+  if (
+    !ilk ||
+    !ilk[PRICE_WITH_SAFETY_MARGIN] ||
+    !ilk[LIQUIDATION_RATIO] ||
+    !par
+  ) {
+    return;
+  }
+
+  const price = math.price(
+    getCurrency({ ilk: name }),
+    par,
+    ilk[PRICE_WITH_SAFETY_MARGIN],
+    ilk[LIQUIDATION_RATIO]
+  );
+  console.log(`calculated price for ${name}: ${price}`);
+  return price;
+}

@@ -215,6 +215,9 @@ const CdpViewHistory = ({ title, rows }) => {
                   <td
                     css={`
                       white-space: nowrap;
+                      max-width: 205px;
+                      text-overflow: ellipsis;
+                      overflow: hidden;
                     `}
                   >
                     <Text color="darkLavender" t="caption">

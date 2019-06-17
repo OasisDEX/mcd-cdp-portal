@@ -35,7 +35,7 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
       </Text>
-      <RatioDisplay ratio={ratio} active={active} />
+      <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
     </Flex>
   </NavbarItemContainer>
 );

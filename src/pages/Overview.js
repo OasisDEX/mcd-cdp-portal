@@ -15,7 +15,6 @@ import { Link, useCurrentRoute } from 'react-navi';
 import useMaker from 'hooks/useMaker';
 import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
-import styled from 'styled-components';
 import useStore from 'hooks/useStore';
 import {
   getCdp,
@@ -26,27 +25,21 @@ import {
   getCollateralAvailableAmount
 } from 'reducers/cdps';
 
-const TableButton = styled(Button)`
-  padding: 6px 12px 6px 12px;
-  background-color: #fff;
-  border: 1px solid;
-  border-color: #708390;
-  &:hover {
-    background-color: #fff;
-    border-color: #708390;
-  }
-`;
-
 const InfoCard = ({ title, amount, denom }) => (
-  <Card p="l">
-    <Grid>
-      <Text justifySelf="center" color="steel" t="p5">
+  <Card py="l" px="m" minWidth="22.4rem">
+    <Grid gridRowGap="s">
+      <Text
+        justifySelf="center"
+        t="subheading"
+        textAlign="center"
+        css={`
+          white-space: nowrap;
+        `}
+      >
         {title.toUpperCase()}
       </Text>
-      <Flex my="s" justifySelf="center" alignItems="flex-end">
-        <Text.h2>{amount}</Text.h2>
-        &nbsp;
-        <Text.h3>{denom}</Text.h3>
+      <Flex justifySelf="center" alignSelf="end" alignItems="flex-end">
+        <Text.h3>{amount}</Text.h3>&nbsp;<Text.h4>{denom}</Text.h4>
       </Flex>
     </Grid>
   </Card>
@@ -120,7 +113,10 @@ function Overview() {
       </Text.h2>
       {cdpContent && (
         <Box>
-          <Grid gridTemplateColumns="1fr 1fr 1fr 1fr" gridColumnGap="s">
+          <Grid
+            gridTemplateColumns={{ s: '1fr 1fr', m: 'auto auto 1fr' }}
+            gridColumnGap="m"
+          >
             <InfoCard
               title={lang.overview_page.total_collateral_locked}
               amount={`$${totalCollateralUSD}`}
@@ -133,11 +129,19 @@ function Overview() {
             />
           </Grid>
           <Box my="l">
-            <Text.h3>{lang.overview_page.your_cdps}</Text.h3>
-            <Card px="l" pt="m" pb="l" my="s">
+            <Text.h4>{lang.overview_page.your_cdps}</Text.h4>
+            <Card
+              px="l"
+              pt="m"
+              pb="s"
+              my="m"
+              css={`
+                overflow-x: scroll;
+              `}
+            >
               <Table
                 width="100%"
-                variant="normal"
+                variant="cozy"
                 tableLayout="fixed"
                 css={`
                   td,
@@ -146,8 +150,8 @@ function Overview() {
                   }
                 `}
               >
-                <thead>
-                  <tr>
+                <Table.thead>
+                  <Table.tr>
                     {[
                       'token',
                       'id',
@@ -156,30 +160,86 @@ function Overview() {
                       'withdraw',
                       'debt'
                     ].map((k, i) => (
-                      <Table.th key={i}>{lang.overview_page[k]}</Table.th>
+                      <Table.th
+                        key={i}
+                        css={`
+                          white-space: nowrap;
+                        `}
+                      >
+                        {lang.overview_page[k]}
+                      </Table.th>
                     ))}
-                  </tr>
-                </thead>
+                  </Table.tr>
+                </Table.thead>
                 <tbody>
                   {cdpContent.map(
                     ([token, id, ratio, deposited, withdraw, debt], i) => (
-                      <tr key={i}>
-                        <td width="10%">{token}</td>
-                        <td width="10%">{id}</td>
-                        <td width="15%">
-                          <RatioDisplay t="p3" ratio={ratio} inverse={true} />
+                      <tr
+                        key={i}
+                        css={`
+                          white-space: nowrap;
+                        `}
+                      >
+                        <td>
+                          <Text t="body" color="darkPurple">
+                            {token}
+                          </Text>
                         </td>
-                        <td width="15%">{deposited}</td>
-                        <td width="15%">{withdraw}</td>
-                        <td width="15%">{debt}</td>
-                        <td width="10%">
-                          <TableButton>
-                            <Link href={`/${id}${url.search}`} prefetch={true}>
-                              <Text t="p4" color="steel">
-                                {lang.overview_page.view_cdp}
-                              </Text>
-                            </Link>
-                          </TableButton>
+                        <td>
+                          <Text t="body" color="darkPurple">
+                            {id}
+                          </Text>
+                        </td>
+                        <td>
+                          {isFinite(ratio) ? (
+                            <RatioDisplay
+                              fontSize="1.3rem"
+                              ratio={ratio}
+                              inverse={true}
+                            />
+                          ) : (
+                            <Text fontSize="1.3rem">N/A</Text>
+                          )}
+                        </td>
+                        <td>
+                          <Text t="caption" color="darkLavender">
+                            {deposited}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text t="caption" color="darkLavender">
+                            {withdraw}
+                          </Text>
+                        </td>
+                        <td>
+                          <Text t="caption" color="darkLavender">
+                            {debt}
+                          </Text>
+                        </td>
+                        <td>
+                          <Flex justifyContent="flex-end">
+                            <Button
+                              variant="secondary-outline"
+                              px="s"
+                              py="2xs"
+                              borderColor="steel"
+                            >
+                              <Link
+                                href={`/${id}${url.search}`}
+                                prefetch={true}
+                              >
+                                <Text
+                                  fontSize="1.3rem"
+                                  color="steel"
+                                  css={`
+                                    white-space: nowrap;
+                                  `}
+                                >
+                                  {lang.overview_page.view_cdp}
+                                </Text>
+                              </Link>
+                            </Button>
+                          </Flex>
                         </td>
                       </tr>
                     )

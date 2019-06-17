@@ -3,7 +3,8 @@ import {
   BASE_RATE,
   GLOBAL_DEBT_CEILING,
   DEBT_AUCTION_LOT_SIZE,
-  SURPLUS_AUCTION_LOT_SIZE
+  SURPLUS_AUCTION_LOT_SIZE,
+  PAR
 } from 'reducers/system';
 
 const totalDebt = addresses => ({
@@ -36,12 +37,19 @@ const surplusAuctionLotSize = addresses => ({
   returns: [[`system.${SURPLUS_AUCTION_LOT_SIZE}`]]
 });
 
+const par = addresses => ({
+  target: addresses.MCD_SPOT,
+  call: ['par()(uint256)'],
+  returns: [[`system.${PAR}`]]
+});
+
 export function createCDPSystemModel(addresses) {
   return [
     totalDebt,
     baseRate,
     globalDebtCeiling,
     debtAuctionLotSize,
-    surplusAuctionLotSize
+    surplusAuctionLotSize,
+    par
   ].map(f => f(addresses));
 }

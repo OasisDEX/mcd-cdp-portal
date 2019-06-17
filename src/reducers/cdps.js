@@ -17,13 +17,13 @@ const defaultCdpState = {
   ilk: ''
 };
 
-export function getCdp(cdpId, state) {
+export function getCdp(cdpId, { cdps, feeds }) {
   cdpId = cdpId.toString();
-  if (!state.cdps[cdpId]) return defaultCdpState;
+  if (!cdps[cdpId]) return defaultCdpState;
   else
     return {
-      ...state.cdps[cdpId],
-      ...getIlkData(state.feeds, state.cdps[cdpId].ilk)
+      ...cdps[cdpId],
+      ...getIlkData(feeds, cdps[cdpId].ilk)
     };
 }
 

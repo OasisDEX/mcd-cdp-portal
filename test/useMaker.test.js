@@ -2,7 +2,7 @@ import React from 'react';
 import { render, cleanup } from 'react-testing-library';
 import waitForExpect from 'wait-for-expect';
 
-import MakerHooksProvider from '../src/providers/MakerHooksProvider';
+import MakerProvider from '../src/providers/MakerProvider';
 import useMaker from '../src/hooks/useMaker';
 import config from '../src/references/config.json';
 
@@ -14,9 +14,9 @@ function TestHook({ callback }) {
 
 function testHookWithMakerProvider(callback) {
   render(
-    <MakerHooksProvider rpcUrl={config.rpcUrls[42]} network="kovan">
+    <MakerProvider rpcUrl={config.rpcUrls[42]} network="kovan">
       <TestHook callback={callback} />
-    </MakerHooksProvider>
+    </MakerProvider>
   );
 }
 

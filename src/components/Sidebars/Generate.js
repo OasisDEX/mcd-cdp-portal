@@ -56,7 +56,7 @@ const Generate = ({ cdpId, reset }) => {
       maker
         .service('mcd:cdpManager')
         .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
-      'Drawing DAI'
+      lang.transactions.generate_dai
     );
     reset();
   };
@@ -102,7 +102,7 @@ const Generate = ({ cdpId, reset }) => {
           <Info
             title={lang.action_sidebar.new_collateralization_ratio}
             body={
-              <Text color={undercollateralized ? 'linkOrange' : null}>
+              <Text color={undercollateralized ? 'orange.600' : null}>
                 {formatCollateralizationRatio(collateralizationRatio)}
               </Text>
             }

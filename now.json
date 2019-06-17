@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "MCD CDP Portal",
-  "alias": "mcd-cdp-portal-staging",
   "builds": [
     {
       "src": "package.json",
@@ -16,7 +15,7 @@
     { "src": "^/(.*)", "dest": "/index.html" }
   ],
   "github": {
-    "autoAlias": false
+    "enabled": false
   },
   "env": {
     "BLANK_SECRET": "@blank-secret"

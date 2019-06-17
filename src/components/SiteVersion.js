@@ -20,17 +20,11 @@ const VersionLink = styled(Link)`
 `;
 
 const SiteVersion = () => {
-  const {
-    NOW_GITHUB_REPO,
-    NOW_GITHUB_ORG,
-    NOW_GITHUB_COMMIT_SHA,
-    NOW_GITHUB_COMMIT_AUTHOR_NAME,
-    NOW_GITHUB_COMMIT_REF
-  } = require('../static/version.json');
+  const { COMMIT_SHA, COMMIT_BRANCH } = require('../static/version.json');
 
   const [commitMsg, setCommitMsg] = useState('');
   const [commitDate, setCommitDate] = useState('');
-  const apiUrl = `https://api.github.com/repos/${NOW_GITHUB_ORG}/${NOW_GITHUB_REPO}/git/commits/${NOW_GITHUB_COMMIT_SHA}`;
+  const apiUrl = `https://api.github.com/repos/makerdao/mcd-cdp-portal/git/commits/${COMMIT_SHA}`;
 
   useEffect(() => {
     const fetchCommitMsg = async () => {
@@ -47,23 +41,20 @@ const SiteVersion = () => {
     fetchCommitMsg();
   }, [apiUrl]);
 
-  const commitUrl = `https://github.com/${NOW_GITHUB_ORG}/${NOW_GITHUB_REPO}/commit/${NOW_GITHUB_COMMIT_SHA}`;
+  const commitUrl = `https://github.com/makerdao/mcd-cdp-portal/commit/${COMMIT_SHA}`;
   return (
     <Box>
       {commitMsg !== '' ? (
         <VersionLink href={commitUrl} target="_blank">
           <Grid p="s" gridTemplateColumns="1fr 2fr">
-            <VersionText>Author:</VersionText>
-            <VersionText>{NOW_GITHUB_COMMIT_AUTHOR_NAME}</VersionText>
-
             <VersionText>Commit:</VersionText>
             <VersionText>{commitMsg}</VersionText>
 
             <VersionText>Hash:</VersionText>
-            <VersionText>{NOW_GITHUB_COMMIT_SHA.substring(0, 10)}</VersionText>
+            <VersionText>{COMMIT_SHA.substring(0, 8)}</VersionText>
 
             <VersionText>Branch:</VersionText>
-            <VersionText>{NOW_GITHUB_COMMIT_REF}</VersionText>
+            <VersionText>{COMMIT_BRANCH}</VersionText>
 
             <VersionText>Uploaded:</VersionText>
             <VersionText>{commitDate}</VersionText>

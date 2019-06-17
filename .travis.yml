@@ -16,18 +16,10 @@ script:
   - yarn ci
   - codecov
 before_deploy:
-  - yarn write-env-variables
-  - yarn build
   - npm install now --no-save
 deploy:
-  - provider: script
-    script: now --token $NOW_TOKEN --team mkr-js-prod && now alias --token $NOW_TOKEN --team mkr-js-prod
-    skip_cleanup: true
-    on:
-      branch: master
-
-  - provider: script
-    script: now --token $NOW_TOKEN --team mkr-js-prod -A ./now.dev.json && now alias --token $NOW_TOKEN --team mkr-js-prod -A ./now.dev.json
-    skip_cleanup: true
-    on:
-      branch: develop
+  provider: script
+  script: ./scripts/now-deploy.sh
+  skip_cleanup: true
+  on:
+    all_branches: true

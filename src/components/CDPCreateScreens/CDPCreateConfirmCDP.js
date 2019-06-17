@@ -192,7 +192,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         daiToDraw
       );
 
-    newTxListener(txObject, 'Creating CDP');
+    newTxListener(txObject, lang.transactions.create_cdp);
 
     maker.service('transactionManager').listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),

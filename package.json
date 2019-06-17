@@ -17,7 +17,7 @@
     "@makerdao/dai": "^0.16.1",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "0.1.12",
+    "@makerdao/dai-plugin-mcd": "^0.2.1",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/multicall": "0.6.1",
     "@makerdao/ui-components-core": "0.2.2",
@@ -54,10 +54,8 @@
     "precommit": "lint-staged",
     "test": "NODE_PATH=src/ jest",
     "ci": "./node_modules/@makerdao/testchain/scripts/launch -s mcd-step-4 --fast --ci jest --coverage",
-    "deploy": "yarn build && now ./build -A ../now.json",
-    "now-build": "yarn write-env-variables && yarn build",
-    "remove-sourcemaps": "rm -rf build/static/js/*.map",
-    "write-env-variables": "./src/scripts/write-env-vars.sh"
+    "now-build": "yarn build",
+    "remove-sourcemaps": "rm -rf build/static/js/*.map"
   },
   "lint-staged": {
     "*.{js,json}": [
