@@ -40,10 +40,11 @@ const Deposit = ({ cdpId, reset }) => {
     (state, updates) => ({ ...state, ...updates }),
     initialState
   );
-
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
+  const userIsOwner =
+    account && account.cdps.some(userCdp => userCdp.id === cdpId);
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
@@ -142,11 +143,21 @@ const Deposit = ({ cdpId, reset }) => {
     }
   }, [maker, userState.proxyAddress]);
 
-  const deposit = () => {
+  const depositAsOwner = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
         .lockAndDraw(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
+      lang.formatString(lang.transactions.depositing_gem, symbol)
+    );
+    reset();
+  };
+
+  const depositAsPatron = () => {
+    newTxListener(
+      maker
+        .service('mcd:cdpManager')
+        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
@@ -232,7 +243,10 @@ const Deposit = ({ cdpId, reset }) => {
           </Grid>
         )}
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button onClick={deposit} disabled={!valid}>
+          <Button
+            onClick={() => (userIsOwner ? depositAsOwner() : depositAsPatron())}
+            disabled={!valid}
+          >
             {lang.actions.deposit}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>

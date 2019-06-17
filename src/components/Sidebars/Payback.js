@@ -104,7 +104,8 @@ const Payback = ({ cdpId, reset }) => {
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
-
+  const userIsOwner =
+    account && account.cdps.some(userCdp => userCdp.id === cdpId);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
@@ -127,11 +128,21 @@ const Payback = ({ cdpId, reset }) => {
 
   const setMax = () => setAmount(Math.min(debtAmount, daiBalance));
 
-  const payback = () => {
+  const paybackAsOwner = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
         .wipeAndFree(cdpId, cdp.ilk, MDAI(parseFloat(amount)), cdp.currency(0)),
+      lang.transactions.pay_back_dai
+    );
+    reset();
+  };
+
+  const paybackAsPatron = () => {
+    newTxListener(
+      maker
+        .service('mcd:cdpManager')
+        .wipe(cdpId, MDAI(parseFloat(amount)), cdp.currency(0)),
       lang.transactions.pay_back_dai
     );
     reset();
@@ -212,7 +223,10 @@ const Payback = ({ cdpId, reset }) => {
           </Grid>
         )}
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button disabled={!canPayBack} onClick={payback}>
+          <Button
+            disabled={!canPayBack}
+            onClick={() => (userIsOwner ? paybackAsOwner() : paybackAsPatron())}
+          >
             {lang.actions.pay_back}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>
