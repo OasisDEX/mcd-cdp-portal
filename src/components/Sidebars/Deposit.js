@@ -143,21 +143,16 @@ const Deposit = ({ cdpId, reset }) => {
     }
   }, [maker, userState.proxyAddress]);
 
-  const depositAsOwner = () => {
+  const deposit = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
-      lang.formatString(lang.transactions.depositing_gem, symbol)
-    );
-    reset();
-  };
-
-  const depositAsPatron = () => {
-    newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
+        [`${userIsOwner ? 'lockAndDraw' : 'lock'}`](
+          cdpId,
+          cdp.ilk,
+          cdp.currency(parseFloat(amount)),
+          MDAI(0)
+        ),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
@@ -243,10 +238,7 @@ const Deposit = ({ cdpId, reset }) => {
           </Grid>
         )}
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button
-            onClick={() => (userIsOwner ? depositAsOwner() : depositAsPatron())}
-            disabled={!valid}
-          >
+          <Button onClick={deposit} disabled={!valid}>
             {lang.actions.deposit}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>
