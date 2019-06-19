@@ -82,7 +82,7 @@
     "proxy_text": "Before creating your first CDP, you must create a personal proxy contract.",
     "insufficient_ilk_balance": "Insufficient {0} balance",
     "draw_too_much_dai": "CDP below liquidation threshold",
-    "stability_fee_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",
+    "stability_fee_description": "The fee calculated on top of the existing debt of the CDP. This is paid when paying back DAI.",
     "liquidation_ratio_description": "The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation.",
     "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs."
   },
