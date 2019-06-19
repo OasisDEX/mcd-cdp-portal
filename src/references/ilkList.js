@@ -33,27 +33,27 @@ export default [
     gem: 'COL1',
     currency: COL1
   },
-  {
-    slug: 'col2-a',
-    symbol: 'COL2-A',
-    key: 'COL2-A',
-    gem: 'COL2',
-    currency: COL2
-  },
-  {
-    slug: 'col3-a',
-    symbol: 'COL3-A',
-    key: 'COL3-A',
-    gem: 'COL3',
-    currency: COL3
-  },
-  {
-    slug: 'col4-a',
-    symbol: 'COL4-A',
-    key: 'COL4-A',
-    gem: 'COL4',
-    currency: COL4
-  },
+  // {
+  //   slug: 'col2-a',
+  //   symbol: 'COL2-A',
+  //   key: 'COL2-A',
+  //   gem: 'COL2',
+  //   currency: COL2
+  // },
+  // {
+  //   slug: 'col3-a',
+  //   symbol: 'COL3-A',
+  //   key: 'COL3-A',
+  //   gem: 'COL3',
+  //   currency: COL3
+  // },
+  // {
+  //   slug: 'col4-a',
+  //   symbol: 'COL4-A',
+  //   key: 'COL4-A',
+  //   gem: 'COL4',
+  //   currency: COL4
+  // },
   {
     slug: 'col5-a',
     symbol: 'COL5-A',
