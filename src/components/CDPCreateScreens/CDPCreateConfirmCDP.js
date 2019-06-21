@@ -184,8 +184,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
-    const decimals = maker.service('token').getToken(selectedIlk.data.gem)
-      ._decimals;
+    const decimals = maker.getToken(selectedIlk.currency)._decimals;
 
     const lockAmount = decimals
       ? selectedIlk.currency(gemsToLock, decimals * -1)
