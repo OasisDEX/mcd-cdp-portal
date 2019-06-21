@@ -6,15 +6,19 @@ import Header from '@makerdao/ui-components-header';
 import { Box, Grid } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { useNavigation } from 'react-navi';
+import useMaker from 'hooks/useMaker';
+import useModal from 'hooks/useModal';
 import { mixpanelIdentify } from 'utils/analytics';
 import ConnectDaiWallet from '../connect-dai-wallet';
 import LandingHeroLayout from 'layouts/LandingHeroLayout';
 import { Title, Subtitle } from 'components/Typography';
 import IconButton from 'components/IconButton';
+import { MakerObjectContext } from 'providers/MakerProvider';
 
 function Landing() {
   const navigation = useNavigation();
-
+  const maker = useMaker();
+  const modal = useModal();
   return (
     <Box width="100%">
       <Header />
@@ -33,6 +37,8 @@ function Landing() {
           </Box>
           <Grid px="m" py="xs" gridRowGap="s">
             <ConnectDaiWallet
+              context={maker}
+              modal={modal}
               analytics={params =>
                 mixpanelIdentify(params.address, params.type)
               }

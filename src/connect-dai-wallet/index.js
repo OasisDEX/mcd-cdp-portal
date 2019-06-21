@@ -1,3 +1,97 @@
-import WalletConnect from './src/WalletConnect';
+import React, { useCallback } from 'react';
+import lang from 'languages';
+import styled from 'styled-components';
+
+import { Grid } from '@makerdao/ui-components-core';
+import BrowserProviderButton from './src/components/BrowserProviderButton';
+import IconButton from './src/components/IconButton';
+// import ReadOnlyConnect from 'components/ReadOnlyConnect'
+
+import { useLedger, useTrezor } from './src/hooks/useHardwareWallet';
+
+import { getWebClientProviderName } from './src/utils/web3';
+import { getWalletConnectAccounts } from './src/utils/walletconnect';
+
+import { ReactComponent as TrezorLogo } from './src/images/trezor.svg';
+import { ReactComponent as LedgerLogo } from './src/images/ledger.svg';
+import { ReactComponent as WalletConnectLogo } from './src/images/wallet-connect.svg';
+
+const StyledLedgerLogo = styled(LedgerLogo)`
+  margin-top: -5px
+  margin-bottom: -5px
+`;
+
+const StyledTrezorLogo = styled(TrezorLogo)`
+  margin-top: -5px
+  margin-bottom: -5px
+`;
+
+const StyledWalletConnectLogo = styled(WalletConnectLogo)`
+  margin-top: -5px
+  margin-bottom: -5px
+`;
+
+function WalletConnect(props) {
+  const {
+    maker,
+    authenticated: makerAuthenticated,
+    connectBrowserProvider
+  } = props.context;
+
+  const { analytics, navigation, modal } = props;
+
+  const onAccountChosen = useCallback(
+    async ({ address }, type) => {
+      maker.useAccountWithAddress(address);
+      analytics && analytics({ address, type });
+      navigation && navigation({ address });
+    },
+    [maker, analytics, navigation]
+  );
+
+  const providerName = getWebClientProviderName();
+
+  async function connectBrowserWallet() {
+    try {
+      const connectedAddress = await connectBrowserProvider();
+      onAccountChosen({ address: connectedAddress }, providerName);
+    } catch (err) {
+      window.alert(err);
+    }
+  }
+  const { connectTrezorWallet } = useTrezor({ onAccountChosen, modal });
+  const { connectLedgerWallet } = useLedger({ onAccountChosen, modal });
+
+  return (
+    <Grid px="m" py="xs" gridRowGap="s">
+      <BrowserProviderButton
+        onClick={connectBrowserWallet}
+        disabled={!makerAuthenticated}
+        provider={providerName}
+      />
+      <IconButton
+        onClick={connectTrezorWallet}
+        disabled={!makerAuthenticated}
+        icon={<StyledTrezorLogo />}
+      >
+        {lang.providers.trezor}
+      </IconButton>
+      <IconButton
+        onClick={connectLedgerWallet}
+        disabled={!makerAuthenticated}
+        icon={<StyledLedgerLogo />}
+      >
+        {lang.providers.ledger_nano}
+      </IconButton>
+      <IconButton
+        onClick={getWalletConnectAccounts}
+        icon={<StyledWalletConnectLogo />}
+      >
+        {lang.landing_page.wallet_connect}
+      </IconButton>
+      {/* <ReadOnlyConnect /> */}
+    </Grid>
+  );
+}
 
 export default WalletConnect;

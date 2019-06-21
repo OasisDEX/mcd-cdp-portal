@@ -3,13 +3,13 @@ import React, { useMemo } from 'react';
 import lang from 'languages';
 import styled from 'styled-components';
 
-import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
-import { ReactComponent as TrustLogo } from 'images/trust-logo.svg';
-import { ReactComponent as ImTokenLogo } from 'images/imtoken-logo.svg';
-import coinbaseWalletLogo from 'images/coinbase-wallet.png';
-import alphaWalletLogo from 'images/alpha-wallet-logo.png';
-import { wallets } from 'utils/web3';
-import IconButton from 'components/IconButton';
+import { ReactComponent as MetaMaskLogo } from '../images/metamask.svg';
+import { ReactComponent as TrustLogo } from '../images/trust-logo.svg';
+import { ReactComponent as ImTokenLogo } from '../images/imtoken-logo.svg';
+import coinbaseWalletLogo from '../images/coinbase-wallet.png';
+import alphaWalletLogo from '../images/alpha-wallet-logo.png';
+import { wallets } from '../utils/web3';
+import IconButton from './IconButton';
 
 // hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
