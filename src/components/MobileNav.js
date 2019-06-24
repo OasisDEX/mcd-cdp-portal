@@ -148,18 +148,13 @@ const MobileNav = ({ networkId, viewedAddress }) => {
         <MakerLogo />
       </Link>
 
-      {account && (
-        <Link
-          href={`/owner/${account.address}`}
-          css={{ margin: '0px 20px 0px 40px' }}
-        >
+      <CDPDropdown>
+        <Link href={`/owner/${account.address}`}>
           <Flex alignItems="center" justifyContent="center" py="s">
             {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
           </Flex>
         </Link>
-      )}
 
-      <CDPDropdown>
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}
