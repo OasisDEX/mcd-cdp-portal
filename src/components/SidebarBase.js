@@ -1,49 +1,21 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
-import { Flex, Box, Grid, Card } from '@makerdao/ui-components-core';
+import { Flex, Box, Grid } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
 
-import AccountConnect from './SidebarAccountConnect';
-import ActiveAccount from 'components/ActiveAccount';
-import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import sidebars from 'components/Sidebars';
 import TransactionManager from 'components/TransactionManager';
 import NotificationManager from 'components/NotificationManager';
-import theme, { getMeasurement, getSpace } from 'styles/theme';
+import AccountBox from 'components/AccountBox';
+import { getMeasurement } from 'styles/theme';
 const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
 const SHOW_MIGRATE_BUTTON = true;
-
-function AccountSection({ currentAccount }) {
-  const [open, setOpen] = useState(false);
-  const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
-  const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
-  const yOffset = currentAccount ? '5px' : '0px';
-
-  return (
-    <Card p="s">
-      <WalletConnectDropdown
-        show={open}
-        offset={`-${getSpace('s') + 1}, ${yOffset}`}
-        openOnHover={false}
-        onClick={toggleDropdown}
-        close={closeDropdown}
-        trigger={
-          currentAccount ? (
-            <ActiveAccount currentAccount={currentAccount} />
-          ) : (
-            <AccountConnect />
-          )
-        }
-      />
-    </Card>
-  );
-}
 
 const animations = {
   fade: [{ opacity: 0.9 }, { opacity: 1 }],
@@ -60,8 +32,7 @@ const animations = {
   slide: [
     { transform: 'translate3d(0px, 0, 0)' },
     {
-      transform: `translate3d(-${getMeasurement('sidebarWidth') -
-        theme.space.s}px, 0, 0)`
+      transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)`
     }
   ]
 };
@@ -156,17 +127,15 @@ function Sidebar() {
   }, []);
 
   return (
-    <Box minWidth={getMeasurement('sidebarWidth')}>
-      {SHOW_MIGRATE_BUTTON && <NotificationManager />}
+    <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
+      {SHOW_MIGRATE_BUTTON && <NotificationManager mb="s" />}
       <TransactionManager
         transactions={selectors.transactions()}
         network={network}
         resetTx={resetTx}
       />
-      <Grid gridRowGap="s" py="s">
-        <Box>
-          <AccountSection currentAccount={account} />
-        </Box>
+      <Grid gridRowGap="s" mt="s">
+        <AccountBox currentAccount={account} />
         <Flex css={'overflow:hidden;'}>
           <AnimatedWrap style={{ ...p1Animation, zIndex: 1 }} key="panel1">
             <GlobalSidebar />

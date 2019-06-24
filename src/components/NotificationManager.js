@@ -4,7 +4,7 @@ import { Card } from '@makerdao/ui-components-core';
 import useModal from '../hooks/useModal';
 import useMaker from '../hooks/useMaker';
 
-const NotificationManager = () => {
+const NotificationManager = ({ ...props }) => {
   const { show } = useModal();
   const { account, maker } = useMaker();
   const [cdpsToMigrate, setCdpsToMigrate] = useState(0);
@@ -26,11 +26,11 @@ const NotificationManager = () => {
   return account && cdpsToMigrate > 0 ? (
     <Card
       p="s"
-      mt="s"
       css={{ cursor: 'pointer' }}
       onClick={() =>
         show({ modalType: 'cdpmigrate', modalTemplate: 'fullscreen' })
       }
+      {...props}
     >
       {cdpsToMigrate} CDP{cdpsToMigrate > 1 && 's'} to migrate
     </Card>

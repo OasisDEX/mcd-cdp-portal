@@ -64,7 +64,12 @@ const TinyButton = props => (
   />
 );
 
-const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
+const TransactionManager = ({
+  transactions = [],
+  network,
+  resetTx,
+  ...props
+} = {}) => {
   const [expanded, setExpanded] = useState(false);
   const [animStart, animEnd] = txAnimations.fade;
 
@@ -95,7 +100,7 @@ const TransactionManager = ({ transactions = [], network, resetTx } = {}) => {
         zIndex: txCount ? '1' : '-1'
       }}
     >
-      <Card p="s" mt="s">
+      <Card p="s" {...props}>
         <Flex>
           <Flex alignItems="flex-start">
             <Circle color={bg} size={'24px'} mr="xs" mt="-1px" />
