@@ -24,6 +24,8 @@ import { getMeasurement } from '../styles/theme';
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
+import { ReactComponent as ActiveHome } from 'images/active-home.svg';
+import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
 const CDPDropdown = ({ children }) => {
   return (
@@ -121,6 +123,8 @@ const MobileNav = ({ networkId, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+  const onOverviewPage =
+    account && url.pathname === `/owner/${account.address}`;
 
   useEffect(() => {
     if (sidebarDrawerOpen) {
@@ -145,6 +149,12 @@ const MobileNav = ({ networkId, viewedAddress }) => {
       </Link>
 
       <CDPDropdown>
+        <Link href={`/owner/${account.address}`}>
+          <Flex alignItems="center" justifyContent="center" py="s">
+            {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
+          </Flex>
+        </Link>
+
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}
