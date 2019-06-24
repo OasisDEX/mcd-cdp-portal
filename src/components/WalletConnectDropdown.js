@@ -10,7 +10,7 @@ import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
-import { getMeasurement, getSpace, getColor } from 'styles/theme';
+import { getMeasurement, getColor } from 'styles/theme';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -66,7 +66,7 @@ const WalletConnectDropdown = ({
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
-        width={getMeasurement('sidebarWidth') - getSpace('s')}
+        width={getMeasurement('sidebarWidth')}
         css={`
           border-top-right-radius: 0;
           border-top-left-radius: 0;

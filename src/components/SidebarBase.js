@@ -156,7 +156,7 @@ function Sidebar() {
   }, []);
 
   return (
-    <Box pr="s">
+    <Box minWidth={getMeasurement('sidebarWidth')}>
       {SHOW_MIGRATE_BUTTON && <NotificationManager />}
       <TransactionManager
         transactions={selectors.transactions()}

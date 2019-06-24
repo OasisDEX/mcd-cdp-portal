@@ -7,7 +7,7 @@ import {
   clearAllBodyScrollLocks
 } from 'body-scroll-lock';
 
-import Sidebar from 'components/Sidebars/Global';
+import Sidebar from 'components/SidebarBase';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 import {
   Dropdown,
@@ -102,15 +102,11 @@ const SidebarDrawer = ({
   children
 }) => {
   return (
-    <DrawerBg
-      sidebarDrawerOpen={sidebarDrawerOpen}
-      onClick={() => setSidebarDrawerOpen(false)}
-    >
+    <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
       <Box
-        width="330px"
         ml="auto"
         height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
-        p="s"
+        px="s"
         css={{
           overflowY: 'scroll'
         }}
@@ -160,12 +156,14 @@ const MobileNav = ({ networkId, viewedAddress }) => {
 
       <div ref={ref}>
         <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-          <Sidebar
-            {...{
-              networkId,
-              connectedAddress: account ? account.address : null
-            }}
-          />
+          <Box mr="s">
+            <Sidebar
+              {...{
+                networkId,
+                connectedAddress: account ? account.address : null
+              }}
+            />
+          </Box>
         </SidebarDrawer>
       </div>
     </Flex>
