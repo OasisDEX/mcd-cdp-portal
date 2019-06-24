@@ -29,7 +29,7 @@ const withDefaultLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
-      const { viewedAddress } = request.params;
+      const { viewedAddress, cdpId } = request.params;
       const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       const networkId = networkNameToId(network);
@@ -49,6 +49,7 @@ const withDefaultLayout = route =>
                     <MobileNav
                       networkId={networkId}
                       viewedAddress={viewedAddress}
+                      cdpId={cdpId}
                     />
                   }
                   navbar={<Navbar viewedAddress={viewedAddress} />}

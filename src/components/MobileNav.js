@@ -6,9 +6,15 @@ import {
   enableBodyScroll,
   clearAllBodyScrollLocks
 } from 'body-scroll-lock';
+import useStore from 'hooks/useStore';
 
+import RatioDisplay from './RatioDisplay';
 import Sidebar from 'components/SidebarBase';
+import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
+import { ReactComponent as ActiveHome } from 'images/active-home.svg';
+import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
+
 import {
   Dropdown,
   DefaultDropdown,
@@ -25,7 +31,24 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
 
-const CDPDropdown = ({ children }) => {
+const NavbarIcon = ({ owned, label, ratio }) => (
+  <Flex
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    bg="teal.500"
+    borderRadius="default"
+    height="50px"
+  >
+    <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
+      {label}
+    </Text>
+    <RatioDisplay fontSize="1.3rem" ratio={ratio} active />
+  </Flex>
+);
+
+const CDPDropdown = ({ iconData, children }) => {
+  const { label, owned, ratio } = iconData;
   return (
     <Dropdown
       css={{
@@ -41,9 +64,11 @@ const CDPDropdown = ({ children }) => {
             bg="teal.500"
             borderRadius="4px"
           >
-            <Text t="p6" fontWeight="bold">
-              ETH
-            </Text>
+            {label ? (
+              <NavbarIcon label={label} owned={owned} ratio={ratio} />
+            ) : (
+              <InactiveHome />
+            )}
           </Flex>
           <Box ml="s">
             <CaratDownIcon />
@@ -116,7 +141,21 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ networkId, viewedAddress }) => {
+const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
+  const [{ cdps, feeds }, dispatch] = useStore();
+  const [iconData, setIconData] = useState({});
+
+  // TODO: do we need to use memo??
+  useEffect(() => {
+    if (cdpId) {
+      const cdp = getCdp(cdpId, { cdps, feeds });
+      const ratio = getCollateralizationRatio(cdp);
+      const owned = Object.keys(cdps).includes(cdpId);
+
+      setIconData({ label: cdp.ilk, ratio, owned });
+    }
+  }, [cdpId, cdps, feeds]);
+
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
@@ -144,7 +183,7 @@ const MobileNav = ({ networkId, viewedAddress }) => {
         <MakerLogo />
       </Link>
 
-      <CDPDropdown>
+      <CDPDropdown iconData={iconData}>
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}
