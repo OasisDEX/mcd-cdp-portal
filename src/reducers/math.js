@@ -60,6 +60,8 @@ const mathReducer = produce((draft, action) => {
 
 export default mathReducer;
 
+// some values can be immediately converted to a human-readable form because
+// their raw value is never used in calculations
 function convertValue(type, value) {
   const [label, ...others] = type.split('.');
   if (label === 'ilk') {
