@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect, Fragment } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 import {
@@ -36,18 +36,25 @@ const NavbarIcon = ({ owned, label, ratio }) => (
     flexDirection="column"
     alignItems="center"
     justifyContent="center"
-    bg="teal.500"
+    bg={label ? 'teal.500' : 'black.500'}
     borderRadius="default"
     height="50px"
+    width="64px"
   >
-    <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
-      {label}
-    </Text>
-    <RatioDisplay fontSize="1.3rem" ratio={ratio} active />
+    {label ? (
+      <Fragment>
+        <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
+          {label}
+        </Text>
+        <RatioDisplay fontSize="1.3rem" ratio={ratio} active />
+      </Fragment>
+    ) : (
+      <ActiveHome />
+    )}
   </Flex>
 );
 
-const CDPDropdown = ({ iconData, children }) => {
+const CDPDropdown = memo(function({ iconData, children }) {
   const { label, owned, ratio } = iconData;
   return (
     <Dropdown
@@ -61,14 +68,15 @@ const CDPDropdown = ({ iconData, children }) => {
             justifyContent="center"
             px="m"
             py="s"
-            bg="teal.500"
+            bg="black.500"
             borderRadius="4px"
           >
-            {label ? (
-              <NavbarIcon label={label} owned={owned} ratio={ratio} />
-            ) : (
-              <InactiveHome />
-            )}
+            <NavbarIcon
+              prefetch={true}
+              label={label}
+              owned={owned}
+              ratio={ratio}
+            />
           </Flex>
           <Box ml="s">
             <CaratDownIcon />
@@ -87,7 +95,7 @@ const CDPDropdown = ({ iconData, children }) => {
       </DefaultDropdown>
     </Dropdown>
   );
-};
+});
 
 const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
   return (
@@ -142,17 +150,18 @@ const SidebarDrawer = ({
   );
 };
 const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
-  const [{ cdps, feeds }, dispatch] = useStore();
+  const [{ cdps, feeds }] = useStore();
   const [iconData, setIconData] = useState({});
 
-  // TODO: do we need to use memo??
   useEffect(() => {
     if (cdpId) {
       const cdp = getCdp(cdpId, { cdps, feeds });
-      const ratio = getCollateralizationRatio(cdp);
+      const ratio = getCollateralizationRatio(cdp, true, 0);
       const owned = Object.keys(cdps).includes(cdpId);
 
       setIconData({ label: cdp.ilk, ratio, owned });
+    } else {
+      setIconData({});
     }
   }, [cdpId, cdps, feeds]);
 
