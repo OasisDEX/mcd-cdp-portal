@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Flex, Card } from '@makerdao/ui-components-core';
 import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 
-const Generate = ({ onClose, children }) => {
+const SidebarActionLayout = ({ onClose, children }) => {
   return (
     <Card p="m">
       <Flex justifyContent="flex-end" pb="xs">
@@ -19,4 +19,4 @@ const Generate = ({ onClose, children }) => {
     </Card>
   );
 };
-export default Generate;
+export default SidebarActionLayout;

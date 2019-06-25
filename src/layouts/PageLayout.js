@@ -3,7 +3,7 @@ import { Grid, Box } from '@makerdao/ui-components-core';
 
 import { hot } from 'react-hot-loader/root';
 import SidebarBase from 'components/SidebarBase';
-import theme from '../styles/theme';
+import theme, { getSpace } from '../styles/theme';
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (
@@ -13,7 +13,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
         s: 'minmax(0, 1fr)',
         xl: `${theme.measurement.navbarWidth}px 1fr ${
           theme.measurement.sidebarWidth
-        }px`
+        }px ${getSpace('s')}px`
       }}
       gridTemplateRows={{
         s: 'auto 1fr',
