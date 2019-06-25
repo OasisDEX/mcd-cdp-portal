@@ -149,11 +149,13 @@ const MobileNav = ({ networkId, viewedAddress }) => {
       </Link>
 
       <CDPDropdown>
-        <Link href={`/owner/${account.address}`}>
-          <Flex alignItems="center" justifyContent="center" py="s">
-            {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
-          </Flex>
-        </Link>
+        {account && (
+          <Link href={`/owner/${account.address}`}>
+            <Flex alignItems="center" justifyContent="center" py="s">
+              {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
+            </Flex>
+          </Link>
+        )}
 
         <CDPList
           currentPath={url.pathname}
