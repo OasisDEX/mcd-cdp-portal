@@ -85,7 +85,7 @@ const DrawerBg = styled.div`
   right: 0;
   top: ${getMeasurement('mobileNavHeight')}px;
   width: 100vw;
-  z-index: 99;
+  z-index: 9;
   height: 100%;
   background-color: rgba(72, 73, 95, 0.25);
   ${({ sidebarDrawerOpen }) =>
