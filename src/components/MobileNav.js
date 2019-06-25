@@ -31,7 +31,7 @@ import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
 
-const NavbarIcon = ({ owned, label, ratio }) => (
+const NavbarIcon = ({ owned, label, ratio, connected }) => (
   <Flex
     flexDirection="column"
     alignItems="center"
@@ -48,14 +48,16 @@ const NavbarIcon = ({ owned, label, ratio }) => (
         </Text>
         <RatioDisplay fontSize="1.3rem" ratio={ratio} active />
       </Fragment>
-    ) : (
+    ) : connected ? (
       <ActiveHome />
+    ) : (
+      <InactiveHome />
     )}
   </Flex>
 );
 
 const CDPDropdown = memo(function({ iconData, children }) {
-  const { label, owned, ratio } = iconData;
+  const { label, owned, ratio, connected } = iconData;
   return (
     <Dropdown
       css={{
@@ -76,6 +78,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
               label={label}
               owned={owned}
               ratio={ratio}
+              connected={connected}
             />
           </Flex>
           <Box ml="s">
@@ -150,25 +153,13 @@ const SidebarDrawer = ({
   );
 };
 const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
-  const [{ cdps, feeds }] = useStore();
-  const [iconData, setIconData] = useState({});
-
-  useEffect(() => {
-    if (cdpId) {
-      const cdp = getCdp(cdpId, { cdps, feeds });
-      const ratio = getCollateralizationRatio(cdp, true, 0);
-      const owned = Object.keys(cdps).includes(cdpId);
-
-      setIconData({ label: cdp.ilk, ratio, owned });
-    } else {
-      setIconData({});
-    }
-  }, [cdpId, cdps, feeds]);
-
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+
+  const [{ cdps, feeds }] = useStore();
+  const [iconData, setIconData] = useState({});
 
   useEffect(() => {
     if (sidebarDrawerOpen) {
@@ -178,6 +169,18 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
     }
     return clearAllBodyScrollLocks;
   }, [sidebarDrawerOpen]);
+
+  useEffect(() => {
+    if (cdpId) {
+      const cdp = getCdp(cdpId, { cdps, feeds });
+      const ratio = getCollateralizationRatio(cdp, true, 0);
+      const owned = Object.keys(cdps).includes(cdpId);
+
+      setIconData({ label: cdp.ilk, ratio, owned, connected: !!account });
+    } else {
+      setIconData({ connected: !!account });
+    }
+  }, [cdpId, cdps, feeds, account]);
 
   return (
     <Flex
