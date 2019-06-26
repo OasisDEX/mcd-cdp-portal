@@ -162,9 +162,9 @@ const Deposit = ({ cdpId, reset }) => {
     lessThanBalance &&
     userState.hasAllowance &&
     userState.proxyAddress;
-  const errorMessage =
-    !lessThanBalance &&
-    lang.formatString(lang.action_sidebar.insufficient_balance, symbol);
+  const errorMessage = !lessThanBalance
+    ? lang.formatString(lang.action_sidebar.insufficient_balance, symbol)
+    : '';
 
   return (
     <SidebarActionLayout onClose={reset}>

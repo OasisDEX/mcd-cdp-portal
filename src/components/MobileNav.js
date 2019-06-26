@@ -7,7 +7,7 @@ import {
   clearAllBodyScrollLocks
 } from 'body-scroll-lock';
 
-import Sidebar from 'components/Sidebars/Global';
+import Sidebar from 'components/SidebarBase';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 import {
   Dropdown,
@@ -24,6 +24,8 @@ import { getMeasurement } from '../styles/theme';
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
+import { ReactComponent as ActiveHome } from 'images/active-home.svg';
+import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
 const CDPDropdown = ({ children }) => {
   return (
@@ -83,7 +85,7 @@ const DrawerBg = styled.div`
   right: 0;
   top: ${getMeasurement('mobileNavHeight')}px;
   width: 100vw;
-  z-index: 99;
+  z-index: 9;
   height: 100%;
   background-color: rgba(72, 73, 95, 0.25);
   ${({ sidebarDrawerOpen }) =>
@@ -102,18 +104,13 @@ const SidebarDrawer = ({
   children
 }) => {
   return (
-    <DrawerBg
-      sidebarDrawerOpen={sidebarDrawerOpen}
-      onClick={() => setSidebarDrawerOpen(false)}
-    >
+    <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
       <Box
-        width="330px"
         ml="auto"
         height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
-        p="s"
-        css={{
-          overflowY: 'scroll'
-        }}
+        px="s"
+        width="100vw"
+        css={{ overflowY: 'scroll', paddingRight: 0 }}
       >
         {children}
       </Box>
@@ -125,6 +122,8 @@ const MobileNav = ({ networkId, viewedAddress }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+  const onOverviewPage =
+    account && url.pathname === `/owner/${account.address}`;
 
   useEffect(() => {
     if (sidebarDrawerOpen) {
@@ -149,6 +148,14 @@ const MobileNav = ({ networkId, viewedAddress }) => {
       </Link>
 
       <CDPDropdown>
+        {account && (
+          <Link href={`/owner/${account.address}`}>
+            <Flex alignItems="center" justifyContent="center" py="s">
+              {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
+            </Flex>
+          </Link>
+        )}
+
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}
@@ -160,12 +167,14 @@ const MobileNav = ({ networkId, viewedAddress }) => {
 
       <div ref={ref}>
         <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
-          <Sidebar
-            {...{
-              networkId,
-              connectedAddress: account ? account.address : null
-            }}
-          />
+          <Box mr="s">
+            <Sidebar
+              {...{
+                networkId,
+                connectedAddress: account ? account.address : null
+              }}
+            />
+          </Box>
         </SidebarDrawer>
       </div>
     </Flex>
