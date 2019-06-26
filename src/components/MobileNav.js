@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect, Fragment } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 import {
@@ -6,9 +6,13 @@ import {
   enableBodyScroll,
   clearAllBodyScrollLocks
 } from 'body-scroll-lock';
+import useStore from 'hooks/useStore';
 
+import RatioDisplay from './RatioDisplay';
 import Sidebar from 'components/SidebarBase';
+import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
+
 import {
   Dropdown,
   DefaultDropdown,
@@ -27,7 +31,33 @@ import { ReactComponent as CloseIcon } from 'images/close.svg';
 import { ReactComponent as ActiveHome } from 'images/active-home.svg';
 import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
-const CDPDropdown = ({ children }) => {
+const NavbarIcon = ({ owned, label, ratio, connected }) => (
+  <Flex
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    bg={label ? 'teal.500' : 'black.500'}
+    borderRadius="default"
+    height="50px"
+    width="64px"
+  >
+    {label ? (
+      <Fragment>
+        <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
+          {label}
+        </Text>
+        <RatioDisplay fontSize="1.3rem" ratio={ratio} active />
+      </Fragment>
+    ) : connected ? (
+      <ActiveHome />
+    ) : (
+      <InactiveHome />
+    )}
+  </Flex>
+);
+
+const CDPDropdown = memo(function({ iconData, children }) {
+  const { label, owned, ratio, connected } = iconData;
   return (
     <Dropdown
       css={{
@@ -40,12 +70,15 @@ const CDPDropdown = ({ children }) => {
             justifyContent="center"
             px="m"
             py="s"
-            bg="teal.500"
+            bg="black.500"
             borderRadius="4px"
           >
-            <Text t="p6" fontWeight="bold">
-              ETH
-            </Text>
+            <NavbarIcon
+              label={label}
+              owned={owned}
+              ratio={ratio}
+              connected={connected}
+            />
           </Flex>
           <Box ml="s">
             <CaratDownIcon />
@@ -64,7 +97,7 @@ const CDPDropdown = ({ children }) => {
       </DefaultDropdown>
     </Dropdown>
   );
-};
+});
 
 const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
   return (
@@ -117,13 +150,15 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ networkId, viewedAddress }) => {
+const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   const onOverviewPage =
     account && url.pathname === `/owner/${account.address}`;
+
+  const [{ cdps, feeds }] = useStore();
 
   useEffect(() => {
     if (sidebarDrawerOpen) {
@@ -133,6 +168,17 @@ const MobileNav = ({ networkId, viewedAddress }) => {
     }
     return clearAllBodyScrollLocks;
   }, [sidebarDrawerOpen]);
+
+  let iconData;
+  if (cdpId) {
+    const cdp = getCdp(cdpId, { cdps, feeds });
+    const ratio = getCollateralizationRatio(cdp, true, 0);
+    const owned = Object.keys(cdps).includes(cdpId);
+
+    iconData = { label: cdp.ilk, ratio, owned, connected: !!account };
+  } else {
+    iconData = { connected: !!account };
+  }
 
   return (
     <Flex
@@ -147,7 +193,7 @@ const MobileNav = ({ networkId, viewedAddress }) => {
         <MakerLogo />
       </Link>
 
-      <CDPDropdown>
+      <CDPDropdown iconData={iconData}>
         {account && (
           <Link href={`/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
