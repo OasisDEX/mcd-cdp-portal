@@ -53,7 +53,7 @@
     "build": "NODE_PATH=src/ craco --max_old_space_size=8192 build",
     "precommit": "lint-staged",
     "test": "NODE_PATH=src/ craco test",
-    "ci": "./node_modules/@makerdao/testchain/scripts/launch -s mcd-step-4 --fast --ci jest --coverage",
+    "ci": "./node_modules/@makerdao/testchain/scripts/launch -s mcd-step-4 --fast --ci yarn test --coverage",
     "now-build": "yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
   },
