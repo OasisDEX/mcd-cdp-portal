@@ -6,7 +6,7 @@ import { instantiateMaker } from '../maker';
 
 export const MakerObjectContext = createContext();
 
-function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
+function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [account, setAccount] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
@@ -14,10 +14,8 @@ function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (!rpcUrl) return;
     instantiateMaker({
       network,
-      rpcUrl,
       testchainId,
       backendEnv
     }).then(maker => {
@@ -40,7 +38,7 @@ function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
         })();
       });
     });
-  }, [rpcUrl]);
+  }, [backendEnv, network, testchainId]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);

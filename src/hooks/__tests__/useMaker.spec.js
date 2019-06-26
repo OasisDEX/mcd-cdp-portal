@@ -14,7 +14,7 @@ function TestHook({ callback }) {
 
 function testHookWithMakerProvider(callback) {
   render(
-    <MakerProvider rpcUrl={config.rpcUrls[42]} network="kovan">
+    <MakerProvider network="kovan">
       <TestHook callback={callback} />
     </MakerProvider>
   );
@@ -30,7 +30,7 @@ afterEach(cleanup);
 // we allow up to 10 seconds for this
 // test will throw a warning, see here for explanation:
 // https://github.com/testing-library/react-testing-library/issues/281#issuecomment-480349256
-test('maker is properly instantiated and authenticated within the maker provider', async () => {
+test('MakerProvider sets up maker instance', async () => {
   expect(useMakerHookValue.authenticated).toBe(false);
   await waitForExpect(() => {
     expect(useMakerHookValue.authenticated).toBe(true);

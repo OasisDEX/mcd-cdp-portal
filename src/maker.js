@@ -3,6 +3,8 @@ import McdPlugin, { ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import configPlugin from '@makerdao/dai-plugin-config';
+import networkConfig from './references/config';
+import { networkNameToId } from './utils/network';
 
 let _maker;
 
@@ -38,6 +40,10 @@ export async function instantiateMaker({
   if (testchainId) {
     delete config.provider;
     config.plugins.push([configPlugin, { testchainId, backendEnv }]);
+  } else if (!rpcUrl) {
+    rpcUrl = networkConfig.rpcUrls[networkNameToId(network)];
+    if (!rpcUrl) throw new Error(`Unsupported network: ${network}`);
+    config.provider.url = rpcUrl;
   }
 
   const maker = await Maker.create('http', config);

@@ -18,7 +18,6 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
-import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { startWatcher } from './watch';
@@ -30,12 +29,10 @@ const withDefaultLayout = route =>
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
       const { viewedAddress, cdpId } = request.params;
-      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       const networkId = networkNameToId(network);
       return (
         <MakerProvider
-          rpcUrl={rpcUrl}
           network={network}
           testchainId={testchainId}
           backendEnv={backendEnv}
@@ -77,13 +74,11 @@ export default mount({
   '/': hasNetwork(
     route(async request => {
       const { network, testchainId, backendEnv } = request.query;
-      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       return {
         title: 'Landing',
         view: (
           <MakerProvider
-            rpcUrl={rpcUrl}
             network={network}
             testchainId={testchainId}
             backendEnv={backendEnv}
