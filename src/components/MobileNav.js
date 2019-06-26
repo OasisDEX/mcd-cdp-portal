@@ -159,7 +159,6 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
   const { url } = useCurrentRoute();
 
   const [{ cdps, feeds }] = useStore();
-  const [iconData, setIconData] = useState({});
 
   useEffect(() => {
     if (sidebarDrawerOpen) {
@@ -170,17 +169,16 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
     return clearAllBodyScrollLocks;
   }, [sidebarDrawerOpen]);
 
-  useEffect(() => {
-    if (cdpId) {
-      const cdp = getCdp(cdpId, { cdps, feeds });
-      const ratio = getCollateralizationRatio(cdp, true, 0);
-      const owned = Object.keys(cdps).includes(cdpId);
+  let iconData;
+  if (cdpId) {
+    const cdp = getCdp(cdpId, { cdps, feeds });
+    const ratio = getCollateralizationRatio(cdp, true, 0);
+    const owned = Object.keys(cdps).includes(cdpId);
 
-      setIconData({ label: cdp.ilk, ratio, owned, connected: !!account });
-    } else {
-      setIconData({ connected: !!account });
-    }
-  }, [cdpId, cdps, feeds, account]);
+    iconData = { label: cdp.ilk, ratio, owned, connected: !!account };
+  } else {
+    iconData = { connected: !!account };
+  }
 
   return (
     <Flex
