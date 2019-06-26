@@ -12,8 +12,6 @@ import RatioDisplay from './RatioDisplay';
 import Sidebar from 'components/SidebarBase';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
-import { ReactComponent as ActiveHome } from 'images/active-home.svg';
-import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
 import {
   Dropdown,
@@ -30,6 +28,8 @@ import { getMeasurement } from '../styles/theme';
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
+import { ReactComponent as ActiveHome } from 'images/active-home.svg';
+import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
 const NavbarIcon = ({ owned, label, ratio, connected }) => (
   <Flex
@@ -74,7 +74,6 @@ const CDPDropdown = memo(function({ iconData, children }) {
             borderRadius="4px"
           >
             <NavbarIcon
-              prefetch={true}
               label={label}
               owned={owned}
               ratio={ratio}
@@ -119,7 +118,7 @@ const DrawerBg = styled.div`
   right: 0;
   top: ${getMeasurement('mobileNavHeight')}px;
   width: 100vw;
-  z-index: 99;
+  z-index: 9;
   height: 100%;
   background-color: rgba(72, 73, 95, 0.25);
   ${({ sidebarDrawerOpen }) =>
@@ -143,9 +142,8 @@ const SidebarDrawer = ({
         ml="auto"
         height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
         px="s"
-        css={{
-          overflowY: 'scroll'
-        }}
+        width="100vw"
+        css={{ overflowY: 'scroll', paddingRight: 0 }}
       >
         {children}
       </Box>
@@ -157,6 +155,8 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+  const onOverviewPage =
+    account && url.pathname === `/owner/${account.address}`;
 
   const [{ cdps, feeds }] = useStore();
 
@@ -194,6 +194,14 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
       </Link>
 
       <CDPDropdown iconData={iconData}>
+        {account && (
+          <Link href={`/owner/${account.address}`}>
+            <Flex alignItems="center" justifyContent="center" py="s">
+              {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
+            </Flex>
+          </Link>
+        )}
+
         <CDPList
           currentPath={url.pathname}
           currentQuery={url.search}

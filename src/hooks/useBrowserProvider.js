@@ -9,10 +9,12 @@ const useBrowserProvider = () => {
     if (window.ethereum.selectedAddress)
       setActiveAccountAddress(window.ethereum.selectedAddress);
 
-    window.ethereum.on('accountsChanged', accounts => {
-      if (accounts.length <= 0) return;
-      setActiveAccountAddress(accounts[0]);
-    });
+    if (window.ethereum.on) {
+      window.ethereum.on('accountsChanged', accounts => {
+        if (accounts.length <= 0) return;
+        setActiveAccountAddress(accounts[0]);
+      });
+    }
   }, []);
 
   return { activeAccountAddress };
