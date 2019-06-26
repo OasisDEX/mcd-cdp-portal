@@ -6,7 +6,10 @@ import { multiply } from 'utils/bignumber';
 import BigNumber from 'bignumber.js';
 import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
-// import { debtValue } from '@makerdao/dai-plugin-mcd/dist/math';
+// import {
+//   debtValue,
+//   debtAvailableValue
+// } from '@makerdao/dai-plugin-mcd/dist/math';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 export const FEED_SET_USD = 'feedSetUSD';
@@ -39,14 +42,18 @@ const defaultIlkState = {
   [ILK_ART]: ''
 };
 
-export function debtValue(art, rate) {
-  art = MDAI.wei(art);
-  console.log('art', art);
-  const timesd = art.times(rate);
-  console.log('timesd', timesd);
-  const shifted = timesd.shiftedBy(-27);
-  console.log('shifted', shifted);
-  return shifted;
+// TODO move this to the SDK math.js
+function debtAvailableValue(art, rate, line) {
+  function _debtValue(art, rate) {
+    art = MDAI(art);
+    return art.times(rate).shiftedBy(-18);
+  }
+  const debtCeiling = MDAI(line);
+
+  const debtValue = _debtValue(art, rate);
+
+  const dAV = debtCeiling.minus(debtValue);
+  return dAV;
 }
 
 export function getIlkDebtAmount(art, rate, rounded = true, precision = 2) {
@@ -61,6 +68,11 @@ export function getIlkData(feeds, ilkKey) {
   if (!feeds) return {};
   const ilkData = feeds.find(({ key }) => ilkKey === key);
   if (!ilkData) return {};
+
+  console.log(
+    'debtAvailableValue',
+    debtAvailableValue(ilkData[ILK_ART], ilkData[RATE], ilkData[DEBT_CEILING])
+  );
   return {
     ...ilkData,
     price: ilkData[FEED_VALUE_USD],
@@ -68,13 +80,10 @@ export function getIlkData(feeds, ilkKey) {
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
     rate: ilkData[RATE],
     stabilityFee: ilkData[DUTY],
-    ilkDebtAvailable: sub(
-      ilkData[DEBT_CEILING],
-      getIlkDebtAmount(ilkData[ILK_ART], ilkData[RATE])
-    ),
-    ilkDebtAvailableNew: sub(
-      ilkData[DEBT_CEILING],
-      debtValue(ilkData[ILK_ART], ilkData[RATE])
+    ilkDebtAvailable: debtAvailableValue(
+      ilkData[ILK_ART],
+      ilkData[RATE],
+      ilkData[DEBT_CEILING]
     )
   };
 }
