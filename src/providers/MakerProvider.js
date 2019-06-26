@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
+import PropTypes from 'prop-types';
 
 export const MakerObjectContext = createContext();
 
@@ -109,5 +110,9 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
     </MakerObjectContext.Provider>
   );
 }
+
+MakerProvider.propTypes = {
+  network: PropTypes.string.isRequired
+};
 
 export default MakerProvider;
