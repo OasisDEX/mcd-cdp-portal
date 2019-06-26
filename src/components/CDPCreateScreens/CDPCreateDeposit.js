@@ -149,11 +149,8 @@ const CDPCreateDepositSidebar = ({
     liquidationRatio,
     rate,
     debtCeiling,
-    ilkDebtAvailable,
-    ilkDebtAvailableNew
+    ilkDebtAvailable
   } = selectedIlk.data;
-
-  console.log('ilkDebtAvailable', ilkDebtAvailable, ilkDebtAvailableNew);
 
   return (
     <Grid gridRowGap="m">

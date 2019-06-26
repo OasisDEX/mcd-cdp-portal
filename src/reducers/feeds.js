@@ -6,12 +6,6 @@ import { multiply } from 'utils/bignumber';
 import BigNumber from 'bignumber.js';
 import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
-// import {
-//   debtValue,
-//   debtAvailableValue
-// } from '@makerdao/dai-plugin-mcd/dist/math';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
-
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
 export const DUTY = 'duty'; // this is ilk.duty in jug.sol
@@ -25,6 +19,7 @@ export const LIQUIDATION_PENALTY = 'liquidationPenalty';
 export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
 export const ILK_ART = 'ilkArt';
+export const ILK_DEBT_AVAILABLE = 'ilkDebtAvailable';
 
 const defaultIlkState = {
   [DUTY]: '',
@@ -39,40 +34,14 @@ const defaultIlkState = {
   [LIQUIDATION_PENALTY]: '',
   [MAX_AUCTION_LOT_SIZE]: '',
   [PRICE_WITH_SAFETY_MARGIN]: '',
-  [ILK_ART]: ''
+  [ILK_ART]: '',
+  [ILK_DEBT_AVAILABLE]: ''
 };
-
-// TODO move this to the SDK math.js
-function debtAvailableValue(art, rate, line) {
-  function _debtValue(art, rate) {
-    art = MDAI(art);
-    return art.times(rate).shiftedBy(-18);
-  }
-  const debtCeiling = MDAI(line);
-
-  const debtValue = _debtValue(art, rate);
-
-  const dAV = debtCeiling.minus(debtValue);
-  return dAV;
-}
-
-export function getIlkDebtAmount(art, rate, rounded = true, precision = 2) {
-  if (!art || !rate) return '';
-  const debtAmount = rounded
-    ? round(multiply(art, rate), precision)
-    : multiply(art, rate);
-  return fromWei(debtAmount);
-}
 
 export function getIlkData(feeds, ilkKey) {
   if (!feeds) return {};
   const ilkData = feeds.find(({ key }) => ilkKey === key);
   if (!ilkData) return {};
-
-  console.log(
-    'debtAvailableValue',
-    debtAvailableValue(ilkData[ILK_ART], ilkData[RATE], ilkData[DEBT_CEILING])
-  );
   return {
     ...ilkData,
     price: ilkData[FEED_VALUE_USD],
@@ -80,11 +49,7 @@ export function getIlkData(feeds, ilkKey) {
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
     rate: ilkData[RATE],
     stabilityFee: ilkData[DUTY],
-    ilkDebtAvailable: debtAvailableValue(
-      ilkData[ILK_ART],
-      ilkData[RATE],
-      ilkData[DEBT_CEILING]
-    )
+    ilkDebtAvailable: ilkData[ILK_DEBT_AVAILABLE]
   };
 }
 
