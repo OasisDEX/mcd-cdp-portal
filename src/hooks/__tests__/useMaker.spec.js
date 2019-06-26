@@ -1,10 +1,8 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import waitForExpect from 'wait-for-expect';
-
-import MakerProvider from '../../providers/MakerProvider';
+import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import useMaker from '../useMaker';
-import config from '../../references/config.json';
 
 // This helper component allows us to call the hook in a component context.
 function TestHook({ callback }) {
@@ -14,9 +12,9 @@ function TestHook({ callback }) {
 
 function testHookWithMakerProvider(callback) {
   render(
-    <MakerProvider network="kovan">
+    <TestMakerProvider>
       <TestHook callback={callback} />
-    </MakerProvider>
+    </TestMakerProvider>
   );
 }
 

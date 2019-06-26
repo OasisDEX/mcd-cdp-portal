@@ -1167,7 +1167,7 @@
 
 "@makerdao/testchain@makerdao/testchain":
   version "1.0.0"
-  resolved "https://codeload.github.com/makerdao/testchain/tar.gz/b3b5e53ff0687066e8efd9221d752d22e4e9350f"
+  resolved "https://codeload.github.com/makerdao/testchain/tar.gz/63a7584dfd0e120a519e15b49424cc2dd4ad9f87"
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
