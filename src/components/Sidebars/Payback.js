@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
@@ -16,91 +16,11 @@ import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 import LoadingToggle from 'components/LoadingToggle';
 
-const initialState = {
-  proxyAddress: null,
-  hasAllowance: null,
-  startedWithoutProxy: false,
-  startedWithoutAllowance: false,
-  allowanceLoading: false,
-  proxyLoading: false
-};
-
 const Payback = ({ cdpId, reset }) => {
   const { maker, account, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
-  const [firstLoadComplete, setFirstLoadComplete] = useState(false);
   const [daiBalance, setDaiBalance] = useState(0);
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
-
-  const [userState, updateUserState] = useReducer(
-    (state, updates) => ({ ...state, ...updates }),
-    initialState
-  );
-
-  const checkForProxyAndAllowance = useCallback(async () => {
-    const proxyAddress = await maker.service('proxy').getProxyAddress();
-    const token = maker.getToken('MDAI');
-    const hasAllowance =
-      proxyAddress &&
-      (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
-        MAX_UINT_BN
-      );
-
-    updateUserState({ proxyAddress, hasAllowance });
-
-    return {
-      proxyAddress,
-      hasAllowance
-    };
-  }, [maker]);
-
-  useEffect(() => {
-    setFirstLoadComplete(false);
-  }, [account]);
-
-  useEffect(() => {
-    (async () => {
-      const { proxyAddress, hasAllowance } = await checkForProxyAndAllowance();
-      if (!firstLoadComplete) {
-        updateUserState({
-          startedWithoutProxy: !proxyAddress,
-          startedWithoutAllowance: !hasAllowance
-        });
-        setFirstLoadComplete(true);
-      }
-    })();
-  }, [maker, account, firstLoadComplete]);
-
-  const setupProxy = async () => {
-    try {
-      updateUserState({ proxyLoading: true });
-      const txPromise = maker.service('proxy').ensureProxy();
-      newTxListener(txPromise, lang.transactions.setting_up_proxy);
-      const proxyAddress = await txPromise;
-      updateUserState({ proxyAddress, proxyLoading: false });
-    } catch (e) {
-      updateUserState({ proxyLoading: false });
-    }
-  };
-
-  const setAllowance = async () => {
-    const { proxyAddress } = userState;
-    try {
-      updateUserState({ allowanceLoading: true });
-
-      const daiToken = maker.getToken('MDAI');
-      const txPromise = daiToken.approveUnlimited(proxyAddress);
-      newTxListener(
-        txPromise,
-        lang.formatString(lang.transactions.unlocking_token, 'DAI')
-      );
-      await txPromise;
-      updateUserState({ hasAllowance: true, allowanceLoading: false });
-    } catch (e) {
-      updateUserState({ allowanceLoading: false });
-    }
-  };
+  const [hasAllowance, setHasAllowance] = useState(false);
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
@@ -108,22 +28,18 @@ const Payback = ({ cdpId, reset }) => {
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
 
+  // FIXME balances should be handled by multicall
   maker
     .getToken(MDAI)
     .balance()
     .then(daiBalance => setDaiBalance(daiBalance.toNumber()));
 
-  useEffect(() => {
-    const amountToPayback = parseFloat(amount || 0);
-    const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: collateralAmount,
-      daiToDraw: Math.max(debtAmount - amountToPayback, 0)
-    });
-
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp]);
+  const amountToPayback = parseFloat(amount || 0);
+  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
+    ilkData: cdp,
+    gemsToLock: collateralAmount,
+    daiToDraw: Math.max(debtAmount - amountToPayback, 0)
+  });
 
   const setMax = () => setAmount(Math.min(debtAmount, daiBalance));
 
@@ -142,7 +58,7 @@ const Payback = ({ cdpId, reset }) => {
   const isLessThanDebt = amt <= debtAmount;
   const isNonZero = amount !== '' && amt > 0;
   const canPayBack =
-    isNonZero && isLessThanDebt && isLessThanBalance && userState.hasAllowance;
+    isNonZero && isLessThanDebt && isLessThanBalance && hasAllowance;
 
   let errorMessage = null;
   if (!isLessThanBalance && isNonZero)
@@ -175,42 +91,9 @@ const Payback = ({ cdpId, reset }) => {
             }
           />
         </Grid>
-        {(userState.startedWithoutProxy ||
-          userState.startedWithoutAllowance) && (
-          <Grid gridRowGap="s">
-            {(userState.startedWithoutProxy || !userState.proxyAddress) && (
-              <LoadingToggle
-                completeText={lang.action_sidebar.proxy_created}
-                loadingText={lang.action_sidebar.creating_proxy}
-                defaultText={lang.action_sidebar.create_proxy}
-                isLoading={userState.proxyLoading}
-                isComplete={!!userState.proxyAddress}
-                disabled={!!userState.proxyAddress}
-                onToggle={setupProxy}
-              />
-            )}
-            {(userState.startedWithoutAllowance || !userState.hasAllowance) && (
-              <LoadingToggle
-                completeText={lang.formatString(
-                  lang.action_sidebar.token_unlocked,
-                  'DAI'
-                )}
-                loadingText={lang.formatString(
-                  lang.action_sidebar.unlocking_token,
-                  'DAI'
-                )}
-                defaultText={lang.formatString(
-                  lang.action_sidebar.unlock_token,
-                  'DAI'
-                )}
-                isLoading={userState.allowanceLoading}
-                isComplete={userState.hasAllowance}
-                onToggle={setAllowance}
-                disabled={!userState.proxyAddress || userState.hasAllowance}
-              />
-            )}
-          </Grid>
-        )}
+        <ProxyAndAllowanceCheck
+          {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
+        />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
           <Button disabled={!canPayBack} onClick={payback}>
             {lang.actions.pay_back}
@@ -242,3 +125,134 @@ const Payback = ({ cdpId, reset }) => {
   );
 };
 export default Payback;
+
+const checkForProxyAndAllowance = async (
+  maker,
+  updateState,
+  setHasAllowance
+) => {
+  const proxyAddress = await maker.service('proxy').getProxyAddress();
+  const token = maker.getToken('MDAI');
+  const hasAllowance =
+    proxyAddress &&
+    (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
+      MAX_UINT_BN
+    );
+
+  setHasAllowance(hasAllowance);
+  updateState({
+    proxyAddress,
+    startedWithoutProxy: !proxyAddress,
+    startedWithoutAllowance: !hasAllowance
+  });
+};
+
+const setupProxy = async (maker, updateState, newTxListener) => {
+  try {
+    updateState({ proxyLoading: true });
+    const txPromise = maker.service('proxy').ensureProxy();
+    newTxListener(txPromise, lang.transactions.setting_up_proxy);
+    const proxyAddress = await txPromise;
+    updateState({ proxyAddress, proxyLoading: false });
+  } catch (e) {
+    updateState({ proxyLoading: false });
+  }
+};
+
+const setAllowance = async (
+  maker,
+  updateState,
+  newTxListener,
+  proxyAddress,
+  setHasAllowance
+) => {
+  try {
+    updateState({ allowanceLoading: true });
+
+    const daiToken = maker.getToken('MDAI');
+    const txPromise = daiToken.approveUnlimited(proxyAddress);
+    newTxListener(
+      txPromise,
+      lang.formatString(lang.transactions.unlocking_token, 'DAI')
+    );
+    await txPromise;
+    setHasAllowance(true);
+    updateState({ allowanceLoading: false });
+  } catch (e) {
+    updateState({ allowanceLoading: false });
+  }
+};
+
+const initialState = {
+  proxyAddress: null,
+  startedWithoutProxy: false,
+  startedWithoutAllowance: false,
+  allowanceLoading: false,
+  proxyLoading: false
+};
+
+function ProxyAndAllowanceCheck({
+  maker,
+  account,
+  newTxListener,
+  hasAllowance,
+  setHasAllowance
+}) {
+  const [
+    {
+      startedWithoutProxy,
+      startedWithoutAllowance,
+      proxyAddress,
+      allowanceLoading,
+      proxyLoading
+    },
+    updateState
+  ] = useReducer(
+    (oldState, updates) => ({ ...oldState, ...updates }),
+    initialState
+  );
+
+  useEffect(() => {
+    checkForProxyAndAllowance(maker, updateState, setHasAllowance);
+  }, [maker, account, setHasAllowance]);
+
+  if (!startedWithoutProxy && !startedWithoutAllowance) return null;
+
+  return (
+    <Grid gridRowGap="s">
+      {(startedWithoutProxy || !proxyAddress) && (
+        <LoadingToggle
+          completeText={lang.action_sidebar.proxy_created}
+          loadingText={lang.action_sidebar.creating_proxy}
+          defaultText={lang.action_sidebar.create_proxy}
+          isLoading={proxyLoading}
+          isComplete={!!proxyAddress}
+          disabled={!!proxyAddress}
+          onToggle={() => setupProxy(maker, updateState, newTxListener)}
+        />
+      )}
+      {(startedWithoutAllowance || !hasAllowance) && (
+        <LoadingToggle
+          completeText={lang.formatString(
+            lang.action_sidebar.token_unlocked,
+            'DAI'
+          )}
+          loadingText={lang.formatString(
+            lang.action_sidebar.unlocking_token,
+            'DAI'
+          )}
+          defaultText={lang.formatString(
+            lang.action_sidebar.unlock_token,
+            'DAI'
+          )}
+          isLoading={allowanceLoading}
+          isComplete={hasAllowance}
+          onToggle={() =>
+            setAllowance(maker, updateState, newTxListener, proxyAddress)
+          }
+          disabled={!proxyAddress || hasAllowance}
+        />
+      )}
+    </Grid>
+  );
+}
