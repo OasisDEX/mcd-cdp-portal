@@ -6,7 +6,7 @@ import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
-import CDPView from 'pages/CDP';
+import CDPDisplay from 'components/CDPDisplay';
 import sidebars from 'components/Sidebars';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -117,7 +117,7 @@ export default mount({
 
       return route({
         title: 'CDP',
-        view: <CDPView cdpId={cdpId} />
+        view: <CDPDisplay cdpId={cdpId} />
       });
     })
   )

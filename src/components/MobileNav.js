@@ -109,9 +109,8 @@ const SidebarDrawer = ({
         ml="auto"
         height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
         px="s"
-        css={{
-          overflowY: 'scroll'
-        }}
+        width="100vw"
+        css={{ overflowY: 'scroll', paddingRight: 0 }}
       >
         {children}
       </Box>
