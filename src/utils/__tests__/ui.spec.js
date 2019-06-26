@@ -1,9 +1,5 @@
-import {
-  fullActivityString,
-  firstLetterLowercase,
-  formatDate
-} from '../src/utils/ui';
-import { mockHistoryDataFromSDK } from '../src/reducers/cdps';
+import { fullActivityString, firstLetterLowercase, formatDate } from '../ui';
+import { mockHistoryDataFromSDK } from '../../reducers/cdps';
 
 test('fullActivityString', () => {
   expect(fullActivityString(mockHistoryDataFromSDK[2])).toBe(
@@ -16,5 +12,8 @@ test('firstLetterLowercase', () => {
 });
 
 test('formatDate', () => {
-  expect(formatDate(new Date(0))).toBe('Jan 1, 1970');
+  const date = new Date(0);
+  expect(formatDate(date)).toBe(
+    date.getTimezoneOffset() > 0 ? 'Dec 31, 1969' : 'Jan 1, 1970'
+  );
 });
