@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { StateInspector } from 'reinspect';
-import { StoreProvider } from './providers/StoreProvider';
+import StoreProvider from './providers/StoreProvider';
 import styled, { ThemeProvider } from 'styled-components';
 import { Router, NotFoundBoundary } from 'react-navi';
 import { createBrowserNavigation } from 'navi';
