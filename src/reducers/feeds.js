@@ -7,7 +7,7 @@ import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
 export const DUTY = 'duty'; // this is ilk.duty in jug.sol
-export const ILK_RATE = 'ilkRate';
+export const RATE = 'rate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
 export const DEBT_CEILING = 'debtCeiling';
@@ -19,7 +19,7 @@ export const ADAPTER_BALANCE = 'adapterBalance';
 
 const defaultIlkState = {
   [DUTY]: '',
-  [ILK_RATE]: '',
+  [RATE]: '',
   [LAST_DRIP]: '',
   [FEED_VALUE_USD]: '',
   [DEBT_CEILING]: '',
@@ -41,7 +41,7 @@ export function getIlkData(feeds, ilkKey) {
     price: ilkData[FEED_VALUE_USD],
     liquidationRatio: ilkData[LIQUIDATION_RATIO],
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
-    ilkRate: ilkData[ILK_RATE],
+    rate: ilkData[RATE],
     stabilityFee: ilkData[DUTY]
   };
 }
@@ -71,7 +71,7 @@ function convert(valueType, value) {
         .times(100)
         .toFixed(3);
     }
-    case ILK_RATE:
+    case RATE:
     case PRICE_WITH_SAFETY_MARGIN:
       return fromRay(value, 5);
     case DEBT_CEILING:

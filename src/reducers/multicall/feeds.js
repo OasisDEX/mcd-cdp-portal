@@ -6,7 +6,7 @@ import {
   LIQUIDATOR_ADDRESS,
   LIQUIDATION_RATIO,
   DUTY,
-  ILK_RATE,
+  RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING
@@ -23,7 +23,7 @@ export const ilkVatData = addresses => name => ({
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
   returns: [
     [],
-    [`ilk.${name}.${ILK_RATE}`],
+    [`ilk.${name}.${RATE}`],
     [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`],
     [`ilk.${name}.${DEBT_CEILING}`],
     []
