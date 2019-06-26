@@ -4,7 +4,11 @@ import {
   FEED_VALUE_USD,
   LIQUIDATION_RATIO,
   PRICE_WITH_SAFETY_MARGIN,
-  DUTY
+  DUTY,
+  DEBT_CEILING,
+  RATE,
+  ILK_ART,
+  ILK_DEBT_AVAILABLE
 } from './feeds';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
@@ -41,6 +45,18 @@ const mathReducer = produce((draft, action) => {
             name,
             draft.system[PAR]
           );
+        }
+        // update the debt available for an ilk of `rate`, `art` or `line` changes
+        if ([RATE, ILK_ART, DEBT_CEILING].includes(prop)) {
+          const feed = draft.feeds.find(f => f.key === name);
+          const { ilkArt, rate, debtCeiling } = draft.raw.ilks[name];
+          if (ilkArt && rate && debtCeiling) {
+            feed[ILK_DEBT_AVAILABLE] = calculateDebtAvailable(
+              ilkArt,
+              rate,
+              debtCeiling
+            );
+          }
         }
       }
 
@@ -96,4 +112,10 @@ function recalculatePrice(ilk, name, par) {
   );
   console.log(`calculated price for ${name}: ${price}`);
   return price;
+}
+
+function calculateDebtAvailable(art, rate, line) {
+  const debtValue = math.debtValue(art, rate);
+  const debtCeiling = math.debtCeiling(line);
+  return debtCeiling.minus(debtValue);
 }
