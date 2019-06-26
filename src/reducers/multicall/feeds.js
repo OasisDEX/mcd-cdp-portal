@@ -5,7 +5,7 @@ import {
   LIQUIDATION_PENALTY,
   LIQUIDATOR_ADDRESS,
   LIQUIDATION_RATIO,
-  RATE,
+  DUTY,
   ILK_RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
@@ -15,7 +15,7 @@ import {
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
-  returns: [[`ilk.${name}.${RATE}`], [`ilk.${name}.${LAST_DRIP}`]]
+  returns: [[`ilk.${name}.${DUTY}`], [`ilk.${name}.${LAST_DRIP}`]]
 });
 
 export const ilkVatData = addresses => name => ({

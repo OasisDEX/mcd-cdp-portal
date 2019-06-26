@@ -6,7 +6,7 @@ import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
-export const RATE = 'rate'; // this is ilk.duty in jug.sol
+export const DUTY = 'duty'; // this is ilk.duty in jug.sol
 export const ILK_RATE = 'ilkRate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
@@ -18,7 +18,7 @@ export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
 
 const defaultIlkState = {
-  [RATE]: '',
+  [DUTY]: '',
   [ILK_RATE]: '',
   [LAST_DRIP]: '',
   [FEED_VALUE_USD]: '',
@@ -42,7 +42,7 @@ export function getIlkData(feeds, ilkKey) {
     liquidationRatio: ilkData[LIQUIDATION_RATIO],
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
     ilkRate: ilkData[ILK_RATE],
-    stabilityFee: ilkData[RATE]
+    stabilityFee: ilkData[DUTY]
   };
 }
 
@@ -61,7 +61,7 @@ const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
 
 function convert(valueType, value) {
   switch (valueType) {
-    case RATE: {
+    case DUTY: {
       const taxBigNumber = new BigNumber(value.toString()).dividedBy(RAY);
       const secondsPerYear = 60 * 60 * 24 * 365;
       BigNumber.config({ POW_PRECISION: 100 });

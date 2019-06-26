@@ -4,7 +4,7 @@ import {
   FEED_VALUE_USD,
   LIQUIDATION_RATIO,
   PRICE_WITH_SAFETY_MARGIN,
-  RATE
+  DUTY
 } from './feeds';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
@@ -69,7 +69,7 @@ function convertValue(type, value) {
     switch (valueType) {
       case LIQUIDATION_RATIO:
         return math.liquidationRatio(value);
-      case RATE:
+      case DUTY:
         return math.annualStabilityFee(value);
       default:
       // fall through to final return
