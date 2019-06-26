@@ -25,7 +25,9 @@ import {
   InfoContainerRow
 } from './subcomponents';
 
-export default function({ cdpId, cdp, showSidebar, account, owner, network }) {
+export default function({ cdp, showSidebar, account, network }) {
+  const cdpId = cdp.id;
+  console.log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
@@ -42,6 +44,7 @@ export default function({ cdpId, cdp, showSidebar, account, owner, network }) {
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
   const eventHistory = getEventHistory(cdp);
+  const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   return (
     <PageContentLayout>
@@ -114,7 +117,7 @@ export default function({ cdpId, cdp, showSidebar, account, owner, network }) {
             conversion={`${collateralAvailableValue} USD`}
             button={
               <ActionButton
-                disabled={!account || !owner}
+                disabled={!account || !isOwner}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'withdraw',
@@ -151,7 +154,7 @@ export default function({ cdpId, cdp, showSidebar, account, owner, network }) {
             value={`${daiAvailable} DAI`}
             button={
               <ActionButton
-                disabled={!account || !owner}
+                disabled={!account || !isOwner}
                 onClick={() =>
                   showSidebar({
                     sidebarType: 'generate',

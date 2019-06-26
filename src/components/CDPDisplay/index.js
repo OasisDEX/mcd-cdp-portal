@@ -14,10 +14,18 @@ function CDPView({ cdpId }) {
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ cdps, feeds }, dispatch] = useStore();
-  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds }), [
+
+  // this workaround (making useMemo depend on just one feed item) ensures that
+  // the view does not re-render when an irrelevant price feed is updated.
+  // TODO: there's definitely a more general solution to this issue, but i'm not
+  // going to try to figure it out right now. let's collect more data first
+  // about how it shows up in different situations.
+  const ilk = cdps[cdpId] ? cdps[cdpId].ilk : null;
+  const feed = ilk ? feeds.find(f => f.key === ilk) : null;
+  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds: [feed] }), [
     cdpId,
     cdps,
-    feeds
+    feed
   ]);
 
   useEffect(() => {
@@ -29,16 +37,14 @@ function CDPView({ cdpId }) {
       cdp.inited ? (
         <CDPViewPresentation
           cdp={cdp}
-          cdpId={cdpId}
           showSidebar={showSidebar}
           account={account}
-          owner={account && account.cdps.some(userCdp => userCdp.id === cdpId)}
           network={network}
         />
       ) : (
         <LoadingLayout background={getColor('backgroundGrey')} />
       ),
-    [cdp, cdpId, showSidebar, account]
+    [cdp, showSidebar, account]
   );
 }
 

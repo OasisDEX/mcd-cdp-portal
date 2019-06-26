@@ -22,6 +22,7 @@ export function getCdp(cdpId, { cdps, feeds }) {
   if (!cdps[cdpId]) return defaultCdpState;
   else
     return {
+      id: cdpId,
       ...cdps[cdpId],
       ...getIlkData(feeds, cdps[cdpId].ilk)
     };
