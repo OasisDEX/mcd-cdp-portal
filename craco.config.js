@@ -25,5 +25,11 @@ module.exports = {
   },
   babel: {
     plugins: ['styled-components', 'react-hot-loader/babel']
+  },
+  jest: {
+    configure: {
+      coverageReporters: ['json', 'lcov', 'text-summary'],
+      setupTestFrameworkScriptFile: '<rootDir>/test/setup.js'
+    }
   }
 };
