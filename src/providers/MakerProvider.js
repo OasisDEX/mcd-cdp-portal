@@ -26,7 +26,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       backendEnv
     }).then(maker => {
       setMaker(maker);
-      if (maker.currentAccount()) initAccount(maker.currentAccount());
+      if (maker.service('accounts').hasAccount())
+        initAccount(maker.currentAccount());
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
