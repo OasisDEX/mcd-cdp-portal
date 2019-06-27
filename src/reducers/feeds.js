@@ -1,6 +1,8 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
+import round from 'lodash/round';
+import { multiply } from 'utils/bignumber';
 import BigNumber from 'bignumber.js';
 import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
@@ -16,6 +18,8 @@ export const LIQUIDATOR_ADDRESS = 'liquidatorAddress';
 export const LIQUIDATION_PENALTY = 'liquidationPenalty';
 export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
+export const ILK_ART = 'ilkArt';
+export const ILK_DEBT_AVAILABLE = 'ilkDebtAvailable';
 
 const defaultIlkState = {
   [DUTY]: '',
@@ -29,7 +33,9 @@ const defaultIlkState = {
   [LIQUIDATOR_ADDRESS]: '',
   [LIQUIDATION_PENALTY]: '',
   [MAX_AUCTION_LOT_SIZE]: '',
-  [PRICE_WITH_SAFETY_MARGIN]: ''
+  [PRICE_WITH_SAFETY_MARGIN]: '',
+  [ILK_ART]: '',
+  [ILK_DEBT_AVAILABLE]: ''
 };
 
 export function getIlkData(feeds, ilkKey) {
@@ -42,7 +48,8 @@ export function getIlkData(feeds, ilkKey) {
     liquidationRatio: ilkData[LIQUIDATION_RATIO],
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
     rate: ilkData[RATE],
-    stabilityFee: ilkData[DUTY]
+    stabilityFee: ilkData[DUTY],
+    ilkDebtAvailable: ilkData[ILK_DEBT_AVAILABLE]
   };
 }
 

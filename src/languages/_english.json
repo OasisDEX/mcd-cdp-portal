@@ -181,6 +181,7 @@
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",
   "collateral_debt_ceiling": "Debt ceiling",
+  "dai_available": "DAI Available",
   "liquidation_ratio": "Minimum liquidation ratio",
   "liquidation_price": "Liquidation price",
   "liquidation_penalty_shortened": "Liq Fee",
