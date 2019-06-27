@@ -154,7 +154,9 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
+  console.log('account in test', account);
   const { url } = useCurrentRoute();
+  console.log('url', url);
   const onOverviewPage =
     account && url.pathname === `/owner/${account.address}`;
 
