@@ -1,8 +1,6 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
-import round from 'lodash/round';
-import { multiply } from 'utils/bignumber';
 import BigNumber from 'bignumber.js';
 import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 

@@ -16,7 +16,6 @@ import MakerProvider from 'providers/MakerProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
-import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
@@ -30,7 +29,6 @@ const withDefaultLayout = route =>
       const { network, testchainId, backendEnv } = request.query;
       const { viewedAddress, cdpId } = request.params;
 
-      const networkId = networkNameToId(network);
       return (
         <MakerProvider
           network={network}
@@ -43,11 +41,7 @@ const withDefaultLayout = route =>
               <SidebarProvider sidebars={sidebars}>
                 <PageLayout
                   mobileNav={
-                    <MobileNav
-                      networkId={networkId}
-                      viewedAddress={viewedAddress}
-                      cdpId={cdpId}
-                    />
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
                   }
                   navbar={<Navbar viewedAddress={viewedAddress} />}
                 >

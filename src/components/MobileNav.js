@@ -9,9 +9,10 @@ import {
 import useStore from 'hooks/useStore';
 
 import RatioDisplay from './RatioDisplay';
-import Sidebar from 'components/SidebarBase';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
+import SidebarGlobal from './Sidebars/Global';
+import AccountBox from './AccountBox';
 
 import {
   Dropdown,
@@ -131,11 +132,7 @@ const DrawerBg = styled.div`
         `}
 `;
 
-const SidebarDrawer = ({
-  sidebarDrawerOpen,
-  setSidebarDrawerOpen,
-  children
-}) => {
+const SidebarDrawer = ({ sidebarDrawerOpen, children }) => {
   return (
     <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
       <Box
@@ -150,7 +147,7 @@ const SidebarDrawer = ({
     </DrawerBg>
   );
 };
-const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
+const MobileNav = ({ viewedAddress, cdpId }) => {
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
@@ -216,12 +213,10 @@ const MobileNav = ({ networkId, viewedAddress, cdpId }) => {
       <div ref={ref}>
         <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
           <Box mr="s">
-            <Sidebar
-              {...{
-                networkId,
-                connectedAddress: account ? account.address : null
-              }}
-            />
+            <Box my="s">
+              <AccountBox currentAccount={account} />
+            </Box>
+            <SidebarGlobal />
           </Box>
         </SidebarDrawer>
       </div>
