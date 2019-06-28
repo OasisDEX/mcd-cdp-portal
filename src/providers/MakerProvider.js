@@ -14,6 +14,11 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [maker, setMaker] = useState(null);
   const navigation = useNavigation();
 
+  const initAccount = account => {
+    mixpanelIdentify(account.address, 'metamask');
+    setAccount({ ...account, cdps: [] });
+  };
+
   useEffect(() => {
     instantiateMaker({
       network,
@@ -21,11 +26,12 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       backendEnv
     }).then(maker => {
       setMaker(maker);
+      if (maker.service('accounts').hasAccount())
+        initAccount(maker.currentAccount());
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
-        mixpanelIdentify(account.address, 'metamask');
-        setAccount({ ...account, cdps: [] });
+        initAccount(account);
         (async () => {
           const proxy = await maker
             .service('proxy')
