@@ -17,9 +17,7 @@ import { MAX_UINT_BN } from '../../utils/units';
 import LoadingToggle from 'components/LoadingToggle';
 
 const Payback = ({ cdpId, reset }) => {
-  console.log('CDP ID IN PAYPBACK', cdpId);
   const { maker, account, newTxListener } = useMaker();
-  console.log('ACCOUNT IN PAYBACK', account);
   const [amount, setAmount] = useState('');
   const [daiBalance, setDaiBalance] = useState(0);
   const [hasAllowance, setHasAllowance] = useState(false);
