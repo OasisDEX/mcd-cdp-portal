@@ -1,5 +1,34 @@
 import mathReducer from '../math';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+
+test('feedValueUSD is calculated correctly', () => {
+  const initialState = {
+    system: {
+      par: '1000000000000000000000000000'
+    },
+    feeds: [
+      {
+        key: 'ETH-A'
+      }
+    ]
+  };
+
+  const action = {
+    type: 'watcherUpdates',
+    payload: [
+      {
+        type: 'ilk.ETH-A.priceWithSafetyMargin',
+        value: '178146666666666666666666666666'
+      },
+      {
+        type: 'ilk.ETH-A.liquidationRatio',
+        value: '1500000000000000000000000000'
+      }
+    ]
+  };
+  const newState = mathReducer(initialState, action);
+  // spot * par * mat
+  expect(newState.feeds[0].feedValueUSD.toNumber()).toEqual(267.22);
+});
 
 test('ilk debtAvailable is calculated correctly', () => {
   const initialState = {
@@ -9,7 +38,7 @@ test('ilk debtAvailable is calculated correctly', () => {
       }
     ]
   };
-  // ilk actions for debtAvailable
+
   const action = {
     type: 'watcherUpdates',
     payload: [
@@ -29,5 +58,5 @@ test('ilk debtAvailable is calculated correctly', () => {
   };
   const newState = mathReducer(initialState, action);
   // line - (art * rate)
-  expect(newState.feeds[0].ilkDebtAvailable).toEqual(MDAI(299610.542));
+  expect(newState.feeds[0].ilkDebtAvailable.toNumber()).toEqual(299610.54);
 });
