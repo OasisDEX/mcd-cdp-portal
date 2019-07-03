@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import lang from 'languages';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -24,6 +24,8 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
+import theme from '../../styles/theme';
+import FullScreenAction from './FullScreenAction';
 
 export default function({ cdp, showSidebar, account, network }) {
   const cdpId = cdp.id;
@@ -45,6 +47,19 @@ export default function({ cdp, showSidebar, account, network }) {
   const daiAvailable = getDaiAvailable(cdp);
   const eventHistory = getEventHistory(cdp);
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
+
+  const [actionShown, setActionShown] = useState(null);
+
+  const showAction = props => {
+    const emSize = parseInt(getComputedStyle(document.body).fontSize);
+    const pxBreakpoint = parseInt(theme.breakpoints.l) * emSize;
+    const isMobile = document.documentElement.clientWidth < pxBreakpoint;
+    if (isMobile) {
+      setActionShown(props);
+    } else {
+      showSidebar(props);
+    }
+  };
 
   return (
     <PageContentLayout>
@@ -101,10 +116,7 @@ export default function({ cdp, showSidebar, account, network }) {
               <ActionButton
                 disabled={!account}
                 onClick={() =>
-                  showSidebar({
-                    sidebarType: 'deposit',
-                    sidebarProps: { cdpId }
-                  })
+                  showAction({ type: 'deposit', props: { cdpId } })
                 }
               >
                 {lang.actions.deposit}
@@ -119,10 +131,7 @@ export default function({ cdp, showSidebar, account, network }) {
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() =>
-                  showSidebar({
-                    sidebarType: 'withdraw',
-                    sidebarProps: { cdpId }
-                  })
+                  showAction({ type: 'withdraw', props: { cdpId } })
                 }
               >
                 {lang.actions.withdraw}
@@ -139,10 +148,7 @@ export default function({ cdp, showSidebar, account, network }) {
               <ActionButton
                 disabled={!account}
                 onClick={() =>
-                  showSidebar({
-                    sidebarType: 'payback',
-                    sidebarProps: { cdpId }
-                  })
+                  showAction({ type: 'payback', props: { cdpId } })
                 }
               >
                 {lang.actions.pay_back}
@@ -156,10 +162,7 @@ export default function({ cdp, showSidebar, account, network }) {
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() =>
-                  showSidebar({
-                    sidebarType: 'generate',
-                    sidebarProps: { cdpId }
-                  })
+                  showAction({ type: 'generate', props: { cdpId } })
                 }
               >
                 {lang.actions.generate}
@@ -174,6 +177,10 @@ export default function({ cdp, showSidebar, account, network }) {
         rows={eventHistory}
         network={network}
       />
+
+      {actionShown && (
+        <FullScreenAction {...actionShown} reset={() => setActionShown(null)} />
+      )}
     </PageContentLayout>
   );
 }

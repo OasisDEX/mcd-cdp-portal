@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
-import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
@@ -43,7 +42,7 @@ const Generate = ({ cdpId, reset }) => {
     setDaiAvailable(daiAvailable - debtAmount);
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp]);
+  }, [amount, cdp, collateralAmount, debtAmount]);
 
   const undercollateralized = greaterThan(
     cdp.liquidationRatio,
@@ -62,54 +61,50 @@ const Generate = ({ cdpId, reset }) => {
   };
 
   return (
-    <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="m">
-        <Grid gridRowGap="s">
-          <Text.h4 color="darkLavender">
-            {lang.action_sidebar.generate_title}
-          </Text.h4>
-          <Text.p t="body">{lang.action_sidebar.generate_description}</Text.p>
-          <Input
-            type="number"
-            value={amount}
-            min="0"
-            onChange={evt => setAmount(evt.target.value)}
-            placeholder="0.00 DAI"
-            errorMessage={
-              undercollateralized
-                ? lang.action_sidebar.cdp_below_threshold
-                : null
-            }
-          />
-        </Grid>
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button onClick={generate} disabled={!valid}>
-            {lang.actions.generate}
-          </Button>
-          <Button variant="secondary-outline" onClick={reset}>
-            {lang.cancel}
-          </Button>
-        </Grid>
-        <InfoContainer>
-          <Info
-            title={lang.action_sidebar.maximum_available_to_generate}
-            body={`${daiAvailable.toFixed(6)} DAI`}
-          />
-          <Info
-            title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
-          />
-          <Info
-            title={lang.action_sidebar.new_collateralization_ratio}
-            body={
-              <Text color={undercollateralized ? 'orange.600' : null}>
-                {formatCollateralizationRatio(collateralizationRatio)}
-              </Text>
-            }
-          />
-        </InfoContainer>
+    <Grid gridRowGap="m">
+      <Grid gridRowGap="s">
+        <Text.h4 color="darkLavender">
+          {lang.action_sidebar.generate_title}
+        </Text.h4>
+        <Text.p t="body">{lang.action_sidebar.generate_description}</Text.p>
+        <Input
+          type="number"
+          value={amount}
+          min="0"
+          onChange={evt => setAmount(evt.target.value)}
+          placeholder="0.00 DAI"
+          errorMessage={
+            undercollateralized ? lang.action_sidebar.cdp_below_threshold : null
+          }
+        />
       </Grid>
-    </SidebarActionLayout>
+      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+        <Button onClick={generate} disabled={!valid}>
+          {lang.actions.generate}
+        </Button>
+        <Button variant="secondary-outline" onClick={reset}>
+          {lang.cancel}
+        </Button>
+      </Grid>
+      <InfoContainer>
+        <Info
+          title={lang.action_sidebar.maximum_available_to_generate}
+          body={`${daiAvailable.toFixed(6)} DAI`}
+        />
+        <Info
+          title={lang.action_sidebar.new_liquidation_price}
+          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+        />
+        <Info
+          title={lang.action_sidebar.new_collateralization_ratio}
+          body={
+            <Text color={undercollateralized ? 'orange.600' : null}>
+              {formatCollateralizationRatio(collateralizationRatio)}
+            </Text>
+          }
+        />
+      </InfoContainer>
+    </Grid>
   );
 };
 export default Generate;

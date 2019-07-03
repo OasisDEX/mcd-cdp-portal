@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
-import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
@@ -46,7 +45,7 @@ const Withdraw = ({ cdpId, reset }) => {
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp]);
+  }, [amount, cdp, collateralAmount, debtAmount]);
 
   const setMax = () => setAmount(collateralAvailableAmount.toFixed(9));
   const lessThanMax =
@@ -64,71 +63,66 @@ const Withdraw = ({ cdpId, reset }) => {
     reset();
   };
   return (
-    <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="m">
-        <Grid gridRowGap="s">
-          <Text.h4 color="darkLavender">
-            {lang.formatString(lang.action_sidebar.withdraw_title, symbol)}
-          </Text.h4>
-          <Text.p t="body">
-            {lang.formatString(
-              lang.action_sidebar.withdraw_description,
-              symbol
-            )}
-          </Text.p>
-          <Input
-            type="number"
-            placeholder={`0.00 ${symbol}`}
-            value={amount}
-            min="0"
-            onChange={evt => setAmount(evt.target.value)}
-            after={
-              debtAmount === 0 ? (
-                <Link fontWeight="medium" onClick={setMax}>
-                  {lang.action_sidebar.set_max}
-                </Link>
-              ) : null
-            }
-            errorMessage={
-              lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
-            }
-          />
-        </Grid>
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button disabled={!valid} onClick={withdraw}>
-            {lang.actions.withdraw}
-          </Button>
-          <Button variant="secondary-outline" onClick={reset}>
-            {lang.cancel}
-          </Button>
-        </Grid>
-        <InfoContainer>
-          <Info
-            title={lang.action_sidebar.maximum_available_to_withdraw}
-            body={`${collateralAvailableAmount} ${symbol}`}
-          />
-          <Info
-            title={lang.formatString(
-              lang.action_sidebar.gem_usd_price_feed,
-              symbol
-            )}
-            body={`${collateralPrice} ${symbol}/USD`}
-          />
-          <Info
-            title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
-          />
-          <Info
-            title={lang.action_sidebar.new_collateralization_ratio}
-            body={
-              <Text color={lessThanMax ? null : 'orange.600'}>
-                {formatCollateralizationRatio(collateralizationRatio)}
-              </Text>
-            }
-          />
-        </InfoContainer>
+    <Grid gridRowGap="m">
+      <Grid gridRowGap="s">
+        <Text.h4 color="darkLavender">
+          {lang.formatString(lang.action_sidebar.withdraw_title, symbol)}
+        </Text.h4>
+        <Text.p t="body">
+          {lang.formatString(lang.action_sidebar.withdraw_description, symbol)}
+        </Text.p>
+        <Input
+          type="number"
+          placeholder={`0.00 ${symbol}`}
+          value={amount}
+          min="0"
+          onChange={evt => setAmount(evt.target.value)}
+          after={
+            debtAmount === 0 ? (
+              <Link fontWeight="medium" onClick={setMax}>
+                {lang.action_sidebar.set_max}
+              </Link>
+            ) : null
+          }
+          errorMessage={
+            lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
+          }
+        />
       </Grid>
-    </SidebarActionLayout>
+      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+        <Button disabled={!valid} onClick={withdraw}>
+          {lang.actions.withdraw}
+        </Button>
+        <Button variant="secondary-outline" onClick={reset}>
+          {lang.cancel}
+        </Button>
+      </Grid>
+      <InfoContainer>
+        <Info
+          title={lang.action_sidebar.maximum_available_to_withdraw}
+          body={`${collateralAvailableAmount} ${symbol}`}
+        />
+        <Info
+          title={lang.formatString(
+            lang.action_sidebar.gem_usd_price_feed,
+            symbol
+          )}
+          body={`${collateralPrice} ${symbol}/USD`}
+        />
+        <Info
+          title={lang.action_sidebar.new_liquidation_price}
+          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+        />
+        <Info
+          title={lang.action_sidebar.new_collateralization_ratio}
+          body={
+            <Text color={lessThanMax ? null : 'orange.600'}>
+              {formatCollateralizationRatio(collateralizationRatio)}
+            </Text>
+          }
+        />
+      </InfoContainer>
+    </Grid>
   );
 };
 export default Withdraw;

@@ -7,12 +7,12 @@ import { useSpring, animated } from 'react-spring';
 
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
-import sidebars from 'components/Sidebars';
+import GlobalSidebar from 'components/Sidebars/Global';
+import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import TransactionManager from 'components/TransactionManager';
 import NotificationManager from 'components/NotificationManager';
 import AccountBox from 'components/AccountBox';
 import { getMeasurement } from 'styles/theme';
-const { global: GlobalSidebar } = sidebars;
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
 const SHOW_MIGRATE_BUTTON = true;
@@ -42,14 +42,7 @@ const AnimatedWrap = styled(animated.div)`
 `;
 
 function Sidebar() {
-  const {
-    account,
-    maker,
-    newTxListener,
-    resetTx,
-    selectors,
-    network
-  } = useMaker();
+  const { account, resetTx, selectors, network } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
@@ -107,24 +100,13 @@ function Sidebar() {
     }
   }, [
     SidebarComponent,
-
+    p1off,
+    p2on,
     setP1Animation,
     setP2Animation,
     setSlideAnimation,
     slideEnd
   ]);
-
-  useEffect(() => {
-    window.pretendFakeTx = (
-      ethToSend = '0.01',
-      recipient = '0xBc5d63fFc63f28bE50EDc63D237151ef7A2d7E11'
-    ) => {
-      newTxListener(
-        maker.getToken('ETH').transfer(recipient, ethToSend),
-        `Sending ${ethToSend} ETH`
-      );
-    };
-  }, []);
 
   return (
     <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
@@ -146,7 +128,12 @@ function Sidebar() {
             key="panel2"
           >
             {!!SidebarComponent && (
-              <SidebarComponent {...props} reset={resetSidebarActionAnimated} />
+              <SidebarActionLayout onClose={resetSidebarActionAnimated}>
+                <SidebarComponent
+                  {...props}
+                  reset={resetSidebarActionAnimated}
+                />
+              </SidebarActionLayout>
             )}
           </AnimatedWrap>
         </Flex>

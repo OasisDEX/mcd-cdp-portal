@@ -7,7 +7,6 @@ import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import CDPDisplay from 'components/CDPDisplay';
-import sidebars from 'components/Sidebars';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
@@ -38,7 +37,7 @@ const withDefaultLayout = route =>
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
             <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider sidebars={sidebars}>
+              <SidebarProvider>
                 <PageLayout
                   mobileNav={
                     <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />

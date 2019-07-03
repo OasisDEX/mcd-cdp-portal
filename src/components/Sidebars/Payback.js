@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
-import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import useMaker from '../../hooks/useMaker';
 import {
   formatCollateralizationRatio,
@@ -70,58 +69,53 @@ const Payback = ({ cdpId, reset }) => {
     errorMessage = lang.action_sidebar.cannot_payback_more_than_owed;
 
   return (
-    <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="m">
-        <Grid gridRowGap="s">
-          <Text.h4 color="darkLavender">
-            {lang.action_sidebar.payback_title}
-          </Text.h4>
-          <Text.p t="body">{lang.action_sidebar.payback_description}</Text.p>
-          <Input
-            type="number"
-            value={amount}
-            min="0"
-            onChange={evt => setAmount(evt.target.value)}
-            placeholder="0.00 DAI"
-            failureMessage={errorMessage}
-            after={
-              <Link onClick={setMax} fontWeight="medium">
-                {lang.action_sidebar.set_max}
-              </Link>
-            }
-          />
-        </Grid>
-        <ProxyAndAllowanceCheck
-          {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
+    <Grid gridRowGap="m">
+      <Grid gridRowGap="s">
+        <Text.h4 color="darkLavender">
+          {lang.action_sidebar.payback_title}
+        </Text.h4>
+        <Text.p t="body">{lang.action_sidebar.payback_description}</Text.p>
+        <Input
+          type="number"
+          value={amount}
+          min="0"
+          onChange={evt => setAmount(evt.target.value)}
+          placeholder="0.00 DAI"
+          failureMessage={errorMessage}
+          after={
+            <Link onClick={setMax} fontWeight="medium">
+              {lang.action_sidebar.set_max}
+            </Link>
+          }
         />
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button disabled={!canPayBack} onClick={payback}>
-            {lang.actions.pay_back}
-          </Button>
-          <Button variant="secondary-outline" onClick={reset}>
-            {lang.cancel}
-          </Button>
-        </Grid>
-        <InfoContainer>
-          <Info
-            title={lang.action_sidebar.dai_balance}
-            body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
-          />
-          <Info
-            title={lang.action_sidebar.dai_debt}
-            body={`${debtAmount} DAI`}
-          />
-          <Info
-            title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
-          />
-          <Info
-            title={lang.action_sidebar.new_collateralization_ratio}
-            body={formatCollateralizationRatio(collateralizationRatio)}
-          />
-        </InfoContainer>
       </Grid>
-    </SidebarActionLayout>
+      <ProxyAndAllowanceCheck
+        {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
+      />
+      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+        <Button disabled={!canPayBack} onClick={payback}>
+          {lang.actions.pay_back}
+        </Button>
+        <Button variant="secondary-outline" onClick={reset}>
+          {lang.cancel}
+        </Button>
+      </Grid>
+      <InfoContainer>
+        <Info
+          title={lang.action_sidebar.dai_balance}
+          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
+        />
+        <Info title={lang.action_sidebar.dai_debt} body={`${debtAmount} DAI`} />
+        <Info
+          title={lang.action_sidebar.new_liquidation_price}
+          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+        />
+        <Info
+          title={lang.action_sidebar.new_collateralization_ratio}
+          body={formatCollateralizationRatio(collateralizationRatio)}
+        />
+      </InfoContainer>
+    </Grid>
   );
 };
 export default Payback;
