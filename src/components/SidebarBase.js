@@ -15,7 +15,7 @@ import AccountBox from 'components/AccountBox';
 import { getMeasurement } from 'styles/theme';
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
-const SHOW_MIGRATE_BUTTON = true;
+const SHOW_MIGRATE_BUTTON = false;
 
 const animations = {
   fade: [{ opacity: 0.9 }, { opacity: 1 }],
