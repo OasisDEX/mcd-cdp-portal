@@ -63,11 +63,15 @@ export const etherscanLink = (string, network = 'mainnet') => {
 export async function checkEthereumProvider() {
   return new Promise(async (res, rej) => {
     if (typeof window.ethereum !== 'undefined') {
-      await window.ethereum.enable();
+      const accounts = await window.ethereum.enable();
+
+      // Keeping selectedAddress for backwards-compatibility.
       const { selectedAddress, networkVersion } = window.ethereum;
+      const account =
+        !accounts || accounts.length <= 0 ? selectedAddress : accounts[0];
       res({
         networkId: parseInt(networkVersion, 10),
-        address: selectedAddress
+        address: account
       });
     } else rej('No web3 provider detected');
   });
