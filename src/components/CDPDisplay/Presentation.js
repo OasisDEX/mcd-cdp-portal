@@ -28,7 +28,7 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 
 export default function({ cdp, showSidebar, account, network }) {
-  const cdpId = cdp.id;
+  const cdpId = parseInt(cdp.id);
   console.log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
