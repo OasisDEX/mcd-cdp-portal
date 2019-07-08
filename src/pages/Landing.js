@@ -114,7 +114,7 @@ function Landing() {
             >
               {lang.landing_page.wallet_connect}
             </IconButton>
-            <ReadOnlyConnect />
+            {/* <ReadOnlyConnect /> */}
           </Grid>
         </LandingHeroLayout>
       </Box>
