@@ -1114,14 +1114,14 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@^0.16.1":
-  version "0.16.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.16.1.tgz#8555c721a66ed71cac21ed8a4d5a3ea085bbca33"
-  integrity sha512-UAUp87hdrwEpMJh/3VdbqkFJyLeg8R0GKtp45aVPKTdvl5WDmUJfSRMCyLCoYLBVvj5yBMpFrZlDgWFxXXlu1Q==
+"@makerdao/dai@^0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.16.3.tgz#2429252df315aa04e11957828de6a16e302b5ca0"
+  integrity sha512-8MzXOoDmXVbNKd8MXgNKPLRXs1jEBYBxw12BPABZziWiV7atSGyYz/+VwgZKJqK4oiH3n9u22pyBBKjMRi6Szw==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/services-core" "^0.9.5"
+    "@makerdao/services-core" "^0.9.8"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
@@ -1160,6 +1160,15 @@
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
   integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
+  dependencies:
+    babel-runtime "^6.26.0"
+    lodash.values "^4.3.0"
+    toposort "^2.0.2"
+
+"@makerdao/services-core@^0.9.8":
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.8.tgz#14481d59267afc5fd1a6576a783d370eb80a47e3"
+  integrity sha512-Qp/kkiKzqhJCuZ2YZT0cYo2oAyCM05PaJK69AkJ0FS21ETC6/n1oSQWwEpnkuKhutnM4ZO9/uuLWke47wC+ojA==
   dependencies:
     babel-runtime "^6.26.0"
     lodash.values "^4.3.0"
