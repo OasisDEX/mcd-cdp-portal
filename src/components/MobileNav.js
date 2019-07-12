@@ -64,6 +64,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
       css={{
         marginLeft: '25px'
       }}
+      hitBoxMargin="0px"
       trigger={
         <Flex alignItems="center">
           <Flex
