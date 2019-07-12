@@ -190,21 +190,21 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         <MakerLogo />
       </Link>
 
-      <CDPDropdown iconData={iconData}>
-        {account && (
+      {account && (
+        <CDPDropdown iconData={iconData}>
           <Link href={`/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
             </Flex>
           </Link>
-        )}
 
-        <CDPList
-          currentPath={url.pathname}
-          currentQuery={url.search}
-          viewedAddress={viewedAddress}
-        />
-      </CDPDropdown>
+          <CDPList
+            currentPath={url.pathname}
+            currentQuery={url.search}
+            viewedAddress={viewedAddress}
+          />
+        </CDPDropdown>
+      )}
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
 
