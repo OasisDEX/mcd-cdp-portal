@@ -46,7 +46,7 @@ const Payback = ({ cdpId, reset }) => {
   const payback = () => {
     newTxListener(
       maker
-        .service('mcd:cdpManager')
+        .service('mcd:cdpManager') // eslint-disable-next-line
         [`${userIsOwner ? 'wipeAndFree' : 'wipe'}`](
           ...[
             cdpId,

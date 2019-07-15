@@ -145,7 +145,7 @@ const Deposit = ({ cdpId, reset }) => {
   const deposit = () => {
     newTxListener(
       maker
-        .service('mcd:cdpManager')
+        .service('mcd:cdpManager') // eslint-disable-next-line
         [`${userIsOwner ? 'lockAndDraw' : 'lock'}`](
           cdpId,
           cdp.ilk,
