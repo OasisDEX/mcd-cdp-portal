@@ -28,7 +28,7 @@ const theme = {
     ...typography
   },
   measurement: {
-    sidebarWidth: 330,
+    sidebarWidth: 318,
     navbarWidth: 80,
     mobileNavHeight: 80
   }

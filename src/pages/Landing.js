@@ -11,7 +11,6 @@ import { mixpanelIdentify } from 'utils/analytics';
 import LandingHeroLayout from 'layouts/LandingHeroLayout';
 
 import BrowserProviderButton from 'components/BrowserProviderButton';
-import ReadOnlyConnect from 'components/ReadOnlyConnect';
 import { Title, Subtitle } from 'components/Typography';
 import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
@@ -114,7 +113,7 @@ function Landing() {
             >
               {lang.landing_page.wallet_connect}
             </IconButton>
-            <ReadOnlyConnect />
+            {/* <ReadOnlyConnect /> */}
           </Grid>
         </LandingHeroLayout>
       </Box>

@@ -77,12 +77,6 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
 
   return (
     <Fragment>
-      {/* <NavbarItem
-        key="overview"
-        href={`/owner/${currentQuery}`}
-        label="Overview"
-        active={currentPath.includes('/overview/')}
-      /> */}
       {navbarCdps.map((cdp, idx) => {
         const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
         const linkPath = `/${cdp.id}`;

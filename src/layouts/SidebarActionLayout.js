@@ -2,9 +2,14 @@ import React from 'react';
 import { Box, Flex, Card } from '@makerdao/ui-components-core';
 import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 
-const Generate = ({ onClose, children }) => {
+const fullscreenCardProps = {
+  border: '0',
+  borderRadius: '0'
+};
+
+const SidebarActionLayout = ({ onClose, children, fullscreen }) => {
   return (
-    <Card p="m">
+    <Card p="m" {...(fullscreen ? fullscreenCardProps : {})}>
       <Flex justifyContent="flex-end" pb="xs">
         <Box
           onClick={onClose}
@@ -19,4 +24,4 @@ const Generate = ({ onClose, children }) => {
     </Card>
   );
 };
-export default Generate;
+export default SidebarActionLayout;

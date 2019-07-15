@@ -3,30 +3,35 @@ import isEqual from 'lodash/isEqual';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
+import PropTypes from 'prop-types';
 
 export const MakerObjectContext = createContext();
 
-function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
+function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [account, setAccount] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
   const navigation = useNavigation();
 
+  const initAccount = account => {
+    mixpanelIdentify(account.address, 'metamask');
+    setAccount({ ...account, cdps: [] });
+  };
+
   useEffect(() => {
-    if (!rpcUrl) return;
     instantiateMaker({
       network,
-      rpcUrl,
       testchainId,
       backendEnv
     }).then(maker => {
+      if (maker.service('accounts').hasAccount())
+        initAccount(maker.currentAccount());
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
-        mixpanelIdentify(account.address, 'metamask');
-        setAccount({ ...account, cdps: [] });
+        initAccount(account);
         (async () => {
           const proxy = await maker
             .service('proxy')
@@ -40,7 +45,7 @@ function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
         })();
       });
     });
-  }, [rpcUrl]);
+  }, [backendEnv, network, testchainId]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
@@ -111,5 +116,9 @@ function MakerProvider({ children, rpcUrl, network, testchainId, backendEnv }) {
     </MakerObjectContext.Provider>
   );
 }
+
+MakerProvider.propTypes = {
+  network: PropTypes.string.isRequired
+};
 
 export default MakerProvider;

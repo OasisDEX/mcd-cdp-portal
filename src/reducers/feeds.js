@@ -6,8 +6,8 @@ import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
-export const RATE = 'rate'; // this is ilk.duty in jug.sol
-export const ILK_RATE = 'ilkRate';
+export const DUTY = 'duty'; // this is ilk.duty in jug.sol
+export const RATE = 'rate';
 export const LAST_DRIP = 'lastDrip';
 export const PRICE_WITH_SAFETY_MARGIN = 'priceWithSafetyMargin';
 export const DEBT_CEILING = 'debtCeiling';
@@ -16,10 +16,12 @@ export const LIQUIDATOR_ADDRESS = 'liquidatorAddress';
 export const LIQUIDATION_PENALTY = 'liquidationPenalty';
 export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
+export const ILK_ART = 'ilkArt';
+export const ILK_DEBT_AVAILABLE = 'ilkDebtAvailable';
 
 const defaultIlkState = {
+  [DUTY]: '',
   [RATE]: '',
-  [ILK_RATE]: '',
   [LAST_DRIP]: '',
   [FEED_VALUE_USD]: '',
   [DEBT_CEILING]: '',
@@ -29,7 +31,9 @@ const defaultIlkState = {
   [LIQUIDATOR_ADDRESS]: '',
   [LIQUIDATION_PENALTY]: '',
   [MAX_AUCTION_LOT_SIZE]: '',
-  [PRICE_WITH_SAFETY_MARGIN]: ''
+  [PRICE_WITH_SAFETY_MARGIN]: '',
+  [ILK_ART]: '',
+  [ILK_DEBT_AVAILABLE]: ''
 };
 
 export function getIlkData(feeds, ilkKey) {
@@ -41,8 +45,9 @@ export function getIlkData(feeds, ilkKey) {
     price: ilkData[FEED_VALUE_USD],
     liquidationRatio: ilkData[LIQUIDATION_RATIO],
     liquidationPenalty: ilkData[LIQUIDATION_PENALTY],
-    ilkRate: ilkData[ILK_RATE],
-    stabilityFee: ilkData[RATE]
+    rate: ilkData[RATE],
+    stabilityFee: ilkData[DUTY],
+    ilkDebtAvailable: ilkData[ILK_DEBT_AVAILABLE]
   };
 }
 
@@ -61,7 +66,7 @@ const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
 
 function convert(valueType, value) {
   switch (valueType) {
-    case RATE: {
+    case DUTY: {
       const taxBigNumber = new BigNumber(value.toString()).dividedBy(RAY);
       const secondsPerYear = 60 * 60 * 24 * 365;
       BigNumber.config({ POW_PRECISION: 100 });
@@ -71,7 +76,7 @@ function convert(valueType, value) {
         .times(100)
         .toFixed(3);
     }
-    case ILK_RATE:
+    case RATE:
     case PRICE_WITH_SAFETY_MARGIN:
       return fromRay(value, 5);
     case DEBT_CEILING:

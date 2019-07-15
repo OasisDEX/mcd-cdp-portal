@@ -6,8 +6,7 @@ import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
-import CDPView from 'pages/CDP';
-import sidebars from 'components/Sidebars';
+import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
@@ -16,9 +15,7 @@ import MakerProvider from 'providers/MakerProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
-import { networkNameToId } from 'utils/network';
 import { userSnapInit } from 'utils/analytics';
-import { getOrFetchNetworkDetails } from 'utils/network';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { startWatcher } from './watch';
@@ -29,13 +26,10 @@ const withDefaultLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
-      const { viewedAddress } = request.params;
-      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
+      const { viewedAddress, cdpId } = request.params;
 
-      const networkId = networkNameToId(network);
       return (
         <MakerProvider
-          rpcUrl={rpcUrl}
           network={network}
           testchainId={testchainId}
           backendEnv={backendEnv}
@@ -43,13 +37,10 @@ const withDefaultLayout = route =>
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
             <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider sidebars={sidebars}>
+              <SidebarProvider>
                 <PageLayout
                   mobileNav={
-                    <MobileNav
-                      networkId={networkId}
-                      viewedAddress={viewedAddress}
-                    />
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
                   }
                   navbar={<Navbar viewedAddress={viewedAddress} />}
                 >
@@ -76,13 +67,11 @@ export default mount({
   '/': hasNetwork(
     route(async request => {
       const { network, testchainId, backendEnv } = request.query;
-      const { rpcUrl } = await getOrFetchNetworkDetails(request.query);
 
       return {
         title: 'Landing',
         view: (
           <MakerProvider
-            rpcUrl={rpcUrl}
             network={network}
             testchainId={testchainId}
             backendEnv={backendEnv}
@@ -117,7 +106,7 @@ export default mount({
 
       return route({
         title: 'CDP',
-        view: <CDPView cdpId={cdpId} />
+        view: <CDPDisplay cdpId={cdpId} />
       });
     })
   )

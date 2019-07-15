@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
-import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
@@ -68,7 +67,7 @@ const Deposit = ({ cdpId, reset }) => {
     });
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp]);
+  }, [amount, cdp, collateralAmount, debtAmount]);
 
   const checkForProxyAndAllowance = useCallback(async () => {
     const proxyAddress = await maker.service('proxy').getProxyAddress();
@@ -86,7 +85,7 @@ const Deposit = ({ cdpId, reset }) => {
       proxyAddress,
       hasAllowance
     };
-  }, [maker]);
+  }, [maker, symbol]);
 
   useEffect(() => {
     setFirstLoadComplete(false);
@@ -103,7 +102,7 @@ const Deposit = ({ cdpId, reset }) => {
         setFirstLoadComplete(true);
       }
     })();
-  }, [maker, account, firstLoadComplete]);
+  }, [maker, account, firstLoadComplete, checkForProxyAndAllowance]);
 
   const setupProxy = useCallback(async () => {
     try {
@@ -120,7 +119,7 @@ const Deposit = ({ cdpId, reset }) => {
         proxyLoading: false
       });
     }
-  }, [maker]);
+  }, [maker, newTxListener]);
 
   const setAllowance = useCallback(async () => {
     try {
@@ -141,7 +140,7 @@ const Deposit = ({ cdpId, reset }) => {
         allowanceLoading: false
       });
     }
-  }, [maker, userState.proxyAddress]);
+  }, [maker, newTxListener, symbol, userState.proxyAddress]);
 
   const deposit = () => {
     newTxListener(
@@ -168,106 +167,100 @@ const Deposit = ({ cdpId, reset }) => {
     lessThanBalance &&
     userState.hasAllowance &&
     userState.proxyAddress;
-  const errorMessage =
-    !lessThanBalance &&
-    lang.formatString(lang.action_sidebar.insufficient_balance, symbol);
+  const errorMessage = !lessThanBalance
+    ? lang.formatString(lang.action_sidebar.insufficient_balance, symbol)
+    : '';
 
   return (
-    <SidebarActionLayout onClose={reset}>
-      <Grid gridRowGap="m">
-        <Grid gridRowGap="s">
-          <Text color="darkLavender" t="h4">
-            {lang.formatString(lang.action_sidebar.deposit_title, symbol)}
+    <Grid gridRowGap="m">
+      <Grid gridRowGap="s">
+        <Text color="darkLavender" t="h4">
+          {lang.formatString(lang.action_sidebar.deposit_title, symbol)}
+        </Text>
+        <p>
+          <Text t="body">
+            {lang.formatString(lang.action_sidebar.deposit_description, symbol)}
           </Text>
-          <p>
-            <Text t="body">
-              {lang.formatString(
-                lang.action_sidebar.deposit_description,
+        </p>
+        <Input
+          type="number"
+          min="0"
+          value={amount}
+          onChange={evt => setAmount(evt.target.value)}
+          placeholder={`0.00 ${symbol}`}
+          after={
+            <Link fontWeight="medium" onClick={setMax}>
+              {lang.action_sidebar.set_max}
+            </Link>
+          }
+          failureMessage={errorMessage}
+        />
+      </Grid>
+      {(userState.startedWithoutProxy || userState.startedWithoutAllowance) && (
+        <Grid gridRowGap="s">
+          {(userState.startedWithoutProxy || !userState.proxyAddress) && (
+            <LoadingToggle
+              completeText={lang.action_sidebar.proxy_created}
+              loadingText={lang.action_sidebar.creating_proxy}
+              defaultText={lang.action_sidebar.create_proxy}
+              isLoading={userState.proxyLoading}
+              isComplete={!!userState.proxyAddress}
+              onToggle={setupProxy}
+              disabled={!!userState.proxyAddress}
+            />
+          )}
+          {(userState.startedWithoutAllowance || !userState.hasAllowance) && (
+            <LoadingToggle
+              completeText={lang.formatString(
+                lang.action_sidebar.token_unlocked,
                 symbol
               )}
-            </Text>
-          </p>
-          <Input
-            type="number"
-            min="0"
-            value={amount}
-            onChange={evt => setAmount(evt.target.value)}
-            placeholder={`0.00 ${symbol}`}
-            after={
-              <Link fontWeight="medium" onClick={setMax}>
-                {lang.action_sidebar.set_max}
-              </Link>
-            }
-            failureMessage={errorMessage}
-          />
+              loadingText={lang.formatString(
+                lang.action_sidebar.unlocking_token,
+                symbol
+              )}
+              defaultText={lang.formatString(
+                lang.action_sidebar.unlock_token,
+                symbol
+              )}
+              isLoading={userState.allowanceLoading}
+              isComplete={userState.hasAllowance}
+              onToggle={setAllowance}
+              disabled={!userState.proxyAddress || userState.hasAllowance}
+            />
+          )}
         </Grid>
-        {(userState.startedWithoutProxy ||
-          userState.startedWithoutAllowance) && (
-          <Grid gridRowGap="s">
-            {(userState.startedWithoutProxy || !userState.proxyAddress) && (
-              <LoadingToggle
-                completeText={lang.action_sidebar.proxy_created}
-                loadingText={lang.action_sidebar.creating_proxy}
-                defaultText={lang.action_sidebar.create_proxy}
-                isLoading={userState.proxyLoading}
-                isComplete={!!userState.proxyAddress}
-                onToggle={setupProxy}
-                disabled={!!userState.proxyAddress}
-              />
-            )}
-            {(userState.startedWithoutAllowance || !userState.hasAllowance) && (
-              <LoadingToggle
-                completeText={lang.formatString(
-                  lang.action_sidebar.token_unlocked,
-                  symbol
-                )}
-                loadingText={lang.formatString(
-                  lang.action_sidebar.unlocking_token,
-                  symbol
-                )}
-                defaultText={lang.formatString(
-                  lang.action_sidebar.unlock_token,
-                  symbol
-                )}
-                isLoading={userState.allowanceLoading}
-                isComplete={userState.hasAllowance}
-                onToggle={setAllowance}
-                disabled={!userState.proxyAddress || userState.hasAllowance}
-              />
-            )}
-          </Grid>
-        )}
-        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-          <Button onClick={deposit} disabled={!valid}>
-            {lang.actions.deposit}
-          </Button>
-          <Button variant="secondary-outline" onClick={reset}>
-            {lang.cancel}
-          </Button>
-        </Grid>
-        <InfoContainer>
-          <Info
-            title={lang.action_sidebar.current_account_balance}
-            body={`${gemBalance.toFixed(6)} ${symbol}`}
-          />
-          <Info
-            title={lang.formatString(
-              lang.action_sidebar.gem_usd_price_feed,
-              symbol
-            )}
-            body={`${collateralPrice} ${symbol}/USD`}
-          />
-          <Info
-            title={lang.action_sidebar.new_liquidation_price}
-            body={formatLiquidationPrice(liquidationPrice, symbol)}
-          />
-          <Info
-            title={lang.action_sidebar.new_collateralization_ratio}
-            body={formatCollateralizationRatio(collateralizationRatio)}
-          />
-        </InfoContainer>
+      )}
+      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+        <Button onClick={deposit} disabled={!valid}>
+          {lang.actions.deposit}
+        </Button>
+        <Button variant="secondary-outline" onClick={reset}>
+          {lang.cancel}
+        </Button>
       </Grid>
-    </SidebarActionLayout>
+      <InfoContainer>
+        <Info
+          title={lang.action_sidebar.current_account_balance}
+          body={`${gemBalance.toFixed(6)} ${symbol}`}
+        />
+        <Info
+          title={lang.formatString(
+            lang.action_sidebar.gem_usd_price_feed,
+            symbol
+          )}
+          body={`${collateralPrice} ${symbol}/USD`}
+        />
+        <Info
+          title={lang.action_sidebar.new_liquidation_price}
+          body={formatLiquidationPrice(liquidationPrice, symbol)}
+        />
+        <Info
+          title={lang.action_sidebar.new_collateralization_ratio}
+          body={formatCollateralizationRatio(collateralizationRatio)}
+        />
+      </InfoContainer>
+    </Grid>
   );
 };
 export default Deposit;

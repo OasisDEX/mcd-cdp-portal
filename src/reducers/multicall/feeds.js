@@ -5,25 +5,26 @@ import {
   LIQUIDATION_PENALTY,
   LIQUIDATOR_ADDRESS,
   LIQUIDATION_RATIO,
+  DUTY,
   RATE,
-  ILK_RATE,
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
-  DEBT_CEILING
+  DEBT_CEILING,
+  ILK_ART
 } from 'reducers/feeds';
 
 export const rateData = addresses => name => ({
   target: addresses.MCD_JUG,
   call: ['ilks(bytes32)(uint256,uint48)', toHex(name)],
-  returns: [[`ilk.${name}.${RATE}`], [`ilk.${name}.${LAST_DRIP}`]]
+  returns: [[`ilk.${name}.${DUTY}`], [`ilk.${name}.${LAST_DRIP}`]]
 });
 
 export const ilkVatData = addresses => name => ({
   target: addresses.MCD_VAT,
   call: ['ilks(bytes32)(uint256,uint256,uint256,uint256,uint256)', toHex(name)],
   returns: [
-    [],
-    [`ilk.${name}.${ILK_RATE}`],
+    [`ilk.${name}.${ILK_ART}`],
+    [`ilk.${name}.${RATE}`],
     [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`],
     [`ilk.${name}.${DEBT_CEILING}`],
     []

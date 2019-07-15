@@ -26,21 +26,27 @@ import {
 } from 'reducers/cdps';
 
 const InfoCard = ({ title, amount, denom }) => (
-  <Card py="l" px="m" minWidth="22.4rem">
+  <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
     <Grid gridRowGap="s">
       <Text
-        justifySelf="center"
+        justifySelf={{ s: 'left', m: 'center' }}
         t="subheading"
-        textAlign="center"
         css={`
           white-space: nowrap;
         `}
       >
         {title.toUpperCase()}
       </Text>
-      <Flex justifySelf="center" alignSelf="end" alignItems="flex-end">
-        <Text.h3>{amount}</Text.h3>&nbsp;<Text.h4>{denom}</Text.h4>
-      </Flex>
+      <Box justifySelf={{ s: 'left', m: 'center' }}>
+        <Box display={{ s: 'none', m: 'unset' }}>
+          <Flex alignSelf="end" alignItems="flex-end">
+            <Text.h3>{amount}</Text.h3>&nbsp;<Text.h4>{denom}</Text.h4>
+          </Flex>
+        </Box>
+        <Text.h4 display={{ s: 'unset', m: 'none' }}>
+          {amount} {denom}
+        </Text.h4>
+      </Box>
     </Grid>
   </Card>
 );
@@ -75,7 +81,6 @@ function Overview() {
           };
         })
       );
-      console.log(cdpData);
       const sumDeposits = cdpData.reduce(
         (acc, { depositedUSD }) => depositedUSD + acc,
         0
@@ -106,16 +111,19 @@ function Overview() {
       return null;
     }
   };
+
   return (
     <PageContentLayout>
       <Text.h2 pr="m" mb="m" color="darkPurple">
         {lang.overview_page.title}
       </Text.h2>
       {cdpContent && (
-        <Box>
+        <Grid gridRowGap={{ s: 'm', m: 'l' }}>
           <Grid
-            gridTemplateColumns={{ s: '1fr 1fr', m: 'auto auto 1fr' }}
+            gridTemplateColumns={{ s: '1fr', m: 'auto auto 1fr' }}
             gridColumnGap="m"
+            gridRowGap="s"
+            order={{ s: 2, m: 1 }}
           >
             <InfoCard
               title={lang.overview_page.total_collateral_locked}
@@ -128,10 +136,10 @@ function Overview() {
               denom={'DAI'}
             />
           </Grid>
-          <Box my="l">
+          <Box order={{ s: 1, m: 2 }}>
             <Text.h4>{lang.overview_page.your_cdps}</Text.h4>
             <Card
-              px="l"
+              px={{ s: 'm', m: 'l' }}
               pt="m"
               pb="s"
               my="m"
@@ -142,81 +150,91 @@ function Overview() {
               <Table
                 width="100%"
                 variant="cozy"
-                tableLayout="fixed"
                 css={`
                   td,
                   th {
+                    white-space: nowrap;
+                  }
+                  td:not(:last-child),
+                  th:not(:last-child) {
                     padding-right: 10px;
                   }
                 `}
               >
                 <Table.thead>
                   <Table.tr>
-                    {[
-                      'token',
-                      'id',
-                      'ratio',
-                      'deposited',
-                      'withdraw',
-                      'debt'
-                    ].map((k, i) => (
-                      <Table.th
-                        key={i}
-                        css={`
-                          white-space: nowrap;
-                        `}
-                      >
-                        {lang.overview_page[k]}
-                      </Table.th>
-                    ))}
+                    <Table.th>{lang.overview_page.token}</Table.th>
+                    <Table.th>{lang.overview_page.id}</Table.th>
+                    <Table.th display={{ s: 'table-cell', m: 'none' }}>
+                      {lang.overview_page.ratio_mobile}
+                    </Table.th>
+                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                      {lang.overview_page.ratio}
+                    </Table.th>
+                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                      {lang.overview_page.deposited}
+                    </Table.th>
+                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                      {lang.overview_page.withdraw}
+                    </Table.th>
+                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                      {lang.overview_page.debt}
+                    </Table.th>
+                    <Table.th />
                   </Table.tr>
                 </Table.thead>
                 <tbody>
                   {cdpContent.map(
                     ([token, id, ratio, deposited, withdraw, debt], i) => (
-                      <tr
-                        key={i}
-                        css={`
-                          white-space: nowrap;
-                        `}
-                      >
-                        <td>
-                          <Text t="body" color="darkPurple">
+                      <Table.tr key={i}>
+                        <Table.td>
+                          <Text
+                            t="body"
+                            fontSize={{ s: '1.7rem', m: 'm' }}
+                            fontWeight={{ s: 'medium', m: 'normal' }}
+                            color="darkPurple"
+                          >
                             {token}
                           </Text>
-                        </td>
-                        <td>
-                          <Text t="body" color="darkPurple">
+                        </Table.td>
+                        <Table.td>
+                          <Text
+                            t="body"
+                            fontSize={{ s: '1.7rem', m: 'm' }}
+                            color={{ s: 'darkLavender', m: 'darkPurple' }}
+                          >
                             {id}
                           </Text>
-                        </td>
-                        <td>
+                        </Table.td>
+                        <Table.td>
                           {isFinite(ratio) ? (
                             <RatioDisplay
-                              fontSize="1.3rem"
+                              fontSize={{ s: '1.7rem', m: '1.3rem' }}
                               ratio={ratio}
                               inverse={true}
                             />
                           ) : (
-                            <Text fontSize="1.3rem">N/A</Text>
+                            <Text fontSize={{ s: '1.7rem', m: '1.3rem' }}>
+                              N/A
+                            </Text>
                           )}
-                        </td>
-                        <td>
+                        </Table.td>
+                        <Table.td display={{ s: 'none', m: 'table-cell' }}>
                           <Text t="caption" color="darkLavender">
                             {deposited}
                           </Text>
-                        </td>
-                        <td>
+                        </Table.td>
+                        <Table.td display={{ s: 'none', m: 'table-cell' }}>
                           <Text t="caption" color="darkLavender">
                             {withdraw}
                           </Text>
-                        </td>
-                        <td>
+                        </Table.td>
+                        <Table.td display={{ s: 'none', m: 'table-cell' }}>
                           <Text t="caption" color="darkLavender">
                             {debt}
                           </Text>
-                        </td>
-                        <td>
+                        </Table.td>
+                        <Table.td>
                           <Flex justifyContent="flex-end">
                             <Button
                               variant="secondary-outline"
@@ -235,20 +253,25 @@ function Overview() {
                                     white-space: nowrap;
                                   `}
                                 >
-                                  {lang.overview_page.view_cdp}
+                                  <Box display={{ s: 'none', m: 'inline' }}>
+                                    {lang.overview_page.view_cdp}
+                                  </Box>
+                                  <Box display={{ s: 'inline', m: 'none' }}>
+                                    {lang.overview_page.view_cdp_mobile}
+                                  </Box>
                                 </Text>
                               </Link>
                             </Button>
                           </Flex>
-                        </td>
-                      </tr>
+                        </Table.td>
+                      </Table.tr>
                     )
                   )}
                 </tbody>
               </Table>
             </Card>
           </Box>
-        </Box>
+        </Grid>
       )}
     </PageContentLayout>
   );

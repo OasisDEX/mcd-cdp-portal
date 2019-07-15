@@ -4,7 +4,11 @@ import {
   FEED_VALUE_USD,
   LIQUIDATION_RATIO,
   PRICE_WITH_SAFETY_MARGIN,
-  RATE
+  DUTY,
+  DEBT_CEILING,
+  RATE,
+  ILK_ART,
+  ILK_DEBT_AVAILABLE
 } from './feeds';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
@@ -42,6 +46,18 @@ const mathReducer = produce((draft, action) => {
             draft.system[PAR]
           );
         }
+        // update the debt available for an ilk if `rate`, `art` or `line` changes
+        if ([RATE, ILK_ART, DEBT_CEILING].includes(prop)) {
+          const feed = draft.feeds.find(f => f.key === name);
+          const { ilkArt, rate, debtCeiling } = draft.raw.ilks[name];
+          if (ilkArt && rate && debtCeiling) {
+            feed[ILK_DEBT_AVAILABLE] = calculateDebtAvailable(
+              ilkArt,
+              rate,
+              debtCeiling
+            );
+          }
+        }
       }
 
       // if `par` changes (which is unlikely) all the prices need to change
@@ -60,6 +76,8 @@ const mathReducer = produce((draft, action) => {
 
 export default mathReducer;
 
+// some values can be immediately converted to a human-readable form because
+// their raw value is never used in calculations
 function convertValue(type, value) {
   const [label, ...others] = type.split('.');
   if (label === 'ilk') {
@@ -67,7 +85,7 @@ function convertValue(type, value) {
     switch (valueType) {
       case LIQUIDATION_RATIO:
         return math.liquidationRatio(value);
-      case RATE:
+      case DUTY:
         return math.annualStabilityFee(value);
       default:
       // fall through to final return
@@ -94,4 +112,10 @@ function recalculatePrice(ilk, name, par) {
   );
   console.log(`calculated price for ${name}: ${price}`);
   return price;
+}
+
+function calculateDebtAvailable(art, rate, line) {
+  const debtValue = math.debtValue(art, rate);
+  const debtCeiling = math.debtCeiling(line);
+  return debtCeiling.minus(debtValue);
 }

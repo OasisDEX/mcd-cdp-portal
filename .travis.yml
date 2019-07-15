@@ -16,7 +16,7 @@ script:
   - yarn ci
   - codecov
 before_deploy:
-  - npm install now --no-save
+  - npm install -g now
 deploy:
   provider: script
   script: ./scripts/now-deploy.sh

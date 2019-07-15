@@ -17,7 +17,7 @@
     "@makerdao/dai": "^0.16.1",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "^0.2.1",
+    "@makerdao/dai-plugin-mcd": "^0.2.8-rc3",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/multicall": "0.6.1",
     "@makerdao/ui-components-core": "0.2.2",
@@ -52,8 +52,9 @@
     "start:https": "HTTPS=true NODE_ENV=development NODE_PATH=src/ craco start",
     "build": "NODE_PATH=src/ craco --max_old_space_size=8192 build",
     "precommit": "lint-staged",
-    "test": "NODE_PATH=src/ jest",
-    "ci": "./node_modules/@makerdao/testchain/scripts/launch -s mcd-step-4 --fast --ci jest --coverage",
+    "test": "NODE_PATH=src/ yarn test:net --ci craco test",
+    "test:net": "./node_modules/@makerdao/testchain/scripts/launch -s default --fast",
+    "ci": "yarn test --coverage",
     "now-build": "yarn build",
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
   },
@@ -77,11 +78,11 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@makerdao/testchain": "makerdao/testchain",
+    "@testing-library/react": "^8.0.4",
     "husky": "^1.3.1",
     "lighthouse": "^4.0.0",
     "lint-staged": "^8.1.0",
     "prettier": "^1.15.3",
-    "react-testing-library": "^6.1.2",
     "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
   }
