@@ -1093,10 +1093,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.2.8-rc3":
-  version "0.2.8-rc3"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.8-rc3.tgz#9a51c77d9e7a724d52739bb6be6b325135d48253"
-  integrity sha512-ryoMwBWrA0XOMEdWtRbjKtQgkJgvE7HAZrbtRbjJGGSFp7PKrPUAiYTVyk54KhfU16SKlOmMze3f73FqHB1BMg==
+"@makerdao/dai-plugin-mcd@0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.9.tgz#0ec109522f8c8f25ea022b620d5d5d91bb5789cd"
+  integrity sha512-ULkip3RxGNKEm6Wtexy5DlQgLKW9GGr2J6mhBBggcKJzz8k11vJwJDgz5QLyYx2444l3/+eicO1UE3ug7zXDdw==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.5"
@@ -1114,10 +1114,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.16.5":
-  version "0.16.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.16.5.tgz#707b6154996ea54a4715feebd49fbb8da2ceea6b"
-  integrity sha512-vbjsa8y27x4Mjor7IdF+VyO0RvIkSuul57/wE2dvxHW2oq/DByFDci1xnHlJYOli3sAzfLLw0RyHPswYPKFgdQ==
+"@makerdao/dai@0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.17.0.tgz#484bc87f4fdb1c278454773e1e3d40f07911d4a9"
+  integrity sha512-hhsX1usPiFR9ELmi4IHxCzrZXjssDJC4L5BQaEpo2jGQhJ+tr4928a3XVsvhMwjYzNkViYiQOcLeJYn+upU+bg==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"

@@ -1,4 +1,4 @@
-import { ETH, COL1, COL2, COL3, COL4, COL5 } from '@makerdao/dai-plugin-mcd';
+import { ETH, REP, ZRX, OMG, BAT, DGD } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -17,38 +17,38 @@ export default [
     currency: ETH
   },
   {
-    slug: 'col1-a',
-    symbol: 'COL1-A',
-    key: 'COL1-A',
-    gem: 'COL1',
-    currency: COL1
+    slug: 'rep-a',
+    symbol: 'REP-A',
+    key: 'REP-A',
+    gem: 'REP',
+    currency: REP
   },
   {
-    slug: 'col2-a',
-    symbol: 'COL2-A',
-    key: 'COL2-A',
-    gem: 'COL2',
-    currency: COL2
+    slug: 'zrx-a',
+    symbol: 'ZRX-A',
+    key: 'ZRX-A',
+    gem: 'ZRX',
+    currency: ZRX
   },
   {
-    slug: 'col3-a',
-    symbol: 'COL3-A',
-    key: 'COL3-A',
-    gem: 'COL3',
-    currency: COL3
+    slug: 'omg-a',
+    symbol: 'OMG-A',
+    key: 'OMG-A',
+    gem: 'OMG',
+    currency: OMG
   },
   {
-    slug: 'col4-a',
-    symbol: 'COL4-A',
-    key: 'COL4-A',
-    gem: 'COL4',
-    currency: COL4
+    slug: 'bat-a',
+    symbol: 'BAT-A',
+    key: 'BAT-A',
+    gem: 'BAT',
+    currency: BAT
   },
   {
-    slug: 'col5-a',
-    symbol: 'COL5-A',
-    key: 'COL5-A',
-    gem: 'COL5',
-    currency: COL5
+    slug: 'dgd-a',
+    symbol: 'DGD-A',
+    key: 'DGD-A',
+    gem: 'DGD',
+    currency: DGD
   }
 ];
