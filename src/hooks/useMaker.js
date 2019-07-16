@@ -52,13 +52,16 @@ function useMaker() {
         'browser ethereum provider and URL network param do not match.'
       );
 
-    if (!browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/))
+    if (
+      !browserProvider.address ||
+      !browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/)
+    )
       throw new Error(
         'browser ethereum provider providing incorrect or non-existent address'
       );
 
     let account;
-    if (maker.service('accounts').hasAccount) {
+    if (maker.service('accounts').hasAccount()) {
       const matchedAccount = _getMatchedAccount(browserProvider.address);
       if (!matchedAccount) {
         account = await maker.addAccount({
