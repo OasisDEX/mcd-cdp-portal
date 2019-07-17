@@ -145,13 +145,8 @@ const Deposit = ({ cdpId, reset }) => {
   const deposit = () => {
     newTxListener(
       maker
-        .service('mcd:cdpManager') // eslint-disable-next-line
-        [`${userIsOwner ? 'lockAndDraw' : 'lock'}`](
-          cdpId,
-          cdp.ilk,
-          cdp.currency(parseFloat(amount)),
-          MDAI(0)
-        ),
+        .service('mcd:cdpManager')
+        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
