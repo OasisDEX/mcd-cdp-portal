@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 
@@ -32,83 +32,92 @@ const SimpleBg = styled(Bg)`
   align-items: center;
 `;
 
-const FullscreenModal = ({ show, onClose, modalProps, children }) => {
-  if (!show) return null;
-  const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
+const FullscreenModal = forwardRef(
+  ({ show, onClose, modalProps, children }, ref) => {
+    const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
 
-  const [animation, setAnimation] = useSpring(() => ({
-    to: fadeUpEnd,
-    from: fadeUpStart,
-    config: config.stiff
-  }));
+    const [animation, setAnimation] = useSpring(() => ({
+      to: fadeUpEnd,
+      from: fadeUpStart,
+      config: config.stiff
+    }));
 
-  const onCloseAnimated = () => {
-    setAnimation({
-      to: fadeUpStart,
-      onRest() {
-        onClose();
-      }
-    });
-  };
+    if (!show) return null;
 
-  return (
-    <Bg onClick={onCloseAnimated} style={animation}>
-      {children({ ...modalProps, onClose: onCloseAnimated })}
-    </Bg>
-  );
-};
+    const onCloseAnimated = () => {
+      setAnimation({
+        to: fadeUpStart,
+        onRest() {
+          onClose();
+        }
+      });
+    };
 
-const BasicModal = ({ show, onClose, modalProps, children }) => {
-  if (!show) return null;
-  const [fadeStart, fadeEnd] = animations.fade;
-  const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
-
-  const ModalContent = styled(animated.div)`
-    background-color: white;
-    border-radius: 6px;
-    padding: ${({ theme }) => theme.space.m}px;
-    box-shadow: 0px 3px 13px rgba(67, 67, 67, 0.13);
-  `;
-
-  const [bgAnimation, setBgAnimation] = useSpring(() => ({
-    to: fadeEnd,
-    from: fadeStart,
-    config: config.stiff
-  }));
-
-  const [contentAnimation, setContentAnimation] = useSpring(() => ({
-    to: fadeUpEnd,
-    from: fadeUpStart,
-    config: config.stiff
-  }));
-
-  const onCloseAnimated = () => {
-    setBgAnimation({
-      to: fadeStart
-    });
-
-    setContentAnimation({
-      to: fadeUpStart,
-      onRest() {
-        onClose();
-      }
-    });
-  };
-
-  return (
-    <SimpleBg
-      onClick={onCloseAnimated}
-      css={{
-        backgroundColor: 'rgba(0, 0, 0, 0.2)'
-      }}
-      style={bgAnimation}
-    >
-      <ModalContent style={contentAnimation} onClick={e => e.stopPropagation()}>
+    return (
+      <Bg ref={ref} onClick={onCloseAnimated} style={animation}>
         {children({ ...modalProps, onClose: onCloseAnimated })}
-      </ModalContent>
-    </SimpleBg>
-  );
-};
+      </Bg>
+    );
+  }
+);
+
+const BasicModal = forwardRef(
+  ({ show, onClose, modalProps, children }, ref) => {
+    if (!show) return null;
+    const [fadeStart, fadeEnd] = animations.fade;
+    const [fadeUpStart, fadeUpEnd] = animations.fadeUp;
+
+    const ModalContent = styled(animated.div)`
+      background-color: white;
+      border-radius: 6px;
+      padding: ${({ theme }) => theme.space.m}px;
+      box-shadow: 0px 3px 13px rgba(67, 67, 67, 0.13);
+    `;
+
+    const [bgAnimation, setBgAnimation] = useSpring(() => ({
+      to: fadeEnd,
+      from: fadeStart,
+      config: config.stiff
+    }));
+
+    const [contentAnimation, setContentAnimation] = useSpring(() => ({
+      to: fadeUpEnd,
+      from: fadeUpStart,
+      config: config.stiff
+    }));
+
+    const onCloseAnimated = () => {
+      setBgAnimation({
+        to: fadeStart
+      });
+
+      setContentAnimation({
+        to: fadeUpStart,
+        onRest() {
+          onClose();
+        }
+      });
+    };
+
+    return (
+      <SimpleBg
+        ref={ref}
+        onClick={onCloseAnimated}
+        css={{
+          backgroundColor: 'rgba(0, 0, 0, 0.2)'
+        }}
+        style={bgAnimation}
+      >
+        <ModalContent
+          style={contentAnimation}
+          onClick={e => e.stopPropagation()}
+        >
+          {children({ ...modalProps, onClose: onCloseAnimated })}
+        </ModalContent>
+      </SimpleBg>
+    );
+  }
+);
 
 const templates = {
   fullscreen: FullscreenModal,

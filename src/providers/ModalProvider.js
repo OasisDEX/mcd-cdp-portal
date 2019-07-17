@@ -67,15 +67,14 @@ function ModalProvider({ children, modals, templates }) {
 
   return (
     <ModalStateContext.Provider value={{ show, reset }}>
-      <div ref={ref}>
-        <ModalTemplateComponent
-          show={shouldShow}
-          onClose={reset}
-          modalProps={modalProps}
-        >
-          {resolveModalTypeToComponent(modals, modalType)}
-        </ModalTemplateComponent>
-      </div>
+      <ModalTemplateComponent
+        ref={ref}
+        show={shouldShow}
+        onClose={reset}
+        modalProps={modalProps}
+      >
+        {resolveModalTypeToComponent(modals, modalType)}
+      </ModalTemplateComponent>
       {children}
     </ModalStateContext.Provider>
   );
