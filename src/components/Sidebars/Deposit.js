@@ -42,8 +42,6 @@ const Deposit = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const userIsOwner =
-    account && account.cdps.some(userCdp => userCdp.id === cdpId);
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
