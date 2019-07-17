@@ -132,21 +132,6 @@ const DrawerBg = styled.div`
         `}
 `;
 
-const SidebarDrawer = ({ sidebarDrawerOpen, children }) => {
-  return (
-    <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
-      <Box
-        ml="auto"
-        height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
-        px="s"
-        width="100vw"
-        css={{ overflowY: 'scroll', paddingRight: 0 }}
-      >
-        {children}
-      </Box>
-    </DrawerBg>
-  );
-};
 const MobileNav = ({ viewedAddress, cdpId }) => {
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
@@ -208,16 +193,23 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
 
-      <div ref={ref}>
-        <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
+      <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
+        <Box
+          ref={ref}
+          ml="auto"
+          height={`calc(100vh - ${getMeasurement('mobileNavHeight')}px)`}
+          px="s"
+          width="100vw"
+          css={{ overflowY: 'scroll', paddingRight: 0 }}
+        >
           <Box mr="s">
             <Box my="s">
               <AccountBox currentAccount={account} />
             </Box>
             <SidebarGlobal />
           </Box>
-        </SidebarDrawer>
-      </div>
+        </Box>
+      </DrawerBg>
     </Flex>
   );
 };

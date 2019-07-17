@@ -1180,10 +1180,10 @@
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
-"@makerdao/ui-components-core@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.2.tgz#ff3bc272b978bb10fd6ae09e157da8dcb5de1032"
-  integrity sha512-7RndtpiwsuCx2ZfBWkPee/TbyUJLgbTfvVfFOow6l06YYech02YzrfAc+eCwmNTPIiIzVkLp51lFRpzdwjyi6g==
+"@makerdao/ui-components-core@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.4.tgz#a32e4f4a17b67a7cb6ed7a0b90e423ff516027b5"
+  integrity sha512-sheldjYDCk2jHkTapJNCCU5EdxqfwHb3CYHRD6NlUtLfAXfilQ8sDuzgz5beyf+PheuMX1/84kP8C31ZZF/4ZA==
   dependencies:
     "@makerdao/design-system-constants" "0.1.0"
     react-onclickoutside "^6.7.1"
