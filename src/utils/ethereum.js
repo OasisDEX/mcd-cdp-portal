@@ -1,5 +1,6 @@
 import round from 'lodash/round';
 import { MKR, ETH } from '../maker';
+import { isMobile } from './dev';
 
 export function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
@@ -64,9 +65,16 @@ export async function checkEthereumProvider() {
   return new Promise(async (res, rej) => {
     if (typeof window.ethereum !== 'undefined') {
       const accounts = await window.ethereum.enable();
-
       // Keeping selectedAddress for backwards-compatibility.
-      const { selectedAddress, networkVersion } = window.ethereum;
+      let selectedAddress, networkVersion;
+      if (isMobile()) {
+        selectedAddress = window.ethereum._selectedAddress;
+        networkVersion = window.ethereum._network;
+      } else {
+        selectedAddress = window.ethereum.selectedAddress;
+        networkVersion = window.ethereum.networkVersion;
+      }
+
       const account =
         !accounts || accounts.length <= 0 ? selectedAddress : accounts[0];
       res({
