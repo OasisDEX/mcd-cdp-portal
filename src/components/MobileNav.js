@@ -72,26 +72,21 @@ const CDPDropdown = memo(function({ iconData, children }) {
   const { label, owned, ratio, connected } = iconData;
   return (
     <Dropdown
-      css={{
-        marginLeft: '25px'
-      }}
+      hitBoxMargin="0px"
       trigger={
-        <Flex alignItems="center">
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            px="m"
-            py="s"
-            bg="black.500"
-            borderRadius="4px"
-          >
-            <NavbarIcon
-              label={label}
-              owned={owned}
-              ratio={ratio}
-              connected={connected}
-            />
-          </Flex>
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          p="s"
+          bg="black.500"
+          borderRadius="4px"
+        >
+          <NavbarIcon
+            label={label}
+            owned={owned}
+            ratio={ratio}
+            connected={connected}
+          />
           <Box ml="s">
             <CaratDownIcon />
           </Box>
@@ -143,6 +138,11 @@ const DrawerBg = styled.div`
         `}
 `;
 
+const LogoLink = styled(Link)`
+  padding: 12px;
+  margin-right: 12px;
+`;
+
 const MobileNav = ({ viewedAddress, cdpId }) => {
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
@@ -185,9 +185,9 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
       width="100%"
       position="relative"
     >
-      <Link href={`/${url.search}`} prefetch={true}>
+      <LogoLink href={`/${url.search}`} prefetch={true}>
         <MakerLogo />
-      </Link>
+      </LogoLink>
 
       {account ? (
         <CDPDropdown iconData={iconData}>
@@ -204,13 +204,14 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
           />
         </CDPDropdown>
       ) : (
-        <Box mx="xl">
+        <Box px="s">
           <WalletConnectDropdown
             show={open}
             offset={`-${getSpace('s') + 1}, 0`}
             openOnHover={false}
             onClick={toggleDropdown}
             close={closeDropdown}
+            hitBoxMargin="0px"
             trigger={
               <Button
                 ml="auto"
