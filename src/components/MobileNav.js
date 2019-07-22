@@ -1,4 +1,11 @@
-import React, { memo, useState, useRef, useEffect, Fragment } from 'react';
+import React, {
+  memo,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  Fragment
+} from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
 import {
@@ -13,6 +20,8 @@ import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 import SidebarGlobal from './Sidebars/Global';
 import AccountBox from './AccountBox';
+import WalletConnectDropdown from 'components/WalletConnectDropdown';
+import { getSpace } from 'styles/theme';
 
 import {
   Dropdown,
@@ -20,11 +29,13 @@ import {
   Flex,
   Box,
   Text,
-  Grid
+  Grid,
+  Button
 } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
 import useMaker from 'hooks/useMaker';
 import { getMeasurement } from '../styles/theme';
+import lang from 'languages';
 
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
@@ -139,6 +150,9 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   const { url } = useCurrentRoute();
   const onOverviewPage =
     account && url.pathname === `/owner/${account.address}`;
+  const [open, setOpen] = useState(false);
+  const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
+  const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
 
   const [{ cdps, feeds }] = useStore();
 
@@ -175,21 +189,42 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         <MakerLogo />
       </Link>
 
-      <CDPDropdown iconData={iconData}>
-        {account && (
+      {account ? (
+        <CDPDropdown iconData={iconData}>
           <Link href={`/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
             </Flex>
           </Link>
-        )}
 
-        <CDPList
-          currentPath={url.pathname}
-          currentQuery={url.search}
-          viewedAddress={viewedAddress}
-        />
-      </CDPDropdown>
+          <CDPList
+            currentPath={url.pathname}
+            currentQuery={url.search}
+            viewedAddress={viewedAddress}
+          />
+        </CDPDropdown>
+      ) : (
+        <Box mx="xl">
+          <WalletConnectDropdown
+            show={open}
+            offset={`-${getSpace('s') + 1}, 0`}
+            openOnHover={false}
+            onClick={toggleDropdown}
+            close={closeDropdown}
+            trigger={
+              <Button
+                ml="auto"
+                px="s"
+                py="xs"
+                height="auto"
+                variant="secondary"
+              >
+                {lang.connect}
+              </Button>
+            }
+          />
+        </Box>
+      )}
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
 
@@ -204,7 +239,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         >
           <Box mr="s">
             <Box my="s">
-              <AccountBox currentAccount={account} />
+              {account && <AccountBox currentAccount={account} />}
             </Box>
             <SidebarGlobal />
           </Box>
