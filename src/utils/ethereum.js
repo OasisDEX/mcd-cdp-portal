@@ -64,9 +64,10 @@ export async function checkEthereumProvider() {
   return new Promise(async (res, rej) => {
     if (typeof window.ethereum !== 'undefined') {
       const accounts = await window.ethereum.enable();
-
-      // Keeping selectedAddress for backwards-compatibility.
-      const { selectedAddress, networkVersion } = window.ethereum;
+      const selectedAddress =
+        window.ethereum._selectedAddress || window.ethereum.selectedAddress;
+      const networkVersion =
+        window.ethereum._network || window.ethereum.networkVersion;
       const account =
         !accounts || accounts.length <= 0 ? selectedAddress : accounts[0];
       res({
