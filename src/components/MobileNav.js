@@ -190,7 +190,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         <MakerLogo />
       </Link>
 
-      {account && (
+      {account ? (
         <CDPDropdown iconData={iconData}>
           <Link href={`/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
@@ -204,6 +204,10 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
             viewedAddress={viewedAddress}
           />
         </CDPDropdown>
+      ) : (
+        <Box mx="s" flexGrow="1">
+          <AccountBox currentAccount={account} />
+        </Box>
       )}
 
       <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
@@ -212,7 +216,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         <SidebarDrawer {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}>
           <Box mr="s">
             <Box my="s">
-              <AccountBox currentAccount={account} />
+              {account && <AccountBox currentAccount={account} />}
             </Box>
             <SidebarGlobal />
           </Box>
