@@ -11,14 +11,3 @@ export const uniqueId = (() => {
     return map.get(object);
   };
 })();
-
-export const isMobile = () => {
-  if (sessionStorage.desktop) return false;
-  if (localStorage.mobile) return true;
-  try {
-    document.createEvent('TouchEvent');
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
