@@ -123,7 +123,6 @@ function Overview() {
             gridTemplateColumns={{ s: '1fr', m: 'auto auto 1fr' }}
             gridColumnGap="m"
             gridRowGap="s"
-            order={{ s: 2, m: 1 }}
           >
             <InfoCard
               title={lang.overview_page.total_collateral_locked}
@@ -136,7 +135,7 @@ function Overview() {
               denom={'DAI'}
             />
           </Grid>
-          <Box order={{ s: 1, m: 2 }}>
+          <Box>
             <Text.h4>{lang.overview_page.your_cdps}</Text.h4>
             <Card
               px={{ s: 'm', m: 'l' }}
