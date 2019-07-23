@@ -70,9 +70,11 @@ const NavbarIcon = ({ owned, label, ratio, connected }) => (
 
 const CDPDropdown = memo(function({ iconData, children }) {
   const { label, owned, ratio, connected } = iconData;
+  const [show, setShow] = useState(false);
   return (
     <Dropdown
       hitBoxMargin="0px"
+      show={show}
       trigger={
         <Flex
           alignItems="center"
@@ -80,6 +82,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
           p="s"
           bg="black.500"
           borderRadius="4px"
+          onClick={() => setShow(!show)}
         >
           <NavbarIcon
             label={label}
@@ -98,6 +101,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
           gridTemplateColumns="64px 64px"
           gridColumnGap="xs"
           gridRowGap="xs"
+          onClick={() => setShow(!show)}
         >
           {children}
         </Grid>

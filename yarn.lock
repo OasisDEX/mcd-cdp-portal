@@ -1093,10 +1093,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.2.10":
-  version "0.2.10"
-  resolved "https://registry.npmjs.org/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10.tgz#b4f08dd3319403e0991b557b35abf1850137eaa7"
-  integrity sha512-iw8g9cWYkwH5HfGCBBknZOV9Oj+xS2py/bDmfKykXPwSevjiugzyD0rhPLm7mA4vp+pSB9V1x2IJwnYDCjOGpg==
+"@makerdao/dai-plugin-mcd@0.2.10-1":
+  version "0.2.10-1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10-1.tgz#ba0b3ce7bd16a38cccdcda28d6242ba8e29242ca"
+  integrity sha512-1Zs0ki+7m867MMR+la7xDtN3SQPf+dJ/36rLcHyb9sGXmbgxr7eQF23p0pFAugGjfUHObBOGmWK9zqApRHxNuQ==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.5"
@@ -1180,10 +1180,10 @@
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
-"@makerdao/ui-components-core@0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.4.tgz#a32e4f4a17b67a7cb6ed7a0b90e423ff516027b5"
-  integrity sha512-sheldjYDCk2jHkTapJNCCU5EdxqfwHb3CYHRD6NlUtLfAXfilQ8sDuzgz5beyf+PheuMX1/84kP8C31ZZF/4ZA==
+"@makerdao/ui-components-core@0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.5.tgz#6ecd935ef5ee166f8283104ae540094904535e14"
+  integrity sha512-3fZttD1E1u+4FJ+6UxDZQpxHzUE9XSyyZb5dekW0bux0IE43HpQjHtWZz9Zm16lx7PoSqcRBFFxPakVV+ElycQ==
   dependencies:
     "@makerdao/design-system-constants" "0.1.0"
     react-onclickoutside "^6.7.1"
