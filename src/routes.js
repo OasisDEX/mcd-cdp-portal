@@ -23,7 +23,6 @@ import { startWatcher } from './watch';
 import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
-const { PREFIX } = Routes;
 
 const withDefaultLayout = route =>
   hasNetwork(
@@ -88,7 +87,7 @@ export default mount({
     })
   ),
 
-  [`/${PREFIX}`]: withDefaultLayout(
+  [`/${Routes.MCD}`]: withDefaultLayout(
     route(() => {
       return {
         title: 'Auth',
@@ -97,7 +96,7 @@ export default mount({
     })
   ),
 
-  [`/${PREFIX}/owner/:viewedAddress`]: withDefaultLayout(
+  [`/${Routes.MCD}/owner/:viewedAddress`]: withDefaultLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -107,7 +106,7 @@ export default mount({
     })
   ),
 
-  [`/${PREFIX}/:cdpId`]: withDefaultLayout(
+  [`/${Routes.MCD}/:cdpId`]: withDefaultLayout(
     map(request => {
       const { cdpId } = request.params;
 

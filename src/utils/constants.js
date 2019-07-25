@@ -20,5 +20,6 @@ export const AccountTypes = {
 };
 
 export const Routes = {
-  PREFIX: 'borrow'
+  MCD: 'borrow',
+  DSR: 'save'
 };
