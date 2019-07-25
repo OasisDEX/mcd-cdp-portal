@@ -6,6 +6,7 @@ import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
+import Entry from 'pages/Entry';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -66,7 +67,14 @@ const hasNetwork = route =>
   });
 
 export default mount({
-  '/': redirect(`/${PREFIX}`),
+  '/': hasNetwork(
+    route(async () => {
+      return {
+        title: 'Entry',
+        view: <Entry />
+      };
+    })
+  ),
 
   [`/${PREFIX}/`]: hasNetwork(
     route(async request => {
