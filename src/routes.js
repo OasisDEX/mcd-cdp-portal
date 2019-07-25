@@ -6,7 +6,7 @@ import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
-import Entry from 'pages/Entry';
+import Auth from 'pages/Auth';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -68,18 +68,8 @@ const hasNetwork = route =>
 
 export default mount({
   '/': hasNetwork(
-    route(async () => {
-      return {
-        title: 'Entry',
-        view: <Entry />
-      };
-    })
-  ),
-
-  [`/${PREFIX}/`]: hasNetwork(
     route(async request => {
       const { network, testchainId, backendEnv } = request.query;
-
       return {
         title: 'Landing',
         view: (
@@ -98,10 +88,18 @@ export default mount({
     })
   ),
 
+  [`/${PREFIX}`]: withDefaultLayout(
+    route(() => {
+      return {
+        title: 'Auth',
+        view: <Auth />
+      };
+    })
+  ),
+
   [`/${PREFIX}/owner/:viewedAddress`]: withDefaultLayout(
     route(request => {
       const { viewedAddress } = request.params;
-
       return {
         title: 'Overview',
         view: <Overview viewedAddress={viewedAddress} />
