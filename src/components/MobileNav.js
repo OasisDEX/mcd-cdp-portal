@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
+import { space } from 'styled-system';
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -73,9 +74,11 @@ const NavbarIcon = ({ owned, label, ratio, connected }) => (
 
 const CDPDropdown = memo(function({ iconData, children }) {
   const { label, owned, ratio, connected } = iconData;
+  const [show, setShow] = useState(false);
   return (
     <Dropdown
       hitBoxMargin="0px"
+      show={show}
       trigger={
         <Flex
           alignItems="center"
@@ -83,6 +86,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
           p="s"
           bg="black.500"
           borderRadius="4px"
+          onClick={() => setShow(!show)}
         >
           <NavbarIcon
             label={label}
@@ -101,6 +105,7 @@ const CDPDropdown = memo(function({ iconData, children }) {
           gridTemplateColumns="64px 64px"
           gridColumnGap="xs"
           gridRowGap="xs"
+          onClick={() => setShow(!show)}
         >
           {children}
         </Grid>
@@ -141,10 +146,7 @@ const DrawerBg = styled.div`
         `}
 `;
 
-const LogoLink = styled(Link)`
-  padding: 12px;
-  margin-right: 12px;
-`;
+const LogoLink = styled(Link)(space);
 
 const MobileNav = ({ viewedAddress, cdpId }) => {
   const ref = useRef();
@@ -188,7 +190,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
       width="100%"
       position="relative"
     >
-      <LogoLink href={`/${PREFIX}/${url.search}`} prefetch={true}>
+      <LogoLink p="s" mr="s" href={`/${PREFIX}/${url.search}`} prefetch={true}>
         <MakerLogo />
       </LogoLink>
 

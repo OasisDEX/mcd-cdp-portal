@@ -73,7 +73,7 @@ function IlkTableRow({ ilk, checked, dispatch }) {
   return (
     <tr css="white-space: nowrap;">
       <td onClick={selectIlk}>
-        <Radio checked={checked} mr="xs" />
+        <Radio checked={checked} readOnly mr="xs" />
       </td>
       <td>{ilk.symbol}</td>
       <td>{ilk.data.rate} %</td>
