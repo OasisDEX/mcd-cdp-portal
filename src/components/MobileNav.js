@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled, { css } from 'styled-components';
+import { space } from 'styled-system';
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -142,10 +143,7 @@ const DrawerBg = styled.div`
         `}
 `;
 
-const LogoLink = styled(Link)`
-  padding: 12px;
-  margin-right: 12px;
-`;
+const LogoLink = styled(Link)(space);
 
 const MobileNav = ({ viewedAddress, cdpId }) => {
   const ref = useRef();
@@ -189,7 +187,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
       width="100%"
       position="relative"
     >
-      <LogoLink href={`/${url.search}`} prefetch={true}>
+      <LogoLink p="s" mr="s" href={`/${url.search}`} prefetch={true}>
         <MakerLogo />
       </LogoLink>
 
