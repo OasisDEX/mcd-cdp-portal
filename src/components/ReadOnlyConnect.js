@@ -4,10 +4,12 @@ import lang from 'languages';
 
 import { Link } from 'react-navi';
 import { Button } from '@makerdao/ui-components-core';
+import { Routes } from '../utils/constants';
+const { PREFIX } = Routes;
 
 function ReadOnlyConnect() {
   return (
-    <Link href="/" prefetch={true}>
+    <Link href={`/${PREFIX}/`} prefetch={true}>
       <Button variant="secondary-outline" width="225px">
         {lang.landing_page.read_only}
       </Button>

@@ -24,6 +24,8 @@ import {
   getCollateralizationRatio,
   getCollateralAvailableAmount
 } from 'reducers/cdps';
+import { Routes } from '../utils/constants';
+const { PREFIX } = Routes;
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -242,7 +244,7 @@ function Overview() {
                               borderColor="steel"
                             >
                               <Link
-                                href={`/${id}${url.search}`}
+                                href={`/${PREFIX}/${id}${url.search}`}
                                 prefetch={true}
                               >
                                 <Text

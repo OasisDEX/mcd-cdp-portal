@@ -19,8 +19,10 @@ import { userSnapInit } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { startWatcher } from './watch';
+import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
+const { PREFIX } = Routes;
 
 const withDefaultLayout = route =>
   hasNetwork(
@@ -64,7 +66,9 @@ const hasNetwork = route =>
   });
 
 export default mount({
-  '/': hasNetwork(
+  '/': redirect(`/${PREFIX}`),
+
+  [`/${PREFIX}/`]: hasNetwork(
     route(async request => {
       const { network, testchainId, backendEnv } = request.query;
 
@@ -86,7 +90,7 @@ export default mount({
     })
   ),
 
-  '/owner/:viewedAddress': withDefaultLayout(
+  [`/${PREFIX}/owner/:viewedAddress`]: withDefaultLayout(
     route(request => {
       const { viewedAddress } = request.params;
 
@@ -97,7 +101,7 @@ export default mount({
     })
   ),
 
-  '/:cdpId': withDefaultLayout(
+  [`/${PREFIX}/:cdpId`]: withDefaultLayout(
     map(request => {
       const { cdpId } = request.params;
 

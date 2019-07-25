@@ -43,6 +43,9 @@ import { ReactComponent as CloseIcon } from 'images/close.svg';
 import { ReactComponent as ActiveHome } from 'images/active-home.svg';
 import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
 
+import { Routes } from '../utils/constants';
+const { PREFIX } = Routes;
+
 const NavbarIcon = ({ owned, label, ratio, connected }) => (
   <Flex
     flexDirection="column"
@@ -149,7 +152,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   const onOverviewPage =
-    account && url.pathname === `/owner/${account.address}`;
+    account && url.pathname === `${PREFIX}/owner/${account.address}`;
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
   const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
@@ -185,13 +188,13 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
       width="100%"
       position="relative"
     >
-      <LogoLink href={`/${url.search}`} prefetch={true}>
+      <LogoLink href={`/${PREFIX}/${url.search}`} prefetch={true}>
         <MakerLogo />
       </LogoLink>
 
       {account ? (
         <CDPDropdown iconData={iconData}>
-          <Link href={`/owner/${account.address}`}>
+          <Link href={`/${PREFIX}/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
             </Flex>

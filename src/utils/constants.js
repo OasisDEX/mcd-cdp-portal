@@ -18,3 +18,7 @@ export const AccountTypes = {
   TREZOR: 'trezor',
   METAMASK: 'browser'
 };
+
+export const Routes = {
+  PREFIX: 'borrow'
+};

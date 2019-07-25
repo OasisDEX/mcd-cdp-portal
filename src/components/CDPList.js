@@ -11,6 +11,8 @@ import useStore from 'hooks/useStore';
 import { trackCdpById } from 'reducers/multicall/cdps';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
+import { Routes } from '../utils/constants';
+const { PREFIX } = Routes;
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -79,7 +81,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     <Fragment>
       {navbarCdps.map((cdp, idx) => {
         const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
-        const linkPath = `/${cdp.id}`;
+        const linkPath = `/${PREFIX}/${cdp.id}`;
         const active = currentPath === linkPath;
         return (
           <NavbarItem

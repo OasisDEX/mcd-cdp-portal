@@ -21,6 +21,8 @@ import { getWalletConnectAccounts } from 'utils/walletconnect';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
+import { Routes } from '../utils/constants';
+const { PREFIX } = Routes;
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -53,7 +55,7 @@ function Landing() {
       const { search } = (await navigation.getRoute()).url;
 
       navigation.navigate({
-        pathname: `owner/${address}`,
+        pathname: `${PREFIX}/owner/${address}`,
         search
       });
     },
