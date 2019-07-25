@@ -13,7 +13,7 @@ const Navbar = ({ viewedAddress }) => {
   const { url } = useCurrentRoute();
   const { account } = useMaker();
   const onOverviewPage =
-    account && url.pathname === `${PREFIX}/owner/${account.address}`;
+    account && url.pathname === `/${PREFIX}/owner/${account.address}`;
   return (
     <Box bg={account ? 'blackLight' : 'white'} height="100%">
       <Link href={`/${PREFIX}/${url.search}`} prefetch={true}>

@@ -152,7 +152,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   const onOverviewPage =
-    account && url.pathname === `${PREFIX}/owner/${account.address}`;
+    account && url.pathname === `/${PREFIX}/owner/${account.address}`;
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
   const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
