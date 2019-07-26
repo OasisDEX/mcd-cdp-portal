@@ -8,11 +8,6 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
-import theme from 'styles/theme';
-
-const mediumScreenMinBreakpoint = theme.breakpoints.xl;
-const mediumScreenMaxBreakpoint = '1425px';
-const mediaMediumScreen = `@media (min-width: ${mediumScreenMinBreakpoint}) and (max-width: ${mediumScreenMaxBreakpoint})`;
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -54,11 +49,6 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
           css={`
             grid-column: 1;
             grid-row: span 2;
-
-            ${mediaMediumScreen} {
-              grid-row: 1;
-              grid-column: span 3;
-            }
           `}
           t="body"
         >
@@ -68,10 +58,6 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
           css={`
             grid-column: 2;
             grid-row: ${conversion ? '1' : 'span 2'};
-
-            ${mediaMediumScreen} {
-              grid-row: 2;
-            }
           `}
           t="h5"
           color="darkLavender"
@@ -84,10 +70,6 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
             css={`
               grid-row: 2;
               grid-column: 2;
-
-              ${mediaMediumScreen} {
-                grid-row: 3;
-              }
             `}
             justifySelf="end"
           >
@@ -98,10 +80,6 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
           css={`
             grid-column: 3;
             grid-row: span 2;
-
-            ${mediaMediumScreen} {
-              grid-row: ${conversion ? 'span 2' : '2'};
-            }
           `}
         >
           {button}
