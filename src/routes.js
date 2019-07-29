@@ -6,6 +6,7 @@ import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
+import Auth from 'pages/Auth';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -19,6 +20,7 @@ import { userSnapInit } from 'utils/analytics';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import { startWatcher } from './watch';
+import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -67,7 +69,6 @@ export default mount({
   '/': hasNetwork(
     route(async request => {
       const { network, testchainId, backendEnv } = request.query;
-
       return {
         title: 'Landing',
         view: (
@@ -86,10 +87,18 @@ export default mount({
     })
   ),
 
-  '/owner/:viewedAddress': withDefaultLayout(
+  [`/${Routes.BORROW}`]: withDefaultLayout(
+    route(() => {
+      return {
+        title: 'Auth',
+        view: <Auth />
+      };
+    })
+  ),
+
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDefaultLayout(
     route(request => {
       const { viewedAddress } = request.params;
-
       return {
         title: 'Overview',
         view: <Overview viewedAddress={viewedAddress} />
@@ -97,7 +106,7 @@ export default mount({
     })
   ),
 
-  '/:cdpId': withDefaultLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withDefaultLayout(
     map(request => {
       const { cdpId } = request.params;
 
