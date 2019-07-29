@@ -20,6 +20,6 @@ export const AccountTypes = {
 };
 
 export const Routes = {
-  MCD: 'borrow',
-  DSR: 'save'
+  BORROW: 'borrow',
+  SAVE: 'save'
 };

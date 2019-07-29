@@ -51,7 +51,7 @@ function Auth() {
       const { search } = (await navigation.getRoute()).url;
 
       navigation.navigate({
-        pathname: `${Routes.MCD}/owner/${address}`,
+        pathname: `${Routes.BORROW}/owner/${address}`,
         search
       });
     },

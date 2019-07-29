@@ -80,7 +80,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     <Fragment>
       {navbarCdps.map((cdp, idx) => {
         const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
-        const linkPath = `/${Routes.MCD}/${cdp.id}`;
+        const linkPath = `/${Routes.BORROW}/${cdp.id}`;
         const active = currentPath === linkPath;
         return (
           <NavbarItem

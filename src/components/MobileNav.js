@@ -153,7 +153,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   const onOverviewPage =
-    account && url.pathname === `/${Routes.MCD}/owner/${account.address}`;
+    account && url.pathname === `/${Routes.BORROW}/owner/${account.address}`;
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
   const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
@@ -192,7 +192,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
       <LogoLink
         p="s"
         mr="s"
-        href={`/${Routes.MCD}/${url.search}`}
+        href={`/${Routes.BORROW}/${url.search}`}
         prefetch={true}
       >
         <MakerLogo />
@@ -200,7 +200,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
 
       {account ? (
         <CDPDropdown iconData={iconData}>
-          <Link href={`/${Routes.MCD}/owner/${account.address}`}>
+          <Link href={`/${Routes.BORROW}/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
             </Flex>

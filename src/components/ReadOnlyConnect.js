@@ -8,7 +8,7 @@ import { Routes } from '../utils/constants';
 
 function ReadOnlyConnect() {
   return (
-    <Link href={`/${Routes.MCD}/`} prefetch={true}>
+    <Link href={`/${Routes.BORROW}/`} prefetch={true}>
       <Button variant="secondary-outline" width="225px">
         {lang.landing_page.read_only}
       </Button>

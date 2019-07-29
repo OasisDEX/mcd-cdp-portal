@@ -87,7 +87,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.MCD}`]: withDefaultLayout(
+  [`/${Routes.BORROW}`]: withDefaultLayout(
     route(() => {
       return {
         title: 'Auth',
@@ -96,7 +96,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.MCD}/owner/:viewedAddress`]: withDefaultLayout(
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDefaultLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -106,7 +106,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.MCD}/:cdpId`]: withDefaultLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withDefaultLayout(
     map(request => {
       const { cdpId } = request.params;
 

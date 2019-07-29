@@ -243,7 +243,7 @@ function Overview() {
                               borderColor="steel"
                             >
                               <Link
-                                href={`/${Routes.MCD}/${id}${url.search}`}
+                                href={`/${Routes.BORROW}/${id}${url.search}`}
                                 prefetch={true}
                               >
                                 <Text

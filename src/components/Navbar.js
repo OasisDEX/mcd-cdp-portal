@@ -12,10 +12,10 @@ const Navbar = ({ viewedAddress }) => {
   const { url } = useCurrentRoute();
   const { account } = useMaker();
   const onOverviewPage =
-    account && url.pathname === `/${Routes.MCD}/owner/${account.address}`;
+    account && url.pathname === `/${Routes.BORROW}/owner/${account.address}`;
   return (
     <Box bg={account ? 'blackLight' : 'white'} height="100%">
-      <Link href={`/${Routes.MCD}/${url.search}`} prefetch={true}>
+      <Link href={`/${Routes.BORROW}/${url.search}`} prefetch={true}>
         <Flex alignItems="center" justifyContent="center" py="m">
           <MakerLogo />
         </Flex>
@@ -23,7 +23,7 @@ const Navbar = ({ viewedAddress }) => {
 
       <Grid gridRowGap="xs" mx="xs">
         {account && (
-          <Link href={`/${Routes.MCD}/owner/${account.address}`}>
+          <Link href={`/${Routes.BORROW}/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
             </Flex>
