@@ -22,6 +22,9 @@ function Landing() {
           >
             <Box pb="s">
               <Title display="block">Oasis</Title>
+              <p>
+                CDP portal has been moved to <a href="/borrow">/borrow</a>
+              </p>
             </Box>
           </Box>
         </LandingHeroLayout>
