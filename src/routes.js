@@ -4,9 +4,11 @@ import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
+import AppLayout from 'layouts/AppLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Auth from 'pages/Auth';
+import Save from 'pages/Save';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -49,6 +51,30 @@ const withDefaultLayout = route =>
                   <View />
                 </PageLayout>
               </SidebarProvider>
+            </ModalProvider>
+          </AwaitMakerAuthentication>
+        </MakerProvider>
+      );
+    }, route)
+  );
+
+const withSaveLayout = route =>
+  hasNetwork(
+    withView(async request => {
+      const { network, testchainId, backendEnv } = request.query;
+
+      return (
+        <MakerProvider
+          network={network}
+          testchainId={testchainId}
+          backendEnv={backendEnv}
+        >
+          <RouteEffects network={network} />
+          <AwaitMakerAuthentication>
+            <ModalProvider modals={modals} templates={templates}>
+              <AppLayout>
+                <View />
+              </AppLayout>
             </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
@@ -117,6 +143,15 @@ export default mount({
         title: 'CDP',
         view: <CDPDisplay cdpId={cdpId} />
       });
+    })
+  ),
+
+  [`/${Routes.SAVE}`]: withSaveLayout(
+    route(() => {
+      return {
+        title: 'Save',
+        view: <Save />
+      };
     })
   )
 });
