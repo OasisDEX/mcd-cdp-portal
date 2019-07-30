@@ -1,41 +1,13 @@
 import React from 'react';
-import { render, cleanup, waitForElement } from '@testing-library/react';
+import { cleanup, waitForElement } from '@testing-library/react';
 import Payback from '../Payback';
-import StoreProvider from '../../../providers/StoreProvider';
-import TestMakerProvider from '../../../../test/helpers/TestMakerProvider';
 import lang from '../../../languages';
-import { ETH } from '@makerdao/dai';
+import { renderForSidebar as render } from '../../../../test/helpers/render';
 
 afterEach(cleanup);
 
-const initialState = {
-  cdps: {
-    '1': {
-      ilk: 'ETH-A',
-      ink: '2',
-      art: '5',
-      currency: {
-        symbol: 'ETH'
-      }
-    }
-  },
-  feeds: [
-    {
-      key: 'ETH-A',
-      price: ETH(100),
-      rate: '1.5'
-    }
-  ]
-};
-
 test('basic rendering', async () => {
-  const { getByText } = render(
-    <StoreProvider reducer={() => initialState} initialState={initialState}>
-      <TestMakerProvider waitForAuth={true}>
-        <Payback cdpId="1" />
-      </TestMakerProvider>
-    </StoreProvider>
-  );
+  const { getByText } = render(<Payback cdpId="1" />);
 
   await waitForElement(() => getByText(lang.action_sidebar.payback_title));
 

@@ -54,12 +54,7 @@ export const adapterBalance = addresses => name => ({
 });
 
 export function createCDPTypeModel(ilk, addresses) {
-  const cdpModel = [
-    rateData,
-    liquidation,
-    flipper,
-    ilkVatData,
-    adapterBalance
-  ].map(f => f(addresses)(ilk));
-  return cdpModel;
+  return [rateData, liquidation, flipper, ilkVatData, adapterBalance].map(f =>
+    f(addresses)(ilk)
+  );
 }

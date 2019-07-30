@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Presentation from '../Presentation';
 import {
   render,
@@ -6,6 +6,7 @@ import {
   fireEvent,
   waitForElement
 } from '@testing-library/react';
+import { renderForSidebar } from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
 
 const LOL = createCurrency('LOL');
@@ -41,4 +42,44 @@ test('basic rendering', () => {
 
   fireEvent.click(getByText('Deposit'));
   expect(showSidebar).toBeCalledWith({ type: 'deposit', props: { cdpId: 1 } });
+});
+
+describe('on mobile', () => {
+  let getComputedStyleOrig;
+
+  beforeAll(() => {
+    Object.defineProperty(window.document.documentElement, 'clientWidth', {
+      value: 320
+    });
+    getComputedStyleOrig = window.getComputedStyle;
+    window.getComputedStyle = () => ({ fontSize: '16px' });
+  });
+
+  afterAll(() => {
+    Object.defineProperty(window.document.documentElement, 'clientWidth', {
+      value: 0
+    });
+    window.getComputedStyle = getComputedStyleOrig;
+  });
+
+  test('render an action full-screen', async () => {
+    const showSidebar = jest.fn();
+    const { findByText, getByText, getByTestId } = renderForSidebar(
+      <Fragment>
+        <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
+        <div id="portal1" />
+      </Fragment>
+    );
+    await waitForElement(() => getByText('Outstanding Dai debt'));
+    fireEvent.click(getByText('Deposit'));
+    await findByText(/would you like to deposit/);
+    expect(showSidebar).not.toBeCalled();
+    getByText('New liquidation price');
+    const input = getByTestId(
+      (content, element) =>
+        content === 'deposit-input' && element.tagName.toLowerCase() === 'input'
+    );
+    fireEvent.change(input, { target: { value: '10000' } });
+    getByText(/Insufficient/);
+  });
 });

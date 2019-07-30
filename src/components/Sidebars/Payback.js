@@ -81,6 +81,7 @@ const Payback = ({ cdpId, reset }) => {
           onChange={evt => setAmount(evt.target.value)}
           placeholder="0.00 DAI"
           failureMessage={errorMessage}
+          data-testid="payback-input"
           after={
             <Link onClick={setMax} fontWeight="medium">
               {lang.action_sidebar.set_max}

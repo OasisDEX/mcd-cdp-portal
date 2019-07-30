@@ -187,6 +187,7 @@ const Deposit = ({ cdpId, reset }) => {
             </Link>
           }
           failureMessage={errorMessage}
+          data-testid="deposit-input"
         />
       </Grid>
       {(userState.startedWithoutProxy || userState.startedWithoutAllowance) && (
