@@ -3,7 +3,7 @@ import { Box, Flex, Text } from '@makerdao/ui-components-core';
 
 const Footer = () => {
   return (
-    <Box borderTop="default" minHeight="100%" mt="m">
+    <Box borderTop="default" mt="m">
       <Flex
         maxWidth="1090px"
         justifyContent="space-between"
