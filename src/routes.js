@@ -7,7 +7,7 @@ import PageLayout from 'layouts/PageLayout';
 import AppLayout from 'layouts/AppLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
-import Auth from 'pages/Auth';
+import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
@@ -26,7 +26,7 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const withDefaultLayout = route =>
+const withBorrowLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
@@ -113,16 +113,16 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}`]: withDefaultLayout(
+  [`/${Routes.BORROW}`]: withBorrowLayout(
     route(() => {
       return {
-        title: 'Auth',
-        view: <Auth />
+        title: 'Borrow',
+        view: <Borrow />
       };
     })
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDefaultLayout(
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -132,7 +132,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withDefaultLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withBorrowLayout(
     map(request => {
       const { cdpId } = request.params;
 

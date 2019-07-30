@@ -35,7 +35,7 @@ const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-bottom: -5px;
 `;
 
-function Auth() {
+function Borrow() {
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -111,4 +111,4 @@ function Auth() {
   );
 }
 
-export default hot(Auth);
+export default hot(Borrow);
