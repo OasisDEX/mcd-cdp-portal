@@ -12,7 +12,7 @@ import {
   Link
 } from '@makerdao/ui-components-core';
 
-import CardTabs from '../components/Save/CardTabs';
+import CardTabs from '../components/CardTabs';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
 function Save() {
