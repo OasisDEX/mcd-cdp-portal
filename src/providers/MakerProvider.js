@@ -4,6 +4,7 @@ import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
+import { Routes } from 'utils/constants';
 
 export const MakerObjectContext = createContext();
 
@@ -66,7 +67,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
               cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
             )[0];
           setAccount({ ...account, cdps: cdps });
-          navigation.navigate(`/${newId}?network=${network}`);
+          navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
         }
       };
 
