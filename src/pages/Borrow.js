@@ -72,7 +72,7 @@ function Borrow() {
   return (
     <PageContentLayout>
       <Flex
-        height="100vh"
+        height="70vh"
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
