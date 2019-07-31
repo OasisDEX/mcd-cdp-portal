@@ -4,8 +4,6 @@ import { hot } from 'react-hot-loader/root';
 
 import { Flex, Box, Grid } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
-import { useCurrentRoute } from 'react-navi';
-import { Routes } from '../utils/constants';
 
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
@@ -50,8 +48,6 @@ function Sidebar() {
   const [slideStart, slideEnd] = animations.slide;
   const [p2off, p2on] = animations.fade;
   const [p1off, p1on] = animations.fadeAway;
-  const { url } = useCurrentRoute();
-  const onBorrowLandingPage = url.pathname === `/${Routes.BORROW}`;
 
   const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
@@ -121,7 +117,7 @@ function Sidebar() {
         resetTx={resetTx}
       />
       <Grid gridRowGap="s" mt="s">
-        {onBorrowLandingPage ? null : <AccountBox currentAccount={account} />}
+        <AccountBox currentAccount={account} />
         <Flex css={'overflow:hidden;'}>
           <AnimatedWrap style={{ ...p1Animation, zIndex: 1 }} key="panel1">
             <GlobalSidebar />
