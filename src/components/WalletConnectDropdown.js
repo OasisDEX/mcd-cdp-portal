@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import lang from 'languages';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-
+import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
@@ -11,6 +11,7 @@ import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import { getMeasurement, getColor } from 'styles/theme';
+import { Routes } from '../utils/constants';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -37,15 +38,25 @@ const WalletConnectDropdown = ({
   ...props
 }) => {
   const { maker, account, connectBrowserProvider } = useMaker();
-  const { connectLedgerWallet } = useLedger({ onAccountChosen });
-  const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
+  const navigation = useNavigation();
 
-  function onAccountChosen({ address }, type) {
-    maker.useAccountWithAddress(address);
-    mixpanelIdentify(address, type);
-  }
+  const onAccountChosen = useCallback(
+    async ({ address }, type) => {
+      maker.useAccountWithAddress(address);
+      mixpanelIdentify(address, type);
+      const { search } = (await navigation.getRoute()).url;
+
+      navigation.navigate({
+        pathname: `${Routes.BORROW}/owner/${address}`,
+        search
+      });
+    },
+    [maker, navigation]
+  );
+  const { connectLedgerWallet } = useLedger({ onAccountChosen });
+  const { connectTrezorWallet } = useTrezor({ onAccountChosen });
 
   useEffect(() => {
     const accounts = maker.listAccounts();
@@ -62,6 +73,15 @@ const WalletConnectDropdown = ({
     account &&
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
+
+  async function connectBrowserWallet({ providerName }) {
+    try {
+      const connectedAddress = await connectBrowserProvider();
+      onAccountChosen({ address: connectedAddress }, providerName);
+    } catch (err) {
+      window.alert(err);
+    }
+  }
 
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
@@ -105,7 +125,9 @@ const WalletConnectDropdown = ({
         {!hasBrowserAccount && (
           <Option
             onClick={() => {
-              connectBrowserProvider();
+              connectBrowserWallet({
+                providerName: getWebClientProviderName()
+              });
               close();
             }}
           >
