@@ -17,9 +17,6 @@ import MakerProvider from 'providers/MakerProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
-import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
-import { startWatcher } from './watch';
 import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
@@ -127,24 +124,9 @@ function networkIsUndefined(request) {
 }
 
 function RouteEffects({ network }) {
-  const { maker } = useMaker();
-  const [, dispatch] = useStore();
-
   useEffect(() => {
     if (network !== 'mainnet' && window.location.hostname !== 'localhost')
       userSnapInit();
   }, [network]);
-
-  useEffect(() => {
-    if (!maker) return;
-    const scs = maker.service('smartContract');
-    startWatcher({
-      rpcUrl: maker.service('web3').rpcUrl,
-      multicallAddress: scs.getContractAddress('MULTICALL'),
-      addresses: scs.getContractAddresses(),
-      dispatch
-    });
-  }, [maker]);
-
   return null;
 }
