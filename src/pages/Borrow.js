@@ -51,7 +51,7 @@ function Borrow() {
       const { search } = (await navigation.getRoute()).url;
 
       navigation.navigate({
-        pathname: `${Routes.BORROW}/owner/${address}`,
+        pathname: `/${Routes.BORROW}/owner/${address}`,
         search
       });
     },
