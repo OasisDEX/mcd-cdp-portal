@@ -57,7 +57,8 @@
     "asset": "ASSET",
     "balance": "BALANCE",
     "usd": "USD",
-    "send": "SEND"
+    "send": "SEND",
+    "no_wallet": "Not connected"
   },
   "cdp_create": {
     "select_title": "Select a collateral type",

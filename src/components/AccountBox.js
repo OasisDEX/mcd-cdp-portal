@@ -8,7 +8,6 @@ import {
   Flex
 } from '@makerdao/ui-components-core';
 import { getSpace } from 'styles/theme';
-import AccountConnect from './SidebarAccountConnect';
 import ActiveAccount from 'components/ActiveAccount';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import lang from 'languages';
@@ -50,6 +49,8 @@ function AccountBox({ currentAccount }) {
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
   const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
+  const address = currentAccount ? currentAccount.address : null;
+  const type = currentAccount ? currentAccount.type : null;
 
   return (
     <Card>
@@ -60,15 +61,10 @@ function AccountBox({ currentAccount }) {
           openOnHover={false}
           onClick={toggleDropdown}
           close={closeDropdown}
-          trigger={
-            currentAccount ? (
-              <ActiveAccount currentAccount={currentAccount} />
-            ) : (
-              <AccountConnect />
-            )
-          }
+          trigger={<ActiveAccount address={address} type={type} />}
         />
       </CardBody>
+
       <CardBody>
         <Box px="s" py="m">
           <Text t="h4">{lang.sidebar.wallet_balances}</Text>
