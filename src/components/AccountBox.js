@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import {
   Box,
-  Table,
   Text,
   Card,
   CardBody,
-  Button
+  Button,
+  Flex
 } from '@makerdao/ui-components-core';
 import { getSpace } from 'styles/theme';
 import AccountConnect from './SidebarAccountConnect';
@@ -13,29 +13,38 @@ import ActiveAccount from 'components/ActiveAccount';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import lang from 'languages';
 
-const TableRow = ({ name, balance, balanceUSD, btn }) => (
-  <Table.tr>
-    <Table.td>
-      <Text
-        fontSize="1.4rem"
-        color="darkLavender"
-        fontWeight="semibold"
-        t="smallCaps"
-      >
-        {name}
-      </Text>
-    </Table.td>
-    <Table.td>{balance}</Table.td>
-    <Table.td>{balanceUSD}</Table.td>
-    <Table.td>{btn}</Table.td>
-  </Table.tr>
-);
-
 const SendTknButton = () => (
   <Button variant="secondary-outline" px="4px" py="1px">
     <Text t="smallCaps">{lang.sidebar.send}</Text>
   </Button>
 );
+
+const mockWalletBalances = [
+  {
+    asset: 'DAI',
+    balance: '--',
+    balanceUSD: '--',
+    btn: <SendTknButton />
+  },
+  {
+    asset: 'MKR',
+    balance: '--',
+    balanceUSD: '--',
+    btn: <SendTknButton />
+  },
+  {
+    asset: 'ETH',
+    balance: '--',
+    balanceUSD: '--',
+    btn: <SendTknButton />
+  },
+  {
+    asset: 'OMG',
+    balance: '--',
+    balanceUSD: '--',
+    btn: <SendTknButton />
+  }
+];
 
 function AccountBox({ currentAccount }) {
   const [open, setOpen] = useState(false);
@@ -60,44 +69,64 @@ function AccountBox({ currentAccount }) {
           }
         />
       </CardBody>
-      <CardBody p="m">
-        <Box pb="m">
+      <CardBody>
+        <Box px="s" py="m">
           <Text t="h4">{lang.sidebar.wallet_balances}</Text>
         </Box>
-        <Table width="100%">
-          <Table.thead>
-            <Table.th width="30%">{lang.sidebar.asset}</Table.th>
-            <Table.th width="30%">{lang.sidebar.balance}</Table.th>
-            <Table.th width="30%">{lang.sidebar.usd}</Table.th>
-            <Table.th width="10%" />
-          </Table.thead>
-          <tbody>
-            <TableRow
-              name="DAI"
-              balance="--"
-              balanceUSD="--"
-              btn={<SendTknButton />}
-            />
-            <TableRow
-              name="MKR"
-              balance="--"
-              balanceUSD="--"
-              btn={<SendTknButton />}
-            />
-            <TableRow
-              name="ETH"
-              balance="--"
-              balanceUSD="--"
-              btn={<SendTknButton />}
-            />
-            <TableRow
-              name="OMG"
-              balance="--"
-              balanceUSD="--"
-              btn={<SendTknButton />}
-            />
-          </tbody>
-        </Table>
+
+        <Flex justifyContent="space-between" px="s">
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+            {lang.sidebar.asset}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.balance}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.usd}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+            {''}
+          </Text>
+        </Flex>
+        {mockWalletBalances.map(({ asset, balance, balanceUSD, btn }, idx) => (
+          <Flex
+            key={`wb_${asset}_${idx}`}
+            justifyContent="space-between"
+            alignItems="center"
+            bg={idx % 2 ? 'coolGrey.100' : 'white'}
+            px="s"
+            py="xs"
+          >
+            <Text
+              color="darkLavender"
+              fontWeight="semibold"
+              t="p5"
+              textAlign="left"
+              width="20%"
+            >
+              {asset}
+            </Text>
+            <Text
+              color="darkLavender"
+              fontWeight="semibold"
+              t="p5"
+              textAlign="left"
+              width="30%"
+            >
+              {balance}
+            </Text>
+            <Text
+              color="darkLavender"
+              fontWeight="semibold"
+              t="p5"
+              textAlign="left"
+              width="30%"
+            >
+              {balanceUSD}
+            </Text>
+            {btn}
+          </Flex>
+        ))}
       </CardBody>
     </Card>
   );
