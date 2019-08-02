@@ -80,9 +80,7 @@ function AccountBox({ currentAccount }) {
           <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
             {lang.sidebar.usd}
           </Text>
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
-            {''}
-          </Text>
+          <Box width="20%" />
         </Flex>
         {mockWalletBalances.map(({ asset, balance, balanceUSD, btn }, idx) => (
           <Flex
@@ -120,7 +118,9 @@ function AccountBox({ currentAccount }) {
             >
               {balanceUSD}
             </Text>
-            {btn}
+            <Flex width="20%" justifyContent="flex-end">
+              {btn}
+            </Flex>
           </Flex>
         ))}
       </CardBody>
