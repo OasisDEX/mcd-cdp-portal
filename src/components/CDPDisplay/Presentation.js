@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import lang from 'languages';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -45,7 +45,6 @@ export default function({ cdp, showSidebar, account, network }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
-  const eventHistory = getEventHistory(cdp);
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
@@ -60,6 +59,12 @@ export default function({ cdp, showSidebar, account, network }) {
       showSidebar(props);
     }
   };
+
+  const [eventHistory, setEventHistory] = useState([]);
+
+  useEffect(() => {
+    getEventHistory().then(events => setEventHistory(events));
+  }, [cdpId]);
 
   return (
     <PageContentLayout>

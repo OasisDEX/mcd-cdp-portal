@@ -152,7 +152,7 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
       );
 }
 
-export function getEventHistory(cdp) {
+export async function getEventHistory(cdp) {
   // eslint-disable-line no-unused-vars
   //return cdp.getEventHistory();
   return mockHistoryDataFromSDK; //TODO switch to real data
