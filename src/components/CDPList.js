@@ -2,7 +2,7 @@ import React, { memo, Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
@@ -108,6 +108,11 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           <Plus />
         </DashedFakeButton>
       )}
+      <Link href={`/${Routes.SAVE}`}>
+        <DashedFakeButton bg="white">
+          <Box p="s">Save</Box>
+        </DashedFakeButton>
+      </Link>
     </Fragment>
   );
 });

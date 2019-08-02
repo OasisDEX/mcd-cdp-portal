@@ -11,13 +11,17 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
-
+import { Routes } from '../utils/constants';
+import AccountBox from '../components/AccountBox';
 import CardTabs from '../components/CardTabs';
+import useMaker from '../hooks/useMaker';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
 function Save() {
+  const { account } = useMaker();
   return (
     <Flex justifyContent="center" mt="xl">
+      <Link href={`/${Routes.BORROW}/5`}>/Borrow</Link>
       <Box px="m">
         <Text.p t="h4" mb="s">
           Balance
@@ -101,6 +105,7 @@ function Save() {
             </Grid>
           </CardTabs>
         </Grid>
+        <AccountBox currentAccount={account} />
       </Box>
     </Flex>
   );
