@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
@@ -42,12 +42,10 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 );
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
-  const { url } = useCurrentRoute();
   const { maker, account } = useMaker();
   const [{ cdps, feeds }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
-  const showPlusButton = url.pathname === `/${Routes.BORROW}` || account;
 
   useEffect(() => {
     if (account) {
@@ -95,7 +93,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           />
         );
       })}
-      {!showPlusButton ? null : (
+      {account && (
         <DashedFakeButton
           onClick={() =>
             account &&
