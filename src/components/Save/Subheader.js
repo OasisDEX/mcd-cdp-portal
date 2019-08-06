@@ -1,10 +1,9 @@
 import React from 'react';
 import { Box, Flex, Text } from '@makerdao/ui-components-core';
-import AccountBox from '../../components/AccountBox';
-import useMaker from '../../hooks/useMaker';
+import { Link } from 'react-navi';
+import { Routes } from '../../utils/constants';
 
 const Subheader = () => {
-  const { account } = useMaker();
   return (
     <Box borderTop="default" p="s">
       <Flex
@@ -14,9 +13,18 @@ const Subheader = () => {
         alignItems="center"
       >
         <Text t="h5">Savings Dai</Text>
-        <Box width="300px">
-          <AccountBox currentAccount={account} />
-        </Box>
+        <Flex
+          p="xs"
+          border="1px solid lightgray"
+          borderRadius="3px"
+          width="200px"
+        >
+          <Link href={`/${Routes.BORROW}`}>
+            <Text fontSize="1.2rem" color="lightgray">
+              {'> /borrow'}
+            </Text>
+          </Link>
+        </Flex>
       </Flex>
     </Box>
   );
