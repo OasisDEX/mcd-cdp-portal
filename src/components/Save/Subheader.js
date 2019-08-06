@@ -1,7 +1,10 @@
 import React from 'react';
-import { Box, Flex, Text, Card } from '@makerdao/ui-components-core';
+import { Box, Flex, Text } from '@makerdao/ui-components-core';
+import AccountBox from '../../components/AccountBox';
+import useMaker from '../../hooks/useMaker';
 
 const Subheader = () => {
+  const { account } = useMaker();
   return (
     <Box borderTop="default" p="s">
       <Flex
@@ -11,11 +14,9 @@ const Subheader = () => {
         alignItems="center"
       >
         <Text t="h5">Savings Dai</Text>
-        <Card p="s">
-          <Text t="body" color="steel">
-            MetaMask 0x...32PD
-          </Text>
-        </Card>
+        <Box width="300px">
+          <AccountBox currentAccount={account} />
+        </Box>
       </Flex>
     </Box>
   );
