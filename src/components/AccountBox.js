@@ -45,6 +45,67 @@ const mockWalletBalances = [
   }
 ];
 
+const WalletBalances = () => (
+  <CardBody>
+    <Box px="s" py="m">
+      <Text t="h4">{lang.sidebar.wallet_balances}</Text>
+    </Box>
+    <Flex justifyContent="space-between" px="s">
+      <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+        {lang.sidebar.asset}
+      </Text>
+      <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+        {lang.sidebar.balance}
+      </Text>
+      <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+        {lang.sidebar.usd}
+      </Text>
+      <Box width="20%" />
+    </Flex>
+    {mockWalletBalances.map(({ asset, balance, balanceUSD, btn }, idx) => (
+      <Flex
+        key={`wb_${asset}_${idx}`}
+        justifyContent="space-between"
+        alignItems="center"
+        bg={idx % 2 ? 'coolGrey.100' : 'white'}
+        px="s"
+        py="xs"
+      >
+        <Text
+          color="darkLavender"
+          fontWeight="semibold"
+          t="p5"
+          textAlign="left"
+          width="20%"
+        >
+          {asset}
+        </Text>
+        <Text
+          color="darkLavender"
+          fontWeight="semibold"
+          t="p5"
+          textAlign="left"
+          width="30%"
+        >
+          {balance}
+        </Text>
+        <Text
+          color="darkLavender"
+          fontWeight="semibold"
+          t="p5"
+          textAlign="left"
+          width="30%"
+        >
+          {balanceUSD}
+        </Text>
+        <Flex width="20%" justifyContent="flex-end">
+          {btn}
+        </Flex>
+      </Flex>
+    ))}
+  </CardBody>
+);
+
 function AccountBox({ currentAccount }) {
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
@@ -64,66 +125,7 @@ function AccountBox({ currentAccount }) {
           trigger={<ActiveAccount address={address} type={type} />}
         />
       </CardBody>
-
-      <CardBody>
-        <Box px="s" py="m">
-          <Text t="h4">{lang.sidebar.wallet_balances}</Text>
-        </Box>
-
-        <Flex justifyContent="space-between" px="s">
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
-            {lang.sidebar.asset}
-          </Text>
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-            {lang.sidebar.balance}
-          </Text>
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-            {lang.sidebar.usd}
-          </Text>
-          <Box width="20%" />
-        </Flex>
-        {mockWalletBalances.map(({ asset, balance, balanceUSD, btn }, idx) => (
-          <Flex
-            key={`wb_${asset}_${idx}`}
-            justifyContent="space-between"
-            alignItems="center"
-            bg={idx % 2 ? 'coolGrey.100' : 'white'}
-            px="s"
-            py="xs"
-          >
-            <Text
-              color="darkLavender"
-              fontWeight="semibold"
-              t="p5"
-              textAlign="left"
-              width="20%"
-            >
-              {asset}
-            </Text>
-            <Text
-              color="darkLavender"
-              fontWeight="semibold"
-              t="p5"
-              textAlign="left"
-              width="30%"
-            >
-              {balance}
-            </Text>
-            <Text
-              color="darkLavender"
-              fontWeight="semibold"
-              t="p5"
-              textAlign="left"
-              width="30%"
-            >
-              {balanceUSD}
-            </Text>
-            <Flex width="20%" justifyContent="flex-end">
-              {btn}
-            </Flex>
-          </Flex>
-        ))}
-      </CardBody>
+      <WalletBalances />
     </Card>
   );
 }
