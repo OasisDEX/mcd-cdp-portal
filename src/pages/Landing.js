@@ -38,7 +38,7 @@ function Landing() {
         <LandingHeroLayout>
           <Flex flexDirection="column">
             <Title pb="l" textAlign="center">
-              Oasis
+              Portal
             </Title>
             <Flex pb="l" flexDirection="row" justifyContent="space-around">
               <CardLink title="Borrow" link={Routes.BORROW} />

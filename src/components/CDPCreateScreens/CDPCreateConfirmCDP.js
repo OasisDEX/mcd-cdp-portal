@@ -74,7 +74,11 @@ const CDPCreateConfirmSummary = ({
                 color="grey.200"
               >
                 <Text>{title}</Text>
-                <Text fontWeight="bold" css="white-space: nowrap">
+                <Text
+                  fontWeight="bold"
+                  css="white-space: nowrap"
+                  textAlign={{ s: 'right', m: 'left' }}
+                >
                   {value}
                 </Text>
               </Grid>
