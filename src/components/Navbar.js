@@ -11,10 +11,14 @@ import { Routes } from '../utils/constants';
 const Navbar = ({ viewedAddress }) => {
   const { url } = useCurrentRoute();
   const { account } = useMaker();
+  const onBorrowLandingPage = url.pathname === `/${Routes.BORROW}`;
   const onOverviewPage =
     account && url.pathname === `/${Routes.BORROW}/owner/${account.address}`;
   return (
-    <Box bg={account ? 'blackLight' : 'white'} height="100%">
+    <Box
+      bg={account || onBorrowLandingPage ? 'blackLight' : 'white'}
+      height="100%"
+    >
       <Link href={`/${Routes.BORROW}/${url.search}`} prefetch={true}>
         <Flex alignItems="center" justifyContent="center" py="m">
           <MakerLogo />
