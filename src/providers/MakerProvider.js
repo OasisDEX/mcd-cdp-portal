@@ -33,15 +33,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       if (maker.service('accounts').hasAccount()) {
         initAccount(maker.currentAccount());
       }
+      startWatcher(maker, dispatch);
       setMaker(maker);
-
-      const scs = maker.service('smartContract');
-      startWatcher({
-        rpcUrl: maker.service('web3').rpcUrl,
-        multicallAddress: scs.getContractAddress('MULTICALL'),
-        addresses: scs.getContractAddresses(),
-        dispatch
-      });
 
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;

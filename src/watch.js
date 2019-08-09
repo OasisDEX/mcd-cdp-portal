@@ -1,20 +1,16 @@
-import { createWatcher } from '@makerdao/multicall';
 import { batchActions } from './utils/redux';
 import ilkList from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
 import { isMissingContractAddress } from './utils/ethereum';
 
-let watcher = null;
+let watcher;
 
-export function startWatcher({
-  rpcUrl,
-  multicallAddress,
-  addresses,
-  dispatch
-}) {
-  watcher = createWatcher([], { rpcUrl, multicallAddress });
+export function startWatcher(maker, dispatch) {
+  watcher = maker.service('multicall').watcher;
   window.watcher = watcher;
+
+  const addresses = maker.service('smartContract').getContractAddresses();
 
   watcher.batch().subscribe(updates => {
     console.log('watcher got updates:', { updates });
@@ -40,10 +36,6 @@ export function startWatcher({
 }
 
 export function getWatcher() {
-  if (!watcher) {
-    console.log('recreating watcher... this should only happen in development');
-    return startWatcher();
-  }
   return watcher;
 }
 
