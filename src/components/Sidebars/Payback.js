@@ -123,22 +123,46 @@ export default Payback;
 const checkForProxyAndAllowance = async (
   maker,
   updateState,
-  setHasAllowance
+  setHasAllowance,
+  madeInitialCheck
 ) => {
   const proxyAddress = await maker.service('proxy').getProxyAddress();
   const token = maker.getToken('MDAI');
-  const hasAllowance =
-    proxyAddress &&
+
+  const checkAllowance = async () =>
+    !!proxyAddress &&
     (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
       MAX_UINT_BN
     );
 
+  const pollCheckAllowance = async () => {
+    let numTries = 5;
+    let allowance;
+    while (numTries > 0) {
+      numTries--;
+      allowance = await checkAllowance();
+      if (allowance) return allowance;
+    }
+    return false;
+  };
+
+  let hasAllowance = await checkAllowance();
+  if (madeInitialCheck && !hasAllowance) {
+    hasAllowance = await pollCheckAllowance();
+  }
+
   setHasAllowance(hasAllowance);
-  updateState({
-    proxyAddress,
-    startedWithoutProxy: !proxyAddress,
-    startedWithoutAllowance: !hasAllowance
-  });
+
+  if (madeInitialCheck) {
+    updateState({ proxyAddress });
+  } else {
+    updateState({
+      proxyAddress,
+      startedWithoutProxy: !proxyAddress,
+      startedWithoutAllowance: !hasAllowance,
+      madeInitialCheck: !madeInitialCheck
+    });
+  }
 };
 
 const setupProxy = async (maker, updateState, newTxListener) => {
@@ -182,7 +206,8 @@ const initialState = {
   startedWithoutProxy: false,
   startedWithoutAllowance: false,
   allowanceLoading: false,
-  proxyLoading: false
+  proxyLoading: false,
+  madeInitialCheck: false
 };
 
 function ProxyAndAllowanceCheck({
@@ -198,7 +223,8 @@ function ProxyAndAllowanceCheck({
       startedWithoutAllowance,
       proxyAddress,
       allowanceLoading,
-      proxyLoading
+      proxyLoading,
+      madeInitialCheck
     },
     updateState
   ] = useReducer(
@@ -207,8 +233,13 @@ function ProxyAndAllowanceCheck({
   );
 
   useEffect(() => {
-    checkForProxyAndAllowance(maker, updateState, setHasAllowance);
-  }, [maker, account, setHasAllowance]);
+    checkForProxyAndAllowance(
+      maker,
+      updateState,
+      setHasAllowance,
+      madeInitialCheck
+    );
+  }, [maker, account, hasAllowance]);
 
   if (!startedWithoutProxy && !startedWithoutAllowance) return null;
 
@@ -242,7 +273,13 @@ function ProxyAndAllowanceCheck({
           isLoading={allowanceLoading}
           isComplete={hasAllowance}
           onToggle={() =>
-            setAllowance(maker, updateState, newTxListener, proxyAddress)
+            setAllowance(
+              maker,
+              updateState,
+              newTxListener,
+              proxyAddress,
+              setHasAllowance
+            )
           }
           disabled={!proxyAddress || hasAllowance}
         />
