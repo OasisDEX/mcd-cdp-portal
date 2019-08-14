@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
@@ -144,7 +143,7 @@ const Deposit = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount)), MDAI(0)),
+        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount))),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
