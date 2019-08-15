@@ -50,7 +50,7 @@ const Generate = ({ cdpId, reset }) => {
   );
   const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
-  const generate = async () => {
+  const generate = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')

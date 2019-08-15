@@ -188,15 +188,13 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
-    const decimals = maker.getToken(selectedIlk.currency)._decimals;
-
-    const lockAmount = decimals
-      ? selectedIlk.currency(gemsToLock, decimals * -1)
-      : selectedIlk.currency(gemsToLock);
-
     const txObject = maker
       .service('mcd:cdpManager')
-      .openLockAndDraw(selectedIlk.key, lockAmount, daiToDraw);
+      .openLockAndDraw(
+        selectedIlk.key,
+        selectedIlk.currency(gemsToLock),
+        daiToDraw
+      );
 
     newTxListener(txObject, lang.transactions.create_cdp);
 

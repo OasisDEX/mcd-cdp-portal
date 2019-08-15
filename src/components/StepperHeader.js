@@ -15,7 +15,7 @@ const StepperHeader = ({ onClose }) => {
       >
         <Box>
           <ActiveAccount
-            currentAccount={account}
+            address={account.address}
             textColor="steel"
             t="1.6rem"
             readOnly
