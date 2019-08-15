@@ -1093,13 +1093,13 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.2.10-1":
-  version "0.2.10-1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10-1.tgz#ba0b3ce7bd16a38cccdcda28d6242ba8e29242ca"
-  integrity sha512-1Zs0ki+7m867MMR+la7xDtN3SQPf+dJ/36rLcHyb9sGXmbgxr7eQF23p0pFAugGjfUHObBOGmWK9zqApRHxNuQ==
+"@makerdao/dai-plugin-mcd@0.2.10-4":
+  version "0.2.10-4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10-4.tgz#48196e197573af5a10f8533936e4febf0406a240"
+  integrity sha512-bOufZeOisBSun4GrUX26uBxGydERP7Z55D2VjO0x5YbYoabNz24KpLdsebabtNUDllBtV9uer+qPQOJ+VHV6Qw==
   dependencies:
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/services-core" "^0.9.5"
+    "@makerdao/services-core" "^0.9.9"
     bignumber.js "^8.1.1"
 
 "@makerdao/dai-plugin-trezor-web@^0.9.6":
@@ -1114,10 +1114,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.18.0.tgz#21f8ad9c025bff0c20769fa860eaf74666833db4"
-  integrity sha512-hEymAWkmB8RjWQ3MIinuopnpzBISB4dfPQSCPQterpkSFc1ZYWX3GN4MWU15aYXiEhpMBZRi/7+DH2fdqEG5zw==
+"@makerdao/dai@0.18.4":
+  version "0.18.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.18.4.tgz#fce8ddf68e2068ee0589b358cbda6c7c1dcec9dd"
+  integrity sha512-4Dl/2KAG1oU+VUTF/Ksr9iDGWN6ehlkKhmVjf1asHFuUifJTz6sVG+yFEnYoTFfm7UKV73rMz708prutPV770g==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
@@ -1165,15 +1165,6 @@
     cross-fetch "^3.0.1"
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
-
-"@makerdao/services-core@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
-  integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
-  dependencies:
-    babel-runtime "^6.26.0"
-    lodash.values "^4.3.0"
-    toposort "^2.0.2"
 
 "@makerdao/services-core@^0.9.9":
   version "0.9.9"
@@ -8366,11 +8357,6 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
-
-lodash.values@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
-  integrity sha1-o6bCsOvsxcLLocF+bmIP6BtT00c=
 
 "lodash@>=3.5 <5", lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0:
   version "4.17.11"

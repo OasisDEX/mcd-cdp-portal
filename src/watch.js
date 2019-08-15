@@ -7,7 +7,9 @@ import { isMissingContractAddress } from './utils/ethereum';
 let watcher;
 
 export function startWatcher(maker, dispatch) {
-  watcher = maker.service('multicall').watcher;
+  const service = maker.service('multicall');
+  service.createWatcher();
+  watcher = service.watcher;
   window.watcher = watcher;
 
   const addresses = maker.service('smartContract').getContractAddresses();

@@ -33,7 +33,8 @@ export async function instantiateMaker({
     provider: {
       url: rpcUrl,
       type: 'HTTP'
-    }
+    },
+    multicall: true
   };
 
   // Use the config plugin, if we have a testchainConfigId
