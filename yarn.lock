@@ -1148,15 +1148,6 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.6.1.tgz#39c34d8364b1b72e2c281431859763b0719720e7"
-  integrity sha512-hD5gluapIzl1r+RlHnRIwBFBcSZ1l7EbwmHWZjcy1qjlccKwJ95AdD/YYwZyhPTLqilwhvCLb1FJ2QM6jSpn2g==
-  dependencies:
-    cross-fetch "^3.0.1"
-    ethers "^4.0.6"
-    js-sha3 "^0.8.0"
-
 "@makerdao/multicall@^0.7.0":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.7.1.tgz#b15cc00b792608b92b20425cc1c889c94c64cc66"
