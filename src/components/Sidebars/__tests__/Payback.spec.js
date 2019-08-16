@@ -10,7 +10,8 @@ afterEach(cleanup);
 test('basic rendering', async () => {
   const { getByText } = render(<Payback cdpId="1" />);
 
-  await waitForElement(() => getByText(lang.action_sidebar.payback_title));
+  // this waits for the initial proxy & allowance check to finish
+  await waitForElement(() => getByText(/Unlock DAI/));
 
   // these throw errors if they don't match anything
   getByText('Pay Back DAI');
