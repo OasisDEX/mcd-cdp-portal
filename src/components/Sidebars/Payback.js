@@ -125,17 +125,23 @@ const checkForProxyAndAllowance = async (
 ) => {
   const proxyAddress = await maker.service('proxy').getProxyAddress();
   const token = maker.getToken('MDAI');
-  const hasAllowance =
-    !!proxyAddress &&
-    (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
-      MAX_UINT_BN
-    );
-  setHasAllowance(hasAllowance);
-  updateState({
-    proxyAddress,
-    startedWithoutProxy: !proxyAddress,
-    startedWithoutAllowance: !hasAllowance
-  });
+
+  console.log('calling allowance');
+  try {
+    const hasAllowance =
+      !!proxyAddress &&
+      (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
+        MAX_UINT_BN
+      );
+    setHasAllowance(hasAllowance);
+    updateState({
+      proxyAddress,
+      startedWithoutProxy: !proxyAddress,
+      startedWithoutAllowance: !hasAllowance
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const setupProxy = async (maker, updateState, newTxListener) => {
@@ -161,6 +167,7 @@ const setAllowance = async (
     updateState({ allowanceLoading: true });
 
     const daiToken = maker.getToken('MDAI');
+
     const txPromise = daiToken.approveUnlimited(proxyAddress);
     newTxListener(
       txPromise,
@@ -183,7 +190,7 @@ const initialState = {
   proxyLoading: false
 };
 
-function ProxyAndAllowanceCheck({
+export function ProxyAndAllowanceCheck({
   maker,
   account,
   newTxListener,
@@ -251,6 +258,7 @@ function ProxyAndAllowanceCheck({
           disabled={!proxyAddress || hasAllowance}
         />
       )}
+      <div>x</div>
     </Grid>
   );
 }
