@@ -8,8 +8,8 @@ import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
+import useManagedCdps from 'hooks/useManagedCdps';
 import { trackCdpById } from 'reducers/multicall/cdps';
-import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
 
@@ -43,10 +43,12 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { maker, account } = useMaker();
-  const [{ cdps, feeds }, dispatch] = useStore();
+  const [, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
+  const managedCdps = useManagedCdps(viewedAddress);
 
+  // NOTE: This can be replaced using managedCdps
   useEffect(() => {
     if (account) {
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
@@ -65,14 +67,13 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   }, [maker, account]);
 
   useEffect(() => {
-    if (account || viewedAddress) {
-      const ratios = navbarCdps.map(({ id: cdpId }) => {
-        const cdp = getCdp(cdpId, { cdps, feeds });
-        return getCollateralizationRatio(cdp);
-      });
+    if (managedCdps.length > 0) {
+      const ratios = managedCdps.map(
+        cdp => parseFloat(cdp.collateralizationRatio) * 100
+      );
       setRatios(ratios);
     }
-  }, [account, navbarCdps, cdps, feeds, viewedAddress]);
+  }, [managedCdps]);
 
   const { show } = useModal();
 

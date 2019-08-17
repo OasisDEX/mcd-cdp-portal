@@ -1,6 +1,5 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
-import uniqBy from 'lodash/uniqBy';
 import BigNumber from 'bignumber.js';
 import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
 
@@ -49,17 +48,6 @@ export function getIlkData(feeds, ilkKey) {
     stabilityFee: ilkData[DUTY],
     ilkDebtAvailable: ilkData[ILK_DEBT_AVAILABLE]
   };
-}
-
-export function getAllFeeds(feeds) {
-  return uniqBy(feeds, 'gem').reduce((acc, cdpType) => {
-    // this will get usd feeds only
-    if (!cdpType[FEED_VALUE_USD]) return acc;
-    return acc.concat({
-      pair: `${[cdpType.currency.symbol]}/USD`,
-      value: cdpType[FEED_VALUE_USD]
-    });
-  }, []);
 }
 
 const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
