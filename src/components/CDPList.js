@@ -93,9 +93,10 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           />
         );
       })}
-      {!account ? null : (
+      {account && (
         <DashedFakeButton
           onClick={() =>
+            account &&
             show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
           }
           justifyContent="center"

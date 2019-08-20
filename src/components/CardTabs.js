@@ -44,8 +44,8 @@ const CardTabs = ({ headers, children }) => {
       <Tabs
         header={
           <Flex>
-            {headers.map(header => (
-              <TabHeader>{header}</TabHeader>
+            {headers.map((header, idx) => (
+              <TabHeader key={idx}>{header}</TabHeader>
             ))}
           </Flex>
         }

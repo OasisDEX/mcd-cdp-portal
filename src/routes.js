@@ -4,9 +4,11 @@ import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import PageLayout from 'layouts/PageLayout';
+import AppLayout from 'layouts/AppLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
-import Auth from 'pages/Auth';
+import Borrow from 'pages/Borrow';
+import Save from 'pages/Save';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -21,7 +23,7 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const withDefaultLayout = route =>
+const withBorrowLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
@@ -46,6 +48,30 @@ const withDefaultLayout = route =>
                   <View />
                 </PageLayout>
               </SidebarProvider>
+            </ModalProvider>
+          </AwaitMakerAuthentication>
+        </MakerProvider>
+      );
+    }, route)
+  );
+
+const withSaveLayout = route =>
+  hasNetwork(
+    withView(async request => {
+      const { network, testchainId, backendEnv } = request.query;
+
+      return (
+        <MakerProvider
+          network={network}
+          testchainId={testchainId}
+          backendEnv={backendEnv}
+        >
+          <RouteEffects network={network} />
+          <AwaitMakerAuthentication>
+            <ModalProvider modals={modals} templates={templates}>
+              <AppLayout>
+                <View />
+              </AppLayout>
             </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
@@ -84,16 +110,16 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}`]: withDefaultLayout(
+  [`/${Routes.BORROW}`]: withBorrowLayout(
     route(() => {
       return {
-        title: 'Auth',
-        view: <Auth />
+        title: 'Borrow',
+        view: <Borrow />
       };
     })
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDefaultLayout(
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -103,7 +129,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withDefaultLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withBorrowLayout(
     map(request => {
       const { cdpId } = request.params;
 
@@ -114,6 +140,15 @@ export default mount({
         title: 'CDP',
         view: <CDPDisplay cdpId={cdpId} />
       });
+    })
+  ),
+
+  [`/${Routes.SAVE}`]: withSaveLayout(
+    route(() => {
+      return {
+        title: 'Save',
+        view: <Save />
+      };
     })
   )
 });

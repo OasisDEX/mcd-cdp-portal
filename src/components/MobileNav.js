@@ -152,6 +152,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
   const { account } = useMaker();
   const { url } = useCurrentRoute();
+  const onBorrowLandingPage = url.pathname === `/${Routes.BORROW}`;
   const onOverviewPage =
     account && url.pathname === `/${Routes.BORROW}/owner/${account.address}`;
   const [open, setOpen] = useState(false);
@@ -198,7 +199,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         <MakerLogo />
       </LogoLink>
 
-      {account ? (
+      {onBorrowLandingPage ? null : account ? (
         <CDPDropdown iconData={iconData}>
           <Link href={`/${Routes.BORROW}/owner/${account.address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
