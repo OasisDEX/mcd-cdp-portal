@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import waitForExpect from 'wait-for-expect';
+import { renderWithStore } from '../../../test/helpers/render';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import useMaker from '../useMaker';
 
@@ -11,7 +12,7 @@ function TestHook({ callback }) {
 }
 
 function testHookWithMakerProvider(callback) {
-  render(
+  renderWithStore(
     <TestMakerProvider>
       <TestHook callback={callback} />
     </TestMakerProvider>
