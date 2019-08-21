@@ -20,6 +20,7 @@
     "@makerdao/dai-plugin-mcd": "0.2.10-4",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/multicall": "0.6.1",
+    "@makerdao/test-helpers": "^0.2.0",
     "@makerdao/ui-components-core": "0.2.5",
     "@makerdao/ui-components-footer": "^0.1.7",
     "@makerdao/ui-components-header": "^0.1.7",
