@@ -35,7 +35,7 @@ const SetupProxyAndAllowance = () => {
   );
 };
 
-test.only('set allowance', async () => {
+test('set allowance', async () => {
   const { getByTestId, findByText } = render(<SetupProxyAndAllowance />);
   await findByText(/Unlock/);
 
