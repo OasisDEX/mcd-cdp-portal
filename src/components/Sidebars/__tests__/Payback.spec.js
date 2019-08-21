@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { cleanup, waitForElement } from '@testing-library/react';
+import {
+  cleanup,
+  waitForElement,
+  waitForElementToBeRemoved,
+  fireEvent
+} from '@testing-library/react';
 import Payback, { ProxyAndAllowanceCheck } from '../Payback';
 import lang from '../../../languages';
+import { callGanache } from '@makerdao/test-helpers';
+
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 
@@ -20,16 +27,24 @@ test('basic rendering', async () => {
 
 const SetupProxyAndAllowance = () => {
   const { maker, account, newTxListener } = useMaker();
-  const [hasAllowance, setAllowance] = useState(false);
-
+  const [hasAllowance, setHasAllowance] = useState(false);
   return (
     <ProxyAndAllowanceCheck
-      {...{ maker, account, newTxListener, hasAllowance, setAllowance }}
+      {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
     />
   );
 };
 
-test('Proxy + Allowance check', async () => {
-  const { getByText } = render(<SetupProxyAndAllowance />);
-  await waitForElement(() => getByText(lang.action_sidebar.create_proxy));
+test.only('set allowance', async () => {
+  const { getByTestId, findByText } = render(<SetupProxyAndAllowance />);
+  await findByText(/Unlock/);
+
+  const allowanceToggle = getByTestId('allowance-toggle');
+  const allowanceButton = allowanceToggle.children[1];
+  fireEvent.click(allowanceButton);
+  await findByText(/Unlocking/);
+
+  await callGanache('evm_mine');
+  await callGanache('evm_mine');
+  await findByText(/unlocked/);
 });

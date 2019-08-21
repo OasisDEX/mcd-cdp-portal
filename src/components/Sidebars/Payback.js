@@ -126,7 +126,6 @@ const checkForProxyAndAllowance = async (
   const proxyAddress = await maker.service('proxy').getProxyAddress();
   const token = maker.getToken('MDAI');
 
-  console.log('calling allowance');
   try {
     const hasAllowance =
       !!proxyAddress &&
@@ -173,8 +172,16 @@ const setAllowance = async (
       txPromise,
       lang.formatString(lang.transactions.unlocking_token, 'DAI')
     );
-    console.log('waiting on one block confirmation to ensure allowance is set');
-    await maker.service('transactionManager').confirm(txPromise, 1);
+
+    // await maker.service('transactionManager').confirm(txPromise, 1);
+    // - This doesn't work with ganache for some reason?!?
+
+    const _web3 = maker.service('web3');
+    await Promise.all([
+      txPromise,
+      _web3.waitForBlockNumber(_web3.blockNumber() + 2)
+    ]);
+
     setHasAllowance(true);
     updateState({ allowanceLoading: false });
   } catch (e) {
@@ -256,9 +263,9 @@ export function ProxyAndAllowanceCheck({
             )
           }
           disabled={!proxyAddress || hasAllowance}
+          data-testid="allowance-toggle"
         />
       )}
-      <div>x</div>
     </Grid>
   );
 }
