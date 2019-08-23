@@ -4,6 +4,7 @@ import { Box, Text, Card, Button, Grid } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useMaker from 'hooks/useMaker';
+import useBlockHeight from 'hooks/useBlockHeight';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 
@@ -22,13 +23,20 @@ const CDPCreateSetAllowance = ({
   dispatch
 }) => {
   const { maker } = useMaker();
+  const blockHeight = useBlockHeight(0);
+  const [startingBlockHeight, setStartingBlockHeight] = useState(0);
+  const [proxyDeployed, setProxyDeployed] = useState(false);
   const [isDeployingProxy, setIsDeployingProxy] = useState(false);
   const [isSettingAllowance, setIsSettingAllowance] = useState(false);
 
   async function deployProxy() {
     setIsDeployingProxy(true);
     try {
-      const proxyAddress = await maker.service('proxy').ensureProxy();
+      const promise = maker.service('proxy').ensureProxy();
+      const proxyAddress = await promise;
+      setStartingBlockHeight(blockHeight);
+      await maker.service('transactionManager').confirm(promise, 7);
+      setProxyDeployed(true);
       dispatch({
         type: 'set-proxy-address',
         payload: { address: proxyAddress }
@@ -71,6 +79,22 @@ const CDPCreateSetAllowance = ({
               {lang.cdp_create.setup_proxy_proxy_button}
             </Button>
           )}
+          {isDeployingProxy && (
+            <Text.p color="slate.400" fontSize="s" lineHeight="normal">
+              WAITING FOR CONFIRMATIONS...{' '}
+              {startingBlockHeight === 0
+                ? 0
+                : blockHeight - startingBlockHeight > 10
+                ? 10
+                : blockHeight - startingBlockHeight}{' '}
+              of 10
+            </Text.p>
+          )}
+          {proxyDeployed && (
+            <Text.p color="slate.400" fontSize="s" lineHeight="normal">
+              CONFIRMED WITH 10 CONFIRMATIONS
+            </Text.p>
+          )}
         </Grid>
         <Grid gridRowGap="xs" mt="l">
           <Text.h4>Set allowance</Text.h4>
@@ -97,6 +121,7 @@ const CDPCreateSetAllowance = ({
       </Card>
       <ScreenFooter
         dispatch={dispatch}
+        canGoBack={!isDeployingProxy}
         canProgress={proxyAddress && hasAllowance}
       />
     </Box>

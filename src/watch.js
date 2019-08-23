@@ -14,6 +14,10 @@ export function startWatcher(maker, dispatch) {
 
   const addresses = maker.service('smartContract').getContractAddresses();
 
+  watcher.onNewBlock(blockHeight => {
+    console.log('Latest block height:', blockHeight);
+  });
+
   watcher.batch().subscribe(updates => {
     console.log('watcher got updates:', { updates });
 
