@@ -188,6 +188,8 @@
   "liquidation_penalty": "Liquidation fee",
   "collateral_debt_ceiling": "Debt ceiling",
   "dai_available": "DAI Available",
+  "returned_auction": "returned from the auction",
+  "liquidated_event": "Your CDP has been liquidated",
   "liquidation_ratio": "Minimum liquidation ratio",
   "liquidation_price": "Liquidation price",
   "liquidation_penalty_shortened": "Liq Fee",
