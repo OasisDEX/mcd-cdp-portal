@@ -81,7 +81,18 @@ export function activityString(action, amount, lowercase) {
   );
 }
 
+function auctionString(amount) {
+  return (
+    prettifyNumber(amount.toNumber()) +
+    amount.symbol +
+    ' ' +
+    lang.returned_auction
+  );
+}
+
 export function fullActivityString(e) {
+  if (e.liquidated) return lang.liquidated_event;
+  if (e.auctionProceeds) return auctionString(e.changeInCollateral);
   let str = '';
   if (e.collateralAction)
     str += activityString(e.collateralAction, e.changeInCollateral);
