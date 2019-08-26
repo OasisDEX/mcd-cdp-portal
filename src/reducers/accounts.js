@@ -2,17 +2,17 @@ import produce from 'immer';
 import ilkList from 'references/ilkList';
 
 const defaultTokenState = {
-  balance: NaN
+  balance: null
 };
 
-const symbols = [
+export const tokensWithBalances = [
   'MDAI',
   'DAI',
   'MWETH',
   ...new Set(ilkList.map(ilk => ilk.gem))
 ];
 
-const defaultAccountState = symbols.reduce((acc, symbol) => {
+const defaultAccountState = tokensWithBalances.reduce((acc, symbol) => {
   acc[symbol] = defaultTokenState;
   return acc;
 }, {});

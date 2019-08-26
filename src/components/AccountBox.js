@@ -16,7 +16,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import lang from 'languages';
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
-// we handle showing ETH manually since we always want to show it first
+// this turns out to be the same as MWETH, which we show manually
 uniqueGemsToShow.delete('ETH');
 uniqueGemsToShow = [...uniqueGemsToShow];
 
@@ -32,7 +32,7 @@ const ActionButton = ({ children, ...rest }) => (
   </Button>
 );
 
-const TokenBalance = ({ symbol, currencyAmount, button }) => {
+const TokenBalance = ({ symbol, amount, button }) => {
   return (
     <Flex
       key={`wb_${symbol}`}
@@ -57,7 +57,7 @@ const TokenBalance = ({ symbol, currencyAmount, button }) => {
         textAlign="left"
         width="30%"
       >
-        {(currencyAmount && currencyAmount.toBigNumber().toFixed(3)) || '--'}
+        {(amount && amount.toFixed(3)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -78,7 +78,7 @@ const TokenBalance = ({ symbol, currencyAmount, button }) => {
 const WalletBalances = () => {
   const balances = useWalletBalances();
 
-  const balanceETH = balances.ETH && balances.ETH.balance;
+  const balanceMWETH = balances.MWETH && balances.MWETH.balance;
   const balanceSAI = balances.DAI && balances.DAI.balance;
 
   return (
@@ -102,20 +102,20 @@ const WalletBalances = () => {
       <StripedRows>
         <TokenBalance
           symbol="DAI"
-          currencyAmount={balances.MDAI && balances.MDAI.balance}
+          amount={balances.MDAI && balances.MDAI.balance}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
         {balanceSAI && balanceSAI.gt(0) && (
           <TokenBalance
             symbol="SAI"
-            currencyAmount={balanceSAI}
+            amount={balanceSAI}
             button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
           />
         )}
-        {balanceETH && balanceETH.gt(0) && (
+        {balanceMWETH && balanceMWETH.gt(0) && (
           <TokenBalance
             symbol="WETH"
-            currencyAmount={balanceETH}
+            amount={balanceMWETH}
             button={<ActionButton>{lang.sidebar.send}</ActionButton>}
           />
         )}
@@ -124,10 +124,10 @@ const WalletBalances = () => {
           const balance = balances[gem] && balances[gem].balance;
           return (
             balance &&
-            balance.toBigNumber().gt(0) && (
+            balance.gt(0) && (
               <TokenBalance
                 symbol={gem}
-                currencyAmount={balance}
+                amount={balance}
                 button={<ActionButton>{lang.sidebar.send}</ActionButton>}
               />
             )
