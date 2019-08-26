@@ -173,14 +173,7 @@ const setAllowance = async (
       lang.formatString(lang.transactions.unlocking_token, 'DAI')
     );
 
-    // await maker.service('transactionManager').confirm(txPromise, 1);
-    // - This doesn't work with ganache for some reason?!?
-
-    const _web3 = maker.service('web3');
-    await Promise.all([
-      txPromise,
-      _web3.waitForBlockNumber(_web3.blockNumber() + 2)
-    ]);
+    await maker.service('transactionManager').confirm(txPromise, 1);
 
     setHasAllowance(true);
     updateState({ allowanceLoading: false });
@@ -225,7 +218,7 @@ export function ProxyAndAllowanceCheck({
   if (!startedWithoutProxy && !startedWithoutAllowance) return null;
 
   return (
-    <Grid gridRowGap="s">
+    <Grid gridRowGap="s" data-testid="toggle-container">
       {(startedWithoutProxy || !proxyAddress) && (
         <LoadingToggle
           completeText={lang.action_sidebar.proxy_created}
@@ -235,6 +228,7 @@ export function ProxyAndAllowanceCheck({
           isComplete={!!proxyAddress}
           disabled={!!proxyAddress}
           onToggle={() => setupProxy(maker, updateState, newTxListener)}
+          data-testid="proxy-toggle"
         />
       )}
       {(startedWithoutAllowance || !hasAllowance) && (

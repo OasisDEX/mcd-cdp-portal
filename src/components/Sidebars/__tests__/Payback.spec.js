@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {
-  cleanup,
-  waitForElement,
-  waitForElementToBeRemoved,
-  fireEvent
-} from '@testing-library/react';
-import Payback, { ProxyAndAllowanceCheck } from '../Payback';
-import lang from '../../../languages';
-import { callGanache } from '@makerdao/test-helpers';
+import { cleanup, waitForElement, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
+import Payback, { ProxyAndAllowanceCheck } from '../Payback';
+import { mineBlocks } from '@makerdao/test-helpers';
+import { TestAccountProvider } from '../../../../node_modules/@makerdao/test-helpers/dist/TestAccountProvider';
+import testAccounts from '../../../../node_modules/@makerdao/test-helpers/dist/testAccounts.json';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
+import lang from '../../../languages';
 
 afterEach(cleanup);
 
@@ -25,26 +23,136 @@ test('basic rendering', async () => {
   getByText('7.5 DAI'); // art * rate
 });
 
-const SetupProxyAndAllowance = () => {
-  const { maker, account, newTxListener } = useMaker();
-  const [hasAllowance, setHasAllowance] = useState(false);
-  return (
-    <ProxyAndAllowanceCheck
-      {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
-    />
-  );
-};
+describe('Set Proxy + Allowance', async () => {
+  let _web3;
 
-test('set allowance', async () => {
-  const { getByTestId, findByText } = render(<SetupProxyAndAllowance />);
-  await findByText(/Unlock/);
+  const SetupProxyAndAllowance = () => {
+    const [changedAccount, setAccountChanged] = useState(false);
+    const { maker, account, newTxListener } = useMaker();
+    const [hasAllowance, setHasAllowance] = useState(false);
+    _web3 = maker.service('web3');
 
-  const allowanceToggle = getByTestId('allowance-toggle');
-  const allowanceButton = allowanceToggle.children[1];
-  fireEvent.click(allowanceButton);
-  await findByText(/Unlocking/);
+    const accountProvider = new TestAccountProvider(testAccounts);
+    accountProvider.setIndex(1);
+    const { key: pkey } = accountProvider.nextAccount();
+    const accountService = maker.service('accounts');
 
-  await callGanache('evm_mine');
-  await callGanache('evm_mine');
-  await findByText(/unlocked/);
+    const changeAccount = async () => {
+      await accountService.addAccount('no proxy account', {
+        type: 'privateKey',
+        key: pkey
+      });
+      accountService.useAccount('no proxy account');
+      setAccountChanged(true);
+    };
+
+    useEffect(() => {
+      changeAccount();
+    }, []);
+
+    return (
+      <>
+        {changedAccount ? (
+          <ProxyAndAllowanceCheck
+            {...{
+              maker,
+              account,
+              newTxListener,
+              hasAllowance,
+              setHasAllowance
+            }}
+          />
+        ) : (
+          <div />
+        )}
+      </>
+    );
+  };
+
+  test('new account should render both proxy + allowance toggles', async () => {
+    const { getByTestId } = render(<SetupProxyAndAllowance />);
+    const [proxyToggle, allowanceToggle] = await Promise.all([
+      waitForElement(() => getByTestId('proxy-toggle')),
+      waitForElement(() => getByTestId('allowance-toggle'))
+    ]);
+
+    expect(proxyToggle).toHaveTextContent(lang.action_sidebar.create_proxy);
+    expect(allowanceToggle).toHaveTextContent(
+      lang.formatString(lang.action_sidebar.unlock_token, 'DAI')
+    );
+  });
+
+  test('allowance should be disabled if proxy unset', async () => {
+    const { getByTestId } = render(<SetupProxyAndAllowance />);
+    const [proxyToggle, allowanceToggle] = await Promise.all([
+      waitForElement(() => getByTestId('proxy-toggle')),
+      waitForElement(() => getByTestId('allowance-toggle'))
+    ]);
+    const proxyButton = proxyToggle.children[1];
+    const allowanceButton = allowanceToggle.children[1];
+    expect(proxyButton).toBeEnabled();
+    expect(allowanceButton).toBeDisabled();
+  });
+
+  test('proxy can be set', async () => {
+    const { getByTestId } = render(<SetupProxyAndAllowance />);
+    const [proxyToggle, allowanceToggle] = await Promise.all([
+      waitForElement(() => getByTestId('proxy-toggle')),
+      waitForElement(() => getByTestId('allowance-toggle'))
+    ]);
+
+    const proxyButton = proxyToggle.children[1];
+    fireEvent.click(proxyButton);
+
+    expect(
+      await waitForElement(() => getByTestId('proxy-toggle'))
+    ).toHaveTextContent(lang.action_sidebar.creating_proxy);
+
+    await mineBlocks(_web3);
+
+    expect(
+      await waitForElement(() => getByTestId('proxy-toggle'))
+    ).toHaveTextContent(lang.action_sidebar.proxy_created);
+    expect(allowanceToggle.children[1]).toBeEnabled();
+  });
+
+  test('if proxy is already set, proxy toggle should not be rendered', async () => {
+    const { queryByTestId, getByTestId } = render(<SetupProxyAndAllowance />);
+
+    await waitForElement(() => getByTestId('toggle-container'));
+    expect(queryByTestId('proxy-toggle')).toBeNull();
+    expect(queryByTestId('allowance-toggle')).not.toBeNull();
+  });
+
+  test('allowance can be set', async () => {
+    const { getByTestId } = render(<SetupProxyAndAllowance />);
+
+    const allowanceToggle = await waitForElement(() =>
+      getByTestId('allowance-toggle')
+    );
+    const allowanceButton = allowanceToggle.children[1];
+    fireEvent.click(allowanceButton);
+
+    expect(
+      await waitForElement(() => getByTestId('allowance-toggle'))
+    ).toHaveTextContent(
+      lang.formatString(lang.action_sidebar.unlocking_token, 'DAI')
+    );
+
+    await mineBlocks(_web3);
+
+    expect(
+      await waitForElement(() => getByTestId('allowance-toggle'))
+    ).toHaveTextContent(
+      lang.formatString(lang.action_sidebar.token_unlocked, 'DAI')
+    );
+  });
+
+  test('if allowance is already set, allowance toggle should nnot be rendered', async () => {
+    const { queryByTestId, getByTestId } = render(<SetupProxyAndAllowance />);
+
+    await waitForElement(() => getByTestId('toggle-container'));
+    expect(queryByTestId('proxy-toggle')).toBeNull();
+    expect(queryByTestId('allowance-toggle')).toBeNull();
+  });
 });
