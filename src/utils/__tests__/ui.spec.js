@@ -2,7 +2,7 @@ import { fullActivityString, firstLetterLowercase, formatDate } from '../ui';
 import { mockHistoryDataFromSDK } from '../../reducers/cdps';
 
 test('fullActivityString', () => {
-  expect(fullActivityString(mockHistoryDataFromSDK[2])).toBe(
+  expect(fullActivityString(mockHistoryDataFromSDK[4])).toBe(
     'Deposited 10,000 ETH and generated 120,000 DAI'
   );
 });

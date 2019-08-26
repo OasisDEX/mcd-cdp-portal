@@ -36,7 +36,8 @@ export async function instantiateMaker({
     },
     web3: {
       pollingInterval: network === 'testnet' ? 100 : null
-    }
+    },
+    multicall: true
   };
 
   // Use the config plugin, if we have a testchainConfigId

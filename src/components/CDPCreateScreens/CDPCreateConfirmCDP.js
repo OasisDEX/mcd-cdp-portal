@@ -198,12 +198,12 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
     newTxListener(txObject, lang.transactions.create_cdp);
 
-    maker.service('transactionManager').listen(txObject, {
+    const txMgr = maker.service('transactionManager');
+    txMgr.listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),
-      mined: () => {
-        checkForNewCdps();
-      }
+      confirmed: () => checkForNewCdps()
     });
+    await txMgr.confirm(txObject, 1);
   }
 
   if (openCDPTxHash)
