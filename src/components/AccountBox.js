@@ -20,9 +20,15 @@ let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
 uniqueGemsToShow.delete('ETH');
 uniqueGemsToShow = [...uniqueGemsToShow];
 
-const SendTknButton = () => (
-  <Button variant="secondary-outline" px="4px" py="1px">
-    <Text t="smallCaps">{lang.sidebar.send}</Text>
+const ActionButton = ({ children, ...rest }) => (
+  <Button
+    variant="secondary-outline"
+    px="4px"
+    py="1px"
+    minWidth="4.5rem"
+    {...rest}
+  >
+    <Text t="smallCaps">{children}</Text>
   </Button>
 );
 
@@ -73,6 +79,7 @@ const WalletBalances = () => {
   const balances = useWalletBalances();
 
   const balanceETH = balances.ETH && balances.ETH.balance;
+  const balanceSAI = balances.DAI && balances.DAI.balance;
 
   return (
     <CardBody>
@@ -96,13 +103,20 @@ const WalletBalances = () => {
         <TokenBalance
           symbol="DAI"
           currencyAmount={balances.MDAI && balances.MDAI.balance}
-          button={<SendTknButton />}
+          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
+        {balanceSAI && balanceSAI.gt(0) && (
+          <TokenBalance
+            symbol="SAI"
+            currencyAmount={balanceSAI}
+            button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
+          />
+        )}
         {balanceETH && balanceETH.gt(0) && (
           <TokenBalance
             symbol="WETH"
             currencyAmount={balanceETH}
-            button={<SendTknButton />}
+            button={<ActionButton>{lang.sidebar.send}</ActionButton>}
           />
         )}
 
@@ -114,7 +128,7 @@ const WalletBalances = () => {
               <TokenBalance
                 symbol={gem}
                 currencyAmount={balance}
-                button={<SendTknButton />}
+                button={<ActionButton>{lang.sidebar.send}</ActionButton>}
               />
             )
           );

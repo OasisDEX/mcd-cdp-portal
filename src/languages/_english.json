@@ -58,6 +58,7 @@
     "balance": "BALANCE",
     "usd": "USD",
     "send": "SEND",
+    "migrate": "MIG",
     "no_wallet": "Not connected"
   },
   "cdp_create": {

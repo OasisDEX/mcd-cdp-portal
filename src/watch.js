@@ -5,10 +5,16 @@ import cdpTypeModel from './reducers/multicall/feeds';
 import tokenModel from './reducers/multicall/balances';
 import { isMissingContractAddress } from './utils/ethereum';
 import { MDAI, MWETH } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai';
 
 let watcher;
 
-const currencies = [MDAI, MWETH, ...new Set(ilks.map(ilk => ilk.currency))];
+const currencies = [
+  MDAI,
+  MWETH,
+  DAI,
+  ...new Set(ilks.map(ilk => ilk.currency))
+];
 
 export function startWatcher(maker, dispatch) {
   const service = maker.service('multicall');

@@ -5,7 +5,12 @@ const defaultTokenState = {
   balance: NaN
 };
 
-const symbols = ['MDAI', 'MWETH', ...new Set(ilkList.map(ilk => ilk.gem))];
+const symbols = [
+  'MDAI',
+  'DAI',
+  'MWETH',
+  ...new Set(ilkList.map(ilk => ilk.gem))
+];
 
 const defaultAccountState = symbols.reduce((acc, symbol) => {
   acc[symbol] = defaultTokenState;
