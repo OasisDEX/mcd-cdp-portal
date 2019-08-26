@@ -1,7 +1,6 @@
 import React from 'react';
 import lang from 'languages';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
 import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
@@ -9,7 +8,8 @@ import { getWebClientProviderName } from 'utils/web3';
 import { cutMiddle } from 'utils/ui';
 
 const ActiveAccount = ({
-  currentAccount,
+  address,
+  type,
   textColor = 'darkPurple',
   iconSize = 22,
   t = 'body',
@@ -17,22 +17,29 @@ const ActiveAccount = ({
   readOnly,
   ...rest
 }) => {
-  const { address, type } = currentAccount;
-  if (!currentAccount) return null;
   const providerType =
     type === 'browser' ? getWebClientProviderName(type) : type;
   return (
-    <Flex alignItems="center" {...rest}>
-      <Jazzicon diameter={iconSize} seed={jsNumberForAddress(address)} />
+    <Flex justifyContent="space-between" alignItems="center" {...rest}>
+      <Text
+        pr="xs"
+        fontSize="0.8rem"
+        color={address ? 'makerTeal' : 'makerOrange'}
+      >
+        &#11044;
+      </Text>
+
       <Box ml="xs" mr="auto">
         <Text t={t} color={textColor}>
-          {lang.providers[providerType]}
+          {address ? lang.providers[providerType] : lang.sidebar.no_wallet}
         </Text>
       </Box>
       <Box ml="s">
-        <Text t={addressTextStyle} color={textColor}>
-          {cutMiddle(address, 7, 5)}
-        </Text>
+        {address ? (
+          <Text t={addressTextStyle} color={textColor}>
+            {cutMiddle(address, 7, 5)}
+          </Text>
+        ) : null}
       </Box>
       {readOnly ? null : (
         <Box ml="xs" mb="2px">

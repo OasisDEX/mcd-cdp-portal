@@ -27,9 +27,16 @@ export function renderForSidebar(children, initialState) {
     };
   }
 
+  return renderWithStore(
+    <TestMakerProvider waitForAuth={true}>{children}</TestMakerProvider>,
+    initialState
+  );
+}
+
+export function renderWithStore(children, initialState = {}) {
   return render(
     <StoreProvider reducer={() => initialState} initialState={initialState}>
-      <TestMakerProvider waitForAuth={true}>{children}</TestMakerProvider>
+      {children}
     </StoreProvider>
   );
 }

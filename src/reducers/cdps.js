@@ -162,13 +162,26 @@ export const mockHistoryDataFromSDK = [
   {
     transactionHash:
       '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(15),
+    auctionProceeds: true,
+    time: new Date(Date.now() + 10000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
+    changeInCollateral: ETH(0),
+    liquidated: true,
+    time: new Date(Date.now() + 10000000000),
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a'
+  },
+  {
+    transactionHash:
+      '0xbe023a205453b833e65bf29063de8b8b3bd44d2e68c9c079f681ec46a765a63f',
     changeInCollateral: ETH(99.5),
     collateralAction: 'free',
     time: new Date(Date.now()),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(900.5),
-    resultingDebt: MDAI(10090),
-    ilk: 'ETH-A'
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a'
   },
   {
     transactionHash:
@@ -177,10 +190,7 @@ export const mockHistoryDataFromSDK = [
     changeInDai: MDAI(1000),
     daiAction: 'wipe',
     time: new Date(Date.now() - 10000000000),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(1000),
-    resultingDebt: MDAI(10045),
-    ilk: 'ETH-A'
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a'
   },
   {
     transactionHash:
@@ -190,10 +200,7 @@ export const mockHistoryDataFromSDK = [
     changeInDai: MDAI(120000),
     daiAction: 'draw',
     time: new Date(Date.now() - 20000000000),
-    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a',
-    resultingCollateral: ETH(1000),
-    resultingDebt: MDAI(1100),
-    ilk: 'ETH-A'
+    senderAddress: '0x1ad35418e7b7c5746ea42295a1100480a810256a'
   }
 ];
 

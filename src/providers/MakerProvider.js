@@ -5,6 +5,8 @@ import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
+import useStore from '../hooks/useStore';
+import { startWatcher } from '../watch';
 
 export const MakerObjectContext = createContext();
 
@@ -14,6 +16,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
   const navigation = useNavigation();
+  const [, dispatch] = useStore();
 
   const initAccount = account => {
     mixpanelIdentify(account.address, 'metamask');
@@ -21,13 +24,16 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   };
 
   useEffect(() => {
-    instantiateMaker({
-      network,
-      testchainId,
-      backendEnv
-    }).then(maker => {
-      if (maker.service('accounts').hasAccount())
+    (async () => {
+      const maker = await instantiateMaker({
+        network,
+        testchainId,
+        backendEnv
+      });
+      if (maker.service('accounts').hasAccount()) {
         initAccount(maker.currentAccount());
+      }
+      startWatcher(maker, dispatch);
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
@@ -45,8 +51,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
           }
         })();
       });
-    });
-  }, [backendEnv, network, testchainId]);
+    })();
+  }, [backendEnv, dispatch, network, testchainId]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);

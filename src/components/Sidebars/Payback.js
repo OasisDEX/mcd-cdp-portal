@@ -43,9 +43,7 @@ const Payback = ({ cdpId, reset }) => {
 
   const payback = () => {
     newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .wipe(cdpId, MDAI(parseFloat(amount)), cdp.currency(0)),
+      maker.service('mcd:cdpManager').wipe(cdpId, MDAI(parseFloat(amount))),
       lang.transactions.pay_back_dai
     );
     reset();

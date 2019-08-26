@@ -35,7 +35,7 @@ const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-bottom: -5px;
 `;
 
-function Auth() {
+function Borrow() {
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -51,7 +51,7 @@ function Auth() {
       const { search } = (await navigation.getRoute()).url;
 
       navigation.navigate({
-        pathname: `${Routes.BORROW}/owner/${address}`,
+        pathname: `/${Routes.BORROW}/owner/${address}`,
         search
       });
     },
@@ -72,7 +72,7 @@ function Auth() {
   return (
     <PageContentLayout>
       <Flex
-        height="100vh"
+        height="70vh"
         justifyContent="center"
         alignItems="center"
         flexDirection="column"
@@ -111,4 +111,4 @@ function Auth() {
   );
 }
 
-export default hot(Auth);
+export default hot(Borrow);

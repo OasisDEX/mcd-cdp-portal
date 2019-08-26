@@ -1093,13 +1093,13 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.2.10-1":
-  version "0.2.10-1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10-1.tgz#ba0b3ce7bd16a38cccdcda28d6242ba8e29242ca"
-  integrity sha512-1Zs0ki+7m867MMR+la7xDtN3SQPf+dJ/36rLcHyb9sGXmbgxr7eQF23p0pFAugGjfUHObBOGmWK9zqApRHxNuQ==
+"@makerdao/dai-plugin-mcd@0.2.10-4":
+  version "0.2.10-4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.10-4.tgz#48196e197573af5a10f8533936e4febf0406a240"
+  integrity sha512-bOufZeOisBSun4GrUX26uBxGydERP7Z55D2VjO0x5YbYoabNz24KpLdsebabtNUDllBtV9uer+qPQOJ+VHV6Qw==
   dependencies:
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/services-core" "^0.9.5"
+    "@makerdao/services-core" "^0.9.9"
     bignumber.js "^8.1.1"
 
 "@makerdao/dai-plugin-trezor-web@^0.9.6":
@@ -1114,14 +1114,15 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai@0.17.1":
-  version "0.17.1"
-  resolved "https://registry.npmjs.org/@makerdao/dai/-/dai-0.17.1.tgz#590f014fd35ca4a71cba385dff42c6333794d218"
-  integrity sha512-osYUOLPjTjgtHwvK6jK0sluvEEOw2AzXOrIMQem1P8Fdz5/wmHRCW3XWgGsi+xsZgcR92SSjHWLRPJLxmbzQAw==
+"@makerdao/dai@0.18.4":
+  version "0.18.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.18.4.tgz#fce8ddf68e2068ee0589b358cbda6c7c1dcec9dd"
+  integrity sha512-4Dl/2KAG1oU+VUTF/Ksr9iDGWN6ehlkKhmVjf1asHFuUifJTz6sVG+yFEnYoTFfm7UKV73rMz708prutPV770g==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/services-core" "^0.9.8"
+    "@makerdao/multicall" "^0.7.0"
+    "@makerdao/services-core" "^0.9.9"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
@@ -1147,36 +1148,28 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.6.1.tgz#39c34d8364b1b72e2c281431859763b0719720e7"
-  integrity sha512-hD5gluapIzl1r+RlHnRIwBFBcSZ1l7EbwmHWZjcy1qjlccKwJ95AdD/YYwZyhPTLqilwhvCLb1FJ2QM6jSpn2g==
+"@makerdao/multicall@^0.7.0":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.7.1.tgz#b15cc00b792608b92b20425cc1c889c94c64cc66"
+  integrity sha512-CSGLCSLkqpqZcyQuAOlCh3+ZE5IYS0vbN+FawlIs9Yod9uHcHn1sCvnEhlhVbRDfZqdx1upKe/ifraM1Dw+riQ==
   dependencies:
     cross-fetch "^3.0.1"
     ethers "^4.0.6"
     js-sha3 "^0.8.0"
 
-"@makerdao/services-core@^0.9.5":
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.5.tgz#2ab2d4cf056ede36b1b4d2d01cca5ea629b4238b"
-  integrity sha512-76OdWkraW1qBp2CP8hezy8MIJT2qjqQYEVuHxmHhUc4lV+VpGogifh5q49do5u6wDKw0TrESccMzNX7E4/VSZA==
+"@makerdao/services-core@^0.9.9":
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.9.tgz#22bccab226cebfbe9649e34156f4aaa109cc0f86"
+  integrity sha512-EFimChs0KpIFMW7wpB0foYA77YP785384h0RbQB517X14blNvgR1T1eZCxFH0YZWw5nISfxGh0lf6l1ImAdfEw==
   dependencies:
     babel-runtime "^6.26.0"
-    lodash.values "^4.3.0"
+    lodash "^4.17.15"
     toposort "^2.0.2"
 
-"@makerdao/services-core@^0.9.8":
-  version "0.9.8"
-  resolved "https://registry.yarnpkg.com/@makerdao/services-core/-/services-core-0.9.8.tgz#14481d59267afc5fd1a6576a783d370eb80a47e3"
-  integrity sha512-Qp/kkiKzqhJCuZ2YZT0cYo2oAyCM05PaJK69AkJ0FS21ETC6/n1oSQWwEpnkuKhutnM4ZO9/uuLWke47wC+ojA==
-  dependencies:
-    babel-runtime "^6.26.0"
-    lodash.values "^4.3.0"
-    toposort "^2.0.2"
-
-"@makerdao/testchain@makerdao/testchain":
-  version "1.0.0"
-  resolved "https://codeload.github.com/makerdao/testchain/tar.gz/63a7584dfd0e120a519e15b49424cc2dd4ad9f87"
+"@makerdao/testchain@0.2.10-4":
+  version "0.2.10-4"
+  resolved "https://registry.yarnpkg.com/@makerdao/testchain/-/testchain-0.2.10-4.tgz#cd0656c159b3f40a739980baee1297ce7d9ca46b"
+  integrity sha512-vtr3j7aBKv0YpRKtfHnK2K/o+AWzukDUxGw6KirXrV6+k1WEirjohn0sly64b/0ecO6ivxuV7BugkHK4FB9voQ==
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
@@ -8357,15 +8350,15 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash.values@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/lodash.values/-/lodash.values-4.3.0.tgz#a3a6c2b0ebecc5c2cba1c17e6e620fe81b53d347"
-  integrity sha1-o6bCsOvsxcLLocF+bmIP6BtT00c=
-
 "lodash@>=3.5 <5", lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
+
+lodash@^4.17.15:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
 log-symbols@^1.0.2:
   version "1.0.2"
