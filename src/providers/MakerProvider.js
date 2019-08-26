@@ -39,6 +39,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       maker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
         initAccount(account);
+        startWatcher(maker, dispatch);
         (async () => {
           const proxy = await maker
             .service('proxy')

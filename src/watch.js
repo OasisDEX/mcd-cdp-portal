@@ -1,10 +1,14 @@
 import { batchActions } from './utils/redux';
-import ilkList from './references/ilkList';
+import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
+import tokenModel from './reducers/multicall/balances';
 import { isMissingContractAddress } from './utils/ethereum';
+import { MDAI, MWETH } from '@makerdao/dai-plugin-mcd';
 
 let watcher;
+
+const currencies = [MDAI, MWETH, ...new Set(ilks.map(ilk => ilk.currency))];
 
 export function startWatcher(maker, dispatch) {
   const service = maker.service('multicall');
@@ -12,7 +16,15 @@ export function startWatcher(maker, dispatch) {
   watcher = service.watcher;
   window.watcher = watcher;
 
+  let currentAddress;
+  try {
+    currentAddress = maker.currentAddress();
+  } catch (err) {}
+
   const addresses = maker.service('smartContract').getContractAddresses();
+  // for convenience
+  addresses.MDAI = addresses.MCD_DAI;
+  addresses.MWETH = addresses.ETH;
 
   watcher.onNewBlock(blockHeight => {
     console.log('Latest block height:', blockHeight);
@@ -35,7 +47,12 @@ export function startWatcher(maker, dispatch) {
   watcher.tap(() => {
     return [
       ...createCDPSystemModel(addresses),
-      ...ilkList.map(ilk => cdpTypeModel(addresses, ilk)).flat()
+      ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
+      ...(currentAddress
+        ? currencies
+            .map(currency => tokenModel(addresses, currency, currentAddress))
+            .flat()
+        : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
   });
   return watcher;

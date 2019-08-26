@@ -7,10 +7,18 @@ import {
   Button,
   Flex
 } from '@makerdao/ui-components-core';
+import ilkList from 'references/ilkList';
 import { getSpace } from 'styles/theme';
 import ActiveAccount from 'components/ActiveAccount';
+import StripedRows from 'components/StripedRows';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
+import useWalletBalances from 'hooks/useWalletBalances';
 import lang from 'languages';
+
+let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
+// we handle showing ETH manually since we always want to show it first
+uniqueGemsToShow.delete('ETH');
+uniqueGemsToShow = [...uniqueGemsToShow];
 
 const SendTknButton = () => (
   <Button variant="secondary-outline" px="4px" py="1px">
@@ -18,93 +26,103 @@ const SendTknButton = () => (
   </Button>
 );
 
-const mockWalletBalances = [
-  {
-    asset: 'DAI',
-    balance: '--',
-    balanceUSD: '--',
-    btn: <SendTknButton />
-  },
-  {
-    asset: 'MKR',
-    balance: '--',
-    balanceUSD: '--',
-    btn: <SendTknButton />
-  },
-  {
-    asset: 'ETH',
-    balance: '--',
-    balanceUSD: '--',
-    btn: <SendTknButton />
-  },
-  {
-    asset: 'OMG',
-    balance: '--',
-    balanceUSD: '--',
-    btn: <SendTknButton />
-  }
-];
-
-const WalletBalances = () => (
-  <CardBody>
-    <Box px="s" py="m">
-      <Text t="h4">{lang.sidebar.wallet_balances}</Text>
-    </Box>
-    <Flex justifyContent="space-between" px="s">
-      <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
-        {lang.sidebar.asset}
-      </Text>
-      <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-        {lang.sidebar.balance}
-      </Text>
-      <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-        {lang.sidebar.usd}
-      </Text>
-      <Box width="20%" />
-    </Flex>
-    {mockWalletBalances.map(({ asset, balance, balanceUSD, btn }, idx) => (
-      <Flex
-        key={`wb_${asset}_${idx}`}
-        justifyContent="space-between"
-        alignItems="center"
-        bg={idx % 2 ? 'coolGrey.100' : 'white'}
-        px="s"
-        py="xs"
+const TokenBalance = ({ symbol, currencyAmount, button }) => {
+  return (
+    <Flex
+      key={`wb_${symbol}`}
+      justifyContent="space-between"
+      alignItems="center"
+      px="s"
+      py="xs"
+    >
+      <Text
+        color="darkLavender"
+        fontWeight="semibold"
+        t="p5"
+        textAlign="left"
+        width="20%"
       >
-        <Text
-          color="darkLavender"
-          fontWeight="semibold"
-          t="p5"
-          textAlign="left"
-          width="20%"
-        >
-          {asset}
-        </Text>
-        <Text
-          color="darkLavender"
-          fontWeight="semibold"
-          t="p5"
-          textAlign="left"
-          width="30%"
-        >
-          {balance}
-        </Text>
-        <Text
-          color="darkLavender"
-          fontWeight="semibold"
-          t="p5"
-          textAlign="left"
-          width="30%"
-        >
-          {balanceUSD}
-        </Text>
-        <Flex width="20%" justifyContent="flex-end">
-          {btn}
-        </Flex>
+        {symbol}
+      </Text>
+      <Text
+        color="darkLavender"
+        fontWeight="semibold"
+        t="p5"
+        textAlign="left"
+        width="30%"
+      >
+        {(currencyAmount && currencyAmount.toBigNumber().toFixed(3)) || '--'}
+      </Text>
+      <Text
+        color="darkLavender"
+        fontWeight="semibold"
+        t="p5"
+        textAlign="left"
+        width="30%"
+      >
+        --
+      </Text>
+      <Flex width="20%" justifyContent="flex-end">
+        {button}
       </Flex>
-    ))}
-  </CardBody>
-);
+    </Flex>
+  );
+};
+
+const WalletBalances = () => {
+  const balances = useWalletBalances();
+
+  const balanceETH = balances.ETH && balances.ETH.balance;
+
+  return (
+    <CardBody>
+      <Box px="s" py="m">
+        <Text t="h4">{lang.sidebar.wallet_balances}</Text>
+      </Box>
+      <Flex justifyContent="space-between" px="s">
+        <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+          {lang.sidebar.asset}
+        </Text>
+        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+          {lang.sidebar.balance}
+        </Text>
+        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+          {lang.sidebar.usd}
+        </Text>
+        <Box width="20%" />
+      </Flex>
+
+      <StripedRows>
+        <TokenBalance
+          symbol="DAI"
+          currencyAmount={balances.MDAI && balances.MDAI.balance}
+          button={<SendTknButton />}
+        />
+        {balanceETH && balanceETH.gt(0) && (
+          <TokenBalance
+            symbol="WETH"
+            currencyAmount={balanceETH}
+            button={<SendTknButton />}
+          />
+        )}
+
+        {uniqueGemsToShow.map(gem => {
+          const balance = balances[gem] && balances[gem].balance;
+          return (
+            balance &&
+            balance.toBigNumber().gt(0) && (
+              <TokenBalance
+                symbol={gem}
+                currencyAmount={balance}
+                button={<SendTknButton />}
+              />
+            )
+          );
+        })}
+      </StripedRows>
+    </CardBody>
+  );
+};
 
 function AccountBox({ currentAccount }) {
   const [open, setOpen] = useState(false);
