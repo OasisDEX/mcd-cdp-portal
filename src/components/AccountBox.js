@@ -17,6 +17,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
 import lang from 'languages';
+import useSidebar from 'hooks/useSidebar';
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
 // this turns out to be the same as MWETH, which we show manually
@@ -81,9 +82,11 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
   );
 };
 
-const WalletBalances = () => {
+const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
+  const { show: showSidebar } = useSidebar();
+
   const uniqueFeeds = useMemo(
     () =>
       getAllFeeds(feeds).reduce((acc, feed) => {
@@ -96,6 +99,9 @@ const WalletBalances = () => {
 
   const balanceMWETH = balances.MWETH && balances.MWETH.balance;
   const balanceSAI = balances.DAI && balances.DAI.balance;
+
+  const showSendSidebar = props =>
+    hasActiveAccount && showSidebar({ type: 'send', props });
 
   return (
     <CardBody>
@@ -120,13 +126,21 @@ const WalletBalances = () => {
           symbol="DAI"
           amount={balances.MDAI && balances.MDAI.balance}
           usdRatio={new BigNumber(1)}
-          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+          button={
+            <ActionButton onClick={() => showSendSidebar({ token: 'DAI' })}>
+              {lang.sidebar.send}
+            </ActionButton>
+          }
         />
         <TokenBalance
           symbol="ETH"
           amount={balances.ETH && balances.ETH.balance}
           usdRatio={uniqueFeeds.ETH}
-          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+          button={
+            <ActionButton onClick={() => showSendSidebar({ token: 'ETH' })}>
+              {lang.sidebar.send}
+            </ActionButton>
+          }
         />
         {balanceSAI && balanceSAI.gt(0) && (
           <TokenBalance
@@ -141,7 +155,11 @@ const WalletBalances = () => {
             symbol="WETH"
             amount={balanceMWETH}
             usdRatio={uniqueFeeds.ETH}
-            button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+            button={
+              <ActionButton onClick={() => showSendSidebar({ token: 'WETH' })}>
+                {lang.sidebar.send}
+              </ActionButton>
+            }
           />
         )}
 
@@ -154,7 +172,11 @@ const WalletBalances = () => {
                 symbol={gem}
                 amount={balance}
                 usdRatio={uniqueFeeds[gem]}
-                button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+                button={
+                  <ActionButton onClick={() => showSendSidebar({ token: gem })}>
+                    {lang.sidebar.send}
+                  </ActionButton>
+                }
               />
             )
           );
@@ -183,7 +205,7 @@ function AccountBox({ currentAccount }) {
           trigger={<ActiveAccount address={address} type={type} />}
         />
       </CardBody>
-      <WalletBalances />
+      <WalletBalances hasActiveAccount={!!currentAccount} />
     </Card>
   );
 }
