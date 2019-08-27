@@ -24,3 +24,18 @@ export function getWalletConnectAccounts() {
     });
   });
 }
+
+export async function getWalletLinkAccounts({
+  maker,
+  onAccountChosenCallback
+}) {
+  console.log('getWalletLinkAccounts called');
+  maker.addAccount({
+    type: 'walletlink',
+    calledFrom: 'portal',
+    onAccountSelect: address => {
+      console.log('testing callback address', address);
+      onAccountChosenCallback(address, 'walletlink');
+    }
+  });
+}

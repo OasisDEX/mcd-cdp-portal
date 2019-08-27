@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import lang from 'languages';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
@@ -6,7 +6,10 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
-import { getWalletConnectAccounts } from 'utils/walletconnect';
+import {
+  getWalletConnectAccounts,
+  getWalletLinkAccounts
+} from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
@@ -46,6 +49,15 @@ const WalletConnectDropdown = ({
     maker.useAccountWithAddress(address);
     mixpanelIdentify(address, type);
   }
+
+  const onAccountChosenCallback = useCallback(
+    async (address, type) => {
+      console.log('onAcct Chosen params', address, type);
+      maker.useAccountWithAddress(address);
+      mixpanelIdentify(address, type);
+    },
+    [maker]
+  );
 
   useEffect(() => {
     const accounts = maker.listAccounts();
@@ -135,6 +147,14 @@ const WalletConnectDropdown = ({
           }}
         >
           Wallet Connect
+        </Option>
+        <Option
+          onClick={() => {
+            getWalletLinkAccounts({ maker, onAccountChosenCallback });
+            close();
+          }}
+        >
+          Coinbase WalletLink
         </Option>
       </Card>
     </Dropdown>
