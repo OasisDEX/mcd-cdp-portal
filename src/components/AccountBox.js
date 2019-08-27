@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Text,
@@ -13,6 +13,8 @@ import ActiveAccount from 'components/ActiveAccount';
 import StripedRows from 'components/StripedRows';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
+import useStore from 'hooks/useStore';
+import { getAllFeeds } from 'reducers/feeds';
 import lang from 'languages';
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
@@ -32,7 +34,7 @@ const ActionButton = ({ children, ...rest }) => (
   </Button>
 );
 
-const TokenBalance = ({ symbol, amount, button }) => {
+const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
   return (
     <Flex
       key={`wb_${symbol}`}
@@ -66,7 +68,10 @@ const TokenBalance = ({ symbol, amount, button }) => {
         textAlign="left"
         width="30%"
       >
-        --
+        {(amount &&
+          usdRatio &&
+          `$${amount.times(usdRatio.toNumber()).toFixed(3)}`) ||
+          '--'}
       </Text>
       <Flex width="20%" justifyContent="flex-end">
         {button}
@@ -77,6 +82,16 @@ const TokenBalance = ({ symbol, amount, button }) => {
 
 const WalletBalances = () => {
   const balances = useWalletBalances();
+  const [{ feeds }] = useStore();
+  const uniqueFeeds = useMemo(
+    () =>
+      getAllFeeds(feeds).reduce((acc, feed) => {
+        const [token] = feed.pair.split('/');
+        acc[token] = feed.value;
+        return acc;
+      }, {}),
+    [feeds]
+  );
 
   const balanceMWETH = balances.MWETH && balances.MWETH.balance;
   const balanceSAI = balances.DAI && balances.DAI.balance;
@@ -108,6 +123,7 @@ const WalletBalances = () => {
         <TokenBalance
           symbol="ETH"
           amount={balances.ETH && balances.ETH.balance}
+          usdRatio={uniqueFeeds.ETH}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
         {balanceSAI && balanceSAI.gt(0) && (
@@ -121,6 +137,7 @@ const WalletBalances = () => {
           <TokenBalance
             symbol="WETH"
             amount={balanceMWETH}
+            usdRatio={uniqueFeeds.ETH}
             button={<ActionButton>{lang.sidebar.send}</ActionButton>}
           />
         )}
@@ -133,6 +150,7 @@ const WalletBalances = () => {
               <TokenBalance
                 symbol={gem}
                 amount={balance}
+                usdRatio={uniqueFeeds[gem]}
                 button={<ActionButton>{lang.sidebar.send}</ActionButton>}
               />
             )
