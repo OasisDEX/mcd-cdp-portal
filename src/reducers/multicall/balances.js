@@ -1,16 +1,11 @@
-import BigNumber from 'bignumber.js';
+import { fromWei } from 'utils/units';
 
 export default function(addresses, token, currentAddress) {
   return [
     {
       target: addresses[token],
       call: ['balanceOf(address)(uint256)', currentAddress],
-      returns: [
-        [
-          `balance.${currentAddress}.${token}`,
-          amt => new BigNumber(amt).shiftedBy(-18)
-        ]
-      ]
+      returns: [[`balance.${currentAddress}.${token}`, fromWei]]
     }
   ];
 }
