@@ -13,7 +13,7 @@ export const tokensWithBalances = [
 ];
 
 const defaultAccountState = tokensWithBalances.reduce((acc, symbol) => {
-  acc[symbol] = defaultTokenState;
+  acc[symbol] = Object.assign({}, defaultTokenState);
   return acc;
 }, {});
 
@@ -22,11 +22,12 @@ const initialState = {};
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
 
-  // example type: balance.0xdead...beef.MWETH
-  const [label, account, token] = type.split('.');
-  if (label === 'balance') {
+  // example type: accounts.0xdead...beef.balances.MWETH
+  const [label, account, , token] = type.split('.');
+  if (label === 'accounts') {
     if (!draft[account]) draft[account] = defaultAccountState;
-    if (!draft[account][token]) draft[account][token] = defaultTokenState;
+    if (!draft[account][token])
+      draft[account][token] = Object.assign({}, defaultTokenState);
 
     draft[account][token].balance = value;
   }

@@ -2,7 +2,7 @@ import { batchActions } from './utils/redux';
 import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
-import tokenModel from './reducers/multicall/balances';
+import accountBalanceForToken from './reducers/multicall/accounts';
 import { tokensWithBalances } from './reducers/accounts';
 import { isMissingContractAddress } from './utils/ethereum';
 
@@ -50,7 +50,10 @@ export function startWatcher(maker, dispatch) {
       ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
       ...(currentAddress
         ? tokensWithBalances
-            .map(token => tokenModel(addresses, token, currentAddress))
+            .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
+            .map(token =>
+              accountBalanceForToken(addresses, token, currentAddress)
+            )
             .flat()
         : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)

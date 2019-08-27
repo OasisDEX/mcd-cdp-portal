@@ -5,7 +5,7 @@ export default function(addresses, token, currentAddress) {
     {
       target: addresses[token],
       call: ['balanceOf(address)(uint256)', currentAddress],
-      returns: [[`balance.${currentAddress}.${token}`, fromWei]]
+      returns: [[`accounts.${currentAddress}.balances.${token}`, fromWei]]
     }
   ];
 }

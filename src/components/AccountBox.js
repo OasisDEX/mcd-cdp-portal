@@ -105,6 +105,11 @@ const WalletBalances = () => {
           amount={balances.MDAI && balances.MDAI.balance}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
+        <TokenBalance
+          symbol="ETH"
+          amount={balances.ETH && balances.ETH.balance}
+          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+        />
         {balanceSAI && balanceSAI.gt(0) && (
           <TokenBalance
             symbol="SAI"
