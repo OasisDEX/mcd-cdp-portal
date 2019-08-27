@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box,
   Text,
@@ -118,6 +119,7 @@ const WalletBalances = () => {
         <TokenBalance
           symbol="DAI"
           amount={balances.MDAI && balances.MDAI.balance}
+          usdRatio={new BigNumber(1)}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
         <TokenBalance
@@ -130,6 +132,7 @@ const WalletBalances = () => {
           <TokenBalance
             symbol="SAI"
             amount={balanceSAI}
+            usdRatio={new BigNumber(1)}
             button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
           />
         )}
