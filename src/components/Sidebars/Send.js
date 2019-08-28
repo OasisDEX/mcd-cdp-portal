@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   Input,
@@ -11,8 +11,9 @@ import {
 import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
 import useMaker from 'hooks/useMaker';
+import usePrevious from '../../hooks/usePrevious';
 import lang from 'languages';
-
+import BigNumber from 'bignumber.js';
 const PasteLink = styled(Link)``;
 
 const StyledPaste = styled(PasteIcon)`
@@ -36,12 +37,34 @@ const PasteAddress = props => (
   </PasteLink>
 );
 
+const SetMaxLink = ({ token, setMax }) => {
+  return token === 'ETH' ? null : (
+    <Link fontWeight="medium" onClick={setMax}>
+      {lang.action_sidebar.set_max}
+    </Link>
+  );
+};
+
 const Send = ({ token, balance, reset }) => {
   const [amount, setAmount] = useState('');
   const [destAddress, setDestAddress] = useState('');
-  const setMax = () => null;
-  const paste = () => null;
+
+  const previousToken = usePrevious(token);
+  useEffect(() => {
+    if (previousToken !== token) {
+      setAmount('');
+    }
+  }, [token]);
+  const setMax = () => setAmount(balance.toString());
+  const paste = async () => null;
   const send = () => null;
+
+  const amountBig = BigNumber(amount);
+  const amountIsValid =
+    amount === '' || (amountBig.gt(0) && amountBig.lte(balance));
+  const amountFailureMessage = amountIsValid
+    ? ''
+    : 'The amount you wish to send is invalid';
   const valid = true;
 
   return (
@@ -60,13 +83,16 @@ const Send = ({ token, balance, reset }) => {
           type="number"
           min="0"
           value={amount}
+          autoFocus
           onChange={evt => setAmount(evt.target.value)}
+          onFocus={e => {
+            const tmp = e.target.value;
+            e.target.value = '';
+            e.target.value = tmp;
+          }}
           placeholder={`0.00 ${token}`}
-          after={
-            <Link fontWeight="medium" onClick={setMax}>
-              {lang.action_sidebar.set_max}
-            </Link>
-          }
+          after={<SetMaxLink {...{ token, setMax }} />}
+          failureMessage={amountFailureMessage}
         />
 
         <Grid gridTemplateColumns="auto 1fr" gridColumnGap="s" alignItems="end">
