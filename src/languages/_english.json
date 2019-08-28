@@ -93,7 +93,11 @@
     "draw_too_much_dai": "CDP below liquidation threshold",
     "stability_fee_description": "The fee calculated on top of the existing debt of the CDP. This is paid when paying back DAI.",
     "liquidation_ratio_description": "The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation.",
-    "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs."
+    "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",
+
+    "waiting_for_comfirmations": "Waiting for confirmations... {0} of {1}",
+    "confirmed_with_confirmations": "Confirmed with {0} confirmations",
+    "waiting_for_confirmations_info": "Waiting for confirmations reduces the risk of your Maker Collateral Vault address changing. We require users to wait 10 block confirmations to ensure it has created successfully. This will often take around 2 minutes."
   },
   "cdp_migrate": {
     "select_title": "Select CDP to Migrate",
