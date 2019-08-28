@@ -87,7 +87,7 @@ const Send = ({ token, balance, reset }) => {
           type="text"
           value={destAddress}
           onChange={evt => setDestAddress(evt.target.value)}
-          placeholder={`0.00 ${token}`}
+          placeholder="0x..."
           after={<PasteAddress onClick={paste} />}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="m">
