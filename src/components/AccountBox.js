@@ -125,16 +125,18 @@ const WalletBalances = ({ hasActiveAccount }) => {
           amount={balances.MDAI}
           usdRatio={new BigNumber(1)}
           button={
-            <ActionButton
-              onClick={() =>
-                showSendSidebar({
-                  token: 'DAI',
-                  balance: balances.MDAI
-                })
-              }
-            >
-              {lang.sidebar.send}
-            </ActionButton>
+            hasActiveAccount && (
+              <ActionButton
+                onClick={() =>
+                  showSendSidebar({
+                    token: 'DAI',
+                    balance: balances.MDAI
+                  })
+                }
+              >
+                {lang.sidebar.send}
+              </ActionButton>
+            )
           }
         />
         <TokenBalance
@@ -142,13 +144,15 @@ const WalletBalances = ({ hasActiveAccount }) => {
           amount={balances.ETH}
           usdRatio={uniqueFeeds.ETH}
           button={
-            <ActionButton
-              onClick={() =>
-                showSendSidebar({ token: 'ETH', balance: balances.ETH })
-              }
-            >
-              {lang.sidebar.send}
-            </ActionButton>
+            hasActiveAccount && (
+              <ActionButton
+                onClick={() =>
+                  showSendSidebar({ token: 'ETH', balance: balances.ETH })
+                }
+              >
+                {lang.sidebar.send}
+              </ActionButton>
+            )
           }
         />
         {balances.SAI && balances.SAI.gt(0) && (
@@ -156,7 +160,11 @@ const WalletBalances = ({ hasActiveAccount }) => {
             symbol="SAI"
             amount={balances.SAI}
             usdRatio={new BigNumber(1)}
-            button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
+            button={
+              hasActiveAccount && (
+                <ActionButton>{lang.sidebar.migrate}</ActionButton>
+              )
+            }
           />
         )}
         {balances.MWETH && balances.MWETH.gt(0) && (
@@ -165,32 +173,37 @@ const WalletBalances = ({ hasActiveAccount }) => {
             amount={balances.MWETH}
             usdRatio={uniqueFeeds.ETH}
             button={
-              <ActionButton
-                onClick={() =>
-                  showSendSidebar({ token: 'WETH', balance: balances.MWETH })
-                }
-              >
-                {lang.sidebar.send}
-              </ActionButton>
+              hasActiveAccount && (
+                <ActionButton
+                  onClick={() =>
+                    showSendSidebar({ token: 'WETH', balance: balances.MWETH })
+                  }
+                >
+                  {lang.sidebar.send}
+                </ActionButton>
+              )
             }
           />
         )}
 
-        {uniqueGemsToShow.map(gem => {
+        {uniqueGemsToShow.map((gem, idx) => {
           const balance = balances[gem];
           return (
             balance &&
             balance.gt(0) && (
               <TokenBalance
+                key={`tkn_balance_${idx}`}
                 symbol={gem}
                 amount={balance}
                 usdRatio={uniqueFeeds[gem]}
                 button={
-                  <ActionButton
-                    onClick={() => showSendSidebar({ token: gem, balance })}
-                  >
-                    {lang.sidebar.send}
-                  </ActionButton>
+                  hasActiveAccount && (
+                    <ActionButton
+                      onClick={() => showSendSidebar({ token: gem, balance })}
+                    >
+                      {lang.sidebar.send}
+                    </ActionButton>
+                  )
                 }
               />
             )
