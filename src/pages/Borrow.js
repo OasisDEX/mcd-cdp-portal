@@ -13,11 +13,15 @@ import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
-import { getWalletConnectAccounts } from 'utils/walletconnect';
+import {
+  getWalletConnectAccounts,
+  getWalletLinkAccounts
+} from 'utils/walletconnect';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
+import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { Routes } from '../utils/constants';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -35,6 +39,13 @@ const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-bottom: -5px;
 `;
 
+const StyledWalletLinkLogo = styled(WalletLinkLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+  height: 21px;
+  width: 21px;
+`;
+
 function Borrow() {
   const providerName = getWebClientProviderName();
   const {
@@ -42,14 +53,16 @@ function Borrow() {
     authenticated: makerAuthenticated,
     connectBrowserProvider
   } = useMaker();
+  console.log('maker auth?', makerAuthenticated);
   const navigation = useNavigation();
 
   const onAccountChosen = useCallback(
     async ({ address }, type) => {
+      console.log('address & type', address, type);
       maker.useAccountWithAddress(address);
       mixpanelIdentify(address, type);
+      console.log('should navigate');
       const { search } = (await navigation.getRoute()).url;
-
       navigation.navigate({
         pathname: `/${Routes.BORROW}/owner/${address}`,
         search
@@ -67,6 +80,17 @@ function Borrow() {
     } catch (err) {
       window.alert(err);
     }
+  }
+
+  async function connectWalletLink() {
+    maker.addAccount({
+      type: 'walletlink',
+      calledFrom: 'portal2',
+      onAccountSelect: async address => {
+        console.log('testing callback address', address);
+        await onAccountChosen({ address }, 'walletlink');
+      }
+    });
   }
 
   return (
@@ -103,6 +127,13 @@ function Borrow() {
             icon={<StyledWalletConnectLogo />}
           >
             {lang.landing_page.wallet_connect}
+          </IconButton>
+          <IconButton
+            onClick={connectWalletLink}
+            disabled={!makerAuthenticated}
+            icon={<StyledWalletLinkLogo />}
+          >
+            {lang.landing_page.wallet_link}
           </IconButton>
           {/* <ReadOnlyConnect /> */}
         </Grid>
