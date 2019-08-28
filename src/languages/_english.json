@@ -121,7 +121,8 @@
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "pay_back": "Pay back",
-    "generate": "Generate"
+    "generate": "Generate",
+    "send": "Send"
   },
   "actions_past_tense": {
     "deposit": "Deposited",
@@ -155,7 +156,12 @@
     "set_max": "Set max",
     "create_proxy": "Create Proxy to continue",
     "creating_proxy": "Creating Proxy...",
-    "proxy_created": "Proxy Created"
+    "proxy_created": "Proxy Created",
+    "send_title": "Send {0}",
+    "send_description": "How much {0} would you like to send?",
+    "your_balance": "Your Balance",
+    "dest_address": "Destination Address",
+    "paste": "Paste"
   },
   "verbs": {
     "depositing": "Depositing",

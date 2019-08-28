@@ -127,7 +127,14 @@ const WalletBalances = ({ hasActiveAccount }) => {
           amount={balances.MDAI && balances.MDAI.balance}
           usdRatio={new BigNumber(1)}
           button={
-            <ActionButton onClick={() => showSendSidebar({ token: 'DAI' })}>
+            <ActionButton
+              onClick={() =>
+                showSendSidebar({
+                  token: 'DAI',
+                  balance: balances.MDAI.balance
+                })
+              }
+            >
               {lang.sidebar.send}
             </ActionButton>
           }
@@ -137,7 +144,11 @@ const WalletBalances = ({ hasActiveAccount }) => {
           amount={balances.ETH && balances.ETH.balance}
           usdRatio={uniqueFeeds.ETH}
           button={
-            <ActionButton onClick={() => showSendSidebar({ token: 'ETH' })}>
+            <ActionButton
+              onClick={() =>
+                showSendSidebar({ token: 'ETH', balance: balances.ETH.balance })
+              }
+            >
               {lang.sidebar.send}
             </ActionButton>
           }
@@ -156,7 +167,11 @@ const WalletBalances = ({ hasActiveAccount }) => {
             amount={balanceMWETH}
             usdRatio={uniqueFeeds.ETH}
             button={
-              <ActionButton onClick={() => showSendSidebar({ token: 'WETH' })}>
+              <ActionButton
+                onClick={() =>
+                  showSendSidebar({ token: 'WETH', balance: balanceMWETH })
+                }
+              >
                 {lang.sidebar.send}
               </ActionButton>
             }
@@ -173,7 +188,9 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 amount={balance}
                 usdRatio={uniqueFeeds[gem]}
                 button={
-                  <ActionButton onClick={() => showSendSidebar({ token: gem })}>
+                  <ActionButton
+                    onClick={() => showSendSidebar({ token: gem, balance })}
+                  >
                     {lang.sidebar.send}
                   </ActionButton>
                 }
