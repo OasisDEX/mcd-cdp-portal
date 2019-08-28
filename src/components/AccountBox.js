@@ -16,6 +16,7 @@ import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
+import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import useSidebar from 'hooks/useSidebar';
 
@@ -61,7 +62,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && amount.toFixed(3)) || '--'}
+        {(amount && prettifyNumber(amount, true, 3)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -72,7 +73,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
       >
         {(amount &&
           usdRatio &&
-          `$${amount.times(usdRatio.toNumber()).toFixed(3)}`) ||
+          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 3)}`) ||
           '--'}
       </Text>
       <Flex width="20%" justifyContent="flex-end">
@@ -96,9 +97,6 @@ const WalletBalances = ({ hasActiveAccount }) => {
       }, {}),
     [feeds]
   );
-
-  const balanceMWETH = balances.MWETH && balances.MWETH.balance;
-  const balanceSAI = balances.DAI && balances.DAI.balance;
 
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
@@ -124,14 +122,14 @@ const WalletBalances = ({ hasActiveAccount }) => {
       <StripedRows>
         <TokenBalance
           symbol="DAI"
-          amount={balances.MDAI && balances.MDAI.balance}
+          amount={balances.MDAI}
           usdRatio={new BigNumber(1)}
           button={
             <ActionButton
               onClick={() =>
                 showSendSidebar({
                   token: 'DAI',
-                  balance: balances.MDAI.balance
+                  balance: balances.MDAI
                 })
               }
             >
@@ -141,35 +139,35 @@ const WalletBalances = ({ hasActiveAccount }) => {
         />
         <TokenBalance
           symbol="ETH"
-          amount={balances.ETH && balances.ETH.balance}
+          amount={balances.ETH}
           usdRatio={uniqueFeeds.ETH}
           button={
             <ActionButton
               onClick={() =>
-                showSendSidebar({ token: 'ETH', balance: balances.ETH.balance })
+                showSendSidebar({ token: 'ETH', balance: balances.ETH })
               }
             >
               {lang.sidebar.send}
             </ActionButton>
           }
         />
-        {balanceSAI && balanceSAI.gt(0) && (
+        {balances.SAI && balances.SAI.gt(0) && (
           <TokenBalance
             symbol="SAI"
-            amount={balanceSAI}
+            amount={balances.SAI}
             usdRatio={new BigNumber(1)}
             button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
           />
         )}
-        {balanceMWETH && balanceMWETH.gt(0) && (
+        {balances.MWETH && balances.MWETH.gt(0) && (
           <TokenBalance
             symbol="WETH"
-            amount={balanceMWETH}
+            amount={balances.MWETH}
             usdRatio={uniqueFeeds.ETH}
             button={
               <ActionButton
                 onClick={() =>
-                  showSendSidebar({ token: 'WETH', balance: balanceMWETH })
+                  showSendSidebar({ token: 'WETH', balance: balances.MWETH })
                 }
               >
                 {lang.sidebar.send}
@@ -179,7 +177,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
         )}
 
         {uniqueGemsToShow.map(gem => {
-          const balance = balances[gem] && balances[gem].balance;
+          const balance = balances[gem];
           return (
             balance &&
             balance.gt(0) && (
