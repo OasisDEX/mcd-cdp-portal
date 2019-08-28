@@ -1,10 +1,6 @@
 import produce from 'immer';
 import ilkList from 'references/ilkList';
 
-const defaultTokenState = {
-  balance: null
-};
-
 export const tokensWithBalances = [
   'MDAI',
   'DAI',
@@ -12,10 +8,9 @@ export const tokensWithBalances = [
   ...new Set(ilkList.map(ilk => ilk.gem))
 ];
 
-const defaultAccountState = tokensWithBalances.reduce((acc, symbol) => {
-  acc[symbol] = Object.assign({}, defaultTokenState);
-  return acc;
-}, {});
+const defaultAccountState = {
+  balances: {}
+};
 
 const initialState = {};
 
@@ -25,11 +20,10 @@ const reducer = produce((draft, { type, value }) => {
   // example type: accounts.0xdead...beef.balances.MWETH
   const [label, account, , token] = type.split('.');
   if (label === 'accounts') {
-    if (!draft[account]) draft[account] = defaultAccountState;
-    if (!draft[account][token])
-      draft[account][token] = Object.assign({}, defaultTokenState);
+    if (!draft[account])
+      draft[account] = Object.assign({}, defaultAccountState);
 
-    draft[account][token].balance = value;
+    draft[account].balances[token] = value;
   }
 }, initialState);
 

@@ -6,7 +6,7 @@ const useWalletBalances = () => {
   const { account } = useMaker();
 
   return account && accounts && accounts[account.address]
-    ? accounts[account.address]
+    ? accounts[account.address].balances
     : {};
 };
 

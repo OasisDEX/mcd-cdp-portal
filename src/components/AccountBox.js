@@ -95,9 +95,6 @@ const WalletBalances = () => {
     [feeds]
   );
 
-  const balanceMWETH = balances.MWETH && balances.MWETH.balance;
-  const balanceSAI = balances.DAI && balances.DAI.balance;
-
   return (
     <CardBody>
       <Box px="s" py="m">
@@ -119,28 +116,28 @@ const WalletBalances = () => {
       <StripedRows>
         <TokenBalance
           symbol="DAI"
-          amount={balances.MDAI && balances.MDAI.balance}
+          amount={balances.MDAI}
           usdRatio={new BigNumber(1)}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
         <TokenBalance
           symbol="ETH"
-          amount={balances.ETH && balances.ETH.balance}
+          amount={balances.ETH}
           usdRatio={uniqueFeeds.ETH}
           button={<ActionButton>{lang.sidebar.send}</ActionButton>}
         />
-        {balanceSAI && balanceSAI.gt(0) && (
+        {balances.SAI && balances.SAI.gt(0) && (
           <TokenBalance
             symbol="SAI"
-            amount={balanceSAI}
+            amount={balances.SAI}
             usdRatio={new BigNumber(1)}
             button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
           />
         )}
-        {balanceMWETH && balanceMWETH.gt(0) && (
+        {balances.MWETH && balances.MWETH.gt(0) && (
           <TokenBalance
             symbol="WETH"
-            amount={balanceMWETH}
+            amount={balances.MWETH}
             usdRatio={uniqueFeeds.ETH}
             button={<ActionButton>{lang.sidebar.send}</ActionButton>}
           />
