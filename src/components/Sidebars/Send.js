@@ -10,10 +10,11 @@ import {
 } from '@makerdao/ui-components-core';
 import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
-import useMaker from 'hooks/useMaker';
 import usePrevious from '../../hooks/usePrevious';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
+import { isValidAddressString } from '../../utils/ethereum';
+
 const PasteLink = styled(Link)``;
 
 const StyledPaste = styled(PasteIcon)`
@@ -56,7 +57,10 @@ const Send = ({ token, balance, reset }) => {
     }
   }, [token]);
   const setMax = () => setAmount(balance.toString());
-  const paste = async () => null;
+  const paste = async () => {
+    const contents = await navigator.clipboard.readText();
+    setDestAddress(contents);
+  };
   const send = () => null;
 
   const amountBig = BigNumber(amount);
@@ -65,6 +69,13 @@ const Send = ({ token, balance, reset }) => {
   const amountFailureMessage = amountIsValid
     ? ''
     : 'The amount you wish to send is invalid';
+
+  const destAddressIsValid =
+    destAddress === '' || isValidAddressString(destAddress);
+  const destAddressFailureMessage = destAddressIsValid
+    ? ''
+    : 'This is not a valid address';
+
   const valid = true;
 
   return (
@@ -113,8 +124,14 @@ const Send = ({ token, balance, reset }) => {
           type="text"
           value={destAddress}
           onChange={evt => setDestAddress(evt.target.value)}
+          onFocus={e => {
+            const tmp = e.target.value;
+            e.target.value = '';
+            e.target.value = tmp;
+          }}
           placeholder="0x..."
           after={<PasteAddress onClick={paste} />}
+          failureMessage={destAddressFailureMessage}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="m">
           <Button onClick={send} disabled={!valid}>
