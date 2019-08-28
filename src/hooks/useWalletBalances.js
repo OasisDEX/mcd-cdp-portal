@@ -5,7 +5,9 @@ const useWalletBalances = () => {
   const [{ accounts }] = useStore();
   const { account } = useMaker();
 
-  return account && accounts[account.address] ? accounts[account.address] : {};
+  return account && accounts && accounts[account.address]
+    ? accounts[account.address]
+    : {};
 };
 
 export default useWalletBalances;

@@ -16,6 +16,7 @@ import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
+import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
@@ -60,7 +61,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && amount.toFixed(3)) || '--'}
+        {(amount && prettifyNumber(amount, true, 3)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -71,7 +72,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
       >
         {(amount &&
           usdRatio &&
-          `$${amount.times(usdRatio.toNumber()).toFixed(3)}`) ||
+          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 3)}`) ||
           '--'}
       </Text>
       <Flex width="20%" justifyContent="flex-end">
