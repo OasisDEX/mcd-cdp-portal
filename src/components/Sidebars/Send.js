@@ -5,7 +5,9 @@ import styled from 'styled-components';
 import usePrevious from '../../hooks/usePrevious';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
+import useMaker from '../../hooks/useMaker';
 import { isValidAddressString } from '../../utils/ethereum';
+import { cutMiddle, prettifyNumber } from '../../utils/ui';
 
 const PasteLink = styled(Link)``;
 
@@ -41,19 +43,20 @@ const SetMaxLink = ({ token, setMax }) => {
 const Send = ({ token, balance, reset }) => {
   const [amount, setAmount] = useState('');
   const [destAddress, setDestAddress] = useState('');
-
+  const { maker, newTxListener } = useMaker();
   const previousToken = usePrevious(token);
   useEffect(() => {
     if (previousToken !== token) {
       setAmount('');
+      setDestAddress('');
     }
   }, [token]);
+
   const setMax = () => setAmount(balance.toString());
   const paste = async () => {
     const contents = await navigator.clipboard.readText();
     setDestAddress(contents);
   };
-  const send = () => null;
 
   const amountBig = BigNumber(amount);
   const amountIsValid =
@@ -70,6 +73,22 @@ const Send = ({ token, balance, reset }) => {
 
   const valid =
     amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
+
+  const transfer = async () => {
+    const _token = token === 'DAI' ? 'MDAI' : token;
+    const tokenObj = maker.getToken(_token);
+
+    newTxListener(
+      tokenObj.transfer(destAddress, amount),
+      lang.formatString(
+        lang.action_sidebar.send_token_desc,
+        prettifyNumber(amount),
+        token,
+        cutMiddle(destAddress)
+      )
+    );
+    reset();
+  };
 
   return (
     <Grid gridRowGap="m">
@@ -126,7 +145,7 @@ const Send = ({ token, balance, reset }) => {
           failureMessage={destAddressFailureMessage}
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="m">
-          <Button onClick={send} disabled={!valid}>
+          <Button onClick={transfer} disabled={!valid}>
             {lang.actions.send}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>

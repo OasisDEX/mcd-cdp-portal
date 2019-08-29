@@ -165,7 +165,8 @@
     "send_description": "How much {0} would you like to send?",
     "your_balance": "Your Balance",
     "dest_address": "Destination Address",
-    "paste": "Paste"
+    "paste": "Paste",
+    "send_token_desc": "Sent {0} {1} to {2}"
   },
   "verbs": {
     "depositing": "Depositing",
