@@ -12,10 +12,11 @@ import {
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
-import { Link } from 'react-navi';
 import CardTabs from '../components/CardTabs';
-import useMaker from '../hooks/useMaker';
 import AccountBox from '../components/AccountBox';
+
+import useMaker from '../hooks/useMaker';
+import useWalletBalances from '../hooks/useWalletBalances';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
 function ActionInput({
@@ -24,6 +25,7 @@ function ActionInput({
   button,
   validateInput = () => true,
   invalidMessage,
+  maximumValue,
   action
 }) {
   const [inputValue, setInputValue] = useState('');
@@ -33,12 +35,22 @@ function ActionInput({
 
   const onChange = useCallback(evt => {
     const newValue = evt.target.value;
-    const isValid = validateInput(newValue);
+    validate(newValue);
+
+    setInputValue(newValue);
+  });
+
+  const validate = useCallback(value => {
+    const isValid = validateInput(value);
     setIsValid(isValid);
 
     setErrorMessage(isValid ? '' : invalidMessage);
-    setInputValue(newValue);
   });
+
+  const onSetMaximum = useCallback(async () => {
+    validate(maximumValue);
+    setInputValue(maximumValue);
+  }, [maximumValue]);
 
   const onAction = useCallback(async () => {
     setIsLoading(true);
@@ -64,8 +76,12 @@ function ActionInput({
           onChange,
           value: inputValue,
           error: errorMessage,
-          failureMessage: errorMessage
-          // after: <Link fontWeight="medium" color="blue">Set max</Link>
+          failureMessage: errorMessage,
+          after: maximumValue && (
+            <Text.a fontWeight="medium" color="blue" onClick={onSetMaximum}>
+              Set max
+            </Text.a>
+          )
         })}
       </div>
 
@@ -81,6 +97,7 @@ function ActionInput({
 }
 
 function Save() {
+  const balances = useWalletBalances();
   const { maker, account } = useMaker();
   const [balance, setBalance] = useState(0);
   const [yearlyRate, setYearlyRate] = useState(undefined);
@@ -205,6 +222,7 @@ function Save() {
                 invalidMessage={invalidMessage}
                 input={<Input type="number" min="0" placeholder="0 DAI" />}
                 button={<Button>Deposit</Button>}
+                maximumValue={balances.MDAI && balances.MDAI.toNumber()}
                 action={onDeposit}
               />
             </Grid>
@@ -219,6 +237,7 @@ function Save() {
                 invalidMessage={invalidMessage}
                 input={<Input type="number" min="0" placeholder="0 DAI" />}
                 button={<Button>Withdraw</Button>}
+                maximumValue={balance}
                 action={onWithdraw}
               />
             </Grid>
