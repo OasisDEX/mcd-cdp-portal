@@ -83,11 +83,19 @@ function useMaker() {
     return connectedAddress;
   };
 
+  const connectMobileProvider = async (type, callback) => {
+    await maker.addAccount({
+      type,
+      callback
+    });
+  };
+
   return {
     maker,
     authenticated,
     isConnectedToProvider,
     connectBrowserProvider,
+    connectMobileProvider,
     checkForNewCdps,
     account,
     transactions,

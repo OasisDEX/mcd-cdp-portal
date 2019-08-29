@@ -22,7 +22,7 @@ import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
-import { Routes } from '../utils/constants';
+import { Routes, AccountTypes } from '../utils/constants';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -51,17 +51,16 @@ function Borrow() {
   const {
     maker,
     authenticated: makerAuthenticated,
-    connectBrowserProvider
+    connectBrowserProvider,
+    connectMobileProvider
   } = useMaker();
-  console.log('maker auth?', makerAuthenticated);
+
   const navigation = useNavigation();
 
   const onAccountChosen = useCallback(
     async ({ address }, type) => {
-      console.log('address & type', address, type);
       maker.useAccountWithAddress(address);
       mixpanelIdentify(address, type);
-      console.log('should navigate');
       const { search } = (await navigation.getRoute()).url;
       navigation.navigate({
         pathname: `/${Routes.BORROW}/owner/${address}`,
@@ -82,14 +81,12 @@ function Borrow() {
     }
   }
 
-  async function connectWalletLink() {
-    maker.addAccount({
-      type: 'walletlink',
-      calledFrom: 'portal2',
-      onAccountSelect: async address => {
-        console.log('testing callback address', address);
-        await onAccountChosen({ address }, 'walletlink');
-      }
+  async function onWalletLinkConnect(address) {
+    mixpanelIdentify(address, AccountTypes.WALLETLINK);
+    const { search } = (await navigation.getRoute()).url;
+    navigation.navigate({
+      pathname: `/${Routes.BORROW}/owner/${address}`,
+      search
     });
   }
 
@@ -129,7 +126,12 @@ function Borrow() {
             {lang.landing_page.wallet_connect}
           </IconButton>
           <IconButton
-            onClick={connectWalletLink}
+            onClick={() =>
+              connectMobileProvider(
+                AccountTypes.WALLETLINK,
+                onWalletLinkConnect
+              )
+            }
             disabled={!makerAuthenticated}
             icon={<StyledWalletLinkLogo />}
           >

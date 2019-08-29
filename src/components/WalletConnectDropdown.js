@@ -6,14 +6,12 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
-import {
-  getWalletConnectAccounts,
-  getWalletLinkAccounts
-} from 'utils/walletconnect';
+import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import { getMeasurement, getColor } from 'styles/theme';
+import { AccountTypes } from '../utils/constants';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -39,7 +37,12 @@ const WalletConnectDropdown = ({
   close = () => {},
   ...props
 }) => {
-  const { maker, account, connectBrowserProvider } = useMaker();
+  const {
+    maker,
+    account,
+    connectBrowserProvider,
+    connectMobileProvider
+  } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
@@ -50,14 +53,9 @@ const WalletConnectDropdown = ({
     mixpanelIdentify(address, type);
   }
 
-  const onAccountChosenCallback = useCallback(
-    async (address, type) => {
-      console.log('onAcct Chosen params', address, type);
-      maker.useAccountWithAddress(address);
-      mixpanelIdentify(address, type);
-    },
-    [maker]
-  );
+  function onWalletLinkConnect(address) {
+    mixpanelIdentify(address, AccountTypes.WALLETLINK);
+  }
 
   useEffect(() => {
     const accounts = maker.listAccounts();
@@ -150,7 +148,7 @@ const WalletConnectDropdown = ({
         </Option>
         <Option
           onClick={() => {
-            getWalletLinkAccounts({ maker, onAccountChosenCallback });
+            connectMobileProvider(AccountTypes.WALLETLINK, onWalletLinkConnect);
             close();
           }}
         >

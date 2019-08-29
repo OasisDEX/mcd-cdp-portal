@@ -19,7 +19,7 @@
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
     "@makerdao/dai-plugin-mcd": "0.2.10-4",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
-    "@makerdao/dai-plugin-walletlink": "^0.0.1-alpha5",
+    "@makerdao/dai-plugin-walletlink": "^0.0.1-alpha6",
     "@makerdao/ui-components-core": "0.2.5",
     "@makerdao/ui-components-footer": "^0.1.7",
     "@makerdao/ui-components-header": "^0.1.7",
