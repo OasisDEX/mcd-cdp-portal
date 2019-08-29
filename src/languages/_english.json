@@ -166,7 +166,7 @@
     "your_balance": "Your Balance",
     "dest_address": "Destination Address",
     "paste": "Paste",
-    "send_token_desc": "Sent {0} {1} to {2}"
+    "send_token_desc": "Sent {0}"
   },
   "verbs": {
     "depositing": "Depositing",

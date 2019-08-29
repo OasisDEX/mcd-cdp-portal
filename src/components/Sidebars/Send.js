@@ -7,7 +7,6 @@ import lang from 'languages';
 import BigNumber from 'bignumber.js';
 import useMaker from '../../hooks/useMaker';
 import { isValidAddressString } from '../../utils/ethereum';
-import { cutMiddle, prettifyNumber } from '../../utils/ui';
 
 const PasteLink = styled(Link)``;
 
@@ -77,15 +76,9 @@ const Send = ({ token, balance, reset }) => {
   const transfer = async () => {
     const _token = token === 'DAI' ? 'MDAI' : token;
     const tokenObj = maker.getToken(_token);
-
     newTxListener(
       tokenObj.transfer(destAddress, amount),
-      lang.formatString(
-        lang.action_sidebar.send_token_desc,
-        prettifyNumber(amount),
-        token,
-        cutMiddle(destAddress)
-      )
+      lang.formatString(lang.action_sidebar.send_token_desc, token)
     );
     reset();
   };
