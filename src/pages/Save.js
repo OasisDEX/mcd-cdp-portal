@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -82,6 +82,8 @@ function ActionInput({
 
 function Save() {
   const { maker, account } = useMaker();
+  const [balance, setBalance] = useState(0);
+  const [yearlyRate, setYearlyRate] = useState(undefined);
 
   const onDeposit = useCallback(value => {
     return maker.service('mcd:savings').join(MDAI(value));
@@ -104,6 +106,28 @@ function Save() {
 
   const invalidMessage = 'Please enter a value greater than 0';
 
+  useEffect(() => {
+    (async () => {
+      if (!account) return setBalance(0);
+      const proxyAddress = await maker.currentProxy();
+      if (!proxyAddress) return setBalance(0);
+
+      const balance = await maker
+        .service('mcd:savings')
+        .balanceOf(proxyAddress);
+      setBalance(balance.toNumber());
+    })();
+  }, [account]);
+
+  useEffect(() => {
+    maker
+      .service('mcd:savings')
+      .getYearlyRate()
+      .then(rate => {
+        setYearlyRate(rate);
+      });
+  }, []);
+
   return (
     <Flex justifyContent="center" mt="xl">
       <Box px="m">
@@ -118,13 +142,13 @@ function Save() {
           <Card>
             <CardBody px="l" py="m">
               <Text.p t="h2">
-                140,032.5011{' '}
+                {balance.toFixed(4)}{' '}
                 <Text t="h5">
                   <DaiLogo /> DAI
                 </Text>
               </Text.p>
               <Text.p t="h5" mt="s" color="steel">
-                140,032.5011 USD
+                {balance.toFixed(4)} USD
               </Text.p>
             </CardBody>
             <CardBody px="l" py="m">
@@ -135,7 +159,9 @@ function Save() {
                       <Text t="body">Dai Savings rate</Text>
                     </Table.td>
                     <Table.td textAlign="right">
-                      <Text t="body">2.25%</Text>
+                      <Text t="body">
+                        {yearlyRate ? `${yearlyRate.toFixed(2)}%` : '--'}
+                      </Text>
                     </Table.td>
                   </Table.tr>
                   <Table.tr>
