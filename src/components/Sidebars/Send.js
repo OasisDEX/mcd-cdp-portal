@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text,
-  Input,
-  Grid,
-  Link,
-  Flex,
-  Button,
-  Box
-} from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
 import usePrevious from '../../hooks/usePrevious';
@@ -76,7 +68,8 @@ const Send = ({ token, balance, reset }) => {
     ? ''
     : 'This is not a valid address';
 
-  const valid = true;
+  const valid =
+    amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
 
   return (
     <Grid gridRowGap="m">
@@ -94,7 +87,6 @@ const Send = ({ token, balance, reset }) => {
           type="number"
           min="0"
           value={amount}
-          autoFocus
           onChange={evt => setAmount(evt.target.value)}
           onFocus={e => {
             const tmp = e.target.value;
