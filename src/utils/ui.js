@@ -17,7 +17,11 @@ export function formatLiquidationPrice(price, symbol) {
   return `${round(price, 2).toLocaleString()} ${symbol}/USD`;
 }
 
-export function prettifyNumber(_num = null, truncate = false) {
+export function prettifyNumber(
+  _num = null,
+  truncate = false,
+  decimalPlaces = 2
+) {
   if (_num === null) return null;
   let symbol = ' ';
   if (_num.symbol !== undefined) symbol += _num.symbol;
@@ -30,7 +34,7 @@ export function prettifyNumber(_num = null, truncate = false) {
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + ' M';
     else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + ' K';
-    else formattedNumber = num.toFixed(2);
+    else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
   }

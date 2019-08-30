@@ -33,7 +33,6 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       if (maker.service('accounts').hasAccount()) {
         initAccount(maker.currentAccount());
       }
-      startWatcher(maker, dispatch);
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
@@ -53,6 +52,10 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       });
     })();
   }, [backendEnv, dispatch, network, testchainId]);
+
+  useEffect(() => {
+    if (maker) startWatcher(maker, dispatch);
+  }, [maker, dispatch, account]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
