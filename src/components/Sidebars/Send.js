@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
@@ -31,80 +31,108 @@ const PasteAddress = props => (
   </PasteLink>
 );
 
-const SetMaxLink = ({ token, setMax, hasSurplusETH }) =>
-  (token !== 'ETH' || hasSurplusETH) && (
+const SetMaxLink = ({ token, setMax, balanceGtGas }) =>
+  (token !== 'ETH' || balanceGtGas) && (
     <Link fontWeight="medium" onClick={setMax}>
       {lang.action_sidebar.set_max}
     </Link>
   );
 
+const generateFailureMessage = ({
+  amountIsValid,
+  token,
+  balanceGtAmountPlusGas,
+  amountGtBalance,
+  balanceGtGas
+}) => {
+  if (amountIsValid) return '';
+  if (amountGtBalance) return lang.action_sidebar.invalid_amount;
+  if (token === 'ETH') {
+    if (!(balanceGtGas && balanceGtAmountPlusGas))
+      return lang.action_sidebar.invalid_gas;
+  }
+  return lang.action_sidebar.invalid_input;
+};
+
 const gasLimit = BigNumber(21000);
 
+const initialState = {
+  amount: '',
+  destAddress: '',
+  gasOffset: false,
+  balanceGtAmountPlusGas: true,
+  amountGtBalance: false,
+  balanceGtGas: false
+};
+
 const Send = ({ token, balance, reset }) => {
-  const [amount, setAmount] = useState('');
-  const [destAddress, setDestAddress] = useState('');
-
-  const [gasOffset, setGasOffset] = useState(false);
-  const [
-    enoughBalanceForGasAndAmount,
-    setEnoughBalanceForGasAndAmount
-  ] = useState(true);
-  const [amountGreaterThanBalance, setAmountGreaterThanBalance] = useState(
-    false
-  );
-  const [hasSurplusETH, setHasSurplusETH] = useState(false);
-
   const { maker, account, newTxListener } = useMaker();
   const { address } = account;
+
+  const [
+    {
+      amount,
+      destAddress,
+      gasOffset,
+      balanceGtAmountPlusGas,
+      amountGtBalance,
+      balanceGtGas
+    },
+    updateState
+  ] = useReducer((state, updates) => ({ ...state, ...updates }), initialState);
+
   const prevToken = usePrevious(token);
   const prevAddress = usePrevious(address);
 
   const calculateEthOffset = async () => {
     const gasPrice = await maker.service('gas').getGasPrice('fast');
-    const gasCost = gasLimit.times(gasPrice).shiftedBy(-18);
-    setGasOffset(gasCost.toNumber());
-    if (token === 'ETH' && balance.minus(gasCost.toNumber()).gte(0)) {
-      setHasSurplusETH(true);
+    const gasCost = gasLimit
+      .times(gasPrice)
+      .shiftedBy(-18)
+      .toNumber();
+
+    if (token === 'ETH' && balance.minus(gasCost).gte(0)) {
+      updateState({
+        gasOffset: gasCost,
+        balanceGtGas: true
+      });
     } else {
-      setEnoughBalanceForGasAndAmount(false);
+      updateState({
+        gasOffset: gasCost,
+        balanceGtAmountPlusGas: false
+      });
     }
   };
 
   useEffect(() => {
-    if (prevToken !== token) {
-      setAmount('');
-      setDestAddress('');
-      setEnoughBalanceForGasAndAmount(true);
-      setHasSurplusETH(false);
-      setGasOffset(false);
-    }
+    if (prevToken !== token) updateState(initialState);
     if (prevAddress !== address) reset();
     if (token === 'ETH' && !gasOffset) calculateEthOffset();
   }, [token, address, prevToken, prevAddress]);
 
   const updateAmount = value => {
-    setAmountGreaterThanBalance(balance.minus(value).lt(0));
-    if (token === 'ETH') {
-      setEnoughBalanceForGasAndAmount(
-        balance.minus(BigNumber(value).plus(gasOffset)).gte(0)
-      );
-      setAmount(value);
-    } else {
-      setAmount(value);
-    }
+    updateState({
+      amount: value,
+      amountGtBalance: balance.minus(value).lt(0),
+      balanceGtAmountPlusGas:
+        token === 'ETH'
+          ? balance.minus(BigNumber(value).plus(gasOffset)).gte(0)
+          : balanceGtAmountPlusGas
+    });
+    console.log(amountGtBalance);
   };
 
   const setMax = () => {
-    if (token === 'ETH' && gasOffset && hasSurplusETH) {
+    if (token === 'ETH' && gasOffset && balanceGtGas) {
       updateAmount(balance.minus(gasOffset));
     } else {
-      setAmount(balance);
+      updateState({ amount: balance });
     }
   };
 
   const paste = async () => {
-    const contents = await navigator.clipboard.readText();
-    setDestAddress(contents);
+    const copiedAddress = await navigator.clipboard.readText();
+    updateState({ destAddress: copiedAddress });
   };
 
   const amountBig = BigNumber(amount);
@@ -112,18 +140,16 @@ const Send = ({ token, balance, reset }) => {
     amount === '' ||
     (amountBig.gt(0) &&
       (token === 'ETH'
-        ? hasSurplusETH && enoughBalanceForGasAndAmount
-        : !amountGreaterThanBalance));
+        ? balanceGtGas && balanceGtAmountPlusGas
+        : !amountGtBalance));
 
-  const amountFailureMessage = amountIsValid
-    ? ''
-    : token === 'ETH'
-    ? hasSurplusETH && enoughBalanceForGasAndAmount
-      ? lang.action_sidebar.invalid_amount
-      : amountGreaterThanBalance
-      ? lang.action_sidebar.invalid_amount
-      : lang.action_sidebar.invalid_gas
-    : lang.action_sidebar.invalid_amount;
+  const amountFailureMessage = generateFailureMessage({
+    amountIsValid,
+    token,
+    balanceGtAmountPlusGas,
+    amountGtBalance,
+    balanceGtGas
+  });
 
   const destAddressIsValid =
     destAddress === '' || isValidAddressString(destAddress);
@@ -167,7 +193,7 @@ const Send = ({ token, balance, reset }) => {
             e.target.value = tmp;
           }}
           placeholder={`0.00 ${token}`}
-          after={<SetMaxLink {...{ token, setMax, hasSurplusETH }} />}
+          after={<SetMaxLink {...{ token, setMax, balanceGtGas }} />}
           failureMessage={amountFailureMessage}
         />
 
@@ -188,7 +214,7 @@ const Send = ({ token, balance, reset }) => {
         <Input
           type="text"
           value={destAddress}
-          onChange={evt => setDestAddress(evt.target.value)}
+          onChange={evt => updateState({ destAddress: evt.target.value })}
           onFocus={e => {
             const tmp = e.target.value;
             e.target.value = '';

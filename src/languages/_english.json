@@ -167,7 +167,8 @@
     "dest_address": "Destination Address",
     "paste": "Paste",
     "send_token_desc": "Sent {0}",
-    "invalid_amount": "The amount you wish to send is invalid",
+    "invalid_input": "This input is invalid",
+    "invalid_amount": "The amount entered is greater than your balance",
     "invalid_gas": "Not enough gas",
     "invalid_address": "Thiis is not a valid address"
   },
