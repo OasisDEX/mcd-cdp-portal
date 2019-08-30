@@ -81,6 +81,15 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const [loading, setLoading] = useState(true);
   const balances = useWalletBalances();
 
+  async function checkAllowance(gemToken) {
+    const allowance = (await gemToken.allowance(
+      maker.currentAddress(),
+      proxyAddress
+    )).toNumber();
+
+    return allowance === MAX_UINT_BN.toNumber();
+  }
+
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -88,9 +97,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         const gemToken = maker.getToken(selectedIlk.currency.symbol);
         const hasAllowance =
           selectedIlk.currency.symbol === 'ETH' ||
-          (await gemToken.allowance(maker.currentAddress(), proxyAddress)).eq(
-            MAX_UINT_BN
-          );
+          (await checkAllowance(gemToken));
         dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance } });
       } catch (err) {
         dispatch({
