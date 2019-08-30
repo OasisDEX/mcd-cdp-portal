@@ -9,7 +9,8 @@ function LoadingToggle({
   isLoading,
   isComplete,
   onToggle,
-  disabled
+  disabled,
+  ...props
 }) {
   const text = isLoading
     ? loadingText
@@ -18,7 +19,7 @@ function LoadingToggle({
     : defaultText;
 
   return (
-    <Grid alignItems="center" gridTemplateColumns="auto 1fr auto">
+    <Grid alignItems="center" gridTemplateColumns="auto 1fr auto" {...props}>
       <Text t="body">{text}</Text>
       {isLoading && (
         <Loader

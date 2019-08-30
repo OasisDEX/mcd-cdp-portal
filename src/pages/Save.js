@@ -15,10 +15,12 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 import CardTabs from 'components/CardTabs';
 import AccountBox from 'components/AccountBox';
 import SetMax from 'components/SetMax';
+import AllowanceToggle from 'components/AllowanceToggle';
 
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
@@ -27,6 +29,13 @@ function Save() {
   const { maker, account } = useMaker();
   const [balance, setBalance] = useState(0);
   const [yearlyRate, setYearlyRate] = useState(undefined);
+  const [
+    hasAllowance,
+    setAllowance,
+    startedWithoutAllowance
+  ] = useTokenAllowance('MDAI');
+
+  const [onSetAllowance, allowanceLoading] = useActionState(setAllowance);
 
   const [
     depositAmount,
@@ -49,19 +58,19 @@ function Save() {
     maxFloat: balance
   });
 
-  const onDeposit = useCallback(() => {
+  const onStartDeposit = useCallback(() => {
     return maker.service('mcd:savings').join(MDAI(depositAmount));
   }, [maker, depositAmount]);
 
-  const onWithdraw = useCallback(() => {
+  const onStartWithdraw = useCallback(() => {
     return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
   }, [maker, withdrawAmount]);
 
-  const [onStartDeposit, depositLoading, depositError] = useActionState(
-    onDeposit
+  const [onDeposit, depositLoading, depositError] = useActionState(
+    onStartDeposit
   );
-  const [onStartWithdraw, withdrawLoading, withdrawError] = useActionState(
-    onWithdraw
+  const [onWithdraw, withdrawLoading, withdrawError] = useActionState(
+    onStartWithdraw
   );
 
   const setDepositMax = useCallback(() => {
@@ -187,17 +196,29 @@ function Save() {
                   failureMessage={depositAmountErrors}
                   after={<SetMax onClick={setDepositMax} />}
                 />
+
+                {startedWithoutAllowance && (
+                  <AllowanceToggle
+                    mt="s"
+                    tokenDisplayName="DAI"
+                    onToggle={onSetAllowance}
+                    isLoading={allowanceLoading}
+                    isComplete={hasAllowance}
+                    disabled={hasAllowance}
+                  />
+                )}
               </div>
 
               <Box justifySelf="center">
                 <Button
                   disabled={
+                    !hasAllowance ||
                     depositAmount === '' ||
                     depositAmountErrors ||
                     depositLoading
                   }
                   loading={depositLoading}
-                  onClick={onStartDeposit}
+                  onClick={onDeposit}
                 >
                   Deposit
                 </Button>
@@ -227,17 +248,29 @@ function Save() {
                   failureMessage={withdrawAmountErrors}
                   after={<SetMax onClick={setWithdrawMax} />}
                 />
+
+                {startedWithoutAllowance && (
+                  <AllowanceToggle
+                    mt="s"
+                    tokenDisplayName="DAI"
+                    onToggle={onSetAllowance}
+                    isLoading={allowanceLoading}
+                    isComplete={hasAllowance}
+                    disabled={hasAllowance}
+                  />
+                )}
               </div>
 
               <Box justifySelf="center">
                 <Button
                   disabled={
+                    !hasAllowance ||
                     withdrawAmount === '' ||
                     withdrawAmountErrors ||
                     withdrawLoading
                   }
                   loading={withdrawLoading}
-                  onClick={onStartWithdraw}
+                  onClick={onWithdraw}
                 >
                   Withdraw
                 </Button>
