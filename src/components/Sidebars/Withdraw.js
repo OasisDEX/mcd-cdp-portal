@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
@@ -18,6 +18,8 @@ import {
   formatLiquidationPrice
 } from '../../utils/ui';
 import lang from 'languages';
+
+import SetMax from 'components/SetMax';
 
 const Withdraw = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
@@ -77,13 +79,7 @@ const Withdraw = ({ cdpId, reset }) => {
           value={amount}
           min="0"
           onChange={evt => setAmount(evt.target.value)}
-          after={
-            debtAmount === 0 ? (
-              <Link fontWeight="medium" onClick={setMax}>
-                {lang.action_sidebar.set_max}
-              </Link>
-            ) : null
-          }
+          after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
           errorMessage={
             lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
           }

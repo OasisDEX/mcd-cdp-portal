@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
@@ -14,6 +14,7 @@ import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import { MAX_UINT_BN } from 'utils/units';
 import LoadingToggle from 'components/LoadingToggle';
+import SetMax from 'components/SetMax';
 
 import lang from 'languages';
 
@@ -180,11 +181,7 @@ const Deposit = ({ cdpId, reset }) => {
           value={amount}
           onChange={evt => setAmount(evt.target.value)}
           placeholder={`0.00 ${symbol}`}
-          after={
-            <Link fontWeight="medium" onClick={setMax}>
-              {lang.action_sidebar.set_max}
-            </Link>
-          }
+          after={<SetMax onClick={setMax} />}
           failureMessage={errorMessage}
           data-testid="deposit-input"
         />

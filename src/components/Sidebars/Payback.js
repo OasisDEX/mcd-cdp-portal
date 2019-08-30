@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
+import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import useMaker from '../../hooks/useMaker';
 import {
   formatCollateralizationRatio,
@@ -14,6 +14,7 @@ import InfoContainer from './shared/InfoContainer';
 import lang from 'languages';
 import { MAX_UINT_BN } from '../../utils/units';
 import LoadingToggle from 'components/LoadingToggle';
+import SetMax from 'components/SetMax';
 
 const Payback = ({ cdpId, reset }) => {
   const { maker, account, newTxListener } = useMaker();
@@ -80,11 +81,7 @@ const Payback = ({ cdpId, reset }) => {
           placeholder="0.00 DAI"
           failureMessage={errorMessage}
           data-testid="payback-input"
-          after={
-            <Link onClick={setMax} fontWeight="medium">
-              {lang.action_sidebar.set_max}
-            </Link>
-          }
+          after={<SetMax onClick={setMax} />}
         />
       </Grid>
       <ProxyAndAllowanceCheck

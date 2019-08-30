@@ -12,13 +12,14 @@ import {
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
-import CardTabs from '../components/CardTabs';
-import AccountBox from '../components/AccountBox';
+import CardTabs from 'components/CardTabs';
+import AccountBox from 'components/AccountBox';
+import SetMax from 'components/SetMax';
 
-import useMaker from '../hooks/useMaker';
-import useWalletBalances from '../hooks/useWalletBalances';
-import useValidatedInput from '../hooks/useValidatedInput';
-import useActionState from '../hooks/useActionState';
+import useMaker from 'hooks/useMaker';
+import useWalletBalances from 'hooks/useWalletBalances';
+import useValidatedInput from 'hooks/useValidatedInput';
+import useActionState from 'hooks/useActionState';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
 function Save() {
@@ -184,24 +185,17 @@ function Save() {
                   onChange={onDepositAmountChange}
                   error={depositAmountErrors}
                   failureMessage={depositAmountErrors}
-                  after={
-                    <Text.a
-                      css={`
-                        cursor: pointer;
-                      `}
-                      onClick={setDepositMax}
-                      fontWeight="medium"
-                      color="blue"
-                    >
-                      Set max
-                    </Text.a>
-                  }
+                  after={<SetMax onClick={setDepositMax} />}
                 />
               </div>
 
               <Box justifySelf="center">
                 <Button
-                  disabled={depositAmountErrors || depositLoading}
+                  disabled={
+                    depositAmount === '' ||
+                    depositAmountErrors ||
+                    depositLoading
+                  }
                   loading={depositLoading}
                   onClick={onStartDeposit}
                 >
@@ -231,24 +225,17 @@ function Save() {
                   onChange={onWithdrawAmountChange}
                   error={withdrawAmountErrors}
                   failureMessage={withdrawAmountErrors}
-                  after={
-                    <Text.a
-                      css={`
-                        cursor: pointer;
-                      `}
-                      onClick={setWithdrawMax}
-                      fontWeight="medium"
-                      color="blue"
-                    >
-                      Set max
-                    </Text.a>
-                  }
+                  after={<SetMax onClick={setWithdrawMax} />}
                 />
               </div>
 
               <Box justifySelf="center">
                 <Button
-                  disabled={withdrawAmountErrors || withdrawLoading}
+                  disabled={
+                    withdrawAmount === '' ||
+                    withdrawAmountErrors ||
+                    withdrawLoading
+                  }
                   loading={withdrawLoading}
                   onClick={onStartWithdraw}
                 >
