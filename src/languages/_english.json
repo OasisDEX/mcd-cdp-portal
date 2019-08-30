@@ -166,7 +166,10 @@
     "your_balance": "Your Balance",
     "dest_address": "Destination Address",
     "paste": "Paste",
-    "send_token_desc": "Sent {0}"
+    "send_token_desc": "Sent {0}",
+    "invalid_amount": "The amount you wish to send is invalid",
+    "invalid_gas": "Not enough gas",
+    "invalid_address": "Thiis is not a valid address"
   },
   "verbs": {
     "depositing": "Depositing",

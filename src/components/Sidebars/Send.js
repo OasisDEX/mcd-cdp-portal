@@ -31,27 +31,77 @@ const PasteAddress = props => (
   </PasteLink>
 );
 
-const SetMaxLink = ({ token, setMax }) => {
-  return token === 'ETH' ? null : (
+const SetMaxLink = ({ token, setMax, hasSurplusETH }) =>
+  (token !== 'ETH' || hasSurplusETH) && (
     <Link fontWeight="medium" onClick={setMax}>
       {lang.action_sidebar.set_max}
     </Link>
   );
-};
+
+const gasLimit = BigNumber(21000);
 
 const Send = ({ token, balance, reset }) => {
   const [amount, setAmount] = useState('');
   const [destAddress, setDestAddress] = useState('');
-  const { maker, newTxListener } = useMaker();
-  const previousToken = usePrevious(token);
+
+  const [gasOffset, setGasOffset] = useState(false);
+  const [
+    enoughBalanceForGasAndAmount,
+    setEnoughBalanceForGasAndAmount
+  ] = useState(true);
+  const [amountGreaterThanBalance, setAmountGreaterThanBalance] = useState(
+    false
+  );
+  const [hasSurplusETH, setHasSurplusETH] = useState(false);
+
+  const { maker, account, newTxListener } = useMaker();
+  const { address } = account;
+  const prevToken = usePrevious(token);
+  const prevAddress = usePrevious(address);
+
+  const calculateEthOffset = async () => {
+    const gasPrice = await maker.service('gas').getGasPrice('fast');
+    const gasCost = gasLimit.times(gasPrice).shiftedBy(-18);
+    setGasOffset(gasCost.toNumber());
+    if (token === 'ETH' && balance.minus(gasCost.toNumber()).gte(0)) {
+      setHasSurplusETH(true);
+    } else {
+      setEnoughBalanceForGasAndAmount(false);
+    }
+  };
+
   useEffect(() => {
-    if (previousToken !== token) {
+    if (prevToken !== token) {
       setAmount('');
       setDestAddress('');
+      setEnoughBalanceForGasAndAmount(true);
+      setHasSurplusETH(false);
+      setGasOffset(false);
     }
-  }, [token]);
+    if (prevAddress !== address) reset();
+    if (token === 'ETH' && !gasOffset) calculateEthOffset();
+  }, [token, address, prevToken, prevAddress]);
 
-  const setMax = () => setAmount(balance.toString());
+  const updateAmount = value => {
+    setAmountGreaterThanBalance(balance.minus(value).lt(0));
+    if (token === 'ETH') {
+      setEnoughBalanceForGasAndAmount(
+        balance.minus(BigNumber(value).plus(gasOffset)).gte(0)
+      );
+      setAmount(value);
+    } else {
+      setAmount(value);
+    }
+  };
+
+  const setMax = () => {
+    if (token === 'ETH' && gasOffset && hasSurplusETH) {
+      updateAmount(balance.minus(gasOffset));
+    } else {
+      setAmount(balance);
+    }
+  };
+
   const paste = async () => {
     const contents = await navigator.clipboard.readText();
     setDestAddress(contents);
@@ -59,16 +109,27 @@ const Send = ({ token, balance, reset }) => {
 
   const amountBig = BigNumber(amount);
   const amountIsValid =
-    amount === '' || (amountBig.gt(0) && amountBig.lte(balance));
+    amount === '' ||
+    (amountBig.gt(0) &&
+      (token === 'ETH'
+        ? hasSurplusETH && enoughBalanceForGasAndAmount
+        : !amountGreaterThanBalance));
+
   const amountFailureMessage = amountIsValid
     ? ''
-    : 'The amount you wish to send is invalid';
+    : token === 'ETH'
+    ? hasSurplusETH && enoughBalanceForGasAndAmount
+      ? lang.action_sidebar.invalid_amount
+      : amountGreaterThanBalance
+      ? lang.action_sidebar.invalid_amount
+      : lang.action_sidebar.invalid_gas
+    : lang.action_sidebar.invalid_amount;
 
   const destAddressIsValid =
     destAddress === '' || isValidAddressString(destAddress);
   const destAddressFailureMessage = destAddressIsValid
     ? ''
-    : 'This is not a valid address';
+    : lang.action_sidebar.invalid_address;
 
   const valid =
     amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
@@ -99,14 +160,14 @@ const Send = ({ token, balance, reset }) => {
           type="number"
           min="0"
           value={amount}
-          onChange={evt => setAmount(evt.target.value)}
+          onChange={evt => updateAmount(evt.target.value)}
           onFocus={e => {
             const tmp = e.target.value;
             e.target.value = '';
             e.target.value = tmp;
           }}
           placeholder={`0.00 ${token}`}
-          after={<SetMaxLink {...{ token, setMax }} />}
+          after={<SetMaxLink {...{ token, setMax, hasSurplusETH }} />}
           failureMessage={amountFailureMessage}
         />
 

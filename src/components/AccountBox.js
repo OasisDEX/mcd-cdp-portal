@@ -129,7 +129,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
               <ActionButton
                 onClick={() =>
                   showSendSidebar({
-                    token: 'DAI',
+                    token: 'MDAI',
                     balance: balances.MDAI
                   })
                 }
