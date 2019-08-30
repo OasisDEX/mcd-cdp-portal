@@ -17,84 +17,9 @@ import AccountBox from '../components/AccountBox';
 
 import useMaker from '../hooks/useMaker';
 import useWalletBalances from '../hooks/useWalletBalances';
+import useValidatedInput from '../hooks/useValidatedInput';
+import useActionState from '../hooks/useActionState';
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
-
-function ActionInput({
-  inputTitle,
-  input,
-  button,
-  validateInput = () => true,
-  invalidMessage,
-  maximumValue,
-  action
-}) {
-  const [inputValue, setInputValue] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValid, setIsValid] = useState(false);
-
-  const onChange = useCallback(evt => {
-    const newValue = evt.target.value;
-    validate(newValue);
-
-    setInputValue(newValue);
-  });
-
-  const validate = useCallback(value => {
-    const isValid = validateInput(value);
-    setIsValid(isValid);
-
-    setErrorMessage(isValid ? '' : invalidMessage);
-  });
-
-  const onSetMaximum = useCallback(async () => {
-    validate(maximumValue);
-    setInputValue(maximumValue);
-  }, [maximumValue]);
-
-  const onAction = useCallback(async () => {
-    setIsLoading(true);
-    setErrorMessage('');
-
-    try {
-      await action(inputValue);
-      setInputValue('');
-    } catch (err) {
-      setErrorMessage('An error occurred. Please try again.');
-    }
-
-    setIsLoading(false);
-  }, [inputValue]);
-
-  return (
-    <>
-      <div>
-        <Text.p t="subheading" mb="s">
-          {inputTitle}
-        </Text.p>
-        {React.cloneElement(input, {
-          onChange,
-          value: inputValue,
-          error: errorMessage,
-          failureMessage: errorMessage,
-          after: maximumValue && (
-            <Text.a fontWeight="medium" color="blue" onClick={onSetMaximum}>
-              Set max
-            </Text.a>
-          )
-        })}
-      </div>
-
-      <Box justifySelf="center">
-        {React.cloneElement(button, {
-          disabled: isLoading || !isValid,
-          loading: isLoading,
-          onClick: onAction
-        })}
-      </Box>
-    </>
-  );
-}
 
 function Save() {
   const balances = useWalletBalances();
@@ -102,32 +27,63 @@ function Save() {
   const [balance, setBalance] = useState(0);
   const [yearlyRate, setYearlyRate] = useState(undefined);
 
-  const onDeposit = useCallback(value => {
-    return maker.service('mcd:savings').join(MDAI(value));
+  const [
+    depositAmount,
+    setDepositAmount,
+    onDepositAmountChange,
+    depositAmountErrors
+  ] = useValidatedInput('', {
+    isFloat: true,
+    minFloat: 0.0,
+    maxFloat: balances.MDAI && balances.MDAI.toNumber()
+  });
+  const [
+    withdrawAmount,
+    setWithdrawAmount,
+    onWithdrawAmountChange,
+    withdrawAmountErrors
+  ] = useValidatedInput('', {
+    isFloat: true,
+    minFloat: 0.0,
+    maxFloat: balance
   });
 
-  const onWithdraw = useCallback(value => {
-    return maker.service('mcd:savings').exit(MDAI(value));
-  });
+  const onDeposit = useCallback(() => {
+    return maker.service('mcd:savings').join(MDAI(depositAmount));
+  }, [maker, depositAmount]);
 
-  const validateInput = useCallback(value => {
-    if (!value) return false;
+  const onWithdraw = useCallback(() => {
+    return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+  }, [maker, withdrawAmount]);
 
-    try {
-      const num = parseFloat(value);
-      return num > 0;
-    } catch (err) {
-      return false;
+  const [onStartDeposit, depositLoading, depositError] = useActionState(
+    onDeposit
+  );
+  const [onStartWithdraw, withdrawLoading, withdrawError] = useActionState(
+    onWithdraw
+  );
+
+  const setDepositMax = useCallback(() => {
+    if (balances.MDAI) {
+      setDepositAmount(balances.MDAI.toNumber().toString());
+    } else {
+      setDepositAmount('0');
     }
-  });
+  }, [balances.MDAI, setDepositAmount]);
 
-  const invalidMessage = 'Please enter a value greater than 0';
+  const setWithdrawMax = useCallback(() => {
+    setWithdrawAmount(balance.toString());
+  }, [balance, setWithdrawAmount]);
 
   useEffect(() => {
     (async () => {
       if (!account) return setBalance(0);
-      const proxyAddress = await maker.currentProxy();
-      if (!proxyAddress) return setBalance(0);
+      let proxyAddress;
+      try {
+        proxyAddress = await maker.currentProxy();
+      } catch (err) {
+        return setBalance(0);
+      }
 
       const balance = await maker
         .service('mcd:savings')
@@ -216,30 +172,95 @@ function Save() {
                 Receive interest on your Dai. Withdraw or top-up at any time.
               </Text.p>
 
-              <ActionInput
-                inputTitle="Deposit amount"
-                validateInput={validateInput}
-                invalidMessage={invalidMessage}
-                input={<Input type="number" min="0" placeholder="0 DAI" />}
-                button={<Button>Deposit</Button>}
-                maximumValue={balances.MDAI && balances.MDAI.toNumber()}
-                action={onDeposit}
-              />
+              <div>
+                <Text.p t="subheading" mb="s">
+                  Deposit amount
+                </Text.p>
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="0 DAI"
+                  value={depositAmount}
+                  onChange={onDepositAmountChange}
+                  error={depositAmountErrors}
+                  failureMessage={depositAmountErrors}
+                  after={
+                    <Text.a
+                      css={`
+                        cursor: pointer;
+                      `}
+                      onClick={setDepositMax}
+                      fontWeight="medium"
+                      color="blue"
+                    >
+                      Set max
+                    </Text.a>
+                  }
+                />
+              </div>
+
+              <Box justifySelf="center">
+                <Button
+                  disabled={depositAmountErrors || depositLoading}
+                  loading={depositLoading}
+                  onClick={onStartDeposit}
+                >
+                  Deposit
+                </Button>
+              </Box>
+              {depositError && (
+                <Text.p t="caption" color="orange.600" textAlign="center">
+                  {depositError}
+                </Text.p>
+              )}
             </Grid>
             <Grid px="l" py="m" gridRowGap="m">
               <Text.p t="body">
                 Receive interest on your Dai. Withdraw or top-up at any time.
               </Text.p>
 
-              <ActionInput
-                inputTitle="Withdraw amount"
-                validateInput={validateInput}
-                invalidMessage={invalidMessage}
-                input={<Input type="number" min="0" placeholder="0 DAI" />}
-                button={<Button>Withdraw</Button>}
-                maximumValue={balance}
-                action={onWithdraw}
-              />
+              <div>
+                <Text.p t="subheading" mb="s">
+                  Withdraw amount
+                </Text.p>
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="0 DAI"
+                  value={withdrawAmount}
+                  onChange={onWithdrawAmountChange}
+                  error={withdrawAmountErrors}
+                  failureMessage={withdrawAmountErrors}
+                  after={
+                    <Text.a
+                      css={`
+                        cursor: pointer;
+                      `}
+                      onClick={setWithdrawMax}
+                      fontWeight="medium"
+                      color="blue"
+                    >
+                      Set max
+                    </Text.a>
+                  }
+                />
+              </div>
+
+              <Box justifySelf="center">
+                <Button
+                  disabled={withdrawAmountErrors || withdrawLoading}
+                  loading={withdrawLoading}
+                  onClick={onStartWithdraw}
+                >
+                  Withdraw
+                </Button>
+              </Box>
+
+              {withdrawError && (
+                <Text.p t="caption" color="orange.600" textAlign="center">
+                  {withdrawError}
+                </Text.p>
+              )}
             </Grid>
           </CardTabs>
           <AccountBox currentAccount={account} />
