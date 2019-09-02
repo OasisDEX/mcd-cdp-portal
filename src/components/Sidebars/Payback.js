@@ -102,13 +102,14 @@ const Payback = ({ cdpId, reset }) => {
         !hasAllowance ||
         startedWithoutAllowance ||
         startedWithoutProxy) && (
-        <Grid gridRowGap="s">
+        <Grid gridRowGap="s" data-testid="toggle-container">
           {(startedWithoutProxy || showProxyToggle) && (
             <ProxyToggle
               isLoading={proxyLoading}
               isComplete={!!hasProxy}
               onToggle={setupProxy}
               disabled={!!hasProxy}
+              data-testid="proxy-toggle"
             />
           )}
           {(startedWithoutAllowance || !hasAllowance) && (
@@ -118,6 +119,7 @@ const Payback = ({ cdpId, reset }) => {
               isComplete={hasAllowance}
               onToggle={setAllowance}
               disabled={!hasProxy || hasAllowance}
+              data-testid="allowance-toggle"
             />
           )}
         </Grid>
