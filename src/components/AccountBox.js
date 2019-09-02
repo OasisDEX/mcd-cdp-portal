@@ -144,7 +144,7 @@ const WalletBalances = () => {
         )}
 
         {uniqueGemsToShow.map(gem => {
-          const balance = balances[gem] && balances[gem].balance;
+          const balance = balances[gem];
           return (
             balance &&
             balance.gt(0) && (
