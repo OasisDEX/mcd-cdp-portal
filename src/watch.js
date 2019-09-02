@@ -2,21 +2,26 @@ import { batchActions } from './utils/redux';
 import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
-import accountBalanceForToken from './reducers/multicall/accounts';
+import accountModel, {
+  accountBalanceForToken
+} from './reducers/multicall/accounts';
+import savingsModel from './reducers/multicall/savings';
 import { tokensWithBalances } from './reducers/accounts';
 import { isMissingContractAddress } from './utils/ethereum';
 
 let watcher;
 
-export function startWatcher(maker, dispatch) {
+export async function startWatcher(maker, dispatch) {
   const service = maker.service('multicall');
   service.createWatcher();
   watcher = service.watcher;
   window.watcher = watcher;
 
   let currentAddress;
+  let proxyAddress;
   try {
     currentAddress = maker.currentAddress();
+    proxyAddress = await maker.currentProxy();
   } catch (err) {}
 
   const addresses = maker.service('smartContract').getContractAddresses();
@@ -48,6 +53,10 @@ export function startWatcher(maker, dispatch) {
     return [
       ...createCDPSystemModel(addresses),
       ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
+      ...savingsModel(addresses),
+      ...(currentAddress && proxyAddress
+        ? accountModel(addresses, currentAddress, proxyAddress)
+        : []),
       ...(currentAddress
         ? tokensWithBalances
             .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.

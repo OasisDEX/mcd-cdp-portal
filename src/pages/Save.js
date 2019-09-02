@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
 import {
   Box,
@@ -13,6 +13,8 @@ import {
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
+import { getSavingsBalance } from 'reducers/accounts';
+
 import CardTabs from 'components/CardTabs';
 import AccountBox from 'components/AccountBox';
 import SetMax from 'components/SetMax';
@@ -23,18 +25,25 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
+import useStore from 'hooks/useStore';
+
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 
 function Save() {
   const balances = useWalletBalances();
   const { maker, account } = useMaker();
-  const [balance, setBalance] = useState(0);
-  const [yearlyRate, setYearlyRate] = useState(undefined);
+  const [{ accounts, savings }] = useStore();
   const [
     hasAllowance,
     setAllowance,
     startedWithoutAllowance
   ] = useTokenAllowance('MDAI');
+
+  const balance = useMemo(() => {
+    return account
+      ? getSavingsBalance(account.address, { accounts, savings })
+      : 0;
+  }, [account, accounts, savings]);
 
   const [onSetAllowance, allowanceLoading] = useActionState(setAllowance);
 
@@ -71,12 +80,26 @@ function Save() {
     }
   }, [maker, withdrawAmount]);
 
-  const [onDeposit, depositLoading, depositError] = useActionState(
-    onStartDeposit
-  );
-  const [onWithdraw, withdrawLoading, withdrawError] = useActionState(
-    onStartWithdraw
-  );
+  const [
+    onDeposit,
+    depositLoading,
+    depositSuccess,
+    depositError
+  ] = useActionState(onStartDeposit);
+  const [
+    onWithdraw,
+    withdrawLoading,
+    withdrawSuccess,
+    withdrawError
+  ] = useActionState(onStartWithdraw);
+
+  useEffect(() => {
+    if (depositSuccess) setDepositAmount('', { validate: false });
+  }, [depositSuccess]);
+
+  useEffect(() => {
+    if (withdrawSuccess) setWithdrawAmount('', { validate: false });
+  }, [withdrawSuccess]);
 
   const setDepositMax = useCallback(() => {
     if (balances.MDAI) {
@@ -89,32 +112,6 @@ function Save() {
   const setWithdrawMax = useCallback(() => {
     setWithdrawAmount(balance.toString());
   }, [balance, setWithdrawAmount]);
-
-  useEffect(() => {
-    (async () => {
-      if (!account) return setBalance(0);
-      let proxyAddress;
-      try {
-        proxyAddress = await maker.currentProxy();
-      } catch (err) {
-        return setBalance(0);
-      }
-
-      const balance = await maker
-        .service('mcd:savings')
-        .balanceOf(proxyAddress);
-      setBalance(balance.toNumber());
-    })();
-  }, [account]);
-
-  useEffect(() => {
-    maker
-      .service('mcd:savings')
-      .getYearlyRate()
-      .then(rate => {
-        setYearlyRate(rate);
-      });
-  }, []);
 
   return (
     <Flex justifyContent="center" mt="xl">
@@ -148,7 +145,9 @@ function Save() {
                     </Table.td>
                     <Table.td textAlign="right">
                       <Text t="body">
-                        {yearlyRate ? `${yearlyRate.toFixed(2)}%` : '--'}
+                        {savings && savings.yearlyRate
+                          ? `${savings.yearlyRate.toFixed(2)}%`
+                          : '--'}
                       </Text>
                     </Table.td>
                   </Table.tr>

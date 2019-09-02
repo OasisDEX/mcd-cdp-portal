@@ -34,8 +34,8 @@ export default function useValidatedInput(initialValue, validationSchema) {
   );
 
   const setValueAndValidate = useCallback(
-    newValue => {
-      setErrors(validate(newValue));
+    (newValue, options = { validate: true }) => {
+      if (options.validate) setErrors(validate(newValue));
       setValue(newValue);
     },
     [setValue, setErrors, validate]
