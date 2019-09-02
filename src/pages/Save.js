@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import BigNumber from 'bignumber.js';
 import {
   Box,
   Flex,
@@ -63,7 +64,11 @@ function Save() {
   }, [maker, depositAmount]);
 
   const onStartWithdraw = useCallback(() => {
-    return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+    if (new BigNumber(withdrawAmount).eq(balance)) {
+      return maker.service('mcd:savings').exitAll();
+    } else {
+      return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+    }
   }, [maker, withdrawAmount]);
 
   const [onDeposit, depositLoading, depositError] = useActionState(
