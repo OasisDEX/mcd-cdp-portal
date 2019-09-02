@@ -13,7 +13,6 @@ import ScreenFooter from './ScreenFooter';
 import useMaker from 'hooks/useMaker';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useTokenAllowance from 'hooks/useTokenAllowance';
-import useActionState from 'hooks/useActionState';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -31,10 +30,11 @@ const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
   const blockHeight = useBlockHeight(0);
   const [startingBlockHeight, setStartingBlockHeight] = useState(0);
   const [proxyDeployed, setProxyDeployed] = useState(false);
-  const [hasAllowance, startSetAllowance] = useTokenAllowance(
-    selectedIlk.currency.symbol
-  );
-  const [setAllowance, isSettingAllowance] = useActionState(startSetAllowance);
+  const {
+    hasAllowance,
+    setAllowance,
+    allowanceLoading: isSettingAllowance
+  } = useTokenAllowance(selectedIlk.currency.symbol);
 
   const [isDeployingProxy, setIsDeployingProxy] = useState(false);
 

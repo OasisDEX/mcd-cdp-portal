@@ -33,19 +33,18 @@ function Save() {
   const balances = useWalletBalances();
   const { maker, account } = useMaker();
   const [{ accounts, savings }] = useStore();
-  const [
+  const {
     hasAllowance,
     setAllowance,
+    allowanceLoading,
     startedWithoutAllowance
-  ] = useTokenAllowance('MDAI');
+  } = useTokenAllowance('MDAI');
 
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
       : 0;
   }, [account, accounts, savings]);
-
-  const [onSetAllowance, allowanceLoading] = useActionState(setAllowance);
 
   const [
     depositAmount,
@@ -201,11 +200,11 @@ function Save() {
                   after={<SetMax onClick={setDepositMax} />}
                 />
 
-                {startedWithoutAllowance && (
+                {(startedWithoutAllowance || !hasAllowance) && (
                   <AllowanceToggle
                     mt="s"
                     tokenDisplayName="DAI"
-                    onToggle={onSetAllowance}
+                    onToggle={setAllowance}
                     isLoading={allowanceLoading}
                     isComplete={hasAllowance}
                     disabled={hasAllowance}
@@ -253,11 +252,11 @@ function Save() {
                   after={<SetMax onClick={setWithdrawMax} />}
                 />
 
-                {startedWithoutAllowance && (
+                {(startedWithoutAllowance || !hasAllowance) && (
                   <AllowanceToggle
                     mt="s"
                     tokenDisplayName="DAI"
-                    onToggle={onSetAllowance}
+                    onToggle={setAllowance}
                     isLoading={allowanceLoading}
                     isComplete={hasAllowance}
                     disabled={hasAllowance}

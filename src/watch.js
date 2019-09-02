@@ -5,17 +5,11 @@ import cdpTypeModel from './reducers/multicall/feeds';
 import accountModel, {
   accountBalanceForToken
 } from './reducers/multicall/accounts';
+import { tokensWithBalances } from 'reducers/accounts';
 import savingsModel from './reducers/multicall/savings';
 import { isMissingContractAddress } from './utils/ethereum';
 
 let watcher;
-
-export const tokensWithBalances = [
-  'MDAI',
-  'DAI',
-  'MWETH',
-  ...new Set(ilks.map(ilk => ilk.gem))
-];
 
 export async function startWatcher(maker, dispatch) {
   const service = maker.service('multicall');

@@ -187,7 +187,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     collateralizationRatio,
     daiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
-  const [hasAllowance] = useTokenAllowance(selectedIlk.currency.symbol);
+  const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;

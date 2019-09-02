@@ -4,6 +4,7 @@ import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
+import useValidatedInput from 'hooks/useValidatedInput';
 import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
@@ -16,7 +17,6 @@ import useMaker from '../../hooks/useMaker';
 
 const Generate = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
-  const [amount, setAmount] = useState('');
   const [daiAvailable, setDaiAvailable] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
@@ -26,6 +26,22 @@ const Generate = ({ cdpId, reset }) => {
 
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp);
+  const undercollateralized = greaterThan(
+    cdp.liquidationRatio,
+    collateralizationRatio
+  );
+
+  const [amount, , onAmountChange, amountErrors] = useValidatedInput(
+    '',
+    {
+      minFloat: 0,
+      maxFloat: daiAvailable,
+      isFloat: true
+    },
+    {
+      maxFloat: () => lang.action_sidebar.cdp_below_threshold
+    }
+  );
 
   useEffect(() => {
     const amountToGenerate = parseFloat(amount || 0);
@@ -43,12 +59,6 @@ const Generate = ({ cdpId, reset }) => {
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp, collateralAmount, debtAmount]);
-
-  const undercollateralized = greaterThan(
-    cdp.liquidationRatio,
-    collateralizationRatio
-  );
-  const valid = parseFloat(amount) >= 0 && !undercollateralized;
 
   const generate = () => {
     newTxListener(
@@ -71,15 +81,13 @@ const Generate = ({ cdpId, reset }) => {
           type="number"
           value={amount}
           min="0"
-          onChange={evt => setAmount(evt.target.value)}
+          onChange={onAmountChange}
           placeholder="0.00 DAI"
-          errorMessage={
-            undercollateralized ? lang.action_sidebar.cdp_below_threshold : null
-          }
+          failureMessage={amountErrors}
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={generate} disabled={!valid}>
+        <Button onClick={generate} disabled={!amount || amountErrors}>
           {lang.actions.generate}
         </Button>
         <Button variant="secondary-outline" onClick={reset}>

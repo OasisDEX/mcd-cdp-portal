@@ -3,7 +3,7 @@ import lang from 'languages';
 
 import LoadingToggle from 'components/LoadingToggle';
 
-export default function AllowanceToggle({ tokenDisplayName, ...props }) {
+export default function AllowanceToggle({ tokenDisplayName = '', ...props }) {
   return (
     <LoadingToggle
       completeText={lang.formatString(

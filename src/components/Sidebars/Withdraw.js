@@ -6,6 +6,7 @@ import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
 import { calcCDPParams } from '../../utils/cdp';
 import useStore from 'hooks/useStore';
+import useValidatedInput from 'hooks/useValidatedInput';
 import {
   getCdp,
   getDebtAmount,
@@ -23,7 +24,6 @@ import SetMax from 'components/SetMax';
 
 const Withdraw = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
-  const [amount, setAmount] = useState('');
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
@@ -37,6 +37,22 @@ const Withdraw = ({ cdpId, reset }) => {
 
   const { symbol } = cdp.currency;
 
+  const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
+    '',
+    {
+      maxFloat: collateralAvailableAmount,
+      minFloat: 0,
+      isFloat: true
+    },
+    {
+      maxFloat: () => lang.action_sidebar.cdp_below_threshold
+    }
+  );
+
+  const setMax = () => setAmount(collateralAvailableAmount.toFixed(9));
+  const undercollateralized =
+    amount && parseFloat(amount) > collateralAvailableAmount;
+
   useEffect(() => {
     let val = parseFloat(amount);
     val = isNaN(val) ? 0 : val;
@@ -48,12 +64,6 @@ const Withdraw = ({ cdpId, reset }) => {
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp, collateralAmount, debtAmount]);
-
-  const setMax = () => setAmount(collateralAvailableAmount.toFixed(9));
-  const lessThanMax =
-    amount === '' || parseFloat(amount) <= collateralAvailableAmount;
-  const moreThanZero = amount !== '' && amount > 0;
-  const valid = moreThanZero && lessThanMax;
 
   const withdraw = () => {
     newTxListener(
@@ -78,15 +88,13 @@ const Withdraw = ({ cdpId, reset }) => {
           placeholder={`0.00 ${symbol}`}
           value={amount}
           min="0"
-          onChange={evt => setAmount(evt.target.value)}
+          onChange={onAmountChange}
           after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
-          errorMessage={
-            lessThanMax ? null : lang.action_sidebar.cdp_below_threshold
-          }
+          errorMessage={amountErrors}
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!valid} onClick={withdraw}>
+        <Button disabled={!amount || amountErrors} onClick={withdraw}>
           {lang.actions.withdraw}
         </Button>
         <Button variant="secondary-outline" onClick={reset}>
@@ -112,7 +120,7 @@ const Withdraw = ({ cdpId, reset }) => {
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <Text color={lessThanMax ? null : 'orange.600'}>
+            <Text color={undercollateralized ? 'orange.600' : null}>
               {formatCollateralizationRatio(collateralizationRatio)}
             </Text>
           }
