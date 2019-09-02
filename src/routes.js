@@ -62,6 +62,7 @@ const withSaveLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
+      const { viewedAddress, cdpId } = request.params;
 
       return (
         <MakerProvider
@@ -72,9 +73,16 @@ const withSaveLayout = route =>
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
             <ModalProvider modals={modals} templates={templates}>
-              <AppLayout>
-                <View />
-              </AppLayout>
+              <SidebarProvider>
+                <PageLayout
+                  mobileNav={
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                  }
+                  navbar={<Navbar viewedAddress={viewedAddress} />}
+                >
+                  <View />
+                </PageLayout>
+              </SidebarProvider>
             </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
