@@ -15,6 +15,7 @@ import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
 import MakerProvider from 'providers/MakerProvider';
+import EthBalanceProvider from 'providers/EthBalanceProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
@@ -37,18 +38,20 @@ const withBorrowLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider>
-                <PageLayout
-                  mobileNav={
-                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                  }
-                  navbar={<Navbar viewedAddress={viewedAddress} />}
-                >
-                  <View />
-                </PageLayout>
-              </SidebarProvider>
-            </ModalProvider>
+            <EthBalanceProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <SidebarProvider>
+                  <PageLayout
+                    mobileNav={
+                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                    }
+                    navbar={<Navbar viewedAddress={viewedAddress} />}
+                  >
+                    <View />
+                  </PageLayout>
+                </SidebarProvider>
+              </ModalProvider>
+            </EthBalanceProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );

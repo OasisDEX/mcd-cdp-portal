@@ -1,7 +1,9 @@
 import { batchActions } from './utils/redux';
-import ilkList from './references/ilkList';
+import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
+import accountBalanceForToken from './reducers/multicall/accounts';
+import { tokensWithBalances } from './reducers/accounts';
 import { isMissingContractAddress } from './utils/ethereum';
 
 let watcher;
@@ -12,7 +14,17 @@ export function startWatcher(maker, dispatch) {
   watcher = service.watcher;
   window.watcher = watcher;
 
+  let currentAddress;
+  try {
+    currentAddress = maker.currentAddress();
+  } catch (err) {}
+
   const addresses = maker.service('smartContract').getContractAddresses();
+
+  // add additional lookups for easier mapping when finding address
+  // by token symbol
+  addresses.MDAI = addresses.MCD_DAI;
+  addresses.MWETH = addresses.ETH;
 
   watcher.onNewBlock(blockHeight => {
     console.log('Latest block height:', blockHeight);
@@ -35,7 +47,15 @@ export function startWatcher(maker, dispatch) {
   watcher.tap(() => {
     return [
       ...createCDPSystemModel(addresses),
-      ...ilkList.map(ilk => cdpTypeModel(addresses, ilk)).flat()
+      ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
+      ...(currentAddress
+        ? tokensWithBalances
+            .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
+            .map(token =>
+              accountBalanceForToken(addresses, token, currentAddress)
+            )
+            .flat()
+        : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
   });
   return watcher;

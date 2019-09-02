@@ -6,32 +6,14 @@ export const RAD = BigNumber('1000000000000000000000000000000000000000000000');
 export const RAY = BigNumber('1000000000000000000000000000');
 export const WAD = BigNumber('1000000000000000000');
 
-export function fromWei(value, digits = 18) {
-  return BigNumber(value)
-    .shiftedBy(-18)
-    .toFixed(digits);
+export function fromWei(value) {
+  return BigNumber(value).shiftedBy(-18);
 }
 
-export function fromRay(value, digits = 18) {
-  return BigNumber(value)
-    .shiftedBy(-27)
-    .toFixed(digits);
+export function fromRay(value) {
+  return BigNumber(value).shiftedBy(-27);
 }
 
-export function fromRad(value, digits = 18) {
-  return BigNumber(value)
-    .shiftedBy(-45)
-    .toFixed(digits);
-}
-
-export function sub(a, b) {
-  return BigNumber(a)
-    .minus(BigNumber(b))
-    .toFixed();
-}
-
-export function mul(a, b) {
-  return BigNumber(a)
-    .times(BigNumber(b))
-    .toFixed();
+export function fromRad(value) {
+  return BigNumber(value).shiftedBy(-45);
 }

@@ -16,6 +16,7 @@ import { getIlkData } from 'reducers/feeds';
 
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
+import useWalletBalances from 'hooks/useWalletBalances';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
@@ -42,28 +43,17 @@ const CDPCreateSelectCollateralSidebar = () => (
   </Box>
 );
 
-function IlkTableRow({ ilk, checked, dispatch }) {
-  const { maker } = useMaker();
+function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
   const [{ feeds }] = useStore();
-  const [userGemBalance, setUserGemBalance] = useState(null);
 
   ilk.data = getIlkData(feeds, ilk.key);
-
-  useEffect(() => {
-    (async () => {
-      setUserGemBalance(await maker.getToken(ilk.currency).balance());
-    })();
-  }, []);
 
   async function selectIlk() {
     dispatch({
       type: 'set-ilk',
       payload: {
         key: ilk.key,
-        gemBalance:
-          userGemBalance === null
-            ? (await maker.getToken(ilk.currency).balance()).toNumber()
-            : userGemBalance.toNumber(),
+        gemBalance,
         currency: ilk.currency,
         data: ilk.data
       }
@@ -79,7 +69,9 @@ function IlkTableRow({ ilk, checked, dispatch }) {
       <td>{ilk.data.rate} %</td>
       <td>{ilk.data.liquidationRatio} %</td>
       <td>{ilk.data.liquidationPenalty} %</td>
-      <td css="text-align: right">{prettifyNumber(userGemBalance)}</td>
+      <td css="text-align: right">
+        {prettifyNumber(gemBalance)} {ilk.gem}
+      </td>
     </tr>
   );
 }
@@ -87,6 +79,7 @@ function IlkTableRow({ ilk, checked, dispatch }) {
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const { maker, account } = useMaker();
   const [loading, setLoading] = useState(true);
+  const balances = useWalletBalances();
 
   useEffect(() => {
     (async () => {
@@ -154,6 +147,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                       checked={ilk.key === selectedIlk.key}
                       dispatch={dispatch}
                       ilk={ilk}
+                      gemBalance={balances[ilk.gem]}
                     />
                   ))}
                 </tbody>
