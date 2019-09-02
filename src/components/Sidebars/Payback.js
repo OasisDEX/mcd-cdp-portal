@@ -125,18 +125,22 @@ const checkForProxyAndAllowance = async (
 ) => {
   const proxyAddress = await maker.service('proxy').getProxyAddress();
   const token = maker.getToken('MDAI');
-  const hasAllowance =
-    proxyAddress &&
-    (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
-      MAX_UINT_BN
-    );
 
-  setHasAllowance(hasAllowance);
-  updateState({
-    proxyAddress,
-    startedWithoutProxy: !proxyAddress,
-    startedWithoutAllowance: !hasAllowance
-  });
+  try {
+    const hasAllowance =
+      !!proxyAddress &&
+      (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
+        MAX_UINT_BN
+      );
+    setHasAllowance(hasAllowance);
+    updateState({
+      proxyAddress,
+      startedWithoutProxy: !proxyAddress,
+      startedWithoutAllowance: !hasAllowance
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const setupProxy = async (maker, updateState, newTxListener) => {
@@ -162,12 +166,15 @@ const setAllowance = async (
     updateState({ allowanceLoading: true });
 
     const daiToken = maker.getToken('MDAI');
+
     const txPromise = daiToken.approveUnlimited(proxyAddress);
     newTxListener(
       txPromise,
       lang.formatString(lang.transactions.unlocking_token, 'DAI')
     );
-    await txPromise;
+
+    await maker.service('transactionManager').confirm(txPromise, 1);
+
     setHasAllowance(true);
     updateState({ allowanceLoading: false });
   } catch (e) {
@@ -183,7 +190,7 @@ const initialState = {
   proxyLoading: false
 };
 
-function ProxyAndAllowanceCheck({
+export function ProxyAndAllowanceCheck({
   maker,
   account,
   newTxListener,
@@ -206,12 +213,12 @@ function ProxyAndAllowanceCheck({
 
   useEffect(() => {
     checkForProxyAndAllowance(maker, updateState, setHasAllowance);
-  }, [maker, account, setHasAllowance]);
+  }, [maker, account]);
 
   if (!startedWithoutProxy && !startedWithoutAllowance) return null;
 
   return (
-    <Grid gridRowGap="s">
+    <Grid gridRowGap="s" data-testid="toggle-container">
       {(startedWithoutProxy || !proxyAddress) && (
         <LoadingToggle
           completeText={lang.action_sidebar.proxy_created}
@@ -221,6 +228,7 @@ function ProxyAndAllowanceCheck({
           isComplete={!!proxyAddress}
           disabled={!!proxyAddress}
           onToggle={() => setupProxy(maker, updateState, newTxListener)}
+          data-testid="proxy-toggle"
         />
       )}
       {(startedWithoutAllowance || !hasAllowance) && (
@@ -240,9 +248,16 @@ function ProxyAndAllowanceCheck({
           isLoading={allowanceLoading}
           isComplete={hasAllowance}
           onToggle={() =>
-            setAllowance(maker, updateState, newTxListener, proxyAddress)
+            setAllowance(
+              maker,
+              updateState,
+              newTxListener,
+              proxyAddress,
+              setHasAllowance
+            )
           }
           disabled={!proxyAddress || hasAllowance}
+          data-testid="allowance-toggle"
         />
       )}
     </Grid>
