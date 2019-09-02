@@ -11,7 +11,8 @@ export function useTokenAllowances() {
   const allowances = useMemo(() => {
     return account
       ? {
-          ...((accounts[account.address] &&
+          ...((accounts &&
+            accounts[account.address] &&
             accounts[account.address].allowances) ||
             {}),
           ETH: true
