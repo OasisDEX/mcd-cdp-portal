@@ -20,7 +20,6 @@ const screens = [
 const initialState = {
   step: 0,
   proxyAddress: null,
-  hasAllowance: null,
   selectedIlk: {
     userGemBalance: '',
     currency: null,
@@ -36,28 +35,19 @@ function reducer(state, action) {
   const { type, payload } = action;
   switch (type) {
     case 'increment-step':
-      const skipProxySetupForward =
-        state.step === 0 && state.proxyAddress && state.hasAllowance;
       return {
         ...state,
-        step: state.step + (skipProxySetupForward ? 2 : 1)
+        step: state.step + ((payload && payload.by) || 1)
       };
     case 'decrement-step':
-      const skipProxySetupBackwards =
-        state.step === 2 && state.proxyAddress && state.hasAllowance;
       return {
         ...state,
-        step: state.step - (skipProxySetupBackwards ? 2 : 1)
+        step: state.step - ((payload && payload.by) || 1)
       };
     case 'set-proxy-address':
       return {
         ...state,
         proxyAddress: payload.address
-      };
-    case 'set-ilk-allowance':
-      return {
-        ...state,
-        hasAllowance: payload.hasAllowance
       };
     case 'set-ilk':
       return {
@@ -93,7 +83,7 @@ function reducer(state, action) {
 function CDPCreate({ onClose }) {
   const { maker, account } = useMaker();
   const [
-    { step, selectedIlk, proxyAddress, hasAllowance, ...cdpParams },
+    { step, selectedIlk, proxyAddress, ...cdpParams },
     dispatch
   ] = useReducer(reducer, initialState);
 
@@ -111,7 +101,6 @@ function CDPCreate({ onClose }) {
   const screenProps = {
     selectedIlk,
     proxyAddress,
-    hasAllowance,
     cdpParams,
     dispatch,
     onClose

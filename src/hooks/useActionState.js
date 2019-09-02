@@ -1,5 +1,9 @@
 import { useState, useCallback } from 'react';
 
+/**
+ * VERY IMPORTANT NOTE: do NOT pass in an anonymous function to useActionState!
+ * This will cause the component to infinitely rerender!
+ **/
 export default function useActionState(
   action,
   errorMessage = 'An error occurred. Please try again.'
