@@ -13,10 +13,7 @@ import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
-import {
-  getWalletConnectAccounts,
-  getWalletLinkAccounts
-} from 'utils/walletconnect';
+import { getWalletConnectAccounts } from 'utils/walletconnect';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
