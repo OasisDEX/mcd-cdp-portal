@@ -71,11 +71,13 @@ const withSaveLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <ModalProvider modals={modals} templates={templates}>
-              <AppLayout>
-                <View />
-              </AppLayout>
-            </ModalProvider>
+            <EthBalanceProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <AppLayout>
+                  <View />
+                </AppLayout>
+              </ModalProvider>
+            </EthBalanceProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );
