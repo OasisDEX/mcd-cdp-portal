@@ -6,6 +6,7 @@ import usePrevious from '../../hooks/usePrevious';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
 import useMaker from '../../hooks/useMaker';
+import SetMax from '../SetMax';
 import { isValidAddressString } from '../../utils/ethereum';
 
 const PasteLink = styled(Link)``;
@@ -30,13 +31,6 @@ const PasteAddress = props => (
     </Grid>
   </PasteLink>
 );
-
-const SetMaxLink = ({ setMax, showSetMax }) =>
-  showSetMax && (
-    <Link fontWeight="medium" onClick={setMax}>
-      {lang.set_max}
-    </Link>
-  );
 
 const generateFailureMessage = ({
   amountIsValid,
@@ -160,11 +154,13 @@ const Send = ({ token, balance, reset }) => {
   const valid =
     amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
 
+  const showSetMax = token !== 'ETH' || balanceGtGas;
+
   const transfer = async () => {
     const _token = token === 'DAI' ? 'MDAI' : token;
-    const tokenObj = maker.getToken(_token);
+    const daiToken = maker.getToken(_token);
     newTxListener(
-      tokenObj.transfer(destAddress, amount),
+      daiToken.transfer(destAddress, amount),
       lang.formatString(lang.action_sidebar.send_token_desc, token)
     );
     reset();
@@ -193,12 +189,7 @@ const Send = ({ token, balance, reset }) => {
             e.target.value = tmp;
           }}
           placeholder={`0.00 ${token}`}
-          after={
-            <SetMaxLink
-              setMax={setMax}
-              showSetMax={token !== 'ETH' || balanceGtGas}
-            />
-          }
+          after={<>{showSetMax && <SetMax onClick={setMax} />}</>}
           failureMessage={amountFailureMessage}
         />
 
