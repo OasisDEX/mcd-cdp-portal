@@ -25,16 +25,16 @@ const StyledPaste = styled(PasteIcon)`
 const PasteAddress = props => (
   <PasteLink fontWeight="medium" {...props}>
     <Grid gridTemplateColumns="auto 1fr">
-      {lang.action_sidebar.paste}
+      {lang.paste}
       <StyledPaste />
     </Grid>
   </PasteLink>
 );
 
-const SetMaxLink = ({ token, setMax, balanceGtGas }) =>
-  (token !== 'ETH' || balanceGtGas) && (
+const SetMaxLink = ({ setMax, showSetMax }) =>
+  showSetMax && (
     <Link fontWeight="medium" onClick={setMax}>
-      {lang.action_sidebar.set_max}
+      {lang.set_max}
     </Link>
   );
 
@@ -119,11 +119,11 @@ const Send = ({ token, balance, reset }) => {
           ? balance.minus(BigNumber(value).plus(gasOffset)).gte(0)
           : balanceGtAmountPlusGas
     });
-    console.log(amountGtBalance);
   };
 
-  const setMax = () => {
+  const setMax = async () => {
     if (token === 'ETH' && gasOffset && balanceGtGas) {
+      await calculateEthOffset();
       updateAmount(balance.minus(gasOffset));
     } else {
       updateState({ amount: balance });
@@ -193,7 +193,12 @@ const Send = ({ token, balance, reset }) => {
             e.target.value = tmp;
           }}
           placeholder={`0.00 ${token}`}
-          after={<SetMaxLink {...{ token, setMax, balanceGtGas }} />}
+          after={
+            <SetMaxLink
+              setMax={setMax}
+              showSetMax={token !== 'ETH' || balanceGtGas}
+            />
+          }
           failureMessage={amountFailureMessage}
         />
 
