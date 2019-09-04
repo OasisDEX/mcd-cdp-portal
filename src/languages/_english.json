@@ -172,6 +172,12 @@
     "invalid_max_gas": "Balance is below the Amount + tx fee: {0}",
     "invalid_address": "This is not a valid address"
   },
+  "save": {
+    "dai_savings_rate": "Dai Savings rate",
+    "description": "Receive interest on your Dai. Withdraw or top-up at any time.",
+    "deposit_amount": "Deposit amount",
+    "withdraw_amount": "Withdraw amount"
+  },
   "verbs": {
     "depositing": "Depositing",
     "generating": "Generating"
@@ -191,6 +197,12 @@
     "pay_back_dai": "Paying back DAI",
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
+  },
+  "input_validations": {
+    "max_float": "Amount must be less than {0}",
+    "min_float": "Amount must be greater than {0}",
+    "is_float": "Please enter a valid number",
+    "default": "Please enter a valid input"
   },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",

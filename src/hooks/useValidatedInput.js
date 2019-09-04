@@ -1,52 +1,94 @@
-import { useState, useCallback } from 'react';
+import lang from 'languages';
+import { useState, useCallback, useMemo } from 'react';
+
+import { prettifyFloat } from 'utils/ui';
 
 /**
  * Example schema:
  *  { minFloat: 0, maxFloat: 10, isFloat: true, custom: { isEven: (value) => parseFloat(value) % 2 === 0 } }
  * Custom messages should match any custom or built in validator by key.
+ * The validate function should return TRUE when the value is invalid
  */
 
+const defaultValidators = {
+  isFloat: {
+    validate: value => isNaN(parseFloat(value)),
+    message: () => lang.input_validations.is_float
+  },
+  maxFloat: {
+    validate: (value, schemaValue) => parseFloat(value) > schemaValue,
+    message: (value, schemaValue) =>
+      lang.formatString(
+        lang.input_validations.max_float,
+        prettifyFloat(schemaValue, 5)
+      )
+  },
+  minFloat: {
+    validate: (value, schemaValue) => parseFloat(value) <= schemaValue,
+    message: (value, schemaValue) =>
+      lang.formatString(
+        lang.input_validations.min_float,
+        prettifyFloat(schemaValue, 5)
+      )
+  }
+};
+
+const defaultErrorMessage = () => lang.input_validations.default;
+
 export default function useValidatedInput(
-  initialValue,
-  validationSchema,
+  initialValue = '',
+  validationSchema = {},
   customMessages = {}
 ) {
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState('');
+
+  const validators = useMemo(() => {
+    const custom = validationSchema.custom || {};
+    delete validationSchema.custom;
+
+    const fromDefault = Object.keys(validationSchema).map(key => {
+      const defaultValidator = defaultValidators[key];
+      if (!defaultValidator)
+        throw new Error(
+          `Unexpected validation ${key} in validation schema. Valid values are ${Object.keys(
+            defaultValidators
+          )}`
+        );
+
+      return {
+        key,
+        validate: defaultValidator.validate,
+        message: customMessages[key] || defaultValidator.message
+      };
+    }, {});
+
+    const fromCustom = Object.entries(custom).map(([key, validate]) => {
+      return {
+        key,
+        validate,
+        message: customMessages[key] || defaultErrorMessage
+      };
+    });
+
+    return [...fromDefault, ...fromCustom];
+  }, [validationSchema, customMessages]);
+
   const validate = useCallback(
     value => {
-      const errors = [];
+      const errors = validators.reduce((errors, validator) => {
+        const schemaValue = validationSchema[validator.key];
+        const isInvalid =
+          validator.validate(value, schemaValue) && value !== '';
 
-      const amount = parseFloat(value);
-      if (validationSchema.isFloat && isNaN(amount)) {
-        errors.push(customMessages.isFloat || 'Please enter a valid number');
-      }
-      if (amount <= validationSchema.minFloat) {
-        errors.push(
-          customMessages.minFloat ||
-            `Amount must be greater than ${validationSchema.minFloat}`
-        );
-      }
-      if (amount > validationSchema.maxFloat) {
-        errors.push(
-          customMessages.maxFloat(value) ||
-            `Amount must be less than ${validationSchema.maxFloat}`
-        );
-      }
+        if (isInvalid) errors.push(validator.message(value, schemaValue));
 
-      Object.entries(validationSchema.custom || {}).forEach(
-        ([name, validation]) => {
-          if (!validation(value) && value !== initialValue) {
-            const errorMessage =
-              customMessages[name] && customMessages[name](value);
-            errors.push(errorMessage || 'This input is invalid');
-          }
-        }
-      );
+        return errors;
+      }, []);
 
       return errors.join(', ');
     },
-    [validationSchema]
+    [validationSchema, customMessages]
   );
 
   const onChange = useCallback(

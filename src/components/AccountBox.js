@@ -37,7 +37,7 @@ const ActionButton = ({ children, ...rest }) => (
   </Button>
 );
 
-const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
+const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
   return (
     <Flex
       key={`wb_${symbol}`}
@@ -45,6 +45,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button }) => {
       alignItems="center"
       px="s"
       py="xs"
+      {...props}
     >
       <Text
         color="darkLavender"
@@ -192,13 +193,13 @@ const WalletBalances = ({ hasActiveAccount }) => {
           />
         )}
 
-        {uniqueGemsToShow.map((gem, idx) => {
+        {uniqueGemsToShow.map(gem => {
           const balance = balances[gem];
           return (
             balance &&
             balance.gt(0) && (
               <TokenBalance
-                key={`tkn_balance_${idx}`}
+                key={gem}
                 symbol={gem}
                 amount={balance}
                 usdRatio={uniqueFeeds[gem]}

@@ -46,24 +46,25 @@ const Send = ({ token, balance, reset }) => {
 
   const displayToken = token === 'MDAI' ? 'DAI' : token;
 
-  const inRangeNotEth = (_token, _val) =>
-    _token !== 'ETH' || _val < 0 || _val > balance;
+  const inRangeAndEth = (_token, _val) =>
+    _token === 'ETH' && _val >= 0 && _val <= balance && _val !== 0;
+
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
       custom: {
-        valid: val => !isNaN(parseFloat(val)),
+        invalid: val => isNaN(parseFloat(val)),
         minEth: val =>
-          gasCost <= balance || inRangeNotEth(token, parseFloat(val)),
-        min: val => parseFloat(val) >= 0,
+          gasCost > balance && inRangeAndEth(token, parseFloat(val)),
+        min: val => parseFloat(val) < 0,
         maxEth: val =>
-          parseFloat(val) + gasCost <= balance ||
-          inRangeNotEth(token, parseFloat(val)),
-        max: val => val <= balance
+          parseFloat(val) + gasCost > balance &&
+          inRangeAndEth(token, parseFloat(val)),
+        max: val => parseFloat(val) > balance
       }
     },
     {
-      valid: _ => lang.action_sidebar.invalid_input,
+      invalid: _ => lang.action_sidebar.invalid_input,
       minEth: _ =>
         lang.formatString(
           lang.action_sidebar.invalid_min_gas,
