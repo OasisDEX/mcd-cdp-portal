@@ -1,17 +1,14 @@
-import React, { useState, useCallback } from 'react';
-import { useCurrentRoute } from 'react-navi';
+import React from 'react';
 import SaveNav from 'components/SaveNav';
 import BorrowNav from 'components/BorrowNav';
 import TradeNav from 'components/TradeNav';
-import { Flex, Grid, Box, Button } from '@makerdao/ui-components-core';
+import { Flex, Grid, Box } from '@makerdao/ui-components-core';
 import { ReactComponent as MakerLogo } from 'images/maker-logo.svg';
 import useMaker from 'hooks/useMaker';
-import { Routes } from '../utils/constants';
 
 const navbarFill = '#1E2C37';
 
 const Navbar = ({ viewedAddress }) => {
-  const { url } = useCurrentRoute();
   const { account } = useMaker();
 
   return (

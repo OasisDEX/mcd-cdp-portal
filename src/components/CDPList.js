@@ -1,10 +1,10 @@
-import React, { memo, Fragment, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
 import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
-import { Flex, Text, Box, Button } from '@makerdao/ui-components-core';
+import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
@@ -21,9 +21,7 @@ const NavbarItemContainer = styled(Link)`
 `;
 
 const DashedFakeButton = styled(Flex)`
-  border: 1px dashed;
   cursor: pointer;
-  border-color: ${({ theme }) => theme.colors.blackLighter};
 `;
 
 const cdpListFill = '#18232C';
@@ -130,7 +128,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         setNavbarCdps(cdps);
       })();
     }
-  }, [maker, account]);
+  }, [maker, account, viewedAddress, dispatch]);
 
   useEffect(() => {
     if (account || viewedAddress) {

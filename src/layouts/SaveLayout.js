@@ -1,9 +1,7 @@
 import React from 'react';
-import { Flex, Box, Grid } from '@makerdao/ui-components-core';
+import { Box, Grid } from '@makerdao/ui-components-core';
 import { hot } from 'react-hot-loader/root';
 import theme, { getSpace } from '../styles/theme';
-
-//
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (

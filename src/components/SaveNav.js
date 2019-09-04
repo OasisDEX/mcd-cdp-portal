@@ -1,15 +1,23 @@
 import React from 'react';
-import { Link, useCurrentRoute } from 'react-navi';
-import { Flex, Grid, Box } from '@makerdao/ui-components-core';
+import { Link } from 'react-navi';
+import { Flex, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as SaveIcon } from 'images/active-save-icon.svg';
-import useMaker from 'hooks/useMaker';
 import { Routes } from '../utils/constants';
+import lang from 'languages';
 
 const SaveNav = () => {
   return (
     <Link href={`/${Routes.SAVE}`}>
-      <Flex alignItems="center" justifyContent="center" py="s">
+      <Flex
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        py="s"
+      >
         <SaveIcon />
+        <Text t="p6" fontWeight="bold" color={'white'}>
+          {lang.navbar.save}
+        </Text>
       </Flex>
     </Link>
   );
