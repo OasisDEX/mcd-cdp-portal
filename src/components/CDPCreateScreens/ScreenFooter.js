@@ -4,7 +4,8 @@ import { Button, Flex } from '@makerdao/ui-components-core';
 import lang from 'languages';
 
 const ScreenFooter = ({
-  dispatch,
+  onNext,
+  onBack,
   loading,
   canGoBack = true,
   canProgress = true,
@@ -17,7 +18,7 @@ const ScreenFooter = ({
         width="110px"
         variant="secondary-outline"
         mx="xs"
-        onClick={() => dispatch({ type: 'decrement-step' })}
+        onClick={onBack}
       >
         {lang.actions.back}
       </Button>
@@ -26,7 +27,7 @@ const ScreenFooter = ({
         loading={loading}
         width="145px"
         mx="xs"
-        onClick={() => dispatch({ type: 'increment-step' })}
+        onClick={onNext}
       >
         {continueText}
       </Button>

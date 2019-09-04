@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
-import CDPList from 'components/CDPList';
 import { Flex, Grid, Box } from '@makerdao/ui-components-core';
 import { ReactComponent as SaveIcon } from 'images/active-save-icon.svg';
 import useMaker from 'hooks/useMaker';

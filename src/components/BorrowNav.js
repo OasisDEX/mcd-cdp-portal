@@ -6,7 +6,7 @@ import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
 import useMaker from 'hooks/useMaker';
 import { Routes } from '../utils/constants';
 
-const BorrowNav = ({ viewedAddress, show }) => {
+const BorrowNav = ({ viewedAddress }) => {
   const { url } = useCurrentRoute();
   const { account } = useMaker();
   return (
@@ -18,14 +18,11 @@ const BorrowNav = ({ viewedAddress, show }) => {
           </Flex>
         </Link>
       )}
-
-      {show ? (
-        <CDPList
-          currentPath={url.pathname}
-          viewedAddress={viewedAddress}
-          currentQuery={url.search}
-        />
-      ) : null}
+      <CDPList
+        currentPath={url.pathname}
+        viewedAddress={viewedAddress}
+        currentQuery={url.search}
+      />
     </Fragment>
   );
 };

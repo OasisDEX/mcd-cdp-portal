@@ -1109,10 +1109,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.11.tgz#1be4585b7037541e2ccec57f07c6645c9d50a40b"
-  integrity sha512-cF6QlDgy6Di8wy6gNW5bM+Q/0mBXktLuSWrbWUPQZi0/N6QkCISciNPX1PuISKM8VJbQV0AUXU8dfjupRqKIuQ==
+"@makerdao/dai-plugin-mcd@0.2.11-1":
+  version "0.2.11-1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.11-1.tgz#77f24f19736e5e0d3d144e2aab9599861c667bc7"
+  integrity sha512-oMxKrSnQ1AllSEapuX+/mXxCKo0N3FmxK/FsNqDR8rydT92NGrKdQ2UMykq6yNpo/mDIClb/GXaX3JjpKE2q6Q==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -4886,11 +4886,6 @@ eslint-plugin-jsx-a11y@6.1.2:
     emoji-regex "^6.5.1"
     has "^1.0.3"
     jsx-ast-utils "^2.0.1"
-
-eslint-plugin-react-hooks@^1.5.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-1.6.0.tgz#348efcda8fb426399ac7b8609607c7b4025a6f5f"
-  integrity sha512-lHBVRIaz5ibnIgNG07JNiAuBUeKhEf8l4etNx5vfAEwqQ5tcuK3jV9yjmopPgQDagQb7HwIuQVsE3IVcGrRnag==
 
 eslint-plugin-react@7.12.4:
   version "7.12.4"

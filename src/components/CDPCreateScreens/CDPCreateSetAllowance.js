@@ -12,6 +12,7 @@ import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useMaker from 'hooks/useMaker';
 import useBlockHeight from 'hooks/useBlockHeight';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -24,18 +25,18 @@ const SuccessButton = () => {
   );
 };
 
-const CDPCreateSetAllowance = ({
-  selectedIlk,
-  proxyAddress,
-  hasAllowance,
-  dispatch
-}) => {
+const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
   const { maker } = useMaker();
   const blockHeight = useBlockHeight(0);
   const [startingBlockHeight, setStartingBlockHeight] = useState(0);
   const [proxyDeployed, setProxyDeployed] = useState(false);
+  const {
+    hasAllowance,
+    setAllowance,
+    allowanceLoading: isSettingAllowance
+  } = useTokenAllowance(selectedIlk.currency.symbol);
+
   const [isDeployingProxy, setIsDeployingProxy] = useState(false);
-  const [isSettingAllowance, setIsSettingAllowance] = useState(false);
 
   async function deployProxy() {
     setIsDeployingProxy(true);
@@ -51,16 +52,6 @@ const CDPCreateSetAllowance = ({
       });
     } catch (err) {}
     setIsDeployingProxy(false);
-  }
-
-  async function setAllowance() {
-    setIsSettingAllowance(true);
-    try {
-      const gemToken = maker.getToken(selectedIlk.currency.symbol);
-      await gemToken.approveUnlimited(proxyAddress);
-      dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance: true } });
-    } catch (err) {}
-    setIsSettingAllowance(false);
   }
 
   return (
@@ -140,7 +131,8 @@ const CDPCreateSetAllowance = ({
         </Grid>
       </Card>
       <ScreenFooter
-        dispatch={dispatch}
+        onNext={() => dispatch({ type: 'increment-step' })}
+        onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={!isDeployingProxy}
         canProgress={proxyAddress && hasAllowance}
       />

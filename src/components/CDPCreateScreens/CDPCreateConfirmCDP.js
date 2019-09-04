@@ -106,7 +106,8 @@ const CDPCreateConfirmSummary = ({
       </Card>
       <ScreenFooter
         canProgress={hasReadTOS}
-        dispatch={capturedDispatch}
+        onNext={() => capturedDispatch({ type: 'increment-step' })}
+        onBack={() => capturedDispatch({ type: 'decrement-step' })}
         continueText={lang.actions.create_cdp}
       />
     </Box>

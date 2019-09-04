@@ -3,6 +3,7 @@ import { toHex } from 'utils/ethereum';
 import { INK, ART } from 'reducers/cdps';
 
 export async function trackCdpById(maker, cdpId, dispatch) {
+  console.log('&&&cdpId in reducer', cdpId);
   const addresses = maker.service('smartContract').getContractAddresses();
   const cdp = await maker
     .service('mcd:cdpManager')
