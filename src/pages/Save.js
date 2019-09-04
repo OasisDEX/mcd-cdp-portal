@@ -108,6 +108,18 @@ function Save() {
     if (withdrawSuccess) setWithdrawAmount('', { validate: false });
   }, [withdrawSuccess]);
 
+  useEffect(() => {
+    if (!balances.MDAI) return;
+    if (depositAmount !== '')
+      setDepositAmount(depositAmount, { validate: true });
+  }, [balances.MDAI]);
+
+  useEffect(() => {
+    if (!balance) return;
+    if (withdrawAmount !== '')
+      setWithdrawAmount(withdrawAmount, { validate: true });
+  }, [balance]);
+
   const setDepositMax = useCallback(() => {
     if (balances.MDAI) {
       setDepositAmount(balances.MDAI.toNumber().toString());

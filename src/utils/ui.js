@@ -42,14 +42,13 @@ export function prettifyNumber(
 }
 
 export function prettifyFloat(num, decimalPlaces = 2) {
-  if (Number.isInteger(num)) {
-    return num;
-  } else {
-    const decimalPlacesInNumber = num.toString().split('.')[1].length;
-    return decimalPlacesInNumber > decimalPlaces
-      ? `${num.toFixed(decimalPlaces)}...`
-      : num;
-  }
+  if (!num) return 'NaN';
+  const [, decimalPortion] = num.toString().split('.');
+  const decimalPlacesInNumber = decimalPortion ? decimalPortion.length : 0;
+
+  return decimalPlacesInNumber > decimalPlaces
+    ? `${num.toFixed(decimalPlaces)}...`
+    : num;
 }
 
 export function cutMiddle(str = '', left = 4, right = 4) {
