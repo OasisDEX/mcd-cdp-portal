@@ -12,6 +12,7 @@ import {
   Button
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
+import lang from 'languages';
 
 import { getSavingsBalance } from 'reducers/accounts';
 
@@ -51,11 +52,18 @@ function Save() {
     setDepositAmount,
     onDepositAmountChange,
     depositAmountErrors
-  ] = useValidatedInput('', {
-    isFloat: true,
-    minFloat: 0.0,
-    maxFloat: balances.MDAI && balances.MDAI.toNumber()
-  });
+  ] = useValidatedInput(
+    '',
+    {
+      isFloat: true,
+      minFloat: 0.0,
+      maxFloat: balances.MDAI && balances.MDAI.toNumber()
+    },
+    {
+      maxFloat: () =>
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+    }
+  );
   const [
     withdrawAmount,
     setWithdrawAmount,

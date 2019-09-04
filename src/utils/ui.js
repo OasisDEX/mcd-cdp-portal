@@ -41,6 +41,17 @@ export function prettifyNumber(
   return formattedNumber + symbol;
 }
 
+export function prettifyFloat(num, decimalPlaces = 2) {
+  if (Number.isInteger(num)) {
+    return num;
+  } else {
+    const decimalPlacesInNumber = num.toString().split('.')[1].length;
+    return decimalPlacesInNumber > decimalPlaces
+      ? `${num.toFixed(decimalPlaces)}...`
+      : num;
+  }
+}
+
 export function cutMiddle(str = '', left = 4, right = 4) {
   if (str.length <= left + right) return str;
   return `${str.slice(0, left)}...${str.slice(-right)}`;

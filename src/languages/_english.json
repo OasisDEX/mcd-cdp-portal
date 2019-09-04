@@ -180,6 +180,12 @@
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
   },
+  "input_validations": {
+    "max_float": "Amount must be less than {0}",
+    "min_float": "Amount must be greater than {0}",
+    "is_float": "Please enter a valid number",
+    "default": "Please enter a valid input"
+  },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
   "network": "Network",
