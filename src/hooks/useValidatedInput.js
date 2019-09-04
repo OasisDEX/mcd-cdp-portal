@@ -13,7 +13,6 @@ export default function useValidatedInput(
 ) {
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState('');
-
   const validate = useCallback(
     value => {
       const errors = [];
@@ -37,7 +36,7 @@ export default function useValidatedInput(
 
       Object.entries(validationSchema.custom || {}).forEach(
         ([name, validation]) => {
-          if (!validation(value)) {
+          if (!validation(value) && value !== initialValue) {
             const errorMessage =
               customMessages[name] && customMessages[name](value);
             errors.push(errorMessage || 'This input is invalid');

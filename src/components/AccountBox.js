@@ -130,7 +130,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 onClick={() =>
                   showSendSidebar({
                     token: 'MDAI',
-                    balance: balances.MDAI
+                    balance: balances.MDAI.toNumber()
                   })
                 }
               >
@@ -147,7 +147,10 @@ const WalletBalances = ({ hasActiveAccount }) => {
             hasActiveAccount && (
               <ActionButton
                 onClick={() =>
-                  showSendSidebar({ token: 'ETH', balance: balances.ETH })
+                  showSendSidebar({
+                    token: 'ETH',
+                    balance: balances.ETH.toNumber()
+                  })
                 }
               >
                 {lang.sidebar.send}
@@ -176,7 +179,10 @@ const WalletBalances = ({ hasActiveAccount }) => {
               hasActiveAccount && (
                 <ActionButton
                   onClick={() =>
-                    showSendSidebar({ token: 'WETH', balance: balances.MWETH })
+                    showSendSidebar({
+                      token: 'WETH',
+                      balance: balances.MWETH.toNumber()
+                    })
                   }
                 >
                   {lang.sidebar.send}
@@ -199,7 +205,12 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 button={
                   hasActiveAccount && (
                     <ActionButton
-                      onClick={() => showSendSidebar({ token: gem, balance })}
+                      onClick={() =>
+                        showSendSidebar({
+                          token: gem,
+                          balance: balance.toNumber()
+                        })
+                      }
                     >
                       {lang.sidebar.send}
                     </ActionButton>

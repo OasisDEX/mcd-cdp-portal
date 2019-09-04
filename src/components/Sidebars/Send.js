@@ -1,11 +1,12 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
 import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
 import usePrevious from '../../hooks/usePrevious';
+import useMaker from '../../hooks/useMaker';
+import useValidatedInput from '../../hooks/useValidatedInput';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
-import useMaker from '../../hooks/useMaker';
 import SetMax from '../SetMax';
 import { isValidAddressString } from '../../utils/ethereum';
 
@@ -32,118 +33,87 @@ const PasteAddress = props => (
   </PasteLink>
 );
 
-const generateFailureMessage = ({
-  amountIsValid,
-  token,
-  balanceGtAmountPlusGas,
-  amountGtBalance,
-  balanceGtGas
-}) => {
-  if (amountIsValid) return '';
-  if (amountGtBalance) return lang.action_sidebar.invalid_amount;
-  if (token === 'ETH') {
-    if (!(balanceGtGas && balanceGtAmountPlusGas))
-      return lang.action_sidebar.invalid_gas;
-  }
-  return lang.action_sidebar.invalid_input;
-};
-
 const gasLimit = BigNumber(21000);
-
-const initialState = {
-  amount: '',
-  destAddress: '',
-  gasOffset: false,
-  balanceGtAmountPlusGas: true,
-  amountGtBalance: false,
-  balanceGtGas: false
-};
 
 const Send = ({ token, balance, reset }) => {
   const { maker, account, newTxListener } = useMaker();
   const { address } = account;
+  const [gasCost, setGasCost] = useState(0);
+  const [destAddress, setDestAddress] = useState('');
 
-  const [
+  const minAmount = token === 'ETH' ? gasCost : 0;
+  const maxAmount = token === 'ETH' ? balance - gasCost : balance;
+
+  const displayToken = token === 'MDAI' ? 'DAI' : token;
+
+  const inRangeNotEth = (_token, _val) =>
+    _token !== 'ETH' || _val < 0 || _val > balance;
+  const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
+    '',
     {
-      amount,
-      destAddress,
-      gasOffset,
-      balanceGtAmountPlusGas,
-      amountGtBalance,
-      balanceGtGas
+      custom: {
+        valid: val => !isNaN(parseFloat(val)),
+        minEth: val =>
+          gasCost <= balance || inRangeNotEth(token, parseFloat(val)),
+        min: val => parseFloat(val) >= 0,
+        maxEth: val =>
+          parseFloat(val) + gasCost <= balance ||
+          inRangeNotEth(token, parseFloat(val)),
+        max: val => val <= balance
+      }
     },
-    updateState
-  ] = useReducer((state, updates) => ({ ...state, ...updates }), initialState);
+    {
+      valid: _ => lang.action_sidebar.invalid_input,
+      minEth: _ =>
+        lang.formatString(
+          lang.action_sidebar.invalid_min_gas,
+          `${gasCost} ${displayToken}`
+        ),
+      min: _ =>
+        lang.formatString(lang.action_sidebar.invalid_min_amount, displayToken),
+      maxEth: _ =>
+        lang.formatString(
+          lang.action_sidebar.invalid_max_gas,
+          `${gasCost} ${displayToken}`
+        ),
+      max: _ => lang.action_sidebar.invalid_max_amount
+    }
+  );
 
   const prevToken = usePrevious(token);
   const prevAddress = usePrevious(address);
 
-  const calculateEthOffset = async () => {
+  const calculateGasCost = async () => {
     const gasPrice = await maker.service('gas').getGasPrice('fast');
     const gasCost = gasLimit
       .times(gasPrice)
       .shiftedBy(-18)
       .toNumber();
 
-    if (token === 'ETH' && balance.minus(gasCost).gte(0)) {
-      updateState({
-        gasOffset: gasCost,
-        balanceGtGas: true
-      });
-    } else {
-      updateState({
-        gasOffset: gasCost,
-        balanceGtAmountPlusGas: false
-      });
-    }
+    setGasCost(gasCost);
   };
 
   useEffect(() => {
-    if (prevToken !== token) updateState(initialState);
+    if (prevToken !== token) {
+      setAmount('');
+      setGasCost(0);
+      setDestAddress('');
+    }
     if (prevAddress !== address) reset();
-    if (token === 'ETH' && !gasOffset) calculateEthOffset();
+    calculateGasCost();
   }, [token, address, prevToken, prevAddress]);
 
-  const updateAmount = value => {
-    updateState({
-      amount: value,
-      amountGtBalance: balance.minus(value).lt(0),
-      balanceGtAmountPlusGas:
-        token === 'ETH'
-          ? balance.minus(BigNumber(value).plus(gasOffset)).gte(0)
-          : balanceGtAmountPlusGas
-    });
-  };
-
   const setMax = async () => {
-    if (token === 'ETH' && gasOffset && balanceGtGas) {
-      await calculateEthOffset();
-      updateAmount(balance.minus(gasOffset));
-    } else {
-      updateState({ amount: balance });
-    }
+    await calculateGasCost();
+    setAmount(maxAmount);
   };
 
   const paste = async () => {
     const copiedAddress = await navigator.clipboard.readText();
-    updateState({ destAddress: copiedAddress });
+    setDestAddress(copiedAddress);
   };
 
-  const amountBig = BigNumber(amount);
-  const amountIsValid =
-    amount === '' ||
-    (amountBig.gt(0) &&
-      (token === 'ETH'
-        ? balanceGtGas && balanceGtAmountPlusGas
-        : !amountGtBalance));
-
-  const amountFailureMessage = generateFailureMessage({
-    amountIsValid,
-    token,
-    balanceGtAmountPlusGas,
-    amountGtBalance,
-    balanceGtGas
-  });
+  const amountIsValid = amount >= minAmount && amount <= maxAmount;
 
   const destAddressIsValid =
     destAddress === '' || isValidAddressString(destAddress);
@@ -154,7 +124,7 @@ const Send = ({ token, balance, reset }) => {
   const valid =
     amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
 
-  const showSetMax = token !== 'ETH' || balanceGtGas;
+  const showSetMax = token !== 'ETH' || balance >= gasCost;
 
   const transfer = async () => {
     const _token = token === 'DAI' ? 'MDAI' : token;
@@ -182,15 +152,15 @@ const Send = ({ token, balance, reset }) => {
           type="number"
           min="0"
           value={amount}
-          onChange={evt => updateAmount(evt.target.value)}
+          onChange={onAmountChange}
           onFocus={e => {
             const tmp = e.target.value;
             e.target.value = '';
             e.target.value = tmp;
           }}
-          placeholder={`0.00 ${token}`}
+          placeholder={`0.00 ${displayToken}`}
           after={<>{showSetMax && <SetMax onClick={setMax} />}</>}
-          failureMessage={amountFailureMessage}
+          failureMessage={amountErrors}
         />
 
         <Grid gridTemplateColumns="auto 1fr" gridColumnGap="s" alignItems="end">
@@ -210,7 +180,7 @@ const Send = ({ token, balance, reset }) => {
         <Input
           type="text"
           value={destAddress}
-          onChange={evt => updateState({ destAddress: evt.target.value })}
+          onChange={evt => setDestAddress(evt.target.value)}
           onFocus={e => {
             const tmp = e.target.value;
             e.target.value = '';

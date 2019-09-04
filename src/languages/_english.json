@@ -166,9 +166,11 @@
     "dest_address": "Destination Address",
     "send_token_desc": "Sent {0}",
     "invalid_input": "This input is invalid",
-    "invalid_amount": "The amount entered is greater than your balance",
-    "invalid_gas": "Not enough gas",
-    "invalid_address": "Thiis is not a valid address"
+    "invalid_min_amount": "Can only send a positive amount of {0}",
+    "invalid_max_amount": "Amount is greater than your balance",
+    "invalid_min_gas": "Balance is below the required tx fee: {0}",
+    "invalid_max_gas": "Balance is below the Amount + tx fee: {0}",
+    "invalid_address": "This is not a valid address"
   },
   "verbs": {
     "depositing": "Depositing",
