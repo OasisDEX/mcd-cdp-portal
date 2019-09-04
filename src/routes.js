@@ -3,8 +3,8 @@ import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import PageLayout from 'layouts/PageLayout';
-import AppLayout from 'layouts/AppLayout';
+import BorrowLayout from 'layouts/BorrowLayout';
+import SaveLayout from 'layouts/SaveLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
@@ -41,14 +41,14 @@ const withBorrowLayout = route =>
             <EthBalanceProvider>
               <ModalProvider modals={modals} templates={templates}>
                 <SidebarProvider>
-                  <PageLayout
+                  <BorrowLayout
                     mobileNav={
                       <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
                     }
                     navbar={<Navbar viewedAddress={viewedAddress} />}
                   >
                     <View />
-                  </PageLayout>
+                  </BorrowLayout>
                 </SidebarProvider>
               </ModalProvider>
             </EthBalanceProvider>
@@ -73,16 +73,14 @@ const withSaveLayout = route =>
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
             <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider>
-                <PageLayout
-                  mobileNav={
-                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                  }
-                  navbar={<Navbar viewedAddress={viewedAddress} />}
-                >
-                  <View />
-                </PageLayout>
-              </SidebarProvider>
+              <SaveLayout
+                mobileNav={
+                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                }
+                navbar={<Navbar viewedAddress={viewedAddress} />}
+              >
+                <View />
+              </SaveLayout>
             </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>

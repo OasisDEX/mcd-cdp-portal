@@ -2,7 +2,9 @@ import React, { memo, Fragment, useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
-import { Flex, Text, Box } from '@makerdao/ui-components-core';
+import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
+import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
+import { Flex, Text, Box, Button } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
 import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
@@ -44,6 +46,22 @@ const OverviewButton = ({ href, label, active, ...props }) => (
     </Flex>
   </NavbarItemContainer>
 );
+
+const DirectionalButton = ({ direction }) => {
+  return (
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      bg={inactiveFill}
+      borderRadius="default"
+      height="25px"
+    >
+      {direction === 'up' ? <NavUp /> : <NavDown />}
+    </Flex>
+    // </Button>
+  );
+};
 
 const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
@@ -125,9 +143,11 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
   const { show } = useModal();
+  const showDirectionals = navbarCdps.length >= 4;
 
   return listOpen ? (
-    <Box bg={cdpListFill} height="400px">
+    <Box bg={cdpListFill} height="100%">
+      {showDirectionals && <DirectionalButton direction={'up'} />}
       <OverviewButton
         key={navbarCdps.length * 10}
         href={overviewPath + currentQuery}
@@ -149,6 +169,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           />
         );
       })}
+      {showDirectionals && <DirectionalButton direction={'down'} />}
       {account && (
         <DashedFakeButton
           onClick={() =>
