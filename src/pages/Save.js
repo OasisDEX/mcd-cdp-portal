@@ -12,6 +12,7 @@ import {
   Button
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
+import lang from 'languages';
 
 import { getSavingsBalance } from 'reducers/accounts';
 
@@ -51,11 +52,18 @@ function Save() {
     setDepositAmount,
     onDepositAmountChange,
     depositAmountErrors
-  ] = useValidatedInput('', {
-    isFloat: true,
-    minFloat: 0.0,
-    maxFloat: balances.MDAI && balances.MDAI.toNumber()
-  });
+  ] = useValidatedInput(
+    '',
+    {
+      isFloat: true,
+      minFloat: 0.0,
+      maxFloat: balances.MDAI && balances.MDAI.toNumber()
+    },
+    {
+      maxFloat: () =>
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+    }
+  );
   const [
     withdrawAmount,
     setWithdrawAmount,
@@ -100,6 +108,18 @@ function Save() {
     if (withdrawSuccess) setWithdrawAmount('', { validate: false });
   }, [withdrawSuccess]);
 
+  useEffect(() => {
+    if (!balances.MDAI) return;
+    if (depositAmount !== '')
+      setDepositAmount(depositAmount, { validate: true });
+  }, [balances.MDAI]);
+
+  useEffect(() => {
+    if (!balance) return;
+    if (withdrawAmount !== '')
+      setWithdrawAmount(withdrawAmount, { validate: true });
+  }, [balance]);
+
   const setDepositMax = useCallback(() => {
     if (balances.MDAI) {
       setDepositAmount(balances.MDAI.toNumber().toString());
@@ -135,12 +155,12 @@ function Save() {
                 {balance.toFixed(4)} USD
               </Text.p>
             </CardBody>
-            <CardBody px="l" py="m">
+            <CardBody px="l">
               <Table width="100%">
                 <Table.tbody>
                   <Table.tr>
                     <Table.td>
-                      <Text t="body">Dai Savings rate</Text>
+                      <Text t="body">{lang.save.dai_savings_rate}</Text>
                     </Table.td>
                     <Table.td textAlign="right">
                       <Text t="body">
@@ -150,44 +170,18 @@ function Save() {
                       </Text>
                     </Table.td>
                   </Table.tr>
-                  <Table.tr>
-                    <Table.td>
-                      <Text t="body">Locked Dai</Text>
-                    </Table.td>
-                    <Table.td textAlign="right">
-                      <Text t="body">120,032.5001</Text>
-                    </Table.td>
-                  </Table.tr>
-                  <Table.tr>
-                    <Table.td>
-                      <Text t="body">Free Dai</Text>
-                    </Table.td>
-                    <Table.td textAlign="right">
-                      <Text t="body">10,000.0000 DAI</Text>
-                    </Table.td>
-                  </Table.tr>
-                  <Table.tr>
-                    <Table.td>
-                      <Text t="body">Ratio</Text>
-                    </Table.td>
-                    <Table.td textAlign="right">
-                      <Text t="body">87.21% locked</Text>
-                    </Table.td>
-                  </Table.tr>
                 </Table.tbody>
               </Table>
             </CardBody>
           </Card>
 
-          <CardTabs headers={['Deposit', 'Withdraw']}>
+          <CardTabs headers={[lang.actions.deposit, lang.actions.withdraw]}>
             <Grid px="l" py="m" gridRowGap="m">
-              <Text.p t="body">
-                Receive interest on your Dai. Withdraw or top-up at any time.
-              </Text.p>
+              <Text.p t="body">{lang.save.description}</Text.p>
 
               <div>
                 <Text.p t="subheading" mb="s">
-                  Deposit amount
+                  {lang.save.deposit_amount}
                 </Text.p>
                 <Input
                   type="number"
@@ -223,7 +217,7 @@ function Save() {
                   loading={depositLoading}
                   onClick={onDeposit}
                 >
-                  Deposit
+                  {lang.actions.deposit}
                 </Button>
               </Box>
               {depositError && (
@@ -233,13 +227,11 @@ function Save() {
               )}
             </Grid>
             <Grid px="l" py="m" gridRowGap="m">
-              <Text.p t="body">
-                Receive interest on your Dai. Withdraw or top-up at any time.
-              </Text.p>
+              <Text.p t="body">{lang.save.description}</Text.p>
 
               <div>
                 <Text.p t="subheading" mb="s">
-                  Withdraw amount
+                  {lang.save.withdraw_amount}
                 </Text.p>
                 <Input
                   type="number"
@@ -275,7 +267,7 @@ function Save() {
                   loading={withdrawLoading}
                   onClick={onWithdraw}
                 >
-                  Withdraw
+                  {lang.actions.withdraw}
                 </Button>
               </Box>
 
