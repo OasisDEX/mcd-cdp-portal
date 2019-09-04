@@ -4,6 +4,13 @@ import { Flex, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as TradeIcon } from 'images/active-trade-icon.svg';
 import { Routes } from '../utils/constants';
 import lang from 'languages';
+import styled from 'styled-components';
+
+const StyledTradeIcon = styled(TradeIcon)`
+  circle {
+    stroke: ${props => (props.active ? 'white' : 'gray')};
+  }
+`;
 
 const TradeNav = () => {
   return (
@@ -14,8 +21,8 @@ const TradeNav = () => {
         justifyContent="center"
         py="s"
       >
-        <TradeIcon />
-        <Text t="p6" fontWeight="bold" color={'white'}>
+        <StyledTradeIcon active={false} />
+        <Text t="p6" fontWeight="bold" color={'gray'}>
           {lang.navbar.trade}
         </Text>
       </Flex>

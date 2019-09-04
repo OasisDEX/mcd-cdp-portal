@@ -6,10 +6,18 @@ import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
 import useMaker from 'hooks/useMaker';
 import { Routes } from '../utils/constants';
 import lang from 'languages';
+import styled from 'styled-components';
+
+const StyledBorrowIcon = styled(BorrowIcon)`
+  path {
+    stroke: ${props => (props.active ? 'white' : 'gray')};
+  }
+`;
 
 const BorrowNav = ({ viewedAddress }) => {
   const { url } = useCurrentRoute();
   const { account } = useMaker();
+  const active = url.pathname.startsWith(`/${Routes.BORROW}`);
   return (
     <Fragment>
       {account && (
@@ -20,8 +28,8 @@ const BorrowNav = ({ viewedAddress }) => {
             justifyContent="center"
             py="s"
           >
-            <BorrowIcon />
-            <Text t="p6" fontWeight="bold" color={'white'}>
+            <StyledBorrowIcon active={active} />
+            <Text t="p6" fontWeight="bold" color={active ? 'white' : 'gray'}>
               {lang.navbar.borrow}
             </Text>
           </Flex>
