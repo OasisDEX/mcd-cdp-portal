@@ -147,10 +147,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         }
         onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={false}
-        canProgress={
-          !!selectedIlk.key &&
-          allowances[selectedIlk.currency.symbol] !== undefined
-        }
+        canProgress={!!selectedIlk.key}
       />
     </Box>
   );
