@@ -1114,10 +1114,10 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-walletlink@^0.0.1-alpha8":
-  version "0.0.1-alpha8"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletlink/-/dai-plugin-walletlink-0.0.1-alpha8.tgz#2b3c57531565544c0b86a22befcea728e79bfd63"
-  integrity sha512-LDfca0Dj3Nbg1sw5h0fsJW33YRI1n6vgoOUUzTO6FpbyBZs0sE7aE1TAXY8/ywmOpXxRen4B0+1jMN7oHnK8Rg==
+"@makerdao/dai-plugin-walletlink@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletlink/-/dai-plugin-walletlink-0.0.1.tgz#05914be384df1dde599d21b6a2be1599ceb8cd10"
+  integrity sha512-8IJ+61zLU80bWE2RllV5eYrt2CxAZX8hhj5dvDzoYJErR4GSWTNwLKFrudXnQy4n5GG1Ejgc8p69cpwsqFOhfw==
   dependencies:
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
