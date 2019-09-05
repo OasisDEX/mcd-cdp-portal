@@ -156,10 +156,15 @@
     "gem_usd_price_feed": "{0}/USD Price feed",
     "new_liquidation_price": "New liquidation price",
     "new_collateralization_ratio": "New collateralization ratio",
-    "set_max": "Set max",
     "create_proxy": "Create Proxy to continue",
     "creating_proxy": "Creating Proxy...",
     "proxy_created": "Proxy Created"
+  },
+  "save": {
+    "dai_savings_rate": "Dai Savings rate",
+    "description": "Receive interest on your Dai. Withdraw or top-up at any time.",
+    "deposit_amount": "Deposit amount",
+    "withdraw_amount": "Withdraw amount"
   },
   "verbs": {
     "depositing": "Depositing",
@@ -181,6 +186,12 @@
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
   },
+  "input_validations": {
+    "max_float": "Amount must be less than {0}",
+    "min_float": "Amount must be greater than {0}",
+    "is_float": "Please enter a valid number",
+    "default": "Please enter a valid input"
+  },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
   "network": "Network",
@@ -188,6 +199,7 @@
   "cdp": "CDP",
   "cdp_id": "CDP ID",
   "connect": "Connect",
+  "set_max": "Set max",
   "cancel": "Cancel",
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",
