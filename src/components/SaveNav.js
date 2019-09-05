@@ -23,7 +23,7 @@ const SaveNav = () => {
         justifyContent="center"
         py="s"
       >
-        <StyledSaveIcon active={active} />
+        <StyledSaveIcon active={active.toString()} />
         <Text t="p6" fontWeight="bold" color={active ? 'white' : 'gray'}>
           {lang.navbar.save}
         </Text>

@@ -21,7 +21,7 @@ const TradeNav = () => {
         justifyContent="center"
         py="s"
       >
-        <StyledTradeIcon active={false} />
+        <StyledTradeIcon active="false" />
         <Text t="p6" fontWeight="bold" color={'gray'}>
           {lang.navbar.trade}
         </Text>

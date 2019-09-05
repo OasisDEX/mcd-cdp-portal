@@ -85,7 +85,6 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 // `;
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
-  console.log('viewed address in cdplist', viewedAddress);
   const { url } = useCurrentRoute();
   const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
@@ -107,10 +106,10 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     const onSavePage = url.pathname === `/${Routes.SAVE}`;
     if (onSavePage) {
       setListOpen(false);
-    } else if (!onSavePage) {
+    } else if (!onSavePage && (account || viewedAddress)) {
       setListOpen(true);
     }
-  }, [url]);
+  }, [account, url, viewedAddress]);
 
   useEffect(() => {
     if (account) {
@@ -118,7 +117,8 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
     } else if (viewedAddress) {
-      setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`)(async () => {
+      setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
+      (async () => {
         const proxy = await maker
           .service('proxy')
           .getProxyAddress(viewedAddress);
@@ -128,7 +128,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         setNavbarCdps(cdps);
       })();
     }
-  }, [maker, account, viewedAddress, dispatch]);
+  }, [maker, account, viewedAddress, dispatch, setOverviewPath]);
 
   useEffect(() => {
     if (account || viewedAddress) {

@@ -11,7 +11,7 @@ const Navbar = ({ viewedAddress }) => {
   const { account } = useMaker();
 
   return (
-    <Box bg={account ? navbarFill : 'white'} height="100%">
+    <Box bg={navbarFill} height="100%">
       <Flex alignItems="center" justifyContent="center" py="m" />
       <Grid gridRowGap="xs" mx="xs">
         <SaveNav />
