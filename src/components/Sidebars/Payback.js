@@ -53,10 +53,11 @@ const Payback = ({ cdpId, reset }) => {
       isFloat: true
     },
     {
-      maxFloat: amount =>
-        daiBalance < parseFloat(amount)
+      maxFloat: amount => {
+        return daiBalance < parseFloat(amount)
           ? lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
-          : lang.action_sidebar.cannot_payback_more_than_owed
+          : lang.action_sidebar.cannot_payback_more_than_owed;
+      }
     }
   );
 
