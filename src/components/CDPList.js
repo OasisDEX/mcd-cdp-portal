@@ -1,6 +1,5 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-// import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
 import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
@@ -27,6 +26,7 @@ const DashedFakeButton = styled(Flex)`
 const cdpListFill = '#18232C';
 const activeFill = '#31424E';
 const inactiveFill = '#18232C';
+const itemHeight = '50px';
 
 const OverviewButton = ({ href, label, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
@@ -36,7 +36,7 @@ const OverviewButton = ({ href, label, active, ...props }) => (
       justifyContent="center"
       bg={active ? activeFill : inactiveFill}
       borderRadius="default"
-      height="50px"
+      height={itemHeight}
     >
       <Text t="p6" fontWeight="bold" color="white">
         {label}
@@ -45,19 +45,22 @@ const OverviewButton = ({ href, label, active, ...props }) => (
   </NavbarItemContainer>
 );
 
-const DirectionalButton = ({ direction }) => {
+const DirectionalButton = ({ direction, onClick }) => {
   return (
     <Flex
+      onClick={() => onClick(direction)}
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
       bg={inactiveFill}
       borderRadius="default"
       height="25px"
+      css={`
+        cursor: pointer;
+      `}
     >
       {direction === 'up' ? <NavUp /> : <NavDown />}
     </Flex>
-    // </Button>
   );
 };
 
@@ -70,6 +73,7 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       bg={active ? activeFill : owned ? inactiveFill : 'grey.200'}
       borderRadius="default"
       height="50px"
+      mt="5px"
     >
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
@@ -78,6 +82,13 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
     </Flex>
   </NavbarItemContainer>
 );
+
+const CdpContainer = styled(Flex)`
+  cursor: pointer;
+  flex-direction: column;
+  overflow: auto;
+  height: ${props => (props.cdpsLength >= 4 ? '250px' : undefined)};
+`;
 
 // replace Fragment with this & add style={props}
 // const AnimatedWrap = styled(animated.div)`
@@ -140,34 +151,57 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     }
   }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const cdpContainerRef = useRef(null);
+
+  const onDirectionalClick = direction => {
+    const scrollAmount = 50;
+    const topPosition = 0;
+    const bottomPosition = 570;
+    let newPosition =
+      direction === 'up' && scrollAmount
+        ? scrollPosition - scrollAmount
+        : scrollPosition + scrollAmount;
+    if (newPosition < topPosition) newPosition = topPosition;
+    if (newPosition > bottomPosition) newPosition = bottomPosition;
+    setScrollPosition(newPosition);
+    cdpContainerRef.current.scrollTop = newPosition;
+  };
+
   const { show } = useModal();
   const showDirectionals = navbarCdps.length >= 4;
 
   return listOpen ? (
     <Box bg={cdpListFill} height="100%">
-      {showDirectionals && <DirectionalButton direction={'up'} />}
-      <OverviewButton
-        key={navbarCdps.length * 10}
-        href={overviewPath + currentQuery}
-        label={'Overview'}
-        active={active}
-      />
-      {navbarCdps.map((cdp, idx) => {
-        const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
-        const linkPath = `/${Routes.BORROW}/${cdp.id}`;
-        const active = currentPath === linkPath;
-        return (
-          <NavbarItem
-            key={idx}
-            href={linkPath + currentQuery}
-            label={cdp.ilk}
-            owned={account}
-            active={active}
-            ratio={ratio}
-          />
-        );
-      })}
-      {showDirectionals && <DirectionalButton direction={'down'} />}
+      {showDirectionals && (
+        <DirectionalButton onClick={onDirectionalClick} direction={'up'} />
+      )}
+      <CdpContainer ref={cdpContainerRef} cdpsLength={navbarCdps.length}>
+        <OverviewButton
+          key={navbarCdps.length * 10}
+          href={overviewPath + currentQuery}
+          label={'Overview'}
+          active={active}
+        />
+        {navbarCdps.map((cdp, idx) => {
+          const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
+          const linkPath = `/${Routes.BORROW}/${cdp.id}`;
+          const active = currentPath === linkPath;
+          return (
+            <NavbarItem
+              key={idx}
+              href={linkPath + currentQuery}
+              label={cdp.ilk}
+              owned={account}
+              active={active}
+              ratio={ratio}
+            />
+          );
+        })}
+      </CdpContainer>
+      {showDirectionals && (
+        <DirectionalButton onClick={onDirectionalClick} direction={'down'} />
+      )}
       {account && (
         <DashedFakeButton
           onClick={() =>

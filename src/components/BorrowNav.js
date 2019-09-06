@@ -25,7 +25,7 @@ const BorrowNav = ({ viewedAddress }) => {
           justifyContent="center"
           py="s"
         >
-          <StyledBorrowIcon active={active.toString()} />
+          <StyledBorrowIcon active={active} />
           <Text t="p6" fontWeight="bold" color={active ? 'white' : 'gray'}>
             {lang.navbar.borrow}
           </Text>
