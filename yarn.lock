@@ -5996,7 +5996,7 @@ g-status@^2.0.2:
     matcher "^1.0.0"
     simple-git "^1.85.0"
 
-"ganache-cli@github:makerdao/ganache-cli#fix/gas-est-crash":
+ganache-cli@makerdao/ganache-cli#fix/gas-est-crash:
   version "6.4.3-beta.0"
   resolved "https://codeload.github.com/makerdao/ganache-cli/tar.gz/3e512b61da2479042627e6155231dcb038110650"
   dependencies:
@@ -8399,6 +8399,11 @@ lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
+
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
 lodash.isequal@^4.5.0:
   version "4.5.0"

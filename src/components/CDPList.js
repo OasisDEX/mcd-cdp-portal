@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import React, { memo, useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Plus } from '../images/plus.svg';
@@ -154,10 +155,15 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const cdpContainerRef = useRef(null);
 
+  const handleOnScroll = () => {
+    setScrollPosition(cdpContainerRef.current.scrollTop);
+  };
+  const debounced = debounce(handleOnScroll, 200);
+
   const onDirectionalClick = direction => {
     const scrollAmount = 50;
     const topPosition = 0;
-    const bottomPosition = 570;
+    const bottomPosition = 570; //TODO set this to navbarCdps.length * height
     let newPosition =
       direction === 'up' && scrollAmount
         ? scrollPosition - scrollAmount
@@ -176,7 +182,11 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
       {showDirectionals && (
         <DirectionalButton onClick={onDirectionalClick} direction={'up'} />
       )}
-      <CdpContainer ref={cdpContainerRef} cdpsLength={navbarCdps.length}>
+      <CdpContainer
+        onScroll={debounced}
+        ref={cdpContainerRef}
+        cdpsLength={navbarCdps.length}
+      >
         <OverviewButton
           key={navbarCdps.length * 10}
           href={overviewPath + currentQuery}
