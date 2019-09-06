@@ -24,7 +24,10 @@ export function accountBalanceForToken(
             returns: [
               [
                 `accounts.${currentAddress}.allowances.${tokenSymbol}`,
-                allowance => fromWei(allowance).eq(MAX_UINT_BN)
+                // Unlimited allowance may be a tiny bit less than MAX_UINT_BN,
+                // calling .toNumber() gives us a reasonably large number to compare.
+                allowance =>
+                  fromWei(allowance).toNumber() === MAX_UINT_BN.toNumber()
               ]
             ]
           }
