@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Grid,
@@ -9,14 +9,13 @@ import {
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 
-import { MAX_UINT_BN } from 'utils/units';
 import { prettifyNumber } from 'utils/ui';
 import ilkList from 'references/ilkList';
 import { getIlkData } from 'reducers/feeds';
 
-import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
+import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
@@ -77,30 +76,10 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 }
 
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
-  const { maker, account } = useMaker();
-  const [loading, setLoading] = useState(true);
   const balances = useWalletBalances();
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const gemToken = maker.getToken(selectedIlk.currency.symbol);
-        const hasAllowance =
-          selectedIlk.currency.symbol === 'ETH' ||
-          (await gemToken.allowance(maker.currentAddress(), proxyAddress)).eq(
-            MAX_UINT_BN
-          );
-        dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance } });
-      } catch (err) {
-        dispatch({
-          type: 'set-ilk-allowance',
-          payload: { hasAllowance: false }
-        });
-      }
-      setLoading(false);
-    })();
-  }, [maker, account, selectedIlk.key]);
+  const allowances = useTokenAllowances();
+  const hasAllowance =
+    selectedIlk.currency && allowances[selectedIlk.currency.symbol];
 
   return (
     <Box
@@ -160,9 +139,18 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        dispatch={dispatch}
+        onNext={() =>
+          dispatch({
+            type: 'increment-step',
+            payload: { by: hasAllowance ? 2 : 1 }
+          })
+        }
+        onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={false}
-        canProgress={!loading && !!selectedIlk.key}
+        canProgress={
+          !!selectedIlk.key &&
+          allowances[selectedIlk.currency.symbol] !== undefined
+        }
       />
     </Box>
   );

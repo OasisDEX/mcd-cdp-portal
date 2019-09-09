@@ -40,6 +40,9 @@ export async function instantiateMaker({
       url: rpcUrl,
       type: 'HTTP'
     },
+    web3: {
+      pollingInterval: network === 'testnet' ? 100 : null
+    },
     multicall: true
   };
 
