@@ -18,7 +18,8 @@ import { getWalletConnectAccounts } from 'utils/walletconnect';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
-import { Routes } from '../utils/constants';
+import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { Routes, AccountTypes } from '../utils/constants';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -35,13 +36,22 @@ const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-bottom: -5px;
 `;
 
+const StyledWalletLinkLogo = styled(WalletLinkLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+  height: 21px;
+  width: 21px;
+`;
+
 function Borrow() {
   const providerName = getWebClientProviderName();
   const {
     maker,
     authenticated: makerAuthenticated,
-    connectBrowserProvider
+    connectBrowserProvider,
+    connectToProviderOfType
   } = useMaker();
+
   const navigation = useNavigation();
 
   const onAccountChosen = useCallback(
@@ -49,7 +59,6 @@ function Borrow() {
       maker.useAccountWithAddress(address);
       mixpanelIdentify(address, type);
       const { search } = (await navigation.getRoute()).url;
-
       navigation.navigate({
         pathname: `/${Routes.BORROW}/owner/${address}`,
         search
@@ -67,6 +76,16 @@ function Borrow() {
     } catch (err) {
       window.alert(err);
     }
+  }
+
+  async function onWalletLinkConnect() {
+    const address = await connectToProviderOfType(AccountTypes.WALLETLINK);
+    mixpanelIdentify(address, AccountTypes.WALLETLINK);
+    const { search } = (await navigation.getRoute()).url;
+    navigation.navigate({
+      pathname: `/${Routes.BORROW}/owner/${address}`,
+      search
+    });
   }
 
   return (
@@ -103,6 +122,13 @@ function Borrow() {
             icon={<StyledWalletConnectLogo />}
           >
             {lang.landing_page.wallet_connect}
+          </IconButton>
+          <IconButton
+            onClick={onWalletLinkConnect}
+            disabled={!makerAuthenticated}
+            icon={<StyledWalletLinkLogo />}
+          >
+            {lang.landing_page.wallet_link}
           </IconButton>
           {/* <ReadOnlyConnect /> */}
         </Grid>

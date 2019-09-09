@@ -11,6 +11,7 @@ import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import { getMeasurement, getColor } from 'styles/theme';
+import { AccountTypes } from '../utils/constants';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -36,7 +37,12 @@ const WalletConnectDropdown = ({
   close = () => {},
   ...props
 }) => {
-  const { maker, account, connectBrowserProvider } = useMaker();
+  const {
+    maker,
+    account,
+    connectBrowserProvider,
+    connectToProviderOfType
+  } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
@@ -135,6 +141,14 @@ const WalletConnectDropdown = ({
           }}
         >
           Wallet Connect
+        </Option>
+        <Option
+          onClick={() => {
+            connectToProviderOfType(AccountTypes.WALLETLINK);
+            close();
+          }}
+        >
+          Coinbase WalletLink
         </Option>
       </Card>
     </Dropdown>
