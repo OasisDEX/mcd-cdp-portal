@@ -50,7 +50,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
       payload: { address: proxyAddress }
     });
   }
-  console.log(proxyErrors);
+
   return (
     <Box maxWidth="71.8rem">
       <Text.h2 textAlign="center" mb="xl">
@@ -69,13 +69,27 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
               width="13.0rem"
               mt="xs"
               onClick={deployProxy}
-              disabled={proxyLoading || isSettingAllowance}
-              loading={proxyLoading}
+              disabled={proxyLoading || isSettingAllowance || !!proxyErrors}
+              loading={proxyLoading || !!proxyErrors}
             >
               {lang.cdp_create.setup_proxy_proxy_button}
             </Button>
           )}
           <Text.p t="subheading" lineHeight="normal">
+            {proxyErrors && (
+              <>
+                {lang.cdp_create.proxy_failure_not_mined}
+                <Tooltip
+                  fontSize="m"
+                  ml="2xs"
+                  content={
+                    <TooltipContents>
+                      {lang.cdp_create.proxy_failure_not_mined_info}
+                    </TooltipContents>
+                  }
+                />
+              </>
+            )}
             {proxyLoading &&
               lang.formatString(
                 lang.cdp_create.waiting_for_comfirmations,
