@@ -3,6 +3,7 @@ import lang from 'languages';
 
 import useActionState from 'hooks/useActionState';
 import useMaker from 'hooks/useMaker';
+import { updateWatcherWithProxy } from '../watch';
 
 export default function useProxy() {
   const { maker, account, newTxListener } = useMaker();
@@ -15,7 +16,8 @@ export default function useProxy() {
     const txPromise = maker
       .service('proxy')
       .ensureProxy()
-      .then(address => {
+      .then(async address => {
+        await updateWatcherWithProxy(maker, account.address, address);
         setProxyAddress(address);
       });
     setStartedWithoutProxy(true);
