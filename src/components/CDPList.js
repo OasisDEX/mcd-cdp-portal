@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import React, { memo, useEffect, useState, useRef } from 'react';
+import React, { memo, useEffect, useState, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
@@ -85,10 +85,15 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 );
 
 const CdpContainer = styled(Flex)`
+  width: 100%;
+  py: '10px';
   cursor: pointer;
   flex-direction: column;
   overflow: auto;
   height: ${props => (props.cdpsLength >= 4 ? '250px' : undefined)};
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
 `;
 
 // replace Fragment with this & add style={props}
@@ -114,7 +119,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   //   () => console.log('animation render2', listOpen) || fadeProps
   // );
 
-  useEffect(() => {
+  useMemo(() => {
     const onSavePage = url.pathname === `/${Routes.SAVE}`;
     if (onSavePage) {
       setListOpen(false);
@@ -152,34 +157,52 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     }
   }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState({});
+  const { scrollTop, maxScrollTop } = scrollPosition;
   const cdpContainerRef = useRef(null);
 
   const handleOnScroll = () => {
-    setScrollPosition(cdpContainerRef.current.scrollTop);
+    const maxScrollTop =
+      cdpContainerRef.current.scrollHeight -
+      cdpContainerRef.current.clientHeight;
+
+    setScrollPosition({
+      ...scrollPosition,
+      scrollTop: cdpContainerRef.current.scrollTop,
+      maxScrollTop
+    });
   };
-  const debounced = debounce(handleOnScroll, 200);
+
+  const debounced = debounce(handleOnScroll, 100);
+
+  const scrollAmount = 50;
+  const topPosition = 0;
+  const bottomPosition = 570; //TODO set this to navbarCdps.length * height
 
   const onDirectionalClick = direction => {
-    const scrollAmount = 50;
-    const topPosition = 0;
-    const bottomPosition = 570; //TODO set this to navbarCdps.length * height
     let newPosition =
       direction === 'up' && scrollAmount
-        ? scrollPosition - scrollAmount
-        : scrollPosition + scrollAmount;
+        ? scrollTop - scrollAmount
+        : scrollTop + scrollAmount;
     if (newPosition < topPosition) newPosition = topPosition;
     if (newPosition > bottomPosition) newPosition = bottomPosition;
-    setScrollPosition(newPosition);
+    setScrollPosition({
+      ...scrollPosition,
+      scrollTop: newPosition,
+      maxScrollTop
+    });
     cdpContainerRef.current.scrollTop = newPosition;
   };
 
-  const { show } = useModal();
   const showDirectionals = navbarCdps.length >= 4;
+  const showTop = showDirectionals && scrollTop > 0;
+  const showBottom = showDirectionals && scrollTop < maxScrollTop;
+
+  const { show } = useModal();
 
   return listOpen ? (
     <Box bg={cdpListFill} height="100%">
-      {showDirectionals && (
+      {showTop && (
         <DirectionalButton onClick={onDirectionalClick} direction={'up'} />
       )}
       <CdpContainer
@@ -209,7 +232,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           );
         })}
       </CdpContainer>
-      {showDirectionals && (
+      {showBottom && (
         <DirectionalButton onClick={onDirectionalClick} direction={'down'} />
       )}
       {account && (
