@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Text,
@@ -10,9 +10,9 @@ import {
 
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
-import useMaker from 'hooks/useMaker';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useTokenAllowance from 'hooks/useTokenAllowance';
+import useProxy from 'hooks/useProxy';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -25,33 +25,29 @@ const SuccessButton = () => {
   );
 };
 
-const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
-  const { maker } = useMaker();
+const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
   const blockHeight = useBlockHeight(0);
-  const [startingBlockHeight, setStartingBlockHeight] = useState(0);
-  const [proxyDeployed, setProxyDeployed] = useState(false);
+
+  const {
+    proxyAddress,
+    setupProxy,
+    proxyLoading,
+    startingBlockHeight,
+    proxyDeployed
+  } = useProxy();
+
   const {
     hasAllowance,
     setAllowance,
     allowanceLoading: isSettingAllowance
   } = useTokenAllowance(selectedIlk.currency.symbol);
 
-  const [isDeployingProxy, setIsDeployingProxy] = useState(false);
-
   async function deployProxy() {
-    setIsDeployingProxy(true);
-    try {
-      const promise = maker.service('proxy').ensureProxy();
-      const proxyAddress = await promise;
-      setStartingBlockHeight(blockHeight);
-      await maker.service('transactionManager').confirm(promise, 7);
-      setProxyDeployed(true);
-      dispatch({
-        type: 'set-proxy-address',
-        payload: { address: proxyAddress }
-      });
-    } catch (err) {}
-    setIsDeployingProxy(false);
+    await setupProxy();
+    dispatch({
+      type: 'set-proxy-address',
+      payload: { address: proxyAddress }
+    });
   }
 
   return (
@@ -65,21 +61,21 @@ const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
           <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
             {lang.cdp_create.setup_proxy_proxy_text}
           </Text.p>
-          {proxyAddress ? (
+          {proxyAddress && proxyDeployed ? (
             <SuccessButton />
           ) : (
             <Button
               width="13.0rem"
               mt="xs"
               onClick={deployProxy}
-              disabled={isDeployingProxy || isSettingAllowance}
-              loading={isDeployingProxy}
+              disabled={proxyLoading || isSettingAllowance}
+              loading={proxyLoading}
             >
               {lang.cdp_create.setup_proxy_proxy_button}
             </Button>
           )}
           <Text.p t="subheading" lineHeight="normal">
-            {isDeployingProxy &&
+            {proxyLoading &&
               lang.formatString(
                 lang.cdp_create.waiting_for_comfirmations,
                 startingBlockHeight === 0
@@ -94,7 +90,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
                 lang.cdp_create.confirmed_with_confirmations,
                 10
               )}
-            {(isDeployingProxy || proxyDeployed) && (
+            {(proxyLoading || proxyDeployed) && (
               <Tooltip
                 fontSize="m"
                 ml="2xs"
@@ -122,7 +118,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
               width="13.0rem"
               mt="xs"
               onClick={setAllowance}
-              disabled={isDeployingProxy || isSettingAllowance}
+              disabled={!proxyAddress || proxyLoading || isSettingAllowance}
               loading={isSettingAllowance}
             >
               {lang.cdp_create.setup_proxy_allowance_button}
@@ -133,7 +129,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, proxyAddress, dispatch }) => {
       <ScreenFooter
         onNext={() => dispatch({ type: 'increment-step' })}
         onBack={() => dispatch({ type: 'decrement-step' })}
-        canGoBack={!isDeployingProxy}
+        canGoBack={!proxyLoading}
         canProgress={proxyAddress && hasAllowance}
       />
     </Box>
