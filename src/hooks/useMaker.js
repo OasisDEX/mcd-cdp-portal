@@ -83,11 +83,13 @@ function useMaker() {
     return connectedAddress;
   };
 
-  const connectMobileProvider = async (type, callback) => {
-    await maker.addAccount({
-      type,
-      callback
+  const connectToProviderOfType = async type => {
+    const account = await maker.addAccount({
+      type
     });
+    maker.useAccountWithAddress(account.address);
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
   };
 
   return {
@@ -95,7 +97,7 @@ function useMaker() {
     authenticated,
     isConnectedToProvider,
     connectBrowserProvider,
-    connectMobileProvider,
+    connectToProviderOfType,
     checkForNewCdps,
     account,
     transactions,

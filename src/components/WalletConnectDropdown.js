@@ -41,7 +41,7 @@ const WalletConnectDropdown = ({
     maker,
     account,
     connectBrowserProvider,
-    connectMobileProvider
+    connectToProviderOfType
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
@@ -51,10 +51,6 @@ const WalletConnectDropdown = ({
   function onAccountChosen({ address }, type) {
     maker.useAccountWithAddress(address);
     mixpanelIdentify(address, type);
-  }
-
-  function onWalletLinkConnect(address) {
-    mixpanelIdentify(address, AccountTypes.WALLETLINK);
   }
 
   useEffect(() => {
@@ -148,7 +144,7 @@ const WalletConnectDropdown = ({
         </Option>
         <Option
           onClick={() => {
-            connectMobileProvider(AccountTypes.WALLETLINK, onWalletLinkConnect);
+            connectToProviderOfType(AccountTypes.WALLETLINK);
             close();
           }}
         >

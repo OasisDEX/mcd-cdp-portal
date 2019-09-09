@@ -19,7 +19,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [, dispatch] = useStore();
 
   const initAccount = account => {
-    mixpanelIdentify(account.address, 'metamask');
+    mixpanelIdentify(account.address, account.type);
     setAccount({ ...account, cdps: [] });
   };
 

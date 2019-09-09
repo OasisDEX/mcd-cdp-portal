@@ -49,7 +49,7 @@ function Borrow() {
     maker,
     authenticated: makerAuthenticated,
     connectBrowserProvider,
-    connectMobileProvider
+    connectToProviderOfType
   } = useMaker();
 
   const navigation = useNavigation();
@@ -78,7 +78,8 @@ function Borrow() {
     }
   }
 
-  async function onWalletLinkConnect(address) {
+  async function onWalletLinkConnect() {
+    const address = await connectToProviderOfType(AccountTypes.WALLETLINK);
     mixpanelIdentify(address, AccountTypes.WALLETLINK);
     const { search } = (await navigation.getRoute()).url;
     navigation.navigate({
@@ -123,12 +124,7 @@ function Borrow() {
             {lang.landing_page.wallet_connect}
           </IconButton>
           <IconButton
-            onClick={() =>
-              connectMobileProvider(
-                AccountTypes.WALLETLINK,
-                onWalletLinkConnect
-              )
-            }
+            onClick={onWalletLinkConnect}
             disabled={!makerAuthenticated}
             icon={<StyledWalletLinkLogo />}
           >
