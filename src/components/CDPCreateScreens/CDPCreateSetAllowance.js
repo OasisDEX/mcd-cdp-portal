@@ -33,7 +33,8 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
     setupProxy,
     proxyLoading,
     startingBlockHeight,
-    proxyDeployed
+    proxyDeployed,
+    proxyErrors
   } = useProxy();
 
   const {
@@ -49,7 +50,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
       payload: { address: proxyAddress }
     });
   }
-
+  console.log(proxyErrors);
   return (
     <Box maxWidth="71.8rem">
       <Text.h2 textAlign="center" mb="xl">
