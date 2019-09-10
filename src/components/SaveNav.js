@@ -8,23 +8,37 @@ import styled from 'styled-components';
 
 const StyledSaveIcon = styled(SaveIcon)`
   path {
-    stroke: ${props => (props.active ? 'white' : 'gray')};
+    stroke: ${props => props.textcolor};
+    fill: ${props => props.textcolor};
   }
 `;
 
-const SaveNav = () => {
+const SaveNav = ({ account }) => {
   const { url } = useCurrentRoute();
-  const active = url.pathname.startsWith(`/${Routes.SAVE}`);
+  const selected = url.pathname.startsWith(`/${Routes.SAVE}`);
+  const textColor =
+    selected && account
+      ? 'white'
+      : !selected && account
+      ? 'gray'
+      : selected && !account
+      ? 'black'
+      : 'gray';
   return (
     <Link href={`/${Routes.SAVE}`}>
       <Flex
+        bg={!account && selected && 'grey.200'}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
         py="s"
       >
-        <StyledSaveIcon active={active} />
-        <Text t="p6" fontWeight="bold" color={active ? 'white' : 'gray'}>
+        <StyledSaveIcon
+          textcolor={textColor}
+          selected={selected}
+          connected={account}
+        />
+        <Text t="p6" fontWeight="bold" color={textColor}>
           {lang.navbar.save}
         </Text>
       </Flex>

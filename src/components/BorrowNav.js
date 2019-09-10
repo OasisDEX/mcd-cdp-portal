@@ -9,24 +9,38 @@ import styled from 'styled-components';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
   path {
-    stroke: ${props => (props.active ? 'white' : 'gray')};
+    stroke: ${props => props.textcolor};
+    fill: ${props => props.textcolor};
   }
 `;
 
-const BorrowNav = ({ viewedAddress }) => {
+const BorrowNav = ({ viewedAddress, account }) => {
   const { url } = useCurrentRoute();
-  const active = url.pathname.startsWith(`/${Routes.BORROW}`);
+  const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
+  const textColor =
+    selected && account
+      ? 'white'
+      : !selected && account
+      ? 'gray'
+      : selected && !account
+      ? 'black'
+      : 'gray';
   return (
     <Fragment>
       <Link href={`/${Routes.BORROW}`}>
         <Flex
+          bg={!account && selected && 'grey.200'}
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
           py="s"
         >
-          <StyledBorrowIcon active={active} />
-          <Text t="p6" fontWeight="bold" color={active ? 'white' : 'gray'}>
+          <StyledBorrowIcon
+            textcolor={textColor}
+            selected={selected}
+            connected={account}
+          />
+          <Text t="p6" fontWeight="bold" color={textColor}>
             {lang.navbar.borrow}
           </Text>
         </Flex>

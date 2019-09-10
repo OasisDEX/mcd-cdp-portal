@@ -5,17 +5,15 @@ import TradeNav from 'components/TradeNav';
 import { Flex, Grid, Box } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
 
-const navbarFill = '#1E2C37';
-
 const Navbar = ({ viewedAddress }) => {
   const { account } = useMaker();
 
   return (
-    <Box bg={navbarFill} height="100%">
+    <Box bg={account ? 'blueGray' : 'white'} height="100%">
       <Flex alignItems="center" justifyContent="center" py="m" />
       <Grid mx="0px">
-        <SaveNav />
-        <BorrowNav viewedAddress={viewedAddress} />
+        <SaveNav account={account} />
+        <BorrowNav viewedAddress={viewedAddress} account={account} />
         <TradeNav />
       </Grid>
     </Box>

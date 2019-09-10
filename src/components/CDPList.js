@@ -21,7 +21,6 @@ import { trackCdpById } from 'reducers/multicall/cdps';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
-import { useSpring, animated } from 'react-spring';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -31,36 +30,14 @@ const DashedFakeButton = styled(Flex)`
   cursor: pointer;
 `;
 
-const cdpListFill = '#18232C';
-const activeFill = '#31424E';
-const inactiveFill = '#18232C';
-const itemHeight = '50px';
-
-const OverviewButton = ({ href, label, active, ...props }) => (
-  <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      bg={active ? activeFill : inactiveFill}
-      borderRadius="default"
-      height={itemHeight}
-    >
-      <Text t="p6" fontWeight="bold" color="white">
-        {label}
-      </Text>
-    </Flex>
-  </NavbarItemContainer>
-);
-
-const DirectionalButton = ({ direction, show, onClick }) => {
+const DirectionalButton = ({ connected, direction, show, onClick }) => {
   return (
     <Flex
       onClick={() => onClick(direction)}
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={inactiveFill}
+      bg={connected ? 'blueGrayDarker' : 'white'}
       borderRadius="default"
       height="35px"
       css={`
@@ -79,7 +56,15 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? activeFill : owned ? inactiveFill : 'grey.200'}
+      bg={
+        active && owned
+          ? 'blueGrayLighter'
+          : !active && owned
+          ? 'blueGrayDarker'
+          : active && !owned
+          ? 'teal.500'
+          : 'grey.200'
+      }
       borderRadius="default"
       height="50px"
       mt="5px"
@@ -87,7 +72,9 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
       </Text>
-      <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
+      {ratio && (
+        <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
+      )}
     </Flex>
   </NavbarItemContainer>
 );
@@ -98,16 +85,11 @@ const CdpContainer = styled(Flex)`
   cursor: pointer;
   flex-direction: column;
   overflow: auto;
-  height: ${props => (props.cdpsLength >= 4 ? '250px' : undefined)};
+  height: ${props => (props.cdpsLength >= 4 ? '275px' : undefined)};
   ::-webkit-scrollbar {
     width: 0px;
   }
 `;
-
-// replace Fragment with this & add style={props}
-// const AnimatedWrap = styled(animated.div)`
-//   width: 100%;
-// `;
 
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { url } = useCurrentRoute();
@@ -118,14 +100,6 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const [navbarCdps, setNavbarCdps] = useState([]);
   const [overviewPath, setOverviewPath] = useState(currentPath);
   const active = currentPath === overviewPath;
-
-  // const fadeProps = {
-  //   to: { opacity: listOpen ? 1 : 0 },
-  //   from: { opacity: listOpen ? 0 : 1 }
-  // };
-  // const [props, set, stop] = useSpring(
-  //   () => console.log('animation render2', listOpen) || fadeProps
-  // );
 
   useMemo(() => {
     const onSavePage = url.pathname === `/${Routes.SAVE}`;
@@ -216,23 +190,29 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
 
   return listOpen ? (
     <Fragment>
-      <DirectionalButton
-        show={navbarCdps.length >= 4 && scrollTop > 0}
-        onClick={onDirectionalClick}
-        direction={'up'}
-      />
-      <Box bg={cdpListFill} height="100%" px="5px">
+      {navbarCdps.length >= 4 && (
+        <DirectionalButton
+          connected={account}
+          show={scrollTop > 0}
+          onClick={onDirectionalClick}
+          direction={'up'}
+        />
+      )}
+      <Box bg={account ? 'blueGrayDarker' : 'white'} height="100%" px="5px">
         <CdpContainer
           onScroll={debounced}
           ref={cdpContainerRef}
           cdpsLength={navbarCdps.length}
         >
-          <OverviewButton
-            key={navbarCdps.length * 10}
-            href={overviewPath + currentQuery}
-            label={'Overview'}
-            active={active}
-          />
+          {navbarCdps.length > 0 && (
+            <NavbarItem
+              key={navbarCdps.length * 10}
+              href={overviewPath + currentQuery}
+              label={'Overview'}
+              owned={account}
+              active={active}
+            />
+          )}
           {navbarCdps.map((cdp, idx) => {
             const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
             const linkPath = `/${Routes.BORROW}/${cdp.id}`;
@@ -250,11 +230,14 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           })}
         </CdpContainer>
       </Box>
-      <DirectionalButton
-        show={navbarCdps.length >= 4 && scrollTop < maxScrollTop}
-        onClick={onDirectionalClick}
-        direction={'down'}
-      />
+      {navbarCdps.length >= 4 && (
+        <DirectionalButton
+          connected={account}
+          show={scrollTop < maxScrollTop}
+          onClick={onDirectionalClick}
+          direction={'down'}
+        />
+      )}
       {account && (
         <DashedFakeButton
           onClick={() =>
