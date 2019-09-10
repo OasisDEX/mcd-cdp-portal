@@ -3,8 +3,8 @@ import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import PageLayout from 'layouts/PageLayout';
-import AppLayout from 'layouts/AppLayout';
+import BorrowLayout from 'layouts/BorrowLayout';
+import SaveLayout from 'layouts/SaveLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
@@ -41,14 +41,14 @@ const withBorrowLayout = route =>
             <EthBalanceProvider>
               <ModalProvider modals={modals} templates={templates}>
                 <SidebarProvider>
-                  <PageLayout
+                  <BorrowLayout
                     mobileNav={
                       <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
                     }
                     navbar={<Navbar viewedAddress={viewedAddress} />}
                   >
                     <View />
-                  </PageLayout>
+                  </BorrowLayout>
                 </SidebarProvider>
               </ModalProvider>
             </EthBalanceProvider>
@@ -62,6 +62,7 @@ const withSaveLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
+      const { viewedAddress, cdpId } = request.params;
 
       return (
         <MakerProvider
@@ -71,13 +72,16 @@ const withSaveLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <EthBalanceProvider>
-              <ModalProvider modals={modals} templates={templates}>
-                <AppLayout>
-                  <View />
-                </AppLayout>
-              </ModalProvider>
-            </EthBalanceProvider>
+            <ModalProvider modals={modals} templates={templates}>
+              <SaveLayout
+                mobileNav={
+                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                }
+                navbar={<Navbar viewedAddress={viewedAddress} />}
+              >
+                <View />
+              </SaveLayout>
+            </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );

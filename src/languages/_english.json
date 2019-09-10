@@ -42,6 +42,11 @@
     "total_collateral_locked": "total collateral locked",
     "total_dai_debt": "total dai debt"
   },
+  "navbar": {
+    "save": "Earn",
+    "borrow": "Borrow",
+    "trade": "Trade"
+  },
   "sidebar": {
     "wallet_balances": "Wallet Balances",
     "read_only_mode": "Read-Only Mode",

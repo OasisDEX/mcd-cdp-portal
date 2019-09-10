@@ -1,10 +1,12 @@
-import React, { memo, Fragment, useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
+import React, { memo, useEffect, useState, useRef, useMemo } from 'react';
 import styled from 'styled-components';
-// import { ReactComponent as MakerSmall } from '../images/maker-small.svg';
 import { ReactComponent as Plus } from '../images/plus.svg';
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
+import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
+import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { Link } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
@@ -12,16 +14,57 @@ import { trackCdpById } from 'reducers/multicall/cdps';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
+import { useSpring, animated } from 'react-spring';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
 `;
 
 const DashedFakeButton = styled(Flex)`
-  border: 1px dashed;
   cursor: pointer;
-  border-color: ${({ theme }) => theme.colors.blackLighter};
 `;
+
+const cdpListFill = '#18232C';
+const activeFill = '#31424E';
+const inactiveFill = '#18232C';
+const itemHeight = '50px';
+
+const OverviewButton = ({ href, label, active, ...props }) => (
+  <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      bg={active ? activeFill : inactiveFill}
+      borderRadius="default"
+      height={itemHeight}
+    >
+      <Text t="p6" fontWeight="bold" color="white">
+        {label}
+      </Text>
+    </Flex>
+  </NavbarItemContainer>
+);
+
+const DirectionalButton = ({ direction, show, onClick }) => {
+  return (
+    <Flex
+      onClick={() => onClick(direction)}
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      bg={inactiveFill}
+      borderRadius="default"
+      height="25px"
+      css={`
+        cursor: pointer;
+        display: ${show ? 'flex' : 'none'};
+      `}
+    >
+      {direction === 'up' ? <NavUp /> : <NavDown />}
+    </Flex>
+  );
+};
 
 const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
   <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
@@ -29,9 +72,10 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      bg={active ? 'teal.500' : owned ? 'blackLighter' : 'grey.200'}
+      bg={active ? activeFill : owned ? inactiveFill : 'grey.200'}
       borderRadius="default"
       height="50px"
+      mt="5px"
     >
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
@@ -41,17 +85,57 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
   </NavbarItemContainer>
 );
 
+const CdpContainer = styled(Flex)`
+  width: 100%;
+  py: '10px';
+  cursor: pointer;
+  flex-direction: column;
+  overflow: auto;
+  height: ${props => (props.cdpsLength >= 4 ? '250px' : undefined)};
+  ::-webkit-scrollbar {
+    width: 0px;
+  }
+`;
+
+// replace Fragment with this & add style={props}
+// const AnimatedWrap = styled(animated.div)`
+//   width: 100%;
+// `;
+
 const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
+  const { url } = useCurrentRoute();
+  const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
   const [{ cdps, feeds }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
+  const [overviewPath, setOverviewPath] = useState(currentPath);
+  const active = currentPath === overviewPath;
+
+  // const fadeProps = {
+  //   to: { opacity: listOpen ? 1 : 0 },
+  //   from: { opacity: listOpen ? 0 : 1 }
+  // };
+  // const [props, set, stop] = useSpring(
+  //   () => console.log('animation render2', listOpen) || fadeProps
+  // );
+
+  useMemo(() => {
+    const onSavePage = url.pathname === `/${Routes.SAVE}`;
+    if (onSavePage) {
+      setListOpen(false);
+    } else if (!onSavePage && (account || viewedAddress)) {
+      setListOpen(true);
+    }
+  }, [account, url, viewedAddress]);
 
   useEffect(() => {
     if (account) {
+      setOverviewPath(`/${Routes.BORROW}/owner/${account.address}`);
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
     } else if (viewedAddress) {
+      setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
       (async () => {
         const proxy = await maker
           .service('proxy')
@@ -62,7 +146,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
         setNavbarCdps(cdps);
       })();
     }
-  }, [maker, account]);
+  }, [maker, account, viewedAddress, dispatch, setOverviewPath]);
 
   useEffect(() => {
     if (account || viewedAddress) {
@@ -74,25 +158,95 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
     }
   }, [account, navbarCdps, cdps, feeds, viewedAddress]);
 
+  const [scrollPosition, setScrollPosition] = useState({
+    scrollTop: 0,
+    maxScrollTop: 1
+  });
+  const { scrollTop, maxScrollTop } = scrollPosition;
+
+  const cdpContainerRef = useRef(null);
+
+  const handleOnScroll = () => {
+    const maxScrollTop =
+      cdpContainerRef.current.scrollHeight -
+      cdpContainerRef.current.clientHeight;
+
+    setScrollPosition({
+      ...scrollPosition,
+      scrollTop: cdpContainerRef.current.scrollTop,
+      maxScrollTop
+    });
+  };
+
+  const debounced = debounce(handleOnScroll, 100);
+
+  const onDirectionalClick = direction => {
+    const scrollAmount =
+      cdpContainerRef.current.scrollHeight / navbarCdps.length;
+    const maxScrollTop =
+      cdpContainerRef.current.scrollHeight -
+      cdpContainerRef.current.clientHeight;
+
+    setScrollPosition({
+      ...scrollPosition,
+      scrollAmount
+    });
+    let newPosition =
+      direction === 'up' && scrollAmount
+        ? scrollTop - scrollAmount
+        : scrollTop + scrollAmount;
+    if (newPosition < 0) newPosition = 0;
+    if (newPosition > maxScrollTop) newPosition = maxScrollTop;
+    setScrollPosition({
+      ...scrollPosition,
+      scrollTop: newPosition,
+      maxScrollTop
+    });
+    cdpContainerRef.current.scrollTop = newPosition;
+  };
+
   const { show } = useModal();
 
-  return (
-    <Fragment>
-      {navbarCdps.map((cdp, idx) => {
-        const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
-        const linkPath = `/${Routes.BORROW}/${cdp.id}`;
-        const active = currentPath === linkPath;
-        return (
-          <NavbarItem
-            key={idx}
-            href={linkPath + currentQuery}
-            label={cdp.ilk}
-            owned={account}
-            active={active}
-            ratio={ratio}
-          />
-        );
-      })}
+  return listOpen ? (
+    <Box bg={cdpListFill} height="100%">
+      <DirectionalButton
+        show={navbarCdps.length >= 4 && scrollTop > 0}
+        onClick={onDirectionalClick}
+        direction={'up'}
+      />
+      <CdpContainer
+        onScroll={debounced}
+        ref={cdpContainerRef}
+        cdpsLength={navbarCdps.length}
+      >
+        <OverviewButton
+          key={navbarCdps.length * 10}
+          href={overviewPath + currentQuery}
+          label={'Overview'}
+          active={active}
+        />
+        {navbarCdps.map((cdp, idx) => {
+          const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
+          const linkPath = `/${Routes.BORROW}/${cdp.id}`;
+          const active = currentPath === linkPath;
+          return (
+            <NavbarItem
+              key={idx}
+              href={linkPath + currentQuery}
+              label={cdp.ilk}
+              owned={account}
+              active={active}
+              ratio={ratio}
+            />
+          );
+        })}
+      </CdpContainer>
+
+      <DirectionalButton
+        show={navbarCdps.length >= 4 && scrollTop < maxScrollTop}
+        onClick={onDirectionalClick}
+        direction={'down'}
+      />
       {account && (
         <DashedFakeButton
           onClick={() =>
@@ -106,8 +260,8 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           <Plus />
         </DashedFakeButton>
       )}
-    </Fragment>
-  );
+    </Box>
+  ) : null;
 });
 
 export default CDPList;
