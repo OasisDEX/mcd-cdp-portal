@@ -1,10 +1,12 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import lang from 'languages';
 import { Link } from 'react-navi';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 import { Routes } from '../utils/constants';
+import useMaker from 'hooks/useMaker';
+import ilkList from '../references/ilkList';
 
 const GLOBAL_DEBT_CEILING = system => [
   lang.sidebar.global_debt_ceiling,
@@ -29,6 +31,19 @@ const DEBT_AUCTION_LOT_SIZE = system => [
 ];
 
 const SidebarSystem = ({ system }) => {
+  const { maker } = useMaker();
+  useEffect(async () => {
+    await Promise.all(
+      ilkList.map(async ilk => {
+        await maker
+          .service('mcd:cdpType')
+          .getCdpType(null, ilk)
+          .prefetch();
+        console.log('prefetched ilk: ', ilk);
+      })
+    );
+  }, [maker]);
+
   const systemParams = [
     GLOBAL_DEBT_CEILING,
     CURRENT_DEBT,
