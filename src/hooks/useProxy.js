@@ -36,7 +36,6 @@ export default function useProxy() {
     if (proxyAddress) return proxyAddress;
 
     const txPromise = maker.service('proxy').ensureProxy();
-    updateState({ startedWithoutProxy: true });
     const address = await txPromise;
 
     updateState({
@@ -58,7 +57,8 @@ export default function useProxy() {
       const proxyAddress = await maker.service('proxy').getProxyAddress();
       updateState({
         isFirstLoading: false,
-        proxyAddress
+        proxyAddress,
+        startedWithoutProxy: !proxyAddress
       });
     })();
   }, [maker, account]);

@@ -39,7 +39,7 @@ const Payback = ({ cdpId, reset }) => {
     startedWithoutProxy,
     proxyDeployed
   } = useProxy();
-  const hasProxy = !!proxyAddress && proxyDeployed;
+  const hasProxy = startedWithoutProxy ? proxyDeployed : !!proxyAddress;
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
