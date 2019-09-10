@@ -13,7 +13,7 @@ const Navbar = ({ viewedAddress }) => {
   return (
     <Box bg={navbarFill} height="100%">
       <Flex alignItems="center" justifyContent="center" py="m" />
-      <Grid gridRowGap="xs" mx="xs">
+      <Grid mx="0px">
         <SaveNav />
         <BorrowNav viewedAddress={viewedAddress} />
         <TradeNav />
