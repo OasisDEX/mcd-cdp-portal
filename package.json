@@ -11,7 +11,7 @@
     "Adrian le Bas <adrian@makerdao.com>"
   ],
   "dependencies": {
-    "@craco/craco": "^3.4.1",
+    "@craco/craco": "^5.4.0",
     "@hot-loader/react-dom": "^16.8.4",
     "@makerdao/currency": "^0.9.5",
     "@makerdao/dai": "0.18.4",
