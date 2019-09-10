@@ -1,5 +1,12 @@
 import debounce from 'lodash.debounce';
-import React, { memo, useEffect, useState, useRef, useMemo } from 'react';
+import React, {
+  memo,
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  Fragment
+} from 'react';
 import styled from 'styled-components';
 import { ReactComponent as Plus } from '../images/plus.svg';
 import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
@@ -55,10 +62,10 @@ const DirectionalButton = ({ direction, show, onClick }) => {
       justifyContent="center"
       bg={inactiveFill}
       borderRadius="default"
-      height="25px"
+      height="35px"
       css={`
         cursor: pointer;
-        display: ${show ? 'flex' : 'none'};
+        visibility: ${show ? 'visible' : 'hidden'};
       `}
     >
       {direction === 'up' ? <NavUp /> : <NavDown />}
@@ -208,40 +215,41 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
   const { show } = useModal();
 
   return listOpen ? (
-    <Box bg={cdpListFill} height="100%">
+    <Fragment>
       <DirectionalButton
         show={navbarCdps.length >= 4 && scrollTop > 0}
         onClick={onDirectionalClick}
         direction={'up'}
       />
-      <CdpContainer
-        onScroll={debounced}
-        ref={cdpContainerRef}
-        cdpsLength={navbarCdps.length}
-      >
-        <OverviewButton
-          key={navbarCdps.length * 10}
-          href={overviewPath + currentQuery}
-          label={'Overview'}
-          active={active}
-        />
-        {navbarCdps.map((cdp, idx) => {
-          const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
-          const linkPath = `/${Routes.BORROW}/${cdp.id}`;
-          const active = currentPath === linkPath;
-          return (
-            <NavbarItem
-              key={idx}
-              href={linkPath + currentQuery}
-              label={cdp.ilk}
-              owned={account}
-              active={active}
-              ratio={ratio}
-            />
-          );
-        })}
-      </CdpContainer>
-
+      <Box bg={cdpListFill} height="100%" px="5px">
+        <CdpContainer
+          onScroll={debounced}
+          ref={cdpContainerRef}
+          cdpsLength={navbarCdps.length}
+        >
+          <OverviewButton
+            key={navbarCdps.length * 10}
+            href={overviewPath + currentQuery}
+            label={'Overview'}
+            active={active}
+          />
+          {navbarCdps.map((cdp, idx) => {
+            const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
+            const linkPath = `/${Routes.BORROW}/${cdp.id}`;
+            const active = currentPath === linkPath;
+            return (
+              <NavbarItem
+                key={idx}
+                href={linkPath + currentQuery}
+                label={cdp.ilk}
+                owned={account}
+                active={active}
+                ratio={ratio}
+              />
+            );
+          })}
+        </CdpContainer>
+      </Box>
       <DirectionalButton
         show={navbarCdps.length >= 4 && scrollTop < maxScrollTop}
         onClick={onDirectionalClick}
@@ -260,7 +268,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           <Plus />
         </DashedFakeButton>
       )}
-    </Box>
+    </Fragment>
   ) : null;
 });
 
