@@ -43,7 +43,7 @@ const Deposit = ({ cdpId, reset }) => {
     startedWithoutProxy,
     proxyDeployed
   } = useProxy();
-  const hasProxy = !!proxyAddress && proxyDeployed;
+  const hasProxy = startedWithoutProxy ? proxyDeployed : !!proxyAddress;
 
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
