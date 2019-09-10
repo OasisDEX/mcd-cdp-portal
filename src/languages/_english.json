@@ -24,7 +24,8 @@
     "title": "Spend crypto without leaving your position.",
     "subtitle": "Leverage your crypto assets to generate Dai, a decentralized cryptocurrency pegged at the value of 1 US dollar.",
     "read_only": "Read-Only",
-    "wallet_connect": "Wallet Connect"
+    "wallet_connect": "Wallet Connect",
+    "wallet_link": "Coinbase Wallet"
   },
   "overview_page": {
     "title": "Overview",
@@ -40,6 +41,11 @@
     "view_cdp_mobile": "View",
     "total_collateral_locked": "total collateral locked",
     "total_dai_debt": "total dai debt"
+  },
+  "navbar": {
+    "save": "Earn",
+    "borrow": "Borrow",
+    "trade": "Trade"
   },
   "sidebar": {
     "wallet_balances": "Wallet Balances",

@@ -83,11 +83,21 @@ function useMaker() {
     return connectedAddress;
   };
 
+  const connectToProviderOfType = async type => {
+    const account = await maker.addAccount({
+      type
+    });
+    maker.useAccountWithAddress(account.address);
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
+  };
+
   return {
     maker,
     authenticated,
     isConnectedToProvider,
     connectBrowserProvider,
+    connectToProviderOfType,
     checkForNewCdps,
     account,
     transactions,
