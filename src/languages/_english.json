@@ -103,7 +103,9 @@
 
     "waiting_for_comfirmations": "Waiting for confirmations... {0} of {1}",
     "confirmed_with_confirmations": "Confirmed with {0} confirmations",
-    "waiting_for_confirmations_info": "Waiting for confirmations reduces the risk of your Maker Collateral Vault address changing. We require users to wait 10 block confirmations to ensure it has created successfully. This will often take around 2 minutes."
+    "waiting_for_confirmations_info": "Waiting for confirmations reduces the risk of your Maker Collateral Vault address changing. We require users to wait 10 block confirmations to ensure it has created successfully. This will often take around 2 minutes.",
+    "proxy_failure_not_mined": "This transaction is taking longer than usual...",
+    "proxy_failure_not_mined_info": "Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later"
   },
   "cdp_migrate": {
     "select_title": "Select CDP to Migrate",
