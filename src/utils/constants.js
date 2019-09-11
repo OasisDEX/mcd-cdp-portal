@@ -23,5 +23,5 @@ export const AccountTypes = {
 export const Routes = {
   BORROW: 'borrow',
   SAVE: 'earn',
-  TRADE: 'trade'
+  TRADE: '#'
 };

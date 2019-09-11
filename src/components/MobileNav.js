@@ -68,7 +68,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
   return (
     <Flex
       justifyContent="space-between"
-      bg={'blueGray'}
+      bg={account ? 'blueGray' : 'white'}
       height={getMeasurement('mobileNavHeight')}
     >
       <Flex alignItems="center" justifyContent="center">

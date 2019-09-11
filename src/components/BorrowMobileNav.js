@@ -34,19 +34,21 @@ const CDPDropdown = memo(function({ textcolor, selected, account, children }) {
       show={show}
       trigger={
         <Flex
+          bg={!account && selected && 'grey.200'}
+          flexDirection="column"
           alignItems="center"
           justifyContent="center"
-          p="s"
-          bg="black.500"
-          borderRadius="4px"
+          py="s"
           onClick={() => setShow(!show)}
         >
           <StyledBorrowIcon
             textcolor={textcolor}
             selected={selected}
             connected={account}
-            onClick={() => setShow(!show)}
           />
+          <Text t="p6" fontWeight="bold" color={textcolor}>
+            {lang.navbar.borrow}
+          </Text>
         </Flex>
       }
     >
@@ -89,26 +91,31 @@ const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
 
   return (
     <Fragment>
-      <Link href={`/${Routes.BORROW}`}>
-        <Flex
-          bg={!account && selected && 'grey.200'}
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          py="s"
+      {!selected ? (
+        <Link href={`/${Routes.BORROW}`}>
+          <Flex
+            bg={!account && selected && 'grey.200'}
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            py="s"
+          >
+            <StyledBorrowIcon
+              textcolor={textColor}
+              selected={selected}
+              connected={account}
+            />
+            <Text t="p6" fontWeight="bold" color={textColor}>
+              {lang.navbar.borrow}
+            </Text>
+          </Flex>
+        </Link>
+      ) : (
+        <CDPDropdown
+          textcolor={textColor}
+          selected={selected}
+          account={account}
         >
-          <StyledBorrowIcon
-            textcolor={textColor}
-            selected={selected}
-            connected={account}
-          />
-          <Text t="p6" fontWeight="bold" color={textColor}>
-            {lang.navbar.borrow}
-          </Text>
-        </Flex>
-      </Link>
-      {selected && address ? (
-        <CDPDropdown>
           <Link href={`/${Routes.BORROW}/owner/${address}`}>
             <Flex alignItems="center" justifyContent="center" py="s">
               {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
@@ -121,7 +128,7 @@ const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
             viewedAddress={address}
           />
         </CDPDropdown>
-      ) : null}
+      )}
     </Fragment>
   );
 };
