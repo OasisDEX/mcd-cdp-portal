@@ -1,7 +1,6 @@
 import React, { memo, useState, Fragment } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled from 'styled-components';
-
 import {
   Dropdown,
   DefaultDropdown,
@@ -12,11 +11,7 @@ import {
 import CDPList from 'components/CDPList';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
-
 import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
-import { ReactComponent as ActiveHome } from 'images/active-home.svg';
-import { ReactComponent as InactiveHome } from 'images/inactive-home.svg';
-
 import { Routes } from '../utils/constants';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
@@ -70,9 +65,6 @@ const CDPDropdown = memo(function({ textcolor, selected, account, children }) {
 const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
-  const onOverviewPage =
-    account && url.pathname === `/${Routes.BORROW}/owner/${account.address}`;
-
   const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
   const textColor =
     selected && account
@@ -116,12 +108,6 @@ const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
           selected={selected}
           account={account}
         >
-          <Link href={`/${Routes.BORROW}/owner/${address}`}>
-            <Flex alignItems="center" justifyContent="center" py="s">
-              {onOverviewPage ? <ActiveHome /> : <InactiveHome />}
-            </Flex>
-          </Link>
-
           <CDPList
             currentPath={url.pathname}
             currentQuery={url.search}
