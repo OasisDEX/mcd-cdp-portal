@@ -4,6 +4,7 @@ import { ReactComponent as PasteIcon } from '../../images/paste.svg';
 import styled from 'styled-components';
 import usePrevious from '../../hooks/usePrevious';
 import useMaker from '../../hooks/useMaker';
+import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
@@ -36,8 +37,11 @@ const PasteAddress = props => (
 const gasLimit = BigNumber(21000);
 const ZERO = BigNumber(0);
 
-const Send = ({ token, balance, reset }) => {
+const Send = ({ token, reset }) => {
   const { maker, account, newTxListener } = useMaker();
+
+  const balances = useWalletBalances();
+  const balance = balances[token];
   const { address } = account;
   const [gasCost, setGasCost] = useState(ZERO);
   const [destAddress, setDestAddress] = useState('');
@@ -45,7 +49,8 @@ const Send = ({ token, balance, reset }) => {
   const minAmount = token === 'ETH' ? gasCost : ZERO;
   const maxAmount = token === 'ETH' ? balance.minus(gasCost) : balance;
 
-  const displayToken = token === 'MDAI' ? 'DAI' : token;
+  const displayToken =
+    token === 'MDAI' ? 'DAI' : token === 'MWETH' ? 'WETH' : token;
 
   const inRangeAndEth = _val =>
     token === 'ETH' && _val.gt(ZERO) && _val.lte(balance);

@@ -130,8 +130,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
               <ActionButton
                 onClick={() =>
                   showSendSidebar({
-                    token: 'MDAI',
-                    balance: balances.MDAI
+                    token: 'MDAI'
                   })
                 }
               >
@@ -149,8 +148,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
               <ActionButton
                 onClick={() =>
                   showSendSidebar({
-                    token: 'ETH',
-                    balance: balances.ETH
+                    token: 'ETH'
                   })
                 }
               >
@@ -181,8 +179,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 <ActionButton
                   onClick={() =>
                     showSendSidebar({
-                      token: 'WETH',
-                      balance: balances.MWETH
+                      token: 'MWETH'
                     })
                   }
                 >
@@ -208,8 +205,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                     <ActionButton
                       onClick={() =>
                         showSendSidebar({
-                          token: gem,
-                          balance: balance
+                          token: gem
                         })
                       }
                     >
