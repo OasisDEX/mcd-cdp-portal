@@ -2,15 +2,10 @@ import React, { Fragment, useEffect, useState } from 'react';
 import lang from 'languages';
 import { Link } from 'react-navi';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatCollateralizationRatio } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 import { Routes } from '../utils/constants';
 import useMaker from 'hooks/useMaker';
-
-const SYSTEM_COLLATERALIZATION_RATIO = system => [
-  lang.sidebar.system_collateralization,
-  prettifyNumber(system.debtAuctionLotSize)
-];
 
 const SidebarSystem = ({ system }) => {
   const { maker } = useMaker();
@@ -18,11 +13,17 @@ const SidebarSystem = ({ system }) => {
   useEffect(async () => {
     await maker.service('mcd:cdpType').prefetchAllCdpTypes();
     setSysColRatio(
-      maker.service('mcd:cdpType').totalCollateralizationRatioAllCdpTypes
+      maker
+        .service('mcd:cdpType')
+        .totalCollateralizationRatioAllCdpTypes.toNumber()
     );
   }, [maker]);
-
-  const systemParams = [SYSTEM_COLLATERALIZATION_RATIO].map(f => f(system));
+  const systemParams = [
+    [
+      lang.sidebar.system_collateralization,
+      formatCollateralizationRatio(sysColRatio)
+    ]
+  ];
 
   return (
     <Fragment>

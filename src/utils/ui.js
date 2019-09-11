@@ -4,7 +4,7 @@ import lang from 'languages';
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) {
     return lang.cdp_page.not_applicable;
-  } else if (isNaN(ratio)) {
+  } else if (isNaN(ratio) || ratio === null) {
     return '---';
   } else {
     if (ratio < 0) ratio = 0;
