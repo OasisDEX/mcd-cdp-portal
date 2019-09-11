@@ -14,32 +14,15 @@ import MobileNav from '../MobileNav';
 
 afterEach(cleanup);
 
-const ilk = 'ETH-A';
 const cdpId = 1;
 
 const initialState = {
   system: {
     globalDebtCeiling: '1000'
-  },
-  cdps: {
-    [cdpId]: {
-      ilk: ilk,
-      ink: '2',
-      art: '75'
-    }
-  },
-  feeds: [
-    {
-      key: ilk,
-      gem: 'ETH',
-      rate: '1.5',
-      feedValueUSD: ETH(100),
-      currency: { symbol: 'ETH' }
-    }
-  ]
+  }
 };
 
-test('MobileNav button displays ilk label & liquidation ratio', async () => {
+test('MobileNav menu displays Earn, Borrow, and Trade buttons', async () => {
   const navigation = createMemoryNavigation({
     routes: mount({ '/test': route() }),
     url: `/${cdpId}`
@@ -56,8 +39,7 @@ test('MobileNav button displays ilk label & liquidation ratio', async () => {
     </ThemeProvider>
   );
 
-  await waitForElement(() => getByText('maker-logo.svg'));
-
-  getByText(ilk);
-  getByText('178%');
+  await waitForElement(() => getByText('Earn'));
+  await waitForElement(() => getByText('Borrow'));
+  await waitForElement(() => getByText('Trade'));
 });
