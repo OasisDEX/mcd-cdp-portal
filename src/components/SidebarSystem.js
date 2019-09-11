@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import lang from 'languages';
 import { Link } from 'react-navi';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
-import { prettifyNumber, formatCollateralizationRatio } from 'utils/ui';
+import { formatCollateralizationRatio } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 import { Routes } from '../utils/constants';
 import useMaker from 'hooks/useMaker';
@@ -15,7 +15,8 @@ const SidebarSystem = ({ system }) => {
     setSysColRatio(
       maker
         .service('mcd:cdpType')
-        .totalCollateralizationRatioAllCdpTypes.toNumber()
+        .totalCollateralizationRatioAllCdpTypes.times(100)
+        .toNumber()
     );
   }, [maker]);
   const systemParams = [
