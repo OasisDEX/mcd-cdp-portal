@@ -16,7 +16,7 @@ import { Flex, Box } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
 import { getMeasurement } from '../styles/theme';
 
-import { ReactComponent as HamburgerIcon } from 'images/hamburger.svg';
+import { ReactComponent as MoreIcon } from 'images/menu-more.svg';
 import { ReactComponent as CloseIcon } from 'images/close.svg';
 
 const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
@@ -26,7 +26,7 @@ const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
       p="s"
       onClick={() => setSidebarDrawerOpen(!sidebarDrawerOpen)}
     >
-      {sidebarDrawerOpen ? <CloseIcon /> : <HamburgerIcon />}
+      {sidebarDrawerOpen ? <CloseIcon /> : <MoreIcon />}
     </Box>
   );
 };
