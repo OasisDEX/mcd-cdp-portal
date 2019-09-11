@@ -6,10 +6,12 @@ const useBlockHeight = () => {
   const [blockHeight, setblockHeight] = useState([]);
 
   useEffect(() => {
-    const subscription = window.watcher.onNewBlock(blockHeight => {
-      setblockHeight(blockHeight);
-    });
-    return subscription.unsub;
+    if (window.watcher) {
+      const subscription = window.watcher.onNewBlock(blockHeight => {
+        setblockHeight(blockHeight);
+      });
+      return subscription.unsub;
+    }
   }, [maker]);
 
   return blockHeight;

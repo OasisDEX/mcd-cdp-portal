@@ -27,7 +27,7 @@ export default function useTokenAllowance(tokenSymbol) {
   const { maker, newTxListener } = useMaker();
   const token = maker.getToken(tokenSymbol);
   const allowances = useTokenAllowances();
-  const hasAllowance = allowances[tokenSymbol];
+  const hasAllowance = !!allowances[tokenSymbol];
 
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(

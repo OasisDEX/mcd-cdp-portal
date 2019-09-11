@@ -78,9 +78,10 @@ test('proxy toggle', async () => {
   });
 
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.creating_proxy);
-  await mineBlocks(_web3);
+  await mineBlocks(_web3, 10);
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
-  expect(allowanceToggle.children[1]).toBeEnabled();
+
+  expect(allowanceButton).toBeEnabled();
 });
 
 // commented out for now because this doesn't seem to work well with allowances

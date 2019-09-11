@@ -10,6 +10,9 @@ const theme = {
   colors: {
     blackLight: '#222',
     blackLighter: '#383838',
+    blueGray: '#1E2C37',
+    blueGrayDarker: '#18232C',
+    blueGrayLighter: '#31424E',
     ...colors
   },
   typography: {
