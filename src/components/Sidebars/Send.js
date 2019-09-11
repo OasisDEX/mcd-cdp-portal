@@ -34,33 +34,35 @@ const PasteAddress = props => (
 );
 
 const gasLimit = BigNumber(21000);
+const ZERO = BigNumber(0);
 
 const Send = ({ token, balance, reset }) => {
   const { maker, account, newTxListener } = useMaker();
   const { address } = account;
-  const [gasCost, setGasCost] = useState(0);
+  const [gasCost, setGasCost] = useState(ZERO);
   const [destAddress, setDestAddress] = useState('');
 
-  const minAmount = token === 'ETH' ? gasCost : 0;
-  const maxAmount = token === 'ETH' ? balance - gasCost : balance;
+  const minAmount = token === 'ETH' ? gasCost : ZERO;
+  const maxAmount = token === 'ETH' ? balance.minus(gasCost) : balance;
 
   const displayToken = token === 'MDAI' ? 'DAI' : token;
 
-  const inRangeAndEth = (_token, _val) =>
-    _token === 'ETH' && _val >= 0 && _val <= balance && _val !== 0;
+  const inRangeAndEth = _val =>
+    token === 'ETH' && _val.gt(ZERO) && _val.lte(balance);
+
+  const mapBN = cb => val => cb(BigNumber(val));
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
       custom: {
-        invalid: val => isNaN(parseFloat(val)),
-        minEth: val =>
-          gasCost > balance && inRangeAndEth(token, parseFloat(val)),
-        min: val => parseFloat(val) < 0,
-        maxEth: val =>
-          parseFloat(val) + gasCost > balance &&
-          inRangeAndEth(token, parseFloat(val)),
-        max: val => parseFloat(val) > balance
+        invalid: mapBN(val => val.isNaN()),
+        minEth: mapBN(val => gasCost.gt(balance) && inRangeAndEth(val)),
+        min: mapBN(val => val.lt(ZERO)),
+        maxEth: mapBN(
+          val => val.plus(gasCost).gt(balance) && inRangeAndEth(val)
+        ),
+        max: mapBN(val => val.gt(balance))
       }
     },
     {
@@ -75,7 +77,7 @@ const Send = ({ token, balance, reset }) => {
       maxEth: _ =>
         lang.formatString(
           lang.action_sidebar.invalid_max_gas,
-          `${gasCost} ${displayToken}`
+          `${gasCost.plus(BigNumber(amount))} ${displayToken}`
         ),
       max: _ => lang.action_sidebar.invalid_max_amount
     }
@@ -86,10 +88,7 @@ const Send = ({ token, balance, reset }) => {
 
   const calculateGasCost = async () => {
     const gasPrice = await maker.service('gas').getGasPrice('fast');
-    const gasCost = gasLimit
-      .times(gasPrice)
-      .shiftedBy(-18)
-      .toNumber();
+    const gasCost = gasLimit.times(gasPrice).shiftedBy(-18);
 
     setGasCost(gasCost);
   };
@@ -97,7 +96,7 @@ const Send = ({ token, balance, reset }) => {
   useEffect(() => {
     if (prevToken !== token) {
       setAmount('');
-      setGasCost(0);
+      setGasCost(ZERO);
       setDestAddress('');
     }
     if (prevAddress !== address) reset();
@@ -114,7 +113,8 @@ const Send = ({ token, balance, reset }) => {
     setDestAddress(copiedAddress);
   };
 
-  const amountIsValid = amount >= minAmount && amount <= maxAmount;
+  const bnAmount = BigNumber(amount);
+  const amountIsValid = bnAmount.gte(minAmount) && bnAmount.lte(maxAmount);
 
   const destAddressIsValid =
     destAddress === '' || isValidAddressString(destAddress);
@@ -125,7 +125,7 @@ const Send = ({ token, balance, reset }) => {
   const valid =
     amount !== '' && destAddress !== '' && amountIsValid && destAddressIsValid;
 
-  const showSetMax = token !== 'ETH' || balance >= gasCost;
+  const showSetMax = token !== 'ETH' || balance.gte(gasCost);
 
   const transfer = async () => {
     const _token = token === 'DAI' ? 'MDAI' : token;

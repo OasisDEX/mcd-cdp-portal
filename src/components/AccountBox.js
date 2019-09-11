@@ -131,7 +131,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 onClick={() =>
                   showSendSidebar({
                     token: 'MDAI',
-                    balance: balances.MDAI.toNumber()
+                    balance: balances.MDAI
                   })
                 }
               >
@@ -150,7 +150,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                 onClick={() =>
                   showSendSidebar({
                     token: 'ETH',
-                    balance: balances.ETH.toNumber()
+                    balance: balances.ETH
                   })
                 }
               >
@@ -182,7 +182,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   onClick={() =>
                     showSendSidebar({
                       token: 'WETH',
-                      balance: balances.MWETH.toNumber()
+                      balance: balances.MWETH
                     })
                   }
                 >
@@ -209,7 +209,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                       onClick={() =>
                         showSendSidebar({
                           token: gem,
-                          balance: balance.toNumber()
+                          balance: balance
                         })
                       }
                     >
