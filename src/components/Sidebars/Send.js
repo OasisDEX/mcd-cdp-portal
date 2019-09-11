@@ -169,6 +169,7 @@ const Send = ({ token, reset }) => {
           placeholder={`0.00 ${displayToken}`}
           after={<>{showSetMax && <SetMax onClick={setMax} />}</>}
           failureMessage={amountErrors}
+          data-testid="send-amount-input"
         />
 
         <Grid gridTemplateColumns="auto 1fr" gridColumnGap="s" alignItems="end">
@@ -197,9 +198,14 @@ const Send = ({ token, reset }) => {
           placeholder="0x..."
           after={<PasteAddress onClick={paste} />}
           failureMessage={destAddressFailureMessage}
+          data-testid="send-address-input"
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="m">
-          <Button onClick={transfer} disabled={!valid}>
+          <Button
+            onClick={transfer}
+            disabled={!valid}
+            data-testid="send-button"
+          >
             {lang.actions.send}
           </Button>
           <Button variant="secondary-outline" onClick={reset}>
