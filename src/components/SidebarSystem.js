@@ -37,9 +37,8 @@ const SidebarSystem = ({ system }) => {
       ilkList.map(async ilk => {
         await maker
           .service('mcd:cdpType')
-          .getCdpType(null, ilk)
+          .getCdpType(null, ilk.key)
           .prefetch();
-        console.log('prefetched ilk: ', ilk);
       })
     );
   }, [maker]);
