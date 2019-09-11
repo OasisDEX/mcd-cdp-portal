@@ -133,7 +133,8 @@
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "pay_back": "Pay back",
-    "generate": "Generate"
+    "generate": "Generate",
+    "send": "Send"
   },
   "actions_past_tense": {
     "deposit": "Deposited",
@@ -166,7 +167,18 @@
     "new_collateralization_ratio": "New collateralization ratio",
     "create_proxy": "Create Proxy to continue",
     "creating_proxy": "Creating Proxy...",
-    "proxy_created": "Proxy Created"
+    "proxy_created": "Proxy Created",
+    "send_title": "Send {0}",
+    "send_description": "How much {0} would you like to send?",
+    "your_balance": "Your Balance",
+    "dest_address": "Destination Address",
+    "send_token_desc": "Sent {0}",
+    "invalid_input": "This input is invalid",
+    "invalid_min_amount": "Can only send a positive amount of {0}",
+    "invalid_max_amount": "Amount is greater than your balance",
+    "invalid_min_gas": "Balance is below the required tx fee: {0}",
+    "invalid_max_gas": "Balance is below the Amount + tx fee: {0}",
+    "invalid_address": "This is not a valid address"
   },
   "save": {
     "dai_savings_rate": "Dai Savings rate",
@@ -208,6 +220,7 @@
   "cdp_id": "CDP ID",
   "connect": "Connect",
   "set_max": "Set max",
+  "paste": "Paste",
   "cancel": "Cancel",
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",
