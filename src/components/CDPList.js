@@ -204,15 +204,13 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           ref={cdpContainerRef}
           cdpsLength={navbarCdps.length}
         >
-          {navbarCdps.length > 0 && (
-            <NavbarItem
-              key={navbarCdps.length * 10}
-              href={overviewPath + currentQuery}
-              label={'Overview'}
-              owned={account}
-              active={active}
-            />
-          )}
+          <NavbarItem
+            key={navbarCdps.length * 10}
+            href={overviewPath + currentQuery}
+            label={'Overview'}
+            owned={account}
+            active={active}
+          />
           {navbarCdps.map((cdp, idx) => {
             const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
             const linkPath = `/${Routes.BORROW}/${cdp.id}`;
