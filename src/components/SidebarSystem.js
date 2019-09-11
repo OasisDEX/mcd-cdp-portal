@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import lang from 'languages';
 import { Link } from 'react-navi';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
@@ -6,50 +6,23 @@ import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 import { Routes } from '../utils/constants';
 import useMaker from 'hooks/useMaker';
-import ilkList from '../references/ilkList';
 
-const GLOBAL_DEBT_CEILING = system => [
-  lang.sidebar.global_debt_ceiling,
-  prettifyNumber(system.globalDebtCeiling)
-];
-
-const CURRENT_DEBT = system => [
-  lang.sidebar.current_debt,
-  prettifyNumber(system.totalDebt)
-];
-
-const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
-
-const SURPLUS_AUCTION_LOT_SIZE = system => [
-  lang.sidebar.buy_and_burn_lot_size,
-  prettifyNumber(system.surplusAuctionLotSize)
-];
-
-const DEBT_AUCTION_LOT_SIZE = system => [
-  lang.sidebar.inflate_and_sell_lot_size,
+const SYSTEM_COLLATERALIZATION_RATIO = system => [
+  lang.sidebar.system_collateralization,
   prettifyNumber(system.debtAuctionLotSize)
 ];
 
 const SidebarSystem = ({ system }) => {
   const { maker } = useMaker();
+  const [sysColRatio, setSysColRatio] = useState(null);
   useEffect(async () => {
-    await Promise.all(
-      ilkList.map(async ilk => {
-        await maker
-          .service('mcd:cdpType')
-          .getCdpType(null, ilk.key)
-          .prefetch();
-      })
+    await maker.service('mcd:cdpType').prefetchAllCdpTypes();
+    setSysColRatio(
+      maker.service('mcd:cdpType').totalCollateralizationRatioAllCdpTypes
     );
   }, [maker]);
 
-  const systemParams = [
-    GLOBAL_DEBT_CEILING,
-    CURRENT_DEBT,
-    BASE_RATE,
-    SURPLUS_AUCTION_LOT_SIZE,
-    DEBT_AUCTION_LOT_SIZE
-  ].map(f => f(system));
+  const systemParams = [SYSTEM_COLLATERALIZATION_RATIO].map(f => f(system));
 
   return (
     <Fragment>
