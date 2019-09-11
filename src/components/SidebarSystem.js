@@ -10,14 +10,17 @@ import useMaker from 'hooks/useMaker';
 const SidebarSystem = ({ system }) => {
   const { maker } = useMaker();
   const [sysColRatio, setSysColRatio] = useState(null);
-  useEffect(async () => {
-    await maker.service('mcd:cdpType').prefetchAllCdpTypes();
-    setSysColRatio(
-      maker
-        .service('mcd:cdpType')
-        .totalCollateralizationRatioAllCdpTypes.times(100)
-        .toNumber()
-    );
+  useEffect(() => {
+    const prefetchData = async () => {
+      await maker.service('mcd:cdpType').prefetchAllCdpTypes();
+      setSysColRatio(
+        maker
+          .service('mcd:cdpType')
+          .totalCollateralizationRatioAllCdpTypes.times(100)
+          .toNumber()
+      );
+    };
+    prefetchData();
   }, [maker]);
   const systemParams = [
     [
