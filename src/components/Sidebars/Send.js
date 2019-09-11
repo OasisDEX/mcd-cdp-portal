@@ -41,7 +41,7 @@ const Send = ({ token, reset }) => {
   const { maker, account, newTxListener } = useMaker();
 
   const balances = useWalletBalances();
-  const balance = balances[token];
+  const balance = balances[token] ? balances[token] : ZERO;
   const { address } = account;
   const [gasCost, setGasCost] = useState(ZERO);
   const [destAddress, setDestAddress] = useState('');
@@ -104,7 +104,7 @@ const Send = ({ token, reset }) => {
       setGasCost(ZERO);
       setDestAddress('');
     }
-    if (prevAddress !== address) reset();
+    if (prevAddress && prevAddress !== address) reset();
     calculateGasCost();
   }, [token, address, prevToken, prevAddress]);
 
@@ -133,11 +133,10 @@ const Send = ({ token, reset }) => {
   const showSetMax = token !== 'ETH' || balance.gte(gasCost);
 
   const transfer = async () => {
-    const _token = token === 'DAI' ? 'MDAI' : token;
-    const daiToken = maker.getToken(_token);
+    const _token = maker.getToken(token);
     newTxListener(
-      daiToken.transfer(destAddress, amount),
-      lang.formatString(lang.action_sidebar.send_token_desc, token)
+      _token.transfer(destAddress, amount),
+      lang.formatString(lang.action_sidebar.send_token_desc, displayToken)
     );
     reset();
   };
@@ -146,12 +145,15 @@ const Send = ({ token, reset }) => {
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
         <Text color="darkLavender" t="h4">
-          {lang.formatString(lang.action_sidebar.send_title, token)}
+          {lang.formatString(lang.action_sidebar.send_title, displayToken)}
         </Text>
 
         <p>
           <Text t="body">
-            {lang.formatString(lang.action_sidebar.send_description, token)}
+            {lang.formatString(
+              lang.action_sidebar.send_description,
+              displayToken
+            )}
           </Text>
         </p>
         <Input
@@ -174,13 +176,13 @@ const Send = ({ token, reset }) => {
             {lang.action_sidebar.your_balance}
           </Text>
           <Text color="text">
-            {(balance && balance.toFixed(3)) || '--'} {token}
+            {(balance && balance.toFixed(3)) || '--'} {displayToken}
           </Text>
         </Grid>
 
         <p>
           <Text t="body">
-            {lang.formatString(lang.action_sidebar.dest_address, token)}
+            {lang.formatString(lang.action_sidebar.dest_address, displayToken)}
           </Text>
         </p>
         <Input
