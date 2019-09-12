@@ -33,13 +33,11 @@ const Payback = ({ cdpId, reset }) => {
     startedWithoutAllowance
   } = useTokenAllowance('MDAI');
   const {
-    proxyAddress,
     setupProxy,
     proxyLoading,
     startedWithoutProxy,
-    proxyDeployed
+    hasProxy
   } = useProxy();
-  const hasProxy = startedWithoutProxy ? proxyDeployed : !!proxyAddress;
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);

@@ -36,6 +36,8 @@ export default function useProxy() {
     if (proxyAddress) return proxyAddress;
 
     const txPromise = maker.service('proxy').ensureProxy();
+
+    newTxListener(txPromise, lang.transactions.setting_up_proxy);
     const address = await txPromise;
 
     updateState({
@@ -47,7 +49,6 @@ export default function useProxy() {
     await maker.service('transactionManager').confirm(txPromise, 7);
 
     updateState({ proxyDeployed: true });
-    newTxListener(txPromise, lang.transactions.setting_up_proxy);
     return address;
   });
 
@@ -70,6 +71,7 @@ export default function useProxy() {
     proxyErrors,
     startedWithoutProxy,
     startingBlockHeight,
-    proxyDeployed
+    proxyDeployed,
+    hasProxy: startedWithoutProxy ? proxyDeployed : !!proxyAddress
   };
 }

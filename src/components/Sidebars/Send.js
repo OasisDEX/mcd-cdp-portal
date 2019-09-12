@@ -9,7 +9,7 @@ import useValidatedInput from '../../hooks/useValidatedInput';
 import lang from 'languages';
 import BigNumber from 'bignumber.js';
 import SetMax from '../SetMax';
-import { isValidAddressString } from '../../utils/ethereum';
+import { isValidAddressString, calculateGasCost } from '../../utils/ethereum';
 
 const PasteLink = styled(Link)``;
 
@@ -34,7 +34,6 @@ const PasteAddress = props => (
   </PasteLink>
 );
 
-const gasLimit = BigNumber(21000);
 const ZERO = BigNumber(0);
 
 const Send = ({ token, reset }) => {
@@ -91,10 +90,8 @@ const Send = ({ token, reset }) => {
   const prevToken = usePrevious(token);
   const prevAddress = usePrevious(address);
 
-  const calculateGasCost = async () => {
-    const gasPrice = await maker.service('gas').getGasPrice('fast');
-    const gasCost = gasLimit.times(gasPrice).shiftedBy(-18);
-
+  const updateGasCost = async () => {
+    const gasCost = await calculateGasCost(maker);
     setGasCost(gasCost);
   };
 
@@ -105,11 +102,11 @@ const Send = ({ token, reset }) => {
       setDestAddress('');
     }
     if (prevAddress && prevAddress !== address) reset();
-    calculateGasCost();
+    updateGasCost();
   }, [token, address, prevToken, prevAddress]);
 
   const setMax = async () => {
-    await calculateGasCost();
+    await updateGasCost();
     setAmount(maxAmount);
   };
 

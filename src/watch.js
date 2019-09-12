@@ -89,7 +89,7 @@ export async function startWatcher(maker, dispatch) {
         : []),
       ...(currentAddress
         ? tokensWithBalances
-            .filter(token => token && token.symbol !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
+            .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
             .map(token =>
               accountBalanceForToken(
                 addresses,

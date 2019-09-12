@@ -1,5 +1,6 @@
 import round from 'lodash/round';
 import { MKR, ETH } from '../maker';
+import BigNumber from 'bignumber.js';
 
 export function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
@@ -77,3 +78,9 @@ export async function checkEthereumProvider() {
     } else rej('No web3 provider detected');
   });
 }
+
+export const calculateGasCost = async (maker, gasLimit = 21000) => {
+  const _gasLimit = BigNumber(gasLimit);
+  const gasPrice = await maker.service('gas').getGasPrice('fast');
+  return _gasLimit.times(gasPrice).shiftedBy(-18);
+};

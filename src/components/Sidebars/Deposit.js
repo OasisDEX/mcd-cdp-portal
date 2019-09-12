@@ -37,13 +37,11 @@ const Deposit = ({ cdpId, reset }) => {
     startedWithoutAllowance
   } = useTokenAllowance(symbol);
   const {
-    proxyAddress,
     setupProxy,
     proxyLoading,
     startedWithoutProxy,
-    proxyDeployed
+    hasProxy
   } = useProxy();
-  const hasProxy = startedWithoutProxy ? proxyDeployed : !!proxyAddress;
 
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);

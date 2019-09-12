@@ -80,7 +80,9 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const allowances = useTokenAllowances();
   const hasAllowance =
     selectedIlk.currency && allowances[selectedIlk.currency.symbol];
-
+  const ilkIsEth =
+    selectedIlk.currency && selectedIlk.currency.symbol === 'ETH';
+  const hasAllowanceAndProxy = (hasAllowance || ilkIsEth) && !!proxyAddress;
   return (
     <Box
       maxWidth="1040px"
@@ -142,7 +144,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         onNext={() =>
           dispatch({
             type: 'increment-step',
-            payload: { by: hasAllowance ? 2 : 1 }
+            payload: { by: hasAllowanceAndProxy ? 2 : 1 }
           })
         }
         onBack={() => dispatch({ type: 'decrement-step' })}
