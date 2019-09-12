@@ -18,6 +18,7 @@ import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
 import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
+import useSidebar from 'hooks/useSidebar';
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
 // this turns out to be the same as MWETH, which we show manually
@@ -83,9 +84,11 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
   );
 };
 
-const WalletBalances = () => {
+const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
+  const { show: showSidebar } = useSidebar();
+
   const uniqueFeeds = useMemo(
     () =>
       getAllFeeds(feeds).reduce((acc, feed) => {
@@ -95,6 +98,9 @@ const WalletBalances = () => {
       }, {}),
     [feeds]
   );
+
+  const showSendSidebar = props =>
+    hasActiveAccount && showSidebar({ type: 'send', props });
 
   return (
     <CardBody>
@@ -119,20 +125,48 @@ const WalletBalances = () => {
           symbol="DAI"
           amount={balances.MDAI}
           usdRatio={new BigNumber(1)}
-          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+          button={
+            hasActiveAccount && (
+              <ActionButton
+                onClick={() =>
+                  showSendSidebar({
+                    token: 'MDAI'
+                  })
+                }
+              >
+                {lang.sidebar.send}
+              </ActionButton>
+            )
+          }
         />
         <TokenBalance
           symbol="ETH"
           amount={balances.ETH}
           usdRatio={uniqueFeeds.ETH}
-          button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+          button={
+            hasActiveAccount && (
+              <ActionButton
+                onClick={() =>
+                  showSendSidebar({
+                    token: 'ETH'
+                  })
+                }
+              >
+                {lang.sidebar.send}
+              </ActionButton>
+            )
+          }
         />
         {balances.SAI && balances.SAI.gt(0) && (
           <TokenBalance
             symbol="SAI"
             amount={balances.SAI}
             usdRatio={new BigNumber(1)}
-            button={<ActionButton>{lang.sidebar.migrate}</ActionButton>}
+            button={
+              hasActiveAccount && (
+                <ActionButton>{lang.sidebar.migrate}</ActionButton>
+              )
+            }
           />
         )}
         {balances.MWETH && balances.MWETH.gt(0) && (
@@ -140,7 +174,19 @@ const WalletBalances = () => {
             symbol="WETH"
             amount={balances.MWETH}
             usdRatio={uniqueFeeds.ETH}
-            button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+            button={
+              hasActiveAccount && (
+                <ActionButton
+                  onClick={() =>
+                    showSendSidebar({
+                      token: 'MWETH'
+                    })
+                  }
+                >
+                  {lang.sidebar.send}
+                </ActionButton>
+              )
+            }
           />
         )}
 
@@ -154,7 +200,19 @@ const WalletBalances = () => {
                 symbol={gem}
                 amount={balance}
                 usdRatio={uniqueFeeds[gem]}
-                button={<ActionButton>{lang.sidebar.send}</ActionButton>}
+                button={
+                  hasActiveAccount && (
+                    <ActionButton
+                      onClick={() =>
+                        showSendSidebar({
+                          token: gem
+                        })
+                      }
+                    >
+                      {lang.sidebar.send}
+                    </ActionButton>
+                  )
+                }
               />
             )
           );
@@ -183,7 +241,7 @@ function AccountBox({ currentAccount }) {
           trigger={<ActiveAccount address={address} type={type} />}
         />
       </CardBody>
-      <WalletBalances />
+      <WalletBalances hasActiveAccount={!!currentAccount} />
     </Card>
   );
 }

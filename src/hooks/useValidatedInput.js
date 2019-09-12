@@ -78,7 +78,8 @@ export default function useValidatedInput(
     value => {
       const errors = validators.reduce((errors, validator) => {
         const schemaValue = validationSchema[validator.key];
-        const isInvalid = validator.validate(value, schemaValue);
+        const isInvalid =
+          validator.validate(value, schemaValue) && value !== '';
 
         if (isInvalid) errors.push(validator.message(value, schemaValue));
 
