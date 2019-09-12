@@ -13,7 +13,7 @@ const StyledSaveIcon = styled(SaveIcon)`
   }
 `;
 
-const SaveNav = ({ account }) => {
+const SaveNav = ({ account, ...props }) => {
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.SAVE}`);
   const textColor =
@@ -32,6 +32,7 @@ const SaveNav = ({ account }) => {
         alignItems="center"
         justifyContent="center"
         py="s"
+        {...props}
       >
         <StyledSaveIcon
           textcolor={textColor}

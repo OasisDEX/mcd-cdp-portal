@@ -21,7 +21,13 @@ const StyledBorrowIcon = styled(BorrowIcon)`
   }
 `;
 
-const CDPDropdown = memo(function({ textcolor, selected, account, children }) {
+const CDPDropdown = memo(function({
+  textcolor,
+  selected,
+  account,
+  children,
+  ...props
+}) {
   const [show, setShow] = useState(false);
   return (
     <Dropdown
@@ -35,6 +41,7 @@ const CDPDropdown = memo(function({ textcolor, selected, account, children }) {
           justifyContent="center"
           py="s"
           onClick={() => setShow(!show)}
+          {...props}
         >
           <StyledBorrowIcon
             textcolor={textcolor}
@@ -62,7 +69,7 @@ const CDPDropdown = memo(function({ textcolor, selected, account, children }) {
   );
 });
 
-const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
+const BorrowMobileNav = ({ viewedAddress, cdpId, ...props }) => {
   const { account } = useMaker();
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
@@ -91,6 +98,7 @@ const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
             alignItems="center"
             justifyContent="center"
             py="s"
+            {...props}
           >
             <StyledBorrowIcon
               textcolor={textColor}
@@ -107,6 +115,7 @@ const BorrowMobileNav = ({ viewedAddress, cdpId }) => {
           textcolor={textColor}
           selected={selected}
           account={account}
+          {...props}
         >
           <CDPList
             currentPath={url.pathname}

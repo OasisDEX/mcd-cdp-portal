@@ -16,8 +16,8 @@ import { Flex, Box } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
 import { getMeasurement } from '../styles/theme';
 
-import { ReactComponent as MoreIcon } from 'images/menu-more.svg';
-import { ReactComponent as CloseIcon } from 'images/close.svg';
+import { ReactComponent as MoreOpenIcon } from 'images/menu-more.svg';
+import { ReactComponent as MoreCloseIcon } from 'images/menu-more-close.svg';
 
 const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
   return (
@@ -26,7 +26,7 @@ const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
       p="s"
       onClick={() => setSidebarDrawerOpen(!sidebarDrawerOpen)}
     >
-      {sidebarDrawerOpen ? <CloseIcon /> : <MoreIcon />}
+      {sidebarDrawerOpen ? <MoreCloseIcon /> : <MoreOpenIcon />}
     </Box>
   );
 };
@@ -67,16 +67,35 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
 
   return (
     <Flex
-      justifyContent="space-between"
+      justifyContent="center"
       bg={account ? 'blueGray' : 'white'}
       height={getMeasurement('mobileNavHeight')}
     >
-      <Flex alignItems="center" justifyContent="center">
-        <SaveNav account={account} />
-        <BorrowMobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-        <TradeNav />
+      <Flex flex="1" alignItems="center" justifyContent="flex-start">
+        <SaveNav
+          width={`${getMeasurement('navbarWidth')}px`}
+          account={account}
+          borderRadius="4px"
+          ml="xs"
+        />
+        <BorrowMobileNav
+          width={`${getMeasurement('navbarWidth')}px`}
+          viewedAddress={viewedAddress}
+          cdpId={cdpId}
+          borderRadius="4px"
+          ml="xs"
+        />
+        <TradeNav
+          borderRadius="4px"
+          width={`${getMeasurement('navbarWidth')}px`}
+          ml="xs"
+        />
       </Flex>
-      <SidebarDrawerTrigger {...{ sidebarDrawerOpen, setSidebarDrawerOpen }} />
+      <Flex alignItems="center" justifyContent="center" pb="10px">
+        <SidebarDrawerTrigger
+          {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}
+        />
+      </Flex>
 
       <DrawerBg sidebarDrawerOpen={sidebarDrawerOpen}>
         <Box

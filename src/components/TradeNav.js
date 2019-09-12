@@ -12,7 +12,7 @@ const StyledTradeIcon = styled(TradeIcon)`
   }
 `;
 
-const TradeNav = () => {
+const TradeNav = ({ ...props }) => {
   return (
     <Link href={`/${Routes.TRADE}`}>
       <Flex
@@ -20,6 +20,7 @@ const TradeNav = () => {
         alignItems="center"
         justifyContent="center"
         py="s"
+        {...props}
       >
         <StyledTradeIcon />
         <Text t="p6" fontWeight="bold" color={'gray'}>
