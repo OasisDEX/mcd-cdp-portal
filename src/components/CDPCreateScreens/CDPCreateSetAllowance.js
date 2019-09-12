@@ -34,7 +34,8 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
     proxyLoading,
     startingBlockHeight,
     proxyDeployed,
-    proxyErrors
+    proxyErrors,
+    hasProxy
   } = useProxy();
 
   const {
@@ -145,7 +146,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
         onNext={() => dispatch({ type: 'increment-step' })}
         onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={!proxyLoading}
-        canProgress={proxyAddress && hasAllowance}
+        canProgress={hasProxy && hasAllowance}
       />
     </Box>
   );
