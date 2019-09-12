@@ -8,7 +8,8 @@ import {
   DEBT_CEILING,
   RATE,
   ILK_ART,
-  ILK_DEBT_AVAILABLE
+  ILK_DEBT_AVAILABLE,
+  ADAPTER_BALANCE
 } from './feeds';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
@@ -58,8 +59,21 @@ const mathReducer = produce((draft, action) => {
             );
           }
         }
+        // update the system collateralization if Art, rate, adapterBalance, spot, or mat changes for any ilk
+        if (
+          [
+            RATE,
+            ILK_ART,
+            ADAPTER_BALANCE,
+            PRICE_WITH_SAFETY_MARGIN,
+            LIQUIDATION_RATIO
+          ].includes(prop)
+        ) {
+          const debts = draft.feeds.map(feed => {});
+          const colVals = draft.feeds.map(feed => {});
+          //new system value is colVals/debts, can use math collateralization ratio function
+        }
       }
-
       // if `par` changes (which is unlikely) all the prices need to change
       if (type === `system.${PAR}` && draft.raw.ilks) {
         draft.feeds.forEach(feed => {
