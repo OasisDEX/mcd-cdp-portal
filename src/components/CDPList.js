@@ -67,7 +67,9 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
       }
       borderRadius="default"
       height="50px"
+      width="70px" //TODO mobile (add to theme)
       mt="5px"
+      {...props}
     >
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
         {label}
@@ -80,18 +82,25 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 );
 
 const CdpContainer = styled(Flex)`
-  width: 100%;
+  width: ${props => (props.mobile ? '100vw' : '100%')};
   py: '10px';
   cursor: pointer;
-  flex-direction: column;
+  flex-direction: ${props => (props.mobile ? 'row' : 'column')};
+  flex-wrap: ${props => (props.mobile ? 'wrap' : undefined)};
   overflow: auto;
-  height: ${props => (props.cdpsLength >= 4 ? '275px' : undefined)};
+  height: ${props =>
+    props.cdpsLength >= 4 && !props.mobile ? '275px' : undefined};
   ::-webkit-scrollbar {
     width: 0px;
   }
 `;
 
-const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
+const CDPList = memo(function({
+  currentPath,
+  viewedAddress,
+  currentQuery,
+  mobile
+}) {
   const { url } = useCurrentRoute();
   const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
@@ -190,7 +199,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
 
   return listOpen ? (
     <Fragment>
-      {navbarCdps.length >= 4 && (
+      {navbarCdps.length >= 4 && !mobile && (
         <DirectionalButton
           connected={account}
           show={scrollTop > 0}
@@ -203,6 +212,7 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
           onScroll={debounced}
           ref={cdpContainerRef}
           cdpsLength={navbarCdps.length}
+          mobile={mobile}
         >
           <NavbarItem
             key={navbarCdps.length * 10}
@@ -226,28 +236,28 @@ const CDPList = memo(function({ currentPath, viewedAddress, currentQuery }) {
               />
             );
           })}
+          {account && (
+            <DashedFakeButton
+              onClick={() =>
+                account &&
+                show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
+              }
+              justifyContent="center"
+              borderRadius="4px"
+              py="s"
+            >
+              <Plus />
+            </DashedFakeButton>
+          )}
         </CdpContainer>
       </Box>
-      {navbarCdps.length >= 4 && (
+      {navbarCdps.length >= 4 && !mobile && (
         <DirectionalButton
           connected={account}
           show={scrollTop < maxScrollTop}
           onClick={onDirectionalClick}
           direction={'down'}
         />
-      )}
-      {account && (
-        <DashedFakeButton
-          onClick={() =>
-            account &&
-            show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
-          }
-          justifyContent="center"
-          borderRadius="4px"
-          py="s"
-        >
-          <Plus />
-        </DashedFakeButton>
       )}
     </Fragment>
   ) : null;

@@ -1,13 +1,7 @@
 import React, { memo, useState, Fragment } from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
 import styled from 'styled-components';
-import {
-  Dropdown,
-  DefaultDropdown,
-  Flex,
-  Text,
-  Grid
-} from '@makerdao/ui-components-core';
+import { Dropdown, Flex, Text } from '@makerdao/ui-components-core';
 import CDPList from 'components/CDPList';
 import useMaker from 'hooks/useMaker';
 import lang from 'languages';
@@ -54,17 +48,9 @@ const CDPDropdown = memo(function({
         </Flex>
       }
     >
-      <DefaultDropdown mt="0px">
-        <Grid
-          mt="0px"
-          gridTemplateColumns="64px 64px"
-          gridColumnGap="xs"
-          gridRowGap="xs"
-          onClick={() => setShow(!show)}
-        >
-          {children}
-        </Grid>
-      </DefaultDropdown>
+      <Flex flexWrap="wrap" onClick={() => setShow(!show)}>
+        {children}
+      </Flex>
     </Dropdown>
   );
 });
@@ -118,6 +104,7 @@ const BorrowMobileNav = ({ viewedAddress, cdpId, ...props }) => {
           {...props}
         >
           <CDPList
+            mobile={true}
             currentPath={url.pathname}
             currentQuery={url.search}
             viewedAddress={address}
