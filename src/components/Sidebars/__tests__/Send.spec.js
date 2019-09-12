@@ -14,6 +14,8 @@ import { mineBlocks } from '@makerdao/test-helpers';
 import { TestAccountProvider } from '../../../../node_modules/@makerdao/test-helpers/dist/TestAccountProvider';
 import testAccounts from '../../../../node_modules/@makerdao/test-helpers/dist/testAccounts.json';
 import useMaker from '../../../hooks/useMaker';
+import useWalletBalances from '../../../hooks/useWalletBalances';
+import { calculateGasCost } from '../../../utils/ethereum';
 
 afterEach(cleanup);
 
@@ -56,21 +58,35 @@ test('basic rendering when sending WETH', async () => {
 });
 
 let _maker;
-
-const getTokenBalance = (addr, token) =>
-  _maker
+let _gasCost;
+const getTokenBalance = async (addr, token) => {
+  const bal = await _maker
     .service('token')
     .getToken(token)
     .balanceOf(addr);
+  return bal.toBigNumber();
+};
 
 const SetupSend = ({ token }) => {
   const { maker } = useMaker();
+  const balances = useWalletBalances();
+  const [hasTokenBalance, setHasTokenBalance] = useState(false);
+
   _maker = maker;
-  return <Send token={token} />;
+  useEffect(() => {
+    (async () => {
+      if (balances[token]) {
+        _gasCost = await calculateGasCost(maker);
+        setHasTokenBalance(true);
+      }
+    })();
+  }, [balances]);
+  return (
+    <>{hasTokenBalance ? <Send token={token} reset={() => null} /> : <div />}</>
+  );
 };
 
-// this test is also affected by multicall not updating eth balances in time
-xtest('should send 1 ETH successfully', async () => {
+test('should send 1 ETH successfully', async () => {
   const { getByTestId, getAllByTestId } = render(<SetupSend token="ETH" />);
   const {
     addresses: [addr1, addr2]
@@ -108,6 +124,11 @@ xtest('should send 1 ETH successfully', async () => {
     getTokenBalance(addr2, 'ETH')
   ]);
 
-  expect(afterBal1.minus(beforeBal1).toString()).toEqual('-1.00 ETH');
-  expect(afterBal2.minus(beforeBal2).toString()).toEqual('1.00 ETH');
+  expect(
+    afterBal1
+      .minus(beforeBal1)
+      .plus(_gasCost)
+      .toString()
+  ).toEqual('-1');
+  expect(afterBal2.minus(beforeBal2).toString()).toEqual('1');
 });
