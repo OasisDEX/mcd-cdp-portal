@@ -74,14 +74,16 @@ const withSaveLayout = route =>
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
             <ModalProvider modals={modals} templates={templates}>
-              <SaveLayout
-                mobileNav={
-                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                }
-                navbar={<Navbar viewedAddress={viewedAddress} />}
-              >
-                <View />
-              </SaveLayout>
+              <SidebarProvider>
+                <SaveLayout
+                  mobileNav={
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                  }
+                  navbar={<Navbar viewedAddress={viewedAddress} />}
+                >
+                  <View />
+                </SaveLayout>
+              </SidebarProvider>
             </ModalProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
