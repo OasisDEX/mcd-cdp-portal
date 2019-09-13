@@ -23,66 +23,62 @@ import round from 'lodash/round';
 import { Routes } from '../utils/constants';
 import { getMeasurement } from '../styles/theme';
 
-const NavbarItemContainer = styled(Link)`
-  display: block;
-`;
-
-const DashedFakeButton = styled(Flex)`
-  cursor: pointer;
-`;
-
-const DirectionalButton = ({ connected, direction, show, onClick }) => {
-  return (
-    <Flex
-      onClick={() => onClick(direction)}
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      bg={connected ? 'blueGrayDarker' : 'white'}
-      borderRadius="default"
-      height="35px"
-      css={`
-        cursor: pointer;
-        visibility: ${show ? 'visible' : 'hidden'};
-      `}
-    >
-      {direction === 'up' ? <NavUp /> : <NavDown />}
-    </Flex>
-  );
-};
-
-const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
-  <NavbarItemContainer href={href} active={active} prefetch={true} {...props}>
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      bg={
-        active && owned
-          ? 'blueGrayLighter'
-          : !active && owned
-          ? 'blueGrayDarker'
-          : active && !owned
-          ? 'teal.500'
-          : 'grey.200'
-      }
-      borderRadius="default"
-      height={`${getMeasurement('navbarItemHeight')}px`}
-      width={`${getMeasurement('navbarItemWidth')}px`}
-      {...props}
-    >
-      <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
-        {label}
-      </Text>
-      {ratio && (
-        <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
-      )}
-    </Flex>
-  </NavbarItemContainer>
+const NavbarItemContent = ({ children, ...props }) => (
+  <Flex
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    borderRadius="default"
+    {...props}
+  >
+    {children}
+  </Flex>
 );
 
+const NavbarItem = ({ href, owned, active, ...props }) => (
+  <Link
+    href={href}
+    active={active}
+    prefetch={true}
+    css={`
+      display: block;
+    `}
+    {...props}
+  >
+    <NavbarItemContent {...props} />
+  </Link>
+);
+
+const AddCdpButton = ({ account, show, mobile }) => (
+  <Flex
+    onClick={() =>
+      account && show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
+    }
+    width={
+      mobile
+        ? `${getMeasurement('navbarItemWidth')}px`
+        : `${getMeasurement('navbarWidth')}px`
+    }
+    mx={mobile && '7px'}
+    mt={mobile && '15px'}
+    justifyContent="center"
+    borderRadius="4px"
+    py="s"
+    css={`
+      cursor: pointer;
+    `}
+  >
+    <Plus />
+  </Flex>
+);
+
+const DirectionalButton = styled(NavbarItemContent)`
+  height: 35px;
+  cursor: pointer;
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};
+`;
+
 const CdpContainer = styled(Flex)`
-  py: '10px';
   cursor: pointer;
   flex-direction: ${props => (props.mobile ? 'row' : 'column')};
   flex-wrap: ${props => (props.mobile ? 'wrap' : undefined)};
@@ -195,15 +191,25 @@ const CDPList = memo(function({
 
   const { show } = useModal();
 
+  const getBgColor = (active, account) =>
+    active && account
+      ? 'blueGrayLighter'
+      : !active && account
+      ? 'blueGrayDarker'
+      : active && !account
+      ? 'teal.500'
+      : 'grey.200';
+
   return listOpen ? (
     <Fragment>
       {navbarCdps.length >= 4 && !mobile && (
         <DirectionalButton
-          connected={account}
+          onClick={() => onDirectionalClick('up')}
           show={scrollTop > 0}
-          onClick={onDirectionalClick}
-          direction={'up'}
-        />
+          bg={account ? 'blueGrayDarker' : 'white'}
+        >
+          <NavUp />
+        </DirectionalButton>
       )}
       <Box
         bg={account ? 'blueGrayDarker' : 'white'}
@@ -217,16 +223,25 @@ const CDPList = memo(function({
           ref={cdpContainerRef}
           cdpsLength={navbarCdps.length}
           mobile={mobile}
+          pb="5px"
         >
           <NavbarItem
             key={navbarCdps.length * 10}
             href={overviewPath + currentQuery}
-            label={'Overview'}
-            owned={account}
-            active={active}
             mx={mobile && '7px'}
             mt={mobile ? '15px' : '5px'}
-          />
+            bg={getBgColor(active, account)}
+            height={`${getMeasurement('navbarItemHeight')}px`}
+            width={`${getMeasurement('navbarItemWidth')}px`}
+          >
+            <Text
+              t="p6"
+              fontWeight="bold"
+              color={account ? 'white' : 'darkPurple'}
+            >
+              Overview
+            </Text>
+          </NavbarItem>
           {navbarCdps.map((cdp, idx) => {
             const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
             const linkPath = `/${Routes.BORROW}/${cdp.id}`;
@@ -235,40 +250,39 @@ const CDPList = memo(function({
               <NavbarItem
                 key={idx}
                 href={linkPath + currentQuery}
-                label={cdp.ilk}
-                owned={account}
-                active={active}
-                ratio={ratio}
                 mx={mobile && '7px'}
                 mt={mobile ? '15px' : '5px'}
-              />
+                bg={getBgColor(active, account)}
+                height={`${getMeasurement('navbarItemHeight')}px`}
+                width={`${getMeasurement('navbarItemWidth')}px`}
+              >
+                <Text
+                  t="p6"
+                  fontWeight="bold"
+                  color={account ? 'white' : 'darkPurple'}
+                >
+                  {cdp.ilk}
+                </Text>
+                <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
+              </NavbarItem>
             );
           })}
-          {account && (
-            <DashedFakeButton
-              onClick={() =>
-                account &&
-                show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
-              }
-              width={`${getMeasurement('navbarItemWidth')}px`}
-              mx={mobile && '7px'}
-              mt={mobile && '15px'}
-              justifyContent="center"
-              borderRadius="4px"
-              py="s"
-            >
-              <Plus />
-            </DashedFakeButton>
+          {account && mobile && (
+            <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
         </CdpContainer>
       </Box>
       {navbarCdps.length >= 4 && !mobile && (
         <DirectionalButton
-          connected={account}
+          onClick={() => onDirectionalClick('down')}
           show={scrollTop < maxScrollTop}
-          onClick={onDirectionalClick}
-          direction={'down'}
-        />
+          bg={account ? 'blueGrayDarker' : 'white'}
+        >
+          <NavDown />
+        </DirectionalButton>
+      )}
+      {account && !mobile && (
+        <AddCdpButton account={account} show={show} mobile={mobile} />
       )}
     </Fragment>
   ) : null;
