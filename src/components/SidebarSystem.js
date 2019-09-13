@@ -30,7 +30,7 @@ const DEBT_AUCTION_LOT_SIZE = system => [
 
 const SYSTEM_COLLATERALIZATION = system => [
   lang.sidebar.system_collateralization,
-  prettifyNumber(system.systemCollateralization)
+  `${prettifyNumber(system.systemCollateralization, false, 2, false)} %`
 ];
 
 const SidebarSystem = ({ system }) => {

@@ -70,10 +70,47 @@ const mathReducer = produce((draft, action) => {
             LIQUIDATION_RATIO
           ].includes(prop)
         ) {
-          const debts = draft.feeds.map(feed => {});
-          const colVals = draft.feeds.map(feed => {});
-          draft.system[SYSTEM_COLLATERALIZATION] = 247;
-          //new system value is colVals/debts, can use math collateralization ratio function
+          const debts = draft.feeds.map(feed => {
+            if (!draft.raw.ilks[feed.key]) return;
+            const { ilkArt, rate } = draft.raw.ilks[feed.key];
+            if (ilkArt && rate) {
+              return math.debtValue(ilkArt, rate);
+            }
+          });
+          const combinedDebt = debts.reduce((a, b) => {
+            if (a && b) return a.plus(b);
+          });
+          const colVals = draft.feeds.map(feed => {
+            if (!draft.raw.ilks[feed.key]) return;
+            const { adapterBalance } = draft.raw.ilks[feed.key];
+            const price = recalculatePrice(
+              draft.raw.ilks[feed.key],
+              feed.key,
+              draft.system[PAR]
+            );
+            if (adapterBalance && price) {
+              return math.collateralValue(
+                math.collateralAmount(
+                  getCurrency({ ilk: feed.key }),
+                  adapterBalance
+                ),
+                price
+              );
+            }
+          });
+          const combinedColVal = colVals.reduce((a, b) => {
+            if (a && b) return a.plus(b);
+          });
+          if (combinedColVal && combinedDebt) {
+            console.log('combinedColVal', combinedColVal.toString());
+            console.log('combinedDebt', combinedDebt.toString());
+          }
+          if (combinedColVal && combinedDebt)
+            draft.system[
+              SYSTEM_COLLATERALIZATION
+            ] = math
+              .collateralizationRatio(combinedColVal, combinedDebt)
+              .times(100);
         }
       }
       // if `par` changes (which is unlikely) all the prices need to change

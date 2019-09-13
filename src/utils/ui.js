@@ -20,7 +20,8 @@ export function formatLiquidationPrice(price, symbol) {
 export function prettifyNumber(
   _num = null,
   truncate = false,
-  decimalPlaces = 2
+  decimalPlaces = 2,
+  keepSymbol = true
 ) {
   if (_num === null) return null;
   let symbol = ' ';
@@ -38,7 +39,7 @@ export function prettifyNumber(
   } else {
     formattedNumber = num.toLocaleString();
   }
-  return formattedNumber + symbol;
+  return keepSymbol ? formattedNumber + symbol : formattedNumber;
 }
 
 export function prettifyFloat(num, decimalPlaces = 2) {
