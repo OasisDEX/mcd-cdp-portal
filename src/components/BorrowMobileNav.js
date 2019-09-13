@@ -79,10 +79,14 @@ const BorrowMobileNav = ({ viewedAddress, cdpId, ...props }) => {
     ? viewedAddress
     : null;
 
+  const path = address
+    ? `/${Routes.BORROW}/owner/${address}`
+    : `/${Routes.BORROW}`;
+
   return (
     <Fragment>
       {!selected ? (
-        <Link href={`/${Routes.BORROW}`}>
+        <Link href={path}>
           <Flex
             bg={!account && selected && 'grey.200'}
             flexDirection="column"
