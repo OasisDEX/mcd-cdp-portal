@@ -28,13 +28,19 @@ const DEBT_AUCTION_LOT_SIZE = system => [
   prettifyNumber(system.debtAuctionLotSize)
 ];
 
+const SYSTEM_COLLATERALIZATION = system => [
+  lang.sidebar.system_collateralization,
+  prettifyNumber(system.systemCollateralization)
+];
+
 const SidebarSystem = ({ system }) => {
   const systemParams = [
     GLOBAL_DEBT_CEILING,
     CURRENT_DEBT,
     BASE_RATE,
     SURPLUS_AUCTION_LOT_SIZE,
-    DEBT_AUCTION_LOT_SIZE
+    DEBT_AUCTION_LOT_SIZE,
+    SYSTEM_COLLATERALIZATION
   ].map(f => f(system));
 
   return (

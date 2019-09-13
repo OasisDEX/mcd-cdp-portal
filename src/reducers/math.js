@@ -11,6 +11,7 @@ import {
   ILK_DEBT_AVAILABLE,
   ADAPTER_BALANCE
 } from './feeds';
+import { SYSTEM_COLLATERALIZATION } from './system';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
@@ -71,6 +72,7 @@ const mathReducer = produce((draft, action) => {
         ) {
           const debts = draft.feeds.map(feed => {});
           const colVals = draft.feeds.map(feed => {});
+          draft.system[SYSTEM_COLLATERALIZATION] = 247;
           //new system value is colVals/debts, can use math collateralization ratio function
         }
       }
