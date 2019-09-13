@@ -108,7 +108,7 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
         >
           <Box mr="s">
             <Box my="s">
-              {account && <AccountBox currentAccount={account} />}
+              <AccountBox currentAccount={account} />
             </Box>
             <SidebarGlobal />
           </Box>
