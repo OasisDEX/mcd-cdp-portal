@@ -17,6 +17,10 @@ const StyledBorrowIcon = styled(BorrowIcon)`
 const BorrowNav = ({ viewedAddress, account }) => {
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
+  const path =
+    account && account.address
+      ? `/${Routes.BORROW}/owner/${account.address}`
+      : `/${Routes.BORROW}`;
   const textColor =
     selected && account
       ? 'white'
@@ -27,7 +31,7 @@ const BorrowNav = ({ viewedAddress, account }) => {
       : 'gray';
   return (
     <Fragment>
-      <Link href={`/${Routes.BORROW}`}>
+      <Link href={path}>
         <Flex
           bg={!account && selected && 'grey.200'}
           flexDirection="column"
