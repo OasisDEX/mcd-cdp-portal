@@ -33,7 +33,9 @@ const theme = {
   measurement: {
     sidebarWidth: 318,
     navbarWidth: 80,
-    mobileNavHeight: 80
+    mobileNavHeight: 80,
+    navbarItemWidth: 70,
+    navbarItemHeight: 55
   }
 };
 

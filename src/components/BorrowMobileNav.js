@@ -27,6 +27,7 @@ const CDPDropdown = memo(function({
     <Dropdown
       hitBoxMargin="0px"
       show={show}
+      placement="bottom"
       trigger={
         <Flex
           bg={!account && selected && 'grey.200'}
@@ -48,7 +49,11 @@ const CDPDropdown = memo(function({
         </Flex>
       }
     >
-      <Flex flexWrap="wrap" onClick={() => setShow(!show)}>
+      <Flex
+        style={{ transform: 'translateX(-5px)' }}
+        flexWrap="wrap"
+        onClick={() => setShow(!show)}
+      >
         {children}
       </Flex>
     </Dropdown>

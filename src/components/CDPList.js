@@ -21,6 +21,7 @@ import { trackCdpById } from 'reducers/multicall/cdps';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
+import { getMeasurement } from '../styles/theme';
 
 const NavbarItemContainer = styled(Link)`
   display: block;
@@ -66,9 +67,8 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
           : 'grey.200'
       }
       borderRadius="default"
-      height="50px"
-      width="70px" //TODO mobile (add to theme)
-      mt="5px"
+      height={`${getMeasurement('navbarItemHeight')}px`}
+      width={`${getMeasurement('navbarItemWidth')}px`}
       {...props}
     >
       <Text t="p6" fontWeight="bold" color={owned ? 'white' : 'darkPurple'}>
@@ -82,14 +82,12 @@ const NavbarItem = ({ href, label, ratio, owned, active, ...props }) => (
 );
 
 const CdpContainer = styled(Flex)`
-  width: ${props => (props.mobile ? '100vw' : '100%')};
   py: '10px';
   cursor: pointer;
   flex-direction: ${props => (props.mobile ? 'row' : 'column')};
   flex-wrap: ${props => (props.mobile ? 'wrap' : undefined)};
   overflow: auto;
-  height: ${props =>
-    props.cdpsLength >= 4 && !props.mobile ? '275px' : undefined};
+  height: ${props => props.cdpsLength >= 4 && !props.mobile && '275px'};
   ::-webkit-scrollbar {
     width: 0px;
   }
@@ -207,7 +205,13 @@ const CDPList = memo(function({
           direction={'up'}
         />
       )}
-      <Box bg={account ? 'blueGrayDarker' : 'white'} height="100%" px="5px">
+      <Box
+        bg={account ? 'blueGrayDarker' : 'white'}
+        height="100%"
+        width={mobile ? '100vw' : `${getMeasurement('navbarWidth')}px`}
+        px={mobile ? '15px' : '5px'}
+        pb={mobile && '15px'}
+      >
         <CdpContainer
           onScroll={debounced}
           ref={cdpContainerRef}
@@ -220,6 +224,8 @@ const CDPList = memo(function({
             label={'Overview'}
             owned={account}
             active={active}
+            mx={mobile && '7px'}
+            mt={mobile ? '15px' : '5px'}
           />
           {navbarCdps.map((cdp, idx) => {
             const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
@@ -233,6 +239,8 @@ const CDPList = memo(function({
                 owned={account}
                 active={active}
                 ratio={ratio}
+                mx={mobile && '7px'}
+                mt={mobile ? '15px' : '5px'}
               />
             );
           })}
@@ -242,6 +250,9 @@ const CDPList = memo(function({
                 account &&
                 show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
               }
+              width={`${getMeasurement('navbarItemWidth')}px`}
+              mx={mobile && '7px'}
+              mt={mobile && '15px'}
               justifyContent="center"
               borderRadius="4px"
               py="s"
