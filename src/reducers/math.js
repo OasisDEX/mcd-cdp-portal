@@ -101,10 +101,6 @@ const mathReducer = produce((draft, action) => {
           const combinedColVal = colVals.reduce((a, b) => {
             if (a && b) return a.plus(b);
           });
-          if (combinedColVal && combinedDebt) {
-            console.log('combinedColVal', combinedColVal.toString());
-            console.log('combinedDebt', combinedDebt.toString());
-          }
           if (combinedColVal && combinedDebt)
             draft.system[
               SYSTEM_COLLATERALIZATION
