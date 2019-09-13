@@ -9,6 +9,7 @@ import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
+import { GenericNotFound } from 'pages/NotFound';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -159,7 +160,14 @@ export default mount({
         view: <Save />
       };
     })
-  )
+  ),
+
+  [`/${Routes.TRADE}`]: route(() => {
+    return {
+      title: 'Trade',
+      view: <GenericNotFound />
+    };
+  })
 });
 
 function networkIsUndefined(request) {
