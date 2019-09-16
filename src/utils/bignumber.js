@@ -19,17 +19,20 @@ export function greaterThanOrEqual(numberOne, numberTwo) {
 export function subtract(numberOne, numberTwo) {
   return BigNumber(numberOne.toString())
     .minus(BigNumber(numberTwo.toString()))
+    .toFixed()
     .toString();
 }
 
 export function multiply(numberOne, numberTwo) {
   return BigNumber(numberOne.toString())
     .times(BigNumber(numberTwo.toString()))
+    .toFixed()
     .toString();
 }
 
 export function divide(numberOne, numberTwo) {
   return BigNumber(numberOne.toString())
     .dividedBy(BigNumber(numberTwo.toString()))
+    .toFixed()
     .toString();
 }
