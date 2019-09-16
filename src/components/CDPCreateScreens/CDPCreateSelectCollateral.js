@@ -65,7 +65,7 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
         <Radio checked={checked} readOnly mr="xs" />
       </td>
       <td>{ilk.symbol}</td>
-      <td>{ilk.data.rate} %</td>
+      <td>{ilk.data.stabilityFee} %</td>
       <td>{ilk.data.liquidationRatio} %</td>
       <td>{ilk.data.liquidationPenalty} %</td>
       <td css="text-align: right">
