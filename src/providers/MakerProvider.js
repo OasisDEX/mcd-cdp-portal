@@ -43,10 +43,13 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
             .service('proxy')
             .getProxyAddress(account.address);
           if (proxy) {
+            console.debug(`Found proxy address: ${proxy}`);
             const cdpIds = await maker
               .service('mcd:cdpManager')
               .getCdpIds(proxy);
             setAccount({ ...account, cdps: cdpIds });
+          } else {
+            console.debug(`No proxy found`);
           }
         })();
       });
