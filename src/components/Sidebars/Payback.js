@@ -2,9 +2,11 @@ import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import lang from 'languages';
+import round from 'lodash/round';
 
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import { calcCDPParams } from 'utils/cdp';
+import { minimum } from 'utils/bignumber';
 
 import useMaker from 'hooks/useMaker';
 import useProxy from 'hooks/useProxy';
@@ -42,7 +44,7 @@ const Payback = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp);
+  const debtAmount = getDebtAmount(cdp, false);
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -67,11 +69,15 @@ const Payback = ({ cdpId, reset }) => {
     daiToDraw: Math.max(debtAmount - amountToPayback, 0)
   });
 
-  const setMax = () => setAmount(Math.min(debtAmount, daiBalance));
+  const setMax = () =>
+    debtAmount && daiBalance && setAmount(minimum(debtAmount, daiBalance));
 
   const payback = () => {
+    const cdpManager = maker.service('mcd:cdpManager');
     newTxListener(
-      maker.service('mcd:cdpManager').wipe(cdpId, MDAI(parseFloat(amount))),
+      debtAmount !== amount
+        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)))
+        : cdpManager.wipeAll(cdpId),
       lang.transactions.pay_back_dai
     );
     reset();
@@ -137,7 +143,10 @@ const Payback = ({ cdpId, reset }) => {
           title={lang.action_sidebar.dai_balance}
           body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
         />
-        <Info title={lang.action_sidebar.dai_debt} body={`${debtAmount} DAI`} />
+        <Info
+          title={lang.action_sidebar.dai_debt}
+          body={`${round(debtAmount, 6)} DAI`}
+        />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
           body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
