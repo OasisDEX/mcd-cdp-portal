@@ -22,7 +22,7 @@ const SidebarGlobalPanel = () => {
         <Grid gridRowGap="s">
           {routeIsBorrow && <SidebarFeeds feeds={uniqueFeeds} />}
           {routeIsBorrow && <SidebarSystem system={system} />}
-          {routeIsSave && <SidebarDetails />}
+          {routeIsSave && <SidebarDetails system={system} />}
         </Grid>
         <Dev />
       </Box>
