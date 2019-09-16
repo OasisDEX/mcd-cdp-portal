@@ -42,7 +42,7 @@ export function prettifyNumber(
 }
 
 export function prettifyFloat(num, decimalPlaces = 2) {
-  if (!num) return 'NaN';
+  if (!num && num !== 0) return 'NaN';
   const [, decimalPortion] = num.toString().split('.');
   const decimalPlacesInNumber = decimalPortion ? decimalPortion.length : 0;
 
