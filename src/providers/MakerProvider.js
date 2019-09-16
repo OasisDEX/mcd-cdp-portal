@@ -57,7 +57,15 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   }, [backendEnv, dispatch, network, testchainId]);
 
   useEffect(() => {
-    if (maker) startWatcher(maker, dispatch);
+    if (maker) {
+      startWatcher(maker, dispatch);
+      const subscription = maker
+        .service('multicall')
+        .watcher.onNewBlock(blockHeight =>
+          console.debug(`Latest block height: ${blockHeight}`)
+        );
+      return subscription.unsub;
+    }
   }, [maker, dispatch, account]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
