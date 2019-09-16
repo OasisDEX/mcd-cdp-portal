@@ -8,9 +8,9 @@ import {
 
 import SidebarGlobal from './Sidebars/Global';
 import AccountBox from './AccountBox';
+import BorrowNav from 'components/BorrowNav';
 import SaveNav from 'components/SaveNav';
 import TradeNav from 'components/TradeNav';
-import BorrowMobileNav from 'components/BorrowMobileNav';
 
 import { Flex, Box } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
@@ -51,7 +51,7 @@ const DrawerBg = styled.div`
         `}
 `;
 
-const MobileNav = ({ viewedAddress, cdpId }) => {
+const MobileNav = ({ viewedAddress }) => {
   const { account } = useMaker();
   const ref = useRef();
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
@@ -78,10 +78,11 @@ const MobileNav = ({ viewedAddress, cdpId }) => {
           borderRadius="4px"
           ml="xs"
         />
-        <BorrowMobileNav
+        <BorrowNav
           width={`${getMeasurement('navbarWidth')}px`}
           viewedAddress={viewedAddress}
-          cdpId={cdpId}
+          account={account}
+          mobile={true}
           borderRadius="4px"
           ml="xs"
         />

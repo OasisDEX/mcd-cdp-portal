@@ -6,6 +6,7 @@ import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
 import { Routes } from '../utils/constants';
 import lang from 'languages';
 import styled from 'styled-components';
+import CDPDropdown from './CDPDropdown';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
   path {
@@ -14,13 +15,20 @@ const StyledBorrowIcon = styled(BorrowIcon)`
   }
 `;
 
-const BorrowNav = ({ viewedAddress, account }) => {
+const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
-  const path =
-    account && account.address
-      ? `/${Routes.BORROW}/owner/${account.address}`
-      : `/${Routes.BORROW}`;
+
+  const address = account
+    ? account.address
+    : viewedAddress
+    ? viewedAddress
+    : null;
+
+  const path = address
+    ? `/${Routes.BORROW}/owner/${address}`
+    : `/${Routes.BORROW}`;
+
   const textColor =
     selected && account
       ? 'white'
@@ -29,31 +37,51 @@ const BorrowNav = ({ viewedAddress, account }) => {
       : selected && !account
       ? 'black'
       : 'gray';
+
   return (
     <Fragment>
-      <Link href={path}>
-        <Flex
-          bg={!account && selected && 'grey.200'}
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          py="s"
+      {mobile && selected ? (
+        <CDPDropdown
+          textcolor={textColor}
+          selected={selected}
+          account={account}
+          {...props}
         >
-          <StyledBorrowIcon
-            textcolor={textColor}
-            selected={selected}
-            connected={account}
+          <CDPList
+            mobile={mobile}
+            currentPath={url.pathname}
+            currentQuery={url.search}
+            viewedAddress={address}
           />
-          <Text t="p6" fontWeight="bold" color={textColor}>
-            {lang.navbar.borrow}
-          </Text>
-        </Flex>
-      </Link>
-      <CDPList
-        currentPath={url.pathname}
-        viewedAddress={viewedAddress}
-        currentQuery={url.search}
-      />
+        </CDPDropdown>
+      ) : (
+        <Link href={path}>
+          <Flex
+            bg={!account && selected && 'grey.200'}
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            py="s"
+            {...props}
+          >
+            <StyledBorrowIcon
+              textcolor={textColor}
+              selected={selected}
+              connected={account}
+            />
+            <Text t="p6" fontWeight="bold" color={textColor}>
+              {lang.navbar.borrow}
+            </Text>
+          </Flex>
+        </Link>
+      )}
+      {!mobile && (
+        <CDPList
+          currentPath={url.pathname}
+          viewedAddress={address}
+          currentQuery={url.search}
+        />
+      )}
     </Fragment>
   );
 };
