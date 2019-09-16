@@ -65,7 +65,12 @@
     "usd": "USD",
     "send": "SEND",
     "migrate": "MIG",
-    "no_wallet": "Not connected"
+    "no_wallet": "Not connected",
+    "save_details": {
+      "title": "Save Details",
+      "total_savings_dai": "Total Savings DAI",
+      "total_dai_supply": "Total DAI Supply"
+    }
   },
   "cdp_create": {
     "select_title": "Select a collateral type",
