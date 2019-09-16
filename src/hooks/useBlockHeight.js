@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import useMaker from 'hooks/useMaker';
 
-const useBlockHeight = () => {
+const useBlockHeight = (initialState = null) => {
   const { maker } = useMaker();
-  const [blockHeight, setblockHeight] = useState([]);
+  const [blockHeight, setblockHeight] = useState(initialState);
 
   useEffect(() => {
-    if (window.watcher) {
-      const subscription = window.watcher.onNewBlock(blockHeight => {
-        setblockHeight(blockHeight);
-      });
+    if (maker && maker.service('multicall').watcher) {
+      const subscription = maker
+        .service('multicall')
+        .watcher.onNewBlock(blockHeight => setblockHeight(blockHeight));
       return subscription.unsub;
     }
   }, [maker]);
