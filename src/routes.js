@@ -73,18 +73,20 @@ const withSaveLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider>
-                <SaveLayout
-                  mobileNav={
-                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                  }
-                  navbar={<Navbar viewedAddress={viewedAddress} />}
-                >
-                  <View />
-                </SaveLayout>
-              </SidebarProvider>
-            </ModalProvider>
+            <EthBalanceProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <SidebarProvider>
+                  <SaveLayout
+                    mobileNav={
+                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                    }
+                    navbar={<Navbar viewedAddress={viewedAddress} />}
+                  >
+                    <View />
+                  </SaveLayout>
+                </SidebarProvider>
+              </ModalProvider>
+            </EthBalanceProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );
