@@ -36,3 +36,15 @@ export function divide(numberOne, numberTwo) {
     .toFixed()
     .toString();
 }
+
+export function minimum(numberOne, numberTwo) {
+  return BigNumber.min(numberOne.toString(), numberTwo.toString())
+    .toFixed()
+    .toString();
+}
+
+export function maximum(numberOne, numberTwo) {
+  return BigNumber.max(numberOne.toString(), numberTwo.toString())
+    .toFixed()
+    .toString();
+}
