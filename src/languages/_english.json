@@ -132,7 +132,8 @@
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
   "dsr_deposit": {
-    "open_vault": "Open your Maker Earn Vault"
+    "open_vault": "Open your Maker Earn Vault",
+    "confirm_title": "Confirm Deposit"
   },
   "actions": {
     "back": "Back",
@@ -142,7 +143,8 @@
     "withdraw": "Withdraw",
     "pay_back": "Pay back",
     "generate": "Generate",
-    "send": "Send"
+    "send": "Send",
+    "skip": "Skip"
   },
   "actions_past_tense": {
     "deposit": "Deposited",

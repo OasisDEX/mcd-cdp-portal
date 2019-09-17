@@ -20,12 +20,12 @@ import { prettifyNumber } from 'utils/ui';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
-const DSRDepositConfirmSummary = ({ capturedDispatch }) => {
+const DSRDepositConfirmSummary = ({ depositAmount, capturedDispatch }) => {
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
-  const ph = '123';
-
-  const rows = [[lang.verbs.depositing, `${prettifyNumber(ph)} DAI`]];
+  const rows = [
+    [lang.save.deposit_amount, `${prettifyNumber(depositAmount)} DAI`]
+  ];
   return (
     <Box
       maxWidth="1040px"
@@ -33,7 +33,7 @@ const DSRDepositConfirmSummary = ({ capturedDispatch }) => {
         margin: 0 auto;
       `}
     >
-      <ScreenHeader title={lang.cdp_create.confirm_title} />
+      <ScreenHeader title={lang.dsr_deposit.confirm_title} />
       <Card py={{ s: 'm', m: 'l' }} px={{ s: 'm', m: 'xl' }} my="l">
         <Grid>
           {rows.map(([title, value], index) => {
@@ -152,24 +152,24 @@ const DSRDepositWait = ({ hash, onClose }) => {
   );
 };
 
-const DSRDepositConfirm = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker, checkForNewCdps, newTxListener } = useMaker();
+const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
+  const { maker, newTxListener } = useMaker();
 
   const [depositDaiTxHash, setDepositDaiTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
+    console.log('^^^payload in captured dispatch', payload);
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
-    const mockAmount = '4';
-    const txObject = maker.service('mcd:savings').join(mockAmount);
+    const txObject = maker.service('mcd:savings').join(depositAmount);
 
     newTxListener(txObject, lang.transactions.create_cdp);
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
       pending: tx => setDepositDaiTxHash(tx.hash),
-      confirmed: () => checkForNewCdps()
+      confirmed: tx => console.log('^^^CONFIRMED', tx)
     });
     await txMgr.confirm(txObject, 1);
   }
@@ -180,9 +180,8 @@ const DSRDepositConfirm = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   return (
     <DSRDepositConfirmSummary
-      cdpParams={cdpParams}
-      selectedIlk={selectedIlk}
       capturedDispatch={capturedDispatch}
+      depositAmount={depositAmount}
     />
   );
 };

@@ -26,7 +26,7 @@ function DepositDaiForm({
       lang.formatString(lang.cdp_create.deposit_form_field1_title, 'DAI'),
       lang.formatString(lang.cdp_create.deposit_form_field1_text, 'DAI'),
       <Input
-        key="collinput"
+        key="daiinput"
         name="gemsToLock"
         after={<SetMax onClick={setDepositMax} />}
         type="number"
@@ -36,14 +36,6 @@ function DepositDaiForm({
         min="0"
         placeholder="0 DAI"
         width={300}
-        // errorMessage={
-        //   userHasSufficientGemBalance || !cdpParams.gemsToLock
-        //     ? null
-        //     : lang.formatString(
-        //         lang.cdp_create.insufficient_ilk_balance,
-        //         selectedIlk.currency.symbol
-        //       )
-        // }
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>
@@ -127,20 +119,6 @@ const DSRDepositCreate = ({ dispatch }) => {
       setDepositAmount('0');
     }
   }, [MDAI, setDepositAmount]);
-  //dispatch here
-  // const daiData = getIlkData(feeds, 'MDAI');
-  // console.log('^^^dai balance', DAI);
-  // console.log('^^^daiData', daiData);
-
-  function handleInputChange({ target }) {
-    if (parseFloat(target.value) < 0) return;
-    dispatch({
-      type: `form/set-${target.name}`,
-      payload: { value: target.value }
-    });
-  }
-  //todo
-  const daiAvailable = '123';
   return (
     <Box
       maxWidth="1040px"
@@ -160,8 +138,6 @@ const DSRDepositCreate = ({ dispatch }) => {
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <DepositDaiForm
             daiBalance={daiBalance}
-            daiAvailable={daiAvailable}
-            handleInputChange={handleInputChange}
             setDepositMax={setDepositMax}
             depositAmount={depositAmount}
             onDepositAmountChange={onDepositAmountChange}
@@ -170,7 +146,13 @@ const DSRDepositCreate = ({ dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        onNext={() => dispatch({ type: 'increment-step' })}
+        onNext={() => {
+          dispatch({
+            type: 'form/set-deposit-amount',
+            payload: { depositAmount }
+          });
+          dispatch({ type: 'increment-step' });
+        }}
         onBack={() =>
           dispatch({
             type: 'decrement-step',

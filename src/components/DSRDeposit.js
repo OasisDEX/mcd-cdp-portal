@@ -22,7 +22,8 @@ const initialState = {
   currency: null,
   data: {},
   key: '',
-  daiToJoin: ''
+  daiToJoin: '',
+  depositAmount: ''
 };
 
 function reducer(state, action) {
@@ -59,8 +60,8 @@ function reducer(state, action) {
         data: {},
         key: ''
       };
-    case 'form/set-daiToJoin':
-      return { ...state, daiToJoin: payload.value };
+    case 'form/set-deposit-amount':
+      return { ...state, depositAmount: payload.depositAmount };
     case 'reset':
       return { ...initialState };
     default:
@@ -71,7 +72,7 @@ function reducer(state, action) {
 function DSRDeposit({ onClose }) {
   const { maker, account } = useMaker();
   const [
-    { step, proxyAddress, userDaiBalance, data, key },
+    { step, proxyAddress, userDaiBalance, data, key, depositAmount },
     dispatch
   ] = useReducer(reducer, initialState);
 
@@ -91,6 +92,7 @@ function DSRDeposit({ onClose }) {
     userDaiBalance,
     data,
     key,
+    depositAmount,
     dispatch,
     onClose
   };
