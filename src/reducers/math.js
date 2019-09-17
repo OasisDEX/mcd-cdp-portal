@@ -83,10 +83,11 @@ const mathReducer = produce((draft, action) => {
           const colVals = draft.feeds.map(feed => {
             if (!draft.raw.ilks[feed.key]) return;
             const { adapterBalance } = draft.raw.ilks[feed.key];
+            const par = draft.system ? draft.system[PAR] : null;
             const price = recalculatePrice(
               draft.raw.ilks[feed.key],
               feed.key,
-              draft.system[PAR]
+              par
             );
             if (adapterBalance && price) {
               return math.collateralValue(
