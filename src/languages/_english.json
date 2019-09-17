@@ -131,6 +131,9 @@
     "migrate_another_cdp": "Migrate another CDP",
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
+  "dsr_deposit": {
+    "open_vault": "Open your Maker Earn Vault"
+  },
   "actions": {
     "back": "Back",
     "continue": "Continue",

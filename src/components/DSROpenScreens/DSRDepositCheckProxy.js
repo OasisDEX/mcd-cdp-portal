@@ -55,7 +55,7 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
   return (
     <Box maxWidth="71.8rem">
       <Text.h2 textAlign="center" mb="xl">
-        {lang.cdp_create.setup_proxy_title}
+        {lang.dsr_deposit.open_vault}
       </Text.h2>
       <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
         <Grid gridRowGap="xs">

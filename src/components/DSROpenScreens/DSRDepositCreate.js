@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber } from 'utils/ui';
@@ -6,10 +6,21 @@ import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
+import useStore from '../../hooks/useStore';
+import useWalletBalances from '../../hooks/useWalletBalances';
+import useValidatedInput from '../../hooks/useValidatedInput';
+import SetMax from '../SetMax';
 
 const placeholder = 'test';
 
-function DepositDaiForm({ handleInputChange, daiAvailable }) {
+function DepositDaiForm({
+  depositAmount,
+  daiBalance,
+  onDepositAmountChange,
+  handleInputChange,
+  setDepositMax,
+  depositAmountErrors
+}) {
   const fields = [
     [
       lang.formatString(lang.cdp_create.deposit_form_field1_title, 'DAI'),
@@ -17,10 +28,13 @@ function DepositDaiForm({ handleInputChange, daiAvailable }) {
       <Input
         key="collinput"
         name="gemsToLock"
-        after={placeholder}
+        after={<SetMax onClick={setDepositMax} />}
         type="number"
-        value={placeholder}
-        onChange={handleInputChange}
+        value={depositAmount}
+        onChange={onDepositAmountChange}
+        failureMessage={depositAmountErrors}
+        min="0"
+        placeholder="0 DAI"
         width={300}
         // errorMessage={
         //   userHasSufficientGemBalance || !cdpParams.gemsToLock
@@ -47,48 +61,9 @@ function DepositDaiForm({ handleInputChange, daiAvailable }) {
             });
           }}
         >
-          {prettifyNumber(placeholder)} {'dAi'}
+          {prettifyNumber(daiBalance)} {'DAI'}
         </Text>
       </Box>
-    ],
-    [
-      lang.cdp_create.deposit_form_field3_title,
-      lang.cdp_create.deposit_form_field3_text,
-      <Input
-        key="daiToDraw"
-        name="daiToDraw"
-        after="DAI"
-        width="250px"
-        type="number"
-        // errorMessage={
-        //   userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
-        // }
-        value={placeholder}
-        onChange={handleInputChange}
-      />,
-      <Grid gridRowGap="xs" key="keytodrawinfo">
-        <Box key="ba">
-          <Text t="subheading">
-            {lang.cdp_create.deposit_form_field3_after2}{' '}
-          </Text>
-          <Text
-            display="inline-block"
-            ml="s"
-            t="caption"
-            color="darkLavender"
-            onClick={() => {
-              handleInputChange({
-                target: {
-                  name: 'daiToDraw',
-                  value: daiAvailable
-                }
-              });
-            }}
-          >
-            {prettifyNumber(daiAvailable)} DAI
-          </Text>
-        </Box>
-      </Grid>
     ]
   ];
 
@@ -120,6 +95,43 @@ function DepositDaiForm({ handleInputChange, daiAvailable }) {
 }
 
 const DSRDepositCreate = ({ dispatch }) => {
+  const { MDAI } = useWalletBalances();
+  console.log('^^^balances', MDAI, MDAI.symbol);
+  const [{ feeds }] = useStore();
+  console.log('^^^feeds', feeds);
+  console.log('^^^user balance', MDAI.toFixed(6));
+  const daiBalance = MDAI.toFixed(6);
+
+  const [
+    depositAmount,
+    setDepositAmount,
+    onDepositAmountChange,
+    depositAmountErrors
+  ] = useValidatedInput(
+    '',
+    {
+      isFloat: true,
+      minFloat: 0.0,
+      maxFloat: MDAI && MDAI.toNumber()
+    },
+    {
+      maxFloat: () =>
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+    }
+  );
+
+  const setDepositMax = useCallback(() => {
+    if (MDAI) {
+      setDepositAmount(MDAI.toNumber().toString());
+    } else {
+      setDepositAmount('0');
+    }
+  }, [MDAI, setDepositAmount]);
+  //dispatch here
+  // const daiData = getIlkData(feeds, 'MDAI');
+  // console.log('^^^dai balance', DAI);
+  // console.log('^^^daiData', daiData);
+
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
     dispatch({
@@ -147,8 +159,13 @@ const DSRDepositCreate = ({ dispatch }) => {
       >
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <DepositDaiForm
+            daiBalance={daiBalance}
             daiAvailable={daiAvailable}
             handleInputChange={handleInputChange}
+            setDepositMax={setDepositMax}
+            depositAmount={depositAmount}
+            onDepositAmountChange={onDepositAmountChange}
+            depositAmountErrors={depositAmountErrors}
           />
         </Card>
       </Grid>

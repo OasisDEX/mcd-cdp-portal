@@ -10,19 +10,23 @@ import {
 import useMaker from 'hooks/useMaker';
 
 const screens = [
-  ['Open Vault', props => <DSRDepositCheckProxy {...props} />],
+  ['Open Earn Vault', props => <DSRDepositCheckProxy {...props} />],
   ['Deposit Dai', props => <DSRDepositCreate {...props} />],
   ['Confirmation', props => <DSRDepositConfirm {...props} />]
 ];
 
 const initialState = {
   step: 0,
-  proxyAddress: null
+  proxyAddress: null,
+  userDaiBalance: '',
+  currency: null,
+  data: {},
+  key: '',
+  daiToJoin: ''
 };
 
 function reducer(state, action) {
   const { type, payload } = action;
-  console.log('DSR REDUCER', type, payload);
   switch (type) {
     case 'increment-step':
       return {
@@ -35,11 +39,28 @@ function reducer(state, action) {
         step: state.step - ((payload && payload.by) || 1)
       };
     case 'set-proxy-address':
-      console.log('set-proxy-address STATE', state, payload);
       return {
         ...state,
         proxyAddress: payload.address
       };
+    case 'set-dai-data':
+      return {
+        ...state,
+        userDaiBalance: payload.userDaiBalance,
+        currency: payload.currency,
+        data: payload.data,
+        key: payload.key
+      };
+    case 'reset-dai-data':
+      return {
+        ...state,
+        userDaiBalance: '',
+        currency: null,
+        data: {},
+        key: ''
+      };
+    case 'form/set-daiToJoin':
+      return { ...state, daiToJoin: payload.value };
     case 'reset':
       return { ...initialState };
     default:
@@ -49,13 +70,15 @@ function reducer(state, action) {
 
 function DSRDeposit({ onClose }) {
   const { maker, account } = useMaker();
-  const [{ step, proxyAddress }, dispatch] = useReducer(reducer, initialState);
+  const [
+    { step, proxyAddress, userDaiBalance, data, key },
+    dispatch
+  ] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const checkProxy = async () => {
       try {
         const address = await maker.service('proxy').currentProxy();
-        console.log('ADDRESS from proxy', address);
         dispatch({ type: 'set-proxy-address', payload: { address } });
       } catch (err) {}
     };
@@ -65,6 +88,9 @@ function DSRDeposit({ onClose }) {
 
   const screenProps = {
     proxyAddress,
+    userDaiBalance,
+    data,
+    key,
     dispatch,
     onClose
   };
