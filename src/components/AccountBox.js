@@ -16,6 +16,7 @@ import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
+import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import useSidebar from 'hooks/useSidebar';
@@ -101,6 +102,35 @@ const WalletBalances = ({ hasActiveAccount }) => {
 
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
+  const tokenBalances = tokensWithBalances.reduceRight((acc, token) => {
+    const balanceGtZero = !!(balances[token] && balances[token].gt(0));
+    if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
+    const symbol =
+      token === 'MDAI'
+        ? 'DAI'
+        : token === 'DAI'
+        ? 'SAI'
+        : token === 'MWETH'
+        ? 'WETH'
+        : token;
+
+    const tokenIsDai = token === 'MDAI' || token === 'DAI';
+
+    const usdRatio = tokenIsDai
+      ? new BigNumber(1)
+      : token === 'MWETH'
+      ? uniqueFeeds['ETH']
+      : uniqueFeeds[token];
+    return [
+      {
+        token,
+        amount: balances[token],
+        symbol,
+        usdRatio
+      },
+      ...acc
+    ];
+  }, []);
 
   return (
     <CardBody>
@@ -121,102 +151,24 @@ const WalletBalances = ({ hasActiveAccount }) => {
       </Flex>
 
       <StripedRows>
-        <TokenBalance
-          symbol="DAI"
-          amount={balances.MDAI}
-          usdRatio={new BigNumber(1)}
-          button={
-            hasActiveAccount && (
-              <ActionButton
-                onClick={() =>
-                  showSendSidebar({
-                    token: 'MDAI'
-                  })
-                }
-              >
-                {lang.sidebar.send}
-              </ActionButton>
-            )
-          }
-        />
-        <TokenBalance
-          symbol="ETH"
-          amount={balances.ETH}
-          usdRatio={uniqueFeeds.ETH}
-          button={
-            hasActiveAccount && (
-              <ActionButton
-                onClick={() =>
-                  showSendSidebar({
-                    token: 'ETH'
-                  })
-                }
-              >
-                {lang.sidebar.send}
-              </ActionButton>
-            )
-          }
-        />
-        {balances.SAI && balances.SAI.gt(0) && (
+        {tokenBalances.map(({ token, amount, symbol, usdRatio }, idx) => (
           <TokenBalance
-            symbol="SAI"
-            amount={balances.SAI}
-            usdRatio={new BigNumber(1)}
+            key={`tokenbalance_${idx}`}
+            symbol={symbol}
+            amount={amount}
+            usdRatio={usdRatio}
             button={
-              hasActiveAccount && (
+              hasActiveAccount &&
+              ((token === 'SAI' && (
                 <ActionButton>{lang.sidebar.migrate}</ActionButton>
-              )
-            }
-          />
-        )}
-        {balances.MWETH && balances.MWETH.gt(0) && (
-          <TokenBalance
-            symbol="WETH"
-            amount={balances.MWETH}
-            usdRatio={uniqueFeeds.ETH}
-            button={
-              hasActiveAccount && (
-                <ActionButton
-                  onClick={() =>
-                    showSendSidebar({
-                      token: 'MWETH'
-                    })
-                  }
-                >
+              )) || (
+                <ActionButton onClick={() => showSendSidebar({ token })}>
                   {lang.sidebar.send}
                 </ActionButton>
-              )
+              ))
             }
           />
-        )}
-
-        {uniqueGemsToShow.map(gem => {
-          const balance = balances[gem];
-          return (
-            balance &&
-            balance.gt(0) && (
-              <TokenBalance
-                key={gem}
-                symbol={gem}
-                amount={balance}
-                usdRatio={uniqueFeeds[gem]}
-                button={
-                  hasActiveAccount && (
-                    <ActionButton
-                      onClick={() =>
-                        showSendSidebar({
-                          token: gem
-                        })
-                      }
-                    >
-                      {lang.sidebar.send}
-                    </ActionButton>
-                  )
-                }
-              />
-            )
-          );
-        })}
+        ))}
       </StripedRows>
     </CardBody>
   );
