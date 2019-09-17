@@ -3,11 +3,10 @@ import BigNumber from 'bignumber.js';
 
 import ilks from 'references/ilkList';
 
+const uniqueIlkGems = [...new Set(ilks.map(ilk => ilk.gem))];
+
 export const tokensWithBalances = [
-  'MDAI',
-  'DAI',
-  'MWETH',
-  ...new Set(ilks.map(ilk => ilk.gem))
+  ...new Set(['MDAI', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
 ];
 
 const defaultAccountState = {
