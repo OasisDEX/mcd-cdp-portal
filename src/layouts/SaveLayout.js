@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Grid } from '@makerdao/ui-components-core';
 import { hot } from 'react-hot-loader/root';
+import SidebarBase from 'components/SidebarBase';
 import theme, { getSpace } from '../styles/theme';
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
@@ -22,6 +23,9 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
       <Box display={{ s: 'block', xl: 'none' }}>{mobileNav}</Box>
       <Box display={{ s: 'none', xl: 'block' }}>{navbar}</Box>
       <div>{children}</div>
+      <Box display={{ s: 'none', xl: 'block' }}>
+        <SidebarBase />
+      </Box>
     </Grid>
   );
 };

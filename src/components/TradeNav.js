@@ -14,7 +14,7 @@ const StyledTradeIcon = styled(TradeIcon)`
 
 const TradeNav = ({ ...props }) => {
   return (
-    <Link href={`/${Routes.TRADE}`}>
+    <Link href={`/${Routes.TRADE}`} target="_blank">
       <Flex
         flexDirection="column"
         alignItems="center"

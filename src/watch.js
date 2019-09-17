@@ -61,10 +61,6 @@ export async function startWatcher(maker, dispatch) {
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  watcher.onNewBlock(blockHeight => {
-    console.log('Latest block height:', blockHeight);
-  });
-
   watcher.batch().subscribe(updates => {
     console.log('watcher got updates:', { updates });
 

@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react';
 import lang from 'languages';
-import { Link } from 'react-navi';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
-import { Routes } from '../utils/constants';
 
 const GLOBAL_DEBT_CEILING = system => [
   lang.sidebar.global_debt_ceiling,
@@ -73,13 +71,6 @@ const SidebarSystem = ({ system }) => {
       <Box px="s">
         {process.env.NODE_ENV === 'production' ? <SiteVersion /> : null}
       </Box>
-      <Flex p="xs" border="1px solid lightgray" borderRadius="3px">
-        <Link href={`/${Routes.SAVE}`}>
-          <Text fontSize="1.2rem" color="lightgray">
-            {'> /save'}
-          </Text>
-        </Link>
-      </Flex>
     </Fragment>
   );
 };
