@@ -16,6 +16,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
@@ -162,7 +163,7 @@ const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
-    const txObject = maker.service('mcd:savings').join(depositAmount);
+    const txObject = maker.service('mcd:savings').join(MDAI(depositAmount));
 
     newTxListener(txObject, lang.transactions.create_cdp);
 
