@@ -20,6 +20,12 @@ import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import useSidebar from 'hooks/useSidebar';
+import styled from 'styled-components';
+import Carat from './Carat';
+
+const StyledCardBody = styled(CardBody)`
+  cursor: pointer;
+`;
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
 // this turns out to be the same as MWETH, which we show manually
@@ -89,6 +95,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
   const { show: showSidebar } = useSidebar();
+  const [collapsed, setCollapsed] = useState(true);
 
   const uniqueFeeds = useMemo(
     () =>
@@ -133,44 +140,66 @@ const WalletBalances = ({ hasActiveAccount }) => {
   }, []);
 
   return (
-    <CardBody>
-      <Box px="s" py="m">
-        <Text t="h4">{lang.sidebar.wallet_balances}</Text>
-      </Box>
-      <Flex justifyContent="space-between" px="s">
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
-          {lang.sidebar.asset}
-        </Text>
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-          {lang.sidebar.balance}
-        </Text>
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-          {lang.sidebar.usd}
-        </Text>
-        <Box width="20%" />
-      </Flex>
+    <>
+      <CardBody>
+        <Box px="s" py="m">
+          <Text t="h4">{lang.sidebar.wallet_balances}</Text>
+        </Box>
+        <Flex justifyContent="space-between" px="s">
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+            {lang.sidebar.asset}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.balance}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.usd}
+          </Text>
+          <Box width="20%" />
+        </Flex>
 
-      <StripedRows>
-        {tokenBalances.map(({ token, amount, symbol, usdRatio }, idx) => (
-          <TokenBalance
-            key={`tokenbalance_${idx}`}
-            symbol={symbol}
-            amount={amount}
-            usdRatio={usdRatio}
-            button={
-              hasActiveAccount &&
-              ((token === 'SAI' && (
-                <ActionButton>{lang.sidebar.migrate}</ActionButton>
-              )) || (
-                <ActionButton onClick={() => showSendSidebar({ token })}>
-                  {lang.sidebar.send}
-                </ActionButton>
-              ))
-            }
-          />
-        ))}
-      </StripedRows>
-    </CardBody>
+        <StripedRows>
+          {tokenBalances.map(
+            ({ token, amount, symbol, usdRatio }, idx) =>
+              (!collapsed || idx < 4) && (
+                <TokenBalance
+                  key={`tokenbalance_${idx}`}
+                  symbol={symbol}
+                  amount={amount}
+                  usdRatio={usdRatio}
+                  button={
+                    hasActiveAccount &&
+                    ((token === 'SAI' && (
+                      <ActionButton>{lang.sidebar.migrate}</ActionButton>
+                    )) || (
+                      <ActionButton onClick={() => showSendSidebar({ token })}>
+                        {lang.sidebar.send}
+                      </ActionButton>
+                    ))
+                  }
+                />
+              )
+          )}
+        </StripedRows>
+      </CardBody>
+      {tokenBalances.length > 3 && (
+        <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
+          <Flex justifyContent="center" alignItems="center">
+            {collapsed ? (
+              <>
+                <Text pr="xs">{lang.sidebar.view_more}</Text>
+                <Carat />
+              </>
+            ) : (
+              <>
+                <Text pr="xs">{lang.sidebar.view_less}</Text>
+                <Carat rotation={180} />
+              </>
+            )}
+          </Flex>
+        </StyledCardBody>
+      )}
+    </>
   );
 };
 
