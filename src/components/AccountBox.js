@@ -109,35 +109,40 @@ const WalletBalances = ({ hasActiveAccount }) => {
 
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
-  const tokenBalances = tokensWithBalances.reduceRight((acc, token) => {
-    const balanceGtZero = !!(balances[token] && balances[token].gt(0));
-    if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
-    const symbol =
-      token === 'MDAI'
-        ? 'DAI'
-        : token === 'DAI'
-        ? 'SAI'
-        : token === 'MWETH'
-        ? 'WETH'
-        : token;
 
-    const tokenIsDai = token === 'MDAI' || token === 'DAI';
+  const tokenBalances = useMemo(
+    () =>
+      tokensWithBalances.reduceRight((acc, token) => {
+        const balanceGtZero = !!(balances[token] && balances[token].gt(0));
+        if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
+        const symbol =
+          token === 'MDAI'
+            ? 'DAI'
+            : token === 'DAI'
+            ? 'SAI'
+            : token === 'MWETH'
+            ? 'WETH'
+            : token;
 
-    const usdRatio = tokenIsDai
-      ? new BigNumber(1)
-      : token === 'MWETH'
-      ? uniqueFeeds['ETH']
-      : uniqueFeeds[token];
-    return [
-      {
-        token,
-        amount: balances[token],
-        symbol,
-        usdRatio
-      },
-      ...acc
-    ];
-  }, []);
+        const tokenIsDai = token === 'MDAI' || token === 'DAI';
+
+        const usdRatio = tokenIsDai
+          ? new BigNumber(1)
+          : token === 'MWETH'
+          ? uniqueFeeds['ETH']
+          : uniqueFeeds[token];
+        return [
+          {
+            token,
+            amount: balances[token],
+            symbol,
+            usdRatio
+          },
+          ...acc
+        ];
+      }, []),
+    [balances, uniqueFeeds]
+  );
 
   return (
     <>
