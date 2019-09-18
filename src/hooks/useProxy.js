@@ -53,15 +53,17 @@ export default function useProxy() {
   });
 
   useEffect(() => {
-    (async () => {
-      updateState({ isFirstLoading: true });
-      const proxyAddress = await maker.service('proxy').getProxyAddress();
-      updateState({
-        isFirstLoading: false,
-        proxyAddress,
-        startedWithoutProxy: !proxyAddress
-      });
-    })();
+    if (account) {
+      (async () => {
+        updateState({ isFirstLoading: true });
+        const proxyAddress = await maker.service('proxy').getProxyAddress();
+        updateState({
+          isFirstLoading: false,
+          proxyAddress,
+          startedWithoutProxy: !proxyAddress
+        });
+      })();
+    }
   }, [maker, account]);
 
   return {
