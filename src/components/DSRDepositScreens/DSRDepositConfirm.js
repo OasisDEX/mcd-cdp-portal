@@ -127,7 +127,7 @@ const DSRDepositWait = ({ hash, onClose }) => {
       `}
     >
       <ScreenHeader
-        title={lang.cdp_create.confirmed_title}
+        title={lang.dsr_deposit.confirmed_title}
         text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
       />
       <Flex my="l" justifyContent="center">
@@ -167,13 +167,12 @@ const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
   const [depositDaiTxHash, setDepositDaiTxHash] = useState(null);
 
   async function capturedDispatch(payload) {
-    console.log('^^^payload in captured dispatch', payload);
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
     const txObject = maker.service('mcd:savings').join(MDAI(depositAmount));
 
-    newTxListener(txObject, lang.transactions.create_cdp);
+    newTxListener(txObject, lang.formatString(lang.depositing_gem, 'DAI'));
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
