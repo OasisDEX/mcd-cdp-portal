@@ -68,16 +68,16 @@ test('system collateralization is calculated correctly', () => {
     },
     feeds: [
       {
-        key: 'ETH-A'
+        key: 'ETH-B'
       }
     ],
     raw: {
       ilks: {
-        'ETH-A': {
-          priceWithSafetyMargin: '1000000000000000000000000000',
-          ilkArt: '300000000000000000000',
-          rate: '1000000000000000000000000000',
-          adapterBalance: '1000000000000000000000000000'
+        'ETH-B': {
+          priceWithSafetyMargin: '157850000000000000000000000000',
+          ilkArt: '2995628653904063343',
+          rate: '1002000000000000000000000000',
+          adapterBalance: '210000000000000000000000000'
         }
       }
     }
@@ -88,12 +88,13 @@ test('system collateralization is calculated correctly', () => {
     payload: [
       {
         type: 'ilk.ETH-A.liquidationRatio',
-        value: '1500000000000000000000000000'
+        value: '2000000000000000000000000000'
       }
     ]
   };
   const newState = mathReducer(initialState, action);
   console.log('newState', newState);
   console.log('newState.raw', newState.raw);
+  //should be 2,208.99 % ?
   expect(newState.system.systemCollateralization.toNumber()).toEqual(500000000);
 });
