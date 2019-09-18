@@ -15,6 +15,9 @@ import { SYSTEM_COLLATERALIZATION } from './system';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import compact from 'lodash/compact';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { USD } from '../maker';
 
 const mathReducer = produce((draft, action) => {
   if (action.type === 'CLEAR_CONTRACT_STATE') draft.raw = {};
@@ -77,9 +80,10 @@ const mathReducer = produce((draft, action) => {
               return math.debtValue(ilkArt, rate);
             }
           });
-          const combinedDebt = debts.reduce((a, b) => {
-            if (a && b) return a.plus(b);
-          });
+          const combinedDebt = compact(debts).reduce(
+            (a, b) => a.plus(b),
+            MDAI(0)
+          );
           const colVals = draft.feeds.map(feed => {
             if (!draft.raw.ilks[feed.key]) return;
             const { adapterBalance } = draft.raw.ilks[feed.key];
@@ -99,15 +103,22 @@ const mathReducer = produce((draft, action) => {
               );
             }
           });
-          const combinedColVal = colVals.reduce((a, b) => {
-            if (a && b) return a.plus(b);
-          });
-          if (combinedColVal && combinedDebt)
+          const combinedColVal = compact(colVals).reduce(
+            (a, b) => a.plus(b),
+            USD(0)
+          );
+          if (
+            math.collateralizationRatio(combinedColVal, combinedDebt) ===
+            Infinity
+          ) {
+            draft.system[SYSTEM_COLLATERALIZATION] = Infinity;
+          } else {
             draft.system[
               SYSTEM_COLLATERALIZATION
             ] = math
               .collateralizationRatio(combinedColVal, combinedDebt)
               .times(100);
+          }
         }
       }
       // if `par` changes (which is unlikely) all the prices need to change
