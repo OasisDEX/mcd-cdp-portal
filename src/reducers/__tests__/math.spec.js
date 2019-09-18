@@ -87,7 +87,7 @@ test('system collateralization is calculated correctly', () => {
     type: 'watcherUpdates',
     payload: [
       {
-        type: 'ilk.ETH-A.liquidationRatio',
+        type: 'ilk.ETH-B.liquidationRatio',
         value: '2000000000000000000000000000'
       }
     ]
