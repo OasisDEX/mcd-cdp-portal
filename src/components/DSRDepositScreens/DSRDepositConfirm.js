@@ -38,7 +38,10 @@ const DSRDepositConfirmSummary = ({
         margin: 0 auto;
       `}
     >
-      <ScreenHeader title={lang.dsr_deposit.confirm_title} />
+      <ScreenHeader
+        title={lang.dsr_deposit.confirm_title}
+        text={lang.save.deposit_dai_subheading}
+      />
       <Card py={{ s: 'm', m: 'l' }} px={{ s: 'm', m: 'xl' }} my="l">
         <Grid>
           {rows.map(([title, value], index) => {

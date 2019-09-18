@@ -6,7 +6,7 @@ import {
   DSRDepositCheckProxy,
   DSRDepositCreate,
   DSRDepositConfirm
-} from 'components/DSROpenScreens';
+} from 'components/DSRDepositScreens';
 import useMaker from 'hooks/useMaker';
 
 const screens = [

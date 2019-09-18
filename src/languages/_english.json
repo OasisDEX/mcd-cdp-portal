@@ -133,6 +133,7 @@
   },
   "dsr_deposit": {
     "open_vault": "Open your Maker Earn Vault",
+    "deposit_form_title": "Enter the amount you would like to deposit.",
     "confirm_title": "Confirm Deposit"
   },
   "actions": {
