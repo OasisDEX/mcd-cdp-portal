@@ -9,7 +9,8 @@ const ScreenFooter = ({
   loading,
   canGoBack = true,
   canProgress = true,
-  continueText = lang.actions.continue
+  continueText = lang.actions.continue,
+  secondaryButtonText = lang.actions.back
 } = {}) => {
   return (
     <Flex textAlign="center" justifyContent="center">
@@ -20,7 +21,7 @@ const ScreenFooter = ({
         mx="xs"
         onClick={onBack}
       >
-        {lang.actions.back}
+        {secondaryButtonText}
       </Button>
       <Button
         disabled={!canProgress}

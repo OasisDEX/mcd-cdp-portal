@@ -2,13 +2,9 @@ import React, { useState } from 'react';
 import lang from 'languages';
 import { Text, Card, Flex, Link, CardBody } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
-import { ReactComponent as CaratDown } from 'images/carat-down.svg';
+import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
-
-const CaratUp = styled(CaratDown)`
-  transform: rotate(180deg);
-`;
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -58,12 +54,12 @@ const SidebarFeeds = ({ feeds }) => {
           {collapsed ? (
             <>
               <Text pr="xs">{lang.sidebar.view_more}</Text>
-              <CaratDown />
+              <Carat />
             </>
           ) : (
             <>
               <Text pr="xs">{lang.sidebar.view_less}</Text>
-              <CaratUp />
+              <Carat rotation={180} />
             </>
           )}
         </Flex>

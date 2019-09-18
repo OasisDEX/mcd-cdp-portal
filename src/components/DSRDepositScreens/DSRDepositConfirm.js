@@ -16,16 +16,21 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
-const DSRDepositConfirmSummary = ({ capturedDispatch }) => {
+const DSRDepositConfirmSummary = ({
+  onClose,
+  depositAmount,
+  capturedDispatch
+}) => {
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
-  const ph = '123';
-
-  const rows = [[lang.verbs.depositing, `${prettifyNumber(ph)} DAI`]];
+  const rows = [
+    [lang.save.deposit_amount, `${prettifyNumber(depositAmount)} DAI`]
+  ];
   return (
     <Box
       maxWidth="1040px"
@@ -33,7 +38,10 @@ const DSRDepositConfirmSummary = ({ capturedDispatch }) => {
         margin: 0 auto;
       `}
     >
-      <ScreenHeader title={lang.cdp_create.confirm_title} />
+      <ScreenHeader
+        title={lang.dsr_deposit.confirm_title}
+        text={lang.save.deposit_dai_subheading}
+      />
       <Card py={{ s: 'm', m: 'l' }} px={{ s: 'm', m: 'xl' }} my="l">
         <Grid>
           {rows.map(([title, value], index) => {
@@ -81,8 +89,9 @@ const DSRDepositConfirmSummary = ({ capturedDispatch }) => {
       <ScreenFooter
         canProgress={hasReadTOS}
         onNext={() => capturedDispatch({ type: 'increment-step' })}
-        onBack={() => capturedDispatch({ type: 'decrement-step' })}
-        continueText={lang.actions.create_cdp}
+        onBack={onClose}
+        continueText={lang.actions.deposit}
+        secondaryButtonText={lang.actions.skip}
       />
     </Box>
   );
@@ -118,7 +127,7 @@ const DSRDepositWait = ({ hash, onClose }) => {
       `}
     >
       <ScreenHeader
-        title={lang.cdp_create.confirmed_title}
+        title={lang.dsr_deposit.confirmed_title}
         text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
       />
       <Flex my="l" justifyContent="center">
@@ -152,8 +161,8 @@ const DSRDepositWait = ({ hash, onClose }) => {
   );
 };
 
-const DSRDepositConfirm = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
-  const { maker, checkForNewCdps, newTxListener } = useMaker();
+const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
+  const { maker, newTxListener } = useMaker();
 
   const [depositDaiTxHash, setDepositDaiTxHash] = useState(null);
 
@@ -161,15 +170,14 @@ const DSRDepositConfirm = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     const { type } = payload;
     if (type !== 'increment-step') return dispatch(payload);
 
-    const mockAmount = '4';
-    const txObject = maker.service('mcd:savings').join(mockAmount);
+    const txObject = maker.service('mcd:savings').join(MDAI(depositAmount));
 
-    newTxListener(txObject, lang.transactions.create_cdp);
+    newTxListener(txObject, lang.formatString(lang.depositing_gem, 'DAI'));
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
       pending: tx => setDepositDaiTxHash(tx.hash),
-      confirmed: () => checkForNewCdps()
+      confirmed: tx => console.log('^^^CONFIRMED', tx)
     });
     await txMgr.confirm(txObject, 1);
   }
@@ -180,9 +188,9 @@ const DSRDepositConfirm = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
 
   return (
     <DSRDepositConfirmSummary
-      cdpParams={cdpParams}
-      selectedIlk={selectedIlk}
       capturedDispatch={capturedDispatch}
+      depositAmount={depositAmount}
+      onClose={onClose}
     />
   );
 };

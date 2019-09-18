@@ -16,9 +16,16 @@ import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
+import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import useSidebar from 'hooks/useSidebar';
+import styled from 'styled-components';
+import Carat from './Carat';
+
+const StyledCardBody = styled(CardBody)`
+  cursor: pointer;
+`;
 
 let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
 // this turns out to be the same as MWETH, which we show manually
@@ -88,6 +95,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
   const { show: showSidebar } = useSidebar();
+  const [collapsed, setCollapsed] = useState(true);
 
   const uniqueFeeds = useMemo(
     () =>
@@ -102,123 +110,101 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
 
+  const tokenBalances = useMemo(
+    () =>
+      tokensWithBalances.reduceRight((acc, token) => {
+        const balanceGtZero = !!(balances[token] && balances[token].gt(0));
+        if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
+        const symbol =
+          token === 'MDAI'
+            ? 'DAI'
+            : token === 'DAI'
+            ? 'SAI'
+            : token === 'MWETH'
+            ? 'WETH'
+            : token;
+
+        const tokenIsDai = token === 'MDAI' || token === 'DAI';
+
+        const usdRatio = tokenIsDai
+          ? new BigNumber(1)
+          : token === 'MWETH'
+          ? uniqueFeeds['ETH']
+          : uniqueFeeds[token];
+        return [
+          {
+            token,
+            amount: balances[token],
+            symbol,
+            usdRatio
+          },
+          ...acc
+        ];
+      }, []),
+    [balances, uniqueFeeds]
+  );
+
   return (
-    <CardBody>
-      <Box px="s" py="m">
-        <Text t="h4">{lang.sidebar.wallet_balances}</Text>
-      </Box>
-      <Flex justifyContent="space-between" px="s">
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
-          {lang.sidebar.asset}
-        </Text>
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-          {lang.sidebar.balance}
-        </Text>
-        <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
-          {lang.sidebar.usd}
-        </Text>
-        <Box width="20%" />
-      </Flex>
+    <>
+      <CardBody>
+        <Box px="s" py="m">
+          <Text t="h4">{lang.sidebar.wallet_balances}</Text>
+        </Box>
+        <Flex justifyContent="space-between" px="s">
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+            {lang.sidebar.asset}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.balance}
+          </Text>
+          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+            {lang.sidebar.usd}
+          </Text>
+          <Box width="20%" />
+        </Flex>
 
-      <StripedRows>
-        <TokenBalance
-          symbol="DAI"
-          amount={balances.MDAI}
-          usdRatio={new BigNumber(1)}
-          button={
-            hasActiveAccount && (
-              <ActionButton
-                onClick={() =>
-                  showSendSidebar({
-                    token: 'MDAI'
-                  })
-                }
-              >
-                {lang.sidebar.send}
-              </ActionButton>
-            )
-          }
-        />
-        <TokenBalance
-          symbol="ETH"
-          amount={balances.ETH}
-          usdRatio={uniqueFeeds.ETH}
-          button={
-            hasActiveAccount && (
-              <ActionButton
-                onClick={() =>
-                  showSendSidebar({
-                    token: 'ETH'
-                  })
-                }
-              >
-                {lang.sidebar.send}
-              </ActionButton>
-            )
-          }
-        />
-        {balances.SAI && balances.SAI.gt(0) && (
-          <TokenBalance
-            symbol="SAI"
-            amount={balances.SAI}
-            usdRatio={new BigNumber(1)}
-            button={
-              hasActiveAccount && (
-                <ActionButton>{lang.sidebar.migrate}</ActionButton>
-              )
-            }
-          />
-        )}
-        {balances.MWETH && balances.MWETH.gt(0) && (
-          <TokenBalance
-            symbol="WETH"
-            amount={balances.MWETH}
-            usdRatio={uniqueFeeds.ETH}
-            button={
-              hasActiveAccount && (
-                <ActionButton
-                  onClick={() =>
-                    showSendSidebar({
-                      token: 'MWETH'
-                    })
+        <StripedRows>
+          {tokenBalances.map(
+            ({ token, amount, symbol, usdRatio }, idx) =>
+              (!collapsed || idx < 4) && (
+                <TokenBalance
+                  key={`tokenbalance_${idx}`}
+                  symbol={symbol}
+                  amount={amount}
+                  usdRatio={usdRatio}
+                  button={
+                    hasActiveAccount &&
+                    ((token === 'SAI' && (
+                      <ActionButton>{lang.sidebar.migrate}</ActionButton>
+                    )) || (
+                      <ActionButton onClick={() => showSendSidebar({ token })}>
+                        {lang.sidebar.send}
+                      </ActionButton>
+                    ))
                   }
-                >
-                  {lang.sidebar.send}
-                </ActionButton>
+                />
               )
-            }
-          />
-        )}
-
-        {uniqueGemsToShow.map(gem => {
-          const balance = balances[gem];
-          return (
-            balance &&
-            balance.gt(0) && (
-              <TokenBalance
-                key={gem}
-                symbol={gem}
-                amount={balance}
-                usdRatio={uniqueFeeds[gem]}
-                button={
-                  hasActiveAccount && (
-                    <ActionButton
-                      onClick={() =>
-                        showSendSidebar({
-                          token: gem
-                        })
-                      }
-                    >
-                      {lang.sidebar.send}
-                    </ActionButton>
-                  )
-                }
-              />
-            )
-          );
-        })}
-      </StripedRows>
-    </CardBody>
+          )}
+        </StripedRows>
+      </CardBody>
+      {tokenBalances.length > 3 && (
+        <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
+          <Flex justifyContent="center" alignItems="center">
+            {collapsed ? (
+              <>
+                <Text pr="xs">{lang.sidebar.view_more}</Text>
+                <Carat />
+              </>
+            ) : (
+              <>
+                <Text pr="xs">{lang.sidebar.view_less}</Text>
+                <Carat rotation={180} />
+              </>
+            )}
+          </Flex>
+        </StyledCardBody>
+      )}
+    </>
   );
 };
 

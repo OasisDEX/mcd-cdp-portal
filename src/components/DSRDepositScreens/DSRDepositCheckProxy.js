@@ -12,6 +12,7 @@ import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useProxy from 'hooks/useProxy';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -24,7 +25,7 @@ const SuccessButton = () => {
   );
 };
 
-const DSRDepositCheckProxy = ({ dispatch }) => {
+const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
   const blockHeight = useBlockHeight(0);
 
   const {
@@ -37,6 +38,12 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
     hasProxy
   } = useProxy();
 
+  const {
+    hasAllowance,
+    setAllowance,
+    allowanceLoading: isSettingAllowance
+  } = useTokenAllowance('DAI');
+
   async function deployProxy() {
     await setupProxy();
     dispatch({
@@ -48,13 +55,13 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
   return (
     <Box maxWidth="71.8rem">
       <Text.h2 textAlign="center" mb="xl">
-        {lang.cdp_create.setup_proxy_title}
+        {lang.dsr_deposit.open_vault}
       </Text.h2>
       <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
         <Grid gridRowGap="xs">
           <Text.h4>Deploy proxy</Text.h4>
           <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
-            {lang.cdp_create.setup_proxy_proxy_text}
+            {lang.dsr_deposit.setup_proxy_text}
           </Text.p>
           {proxyAddress ? (
             <SuccessButton />
@@ -63,7 +70,7 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
               width="13.0rem"
               mt="xs"
               onClick={deployProxy}
-              disabled={proxyLoading || !!proxyErrors}
+              disabled={proxyLoading || isSettingAllowance || !!proxyErrors}
               loading={proxyLoading || !!proxyErrors}
             >
               {lang.cdp_create.setup_proxy_proxy_button}
@@ -112,10 +119,32 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
             )}
           </Text.p>
         </Grid>
+        <Grid gridRowGap="xs" mt="l">
+          <Text.h4>Set allowance</Text.h4>
+          <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
+            {lang.formatString(
+              lang.cdp_create.setup_proxy_allowance_text,
+              'DAI'
+            )}
+          </Text.p>
+          {hasAllowance ? (
+            <SuccessButton />
+          ) : (
+            <Button
+              width="13.0rem"
+              mt="xs"
+              onClick={setAllowance}
+              disabled={!proxyAddress || proxyLoading || isSettingAllowance}
+              loading={isSettingAllowance}
+            >
+              {lang.cdp_create.setup_proxy_allowance_button}
+            </Button>
+          )}
+        </Grid>
       </Card>
       <ScreenFooter
         onNext={() => dispatch({ type: 'increment-step' })}
-        onBack={() => dispatch({ type: 'decrement-step' })}
+        onBack={onClose}
         canGoBack={!proxyLoading}
         canProgress={hasProxy}
       />
