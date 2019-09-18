@@ -3,7 +3,6 @@ import { ToggleStateContext } from 'providers/ToggleProvider';
 
 export default function useToggle(id, initialState = false) {
   const { toggleState, updateToggleState } = useContext(ToggleStateContext);
-  console.log(toggleState);
 
   if (id && toggleState[id] === undefined) {
     updateToggleState({ id, state: initialState });
