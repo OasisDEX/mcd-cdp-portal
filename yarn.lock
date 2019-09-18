@@ -1531,7 +1531,7 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@0.2.13":
+"@makerdao/dai-plugin-mcd@^0.2.13":
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.13.tgz#51de6811717cc7c253f1a6f3a53c3bc37d140040"
   integrity sha512-KMth8twtBArLThmQA5S3wjKbfU4yQGCsn9x2CCVPiz06GWkPsucIEE6LR8m75xUsSxWY7y1UbDWXU4xyy50T+Q==
@@ -6644,7 +6644,7 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-"ganache-cli@github:makerdao/ganache-cli#fix/gas-est-crash":
+ganache-cli@makerdao/ganache-cli#fix/gas-est-crash:
   version "6.4.3-beta.0"
   resolved "https://codeload.github.com/makerdao/ganache-cli/tar.gz/3e512b61da2479042627e6155231dcb038110650"
   dependencies:

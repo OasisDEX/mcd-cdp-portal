@@ -21,7 +21,11 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
-const DSRDepositConfirmSummary = ({ depositAmount, capturedDispatch }) => {
+const DSRDepositConfirmSummary = ({
+  onClose,
+  depositAmount,
+  capturedDispatch
+}) => {
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const rows = [
@@ -82,8 +86,9 @@ const DSRDepositConfirmSummary = ({ depositAmount, capturedDispatch }) => {
       <ScreenFooter
         canProgress={hasReadTOS}
         onNext={() => capturedDispatch({ type: 'increment-step' })}
-        onBack={() => capturedDispatch({ type: 'decrement-step' })}
-        continueText={lang.actions.create_cdp}
+        onBack={onClose}
+        continueText={lang.actions.deposit}
+        secondaryButtonText={lang.actions.skip}
       />
     </Box>
   );
@@ -183,6 +188,7 @@ const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
     <DSRDepositConfirmSummary
       capturedDispatch={capturedDispatch}
       depositAmount={depositAmount}
+      onClose={onClose}
     />
   );
 };

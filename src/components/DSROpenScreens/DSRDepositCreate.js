@@ -87,7 +87,9 @@ function DepositDaiForm({
 }
 
 const DSRDepositCreate = ({ dispatch }) => {
-  const { MDAI } = useWalletBalances();
+  const balances = useWalletBalances();
+  console.log('^^^balances', balances);
+  const { MDAI } = balances;
   const daiBalance = MDAI.toFixed(6);
 
   const [
