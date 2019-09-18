@@ -25,7 +25,7 @@ const SuccessButton = () => {
   );
 };
 
-const DSRDepositCheckProxy = ({ dispatch }) => {
+const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
   const blockHeight = useBlockHeight(0);
 
   const {
@@ -61,7 +61,7 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
         <Grid gridRowGap="xs">
           <Text.h4>Deploy proxy</Text.h4>
           <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
-            {lang.cdp_create.setup_proxy_proxy_text}
+            {lang.dsr_deposit.setup_proxy_text}
           </Text.p>
           {proxyAddress ? (
             <SuccessButton />
@@ -144,7 +144,7 @@ const DSRDepositCheckProxy = ({ dispatch }) => {
       </Card>
       <ScreenFooter
         onNext={() => dispatch({ type: 'increment-step' })}
-        onBack={() => dispatch({ type: 'decrement-step' })}
+        onBack={onClose}
         canGoBack={!proxyLoading}
         canProgress={hasProxy}
       />

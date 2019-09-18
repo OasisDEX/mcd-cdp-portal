@@ -84,9 +84,8 @@ function DepositDaiForm({
   );
 }
 
-const DSRDepositCreate = ({ dispatch }) => {
+const DSRDepositCreate = ({ dispatch, onClose }) => {
   const balances = useWalletBalances();
-  console.log('^^^balances', balances);
   const { MDAI } = balances;
   const daiBalance = MDAI.toFixed(6);
 
@@ -145,14 +144,9 @@ const DSRDepositCreate = ({ dispatch }) => {
           });
           dispatch({ type: 'increment-step' });
         }}
-        onBack={() =>
-          dispatch({
-            type: 'decrement-step',
-            payload: { by: 1 }
-          })
-        }
-        //todo
-        canProgress={true}
+        onBack={onClose}
+        secondaryButtonText={lang.actions.skip}
+        canProgress={!!depositAmount && !depositAmountErrors}
       />
     </Box>
   );
