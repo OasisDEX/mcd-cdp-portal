@@ -42,7 +42,7 @@ const TOTAL_DAI_SUPPLY = system => [
 
 const SYSTEM_COLLATERALIZATION = system => [
   lang.sidebar.system_collateralization,
-  `${prettifyNumber(system.systemCollateralization, false, 2, false)} %`
+  `${prettifyNumber(system.systemCollateralization, false, 2, false)}%`
 ];
 
 const SidebarSystem = ({ system }) => {
