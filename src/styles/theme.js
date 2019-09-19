@@ -13,6 +13,7 @@ const theme = {
     blueGray: '#1E2C37',
     blueGrayDarker: '#18232C',
     blueGrayLighter: '#31424E',
+    red: '#F75524',
     ...colors
   },
   typography: {

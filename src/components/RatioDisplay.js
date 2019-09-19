@@ -4,23 +4,24 @@ import { CDP_SAFETY_LEVELS } from 'utils/constants';
 import { Text } from '@makerdao/ui-components-core';
 
 const CDP_SAFETY_COLOR_PALETTE = {
-  [CDP_SAFETY_LEVELS.DANGER]: getColor('orange.500'),
-  [CDP_SAFETY_LEVELS.NEUTRAL]: getColor('grey.300'),
-  [CDP_SAFETY_LEVELS.SAFE]: getColor('teal.500'),
-  neutral_inverse: getColor('steel')
+  [CDP_SAFETY_LEVELS.DANGER]: getColor('red'),
+  [CDP_SAFETY_LEVELS.NEUTRAL]: getColor('orange.500'),
+  [CDP_SAFETY_LEVELS.SAFE]: getColor('teal.500')
 };
 
-function lookupCDPSafetyLevel(ratio, inverse) {
+function lookupCDPSafetyLevel(ratio, ilkLiqRatio) {
   ratio = parseFloat(ratio);
-  if (ratio < 250) return CDP_SAFETY_LEVELS.DANGER;
-  if (ratio < 500)
-    return inverse ? 'neutral_inverse' : CDP_SAFETY_LEVELS.NEUTRAL;
+  ilkLiqRatio = parseFloat(ilkLiqRatio);
+
+  const ratioDifference = ratio - ilkLiqRatio;
+  if (ratioDifference < 10) return CDP_SAFETY_LEVELS.DANGER;
+  if (ratioDifference < 50) return CDP_SAFETY_LEVELS.NEUTRAL;
   return CDP_SAFETY_LEVELS.SAFE;
 }
 
-export default function RatioDisplay({ ratio, active, inverse, t, ...props }) {
+export default function RatioDisplay({ ratio, ilkLiqRatio, active, ...props }) {
   if (!ratio || ratio === Infinity) return null;
-  const safetyLevel = lookupCDPSafetyLevel(ratio, inverse);
+  const safetyLevel = lookupCDPSafetyLevel(ratio, ilkLiqRatio);
 
   return (
     <Text
