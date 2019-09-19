@@ -40,6 +40,11 @@ const TOTAL_DAI_SUPPLY = system => [
   prettifyNumber(system.totalDebt)
 ];
 
+const SYSTEM_COLLATERALIZATION = system => [
+  lang.sidebar.system_collateralization,
+  `${prettifyNumber(system.systemCollateralization, false, 2, false)}%`
+];
+
 const SidebarSystem = ({ system }) => {
   const systemParams = [
     // GLOBAL_DEBT_CEILING,
@@ -47,6 +52,7 @@ const SidebarSystem = ({ system }) => {
     // BASE_RATE,
     // SURPLUS_AUCTION_LOT_SIZE,
     // DEBT_AUCTION_LOT_SIZE
+    SYSTEM_COLLATERALIZATION,
     TOTAL_DAI_SUPPLY,
     ACTIVE_CDPS
   ].map(f => f(system));
