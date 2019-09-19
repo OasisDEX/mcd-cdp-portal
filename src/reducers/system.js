@@ -11,6 +11,7 @@ export const NUMBER_OF_LIQUIDATIONS = 'numberOfLiquidations';
 export const PAR = 'par';
 export const SYSTEM_COLLATERALIZATION = 'systemCollateralization';
 export const TOTAL_SAVINGS_DAI = 'totalSavingsDai';
+export const TOTAL_CDPS = 'totalCdps';
 
 export const initialState = {
   [BASE_RATE]: '0',
@@ -21,7 +22,8 @@ export const initialState = {
   [SURPLUS_AUCTION_LOT_SIZE]: '0',
   [PAR]: '0',
   [SYSTEM_COLLATERALIZATION]: '0',
-  [TOTAL_SAVINGS_DAI]: '0'
+  [TOTAL_SAVINGS_DAI]: '0',
+  [TOTAL_CDPS]: '0'
 };
 
 function convert(valueType, value) {

@@ -20,6 +20,7 @@ import { getSavingsBalance } from 'reducers/accounts';
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
 import AllowanceToggle from 'components/AllowanceToggle';
+import AccountSelection from 'components/AccountSelection';
 
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
@@ -140,7 +141,9 @@ function Save() {
 
   return (
     <PageContentLayout>
-      {account && !hasProxy ? (
+      {!account ? (
+        <AccountSelection />
+      ) : account && !hasProxy ? (
         <Flex
           height="70vh"
           justifyContent="center"

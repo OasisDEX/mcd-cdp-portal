@@ -6,7 +6,6 @@ import { prettifyNumber } from 'utils/ui';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
-import useStore from '../../hooks/useStore';
 import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
 import SetMax from '../SetMax';

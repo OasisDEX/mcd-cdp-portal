@@ -25,3 +25,7 @@ export const Routes = {
   SAVE: 'earn',
   TRADE: 'trade'
 };
+
+export const Toggles = {
+  WALLETBALANCES: 'walletbalances'
+};
