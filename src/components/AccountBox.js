@@ -18,8 +18,10 @@ import useStore from 'hooks/useStore';
 import { getAllFeeds } from 'reducers/feeds';
 import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
+import { Toggles } from 'utils/constants';
 import lang from 'languages';
 import useSidebar from 'hooks/useSidebar';
+import useToggle from 'hooks/useToggle';
 import styled from 'styled-components';
 import Carat from './Carat';
 
@@ -95,8 +97,10 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
   const { show: showSidebar } = useSidebar();
-  const [collapsed, setCollapsed] = useState(true);
-
+  const { toggle: collapsed, setToggle: setCollapsed } = useToggle(
+    Toggles.WALLETBALANCES,
+    true
+  );
   const uniqueFeeds = useMemo(
     () =>
       getAllFeeds(feeds).reduce((acc, feed) => {
