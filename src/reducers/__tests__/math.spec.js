@@ -32,6 +32,9 @@ test('feedValueUSD is calculated correctly', () => {
 
 test('ilk debtAvailable is calculated correctly', () => {
   const initialState = {
+    system: {
+      par: '1000000000000000000000000000'
+    },
     feeds: [
       {
         key: 'ETH-A'
