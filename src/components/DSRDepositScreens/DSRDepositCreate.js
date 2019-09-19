@@ -23,8 +23,7 @@ function DepositDaiForm({
 }) {
   const fields = [
     [
-      lang.formatString(lang.cdp_create.deposit_form_field1_title, 'DAI'),
-      lang.formatString(lang.cdp_create.deposit_form_field1_text, 'DAI'),
+      lang.formatString(lang.dsr_deposit.deposit_form_title, 'DAI'),
       <Input
         key="daiinput"
         name="gemsToLock"
@@ -35,7 +34,6 @@ function DepositDaiForm({
         failureMessage={depositAmountErrors}
         min="0"
         placeholder="0 DAI"
-        width={300}
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>
@@ -86,9 +84,8 @@ function DepositDaiForm({
   );
 }
 
-const DSRDepositCreate = ({ dispatch }) => {
+const DSRDepositCreate = ({ dispatch, onClose }) => {
   const balances = useWalletBalances();
-  console.log('^^^balances', balances);
   const { MDAI } = balances;
   const daiBalance = MDAI.toFixed(6);
 
@@ -128,11 +125,7 @@ const DSRDepositCreate = ({ dispatch }) => {
         title={lang.formatString(lang.save.deposit_dai)}
         text={lang.save.deposit_dai_subheading}
       />
-      <Grid
-        gridTemplateColumns={{ s: 'minmax(0, 1fr)', l: '2fr 1fr' }}
-        gridGap="m"
-        my="l"
-      >
+      <Grid gridGap="m" my="l">
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <DepositDaiForm
             daiBalance={daiBalance}
@@ -151,14 +144,9 @@ const DSRDepositCreate = ({ dispatch }) => {
           });
           dispatch({ type: 'increment-step' });
         }}
-        onBack={() =>
-          dispatch({
-            type: 'decrement-step',
-            payload: { by: 1 }
-          })
-        }
-        //todo
-        canProgress={true}
+        onBack={onClose}
+        secondaryButtonText={lang.actions.skip}
+        canProgress={!!depositAmount && !depositAmountErrors}
       />
     </Box>
   );

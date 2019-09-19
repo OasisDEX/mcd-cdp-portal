@@ -29,6 +29,8 @@ import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
+import useModal from '../hooks/useModal';
+import useProxy from '../hooks/useProxy';
 
 function Save() {
   const balances = useWalletBalances();
@@ -40,6 +42,8 @@ function Save() {
     allowanceLoading,
     startedWithoutAllowance
   } = useTokenAllowance('MDAI');
+
+  const { hasProxy } = useProxy();
 
   const balance = useMemo(() => {
     return account
@@ -85,7 +89,7 @@ function Save() {
     } else {
       return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-  }, [maker, withdrawAmount]);
+  }, [balance, maker, withdrawAmount]);
 
   const [
     onDeposit,
@@ -102,23 +106,23 @@ function Save() {
 
   useEffect(() => {
     if (depositSuccess) setDepositAmount('', { validate: false });
-  }, [depositSuccess]);
+  }, [depositSuccess, setDepositAmount]);
 
   useEffect(() => {
     if (withdrawSuccess) setWithdrawAmount('', { validate: false });
-  }, [withdrawSuccess]);
+  }, [setWithdrawAmount, withdrawSuccess]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
     if (depositAmount !== '')
       setDepositAmount(depositAmount, { validate: true });
-  }, [balances.MDAI]);
+  }, [balances.MDAI, depositAmount, setDepositAmount]);
 
   useEffect(() => {
     if (!balance) return;
     if (withdrawAmount !== '')
       setWithdrawAmount(withdrawAmount, { validate: true });
-  }, [balance]);
+  }, [balance, setWithdrawAmount, withdrawAmount]);
 
   const setDepositMax = useCallback(() => {
     if (balances.MDAI) {
@@ -132,156 +136,180 @@ function Save() {
     setWithdrawAmount(balance.toString());
   }, [balance, setWithdrawAmount]);
 
+  const { show } = useModal();
+
   return (
     <PageContentLayout>
-      <Flex justifyContent="center" mt="xl">
-        <Box px="m">
+      {account && !hasProxy ? (
+        <Flex
+          height="70vh"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+        >
           <Text.p t="h4" mb="s">
-            Balance
+            {lang.save.get_started_title}
           </Text.p>
-          <Grid
-            gridTemplateColumns={{ m: '1fr', l: '437px 352px' }}
-            gridColumnGap="l"
-            gridRowGap="m"
+          <Button
+            p="s"
+            css={{ cursor: 'pointer' }}
+            onClick={() =>
+              show({ modalType: 'dsrdeposit', modalTemplate: 'fullscreen' })
+            }
           >
-            <Card>
-              <CardBody px="l" py="m">
-                <Text.p t="h2">
-                  {balance.toFixed(4)}{' '}
-                  <Text t="h5">
-                    <DaiLogo /> DAI
-                  </Text>
-                </Text.p>
-                <Text.p t="h5" mt="s" color="steel">
-                  {balance.toFixed(4)} USD
-                </Text.p>
-              </CardBody>
-              <CardBody px="l">
-                <Table width="100%">
-                  <Table.tbody>
-                    <Table.tr>
-                      <Table.td>
-                        <Text t="body">{lang.save.dai_savings_rate}</Text>
-                      </Table.td>
-                      <Table.td textAlign="right">
-                        <Text t="body">
-                          {savings && savings.yearlyRate
-                            ? `${savings.yearlyRate.toFixed(2)}%`
-                            : '--'}
-                        </Text>
-                      </Table.td>
-                    </Table.tr>
-                  </Table.tbody>
-                </Table>
-              </CardBody>
-            </Card>
-
-            <CardTabs headers={[lang.actions.deposit, lang.actions.withdraw]}>
-              <Grid px="l" py="m" gridRowGap="m">
-                <Text.p t="body">{lang.save.description}</Text.p>
-
-                <div>
-                  <Text.p t="subheading" mb="s">
-                    {lang.save.deposit_amount}
+            {lang.save.get_started}
+          </Button>{' '}
+        </Flex>
+      ) : (
+        <Flex justifyContent="center" mt="xl">
+          <Box px="m">
+            <Text.p t="h4" mb="s">
+              Balance
+            </Text.p>
+            <Grid
+              gridTemplateColumns={{ m: '1fr', l: '437px 352px' }}
+              gridColumnGap="l"
+              gridRowGap="m"
+            >
+              <Card>
+                <CardBody px="l" py="m">
+                  <Text.p t="h2">
+                    {balance.toFixed(4)}{' '}
+                    <Text t="h5">
+                      <DaiLogo /> DAI
+                    </Text>
                   </Text.p>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder="0 DAI"
-                    value={depositAmount}
-                    onChange={onDepositAmountChange}
-                    error={depositAmountErrors}
-                    failureMessage={depositAmountErrors}
-                    after={<SetMax onClick={setDepositMax} />}
-                  />
+                  <Text.p t="h5" mt="s" color="steel">
+                    {balance.toFixed(4)} USD
+                  </Text.p>
+                </CardBody>
+                <CardBody px="l">
+                  <Table width="100%">
+                    <Table.tbody>
+                      <Table.tr>
+                        <Table.td>
+                          <Text t="body">{lang.save.dai_savings_rate}</Text>
+                        </Table.td>
+                        <Table.td textAlign="right">
+                          <Text t="body">
+                            {savings && savings.yearlyRate
+                              ? `${savings.yearlyRate.toFixed(2)}%`
+                              : '--'}
+                          </Text>
+                        </Table.td>
+                      </Table.tr>
+                    </Table.tbody>
+                  </Table>
+                </CardBody>
+              </Card>
 
-                  {(startedWithoutAllowance || !hasAllowance) && (
-                    <AllowanceToggle
-                      mt="s"
-                      tokenDisplayName="DAI"
-                      onToggle={setAllowance}
-                      isLoading={allowanceLoading}
-                      isComplete={hasAllowance}
-                      disabled={hasAllowance}
+              <CardTabs headers={[lang.actions.deposit, lang.actions.withdraw]}>
+                <Grid px="l" py="m" gridRowGap="m">
+                  <Text.p t="body">{lang.save.description}</Text.p>
+
+                  <div>
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.deposit_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={depositAmount}
+                      onChange={onDepositAmountChange}
+                      error={depositAmountErrors}
+                      failureMessage={depositAmountErrors}
+                      after={<SetMax onClick={setDepositMax} />}
                     />
+
+                    {(startedWithoutAllowance || !hasAllowance) && (
+                      <AllowanceToggle
+                        mt="s"
+                        tokenDisplayName="DAI"
+                        onToggle={setAllowance}
+                        isLoading={allowanceLoading}
+                        isComplete={hasAllowance}
+                        disabled={hasAllowance}
+                      />
+                    )}
+                  </div>
+
+                  <Box justifySelf="center">
+                    <Button
+                      disabled={
+                        !hasAllowance ||
+                        depositAmount === '' ||
+                        depositAmountErrors ||
+                        depositLoading
+                      }
+                      loading={depositLoading}
+                      onClick={onDeposit}
+                    >
+                      {lang.actions.deposit}
+                    </Button>
+                  </Box>
+                  {depositError && (
+                    <Text.p t="caption" color="orange.600" textAlign="center">
+                      {depositError}
+                    </Text.p>
                   )}
-                </div>
+                </Grid>
+                <Grid px="l" py="m" gridRowGap="m">
+                  <Text.p t="body">{lang.save.description}</Text.p>
 
-                <Box justifySelf="center">
-                  <Button
-                    disabled={
-                      !hasAllowance ||
-                      depositAmount === '' ||
-                      depositAmountErrors ||
-                      depositLoading
-                    }
-                    loading={depositLoading}
-                    onClick={onDeposit}
-                  >
-                    {lang.actions.deposit}
-                  </Button>
-                </Box>
-                {depositError && (
-                  <Text.p t="caption" color="orange.600" textAlign="center">
-                    {depositError}
-                  </Text.p>
-                )}
-              </Grid>
-              <Grid px="l" py="m" gridRowGap="m">
-                <Text.p t="body">{lang.save.description}</Text.p>
-
-                <div>
-                  <Text.p t="subheading" mb="s">
-                    {lang.save.withdraw_amount}
-                  </Text.p>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder="0 DAI"
-                    value={withdrawAmount}
-                    onChange={onWithdrawAmountChange}
-                    error={withdrawAmountErrors}
-                    failureMessage={withdrawAmountErrors}
-                    after={<SetMax onClick={setWithdrawMax} />}
-                  />
-
-                  {(startedWithoutAllowance || !hasAllowance) && (
-                    <AllowanceToggle
-                      mt="s"
-                      tokenDisplayName="DAI"
-                      onToggle={setAllowance}
-                      isLoading={allowanceLoading}
-                      isComplete={hasAllowance}
-                      disabled={hasAllowance}
+                  <div>
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.withdraw_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={withdrawAmount}
+                      onChange={onWithdrawAmountChange}
+                      error={withdrawAmountErrors}
+                      failureMessage={withdrawAmountErrors}
+                      after={<SetMax onClick={setWithdrawMax} />}
                     />
+
+                    {(startedWithoutAllowance || !hasAllowance) && (
+                      <AllowanceToggle
+                        mt="s"
+                        tokenDisplayName="DAI"
+                        onToggle={setAllowance}
+                        isLoading={allowanceLoading}
+                        isComplete={hasAllowance}
+                        disabled={hasAllowance}
+                      />
+                    )}
+                  </div>
+
+                  <Box justifySelf="center">
+                    <Button
+                      disabled={
+                        !hasAllowance ||
+                        withdrawAmount === '' ||
+                        withdrawAmountErrors ||
+                        withdrawLoading
+                      }
+                      loading={withdrawLoading}
+                      onClick={onWithdraw}
+                    >
+                      {lang.actions.withdraw}
+                    </Button>
+                  </Box>
+
+                  {withdrawError && (
+                    <Text.p t="caption" color="orange.600" textAlign="center">
+                      {withdrawError}
+                    </Text.p>
                   )}
-                </div>
-
-                <Box justifySelf="center">
-                  <Button
-                    disabled={
-                      !hasAllowance ||
-                      withdrawAmount === '' ||
-                      withdrawAmountErrors ||
-                      withdrawLoading
-                    }
-                    loading={withdrawLoading}
-                    onClick={onWithdraw}
-                  >
-                    {lang.actions.withdraw}
-                  </Button>
-                </Box>
-
-                {withdrawError && (
-                  <Text.p t="caption" color="orange.600" textAlign="center">
-                    {withdrawError}
-                  </Text.p>
-                )}
-              </Grid>
-            </CardTabs>
-          </Grid>
-        </Box>
-      </Flex>
+                </Grid>
+              </CardTabs>
+            </Grid>
+          </Box>
+        </Flex>
+      )}
     </PageContentLayout>
   );
 }
