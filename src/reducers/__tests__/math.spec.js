@@ -32,6 +32,9 @@ test('feedValueUSD is calculated correctly', () => {
 
 test('ilk debtAvailable is calculated correctly', () => {
   const initialState = {
+    system: {
+      par: '1000000000000000000000000000'
+    },
     feeds: [
       {
         key: 'ETH-A'
@@ -59,4 +62,54 @@ test('ilk debtAvailable is calculated correctly', () => {
   const newState = mathReducer(initialState, action);
   // line - (art * rate)
   expect(newState.feeds[0].ilkDebtAvailable.toNumber()).toEqual(299610.54);
+});
+
+test('system collateralization is calculated correctly', () => {
+  const initialState = {
+    system: {
+      par: '1000000000000000000000000000'
+    },
+    feeds: [
+      {
+        key: 'ETH-A'
+      },
+      {
+        key: 'ETH-B'
+      }
+    ],
+    raw: {
+      ilks: {
+        'ETH-A': {
+          priceWithSafetyMargin: '157850000000000000000000000000',
+          ilkArt: '2995628653904063343',
+          rate: '1002000000000000000000000000',
+          adapterBalance: '210000000000000000'
+        },
+        'ETH-B': {
+          priceWithSafetyMargin: '157850000000000000000000000000',
+          ilkArt: '2995628653904063343',
+          rate: '1002000000000000000000000000',
+          adapterBalance: '210000000000000000'
+        }
+      }
+    }
+  };
+
+  const action = {
+    type: 'watcherUpdates',
+    payload: [
+      {
+        type: 'ilk.ETH-A.liquidationRatio',
+        value: '2000000000000000000000000000'
+      },
+      {
+        type: 'ilk.ETH-B.liquidationRatio',
+        value: '2000000000000000000000000000'
+      }
+    ]
+  };
+  const newState = mathReducer(initialState, action);
+  expect(newState.system.systemCollateralization.toNumber()).toEqual(
+    2208.7073633927657
+  ); //2,208.99 %
 });

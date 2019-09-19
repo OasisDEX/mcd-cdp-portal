@@ -3,6 +3,9 @@ import { render } from '@testing-library/react';
 import StoreProvider from '../../src/providers/StoreProvider';
 import TestMakerProvider from './TestMakerProvider';
 import { ETH } from '@makerdao/dai';
+import theme from 'styles/theme';
+import { ThemeProvider } from 'styled-components';
+import rootReducer from '../../src/reducers';
 
 export function renderForSidebar(children, initialState) {
   if (!initialState) {
@@ -35,8 +38,10 @@ export function renderForSidebar(children, initialState) {
 
 export function renderWithStore(children, initialState = {}) {
   return render(
-    <StoreProvider reducer={() => initialState} initialState={initialState}>
-      {children}
-    </StoreProvider>
+    <ThemeProvider theme={theme}>
+      <StoreProvider reducer={rootReducer} initialState={initialState}>
+        {children}
+      </StoreProvider>
+    </ThemeProvider>
   );
 }

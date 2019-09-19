@@ -24,7 +24,8 @@
     "title": "Spend crypto without leaving your position.",
     "subtitle": "Leverage your crypto assets to generate Dai, a decentralized cryptocurrency pegged at the value of 1 US dollar.",
     "read_only": "Read-Only",
-    "wallet_connect": "Wallet Connect"
+    "wallet_connect": "Wallet Connect",
+    "wallet_link": "Coinbase Wallet"
   },
   "overview_page": {
     "title": "Overview",
@@ -41,24 +42,40 @@
     "total_collateral_locked": "total collateral locked",
     "total_dai_debt": "total dai debt"
   },
+  "navbar": {
+    "save": "Earn",
+    "borrow": "Borrow",
+    "trade": "Trade"
+  },
   "sidebar": {
     "wallet_balances": "Wallet Balances",
     "read_only_mode": "Read-Only Mode",
     "price_feeds": "Price Feeds",
+    "system_info": "System Info",
+    "active_cdps": "ACTIVE CDPS",
+    "active_cdps_figure": "{0} CDPs",
     "global_debt_ceiling": "GLOBAL DEBT CEILING",
     "current_debt": "CURRENT DEBT",
     "base_rate": "BASE RATE",
     "number_of_liquidations": "NUMBER OF LIQUIDATIONS",
     "buy_and_burn_lot_size": "BUY & BURN LOT SIZE",
     "inflate_and_sell_lot_size": "INFLATE & SELL LOT SIZE",
+    "system_collateralization": "COLLATERALIZATION",
     "view_price_feeds": "View price feeds",
+    "view_mkr_tools": "View mkr.tools",
     "view_more": "View more",
     "view_less": "View less",
     "asset": "ASSET",
     "balance": "BALANCE",
     "usd": "USD",
     "send": "SEND",
-    "no_wallet": "Not connected"
+    "migrate": "MIG",
+    "no_wallet": "Not connected",
+    "save_details": {
+      "title": "Save Details",
+      "total_savings_dai": "Total Savings DAI",
+      "total_dai_supply": "Total DAI Supply"
+    }
   },
   "cdp_create": {
     "select_title": "Select a collateral type",
@@ -92,7 +109,13 @@
     "draw_too_much_dai": "CDP below liquidation threshold",
     "stability_fee_description": "The fee calculated on top of the existing debt of the CDP. This is paid when paying back DAI.",
     "liquidation_ratio_description": "The collateral-to-dai ratio at which a CDP becomes vulnerable to liquidation.",
-    "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs."
+    "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",
+
+    "waiting_for_comfirmations": "Waiting for confirmations... {0} of {1}",
+    "confirmed_with_confirmations": "Confirmed with {0} confirmations",
+    "waiting_for_confirmations_info": "Waiting for confirmations reduces the risk of your Maker Collateral Vault address changing. We require users to wait 10 block confirmations to ensure it's been created successfully. This will often take around 2 minutes.",
+    "proxy_failure_not_mined": "This transaction is taking longer than usual...",
+    "proxy_failure_not_mined_info": "Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later"
   },
   "cdp_migrate": {
     "select_title": "Select CDP to Migrate",
@@ -113,6 +136,12 @@
     "migrate_another_cdp": "Migrate another CDP",
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
+  "dsr_deposit": {
+    "open_vault": "Open your Maker Earn Vault",
+    "deposit_form_title": "Enter the amount you would like to deposit.",
+    "setup_proxy_text": "A proxy is used to bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
+    "confirm_title": "Confirm Deposit"
+  },
   "actions": {
     "back": "Back",
     "continue": "Continue",
@@ -120,7 +149,9 @@
     "deposit": "Deposit",
     "withdraw": "Withdraw",
     "pay_back": "Pay back",
-    "generate": "Generate"
+    "generate": "Generate",
+    "send": "Send",
+    "skip": "Skip"
   },
   "actions_past_tense": {
     "deposit": "Deposited",
@@ -151,10 +182,30 @@
     "gem_usd_price_feed": "{0}/USD Price feed",
     "new_liquidation_price": "New liquidation price",
     "new_collateralization_ratio": "New collateralization ratio",
-    "set_max": "Set max",
     "create_proxy": "Create Proxy to continue",
     "creating_proxy": "Creating Proxy...",
-    "proxy_created": "Proxy Created"
+    "proxy_created": "Proxy Created",
+    "send_title": "Send {0}",
+    "send_description": "How much {0} would you like to send?",
+    "your_balance": "Your Balance",
+    "dest_address": "Destination Address",
+    "send_token_desc": "Sent {0}",
+    "invalid_input": "This input is invalid",
+    "invalid_min_amount": "Can only send a positive amount of {0}",
+    "invalid_max_amount": "Amount is greater than your balance",
+    "invalid_min_gas": "Balance is below the required tx fee: {0}",
+    "invalid_max_gas": "Balance is below the Amount + tx fee: {0}",
+    "invalid_address": "This is not a valid address"
+  },
+  "save": {
+    "dai_savings_rate": "Dai Savings rate",
+    "description": "Receive interest on your Dai. Withdraw or top-up at any time.",
+    "deposit_amount": "Deposit amount",
+    "withdraw_amount": "Withdraw amount",
+    "deposit_dai": "Deposit DAI",
+    "deposit_dai_subheading": "Start earning as soon as your deposit is confirmed.",
+    "get_started": "Get Started",
+    "get_started_title": "Open a Maker Vault to start earning DAI."
   },
   "verbs": {
     "depositing": "Depositing",
@@ -176,6 +227,12 @@
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
   },
+  "input_validations": {
+    "max_float": "Amount must be less than {0}",
+    "min_float": "Amount must be greater than {0}",
+    "is_float": "Please enter a valid number",
+    "default": "Please enter a valid input"
+  },
   "cdp_type": "CDP Type",
   "not_found": "Not Found",
   "network": "Network",
@@ -183,6 +240,8 @@
   "cdp": "CDP",
   "cdp_id": "CDP ID",
   "connect": "Connect",
+  "set_max": "Set max",
+  "paste": "Paste",
   "cancel": "Cancel",
   "stability_fee": "Stability fee",
   "liquidation_penalty": "Liquidation fee",

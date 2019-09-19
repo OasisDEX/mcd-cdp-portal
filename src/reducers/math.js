@@ -8,11 +8,16 @@ import {
   DEBT_CEILING,
   RATE,
   ILK_ART,
-  ILK_DEBT_AVAILABLE
+  ILK_DEBT_AVAILABLE,
+  ADAPTER_BALANCE
 } from './feeds';
+import { SYSTEM_COLLATERALIZATION } from './system';
 import { PAR } from './system';
 import { getCurrency } from '../utils/cdp';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import compact from 'lodash/compact';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { USD } from '../maker';
 
 const mathReducer = produce((draft, action) => {
   if (action.type === 'CLEAR_CONTRACT_STATE') draft.raw = {};
@@ -58,8 +63,64 @@ const mathReducer = produce((draft, action) => {
             );
           }
         }
+        // update the system collateralization if Art, rate, adapterBalance, spot, or mat changes for any ilk
+        if (
+          [
+            RATE,
+            ILK_ART,
+            ADAPTER_BALANCE,
+            PRICE_WITH_SAFETY_MARGIN,
+            LIQUIDATION_RATIO
+          ].includes(prop)
+        ) {
+          const debts = draft.feeds.map(feed => {
+            if (!draft.raw.ilks[feed.key]) return;
+            const { ilkArt, rate } = draft.raw.ilks[feed.key];
+            if (ilkArt && rate) {
+              return math.debtValue(ilkArt, rate);
+            }
+          });
+          const combinedDebt = compact(debts).reduce(
+            (a, b) => a.plus(b),
+            MDAI(0)
+          );
+          const colVals = draft.feeds.map(feed => {
+            if (!draft.raw.ilks[feed.key]) return;
+            const { adapterBalance } = draft.raw.ilks[feed.key];
+            const par = draft.system ? draft.system[PAR] : null;
+            const price = recalculatePrice(
+              draft.raw.ilks[feed.key],
+              feed.key,
+              par
+            );
+            if (adapterBalance && price) {
+              return math.collateralValue(
+                math.collateralAmount(
+                  getCurrency({ ilk: feed.key }),
+                  adapterBalance
+                ),
+                price
+              );
+            }
+          });
+          const combinedColVal = compact(colVals).reduce(
+            (a, b) => a.plus(b),
+            USD(0)
+          );
+          if (
+            math.collateralizationRatio(combinedColVal, combinedDebt) ===
+            Infinity
+          ) {
+            draft.system[SYSTEM_COLLATERALIZATION] = Infinity;
+          } else {
+            draft.system[
+              SYSTEM_COLLATERALIZATION
+            ] = math
+              .collateralizationRatio(combinedColVal, combinedDebt)
+              .times(100);
+          }
+        }
       }
-
       // if `par` changes (which is unlikely) all the prices need to change
       if (type === `system.${PAR}` && draft.raw.ilks) {
         draft.feeds.forEach(feed => {

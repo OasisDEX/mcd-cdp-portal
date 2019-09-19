@@ -1,36 +1,66 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import { Text, Input, Grid, Link, Button } from '@makerdao/ui-components-core';
-import useMaker from '../../hooks/useMaker';
-import {
-  formatCollateralizationRatio,
-  formatLiquidationPrice
-} from '../../utils/ui';
-import { calcCDPParams } from '../../utils/cdp';
+import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import lang from 'languages';
+import round from 'lodash/round';
+
+import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
+import { calcCDPParams } from 'utils/cdp';
+import { minimum } from 'utils/bignumber';
+
+import useMaker from 'hooks/useMaker';
+import useProxy from 'hooks/useProxy';
 import useStore from 'hooks/useStore';
+import useTokenAllowance from 'hooks/useTokenAllowance';
+import useWalletBalances from 'hooks/useWalletBalances';
+import useValidatedInput from 'hooks/useValidatedInput';
+
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
+
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import lang from 'languages';
-import { MAX_UINT_BN } from '../../utils/units';
-import LoadingToggle from 'components/LoadingToggle';
+import ProxyToggle from 'components/ProxyToggle';
+import AllowanceToggle from 'components/AllowanceToggle';
+import SetMax from 'components/SetMax';
 
 const Payback = ({ cdpId, reset }) => {
-  const { maker, account, newTxListener } = useMaker();
-  const [amount, setAmount] = useState('');
-  const [daiBalance, setDaiBalance] = useState(0);
-  const [hasAllowance, setHasAllowance] = useState(false);
+  const { maker, newTxListener } = useMaker();
+  const balances = useWalletBalances();
+  const daiBalance = balances.MDAI;
+
+  const {
+    hasAllowance,
+    setAllowance,
+    allowanceLoading,
+    startedWithoutAllowance
+  } = useTokenAllowance('MDAI');
+  const {
+    setupProxy,
+    proxyLoading,
+    startedWithoutProxy,
+    hasProxy
+  } = useProxy();
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp);
+  const debtAmount = getDebtAmount(cdp, false);
 
-  // FIXME balances should be handled by multicall
-  maker
-    .getToken(MDAI)
-    .balance()
-    .then(daiBalance => setDaiBalance(daiBalance.toNumber()));
+  const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
+    '',
+    {
+      maxFloat: Math.min(daiBalance, debtAmount),
+      minFloat: 0,
+      isFloat: true
+    },
+    {
+      maxFloat: amount => {
+        return daiBalance < parseFloat(amount)
+          ? lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+          : lang.action_sidebar.cannot_payback_more_than_owed;
+      }
+    }
+  );
 
   const amountToPayback = parseFloat(amount || 0);
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
@@ -39,31 +69,22 @@ const Payback = ({ cdpId, reset }) => {
     daiToDraw: Math.max(debtAmount - amountToPayback, 0)
   });
 
-  const setMax = () => setAmount(Math.min(debtAmount, daiBalance));
+  const setMax = () =>
+    debtAmount && daiBalance && setAmount(minimum(debtAmount, daiBalance));
 
   const payback = () => {
+    const cdpManager = maker.service('mcd:cdpManager');
     newTxListener(
-      maker.service('mcd:cdpManager').wipe(cdpId, MDAI(parseFloat(amount))),
+      debtAmount !== amount
+        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)))
+        : cdpManager.wipeAll(cdpId),
       lang.transactions.pay_back_dai
     );
     reset();
   };
 
-  const amt = parseFloat(amount);
-  const isLessThanBalance = amt <= daiBalance;
-  const isLessThanDebt = amt <= debtAmount;
-  const isNonZero = amount !== '' && amt > 0;
-  const canPayBack =
-    isNonZero && isLessThanDebt && isLessThanBalance && hasAllowance;
-
-  let errorMessage = null;
-  if (!isLessThanBalance && isNonZero)
-    errorMessage = lang.formatString(
-      lang.action_sidebar.insufficient_balance,
-      'DAI'
-    );
-  if (!isLessThanDebt && isNonZero)
-    errorMessage = lang.action_sidebar.cannot_payback_more_than_owed;
+  const showProxyToggle = !proxyLoading && !hasProxy;
+  const valid = amount && !amountErrors && hasProxy && hasAllowance;
 
   return (
     <Grid gridRowGap="m">
@@ -76,22 +97,41 @@ const Payback = ({ cdpId, reset }) => {
           type="number"
           value={amount}
           min="0"
-          onChange={evt => setAmount(evt.target.value)}
+          onChange={onAmountChange}
           placeholder="0.00 DAI"
-          failureMessage={errorMessage}
+          failureMessage={amountErrors}
           data-testid="payback-input"
-          after={
-            <Link onClick={setMax} fontWeight="medium">
-              {lang.action_sidebar.set_max}
-            </Link>
-          }
+          after={<SetMax onClick={setMax} />}
         />
       </Grid>
-      <ProxyAndAllowanceCheck
-        {...{ maker, account, newTxListener, hasAllowance, setHasAllowance }}
-      />
+      {(showProxyToggle ||
+        !hasAllowance ||
+        startedWithoutAllowance ||
+        startedWithoutProxy) && (
+        <Grid gridRowGap="s" data-testid="toggle-container">
+          {(startedWithoutProxy || showProxyToggle) && (
+            <ProxyToggle
+              isLoading={proxyLoading}
+              isComplete={!!hasProxy}
+              onToggle={setupProxy}
+              disabled={!!hasProxy}
+              data-testid="proxy-toggle"
+            />
+          )}
+          {(startedWithoutAllowance || !hasAllowance) && (
+            <AllowanceToggle
+              tokenDisplayName={'DAI'}
+              isLoading={allowanceLoading}
+              isComplete={hasAllowance}
+              onToggle={setAllowance}
+              disabled={!hasProxy || hasAllowance}
+              data-testid="allowance-toggle"
+            />
+          )}
+        </Grid>
+      )}
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!canPayBack} onClick={payback}>
+        <Button disabled={!valid} onClick={payback}>
           {lang.actions.pay_back}
         </Button>
         <Button variant="secondary-outline" onClick={reset}>
@@ -103,7 +143,10 @@ const Payback = ({ cdpId, reset }) => {
           title={lang.action_sidebar.dai_balance}
           body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
         />
-        <Info title={lang.action_sidebar.dai_debt} body={`${debtAmount} DAI`} />
+        <Info
+          title={lang.action_sidebar.dai_debt}
+          body={`${round(debtAmount, 6)} DAI`}
+        />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
           body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
@@ -117,134 +160,3 @@ const Payback = ({ cdpId, reset }) => {
   );
 };
 export default Payback;
-
-const checkForProxyAndAllowance = async (
-  maker,
-  updateState,
-  setHasAllowance
-) => {
-  const proxyAddress = await maker.service('proxy').getProxyAddress();
-  const token = maker.getToken('MDAI');
-  const hasAllowance =
-    proxyAddress &&
-    (await token.allowance(maker.currentAddress(), proxyAddress)).eq(
-      MAX_UINT_BN
-    );
-
-  setHasAllowance(hasAllowance);
-  updateState({
-    proxyAddress,
-    startedWithoutProxy: !proxyAddress,
-    startedWithoutAllowance: !hasAllowance
-  });
-};
-
-const setupProxy = async (maker, updateState, newTxListener) => {
-  try {
-    updateState({ proxyLoading: true });
-    const txPromise = maker.service('proxy').ensureProxy();
-    newTxListener(txPromise, lang.transactions.setting_up_proxy);
-    const proxyAddress = await txPromise;
-    updateState({ proxyAddress, proxyLoading: false });
-  } catch (e) {
-    updateState({ proxyLoading: false });
-  }
-};
-
-const setAllowance = async (
-  maker,
-  updateState,
-  newTxListener,
-  proxyAddress,
-  setHasAllowance
-) => {
-  try {
-    updateState({ allowanceLoading: true });
-
-    const daiToken = maker.getToken('MDAI');
-    const txPromise = daiToken.approveUnlimited(proxyAddress);
-    newTxListener(
-      txPromise,
-      lang.formatString(lang.transactions.unlocking_token, 'DAI')
-    );
-    await txPromise;
-    setHasAllowance(true);
-    updateState({ allowanceLoading: false });
-  } catch (e) {
-    updateState({ allowanceLoading: false });
-  }
-};
-
-const initialState = {
-  proxyAddress: null,
-  startedWithoutProxy: false,
-  startedWithoutAllowance: false,
-  allowanceLoading: false,
-  proxyLoading: false
-};
-
-function ProxyAndAllowanceCheck({
-  maker,
-  account,
-  newTxListener,
-  hasAllowance,
-  setHasAllowance
-}) {
-  const [
-    {
-      startedWithoutProxy,
-      startedWithoutAllowance,
-      proxyAddress,
-      allowanceLoading,
-      proxyLoading
-    },
-    updateState
-  ] = useReducer(
-    (oldState, updates) => ({ ...oldState, ...updates }),
-    initialState
-  );
-
-  useEffect(() => {
-    checkForProxyAndAllowance(maker, updateState, setHasAllowance);
-  }, [maker, account, setHasAllowance]);
-
-  if (!startedWithoutProxy && !startedWithoutAllowance) return null;
-
-  return (
-    <Grid gridRowGap="s">
-      {(startedWithoutProxy || !proxyAddress) && (
-        <LoadingToggle
-          completeText={lang.action_sidebar.proxy_created}
-          loadingText={lang.action_sidebar.creating_proxy}
-          defaultText={lang.action_sidebar.create_proxy}
-          isLoading={proxyLoading}
-          isComplete={!!proxyAddress}
-          disabled={!!proxyAddress}
-          onToggle={() => setupProxy(maker, updateState, newTxListener)}
-        />
-      )}
-      {(startedWithoutAllowance || !hasAllowance) && (
-        <LoadingToggle
-          completeText={lang.formatString(
-            lang.action_sidebar.token_unlocked,
-            'DAI'
-          )}
-          loadingText={lang.formatString(
-            lang.action_sidebar.unlocking_token,
-            'DAI'
-          )}
-          defaultText={lang.formatString(
-            lang.action_sidebar.unlock_token,
-            'DAI'
-          )}
-          isLoading={allowanceLoading}
-          isComplete={hasAllowance}
-          onToggle={() =>
-            setAllowance(maker, updateState, newTxListener, proxyAddress)
-          }
-          disabled={!proxyAddress || hasAllowance}
-        />
-      )}
-    </Grid>
-  );
-}

@@ -1,22 +1,65 @@
 import { batchActions } from './utils/redux';
-import ilkList from './references/ilkList';
+import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
+import accountModel, {
+  accountBalanceForToken,
+  accountAllowanceForToken
+} from './reducers/multicall/accounts';
+import { tokensWithBalances } from 'reducers/accounts';
+import savingsModel from './reducers/multicall/savings';
 import { isMissingContractAddress } from './utils/ethereum';
 
 let watcher;
 
-export function startWatcher(maker, dispatch) {
+export async function updateWatcherWithProxy(
+  maker,
+  currentAddress,
+  proxyAddress
+) {
+  const addresses = maker.service('smartContract').getContractAddresses();
+  addresses.MDAI = addresses.MCD_DAI;
+  addresses.MWETH = addresses.ETH;
+
+  await watcher.tap(calls =>
+    [
+      ...calls,
+      ...(currentAddress
+        ? tokensWithBalances
+            .filter(token => token && token.symbol !== 'ETH')
+            .map(token =>
+              accountAllowanceForToken(
+                addresses,
+                token,
+                currentAddress,
+                proxyAddress
+              )
+            )
+            .flat()
+        : [])
+    ].filter(callData => !isMissingContractAddress(callData))
+  );
+}
+
+export async function startWatcher(maker, dispatch) {
   const service = maker.service('multicall');
   service.createWatcher();
   watcher = service.watcher;
   window.watcher = watcher;
 
+  let currentAddress;
+  let proxyAddress;
+  try {
+    currentAddress = maker.currentAddress();
+    proxyAddress = await maker.currentProxy();
+  } catch (err) {}
+
   const addresses = maker.service('smartContract').getContractAddresses();
 
-  watcher.onNewBlock(blockHeight => {
-    console.log('Latest block height:', blockHeight);
-  });
+  // add additional lookups for easier mapping when finding address
+  // by token symbol
+  addresses.MDAI = addresses.MCD_DAI;
+  addresses.MWETH = addresses.ETH;
 
   watcher.batch().subscribe(updates => {
     console.log('watcher got updates:', { updates });
@@ -35,7 +78,24 @@ export function startWatcher(maker, dispatch) {
   watcher.tap(() => {
     return [
       ...createCDPSystemModel(addresses),
-      ...ilkList.map(ilk => cdpTypeModel(addresses, ilk)).flat()
+      ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
+      ...savingsModel(addresses),
+      ...(currentAddress && proxyAddress
+        ? accountModel(addresses, currentAddress, proxyAddress)
+        : []),
+      ...(currentAddress
+        ? tokensWithBalances
+            .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
+            .map(token =>
+              accountBalanceForToken(
+                addresses,
+                token,
+                currentAddress,
+                proxyAddress
+              )
+            )
+            .flat()
+        : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
   });
   return watcher;

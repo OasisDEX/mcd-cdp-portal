@@ -17,7 +17,12 @@ export function formatLiquidationPrice(price, symbol) {
   return `${round(price, 2).toLocaleString()} ${symbol}/USD`;
 }
 
-export function prettifyNumber(_num = null, truncate = false) {
+export function prettifyNumber(
+  _num = null,
+  truncate = false,
+  decimalPlaces = 2,
+  keepSymbol = true
+) {
   if (_num === null) return null;
   let symbol = ' ';
   if (_num.symbol !== undefined) symbol += _num.symbol;
@@ -30,11 +35,21 @@ export function prettifyNumber(_num = null, truncate = false) {
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + ' M';
     else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + ' K';
-    else formattedNumber = num.toFixed(2);
+    else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
   }
-  return formattedNumber + symbol;
+  return keepSymbol ? formattedNumber + symbol : formattedNumber;
+}
+
+export function prettifyFloat(num, decimalPlaces = 2) {
+  if (!num && num !== 0) return 'NaN';
+  const [, decimalPortion] = num.toString().split('.');
+  const decimalPlacesInNumber = decimalPortion ? decimalPortion.length : 0;
+
+  return decimalPlacesInNumber > decimalPlaces
+    ? `${num.toFixed(decimalPlaces)}...`
+    : num;
 }
 
 export function cutMiddle(str = '', left = 4, right = 4) {

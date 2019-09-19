@@ -2,7 +2,7 @@ import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
 import BigNumber from 'bignumber.js';
-import { fromWei, fromRay, fromRad, sub, mul, RAY } from 'utils/units';
+import { fromWei, fromRay, fromRad, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -78,16 +78,18 @@ function convert(valueType, value) {
     }
     case RATE:
     case PRICE_WITH_SAFETY_MARGIN:
-      return fromRay(value, 5);
+      return fromRay(value).toFixed(3);
     case DEBT_CEILING:
-      return fromRad(value, 0);
+      return fromRad(value).toFixed(0);
     case MAX_AUCTION_LOT_SIZE:
     case ADAPTER_BALANCE:
-      return fromWei(value, 5);
+      return fromWei(value).toFixed(5);
     case LIQUIDATION_RATIO:
-      return fromRay(mul(value, 100), 0);
+      return fromRay(value)
+        .times(100)
+        .toFixed(0);
     case LIQUIDATION_PENALTY:
-      return fromRay(mul(sub(value, RAY), 100), 2);
+      return fromRay(new BigNumber(value).minus(RAY).times(100)).toFixed(2);
     default:
       return value;
   }

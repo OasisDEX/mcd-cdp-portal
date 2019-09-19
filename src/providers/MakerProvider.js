@@ -19,7 +19,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   const [, dispatch] = useStore();
 
   const initAccount = account => {
-    mixpanelIdentify(account.address, 'metamask');
+    mixpanelIdentify(account.address, account.type);
     setAccount({ ...account, cdps: [] });
   };
 
@@ -33,7 +33,6 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       if (maker.service('accounts').hasAccount()) {
         initAccount(maker.currentAccount());
       }
-      startWatcher(maker, dispatch);
       setMaker(maker);
 
       maker.on('accounts/CHANGE', eventObj => {
@@ -44,15 +43,30 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
             .service('proxy')
             .getProxyAddress(account.address);
           if (proxy) {
+            console.debug(`Found proxy address: ${proxy}`);
             const cdpIds = await maker
               .service('mcd:cdpManager')
               .getCdpIds(proxy);
             setAccount({ ...account, cdps: cdpIds });
+          } else {
+            console.debug(`No proxy found`);
           }
         })();
       });
     })();
   }, [backendEnv, dispatch, network, testchainId]);
+
+  useEffect(() => {
+    if (maker) {
+      startWatcher(maker, dispatch);
+      const subscription = maker
+        .service('multicall')
+        .watcher.onNewBlock(blockHeight =>
+          console.debug(`Latest block height: ${blockHeight}`)
+        );
+      return subscription.unsub;
+    }
+  }, [maker, dispatch, account]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);

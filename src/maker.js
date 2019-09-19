@@ -2,6 +2,7 @@ import Maker, { USD, DAI } from '@makerdao/dai';
 import McdPlugin, { ETH, MKR } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
+import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
@@ -26,13 +27,21 @@ export async function instantiateMaker({
 
   const config = {
     log: false,
-    plugins: [trezorPlugin, ledgerPlugin, [McdPlugin, mcdPluginConfig]],
+    plugins: [
+      trezorPlugin,
+      ledgerPlugin,
+      walletLinkPlugin,
+      [McdPlugin, mcdPluginConfig]
+    ],
     smartContract: {
       addContracts: {}
     },
     provider: {
       url: rpcUrl,
       type: 'HTTP'
+    },
+    web3: {
+      pollingInterval: network === 'testnet' ? 100 : null
     },
     multicall: true
   };

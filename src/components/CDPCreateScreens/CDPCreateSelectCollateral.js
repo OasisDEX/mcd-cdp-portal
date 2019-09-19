@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Grid,
@@ -9,13 +9,13 @@ import {
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 
-import { MAX_UINT_BN } from 'utils/units';
 import { prettifyNumber } from 'utils/ui';
 import ilkList from 'references/ilkList';
 import { getIlkData } from 'reducers/feeds';
 
-import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
+import useWalletBalances from 'hooks/useWalletBalances';
+import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
@@ -42,28 +42,17 @@ const CDPCreateSelectCollateralSidebar = () => (
   </Box>
 );
 
-function IlkTableRow({ ilk, checked, dispatch }) {
-  const { maker } = useMaker();
+function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
   const [{ feeds }] = useStore();
-  const [userGemBalance, setUserGemBalance] = useState(null);
 
   ilk.data = getIlkData(feeds, ilk.key);
-
-  useEffect(() => {
-    (async () => {
-      setUserGemBalance(await maker.getToken(ilk.currency).balance());
-    })();
-  }, []);
 
   async function selectIlk() {
     dispatch({
       type: 'set-ilk',
       payload: {
         key: ilk.key,
-        gemBalance:
-          userGemBalance === null
-            ? (await maker.getToken(ilk.currency).balance()).toNumber()
-            : userGemBalance.toNumber(),
+        gemBalance,
         currency: ilk.currency,
         data: ilk.data
       }
@@ -76,39 +65,24 @@ function IlkTableRow({ ilk, checked, dispatch }) {
         <Radio checked={checked} readOnly mr="xs" />
       </td>
       <td>{ilk.symbol}</td>
-      <td>{ilk.data.rate} %</td>
+      <td>{ilk.data.stabilityFee} %</td>
       <td>{ilk.data.liquidationRatio} %</td>
       <td>{ilk.data.liquidationPenalty} %</td>
-      <td css="text-align: right">{prettifyNumber(userGemBalance)}</td>
+      <td css="text-align: right">
+        {prettifyNumber(gemBalance)} {ilk.gem}
+      </td>
     </tr>
   );
 }
 
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
-  const { maker, account } = useMaker();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const gemToken = maker.getToken(selectedIlk.currency.symbol);
-        const hasAllowance =
-          selectedIlk.currency.symbol === 'ETH' ||
-          (await gemToken.allowance(maker.currentAddress(), proxyAddress)).eq(
-            MAX_UINT_BN
-          );
-        dispatch({ type: 'set-ilk-allowance', payload: { hasAllowance } });
-      } catch (err) {
-        dispatch({
-          type: 'set-ilk-allowance',
-          payload: { hasAllowance: false }
-        });
-      }
-      setLoading(false);
-    })();
-  }, [maker, account, selectedIlk.key]);
-
+  const balances = useWalletBalances();
+  const allowances = useTokenAllowances();
+  const hasAllowance =
+    selectedIlk.currency && allowances[selectedIlk.currency.symbol];
+  const ilkIsEth =
+    selectedIlk.currency && selectedIlk.currency.symbol === 'ETH';
+  const hasAllowanceAndProxy = (hasAllowance || ilkIsEth) && !!proxyAddress;
   return (
     <Box
       maxWidth="1040px"
@@ -154,6 +128,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                       checked={ilk.key === selectedIlk.key}
                       dispatch={dispatch}
                       ilk={ilk}
+                      gemBalance={balances[ilk.gem]}
                     />
                   ))}
                 </tbody>
@@ -166,9 +141,15 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        dispatch={dispatch}
+        onNext={() =>
+          dispatch({
+            type: 'increment-step',
+            payload: { by: hasAllowanceAndProxy ? 2 : 1 }
+          })
+        }
+        onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={false}
-        canProgress={!loading && !!selectedIlk.key}
+        canProgress={!!selectedIlk.key}
       />
     </Box>
   );

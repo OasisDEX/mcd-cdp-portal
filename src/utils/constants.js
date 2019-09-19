@@ -16,10 +16,16 @@ export const TxLifecycle = {
 export const AccountTypes = {
   LEDGER: 'ledger',
   TREZOR: 'trezor',
-  METAMASK: 'browser'
+  METAMASK: 'browser',
+  WALLETLINK: 'walletlink'
 };
 
 export const Routes = {
   BORROW: 'borrow',
-  SAVE: 'save'
+  SAVE: 'earn',
+  TRADE: 'trade'
+};
+
+export const Toggles = {
+  WALLETBALANCES: 'walletbalances'
 };

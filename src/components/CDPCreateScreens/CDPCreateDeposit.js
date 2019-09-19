@@ -5,6 +5,7 @@ import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
@@ -151,7 +152,6 @@ const CDPCreateDepositSidebar = ({
     debtCeiling,
     ilkDebtAvailable
   } = selectedIlk.data;
-
   return (
     <Grid gridRowGap="m">
       {[
@@ -186,6 +186,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     collateralizationRatio,
     daiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
+  const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -230,7 +231,13 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        dispatch={dispatch}
+        onNext={() => dispatch({ type: 'increment-step' })}
+        onBack={() =>
+          dispatch({
+            type: 'decrement-step',
+            payload: { by: hasAllowance ? 2 : 1 }
+          })
+        }
         canProgress={cdpParamsAreValid(
           cdpParams,
           selectedIlk.userGemBalance,

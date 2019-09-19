@@ -3,18 +3,21 @@ import { map, route, mount, redirect, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import PageLayout from 'layouts/PageLayout';
-import AppLayout from 'layouts/AppLayout';
+import BorrowLayout from 'layouts/BorrowLayout';
+import SaveLayout from 'layouts/SaveLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
+import { GenericNotFound } from 'pages/NotFound';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
+import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
+import EthBalanceProvider from 'providers/EthBalanceProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
@@ -37,18 +40,25 @@ const withBorrowLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider>
-                <PageLayout
-                  mobileNav={
-                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                  }
-                  navbar={<Navbar viewedAddress={viewedAddress} />}
-                >
-                  <View />
-                </PageLayout>
-              </SidebarProvider>
-            </ModalProvider>
+            <EthBalanceProvider>
+              <ToggleProvider>
+                <ModalProvider modals={modals} templates={templates}>
+                  <SidebarProvider>
+                    <BorrowLayout
+                      mobileNav={
+                        <MobileNav
+                          viewedAddress={viewedAddress}
+                          cdpId={cdpId}
+                        />
+                      }
+                      navbar={<Navbar viewedAddress={viewedAddress} />}
+                    >
+                      <View />
+                    </BorrowLayout>
+                  </SidebarProvider>
+                </ModalProvider>
+              </ToggleProvider>
+            </EthBalanceProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );
@@ -59,6 +69,7 @@ const withSaveLayout = route =>
   hasNetwork(
     withView(async request => {
       const { network, testchainId, backendEnv } = request.query;
+      const { viewedAddress, cdpId } = request.params;
 
       return (
         <MakerProvider
@@ -68,11 +79,25 @@ const withSaveLayout = route =>
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>
-            <ModalProvider modals={modals} templates={templates}>
-              <AppLayout>
-                <View />
-              </AppLayout>
-            </ModalProvider>
+            <EthBalanceProvider>
+              <ToggleProvider>
+                <ModalProvider modals={modals} templates={templates}>
+                  <SidebarProvider>
+                    <SaveLayout
+                      mobileNav={
+                        <MobileNav
+                          viewedAddress={viewedAddress}
+                          cdpId={cdpId}
+                        />
+                      }
+                      navbar={<Navbar viewedAddress={viewedAddress} />}
+                    >
+                      <View />
+                    </SaveLayout>
+                  </SidebarProvider>
+                </ModalProvider>
+              </ToggleProvider>
+            </EthBalanceProvider>
           </AwaitMakerAuthentication>
         </MakerProvider>
       );
@@ -150,7 +175,14 @@ export default mount({
         view: <Save />
       };
     })
-  )
+  ),
+
+  [`/${Routes.TRADE}`]: route(() => {
+    return {
+      title: 'Trade',
+      view: <GenericNotFound />
+    };
+  })
 });
 
 function networkIsUndefined(request) {
