@@ -5,7 +5,8 @@ import {
   DEBT_AUCTION_LOT_SIZE,
   SURPLUS_AUCTION_LOT_SIZE,
   PAR,
-  TOTAL_SAVINGS_DAI
+  TOTAL_SAVINGS_DAI,
+  TOTAL_CDPS
 } from 'reducers/system';
 
 const totalDebt = addresses => ({
@@ -50,6 +51,12 @@ const totalSavingsDai = addresses => ({
   returns: [[`system.${TOTAL_SAVINGS_DAI}`]]
 });
 
+const totalCdps = addresses => ({
+  target: addresses.CDP_MANAGER,
+  call: ['cdpi()(uint256)'],
+  returns: [[`system.${TOTAL_CDPS}`]]
+});
+
 export function createCDPSystemModel(addresses) {
   return [
     totalDebt,
@@ -58,6 +65,7 @@ export function createCDPSystemModel(addresses) {
     debtAuctionLotSize,
     surplusAuctionLotSize,
     par,
-    totalSavingsDai
+    totalSavingsDai,
+    totalCdps
   ].map(f => f(addresses));
 }
