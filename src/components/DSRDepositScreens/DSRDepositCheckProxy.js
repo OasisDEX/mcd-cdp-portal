@@ -42,7 +42,7 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
     hasAllowance,
     setAllowance,
     allowanceLoading: isSettingAllowance
-  } = useTokenAllowance('DAI');
+  } = useTokenAllowance('MDAI');
 
   async function deployProxy() {
     await setupProxy();
