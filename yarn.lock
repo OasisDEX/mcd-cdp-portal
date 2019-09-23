@@ -1626,28 +1626,28 @@
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
-"@makerdao/ui-components-core@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.5.tgz#6ecd935ef5ee166f8283104ae540094904535e14"
-  integrity sha512-3fZttD1E1u+4FJ+6UxDZQpxHzUE9XSyyZb5dekW0bux0IE43HpQjHtWZz9Zm16lx7PoSqcRBFFxPakVV+ElycQ==
+"@makerdao/ui-components-core@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.7.tgz#2f07ec9dd64cb45a620742524afb0c730222b204"
+  integrity sha512-nmHSepu5LL4YXQe8mKf6zzmy8bCLmzdi14NcVcCEeOIfOEwxfvbvOxgF9vj08GX5s/SGC0GcR2YDmQLRRd4hOQ==
   dependencies:
     "@makerdao/design-system-constants" "0.1.0"
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"
 
-"@makerdao/ui-components-footer@^0.1.7":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.9.tgz#f085bab75743ff77e98e11ca17ff7f7906e9cd58"
-  integrity sha512-V5toh0coNA/4ceM7INNLwnvXddWdGqm/j/RMX8GURvf3pRFpFvs1qFlj2joIwYA9bXR6ZA7JV8DZ+sTuXHWsuQ==
+"@makerdao/ui-components-footer@^0.1.16":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-footer/-/ui-components-footer-0.1.16.tgz#49d6a1a002cf1d1a6dc5880ddff2ccf81aa61437"
+  integrity sha512-pjtQHofJy0TRPr3nYPhLmgKOOuhcZImwRG3EhD6569yu/9bnWTGN8M9h47NSpMyhVjaU5aFgVvYK9r/cyGNqDw==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.6"
     react-qr-svg "^2.2.1"
 
-"@makerdao/ui-components-header@^0.1.7":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.10.tgz#6b5a206656213723d8ddb3bb0e409e26bdfab92e"
-  integrity sha512-0VhCuaox4G6U48VhgSuKpwgzBPbZZptUOMYTO3HbNdHlXetALHzrpORaN9gnzXAyf+qOj2DVExKWzgFdkvOotA==
+"@makerdao/ui-components-header@^0.1.11-alpha.6":
+  version "0.1.11-alpha.6"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-header/-/ui-components-header-0.1.11-alpha.6.tgz#84ffd71cc7a5f84bbde003cb7db3fca08dd57355"
+  integrity sha512-Hahmu4+burIrKGYDJuHYLMmguxaZiZzR1AwesfN2fcNVl/+m7TH2LmnaQrweCFp08u254Znk4GSfGEwmnpuIhg==
   dependencies:
     "@makerdao/i18n-helper" "^0.1.7"
 
