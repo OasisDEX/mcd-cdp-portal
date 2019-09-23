@@ -7,6 +7,7 @@ import useMaker from '../../hooks/useMaker';
 import { calcCDPParams } from '../../utils/cdp';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
+import useLanguage from 'hooks/useLanguage';
 import {
   getCdp,
   getDebtAmount,
@@ -18,11 +19,11 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
-import lang from 'languages';
 
 import SetMax from 'components/SetMax';
 
 const Withdraw = ({ cdpId, reset }) => {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);

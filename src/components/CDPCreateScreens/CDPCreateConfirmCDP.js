@@ -10,7 +10,7 @@ import {
   Link
 } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
@@ -27,6 +27,7 @@ const CDPCreateConfirmSummary = ({
   selectedIlk,
   capturedDispatch
 }) => {
+  const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
@@ -115,6 +116,7 @@ const CDPCreateConfirmSummary = ({
 };
 
 const CDPCreateConfirmed = ({ hash, onClose }) => {
+  const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');
 
@@ -179,6 +181,7 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
 };
 
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
+  const { lang } = useLanguage();
   const { maker, checkForNewCdps, newTxListener } = useMaker();
 
   const { gemsToLock, daiToDraw } = cdpParams;

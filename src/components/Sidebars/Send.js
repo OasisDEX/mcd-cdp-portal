@@ -6,7 +6,7 @@ import usePrevious from '../../hooks/usePrevious';
 import useMaker from '../../hooks/useMaker';
 import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import BigNumber from 'bignumber.js';
 import SetMax from '../SetMax';
 import { isValidAddressString, calculateGasCost } from '../../utils/ethereum';
@@ -25,18 +25,10 @@ const StyledPaste = styled(PasteIcon)`
   }
 `;
 
-const PasteAddress = props => (
-  <PasteLink fontWeight="medium" {...props}>
-    <Grid gridTemplateColumns="auto 1fr">
-      {lang.paste}
-      <StyledPaste />
-    </Grid>
-  </PasteLink>
-);
-
 const ZERO = BigNumber(0);
 
 const Send = ({ token, reset }) => {
+  const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
 
   const balances = useWalletBalances();
@@ -137,6 +129,15 @@ const Send = ({ token, reset }) => {
     );
     reset();
   };
+
+  const PasteAddress = props => (
+    <PasteLink fontWeight="medium" {...props}>
+      <Grid gridTemplateColumns="auto 1fr">
+        {lang.paste}
+        <StyledPaste />
+      </Grid>
+    </PasteLink>
+  );
 
   return (
     <Grid gridRowGap="m">

@@ -18,10 +18,6 @@ const screens = [
 const initialState = {
   step: 0,
   proxyAddress: null,
-  userDaiBalance: '',
-  currency: null,
-  data: {},
-  key: '',
   daiToJoin: '',
   depositAmount: ''
 };
@@ -43,22 +39,6 @@ function reducer(state, action) {
       return {
         ...state,
         proxyAddress: payload.address
-      };
-    case 'set-dai-data':
-      return {
-        ...state,
-        userDaiBalance: payload.userDaiBalance,
-        currency: payload.currency,
-        data: payload.data,
-        key: payload.key
-      };
-    case 'reset-dai-data':
-      return {
-        ...state,
-        userDaiBalance: '',
-        currency: null,
-        data: {},
-        key: ''
       };
     case 'form/set-deposit-amount':
       return { ...state, depositAmount: payload.depositAmount };
@@ -89,9 +69,6 @@ function DSRDeposit({ onClose }) {
 
   const screenProps = {
     proxyAddress,
-    userDaiBalance,
-    data,
-    key,
     depositAmount,
     dispatch,
     onClose

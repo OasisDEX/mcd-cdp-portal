@@ -1,51 +1,53 @@
 import React, { Fragment } from 'react';
-import lang from 'languages';
 import { Text, Box, Card, Flex, Link } from '@makerdao/ui-components-core';
+import useLanguage from 'hooks/useLanguage';
 import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 
-// const GLOBAL_DEBT_CEILING = system => [
-//   lang.sidebar.global_debt_ceiling,
-//   prettifyNumber(system.globalDebtCeiling)
-// ];
-
-// const CURRENT_DEBT = system => [
-//   lang.sidebar.current_debt,
-//   prettifyNumber(system.totalDebt)
-// ];
-
-// const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
-
-// const SURPLUS_AUCTION_LOT_SIZE = system => [
-//   lang.sidebar.buy_and_burn_lot_size,
-//   prettifyNumber(system.surplusAuctionLotSize)
-// ];
-
-// const DEBT_AUCTION_LOT_SIZE = system => [
-//   lang.sidebar.inflate_and_sell_lot_size,
-//   prettifyNumber(system.debtAuctionLotSize)
-// ];
-
-const ACTIVE_CDPS = system => [
-  lang.sidebar.active_cdps,
-  lang.formatString(
-    lang.sidebar.active_cdps_figure,
-    prettifyNumber(parseInt(system.totalCdps))
-  )
-];
-
-const TOTAL_DAI_SUPPLY = system => [
-  lang.sidebar.save_details.total_dai_supply,
-  prettifyNumber(system.totalDebt)
-];
-
-const SYSTEM_COLLATERALIZATION = system => [
-  lang.sidebar.system_collateralization,
-  `${prettifyNumber(system.systemCollateralization, false, 2, false)}%`
-];
-
 const SidebarSystem = ({ system }) => {
+  const { lang } = useLanguage();
+
+  // const GLOBAL_DEBT_CEILING = system => [
+  //   lang.sidebar.global_debt_ceiling,
+  //   prettifyNumber(system.globalDebtCeiling)
+  // ];
+
+  // const CURRENT_DEBT = system => [
+  //   lang.sidebar.current_debt,
+  //   prettifyNumber(system.totalDebt)
+  // ];
+
+  // const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
+
+  // const SURPLUS_AUCTION_LOT_SIZE = system => [
+  //   lang.sidebar.buy_and_burn_lot_size,
+  //   prettifyNumber(system.surplusAuctionLotSize)
+  // ];
+
+  // const DEBT_AUCTION_LOT_SIZE = system => [
+  //   lang.sidebar.inflate_and_sell_lot_size,
+  //   prettifyNumber(system.debtAuctionLotSize)
+  // ];
+
+  const ACTIVE_CDPS = system => [
+    lang.sidebar.active_cdps,
+    lang.formatString(
+      lang.sidebar.active_cdps_figure,
+      prettifyNumber(parseInt(system.totalCdps))
+    )
+  ];
+
+  const TOTAL_DAI_SUPPLY = system => [
+    lang.sidebar.save_details.total_dai_supply,
+    prettifyNumber(system.totalDebt)
+  ];
+
+  const SYSTEM_COLLATERALIZATION = system => [
+    lang.sidebar.system_collateralization,
+    `${prettifyNumber(system.systemCollateralization, false, 2, false)}%`
+  ];
+
   const systemParams = [
     // GLOBAL_DEBT_CEILING,
     // CURRENT_DEBT,

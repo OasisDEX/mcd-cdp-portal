@@ -1,13 +1,14 @@
 import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
-import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useBlockHeight from 'hooks/useBlockHeight';
+import useLanguage from 'hooks/useLanguage';
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
+  const { lang } = useLanguage();
   const blockHeight = useBlockHeight(0);
 
   const {

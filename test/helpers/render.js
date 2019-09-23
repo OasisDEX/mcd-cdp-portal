@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import LanguageProvider from '../../src/providers/LanguageProvider';
 import StoreProvider from '../../src/providers/StoreProvider';
 import TestMakerProvider from './TestMakerProvider';
 import { ETH } from '@makerdao/dai';
@@ -38,10 +39,12 @@ export function renderForSidebar(children, initialState) {
 
 export function renderWithStore(children, initialState = {}) {
   return render(
-    <ThemeProvider theme={theme}>
-      <StoreProvider reducer={rootReducer} initialState={initialState}>
-        {children}
-      </StoreProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider theme={theme}>
+        <StoreProvider reducer={rootReducer} initialState={initialState}>
+          {children}
+        </StoreProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
