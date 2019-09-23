@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import {
   Box,
@@ -13,6 +13,7 @@ import {
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import PageContentLayout from 'layouts/PageContentLayout';
+import LoadingLayout from 'layouts/LoadingLayout';
 
 import { getSavingsBalance } from 'reducers/accounts';
 
@@ -45,8 +46,7 @@ function Save() {
     startedWithoutAllowance
   } = useTokenAllowance('MDAI');
 
-  const { hasProxy } = useProxy();
-
+  const { hasProxy, proxyLoading } = useProxy();
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -138,13 +138,21 @@ function Save() {
     setWithdrawAmount(balance.toString());
   }, [balance, setWithdrawAmount]);
 
+  const [showOnboarding, setShowOnboarding] = useState(true);
+
+  const hideOnboarding = useCallback(() => {
+    setShowOnboarding(false);
+  }, [setShowOnboarding]);
+
   const { show } = useModal();
 
   return (
     <PageContentLayout>
       {!account ? (
         <AccountSelection />
-      ) : account && !hasProxy ? (
+      ) : proxyLoading && !hasProxy ? (
+        <LoadingLayout />
+      ) : !hasProxy && showOnboarding ? (
         <Flex
           height="70vh"
           justifyContent="center"
@@ -158,7 +166,11 @@ function Save() {
             p="s"
             css={{ cursor: 'pointer' }}
             onClick={() =>
-              show({ modalType: 'dsrdeposit', modalTemplate: 'fullscreen' })
+              show({
+                modalType: 'dsrdeposit',
+                modalTemplate: 'fullscreen',
+                modalProps: { hideOnboarding }
+              })
             }
           >
             {lang.save.get_started}

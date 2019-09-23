@@ -49,12 +49,12 @@ function reducer(state, action) {
   }
 }
 
-function DSRDeposit({ onClose }) {
+function DSRDeposit({ onClose, hideOnboarding }) {
   const { maker, account } = useMaker();
-  const [
-    { step, proxyAddress, userDaiBalance, data, key, depositAmount },
-    dispatch
-  ] = useReducer(reducer, initialState);
+  const [{ step, proxyAddress, depositAmount }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   useEffect(() => {
     const checkProxy = async () => {
@@ -66,6 +66,12 @@ function DSRDeposit({ onClose }) {
 
     checkProxy();
   }, [maker, account]);
+
+  useEffect(() => {
+    if (proxyAddress) {
+      hideOnboarding();
+    }
+  }, [hideOnboarding, proxyAddress]);
 
   const screenProps = {
     proxyAddress,
