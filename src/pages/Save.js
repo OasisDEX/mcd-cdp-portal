@@ -12,7 +12,6 @@ import {
   Button
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import lang from 'languages';
 import PageContentLayout from 'layouts/PageContentLayout';
 
 import { getSavingsBalance } from 'reducers/accounts';
@@ -27,12 +26,14 @@ import useValidatedInput from 'hooks/useValidatedInput';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
+import useLanguage from 'hooks/useLanguage';
 
 import { ReactComponent as DaiLogo } from 'images/dai.svg';
 import useModal from '../hooks/useModal';
 import useProxy from '../hooks/useProxy';
 
 function Save() {
+  const { lang } = useLanguage();
   const balances = useWalletBalances();
   const { maker, account } = useMaker();
   const [{ accounts, savings }] = useStore();

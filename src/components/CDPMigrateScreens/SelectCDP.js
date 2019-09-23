@@ -1,5 +1,5 @@
 import React from 'react';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import {
   Text,
   Grid,
@@ -14,6 +14,7 @@ const RADIO_CONTAINER_WIDTH = '4rem';
 const AESTHETIC_ROW_PADDING = '4rem';
 
 export default ({ dispatch, onClose }) => {
+  const { lang } = useLanguage();
   return (
     <Grid maxWidth="912px" gridRowGap="m">
       <Text.h2 textAlign="center">{lang.cdp_migrate.select_title}</Text.h2>

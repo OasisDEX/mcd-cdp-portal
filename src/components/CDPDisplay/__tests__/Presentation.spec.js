@@ -6,7 +6,10 @@ import {
   fireEvent,
   waitForElement
 } from '@testing-library/react';
-import { renderForSidebar } from '../../../../test/helpers/render';
+import {
+  renderForSidebar,
+  renderWithStore
+} from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
 
 const LOL = createCurrency('LOL');
@@ -32,7 +35,7 @@ const account = {
 
 test('basic rendering', () => {
   const showSidebar = jest.fn(() => {});
-  const { getByText } = render(
+  const { getByText } = renderWithStore(
     <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
   );
   getByText('9.1 LOL');

@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import { Text, Grid, Flex } from '@makerdao/ui-components-core';
-import lang from 'languages';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from 'utils/analytics';
 
@@ -13,6 +12,7 @@ import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import useLanguage from 'hooks/useLanguage';
 import { getWalletConnectAccounts } from 'utils/walletconnect';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
@@ -45,6 +45,7 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
 
 function Borrow() {
   const providerName = getWebClientProviderName();
+  const { lang } = useLanguage();
   const {
     maker,
     authenticated: makerAuthenticated,

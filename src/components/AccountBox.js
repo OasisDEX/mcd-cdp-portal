@@ -15,11 +15,11 @@ import StripedRows from 'components/StripedRows';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
+import useSidebar from 'hooks/useSidebar';
+import useLanguage from 'hooks/useLanguage';
 import { getAllFeeds } from 'reducers/feeds';
 import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
-import lang from 'languages';
-import useSidebar from 'hooks/useSidebar';
 import styled from 'styled-components';
 import Carat from './Carat';
 
@@ -92,6 +92,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
 };
 
 const WalletBalances = ({ hasActiveAccount }) => {
+  const { lang } = useLanguage();
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
   const { show: showSidebar } = useSidebar();

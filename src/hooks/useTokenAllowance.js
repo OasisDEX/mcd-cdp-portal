@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import lang from 'languages';
 
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import useActionState from 'hooks/useActionState';
+import useLanguage from 'hooks/useLanguage';
 
 export function useTokenAllowances() {
   const { account } = useMaker();
@@ -24,6 +24,7 @@ export function useTokenAllowances() {
 }
 
 export default function useTokenAllowance(tokenSymbol) {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const token = maker.getToken(tokenSymbol);
   const allowances = useTokenAllowances();

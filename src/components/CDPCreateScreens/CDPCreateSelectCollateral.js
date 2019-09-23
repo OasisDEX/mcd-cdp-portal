@@ -16,33 +16,40 @@ import { getIlkData } from 'reducers/feeds';
 import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 
-const CDPCreateSelectCollateralSidebar = () => (
-  <Box px="l" py="m">
-    <Box>
-      {[
-        [lang.stability_fee, lang.cdp_create.stability_fee_description],
-        [lang.liquidation_ratio, lang.cdp_create.liquidation_ratio_description],
-        [
-          lang.liquidation_penalty,
-          lang.cdp_create.liquidation_penalty_description
-        ]
-      ].map(([title, text]) => (
-        <Grid mb="m" key={title} gridRowGap="xs">
-          <TextBlock t="h5" lineHeight="normal">
-            {title}
-          </TextBlock>
-          <TextBlock t="body">{text}</TextBlock>
-        </Grid>
-      ))}
+const CDPCreateSelectCollateralSidebar = () => {
+  const { lang } = useLanguage();
+  return (
+    <Box px="l" py="m">
+      <Box>
+        {[
+          [lang.stability_fee, lang.cdp_create.stability_fee_description],
+          [
+            lang.liquidation_ratio,
+            lang.cdp_create.liquidation_ratio_description
+          ],
+          [
+            lang.liquidation_penalty,
+            lang.cdp_create.liquidation_penalty_description
+          ]
+        ].map(([title, text]) => (
+          <Grid mb="m" key={title} gridRowGap="xs">
+            <TextBlock t="h5" lineHeight="normal">
+              {title}
+            </TextBlock>
+            <TextBlock t="body">{text}</TextBlock>
+          </Grid>
+        ))}
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
+  const { lang } = useLanguage();
   const [{ feeds }] = useStore();
 
   ilk.data = getIlkData(feeds, ilk.key);
@@ -76,6 +83,7 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 }
 
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
+  const { lang } = useLanguage();
   const balances = useWalletBalances();
   const allowances = useTokenAllowances();
   const hasAllowance =

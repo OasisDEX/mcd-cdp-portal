@@ -1,6 +1,6 @@
-import lang from 'languages';
 import { useState, useCallback, useMemo } from 'react';
 
+import useLanguage from 'hooks/useLanguage';
 import { prettifyFloat } from 'utils/ui';
 
 /**
@@ -10,38 +10,39 @@ import { prettifyFloat } from 'utils/ui';
  * The validate function should return TRUE when the value is invalid
  */
 
-const defaultValidators = {
-  isFloat: {
-    validate: value => isNaN(parseFloat(value)),
-    message: () => lang.input_validations.is_float
-  },
-  maxFloat: {
-    validate: (value, schemaValue) => parseFloat(value) > schemaValue,
-    message: (value, schemaValue) =>
-      lang.formatString(
-        lang.input_validations.max_float,
-        prettifyFloat(schemaValue, 5)
-      )
-  },
-  minFloat: {
-    validate: (value, schemaValue) => parseFloat(value) <= schemaValue,
-    message: (value, schemaValue) =>
-      lang.formatString(
-        lang.input_validations.min_float,
-        prettifyFloat(schemaValue, 5)
-      )
-  }
-};
-
-const defaultErrorMessage = () => lang.input_validations.default;
-
 export default function useValidatedInput(
   initialValue = '',
   validationSchema = {},
   customMessages = {}
 ) {
+  const { lang } = useLanguage();
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState('');
+
+  const defaultErrorMessage = () => lang.input_validations.default;
+
+  const defaultValidators = {
+    isFloat: {
+      validate: value => isNaN(parseFloat(value)),
+      message: () => lang.input_validations.is_float
+    },
+    maxFloat: {
+      validate: (value, schemaValue) => parseFloat(value) > schemaValue,
+      message: (value, schemaValue) =>
+        lang.formatString(
+          lang.input_validations.max_float,
+          prettifyFloat(schemaValue, 5)
+        )
+    },
+    minFloat: {
+      validate: (value, schemaValue) => parseFloat(value) <= schemaValue,
+      message: (value, schemaValue) =>
+        lang.formatString(
+          lang.input_validations.min_float,
+          prettifyFloat(schemaValue, 5)
+        )
+    }
+  };
 
   const validators = useMemo(() => {
     const custom = validationSchema.custom || {};

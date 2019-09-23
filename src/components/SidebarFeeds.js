@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import lang from 'languages';
 import { Text, Card, Flex, Link, CardBody } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import useLanguage from 'hooks/useLanguage';
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -12,6 +12,7 @@ const StyledCardBody = styled(CardBody)`
 
 const SidebarFeeds = ({ feeds }) => {
   const [collapsed, setCollapsed] = useState(true);
+  const { lang } = useLanguage();
 
   return (
     <Card pt="s" css={'overflow:hidden;'}>

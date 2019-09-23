@@ -3,10 +3,10 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber } from 'utils/ui';
 
-import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import ScreenHeader from './ScreenHeader';
 import useStore from '../../hooks/useStore';
+import useLanguage from 'hooks/useLanguage';
 import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
 import SetMax from '../SetMax';
@@ -21,6 +21,8 @@ function DepositDaiForm({
   setDepositMax,
   depositAmountErrors
 }) {
+  const { lang } = useLanguage();
+
   const fields = [
     [
       lang.formatString(lang.dsr_deposit.deposit_form_title, 'DAI'),
@@ -85,6 +87,7 @@ function DepositDaiForm({
 }
 
 const DSRDepositCreate = ({ dispatch, onClose }) => {
+  const { lang } = useLanguage();
   const balances = useWalletBalances();
   const { MDAI } = balances;
   const daiBalance = MDAI.toFixed(6);

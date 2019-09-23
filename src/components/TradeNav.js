@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-navi';
+import styled from 'styled-components';
 import { Flex, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as TradeIcon } from 'images/active-trade-icon.svg';
 import { Routes } from '../utils/constants';
-import lang from 'languages';
-import styled from 'styled-components';
+import useLanguage from 'hooks/useLanguage';
 
 const StyledTradeIcon = styled(TradeIcon)`
   circle {
@@ -13,6 +13,7 @@ const StyledTradeIcon = styled(TradeIcon)`
 `;
 
 const TradeNav = ({ ...props }) => {
+  const { lang } = useLanguage();
   return (
     <Link href={`/${Routes.TRADE}`} target="_blank">
       <Flex

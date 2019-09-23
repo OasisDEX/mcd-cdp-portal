@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
-
-import lang from 'languages';
 import styled from 'styled-components';
 
+import useLanguage from 'hooks/useLanguage';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { ReactComponent as TrustLogo } from 'images/trust-logo.svg';
 import { ReactComponent as ImTokenLogo } from 'images/imtoken-logo.svg';
@@ -18,6 +17,7 @@ const MMLogo = styled(MetaMaskLogo)`
 `;
 
 export default function BrowserProviderButton({ provider, ...props }) {
+  const { lang } = useLanguage();
   const icon = useMemo(() => {
     if (provider === wallets.METAMASK) {
       return <MMLogo />;

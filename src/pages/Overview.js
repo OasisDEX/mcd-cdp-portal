@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
-import lang from 'languages';
 import {
   Text,
   Grid,
@@ -16,6 +15,7 @@ import useMaker from 'hooks/useMaker';
 import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
 import useStore from 'hooks/useStore';
+import useLanguage from 'hooks/useLanguage';
 import {
   getCdp,
   getDebtAmount,
@@ -59,6 +59,7 @@ function Overview() {
   const [totalDaiDebt, setTotalDaiDebt] = useState(0);
   const [cdpContent, setCdpContent] = useState(null);
   const { url } = useCurrentRoute();
+  const { lang } = useLanguage();
 
   useEffect(() => {
     if (((account || {}).cdps || {}).length) {

@@ -8,6 +8,7 @@ import { ETH } from '@makerdao/dai';
 import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
 
+import LanguageProvider from '../../providers/LanguageProvider';
 import StoreProvider from '../../providers/StoreProvider';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import MobileNav from '../MobileNav';
@@ -28,15 +29,20 @@ test('MobileNav menu displays Earn, Borrow, and Trade buttons', async () => {
     url: `/${cdpId}`
   });
   const { getByText } = render(
-    <ThemeProvider theme={theme}>
-      <NaviProvider navigation={navigation}>
-        <StoreProvider reducer={() => initialState} initialState={initialState}>
-          <TestMakerProvider waitForAuth={true}>
-            <MobileNav cdpId={cdpId} />
-          </TestMakerProvider>
-        </StoreProvider>
-      </NaviProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider theme={theme}>
+        <NaviProvider navigation={navigation}>
+          <StoreProvider
+            reducer={() => initialState}
+            initialState={initialState}
+          >
+            <TestMakerProvider waitForAuth={true}>
+              <MobileNav cdpId={cdpId} />
+            </TestMakerProvider>
+          </StoreProvider>
+        </NaviProvider>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 
   await waitForElement(() => getByText('Earn'));

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import {
   Text,
   Grid,
@@ -14,6 +14,8 @@ import {
 import CardTabs from '../CardTabs';
 
 const Migrated = ({ onClose, dispatch }) => {
+  const { lang } = useLanguage();
+
   return (
     <Grid gridRowGap="m">
       <Text.h2 textAlign="center">
@@ -79,6 +81,8 @@ const Migrated = ({ onClose, dispatch }) => {
 };
 
 const Migrating = ({ onClose, dispatch, onNext }) => {
+  const { lang } = useLanguage();
+
   // emulating time it takes for transaction to confirm, delete later
   setTimeout(onNext, 3000);
 
@@ -116,7 +120,9 @@ const Migrating = ({ onClose, dispatch, onNext }) => {
 };
 
 const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
+  const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
+
   return (
     <Grid maxWidth="912px" gridRowGap="l">
       <Text.h2 textAlign="center">Confirm CDP Migration</Text.h2>
