@@ -49,6 +49,7 @@ export default [
     symbol: 'DGD-A',
     key: 'DGD-A',
     gem: 'DGD',
-    currency: DGD
+    currency: DGD,
+    decimals: 9
   }
 ];

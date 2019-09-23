@@ -2,7 +2,7 @@ import produce from 'immer';
 import ilkList from 'references/ilkList';
 import uniqBy from 'lodash/uniqBy';
 import BigNumber from 'bignumber.js';
-import { fromWei, fromRay, fromRad, RAY } from 'utils/units';
+import { fromWei, fromRay, fromRad, fromDecimals, RAY } from 'utils/units';
 
 export const FEED_SET_USD = 'feedSetUSD';
 export const FEED_VALUE_USD = 'feedValueUSD';
@@ -64,7 +64,7 @@ export function getAllFeeds(feeds) {
 
 const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
 
-function convert(valueType, value) {
+function convert(valueType, value, decimals) {
   switch (valueType) {
     case DUTY: {
       const taxBigNumber = new BigNumber(value.toString()).dividedBy(RAY);
@@ -83,7 +83,11 @@ function convert(valueType, value) {
       return fromRad(value).toFixed(0);
     case MAX_AUCTION_LOT_SIZE:
     case ADAPTER_BALANCE:
-      return fromWei(value).toFixed(5);
+      console.log(
+        'fromDecimals(value, decimals).toFixed(5)',
+        fromDecimals(value, decimals).toFixed(5)
+      );
+      return fromDecimals(value, decimals).toFixed(5);
     case LIQUIDATION_RATIO:
       return fromRay(value)
         .times(100)
@@ -100,8 +104,15 @@ const reducer = produce((draft, { type, value }) => {
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
   // example type: ETH.debtCeiling
   const [label, key, valueType] = type.split('.');
+  const ilk = ilkList.find(i => i.key === key);
+  let decimals = 18;
+  if (ilk) decimals = ilk.decimals;
   if (label === 'ilk') {
-    draft.find(f => f.key === key)[valueType] = convert(valueType, value);
+    draft.find(f => f.key === key)[valueType] = convert(
+      valueType,
+      value,
+      decimals
+    );
   }
 }, initialState);
 
