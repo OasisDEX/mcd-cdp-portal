@@ -8,11 +8,11 @@ import {
   Tooltip
 } from '@makerdao/ui-components-core';
 
-import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
+import useLanguage from 'hooks/useLanguage';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -26,6 +26,7 @@ const SuccessButton = () => {
 };
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
+  const { lang } = useLanguage();
   const blockHeight = useBlockHeight(0);
 
   const {

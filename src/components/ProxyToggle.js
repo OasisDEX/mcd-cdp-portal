@@ -1,9 +1,10 @@
 import React from 'react';
-import lang from 'languages';
 
+import useLanguage from 'hooks/useLanguage';
 import LoadingToggle from 'components/LoadingToggle';
 
 export default function ProxyToggle({ ...props }) {
+  const { lang } = useLanguage();
   return (
     <LoadingToggle
       completeText={lang.action_sidebar.proxy_created}

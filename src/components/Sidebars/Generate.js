@@ -5,6 +5,7 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
+import useLanguage from 'hooks/useLanguage';
 import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
@@ -12,10 +13,10 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
-import lang from 'languages';
 import useMaker from '../../hooks/useMaker';
 
 const Generate = ({ cdpId, reset }) => {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [daiAvailable, setDaiAvailable] = useState(0);
   const [liquidationPrice, setLiquidationPrice] = useState(0);

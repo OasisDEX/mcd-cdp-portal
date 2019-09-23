@@ -1,13 +1,14 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import Footer from '@makerdao/ui-components-footer';
+import Footer, { LangDropdown } from '@makerdao/ui-components-footer';
 import Header from '@makerdao/ui-components-header';
 import { Link } from 'react-navi';
 import { Box, Flex, Card, Text } from '@makerdao/ui-components-core';
 import LandingHeroLayout from 'layouts/LandingHeroLayout';
 import { Routes } from '../utils/constants';
-
 import { Title } from 'components/Typography';
+import { languages } from 'languages';
+import useLanguage from 'hooks/useLanguage';
 
 const CardLink = ({ title, link }) => (
   <Box mx="l">
@@ -31,9 +32,11 @@ const CardLink = ({ title, link }) => (
 );
 
 function Landing() {
+  const { locale, setLocale } = useLanguage();
+
   return (
     <Box width="100%">
-      <Header />
+      <Header locale={locale} />
       <Box bg="backgroundGrey">
         <LandingHeroLayout>
           <Flex flexDirection="column">
@@ -47,7 +50,17 @@ function Landing() {
           </Flex>
         </LandingHeroLayout>
       </Box>
-      <Footer />
+      <Footer
+        langDropdown={
+          <LangDropdown
+            languages={languages}
+            defaultText="Choose language"
+            selectedValue={locale}
+            onSelect={(e, value) => setLocale(value)}
+          />
+        }
+        locale={locale}
+      />
     </Box>
   );
 }

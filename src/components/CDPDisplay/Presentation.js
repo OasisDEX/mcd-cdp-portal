@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -28,6 +28,8 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 
 export default function({ cdp, showSidebar, account, network }) {
+  const { lang } = useLanguage();
+
   const cdpId = parseInt(cdp.id);
   console.log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
