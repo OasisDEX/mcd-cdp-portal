@@ -18,6 +18,7 @@ import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import compact from 'lodash/compact';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { USD } from '../maker';
+import ilkList from 'references/ilkList';
 
 const mathReducer = produce((draft, action) => {
   if (action.type === 'CLEAR_CONTRACT_STATE') draft.raw = {};
@@ -94,13 +95,16 @@ const mathReducer = produce((draft, action) => {
               par
             );
             if (adapterBalance && price) {
-              return math.collateralValue(
-                math.collateralAmount(
-                  getCurrency({ ilk: feed.key }),
-                  adapterBalance
-                ),
-                price
+              let colAmount = math.collateralAmount(
+                getCurrency({ ilk: feed.key }),
+                adapterBalance
               );
+              const ilk = ilkList.find(i => i.key === feed.key);
+              let decimals = 18;
+              if (ilk && ilk.decimals) decimals = ilk.decimals;
+              const currency = getCurrency({ ilk: feed.key });
+              colAmount = currency(adapterBalance, -decimals);
+              return math.collateralValue(colAmount, price);
             }
           });
           const combinedColVal = compact(colVals).reduce(

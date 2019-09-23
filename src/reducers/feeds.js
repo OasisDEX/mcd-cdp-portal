@@ -83,10 +83,6 @@ function convert(valueType, value, decimals) {
       return fromRad(value).toFixed(0);
     case MAX_AUCTION_LOT_SIZE:
     case ADAPTER_BALANCE:
-      console.log(
-        'fromDecimals(value, decimals).toFixed(5)',
-        fromDecimals(value, decimals).toFixed(5)
-      );
       return fromDecimals(value, decimals).toFixed(5);
     case LIQUIDATION_RATIO:
       return fromRay(value)
@@ -106,7 +102,7 @@ const reducer = produce((draft, { type, value }) => {
   const [label, key, valueType] = type.split('.');
   const ilk = ilkList.find(i => i.key === key);
   let decimals = 18;
-  if (ilk) decimals = ilk.decimals;
+  if (ilk && ilk.decimals) decimals = ilk.decimals;
   if (label === 'ilk') {
     draft.find(f => f.key === key)[valueType] = convert(
       valueType,
