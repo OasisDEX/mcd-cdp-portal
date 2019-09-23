@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
-import ScreenFooter from './ScreenFooter';
+import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useBlockHeight from 'hooks/useBlockHeight';

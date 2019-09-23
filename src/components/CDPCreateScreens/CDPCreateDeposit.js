@@ -8,8 +8,8 @@ import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 
 function OpenCDPForm({
   selectedIlk,

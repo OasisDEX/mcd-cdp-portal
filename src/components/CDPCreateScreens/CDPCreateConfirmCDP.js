@@ -15,8 +15,8 @@ import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';

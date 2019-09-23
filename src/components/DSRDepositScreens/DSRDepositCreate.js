@@ -3,8 +3,8 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber } from 'utils/ui';
 
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 import useLanguage from 'hooks/useLanguage';
 import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';

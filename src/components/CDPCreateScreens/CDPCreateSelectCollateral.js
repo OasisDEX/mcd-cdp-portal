@@ -17,8 +17,8 @@ import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 
 const CDPCreateSelectCollateralSidebar = () => {
   const { lang } = useLanguage();

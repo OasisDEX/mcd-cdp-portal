@@ -13,8 +13,8 @@ import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 

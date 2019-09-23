@@ -9,8 +9,8 @@ const ScreenFooter = ({
   loading,
   canGoBack = true,
   canProgress = true,
-  continueText,
-  secondaryButtonText
+  continueText = lang.actions.continue,
+  secondaryButtonText = lang.actions.back
 } = {}) => {
   const { lang } = useLanguage();
   return (
@@ -22,7 +22,7 @@ const ScreenFooter = ({
         mx="xs"
         onClick={onBack}
       >
-        {secondaryButtonText || lang.actions.back}
+        {secondaryButtonText}
       </Button>
       <Button
         disabled={!canProgress}
@@ -31,7 +31,7 @@ const ScreenFooter = ({
         mx="xs"
         onClick={onNext}
       >
-        {continueText || lang.actions.continue}
+        {continueText}
       </Button>
     </Flex>
   );
