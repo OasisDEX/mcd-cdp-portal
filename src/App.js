@@ -12,6 +12,7 @@ import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
 import rootReducer from 'reducers';
+import LanguageProvider from 'providers/LanguageProvider';
 
 const Body = styled.div`
   display: flex;
@@ -52,13 +53,15 @@ function App() {
 
 function AppWithContext() {
   return (
-    <ThemeProvider theme={theme}>
-      <StateInspector name="App">
-        <StoreProvider reducer={rootReducer}>
-          <App />
-        </StoreProvider>
-      </StateInspector>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider theme={theme}>
+        <StateInspector name="App">
+          <StoreProvider reducer={rootReducer}>
+            <App />
+          </StoreProvider>
+        </StateInspector>
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 
