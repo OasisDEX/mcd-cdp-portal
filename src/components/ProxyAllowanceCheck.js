@@ -9,8 +9,6 @@ import {
 
 import lang from 'languages';
 import useBlockHeight from 'hooks/useBlockHeight';
-import useProxy from 'hooks/useProxy';
-import useTokenAllowance from 'hooks/useTokenAllowance';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -23,41 +21,20 @@ const SuccessButton = () => {
   );
 };
 
-const ProxyAllowanceCheck = ({ symbol, labels, dispatch }) => {
+const ProxyAllowanceCheck = ({
+  proxyAddress,
+  deployProxy,
+  proxyLoading,
+  proxyDeployed,
+  proxyErrors,
+  startingBlockHeight,
+  setAllowance,
+  hasAllowance,
+  labels,
+  isSettingAllowance
+}) => {
   const blockHeight = useBlockHeight(0);
-  const { setup_text } = labels;
-
-  const {
-    proxyAddress,
-    setupProxy,
-    proxyLoading,
-    startingBlockHeight,
-    proxyDeployed,
-    proxyErrors
-  } = useProxy();
-
-  const {
-    hasAllowance,
-    setAllowance,
-    allowanceLoading: isSettingAllowance
-  } = useTokenAllowance(symbol);
-
-  async function deployProxy() {
-    await setupProxy();
-    dispatch({
-      type: 'set-proxy-address',
-      payload: { address: proxyAddress }
-    });
-  }
-
-  console.log(
-    '%%2PALuseProxy vals: proxyAddress,proxyLoading,startingBlockHeight,proxyDeployed, proxyErrors',
-    proxyAddress,
-    proxyLoading,
-    startingBlockHeight,
-    proxyDeployed,
-    proxyErrors
-  );
+  const { setup_text, allowance_text } = labels;
 
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
@@ -122,10 +99,7 @@ const ProxyAllowanceCheck = ({ symbol, labels, dispatch }) => {
       <Grid gridRowGap="xs" mt="l">
         <Text.h4>Set allowance</Text.h4>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
-          {lang.formatString(
-            lang.cdp_create.setup_proxy_allowance_text,
-            symbol
-          )}
+          {allowance_text}
         </Text.p>
         {hasAllowance ? (
           <SuccessButton />

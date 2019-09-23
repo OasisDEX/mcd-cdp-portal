@@ -6,11 +6,16 @@ import ScreenFooter from './ScreenFooter';
 import useProxy from 'hooks/useProxy';
 
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
-  const symbol = 'MDAI';
+  // const symbol = 'MDAI';
   const labels = {
-    setup_text: lang.dsr_deposit.setup_proxy_text
+    setup_text: lang.dsr_deposit.setup_proxy_text,
+    allowance_text: lang.formatString(
+      lang.cdp_create.setup_proxy_allowance_text,
+      'DAI'
+    )
   };
   const {
     proxyLoading,
@@ -22,17 +27,19 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
     proxyErrors
   } = useProxy();
 
-  console.log(
-    '%%1PALuseProxy vals: proxyAddress,proxyLoading,startingBlockHeight,proxyDeployed, proxyErrors',
-    proxyAddress,
-    // setupProxy,
-    proxyLoading,
-    startingBlockHeight,
-    proxyDeployed,
-    proxyErrors
-  );
+  const {
+    hasAllowance,
+    setAllowance,
+    allowanceLoading: isSettingAllowance
+  } = useTokenAllowance('MDAI');
 
-  //TODO add hasAllowance to canProgress
+  async function deployProxy() {
+    await setupProxy();
+    dispatch({
+      type: 'set-proxy-address',
+      payload: { address: proxyAddress }
+    });
+  }
 
   return (
     <Box maxWidth="71.8rem">
@@ -40,15 +47,22 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
         {lang.dsr_deposit.open_vault}
       </Text.h2>
       <ProxyAllowanceCheck
-        symbol={symbol}
+        proxyAddress={proxyAddress}
+        deployProxy={deployProxy}
         labels={labels}
-        dispatch={dispatch}
+        proxyLoading={proxyLoading}
+        proxyDeployed={proxyDeployed}
+        proxyErrors={proxyErrors}
+        startingBlockHeight={startingBlockHeight}
+        setAllowance={setAllowance}
+        hasAllowance={hasAllowance}
+        isSettingAllowance={isSettingAllowance}
       />
       <ScreenFooter
         onNext={() => dispatch({ type: 'increment-step' })}
         onBack={onClose}
         canGoBack={!proxyLoading}
-        canProgress={hasProxy}
+        canProgress={hasProxy && hasAllowance}
       />
     </Box>
   );

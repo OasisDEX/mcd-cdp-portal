@@ -139,14 +139,11 @@ function Save() {
 
   const { show } = useModal();
 
-  {
-    /* TODO testing purposes only, set 147 back to: ) : account && !hasProxy ? ( */
-  }
   return (
     <PageContentLayout>
       {!account ? (
         <AccountSelection />
-      ) : account ? (
+      ) : account && !hasProxy ? (
         <Flex
           height="70vh"
           justifyContent="center"
