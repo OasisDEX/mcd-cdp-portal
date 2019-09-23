@@ -8,7 +8,6 @@ import {
 } from '@makerdao/ui-components-core';
 
 import lang from 'languages';
-import useBlockHeight from 'hooks/useBlockHeight';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -27,14 +26,12 @@ const ProxyAllowanceCheck = ({
   proxyLoading,
   proxyDeployed,
   proxyErrors,
-  startingBlockHeight,
   setAllowance,
   hasAllowance,
   labels,
   isSettingAllowance
 }) => {
-  const blockHeight = useBlockHeight(0);
-  const { setup_text, allowance_text } = labels;
+  const { setup_text, allowance_text, confirmations_text } = labels;
 
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
@@ -71,16 +68,7 @@ const ProxyAllowanceCheck = ({
               />
             </>
           )}
-          {proxyLoading &&
-            lang.formatString(
-              lang.cdp_create.waiting_for_comfirmations,
-              startingBlockHeight === 0
-                ? 0
-                : blockHeight - startingBlockHeight > 10
-                ? 10
-                : blockHeight - startingBlockHeight,
-              10
-            )}
+          {proxyLoading && confirmations_text}
           {proxyDeployed &&
             lang.formatString(lang.cdp_create.confirmed_with_confirmations, 10)}
           {(proxyLoading || proxyDeployed) && (

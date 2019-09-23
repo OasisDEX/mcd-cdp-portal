@@ -1,22 +1,15 @@
 import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
-
 import lang from 'languages';
 import ScreenFooter from './ScreenFooter';
 import useProxy from 'hooks/useProxy';
-
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useTokenAllowance from 'hooks/useTokenAllowance';
+import useBlockHeight from 'hooks/useBlockHeight';
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
-  // const symbol = 'MDAI';
-  const labels = {
-    setup_text: lang.dsr_deposit.setup_proxy_text,
-    allowance_text: lang.formatString(
-      lang.cdp_create.setup_proxy_allowance_text,
-      'DAI'
-    )
-  };
+  const blockHeight = useBlockHeight(0);
+
   const {
     proxyLoading,
     hasProxy,
@@ -34,12 +27,29 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
   } = useTokenAllowance('MDAI');
 
   async function deployProxy() {
-    await setupProxy();
+    const proxy = await setupProxy();
     dispatch({
       type: 'set-proxy-address',
-      payload: { address: proxyAddress }
+      payload: { address: proxy }
     });
   }
+
+  const labels = {
+    setup_text: lang.dsr_deposit.setup_proxy_text,
+    allowance_text: lang.formatString(
+      lang.cdp_create.setup_proxy_allowance_text,
+      'DAI'
+    ),
+    confirmations_text: lang.formatString(
+      lang.cdp_create.waiting_for_comfirmations,
+      startingBlockHeight === 0
+        ? 0
+        : blockHeight - startingBlockHeight > 10
+        ? 10
+        : blockHeight - startingBlockHeight,
+      10
+    )
+  };
 
   return (
     <Box maxWidth="71.8rem">
