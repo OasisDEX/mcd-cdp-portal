@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useCurrentRoute } from 'react-navi';
+import styled from 'styled-components';
 import { Flex, Text } from '@makerdao/ui-components-core';
+
 import { ReactComponent as SaveIcon } from 'images/active-save-icon.svg';
 import { Routes } from '../utils/constants';
-import lang from 'languages';
-import styled from 'styled-components';
+import useLanguage from 'hooks/useLanguage';
 
 const StyledSaveIcon = styled(SaveIcon)`
   path {
@@ -14,6 +15,7 @@ const StyledSaveIcon = styled(SaveIcon)`
 `;
 
 const SaveNav = ({ account, ...props }) => {
+  const { lang } = useLanguage();
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.SAVE}`);
   const textColor =

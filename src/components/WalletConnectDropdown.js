@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import lang from 'languages';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
@@ -10,6 +9,7 @@ import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
+import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
 import { AccountTypes } from '../utils/constants';
 
@@ -37,6 +37,7 @@ const WalletConnectDropdown = ({
   close = () => {},
   ...props
 }) => {
+  const { lang } = useLanguage();
   const {
     maker,
     account,

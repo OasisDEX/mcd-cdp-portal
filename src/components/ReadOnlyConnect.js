@@ -1,12 +1,12 @@
 import React from 'react';
-
-import lang from 'languages';
-
 import { Link } from 'react-navi';
+
 import { Button } from '@makerdao/ui-components-core';
-import { Routes } from '../utils/constants';
+import { Routes } from 'utils/constants';
+import useLanguage from 'hooks/useLanguage';
 
 function ReadOnlyConnect() {
+  const { lang } = useLanguage();
   return (
     <Link href={`/${Routes.BORROW}/`} prefetch={true}>
       <Button variant="secondary-outline" width="225px">

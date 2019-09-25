@@ -1,7 +1,6 @@
 import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
-import lang from 'languages';
 import round from 'lodash/round';
 
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
@@ -14,6 +13,7 @@ import useStore from 'hooks/useStore';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
+import useLanguage from 'hooks/useLanguage';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -24,6 +24,7 @@ import AllowanceToggle from 'components/AllowanceToggle';
 import SetMax from 'components/SetMax';
 
 const Payback = ({ cdpId, reset }) => {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const balances = useWalletBalances();
   const daiBalance = balances.MDAI;

@@ -8,6 +8,7 @@ import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
+import useLanguage from 'hooks/useLanguage';
 import {
   getCdp,
   getDebtAmount,
@@ -20,9 +21,8 @@ import SetMax from 'components/SetMax';
 import AllowanceToggle from 'components/AllowanceToggle';
 import ProxyToggle from 'components/ProxyToggle';
 
-import lang from 'languages';
-
 const Deposit = ({ cdpId, reset }) => {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);

@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import styled from 'styled-components';
 import { Dropdown, Flex, Text } from '@makerdao/ui-components-core';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
@@ -17,6 +17,7 @@ const CDPDropdown = memo(function({
   children,
   ...props
 }) {
+  const { lang } = useLanguage();
   const [show, setShow] = useState(false);
   return (
     <Dropdown

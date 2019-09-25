@@ -1,11 +1,11 @@
 import React from 'react';
-import lang from 'languages';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
-
-import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 import { getWebClientProviderName } from 'utils/web3';
 import { cutMiddle } from 'utils/ui';
+import useLanguage from 'hooks/useLanguage';
+
+import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
 
 const ActiveAccount = ({
   address,
@@ -17,6 +17,7 @@ const ActiveAccount = ({
   readOnly,
   ...rest
 }) => {
+  const { lang } = useLanguage();
   const providerType =
     type === 'browser' ? getWebClientProviderName(type) : type;
   return (

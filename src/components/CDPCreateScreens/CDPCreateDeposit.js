@@ -6,10 +6,10 @@ import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
+import useLanguage from 'hooks/useLanguage';
 
-import lang from 'languages';
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 
 function OpenCDPForm({
   selectedIlk,
@@ -17,6 +17,7 @@ function OpenCDPForm({
   handleInputChange,
   daiAvailable
 }) {
+  const { lang } = useLanguage();
   const userHasSufficientGemBalance = greaterThanOrEqual(
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
@@ -145,6 +146,7 @@ const CDPCreateDepositSidebar = ({
   liquidationPrice,
   collateralizationRatio
 }) => {
+  const { lang } = useLanguage();
   const {
     liquidationPenalty,
     liquidationRatio,
@@ -187,6 +189,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     daiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
   const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
+  const { lang } = useLanguage();
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;

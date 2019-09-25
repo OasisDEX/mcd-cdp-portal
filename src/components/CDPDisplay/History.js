@@ -1,10 +1,12 @@
 import React from 'react';
 import { Box, Card, Table, Text } from '@makerdao/ui-components-core';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
 import { fullActivityString, formatDate } from 'utils/ui';
 
 export default function({ title, rows, network }) {
+  const { lang } = useLanguage();
+
   rows = formatEventHistory(rows, network);
   return (
     <Box>

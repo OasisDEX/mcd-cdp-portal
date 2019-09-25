@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 
 const MiddleText = styled.div`
   margin: auto;
@@ -9,6 +9,7 @@ const MiddleText = styled.div`
 `;
 
 export function CDPTypeNotFound({ cdpTypeSlug }) {
+  const { lang } = useLanguage();
   return (
     <MiddleText>
       <h1>
@@ -21,6 +22,7 @@ export function CDPTypeNotFound({ cdpTypeSlug }) {
 }
 
 export function GenericNotFound() {
+  const { lang } = useLanguage();
   return (
     <MiddleText>
       <h1>

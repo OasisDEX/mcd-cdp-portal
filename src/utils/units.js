@@ -17,3 +17,7 @@ export function fromRay(value) {
 export function fromRad(value) {
   return BigNumber(value).shiftedBy(-45);
 }
+
+export function fromDecimals(value, decimals = 18) {
+  return BigNumber(value).shiftedBy(-decimals);
+}

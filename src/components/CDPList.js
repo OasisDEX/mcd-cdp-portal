@@ -136,7 +136,10 @@ const CDPList = memo(function({
     if (account || viewedAddress) {
       const ratios = navbarCdps.map(({ id: cdpId }) => {
         const cdp = getCdp(cdpId, { cdps, feeds });
-        return getCollateralizationRatio(cdp);
+        return {
+          liquidationRatio: cdp.liquidationRatio,
+          collateralizationRatio: getCollateralizationRatio(cdp)
+        };
       });
       setRatios(ratios);
     }
@@ -243,7 +246,12 @@ const CDPList = memo(function({
             </Text>
           </NavbarItem>
           {navbarCdps.map((cdp, idx) => {
-            const ratio = ratios[idx] ? round(ratios[idx], 0) : null;
+            const liquidationRatio = ratios[idx]
+              ? ratios[idx].liquidationRatio
+              : null;
+            const collateralizationRatio = ratios[idx]
+              ? round(ratios[idx].collateralizationRatio, 0)
+              : null;
             const linkPath = `/${Routes.BORROW}/${cdp.id}`;
             const active = currentPath === linkPath;
             return (
@@ -263,7 +271,12 @@ const CDPList = memo(function({
                 >
                   {cdp.ilk}
                 </Text>
-                <RatioDisplay fontSize="1.3rem" ratio={ratio} active={active} />
+                <RatioDisplay
+                  fontSize="1.3rem"
+                  ratio={collateralizationRatio}
+                  ilkLiqRatio={liquidationRatio}
+                  active={active}
+                />
               </NavbarItem>
             );
           })}

@@ -1,9 +1,9 @@
 import { useReducer, useEffect } from 'react';
-import lang from 'languages';
 
 import useActionState from 'hooks/useActionState';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import { updateWatcherWithProxy } from '../watch';
 
 const initialState = {
@@ -15,6 +15,7 @@ const initialState = {
 };
 
 export default function useProxy() {
+  const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
   const blockHeight = useBlockHeight(0);
 

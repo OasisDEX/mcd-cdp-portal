@@ -18,10 +18,6 @@ const screens = [
 const initialState = {
   step: 0,
   proxyAddress: null,
-  userDaiBalance: '',
-  currency: null,
-  data: {},
-  key: '',
   daiToJoin: '',
   depositAmount: ''
 };
@@ -44,22 +40,6 @@ function reducer(state, action) {
         ...state,
         proxyAddress: payload.address
       };
-    case 'set-dai-data':
-      return {
-        ...state,
-        userDaiBalance: payload.userDaiBalance,
-        currency: payload.currency,
-        data: payload.data,
-        key: payload.key
-      };
-    case 'reset-dai-data':
-      return {
-        ...state,
-        userDaiBalance: '',
-        currency: null,
-        data: {},
-        key: ''
-      };
     case 'form/set-deposit-amount':
       return { ...state, depositAmount: payload.depositAmount };
     case 'reset':
@@ -69,12 +49,12 @@ function reducer(state, action) {
   }
 }
 
-function DSRDeposit({ onClose }) {
+function DSRDeposit({ onClose, hideOnboarding }) {
   const { maker, account } = useMaker();
-  const [
-    { step, proxyAddress, userDaiBalance, data, key, depositAmount },
-    dispatch
-  ] = useReducer(reducer, initialState);
+  const [{ step, proxyAddress, depositAmount }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
 
   useEffect(() => {
     const checkProxy = async () => {
@@ -87,11 +67,14 @@ function DSRDeposit({ onClose }) {
     checkProxy();
   }, [maker, account]);
 
+  useEffect(() => {
+    if (proxyAddress) {
+      hideOnboarding();
+    }
+  }, [hideOnboarding, proxyAddress]);
+
   const screenProps = {
     proxyAddress,
-    userDaiBalance,
-    data,
-    key,
     depositAmount,
     dispatch,
     onClose

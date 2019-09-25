@@ -30,14 +30,14 @@ const modals = {
     </Box>
   ),
 
-  dsrdeposit: ({ onClose }) => (
+  dsrdeposit: ({ onClose, hideOnboarding }) => (
     <Box
       bg="backgroundGrey"
       minHeight="100vh"
       p="m"
       onClick={e => e.stopPropagation()}
     >
-      <DSRDeposit onClose={onClose} />
+      <DSRDeposit onClose={onClose} hideOnboarding={hideOnboarding} />
     </Box>
   ),
 

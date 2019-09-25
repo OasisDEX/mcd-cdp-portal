@@ -10,11 +10,11 @@ import {
   Link
 } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
-import lang from 'languages';
+import useLanguage from 'hooks/useLanguage';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
-import ScreenFooter from './ScreenFooter';
-import ScreenHeader from './ScreenHeader';
+import ScreenFooter from '../ScreenFooter';
+import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
@@ -26,6 +26,7 @@ const DSRDepositConfirmSummary = ({
   depositAmount,
   capturedDispatch
 }) => {
+  const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
   const rows = [
@@ -98,6 +99,7 @@ const DSRDepositConfirmSummary = ({
 };
 
 const DSRDepositWait = ({ hash, onClose }) => {
+  const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');
 
@@ -162,6 +164,7 @@ const DSRDepositWait = ({ hash, onClose }) => {
 };
 
 const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
+  const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
   const [depositDaiTxHash, setDepositDaiTxHash] = useState(null);
