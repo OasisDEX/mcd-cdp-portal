@@ -177,15 +177,15 @@ function Save() {
           </Button>{' '}
         </Flex>
       ) : (
-        <Flex justifyContent="center" mt="xl">
-          <Box px="m">
-            <Text.p t="h4" mb="s">
-              Balance
-            </Text.p>
+        <>
+          <Text.h2 pr="m" mb="m" color="darkPurple">
+            Balance
+          </Text.h2>
+          <Grid gridRowGap={{ s: 'm', m: 'l' }}>
             <Grid
-              gridTemplateColumns={{ m: '1fr', l: '437px 352px' }}
-              gridColumnGap="l"
-              gridRowGap="m"
+              gridTemplateColumns={{ s: '1fr', m: 'auto auto 1fr' }}
+              gridColumnGap="m"
+              gridRowGap="s"
             >
               <Card>
                 <CardBody px="l" py="m">
@@ -323,8 +323,8 @@ function Save() {
                 </Grid>
               </CardTabs>
             </Grid>
-          </Box>
-        </Flex>
+          </Grid>
+        </>
       )}
     </PageContentLayout>
   );
