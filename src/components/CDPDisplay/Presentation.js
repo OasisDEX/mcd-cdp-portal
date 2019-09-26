@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
+import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -29,7 +30,7 @@ import FullScreenAction from './FullScreenAction';
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
-
+  const { maker } = useMaker();
   const cdpId = parseInt(cdp.id);
   console.log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
@@ -65,8 +66,8 @@ export default function({ cdp, showSidebar, account, network }) {
   const [eventHistory, setEventHistory] = useState([]);
 
   useEffect(() => {
-    getEventHistory().then(events => setEventHistory(events));
-  }, [cdpId]);
+    getEventHistory(maker, cdpId).then(events => setEventHistory(events));
+  }, [maker, cdpId]);
 
   return (
     <PageContentLayout>
