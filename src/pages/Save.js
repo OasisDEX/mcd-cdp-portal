@@ -46,6 +46,7 @@ function Save() {
     startedWithoutAllowance
   } = useTokenAllowance('MDAI');
 
+  const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const { hasProxy, proxyLoading } = useProxy();
   const balance = useMemo(() => {
     return account
@@ -70,72 +71,85 @@ function Save() {
         lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
     }
   );
+
   const [
     withdrawAmount,
     setWithdrawAmount,
     onWithdrawAmountChange,
     withdrawAmountErrors
-  ] = useValidatedInput('', {
-    isFloat: true,
-    minFloat: 0.0,
-    maxFloat: balance
-  });
+  ] = useValidatedInput(
+    '',
+    {
+      isFloat: true,
+      minFloat: 0.0,
+      maxFloat: balance
+    },
+    {
+      maxFloat: () =>
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+    }
+  );
 
   const onStartDeposit = useCallback(() => {
     return maker.service('mcd:savings').join(MDAI(depositAmount));
   }, [maker, depositAmount]);
 
   const onStartWithdraw = useCallback(() => {
-    if (new BigNumber(withdrawAmount).eq(balance)) {
+    if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(balance)) {
       return maker.service('mcd:savings').exitAll();
     } else {
       return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-  }, [balance, maker, withdrawAmount]);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag]);
 
   const [
     onDeposit,
     depositLoading,
     depositSuccess,
-    depositError
+    depositError,
+    depositReset
   ] = useActionState(onStartDeposit);
+
   const [
     onWithdraw,
     withdrawLoading,
     withdrawSuccess,
-    withdrawError
+    withdrawError,
+    withdrawReset
   ] = useActionState(onStartWithdraw);
 
   useEffect(() => {
-    if (depositSuccess) setDepositAmount('', { validate: false });
-  }, [depositSuccess, setDepositAmount]);
-
-  useEffect(() => {
-    if (withdrawSuccess) setWithdrawAmount('', { validate: false });
-  }, [setWithdrawAmount, withdrawSuccess]);
-
-  useEffect(() => {
     if (!balances.MDAI) return;
-    if (depositAmount !== '')
-      setDepositAmount(depositAmount, { validate: true });
-  }, [balances.MDAI, depositAmount, setDepositAmount]);
+    if (depositSuccess) {
+      setDepositAmount('', { validate: false });
+      depositReset();
+    }
+  }, [balances.MDAI, depositReset, depositSuccess, setDepositAmount]);
 
   useEffect(() => {
     if (!balance) return;
-    if (withdrawAmount !== '')
-      setWithdrawAmount(withdrawAmount, { validate: true });
-  }, [balance, setWithdrawAmount, withdrawAmount]);
+    if (withdrawSuccess) {
+      setWithdrawAmount('', { validate: false });
+      withdrawReset();
+    }
+  }, [balance, withdrawReset, setWithdrawAmount, withdrawSuccess]);
 
+  // https://stackoverflow.com/a/36028587 -> Prevents scientific notation
   const setDepositMax = useCallback(() => {
-    if (balances.MDAI) {
-      setDepositAmount(balances.MDAI.toNumber().toString());
+    if (balances.MDAI && !balances.MDAI.eq(0)) {
+      setDepositAmount(balances.MDAI.toFixed(18).replace(/\.?0+$/, ''));
     } else {
-      setDepositAmount('0');
+      setDepositAmount('');
     }
   }, [balances.MDAI, setDepositAmount]);
 
   const setWithdrawMax = useCallback(() => {
-    setWithdrawAmount(balance.toString());
+    if (balance && !balance.eq(0)) {
+      setWithdrawAmount(balance.toFixed(18).replace(/\.?0+$/, ''));
+      setWithdrawMaxFlag(true);
+    } else {
+      setWithdrawAmount('');
+    }
   }, [balance, setWithdrawAmount]);
 
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -282,7 +296,10 @@ function Save() {
                       min="0"
                       placeholder="0 DAI"
                       value={withdrawAmount}
-                      onChange={onWithdrawAmountChange}
+                      onChange={e => {
+                        if (withdrawMaxFlag) setWithdrawMaxFlag(false);
+                        onWithdrawAmountChange(e);
+                      }}
                       error={withdrawAmountErrors}
                       failureMessage={withdrawAmountErrors}
                       after={<SetMax onClick={setWithdrawMax} />}

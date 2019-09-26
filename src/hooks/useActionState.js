@@ -24,5 +24,9 @@ export default function useActionState(
     }
   }, [action, setIsLoading, setError]);
 
-  return [onAction, isLoading, success, error];
+  const reset = useCallback(() => {
+    setError('');
+    setSuccess(false);
+  }, [setError, setSuccess]);
+  return [onAction, isLoading, success, error, reset];
 }
