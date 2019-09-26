@@ -153,11 +153,11 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
 }
 
 export async function getEventHistory(maker, cdpId) {
-  const cdp = await maker
-    .service('mcd:cdpManager')
-    .getCdp(cdpId, { prefetch: false });
-  return cdp.getEventHistory();
-  //return mockHistoryDataFromSDK; //TODO switch to real data
+  // const cdp = await maker
+  //   .service('mcd:cdpManager')
+  //   .getCdp(cdpId, { prefetch: false });
+  // return cdp.getEventHistory();
+  return mockHistoryDataFromSDK; //TODO switch to real data
 }
 
 export const mockHistoryDataFromSDK = [
