@@ -19,8 +19,7 @@ import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import ProxyToggle from 'components/ProxyToggle';
-import AllowanceToggle from 'components/AllowanceToggle';
+import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
 
 const Payback = ({ cdpId, reset }) => {
@@ -29,18 +28,8 @@ const Payback = ({ cdpId, reset }) => {
   const balances = useWalletBalances();
   const daiBalance = balances.MDAI;
 
-  const {
-    hasAllowance,
-    setAllowance,
-    allowanceLoading,
-    startedWithoutAllowance
-  } = useTokenAllowance('MDAI');
-  const {
-    setupProxy,
-    proxyLoading,
-    startedWithoutProxy,
-    hasProxy
-  } = useProxy();
+  const { hasAllowance } = useTokenAllowance('MDAI');
+  const { hasProxy } = useProxy();
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
@@ -84,7 +73,6 @@ const Payback = ({ cdpId, reset }) => {
     reset();
   };
 
-  const showProxyToggle = !proxyLoading && !hasProxy;
   const valid = amount && !amountErrors && hasProxy && hasAllowance;
 
   return (
@@ -105,32 +93,7 @@ const Payback = ({ cdpId, reset }) => {
           after={<SetMax onClick={setMax} />}
         />
       </Grid>
-      {(showProxyToggle ||
-        !hasAllowance ||
-        startedWithoutAllowance ||
-        startedWithoutProxy) && (
-        <Grid gridRowGap="s" data-testid="toggle-container">
-          {(startedWithoutProxy || showProxyToggle) && (
-            <ProxyToggle
-              isLoading={proxyLoading}
-              isComplete={!!hasProxy}
-              onToggle={setupProxy}
-              disabled={!!hasProxy}
-              data-testid="proxy-toggle"
-            />
-          )}
-          {(startedWithoutAllowance || !hasAllowance) && (
-            <AllowanceToggle
-              tokenDisplayName={'DAI'}
-              isLoading={allowanceLoading}
-              isComplete={hasAllowance}
-              onToggle={setAllowance}
-              disabled={!hasProxy || hasAllowance}
-              data-testid="allowance-toggle"
-            />
-          )}
-        </Grid>
-      )}
+      <ProxyAllowanceToggle token="MDAI" />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button disabled={!valid} onClick={payback}>
           {lang.actions.pay_back}

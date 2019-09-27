@@ -21,6 +21,7 @@ import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
 import AllowanceToggle from 'components/AllowanceToggle';
 import AccountSelection from 'components/AccountSelection';
+import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
@@ -252,16 +253,12 @@ function Save() {
                       after={<SetMax onClick={setDepositMax} />}
                     />
 
-                    {(startedWithoutAllowance || !hasAllowance) && (
-                      <AllowanceToggle
-                        mt="s"
-                        tokenDisplayName="DAI"
-                        onToggle={setAllowance}
-                        isLoading={allowanceLoading}
-                        isComplete={hasAllowance}
-                        disabled={hasAllowance}
+                    <Box my="s" mx="l">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
                       />
-                    )}
+                    </Box>
                   </div>
 
                   <Box justifySelf="center">
@@ -305,16 +302,12 @@ function Save() {
                       after={<SetMax onClick={setWithdrawMax} />}
                     />
 
-                    {(startedWithoutAllowance || !hasAllowance) && (
-                      <AllowanceToggle
-                        mt="s"
-                        tokenDisplayName="DAI"
-                        onToggle={setAllowance}
-                        isLoading={allowanceLoading}
-                        isComplete={hasAllowance}
-                        disabled={hasAllowance}
+                    <Box my="s" mx="l">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
                       />
-                    )}
+                    </Box>
                   </div>
 
                   <Box justifySelf="center">

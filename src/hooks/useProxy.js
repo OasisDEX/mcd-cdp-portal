@@ -7,7 +7,7 @@ import useLanguage from 'hooks/useLanguage';
 import { updateWatcherWithProxy } from '../watch';
 
 const initialState = {
-  isFirstLoading: true,
+  initialProxyCheck: true,
   startingBlockHeight: 0,
   proxyAddress: undefined,
   startedWithoutProxy: false,
@@ -21,7 +21,7 @@ export default function useProxy() {
 
   const [
     {
-      isFirstLoading,
+      initialProxyCheck,
       startingBlockHeight,
       proxyAddress,
       startedWithoutProxy,
@@ -32,6 +32,7 @@ export default function useProxy() {
     (prevState, newState) => ({ ...prevState, ...newState }),
     initialState
   );
+
   const [setupProxy, proxyLoading, , proxyErrors] = useActionState(async () => {
     if (!account) return null;
     if (proxyAddress) return proxyAddress;
@@ -56,10 +57,10 @@ export default function useProxy() {
   useEffect(() => {
     if (account) {
       (async () => {
-        updateState({ isFirstLoading: true });
+        updateState({ initialProxyCheck: true });
         const proxyAddress = await maker.service('proxy').getProxyAddress();
         updateState({
-          isFirstLoading: false,
+          initialProxyCheck: false,
           proxyAddress,
           startedWithoutProxy: !proxyAddress
         });
@@ -69,8 +70,9 @@ export default function useProxy() {
 
   return {
     proxyAddress,
-    setupProxy,
-    proxyLoading: proxyLoading || isFirstLoading,
+    setupProxy: setupProxy,
+    proxyLoading: proxyLoading,
+    initialProxyCheck,
     proxyErrors,
     startedWithoutProxy,
     startingBlockHeight,

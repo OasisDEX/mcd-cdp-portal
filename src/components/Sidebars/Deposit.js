@@ -18,8 +18,7 @@ import {
 import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import SetMax from 'components/SetMax';
-import AllowanceToggle from 'components/AllowanceToggle';
-import ProxyToggle from 'components/ProxyToggle';
+import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
 const Deposit = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -30,18 +29,8 @@ const Deposit = ({ cdpId, reset }) => {
 
   const gemBalances = useWalletBalances();
   const gemBalance = gemBalances[symbol] || 0;
-  const {
-    hasAllowance,
-    setAllowance,
-    allowanceLoading,
-    startedWithoutAllowance
-  } = useTokenAllowance(symbol);
-  const {
-    setupProxy,
-    proxyLoading,
-    startedWithoutProxy,
-    hasProxy
-  } = useProxy();
+  const { hasAllowance } = useTokenAllowance(symbol);
+  const { hasProxy } = useProxy();
 
   const [liquidationPrice, setLiquidationPrice] = useState(0);
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
@@ -65,8 +54,6 @@ const Deposit = ({ cdpId, reset }) => {
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
 
   const setMax = () => setAmount(gemBalance);
-
-  const showProxyToggle = !proxyLoading && !hasProxy;
 
   useEffect(() => {
     let val = parseFloat(amount);
@@ -112,30 +99,7 @@ const Deposit = ({ cdpId, reset }) => {
           data-testid="deposit-input"
         />
       </Grid>
-      {(showProxyToggle ||
-        !hasAllowance ||
-        startedWithoutAllowance ||
-        startedWithoutProxy) && (
-        <Grid gridRowGap="s">
-          {(startedWithoutProxy || showProxyToggle) && (
-            <ProxyToggle
-              isLoading={proxyLoading}
-              isComplete={!!hasProxy}
-              onToggle={setupProxy}
-              disabled={!!hasProxy}
-            />
-          )}
-          {(startedWithoutAllowance || !hasAllowance) && (
-            <AllowanceToggle
-              tokenDisplayName={symbol}
-              isLoading={allowanceLoading}
-              isComplete={hasAllowance}
-              onToggle={setAllowance}
-              disabled={!hasProxy || hasAllowance}
-            />
-          )}
-        </Grid>
-      )}
+      <ProxyAllowanceToggle token={symbol} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button onClick={deposit} disabled={!valid}>
           {lang.actions.deposit}

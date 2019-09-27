@@ -11,7 +11,6 @@ export default function useActionState(
     setError('');
     setSuccess(false);
     setIsLoading(true);
-
     try {
       const res = await action();
       setIsLoading(false);

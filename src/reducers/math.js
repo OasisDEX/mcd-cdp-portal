@@ -175,7 +175,7 @@ function recalculatePrice(ilk, name, par) {
     ilk[PRICE_WITH_SAFETY_MARGIN],
     ilk[LIQUIDATION_RATIO]
   );
-  console.log(`calculated price for ${name}: ${price}`);
+  // console.log(`calculated price for ${name}: ${price}`);
   return price;
 }
 

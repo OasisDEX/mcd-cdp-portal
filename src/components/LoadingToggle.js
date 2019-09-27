@@ -17,7 +17,6 @@ function LoadingToggle({
     : isComplete
     ? completeText
     : defaultText;
-
   return (
     <Grid alignItems="center" gridTemplateColumns="auto 1fr auto" {...props}>
       <Text t="body">{text}</Text>

@@ -62,7 +62,7 @@ export async function startWatcher(maker, dispatch) {
   addresses.MWETH = addresses.ETH;
 
   watcher.batch().subscribe(updates => {
-    console.log('watcher got updates:', { updates });
+    // console.log('watcher got updates:', { updates });
 
     dispatch(batchActions(updates));
 
