@@ -76,6 +76,7 @@ function Overview() {
             token: cdp.gem,
             id,
             ratio: getCollateralizationRatio(cdp),
+            ilkLiqRatio: cdp.liquidationRatio,
             deposited: getCollateralAmount(cdp),
             withdraw: getCollateralAvailableAmount(cdp),
             debt: getDebtAmount(cdp),
@@ -186,7 +187,18 @@ function Overview() {
                 </Table.thead>
                 <tbody>
                   {cdpContent.map(
-                    ([token, id, ratio, deposited, withdraw, debt], i) => (
+                    (
+                      [
+                        token,
+                        id,
+                        ratio,
+                        ilkLiqRatio,
+                        deposited,
+                        withdraw,
+                        debt
+                      ],
+                      i
+                    ) => (
                       <Table.tr key={i}>
                         <Table.td>
                           <Text
@@ -212,7 +224,7 @@ function Overview() {
                             <RatioDisplay
                               fontSize={{ s: '1.7rem', m: '1.3rem' }}
                               ratio={ratio}
-                              inverse={true}
+                              ilkLiqRatio={ilkLiqRatio}
                             />
                           ) : (
                             <Text fontSize={{ s: '1.7rem', m: '1.3rem' }}>
