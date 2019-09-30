@@ -4,6 +4,7 @@ import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
 import useActionState from 'hooks/useActionState';
 import useLanguage from 'hooks/useLanguage';
+import { cleanSymbol } from '../utils/ui';
 
 export function useTokenAllowances() {
   const { account } = useMaker();
@@ -38,7 +39,10 @@ export default function useTokenAllowance(tokenSymbol) {
       setStartedWithoutAllowance(true);
       newTxListener(
         txPromise,
-        lang.formatString(lang.transactions.unlocking_token, tokenSymbol)
+        lang.formatString(
+          lang.transactions.unlocking_token,
+          cleanSymbol(tokenSymbol)
+        )
       );
       return await txPromise;
     }

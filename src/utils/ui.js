@@ -25,7 +25,7 @@ export function prettifyNumber(
 ) {
   if (_num === null) return null;
   let symbol = ' ';
-  if (_num.symbol !== undefined) symbol += _num.symbol;
+  if (_num.symbol !== undefined) symbol += cleanSymbol(_num.symbol);
   const num = parseFloat(_num.toString());
   if (num > Number.MAX_SAFE_INTEGER)
     throw new Error(
