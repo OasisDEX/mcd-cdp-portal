@@ -80,7 +80,7 @@ export default function({ title, rows, network }) {
   );
 }
 
-function formatEventHistory(events, network) {
+function formatEventHistory(events = [], network) {
   return events.map(e => {
     return [
       e.changeInCollateral.symbol,

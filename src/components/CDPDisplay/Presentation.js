@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
+import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -29,7 +30,7 @@ import FullScreenAction from './FullScreenAction';
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
-
+  const { maker } = useMaker();
   const cdpId = parseInt(cdp.id);
   console.log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
@@ -47,7 +48,6 @@ export default function({ cdp, showSidebar, account, network }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
-  const eventHistory = getEventHistory(cdp);
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
@@ -62,6 +62,12 @@ export default function({ cdp, showSidebar, account, network }) {
       showSidebar(props);
     }
   };
+
+  const [eventHistory, setEventHistory] = useState([]);
+
+  useEffect(() => {
+    getEventHistory(maker, cdpId).then(events => setEventHistory(events));
+  }, [maker, cdpId]);
 
   return (
     <PageContentLayout>
