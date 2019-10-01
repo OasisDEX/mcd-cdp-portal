@@ -1531,10 +1531,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.2.14-rc.1":
-  version "0.2.14-rc.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.14-rc.1.tgz#204d9afa241cca4127eb3b69af4302001bd3b0bf"
-  integrity sha512-uL6sScVwUtokqziJcvzl1W6fjXGUioP0i1YtGSTGz+/SW/gY+R8Rz9PqL5mG3kmDRoZdYriOAWEZvtCdUIeH1g==
+"@makerdao/dai-plugin-mcd@^0.2.14":
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.14.tgz#72b80eac9ffe855aed41fcc830d0ee978ca5cd1b"
+  integrity sha512-k3lp9rZJmG5y1KbHtjXVOc2S5QkXGrti0iBfdCXzW7y+Ur4pEEyzW/J+gDtON3bnTtosW0F9S4f1uh4kGXayRQ==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -1560,19 +1560,20 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@0.18.4":
-  version "0.18.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.18.4.tgz#fce8ddf68e2068ee0589b358cbda6c7c1dcec9dd"
-  integrity sha512-4Dl/2KAG1oU+VUTF/Ksr9iDGWN6ehlkKhmVjf1asHFuUifJTz6sVG+yFEnYoTFfm7UKV73rMz708prutPV770g==
+"@makerdao/dai@0.18.6":
+  version "0.18.6"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.18.6.tgz#02f9b46cd59b371614c25d81d4e7f14e15af659a"
+  integrity sha512-3OdpKkRJQD5tydwaWuAB++M824rQ3kS+VWqegJ3xbvHfyxzoo9Mjkm+yx/vRwM3s8oVLPxKcIeoIdtWMFP4Wgw==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/multicall" "^0.7.0"
+    "@makerdao/multicall" "^0.8.0"
     "@makerdao/services-core" "^0.9.9"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
     chalk "^2.4.1"
     debug "^3.1.0"
+    ethereumjs-util "^5.2.0"
     ethers "^3.0.15"
     ethers-web3-bridge "0.0.1"
     eventemitter2 "^5.0.1"
@@ -1594,14 +1595,15 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@^0.7.0":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.7.1.tgz#b15cc00b792608b92b20425cc1c889c94c64cc66"
-  integrity sha512-CSGLCSLkqpqZcyQuAOlCh3+ZE5IYS0vbN+FawlIs9Yod9uHcHn1sCvnEhlhVbRDfZqdx1upKe/ifraM1Dw+riQ==
+"@makerdao/multicall@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.8.0.tgz#c2347b52940b79d303a324b4eef8c04a5f79d0af"
+  integrity sha512-I754RF+1LTsUVpkaYjDBQO4IJqDP2XxriCTYClARVJ7GzbPvXpQcD0EdTLPx5kDAW9OYHPtYsjSr2pOx2Bh51g==
   dependencies:
     cross-fetch "^3.0.1"
-    ethers "^4.0.6"
+    ethers "^4.0.27"
     js-sha3 "^0.8.0"
+    lodash "^4.17.11"
 
 "@makerdao/services-core@^0.9.9":
   version "0.9.9"
@@ -1619,10 +1621,10 @@
   dependencies:
     node-fetch "^2.6.0"
 
-"@makerdao/testchain@0.2.13":
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/@makerdao/testchain/-/testchain-0.2.13.tgz#01782ed6bbbba8034461232e755fed968bdda633"
-  integrity sha512-fEuhLmfUN8j6MXvNJKcnrI8qNtloq5qLaxVCHuWtKzRgEV8+rtn56bCcPGN6dGnS2McAoswOrTT8DwvXviXQCQ==
+"@makerdao/testchain@0.2.14":
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/@makerdao/testchain/-/testchain-0.2.14.tgz#c496c80e54ff4e90d6c9fc3c1685bdadf4820661"
+  integrity sha512-9RO5rvWa/1XoXTZ/PH+oYVnu+Pq+DsEi9Pz/GxZE7aQuYOj1oGaYVIkSGw9qYWJLNqfo+DXvTfytbG30vUhfZw==
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
@@ -5960,10 +5962,10 @@ ethers@^3.0.15:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^4.0.6:
-  version "4.0.28"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.28.tgz#74d9acb57f4ede3337c8d60476b38d0fe646af01"
-  integrity sha512-5JTHrPoFLqf+xCAI3pKwXSOgWBSJJoAUdPtPLr1ZlKbSKiIFMkPlRNovmZS3jhIw5sHW1YoVWOaJ6ZR2gKRbwg==
+ethers@^4.0.27:
+  version "4.0.37"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.37.tgz#dfa70d59498663878c5e4a977d14356660ca5b90"
+  integrity sha512-B7bDdyQ45A5lPr6k2HOkEKMtYOuqlfy+nNf8glnRvWidkDQnToKw1bv7UyrwlbsIgY2mE03UxTVtouXcT6Vvcw==
   dependencies:
     "@types/node" "^10.3.2"
     aes-js "3.0.0"
