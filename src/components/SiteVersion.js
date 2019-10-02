@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Box, Link, Text } from '@makerdao/ui-components-core';
 import 'whatwg-fetch';
 import styled from 'styled-components';
-import { COMMIT_SHA, COMMIT_BRANCH } from '../static/version.json';
 
 const VersionText = styled(Text)`
   font-size: 0.75em;
@@ -23,6 +22,8 @@ const VersionLink = styled(Link)`
 const SiteVersion = () => {
   const [commitMsg, setCommitMsg] = useState('');
   const [commitDate, setCommitDate] = useState('');
+  const { COMMIT_SHA, COMMIT_BRANCH } = require('../static/version.json');
+
   const apiUrl = `https://api.github.com/repos/makerdao/mcd-cdp-portal/git/commits/${COMMIT_SHA}`;
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const SiteVersion = () => {
       setCommitMsg(message);
     };
     fetchCommitMsg();
-  }, [apiUrl]);
+  }, [apiUrl, COMMIT_SHA]);
 
   if (!COMMIT_SHA) return null;
 
