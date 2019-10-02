@@ -27,10 +27,7 @@ export function prettifyNumber(
   let symbol = ' ';
   if (_num.symbol !== undefined) symbol += cleanSymbol(_num.symbol);
   const num = parseFloat(_num.toString());
-  if (num > Number.MAX_SAFE_INTEGER)
-    throw new Error(
-      'formatNumber is not meant to be used with very large numbers'
-    );
+  if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + ' M';
