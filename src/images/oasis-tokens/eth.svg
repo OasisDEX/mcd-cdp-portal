@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 20C15.5228 20 20 15.5228 20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20Z" fill="#667FE3"/>
+  <g transform="matrix(1, 0, 0, 1, 0.25, 0.718)">
+    <path d="M 9.75 3.282 L 9.75 11.57 L 5.75 9.393 L 9.75 3.282 Z" fill="white"/>
+    <path d="M 9.75 3.282 L 13.75 9.393 L 9.75 11.57 L 9.75 3.282 Z" fill="white"/>
+    <path d="M 9.75 12.267 L 9.75 15.281 L 5.75 10.092 L 9.75 12.267 Z" fill="white"/>
+    <path d="M 9.75 15.281 L 9.75 12.267 L 13.75 10.092 L 9.75 15.281 Z" fill="white"/>
+  </g>
+</svg>
