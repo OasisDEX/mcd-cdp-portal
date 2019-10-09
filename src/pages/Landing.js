@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { Link } from 'react-navi';
 
-import LandingLayout from '../layouts/LandingLayout';
+import OasisLayout from '../layouts/OasisLayout';
 import SEO from '../components/seo';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from '../utils/constants';
@@ -430,7 +430,7 @@ const Questions = () => {
 
 function Landing() {
   return (
-    <LandingLayout>
+    <OasisLayout>
       <SEO title="Oasis" />
       <Hero>Trade, borrow and save using Dai.</Hero>
       <Cards>
@@ -543,7 +543,7 @@ function Landing() {
         <h3>Questions</h3>
         <Questions />
       </TextSection>
-    </LandingLayout>
+    </OasisLayout>
   );
 }
 

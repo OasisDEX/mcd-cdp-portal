@@ -64,7 +64,7 @@ const Footer = styled.footer`
   }
 `;
 
-const LandingLayout = ({ children }) => (
+const OasisLayout = ({ children }) => (
   <div
     style={{
       margin: '0 auto',
@@ -120,4 +120,4 @@ const LandingLayout = ({ children }) => (
   </div>
 );
 
-export default LandingLayout;
+export default OasisLayout;

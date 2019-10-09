@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Layout from '../components/layout';
+import OasisLayout from '../layouts/OasisLayout';
 import SEO from '../components/seo';
-import TextPage from '../components/textPage';
+import LegalTextLayout from '../layouts/LegalTextLayout';
 
 const Privacy = () => (
-  <Layout>
+  <OasisLayout>
     <SEO title="Oasis - Privacy Policy" />
-    <TextPage>
+    <LegalTextLayout>
       <h1>Privacy Policy</h1>
       <div className="subheading">Last updated: 30 September 2019</div>
       <p>
@@ -231,8 +231,8 @@ const Privacy = () => (
         Privacy Policy as well as with any requests at{' '}
         <a href="mailto:legal@oasis.app">legal@oasis.app</a>.
       </p>
-    </TextPage>
-  </Layout>
+    </LegalTextLayout>
+  </OasisLayout>
 );
 
 export default Privacy;

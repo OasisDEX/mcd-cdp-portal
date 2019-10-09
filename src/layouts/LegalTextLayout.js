@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const TextPage = styled.div`
+const LegalTextLayout = styled.div`
   max-width: 680px;
   text-align: left;
   margin: 0 auto;
@@ -59,4 +59,4 @@ const TextPage = styled.div`
   }
 `;
 
-export default TextPage;
+export default LegalTextLayout;
