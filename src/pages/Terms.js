@@ -1,7 +1,7 @@
 import React from 'react';
 
 import OasisLayout from '../layouts/OasisLayout';
-import SEO from '../components/seo';
+import SEO from '../components/SEO';
 import LegalTextLayout from '../layouts/LegalTextLayout';
 
 const Privacy = () => (

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-navi';
 
 import OasisLayout from '../layouts/OasisLayout';
-import SEO from '../components/seo';
+import SEO from '../components/SEO';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from '../utils/constants';
 
