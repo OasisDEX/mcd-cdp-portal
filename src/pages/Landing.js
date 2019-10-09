@@ -8,11 +8,11 @@ import SEO from '../components/SEO';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from '../utils/constants';
 
-import BatIcon from '../images/oasis-tokens/bat.svg';
-import ZrxIcon from '../images/oasis-tokens/zrx.svg';
-import EthIcon from '../images/oasis-tokens/eth.svg';
-import DaiIcon from '../images/oasis-tokens/dai.svg';
-import RepIcon from '../images/oasis-tokens/rep.svg';
+import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
+import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
+import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
+import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
+import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
 
 const Hero = styled.div`
   color: #1e2e3a;
@@ -473,17 +473,25 @@ function Landing() {
           }}
         >
           <div className="title" style={{ color: '#5B2E1B' }}>
-            <Link href={`/${Routes.BORROW}`} prefetch={true}>
-              Borrow
-            </Link>
+            Borrow
           </div>
           <div className="description" style={{ color: '#5B2E1B' }}>
             Lock your tokens as collateral to generate Dai, a decentralized
             cryptocurrency pegged to 1 USD.
           </div>
           <div className="buttonContainer">
-            <div className="button" style={{ color: '#5D2D00', opacity: 0.6 }}>
-              Coming Soon
+            <div className="button">
+              <Link
+                href={`/${Routes.BORROW}`}
+                prefetch={true}
+                className="button enabled"
+                style={{
+                  color: '#5894B5',
+                  backgroundColor: 'white'
+                }}
+              >
+                Borrow Dai
+              </Link>
             </div>
           </div>
         </Card>
@@ -501,9 +509,17 @@ function Landing() {
             and non-custodial.
           </div>
           <div className="buttonContainer">
-            <div className="button" style={{ color: '#002F28', opacity: 0.6 }}>
-              <Link href={`/${Routes.SAVE}`} prefetch={true}>
-                Save
+            <div className="button">
+              <Link
+                href={`/${Routes.SAVE}`}
+                prefetch={true}
+                className="button enabled"
+                style={{
+                  color: '#5894B5',
+                  backgroundColor: 'white'
+                }}
+              >
+                Save Dai
               </Link>
             </div>
           </div>

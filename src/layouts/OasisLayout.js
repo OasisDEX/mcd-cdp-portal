@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
 
 import '../styles/minireset.css';
-import './layout.css';
+import './OasisLayout.css';
 
 const Header = styled.header`
   text-align: left;
@@ -69,7 +69,8 @@ const OasisLayout = ({ children }) => (
     style={{
       margin: '0 auto',
       maxWidth: 1203,
-      paddingTop: '41px'
+      paddingTop: '41px',
+      width: '100%'
     }}
   >
     <Helmet>
