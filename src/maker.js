@@ -20,10 +20,7 @@ export async function instantiateMaker({
   testchainId,
   backendEnv
 }) {
-  const mcdPluginConfig = {
-    network: network === 'test' ? 'testnet' : network,
-    prefetch: false
-  };
+  const mcdPluginConfig = { prefetch: false };
 
   const config = {
     log: false,

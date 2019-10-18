@@ -29,7 +29,7 @@ module.exports = {
   jest: {
     configure: {
       coverageReporters: ['json', 'lcov', 'text-summary'],
-      setupTestFrameworkScriptFile: '<rootDir>/test/setup.js'
+      setupFilesAfterEnv: '<rootDir>/test/setup.js'
     }
   }
 };
