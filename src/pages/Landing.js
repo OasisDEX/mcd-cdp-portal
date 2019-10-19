@@ -93,6 +93,7 @@ const TextSection = styled.div`
     font-size: 30px;
     font-weight: normal;
     margin-bottom: 20px;
+    line-height: 40px;
   }
 
   p {
