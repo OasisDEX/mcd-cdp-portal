@@ -538,7 +538,7 @@ function Landing() {
         <h3>What's the Story</h3>
         <p>
           Oasis is a platform for decentralized finance. Use it to trade tokens,
-          borrow Dai and earn savings - all in one place.
+          borrow Dai and earn savings — all in one place.
         </p>
       </TextSection>
       <TextSection>
