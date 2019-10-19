@@ -23,6 +23,12 @@ const Footer = styled.footer`
   margin-top: 90px;
   margin-bottom: 70px;
 
+  *,
+  *:before,
+  *:after {
+    position: static;
+  }
+
   nav {
     float: right;
     display: flex;
