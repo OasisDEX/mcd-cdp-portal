@@ -104,15 +104,15 @@ const OasisLayout = ({ children }) => (
       />
     </Helmet>
     <Header>
-      <Link className="logo" to="/">
+      <Link className="logo" href="/">
         Oasis
       </Link>
     </Header>
     {children}
     <Footer>
       <nav>
-        <Link to="/privacy">Privacy</Link>
-        <Link to="/terms">Terms</Link>
+        <Link href="/privacy">Privacy</Link>
+        <Link href="/terms">Terms</Link>
       </nav>
       <div className="copyright">
         © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.

@@ -1,12 +1,11 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 
 import OasisLayout from '../layouts/OasisLayout';
-import SEO from '../components/SEO';
 import LegalTextLayout from '../layouts/LegalTextLayout';
 
 const Privacy = () => (
   <OasisLayout>
-    <SEO title="Oasis - Terms of Service" />
     <LegalTextLayout>
       <h1>Terms of Service</h1>
       <span className="subheading">Last Revised: 02 October 2019</span>
@@ -854,4 +853,4 @@ const Privacy = () => (
   </OasisLayout>
 );
 
-export default Privacy;
+export default hot(Privacy);
