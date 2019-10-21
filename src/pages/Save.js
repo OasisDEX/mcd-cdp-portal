@@ -188,7 +188,7 @@ function Save() {
               })
             }
           >
-            {lang.save.get_started}
+            {lang.actions.get_started}
           </Button>{' '}
         </Flex>
       ) : (

@@ -40,7 +40,8 @@
     "view_cdp": "View CDP",
     "view_cdp_mobile": "View",
     "total_collateral_locked": "total collateral locked",
-    "total_dai_debt": "total dai debt"
+    "total_dai_debt": "total dai debt",
+    "get_started_title": "Open your first position within the Maker Vault."
   },
   "navbar": {
     "save": "Earn",
@@ -151,7 +152,8 @@
     "pay_back": "Pay back",
     "generate": "Generate",
     "send": "Send",
-    "skip": "Skip"
+    "skip": "Skip",
+    "get_started": "Get Started"
   },
   "actions_past_tense": {
     "deposit": "Deposited",
@@ -204,7 +206,6 @@
     "withdraw_amount": "Withdraw amount",
     "deposit_dai": "Deposit DAI",
     "deposit_dai_subheading": "Start earning as soon as your deposit is confirmed.",
-    "get_started": "Get Started",
     "get_started_title": "Open a Maker Vault to start earning DAI."
   },
   "verbs": {
