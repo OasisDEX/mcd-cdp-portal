@@ -3,8 +3,106 @@ import styled from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
 
-import '../styles/minireset.css';
-import './OasisLayout.css';
+const OasisLayoutStyle = styled.div`
+  /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
+  p,
+  ol,
+  ul,
+  li,
+  dl,
+  dt,
+  dd,
+  blockquote,
+  figure,
+  fieldset,
+  legend,
+  textarea,
+  pre,
+  iframe,
+  hr,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 100%;
+    font-weight: normal;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    margin: 0;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+  img,
+  embed,
+  iframe,
+  object,
+  audio,
+  video {
+    height: auto;
+    max-width: 100%;
+  }
+
+  iframe {
+    border: 0;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  td,
+  th {
+    padding: 0;
+    text-align: left;
+  }
+  /* end minireset */
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+  padding: 0 40px;
+  font-family: 'FT Switch', Arial, Helvetica, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  text-align: center;
+  color: black;
+  width: 100%;
+
+  @media only screen and (max-width: 425px) {
+    padding: 0 10px;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+`;
 
 const Header = styled.header`
   text-align: left;
@@ -71,60 +169,62 @@ const Footer = styled.footer`
 `;
 
 const OasisLayout = ({ children }) => (
-  <div
-    style={{
-      margin: '0 auto',
-      maxWidth: 1203,
-      paddingTop: '41px',
-      width: '100%'
-    }}
-  >
-    <Helmet>
-      <link
-        rel="preload"
-        as="font"
-        href="/fonts/FTSwitch-Regular.woff2"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
-      <link
-        rel="preload"
-        as="font"
-        href="/fonts/FTSwitch-Regular.woff"
-        type="font/woff"
-        crossOrigin="anonymous"
-      />
-      <link
-        rel="preload"
-        as="font"
-        href="/fonts/FTSwitch-Medium.woff2"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
-      <link
-        rel="preload"
-        as="font"
-        href="/fonts/FTSwitch-Medium.woff"
-        type="font/woff"
-        crossOrigin="anonymous"
-      />
-    </Helmet>
-    <Header>
-      <Link className="logo" href="/">
-        Oasis
-      </Link>
-    </Header>
-    {children}
-    <Footer>
-      <nav>
-        <Link href="/privacy">Privacy</Link>
-        <Link href="/terms">Terms</Link>
-      </nav>
-      <div className="copyright">
-        © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
-      </div>
-    </Footer>
-  </div>
+  <OasisLayoutStyle>
+    <div
+      style={{
+        margin: '0 auto',
+        maxWidth: 1203,
+        paddingTop: '41px',
+        width: '100%'
+      }}
+    >
+      <Helmet>
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTSwitch-Regular.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTSwitch-Regular.woff"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTSwitch-Medium.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTSwitch-Medium.woff"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+      </Helmet>
+      <Header>
+        <Link className="logo" href="/">
+          Oasis
+        </Link>
+      </Header>
+      {children}
+      <Footer>
+        <nav>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+        </nav>
+        <div className="copyright">
+          © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
+        </div>
+      </Footer>
+    </div>
+  </OasisLayoutStyle>
 );
 
 export default OasisLayout;
