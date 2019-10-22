@@ -256,9 +256,7 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     }, 300);
 
     window.addEventListener('resize', debouncedHandleResize);
-    if (answerElement.current && height === 0) {
-      setHeight(answerElement.current.clientHeight);
-    }
+    setHeight(answerElement.current.clientHeight);
     return _ => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
