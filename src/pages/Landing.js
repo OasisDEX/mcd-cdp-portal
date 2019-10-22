@@ -39,6 +39,7 @@ const Card = styled.div`
   height: 355px;
   color: #ffffff;
   position: relative;
+  flex-shrink: 1;
 
   @media (max-width: 1020px) {
     margin-bottom: 35px;
