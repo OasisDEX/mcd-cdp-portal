@@ -9,6 +9,7 @@ import accountModel, {
 import { tokensWithBalances } from 'reducers/accounts';
 import savingsModel from './reducers/multicall/savings';
 import { isMissingContractAddress } from './utils/ethereum';
+import flatten from 'lodash/flatten';
 
 let watcher;
 
@@ -25,17 +26,18 @@ export async function updateWatcherWithProxy(
     [
       ...calls,
       ...(currentAddress
-        ? tokensWithBalances
-            .filter(token => token && token.symbol !== 'ETH')
-            .map(token =>
-              accountAllowanceForToken(
-                addresses,
-                token,
-                currentAddress,
-                proxyAddress
+        ? flatten(
+            tokensWithBalances
+              .filter(token => token && token.symbol !== 'ETH')
+              .map(token =>
+                accountAllowanceForToken(
+                  addresses,
+                  token,
+                  currentAddress,
+                  proxyAddress
+                )
               )
-            )
-            .flat()
+          )
         : [])
     ].filter(callData => !isMissingContractAddress(callData))
   );
@@ -78,23 +80,24 @@ export async function startWatcher(maker, dispatch) {
   watcher.tap(() => {
     return [
       ...createCDPSystemModel(addresses),
-      ...ilks.map(ilk => cdpTypeModel(addresses, ilk)).flat(),
+      ...flatten(ilks.map(ilk => cdpTypeModel(addresses, ilk))),
       ...savingsModel(addresses),
       ...(currentAddress && proxyAddress
         ? accountModel(addresses, currentAddress, proxyAddress)
         : []),
       ...(currentAddress
-        ? tokensWithBalances
-            .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
-            .map(token =>
-              accountBalanceForToken(
-                addresses,
-                token,
-                currentAddress,
-                proxyAddress
+        ? flatten(
+            tokensWithBalances
+              .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
+              .map(token =>
+                accountBalanceForToken(
+                  addresses,
+                  token,
+                  currentAddress,
+                  proxyAddress
+                )
               )
-            )
-            .flat()
+          )
         : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
   });
