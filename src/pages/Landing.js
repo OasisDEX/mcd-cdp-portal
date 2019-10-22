@@ -333,17 +333,17 @@ const Questions = () => {
     },
     {
       q: lang.landing_page.question5,
-      a: lang.landing_page.answer5
+      a: lang.formatString(
+        lang.landing_page.answer5,
+        link(
+          lang.landing_page.answer5_link1_url,
+          lang.landing_page.answer5_link1_text
+        )
+      )
     },
     {
       q: lang.landing_page.question6,
-      a: lang.formatString(
-        lang.landing_page.answer6,
-        link(
-          lang.landing_page.answer6_link1_url,
-          lang.landing_page.answer6_link1_text
-        )
-      )
+      a: lang.landing_page.answer6
     },
     {
       q: lang.landing_page.question7,
