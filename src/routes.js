@@ -9,6 +9,8 @@ import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
+import Privacy from 'pages/Privacy';
+import Terms from 'pages/Terms';
 import { GenericNotFound } from 'pages/NotFound';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
@@ -181,6 +183,20 @@ export default mount({
     return {
       title: 'Trade',
       view: <GenericNotFound />
+    };
+  }),
+
+  [`/${Routes.PRIVACY}`]: route(() => {
+    return {
+      title: 'Oasis - Privacy Policy',
+      view: <Privacy />
+    };
+  }),
+
+  [`/${Routes.TERMS}`]: route(() => {
+    return {
+      title: 'Oasis - Terms of Service',
+      view: <Terms />
     };
   })
 });

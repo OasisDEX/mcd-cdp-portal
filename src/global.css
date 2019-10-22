@@ -14,3 +14,19 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+@font-face {
+  font-family: 'FT Switch';
+  src: url('/fonts/FTSwitch-Regular.woff2') format('woff2'),
+  url('/fonts/FTSwitch-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FT Switch';
+  src: url('/fonts/FTSwitch-Medium.woff2') format('woff2'),
+  url('/fonts/FTSwitch-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
