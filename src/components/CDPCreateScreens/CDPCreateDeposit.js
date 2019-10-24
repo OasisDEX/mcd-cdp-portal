@@ -150,9 +150,9 @@ const CDPCreateDepositSidebar = ({
   const {
     liquidationPenalty,
     liquidationRatio,
-    rate,
     debtCeiling,
-    ilkDebtAvailable
+    ilkDebtAvailable,
+    stabilityFee
   } = selectedIlk.data;
   return (
     <Grid gridRowGap="m">
@@ -164,7 +164,7 @@ const CDPCreateDepositSidebar = ({
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
         ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
 
-        [lang.stability_fee, `${rate}%`],
+        [lang.stability_fee, `${stabilityFee}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
         [lang.liquidation_penalty, `${liquidationPenalty}%`],
         [lang.collateral_debt_ceiling, `${prettifyNumber(debtCeiling)} DAI`],

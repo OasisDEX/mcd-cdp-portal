@@ -30,7 +30,11 @@ const CDPCreateConfirmSummary = ({
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
 
-  const { liquidationPenalty, liquidationRatio, rate } = selectedIlk.data;
+  const {
+    liquidationPenalty,
+    liquidationRatio,
+    stabilityFee
+  } = selectedIlk.data;
   const { gemsToLock, daiToDraw } = cdpParams;
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
     ilkData: selectedIlk.data,
@@ -51,7 +55,7 @@ const CDPCreateConfirmSummary = ({
     [lang.liquidation_ratio, `${liquidationRatio}%`],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
-    [lang.stability_fee, `${rate}%`]
+    [lang.stability_fee, `${stabilityFee}%`]
   ];
   return (
     <Box
