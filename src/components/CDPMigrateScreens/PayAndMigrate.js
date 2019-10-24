@@ -168,7 +168,9 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
             <Text t="caption" color="steel">
               {lang.formatString(
                 lang.terms_of_service_text,
-                <Link>{lang.terms_of_service}</Link>
+                <Link href="/terms" target="_blank">
+                  {lang.terms_of_service}
+                </Link>
               )}
             </Text>
           </Grid>
@@ -208,7 +210,9 @@ const ConfirmMigrate = ({ onClose, dispatch, onNext }) => {
             <Text t="caption" color="steel">
               {lang.formatString(
                 lang.terms_of_service_text,
-                <Link>{lang.terms_of_service}</Link>
+                <Link href="/terms" target="_blank">
+                  {lang.terms_of_service}
+                </Link>
               )}
             </Text>
           </Grid>
