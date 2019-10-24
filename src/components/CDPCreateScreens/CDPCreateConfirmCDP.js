@@ -200,7 +200,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         daiToDraw
       );
 
-    newTxListener(txObject, lang.transactions.create_cdp);
+    newTxListener(txObject, lang.transactions.creating_cdp);
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
