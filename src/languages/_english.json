@@ -199,6 +199,7 @@
     "invalid_address": "This is not a valid address"
   },
   "save": {
+    "title": "Balance",
     "dai_savings_rate": "Dai Savings rate",
     "description": "Receive interest on your Dai. Withdraw or top-up at any time.",
     "deposit_amount": "Deposit amount",
