@@ -31,7 +31,10 @@ const CDPCreateSelectCollateralSidebar = () => {
             lang.liquidation_ratio,
             lang.cdp_create.liquidation_ratio_description
           ],
-          [lang.liquidation_fee, lang.cdp_create.liquidation_fee_description]
+          [
+            lang.liquidation_penalty,
+            lang.cdp_create.liquidation_penalty_description
+          ]
         ].map(([title, text]) => (
           <Grid mb="m" key={title} gridRowGap="xs">
             <TextBlock t="h5" lineHeight="normal">
