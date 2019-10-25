@@ -49,7 +49,6 @@ const CDPCreateSelectCollateralSidebar = () => {
 };
 
 function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
-  const { lang } = useLanguage();
   const [{ feeds }] = useStore();
 
   ilk.data = getIlkData(feeds, ilk.key);

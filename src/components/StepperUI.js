@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { Grid, Stepper, Box } from '@makerdao/ui-components-core';
+import { Grid, Stepper, Flex } from '@makerdao/ui-components-core';
 
 const FadeIn = styled.div`
   opacity: 0;
@@ -48,13 +48,13 @@ class StepperUI extends React.Component {
           alignContent="start"
           gridRowGap={{ s: 'm', m: '2xl' }}
         >
-          <Box m="0 auto">
+          <Flex justifyContent="center">
             <Stepper
               minWidth="200px"
               steps={this.props.steps}
               selected={this.props.step}
             />
-          </Box>
+          </Flex>
 
           <div
             style={{ width: '100%', maxWidth: '100vw', position: 'relative' }}
