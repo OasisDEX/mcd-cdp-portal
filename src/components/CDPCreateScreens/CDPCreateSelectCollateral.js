@@ -127,15 +127,18 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ilkList.map(ilk => (
-                    <IlkTableRow
-                      key={ilk.key}
-                      checked={ilk.key === selectedIlk.key}
-                      dispatch={dispatch}
-                      ilk={ilk}
-                      gemBalance={balances[ilk.gem]}
-                    />
-                  ))}
+                  {ilkList.map(
+                    ilk =>
+                      balances[ilk.gem] && (
+                        <IlkTableRow
+                          key={ilk.key}
+                          checked={ilk.key === selectedIlk.key}
+                          dispatch={dispatch}
+                          ilk={ilk}
+                          gemBalance={balances[ilk.gem]}
+                        />
+                      )
+                  )}
                 </tbody>
               </Table>
             </Overflow>
