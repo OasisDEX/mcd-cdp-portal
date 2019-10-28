@@ -6,7 +6,8 @@ import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
-import { startWatcher } from '../watch';
+import { createWatcher, startWatcher } from '../watch';
+import { batchActions } from '../utils/redux';
 
 export const MakerObjectContext = createContext();
 
@@ -58,13 +59,20 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
 
   useEffect(() => {
     if (maker) {
+      const watcher = createWatcher(maker);
+      const batchSub = watcher.batch().subscribe(updates => {
+        dispatch(batchActions(updates));
+        // make entire list of updates available in a single reducer call
+        dispatch({ type: 'watcherUpdates', payload: updates });
+      });
+      const onNewBlockSub = watcher.onNewBlock(blockHeight =>
+        console.debug(`Latest block height: ${blockHeight}`)
+      );
       startWatcher(maker, dispatch);
-      const subscription = maker
-        .service('multicall')
-        .watcher.onNewBlock(blockHeight =>
-          console.debug(`Latest block height: ${blockHeight}`)
-        );
-      return subscription.unsub;
+      return () => {
+        batchSub.unsub();
+        onNewBlockSub.unsub();
+      };
     }
   }, [maker, dispatch, account]);
 
