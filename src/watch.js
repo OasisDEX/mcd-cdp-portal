@@ -1,4 +1,3 @@
-import { batchActions } from './utils/redux';
 import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
@@ -43,12 +42,15 @@ export async function updateWatcherWithProxy(
   );
 }
 
-export async function startWatcher(maker, dispatch) {
+export function createWatcher(maker) {
   const service = maker.service('multicall');
   service.createWatcher();
   watcher = service.watcher;
   window.watcher = watcher;
+  return watcher;
+}
 
+export async function startWatcher(maker, dispatch) {
   let currentAddress;
   let proxyAddress;
   try {
@@ -62,16 +64,6 @@ export async function startWatcher(maker, dispatch) {
   // by token symbol
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
-
-  watcher.batch().subscribe(updates => {
-    // console.log('watcher got updates:', { updates });
-
-    dispatch(batchActions(updates));
-
-    // the advantage of this is that the entire list of updates is available in
-    // a single reducer call
-    dispatch({ type: 'watcherUpdates', payload: updates });
-  });
 
   // all bets are off wrt what contract state in our store
   dispatch({ type: 'CLEAR_CONTRACT_STATE' });

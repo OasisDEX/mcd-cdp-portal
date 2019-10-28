@@ -9,17 +9,21 @@ function EthBalanceProvider({ children }) {
   const [, dispatch] = useStore();
   const blockHeight = useBlockHeight();
 
+  let isCancelled = false;
   useEffect(() => {
     if (!account || !maker) return;
     (async () => {
       const ethBalance = await maker
         .service('web3')
         .getBalance(account.address);
+      if (isCancelled) return;
       dispatch({
         type: `accounts.${account.address}.balances.ETH`,
         value: fromWei(ethBalance)
       });
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => (isCancelled = true);
   }, [maker, dispatch, account, blockHeight]);
 
   return children;
