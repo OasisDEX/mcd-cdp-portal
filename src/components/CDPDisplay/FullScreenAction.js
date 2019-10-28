@@ -25,7 +25,7 @@ export default function FullScreenAction({ type, reset, props }) {
       `}
       position="fixed"
       width="100vw"
-      height="100vh"
+      height="100%"
       overflow="scroll"
       bg="white"
     >
