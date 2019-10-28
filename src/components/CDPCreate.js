@@ -9,6 +9,7 @@ import {
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
 import useMaker from 'hooks/useMaker';
+import { TxLifecycle } from 'utils/constants';
 
 const screens = [
   ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
@@ -28,7 +29,8 @@ const initialState = {
   },
   gemsToLock: '',
   daiToDraw: '',
-  targetCollateralizationRatio: ''
+  targetCollateralizationRatio: '',
+  txState: ''
 };
 
 function reducer(state, action) {
@@ -73,6 +75,8 @@ function reducer(state, action) {
         ...state,
         targetCollateralizationRatio: payload.value
       };
+    case 'transaction-confirmed':
+      return { ...state, txState: TxLifecycle.CONFIRMED };
     case 'reset':
       return { ...initialState };
     default:

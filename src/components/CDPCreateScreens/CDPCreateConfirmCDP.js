@@ -18,6 +18,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { TxLifecycle } from 'utils/constants';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
@@ -121,7 +122,7 @@ const CDPCreateConfirmSummary = ({
   );
 };
 
-const CDPCreateConfirmed = ({ hash, onClose }) => {
+const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');
@@ -152,8 +153,16 @@ const CDPCreateConfirmed = ({ hash, onClose }) => {
       `}
     >
       <ScreenHeader
-        title={lang.cdp_create.confirmed_title}
-        text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
+        title={
+          txState === TxLifecycle.CONFIRMED
+            ? lang.cdp_create.post_confirmed_title
+            : lang.cdp_create.confirmed_title
+        }
+        text={
+          txState === TxLifecycle.CONFIRMED
+            ? lang.cdp_create.post_confirmed_text
+            : lang.formatString(lang.cdp_create.confirmed_text, waitTime)
+        }
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
@@ -190,7 +199,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
   const { lang } = useLanguage();
   const { maker, checkForNewCdps, newTxListener } = useMaker();
 
-  const { gemsToLock, daiToDraw } = cdpParams;
+  const { gemsToLock, daiToDraw, txState } = cdpParams;
 
   const [openCDPTxHash, setOpenCDPTxHash] = useState(null);
 
@@ -211,13 +220,22 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),
-      confirmed: () => checkForNewCdps()
+      confirmed: () => {
+        checkForNewCdps();
+        dispatch({ type: 'transaction-confirmed' });
+      }
     });
     await txMgr.confirm(txObject, 1);
   }
 
   if (openCDPTxHash)
-    return <CDPCreateConfirmed hash={openCDPTxHash} onClose={onClose} />;
+    return (
+      <CDPCreateConfirmed
+        hash={openCDPTxHash}
+        onClose={onClose}
+        txState={txState}
+      />
+    );
 
   return (
     <CDPCreateConfirmSummary

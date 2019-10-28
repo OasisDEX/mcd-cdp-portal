@@ -10,6 +10,7 @@ export const TxLifecycle = {
   INITIALIZED: 'initialized',
   PENDING: 'pending',
   MINED: 'mined',
+  CONFIRMED: 'confirmed',
   ERROR: 'error'
 };
 

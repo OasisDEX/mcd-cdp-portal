@@ -152,8 +152,10 @@
     "deposit_form_field3_after2": "Max avail to generate",
 
     "confirm_title": "Confirm CDP",
-    "confirmed_title": "Your CDP is being created",
+    "confirmed_title": "Your position is being created",
     "confirmed_text": "The estimated time is {0}. You can safely leave this page.",
+    "post_confirmed_title": "Your position has been created",
+    "post_confirmed_text": "You can safely leave this page.",
     "proxy_title": "Creating a proxy",
     "proxy_text": "Before creating your first CDP, you must create a personal proxy contract.",
     "insufficient_ilk_balance": "Insufficient {0} balance",
