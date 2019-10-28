@@ -82,8 +82,10 @@ const Send = ({ token, reset }) => {
   const prevToken = usePrevious(token);
   const prevAddress = usePrevious(address);
 
+  let isCancelled = false;
   const updateGasCost = async () => {
     const gasCost = await calculateGasCost(maker);
+    if (isCancelled) return;
     setGasCost(gasCost);
   };
 
@@ -94,7 +96,10 @@ const Send = ({ token, reset }) => {
       setDestAddress('');
     }
     if (prevAddress && prevAddress !== address) reset();
+    if (isCancelled) return;
     updateGasCost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => (isCancelled = true);
   }, [token, address, prevToken, prevAddress]);
 
   const setMax = async () => {
