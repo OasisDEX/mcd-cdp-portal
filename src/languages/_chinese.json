@@ -21,8 +21,6 @@
     "not_applicable": "N/A"
   },
   "landing_page": {
-    "title": "不用卖币，向自己借美金",
-    "subtitle": "抵押加密资产借 Dai：与美金 1:1 锚定的去中心化稳定币",
     "read_only": "只读模式",
     "wallet_connect": "移动端登录"
   },
