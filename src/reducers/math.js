@@ -182,5 +182,9 @@ function recalculatePrice(ilk, name, par) {
 function calculateDebtAvailable(art, rate, line) {
   const debtValue = math.debtValue(art, rate);
   const debtCeiling = math.debtCeiling(line);
-  return debtCeiling.minus(debtValue);
+  if (debtCeiling.gte(debtValue)) {
+    return debtCeiling.minus(debtValue);
+  } else {
+    MDAI(0);
+  }
 }
