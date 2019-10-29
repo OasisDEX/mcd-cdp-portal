@@ -50,7 +50,7 @@ export function createWatcher(maker) {
   return watcher;
 }
 
-export async function startWatcher(maker, dispatch) {
+export async function startWatcher(maker) {
   let currentAddress;
   let proxyAddress;
   try {
@@ -65,9 +65,6 @@ export async function startWatcher(maker, dispatch) {
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  // all bets are off wrt what contract state in our store
-  dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-  watcher.start();
   // do our best to attach state listeners to this new network
   watcher.tap(() => {
     return [
@@ -93,6 +90,8 @@ export async function startWatcher(maker, dispatch) {
         : [])
     ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
   });
+  watcher.start();
+
   return watcher;
 }
 

@@ -68,7 +68,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       const onNewBlockSub = watcher.onNewBlock(blockHeight =>
         console.debug(`Latest block height: ${blockHeight}`)
       );
-      startWatcher(maker, dispatch);
+      dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+      startWatcher(maker);
       return () => {
         batchSub.unsub();
         onNewBlockSub.unsub();
