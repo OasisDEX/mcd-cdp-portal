@@ -34,15 +34,11 @@ For hardware wallet support:
 1. Clone either [dai.js](https://github.com/makerdao/dai.js) or the [testchain](https://github.com/makerdao/testchain) repo
 
 2. Start the testchain
-
-      1. If using dai.js, run `yarn && git submodule update --init --recursive && yarn test:net -s mcd-step-4 --fast`
-
+      1. If using dai.js, run `yarn && yarn testchain`
       2. If using the testchain repo directly, run `scripts/launch`
+
 
 3. Navigate to `http://localhost:3000?network=test&simplePriceFeeds=1`
 
 
 _see [this PR](https://github.com/makerdao/mcd-cdp-portal/pull/26) for more details_
-
-
-
