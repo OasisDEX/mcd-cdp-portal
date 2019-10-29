@@ -63,9 +63,8 @@
     "remove-sourcemaps": "rm -rf build/static/js/*.map"
   },
   "lint-staged": {
-    "*.{js,json}": [
-      "prettier --write --single-quote",
-      "git add"
+    "*.js": [
+      "prettier --write --single-quote"
     ]
   },
   "eslintConfig": {
