@@ -8,6 +8,7 @@ import {
   DSRDepositConfirm
 } from 'components/DSRDepositScreens';
 import useMaker from 'hooks/useMaker';
+import { TxLifecycle } from 'utils/constants';
 
 const screens = [
   ['Open Earn Vault', props => <DSRDepositCheckProxy {...props} />],
@@ -19,7 +20,8 @@ const initialState = {
   step: 0,
   proxyAddress: null,
   daiToJoin: '',
-  depositAmount: ''
+  depositAmount: '',
+  txState: ''
 };
 
 function reducer(state, action) {
@@ -42,6 +44,8 @@ function reducer(state, action) {
       };
     case 'form/set-deposit-amount':
       return { ...state, depositAmount: payload.depositAmount };
+    case 'transaction-confirmed':
+      return { ...state, txState: TxLifecycle.CONFIRMED };
     case 'reset':
       return { ...initialState };
     default:
@@ -51,7 +55,7 @@ function reducer(state, action) {
 
 function DSRDeposit({ onClose, hideOnboarding }) {
   const { maker, account } = useMaker();
-  const [{ step, proxyAddress, depositAmount }, dispatch] = useReducer(
+  const [{ step, proxyAddress, depositAmount, txState }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -77,7 +81,8 @@ function DSRDeposit({ onClose, hideOnboarding }) {
     proxyAddress,
     depositAmount,
     dispatch,
-    onClose
+    onClose,
+    txState
   };
 
   return (

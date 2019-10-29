@@ -16,6 +16,7 @@ import { networkIdToName } from 'utils/network';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
+import { TxLifecycle } from 'utils/constants';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
@@ -100,7 +101,7 @@ const DSRDepositConfirmSummary = ({
   );
 };
 
-const DSRDepositWait = ({ hash, onClose }) => {
+const DSRDepositWait = ({ hash, onClose, txState }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');
@@ -131,8 +132,16 @@ const DSRDepositWait = ({ hash, onClose }) => {
       `}
     >
       <ScreenHeader
-        title={lang.dsr_deposit.confirmed_title}
-        text={lang.formatString(lang.cdp_create.confirmed_text, waitTime)}
+        title={
+          txState === TxLifecycle.CONFIRMED
+            ? lang.dsr_deposit.post_confirmed_title
+            : lang.dsr_deposit.confirmed_title
+        }
+        text={
+          txState === TxLifecycle.CONFIRMED
+            ? lang.cdp_create.post_confirmed_text
+            : lang.formatString(lang.cdp_create.confirmed_text, waitTime)
+        }
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
@@ -165,7 +174,7 @@ const DSRDepositWait = ({ hash, onClose }) => {
   );
 };
 
-const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
+const DSRDepositConfirm = ({ dispatch, onClose, depositAmount, txState }) => {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
@@ -182,14 +191,19 @@ const DSRDepositConfirm = ({ dispatch, onClose, depositAmount }) => {
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
       pending: tx => setDepositDaiTxHash(tx.hash),
-      confirmed: tx => console.log('^^^CONFIRMED', tx)
+      confirmed: () => dispatch({ type: 'transaction-confirmed' })
     });
     await txMgr.confirm(txObject, 1);
   }
 
-  //todo
   if (depositDaiTxHash)
-    return <DSRDepositWait hash={depositDaiTxHash} onClose={onClose} />;
+    return (
+      <DSRDepositWait
+        hash={depositDaiTxHash}
+        onClose={onClose}
+        txState={txState}
+      />
+    );
 
   return (
     <DSRDepositConfirmSummary

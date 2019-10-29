@@ -192,7 +192,8 @@
     "open_vault": "Open your Maker Earn Vault",
     "deposit_form_title": "Enter the amount you would like to deposit.",
     "setup_proxy_text": "A proxy is used to bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
-    "confirm_title": "Confirm Deposit"
+    "confirm_title": "Confirm Deposit",
+    "post_confirm_title": "Deposit Confirmed"
   },
   "actions": {
     "back": "Back",
