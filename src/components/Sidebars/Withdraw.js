@@ -91,7 +91,7 @@ const Withdraw = ({ cdpId, reset }) => {
           min="0"
           onChange={onAmountChange}
           after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
-          errorMessage={amountErrors}
+          failureMessage={amountErrors}
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">

@@ -44,7 +44,7 @@ function OpenCDPForm({
         value={cdpParams.gemsToLock}
         onChange={handleInputChange}
         width={300}
-        errorMessage={
+        failureMessage={
           userHasSufficientGemBalance || !cdpParams.gemsToLock
             ? null
             : lang.formatString(
@@ -82,7 +82,7 @@ function OpenCDPForm({
         after="DAI"
         width="250px"
         type="number"
-        errorMessage={
+        failureMessage={
           userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
         }
         value={cdpParams.daiToDraw}
