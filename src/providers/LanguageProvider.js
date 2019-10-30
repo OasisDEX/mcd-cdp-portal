@@ -1,6 +1,8 @@
 import React, { createContext, useState } from 'react';
 import lang, { languages, defaultLocale } from 'languages';
 import { getPreferredLanguage } from 'utils/language';
+import debug from 'debug';
+const log = debug('maker:LanguageProvider');
 
 export const LanguageContext = createContext();
 
@@ -36,7 +38,7 @@ function LanguageProvider({ children }) {
       fallback: defaultLocale
     });
 
-    console.debug(`Detected language: ${detectedLanguage}`);
+    log(`Detected language: ${detectedLanguage}`);
     window.localStorage.setItem('locale', detectedLanguage);
     setLocale(detectedLanguage || 'en');
   }

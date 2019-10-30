@@ -27,12 +27,14 @@ import {
 } from './subcomponents';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
+import debug from 'debug';
+const log = debug('maker:CDPDisplay/Presentation');
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const cdpId = parseInt(cdp.id);
-  console.log(`rendering cdp ${cdpId}`);
+  log(`rendering cdp ${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
