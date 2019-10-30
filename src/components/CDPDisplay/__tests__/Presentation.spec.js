@@ -1,11 +1,6 @@
 import React, { Fragment } from 'react';
 import Presentation from '../Presentation';
-import {
-  render,
-  cleanup,
-  fireEvent,
-  waitForElement
-} from '@testing-library/react';
+import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
   renderForSidebar,
   renderWithStore
@@ -71,7 +66,24 @@ describe('on mobile', () => {
       <Fragment>
         <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
         <div id="portal1" />
-      </Fragment>
+      </Fragment>,
+      state => {
+        const newState = {
+          ...state,
+          cdps: {
+            '1': {
+              ilk: 'ETH-A',
+              ink: '2',
+              art: '5',
+              currency: {
+                symbol: 'ETH'
+              }
+            }
+          }
+        };
+        newState.feeds.find(i => i.key === 'ETH-A').rate = '1.5';
+        return newState;
+      }
     );
     await waitForElement(() => getByText('Outstanding Dai debt'));
     fireEvent.click(getByText('Deposit'));
