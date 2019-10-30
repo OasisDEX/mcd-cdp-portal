@@ -6,6 +6,9 @@ import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { updateWatcherWithProxy } from '../watch';
 
+import debug from 'debug';
+const log = debug('maker:useProxy');
+
 const initialState = {
   initialProxyCheck: true,
   startingBlockHeight: 0,
@@ -34,6 +37,7 @@ export default function useProxy() {
   );
 
   const [setupProxy, proxyLoading, , proxyErrors] = useActionState(async () => {
+    log('proxy setup is running');
     if (!account) return null;
     if (proxyAddress) return proxyAddress;
 
@@ -59,6 +63,7 @@ export default function useProxy() {
       (async () => {
         updateState({ initialProxyCheck: true });
         const proxyAddress = await maker.service('proxy').getProxyAddress();
+        log(`got proxy address: ${proxyAddress}`);
         updateState({
           initialProxyCheck: false,
           proxyAddress,
@@ -70,8 +75,8 @@ export default function useProxy() {
 
   return {
     proxyAddress,
-    setupProxy: setupProxy,
-    proxyLoading: proxyLoading,
+    setupProxy,
+    proxyLoading,
     initialProxyCheck,
     proxyErrors,
     startedWithoutProxy,
