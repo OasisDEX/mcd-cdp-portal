@@ -1614,10 +1614,10 @@
     lodash "^4.17.15"
     toposort "^2.0.2"
 
-"@makerdao/test-helpers@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/@makerdao/test-helpers/-/test-helpers-0.2.0.tgz#08c082c85650aba9b557055007278c8153e41044"
-  integrity sha512-fr8qmcn/IU7l8OAI/ZGRRQhnwwTJCY3tsRMQ2Q6zwQs3BI2L7Y0uhbWujvJkSjwbShO/NpFw0/8LTizuLoO6zg==
+"@makerdao/test-helpers@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/test-helpers/-/test-helpers-0.2.1.tgz#acc2c11d3d1d7342bc0712976f5eb07b1ac19804"
+  integrity sha512-2PKqo7e95aLEY4BKpj+o6DbkgBJmj8LHWCm/0E+5ipD/WDydMSUOUHiFQykSExDav+JYGUG4mWDHp7bF6p4PHg==
   dependencies:
     node-fetch "^2.6.0"
 
