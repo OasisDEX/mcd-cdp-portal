@@ -1585,10 +1585,10 @@
     web3 "1.2.1"
     web3-provider-engine makerdao/provider-engine#kovan-fix-dist
 
-"@makerdao/design-system-constants@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/design-system-constants/-/design-system-constants-0.1.0.tgz#ec5c0f112c0f353661ad25a7fb13a8d7154651df"
-  integrity sha512-hva0/d5cI7gx70I9Dqe0RLkvqDVQuzLFdijJS679rrKDGbnbAu6797IpDtrIpfTaPFg1gjAbSYlxCpN6uimA+g==
+"@makerdao/design-system-constants@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/design-system-constants/-/design-system-constants-0.2.0.tgz#3e3bf4b1f5a71393814107725c41c792be079935"
+  integrity sha512-iqPdUOL3XAi5Jgh7ZucbGzSBSQRcZFy9VY07to2yE3NkZN0wUKKKw6M2s89ppDywAB63fm7UQdvKOBvBzw3Jow==
 
 "@makerdao/i18n-helper@^0.1.6", "@makerdao/i18n-helper@^0.1.7":
   version "0.1.7"
@@ -1628,12 +1628,12 @@
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 
-"@makerdao/ui-components-core@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.2.7.tgz#2f07ec9dd64cb45a620742524afb0c730222b204"
-  integrity sha512-nmHSepu5LL4YXQe8mKf6zzmy8bCLmzdi14NcVcCEeOIfOEwxfvbvOxgF9vj08GX5s/SGC0GcR2YDmQLRRd4hOQ==
+"@makerdao/ui-components-core@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/ui-components-core/-/ui-components-core-0.3.1.tgz#4e0c9d851bfaaffb0b97920578a05e4f59deb323"
+  integrity sha512-SZ7wObYKHsPmsNVNBl7Iv7tNkLbM0ptIDkbPJNF3nXVggeAQQMgHU0T30HOuJwv7YyjhcNGpluha9WD+L66HKQ==
   dependencies:
-    "@makerdao/design-system-constants" "0.1.0"
+    "@makerdao/design-system-constants" "0.2.0"
     react-onclickoutside "^6.7.1"
     react-popper "1.0.2"
     styled-system "^3.1.11"
