@@ -8,32 +8,16 @@ import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import rootReducer from '../../src/reducers';
 
-export function renderForSidebar(children, initialState) {
-  if (!initialState) {
-    initialState = {
-      cdps: {
-        '1': {
-          ilk: 'ETH-A',
-          ink: '2',
-          art: '5',
-          currency: {
-            symbol: 'ETH'
-          }
-        }
-      },
-      feeds: [
-        {
-          key: 'ETH-A',
-          price: ETH(100),
-          rate: '1.5'
-        }
-      ]
-    };
-  }
+const defaultInitialState = rootReducer({}, {});
+
+export function renderForSidebar(children, updateInitialState) {
+  const state = updateInitialState
+    ? updateInitialState(defaultInitialState)
+    : defaultInitialState;
 
   return renderWithStore(
     <TestMakerProvider waitForAuth={true}>{children}</TestMakerProvider>,
-    initialState
+    state
   );
 }
 

@@ -62,7 +62,10 @@ export function getAllFeeds(feeds) {
   }, []);
 }
 
-const initialState = ilkList.map(ilk => ({ ...ilk, ...defaultIlkState }));
+export const initialState = ilkList.map(ilk => ({
+  ...ilk,
+  ...defaultIlkState
+}));
 
 function convert(valueType, value, decimals) {
   switch (valueType) {

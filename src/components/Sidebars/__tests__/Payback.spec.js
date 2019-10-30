@@ -8,44 +8,68 @@ import {
 import '@testing-library/jest-dom/extend-expect';
 
 import Payback from '../Payback';
-import { mineBlocks } from '@makerdao/test-helpers';
-import { TestAccountProvider } from '../../../../node_modules/@makerdao/test-helpers/dist/TestAccountProvider';
-import testAccounts from '../../../../node_modules/@makerdao/test-helpers/dist/testAccounts.json';
+import {
+  TestAccountProvider,
+  takeSnapshot,
+  restoreSnapshot,
+  mineBlocks
+} from '@makerdao/test-helpers';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
+let snapshotData;
+
+beforeAll(async () => {
+  snapshotData = await takeSnapshot();
+});
+
+afterAll(() => restoreSnapshot(snapshotData));
+
 afterEach(cleanup);
 
+const setupMockState = state => {
+  const newState = {
+    ...state,
+    cdps: {
+      '1': {
+        ilk: 'ETH-A',
+        ink: '2',
+        art: '5',
+        currency: {
+          symbol: 'ETH'
+        }
+      }
+    }
+  };
+  newState.feeds.find(i => i.key === 'ETH-A').rate = '1.5';
+  return newState;
+};
+
 test('basic rendering', async () => {
-  const { getByText } = render(<Payback cdpId="1" />);
+  const { getByText } = render(<Payback cdpId="1" />, setupMockState);
 
   // this waits for the initial proxy & allowance check to finish
   await waitForElement(() => getByText(/Unlock DAI/));
 
   // these throw errors if they don't match anything
   getByText('Pay Back DAI');
-  getByText('7.5 DAI'); // art * rate
+  getByText('7.5 DAI'); // art * rate from mock state
 });
 
-let _web3;
+let web3;
 
 const SetupProxyAndAllowance = () => {
   const [changedAccount, setAccountChanged] = useState(false);
   const { maker } = useMaker();
-  _web3 = maker.service('web3');
-
-  const accountProvider = new TestAccountProvider(testAccounts);
-  accountProvider.setIndex(1);
-  const { key: pkey } = accountProvider.nextAccount();
-  const accountService = maker.service('accounts');
+  web3 = maker.service('web3');
 
   const changeAccount = async () => {
-    await accountService.addAccount('no proxy account', {
-      type: 'privateKey',
-      key: pkey
-    });
-    accountService.useAccount('no proxy account');
+    const accountService = maker.service('accounts');
+    TestAccountProvider.setIndex(345);
+    const { key } = TestAccountProvider.nextAccount();
+    await accountService.addAccount('noproxy', { type: 'privateKey', key });
+    accountService.useAccount('noproxy');
     setAccountChanged(true);
   };
 
@@ -53,11 +77,11 @@ const SetupProxyAndAllowance = () => {
     changeAccount();
   }, []);
 
-  return <>{changedAccount ? <Payback cdpId="1" /> : <div />}</>;
+  return changedAccount ? <Payback cdpId="1" /> : <div />;
 };
 
 test('proxy toggle', async () => {
-  const { getByTestId } = render(<SetupProxyAndAllowance />);
+  const { getByTestId } = render(<SetupProxyAndAllowance />, setupMockState);
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))
@@ -78,16 +102,19 @@ test('proxy toggle', async () => {
   });
 
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.creating_proxy);
-  await mineBlocks(_web3, 10);
+  await mineBlocks(web3, 11);
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
 
   expect(allowanceButton).toBeEnabled();
-});
+}, 20000);
 
 // commented out for now because this doesn't seem to work well with allowances
 // from multicall
 xtest('allowance toggle', async () => {
-  const { getByTestId, queryByTestId } = render(<SetupProxyAndAllowance />);
+  const { getByTestId, queryByTestId } = render(
+    <SetupProxyAndAllowance />,
+    setupMockState
+  );
 
   await waitForElement(() => getByTestId('toggle-container'));
   expect(queryByTestId('proxy-toggle')).toBeNull();
@@ -103,7 +130,7 @@ xtest('allowance toggle', async () => {
   expect(allowanceToggle).toHaveTextContent(
     lang.formatString(lang.action_sidebar.unlocking_token, 'DAI')
   );
-  await mineBlocks(_web3);
+  await mineBlocks(web3);
   expect(allowanceToggle).toHaveTextContent(
     lang.formatString(lang.action_sidebar.token_unlocked, 'DAI')
   );
