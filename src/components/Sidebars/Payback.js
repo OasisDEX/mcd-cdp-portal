@@ -62,12 +62,17 @@ const Payback = ({ cdpId, reset }) => {
   const setMax = () =>
     debtAmount && daiBalance && setAmount(minimum(debtAmount, daiBalance));
 
-  const payback = () => {
+  const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
+    const owner = await cdpManager.getOwner(cdpId);
+    if (!owner) {
+      console.error(`Unable to find owner of CDP #${cdpId}`);
+      return;
+    }
     newTxListener(
       debtAmount !== amount
-        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)))
-        : cdpManager.wipeAll(cdpId),
+        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)), owner)
+        : cdpManager.wipeAll(cdpId, owner),
       lang.transactions.pay_back_dai
     );
     reset();
