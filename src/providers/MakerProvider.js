@@ -8,6 +8,8 @@ import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
 import { createWatcher, startWatcher } from '../watch';
 import { batchActions } from '../utils/redux';
+import debug from 'debug';
+const log = debug('maker:MakerProvider');
 
 export const MakerObjectContext = createContext();
 
@@ -26,35 +28,39 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
 
   useEffect(() => {
     (async () => {
-      const maker = await instantiateMaker({
+      const newMaker = await instantiateMaker({
         network,
         testchainId,
         backendEnv
       });
-      if (maker.service('accounts').hasAccount()) {
-        initAccount(maker.currentAccount());
+      if (newMaker.service('accounts').hasAccount()) {
+        initAccount(newMaker.currentAccount());
       }
-      setMaker(maker);
 
-      maker.on('accounts/CHANGE', eventObj => {
+      if (maker) dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+      setMaker(newMaker);
+
+      newMaker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
         initAccount(account);
         (async () => {
-          const proxy = await maker
+          const proxy = await newMaker
             .service('proxy')
             .getProxyAddress(account.address);
           if (proxy) {
-            console.debug(`Found proxy address: ${proxy}`);
-            const cdpIds = await maker
+            log(`Found proxy address: ${proxy}`);
+            const cdpIds = await newMaker
               .service('mcd:cdpManager')
               .getCdpIds(proxy);
             setAccount({ ...account, cdps: cdpIds });
           } else {
-            console.debug(`No proxy found`);
+            log('No proxy found');
           }
         })();
       });
     })();
+    // leaving maker out of the deps because it would create an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backendEnv, dispatch, network, testchainId]);
 
   useEffect(() => {
@@ -66,9 +72,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
         dispatch({ type: 'watcherUpdates', payload: updates });
       });
       const onNewBlockSub = watcher.onNewBlock(blockHeight =>
-        console.debug(`Latest block height: ${blockHeight}`)
+        log(`Latest block height: ${blockHeight}`)
       );
-      dispatch({ type: 'CLEAR_CONTRACT_STATE' });
       startWatcher(maker);
       return () => {
         batchSub.unsub();
