@@ -21,16 +21,27 @@ jobs:
       - image: makerdao/dapptools-node
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            npm i --no-save yarn
-            yarn
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Run tests
           command: |
             source /home/circleci/setup-env.sh
             yarn test
+  deploy_staging:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Deploy to Now
+          command: |
+            npm i --no-save now
+            ./scripts/now-deploy.sh
   deploy_prod:
     docker:
       - image: circleci/node:lts
@@ -67,13 +78,15 @@ workflows:
       - test:
           requires:
             - install
+      - deploy_staging:
+          requires:
+            - test
           filters:
             branches:
-              only: TO-748-CICD-mcd-cdp-portal-prod-TO11
-
+              ignore: master
       - deploy_prod:
           requires:
             - test
           filters:
             branches:
-              only: TO-748-CICD-mcd-cdp-portal-prod-TO11
+              only: master
