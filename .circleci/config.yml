@@ -1,17 +1,84 @@
- version: 2
- jobs:
-   build:
-     docker:
-       - image: levity/dapptools-node
-     steps:
-       - checkout
-       - run:
-          name: Install dependencies
-          command: |
-            npm i --no-save yarn
-            yarn
-       - run:
-          name: Run tests
-          command: |
-            source /home/circleci/setup-env.sh
-            yarn test
+version: 2
+jobs:
+  install:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+        keys:
+          - dependency-cache-{{ checksum "package.json" }}
+      - run:
+        name: Install dependencies
+        command: |
+          yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: dependency-cache-{{ checksum "package.json" }}
+  test:
+    docker:
+      - image: makerdao/dapptools-node
+    steps:
+      - checkout
+      - run:
+        name: Install dependencies
+        command: |
+          npm i --no-save yarn
+          yarn
+      - run:
+        name: Run tests
+        command: |
+          source /home/circleci/setup-env.sh
+          yarn test
+  deploy_prod:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+        keys:
+          - dependency-cache-{{ checksum "package.json" }}
+      - run:
+        name: Build production artifact
+        command: |
+          yarn build
+      - run:
+        name: Deploy to production
+        command: |
+          sudo apt update
+          sudo apt install python-pip
+          pip install --upgrade --user awscli
+          export PATH=$HOME/.local/bin:$PATH
+
+          aws configure set default.region $AWS_REGION
+          aws configure set default.output json
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+
+          aws s3 sync build s3://$AWS_BUCKET_NAME/ --delete --exclude /trade
+          # aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths /*
+
+workflows:
+  version: 2
+
+  mainflow:
+    jobs:
+      - install
+      - test:
+        requires:
+          - install
+        # for CI test only
+        filters:
+          branches:
+            only: TO-748-CICD-mcd-cdp-portal-prod-TO11
+
+      - deploy_prod:
+        requires:
+          - test
+        filters:
+          branches:
+            only: TO-748-CICD-mcd-cdp-portal-prod-TO11
+
+
+
