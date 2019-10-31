@@ -67,7 +67,6 @@ workflows:
       - test:
           requires:
             - install
-          # for CI test only
           filters:
             branches:
               only: TO-748-CICD-mcd-cdp-portal-prod-TO11
