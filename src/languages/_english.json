@@ -94,7 +94,7 @@
     "get_started_title": "Open your first vault to start generating Dai."
   },
   "navbar": {
-    "save": "Earn",
+    "save": "Save",
     "borrow": "Borrow",
     "trade": "Trade"
   },
@@ -189,7 +189,7 @@
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
   "dsr_deposit": {
-    "open_vault": "Open your Maker Earn Vault",
+    "open_vault": "Open your Maker Save Vault",
     "deposit_form_title": "Enter the amount you would like to deposit.",
     "setup_proxy_text": "A proxy is used to bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
     "confirm_title": "Confirm Deposit",

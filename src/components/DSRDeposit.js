@@ -11,7 +11,7 @@ import useMaker from 'hooks/useMaker';
 import { TxLifecycle } from 'utils/constants';
 
 const screens = [
-  ['Open Earn Vault', props => <DSRDepositCheckProxy {...props} />],
+  ['Open Save Vault', props => <DSRDepositCheckProxy {...props} />],
   ['Deposit Dai', props => <DSRDepositCreate {...props} />],
   ['Confirmation', props => <DSRDepositConfirm {...props} />]
 ];
