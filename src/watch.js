@@ -1,9 +1,10 @@
 import ilks from './references/ilkList';
 import { createCDPSystemModel } from './reducers/multicall/system';
 import cdpTypeModel from './reducers/multicall/feeds';
-import accountModel, {
+import {
+  accountSavings,
   accountBalanceForToken,
-  accountAllowanceForToken
+  accountProxyAllowanceForToken
 } from './reducers/multicall/accounts';
 import { tokensWithBalances } from 'reducers/accounts';
 import savingsModel from './reducers/multicall/savings';
@@ -12,84 +13,103 @@ import flatten from 'lodash/flatten';
 
 let watcher;
 
+// Update watcher calls with new address for tracking token balances, proxy allowances and savings
+export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
+  const addresses = maker.service('smartContract').getContractAddresses();
+  addresses.MDAI = addresses.MCD_DAI;
+  addresses.MWETH = addresses.ETH;
+
+  watcher.tap(calls => [
+    // Filter out existing calls of the same types we're about to add
+    ...calls.filter(call =>
+      !((accountAddress && call?.meta?.accountBalanceForToken) ||
+        (accountAddress && proxyAddress && (call?.meta?.accountSavings || call?.meta?.accountProxyAllowanceForToken)))),
+    // Add account balance calls
+    ...(accountAddress
+      ? flatten(
+          tokensWithBalances
+            // TODO: This can actually be looked up via multicall using the
+            // getEthBalance(address)(uint256) helper function and omitting the target
+            .filter(token => token !== 'ETH')
+            .map(token =>
+              accountBalanceForToken(addresses, token, accountAddress)
+            )
+        )
+      : []),
+    // Add account savings and proxy allowance calls
+    ...(accountAddress && proxyAddress
+      ? ([
+        ...accountSavings(addresses, accountAddress, proxyAddress),
+        ...flatten(
+            tokensWithBalances
+              // ETH can't have an allowance
+              .filter(token => token && token.symbol !== 'ETH')
+              .map(token =>
+                accountProxyAllowanceForToken(
+                  addresses,
+                  token,
+                  accountAddress,
+                  proxyAddress
+                )
+              )
+          )
+        ])
+      : [])
+    ]
+  .filter(call => !isMissingContractAddress(call)));
+}
+
+// Update watcher calls for tracking proxy allowances
 export async function updateWatcherWithProxy(
   maker,
-  currentAddress,
+  accountAddress,
   proxyAddress
 ) {
   const addresses = maker.service('smartContract').getContractAddresses();
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  await watcher.tap(calls =>
-    [
-      ...calls,
-      ...(currentAddress
-        ? flatten(
-            tokensWithBalances
-              .filter(token => token && token.symbol !== 'ETH')
-              .map(token =>
-                accountAllowanceForToken(
-                  addresses,
-                  token,
-                  currentAddress,
-                  proxyAddress
-                )
+  watcher.tap(calls => [
+    ...calls,
+    ...(accountAddress && proxyAddress
+      ? flatten(
+          tokensWithBalances
+            // ETH can't have an allowance
+            .filter(token => token && token.symbol !== 'ETH')
+            .map(token =>
+              accountProxyAllowanceForToken(
+                addresses,
+                token,
+                accountAddress,
+                proxyAddress
               )
-          )
-        : [])
-    ].filter(callData => !isMissingContractAddress(callData))
-  );
+            )
+        )
+      : [])
+  ].filter(call => !isMissingContractAddress(call)));
 }
 
 export function createWatcher(maker) {
   const service = maker.service('multicall');
-  service.createWatcher();
+  service.createWatcher({ interval: 2000 });
   watcher = service.watcher;
   window.watcher = watcher;
   return watcher;
 }
 
 export async function startWatcher(maker) {
-  let currentAddress;
-  let proxyAddress;
-  try {
-    currentAddress = maker.currentAddress();
-    proxyAddress = await maker.currentProxy();
-  } catch (err) {}
-
   const addresses = maker.service('smartContract').getContractAddresses();
-
-  // add additional lookups for easier mapping when finding address
-  // by token symbol
+  // Add additional lookups for easier mapping when finding address by token symbol
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  // do our best to attach state listeners to this new network
-  watcher.tap(() => {
-    return [
+  // Add initial calls to watcher
+  watcher.tap(() => [
       ...createCDPSystemModel(addresses),
       ...flatten(ilks.map(ilk => cdpTypeModel(addresses, ilk))),
-      ...savingsModel(addresses),
-      ...(currentAddress && proxyAddress
-        ? accountModel(addresses, currentAddress, proxyAddress)
-        : []),
-      ...(currentAddress
-        ? flatten(
-            tokensWithBalances
-              .filter(token => token !== 'ETH') // we poll for this manually as we cannot use multicall. This ETH actually refers to MWETH.
-              .map(token =>
-                accountBalanceForToken(
-                  addresses,
-                  token,
-                  currentAddress,
-                  proxyAddress
-                )
-              )
-          )
-        : [])
-    ].filter(calldata => !isMissingContractAddress(calldata)); // (limited by the addresses we have)
-  });
+      ...savingsModel(addresses)
+    ].filter(call => !isMissingContractAddress(call)));
+  // Our watch has begun
   watcher.start();
 
   return watcher;
@@ -98,11 +118,3 @@ export async function startWatcher(maker) {
 export function getWatcher() {
   return watcher;
 }
-
-// watcher
-//   .onNetworkTrouble(() => {
-//     store.dispatch({ type: 'PROBLEM_FETCHING_STATE' });
-//   })
-//   .onResolution(() => {
-//     store.dispatch({ type: 'NETWORK_PROBLEMS_RESOLVED' });
-//   });

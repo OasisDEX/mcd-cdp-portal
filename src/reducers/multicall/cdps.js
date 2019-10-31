@@ -12,7 +12,7 @@ export async function trackCdpById(maker, cdpId, dispatch) {
   dispatch({ type: `cdp.${cdp.id}.ilk`, value: cdp.ilk });
 
   const urnStateCall = urnState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
-  return getWatcher().tap(calls =>
+  getWatcher().tap(calls =>
     calls
       // filter out duplicate calls
       .filter(call => JSON.stringify(call) !== JSON.stringify(urnStateCall))

@@ -6,7 +6,11 @@ import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
-import { createWatcher, startWatcher } from '../watch';
+import {
+  createWatcher,
+  startWatcher,
+  updateWatcherWithAccount
+} from '../watch';
 import { batchActions } from '../utils/redux';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
@@ -36,8 +40,6 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       if (newMaker.service('accounts').hasAccount()) {
         initAccount(newMaker.currentAccount());
       }
-
-      if (maker) dispatch({ type: 'CLEAR_CONTRACT_STATE' });
       setMaker(newMaker);
 
       newMaker.on('accounts/CHANGE', eventObj => {
@@ -56,6 +58,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
           } else {
             log('No proxy found');
           }
+          updateWatcherWithAccount(newMaker, account.address, proxy);
         })();
       });
     })();
@@ -81,7 +84,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
         onNewBlockSub.unsub();
       };
     }
-  }, [maker, dispatch, account]);
+  }, [maker, dispatch]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);

@@ -19,9 +19,9 @@ export function addressAsNumber(address) {
   return parseInt(address.slice(2, 10), 16);
 }
 
-export function isMissingContractAddress(calldata) {
-  if (calldata.target === undefined) {
-    console.error(`Address for ${calldata.call} not found`);
+export function isMissingContractAddress(call) {
+  if (call.target === undefined) {
+    console.error(`Address for ${call.call} not found`);
     return true;
   }
   return false;
