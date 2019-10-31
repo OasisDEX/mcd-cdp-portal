@@ -17,4 +17,4 @@
             yarn test
        - run:
           name: Deploy to Now
-          command: /home/circleci/scripts/now-deploy.sh
+          command: ./scripts/now-deploy.sh
