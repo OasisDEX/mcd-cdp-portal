@@ -7,9 +7,7 @@
        - checkout
        - run:
           name: Install dependencies
-          command: |
-            npm i --no-save yarn
-            yarn
+          command: yarn
        - run:
           name: Run tests
           command: |
@@ -17,4 +15,6 @@
             yarn test
        - run:
           name: Deploy to Now
-          command: ./scripts/now-deploy.sh
+          command: |
+            npm i --no-save now
+            ./scripts/now-deploy.sh
