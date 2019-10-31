@@ -15,3 +15,6 @@
           command: |
             source /home/circleci/setup-env.sh
             yarn test
+       - run:
+          name: Deploy to Now
+          command: /home/circleci/scripts/now-deploy.sh
