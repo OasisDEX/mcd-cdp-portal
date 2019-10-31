@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Build production artifact
           command: |
-            yarn build
+            CI=false yarn build
       - run:
           name: Deploy to production
           command: |
