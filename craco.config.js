@@ -24,7 +24,7 @@ module.exports = {
     }
   },
   babel: {
-    plugins: ['styled-components', 'react-hot-loader/babel']
+    plugins: ['styled-components', 'react-hot-loader/babel', '@babel/plugin-proposal-optional-chaining']
   },
   jest: {
     configure: {
