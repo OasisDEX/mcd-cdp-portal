@@ -23,7 +23,7 @@ const initialState = {
   }
 };
 
-test('MobileNav menu displays Earn, Borrow, and Trade buttons', async () => {
+test('MobileNav menu displays Save, Borrow, and Trade buttons', async () => {
   const navigation = createMemoryNavigation({
     routes: mount({ '/test': route() }),
     url: `/${cdpId}`
@@ -45,7 +45,7 @@ test('MobileNav menu displays Earn, Borrow, and Trade buttons', async () => {
     </LanguageProvider>
   );
 
-  await waitForElement(() => getByText('Earn'));
+  await waitForElement(() => getByText('Save'));
   await waitForElement(() => getByText('Borrow'));
   await waitForElement(() => getByText('Trade'));
 });
