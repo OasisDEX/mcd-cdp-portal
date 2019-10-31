@@ -14,7 +14,7 @@ jobs:
             yarn install
       - save_cache:
           paths:
-            - ./node_modules
+            - node_modules
           key: dependency-cache-{{ checksum "package.json" }}
   test:
     docker:
