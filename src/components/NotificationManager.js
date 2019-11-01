@@ -21,7 +21,7 @@ const NotificationManager = ({ ...props }) => {
       }
     };
     getCdps();
-  }, [account]);
+  }, [account, maker]);
 
   return account && cdpsToMigrate > 0 ? (
     <Card

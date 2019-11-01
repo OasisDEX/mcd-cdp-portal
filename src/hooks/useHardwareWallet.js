@@ -113,7 +113,7 @@ export function useLedger({ onAccountChosen }) {
         }
       });
     },
-    [show]
+    [accountSelection, show]
   );
 
   return { connectLedgerWallet };

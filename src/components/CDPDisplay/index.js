@@ -30,7 +30,7 @@ function CDPView({ cdpId }) {
 
   useEffect(() => {
     trackCdpById(maker, cdpId, dispatch);
-  }, [cdpId, maker]);
+  }, [cdpId, dispatch, maker]);
 
   return useMemo(
     () =>
@@ -44,7 +44,7 @@ function CDPView({ cdpId }) {
       ) : (
         <LoadingLayout background={getColor('backgroundGrey')} />
       ),
-    [cdp, showSidebar, account]
+    [cdp, showSidebar, account, network]
   );
 }
 
