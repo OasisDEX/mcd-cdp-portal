@@ -10,7 +10,7 @@ import templates from './templates';
 const modals = {
   cdpcreate: ({ onClose }) => (
     <Box
-      bg="backgroundGrey"
+      bg="lightGrey"
       minHeight="100vh"
       p="m"
       onClick={e => e.stopPropagation()}
@@ -21,7 +21,7 @@ const modals = {
 
   cdpmigrate: ({ onClose }) => (
     <Box
-      bg="backgroundGrey"
+      bg="lightGrey"
       minHeight="100vh"
       p="m"
       onClick={e => e.stopPropagation()}
@@ -32,7 +32,7 @@ const modals = {
 
   dsrdeposit: ({ onClose, hideOnboarding }) => (
     <Box
-      bg="backgroundGrey"
+      bg="lightGrey"
       minHeight="100vh"
       p="m"
       onClick={e => e.stopPropagation()}

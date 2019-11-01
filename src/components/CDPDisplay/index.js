@@ -42,7 +42,7 @@ function CDPView({ cdpId }) {
           network={network}
         />
       ) : (
-        <LoadingLayout background={getColor('backgroundGrey')} />
+        <LoadingLayout background={getColor('lightGrey')} />
       ),
     [cdp, showSidebar, account, network]
   );
