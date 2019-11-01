@@ -15,6 +15,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
+            - ./node_modules
           key: dependency-cache-{{ checksum "package.json" }}
   test:
     docker:
@@ -37,9 +38,6 @@ jobs:
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install dependencies
-          command: yarn
       - run:
           name: Deploy to Now
           command: |
