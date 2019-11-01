@@ -60,7 +60,8 @@
     "testchain": "./node_modules/@makerdao/testchain/scripts/launch -s default --fast",
     "ci": "yarn test --coverage",
     "now-build": "yarn build",
-    "remove-sourcemaps": "rm -rf build/static/js/*.map"
+    "remove-sourcemaps": "rm -rf build/static/js/*.map",
+    "deploy-main": "./scripts/deploy-mainnet"
   },
   "lint-staged": {
     "*.js": [

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+read -s -p "Enter Password: " PASS
+
+cleanup () {
+    rm  secret.gpg
+    rm  src/references/mainnet.json
+}
+
+check-command () {
+    cmnd=$1
+    if ! [ -x "$(command -v $cmnd)" ]; then
+        echo "Error: $cmnd is not installed, aborting..." >&2
+        cleanup
+        exit 1
+    fi
+}
+
+check-command now
+check-command gpg
+
+MAIN_ADDR="https://github.com/sirromdev/secrets/blob/master/mainnet.json.gpg?raw=true"
+curl -L $MAIN_ADDR --output secret.gpg
+gpg --decrypt --batch --passphrase $PASS secret.gpg > src/references/mainnet.json
+
+if [ $? -eq 0 ]
+then
+    echo "Successfully decrypted file"
+else
+    echo "Error... exiting"
+    cleanup
+    exit 1
+fi
+
+yarn build
+cleanup
+cd build/
+now switch mkr-js-prod
+NEW_URL=$(now --name "MCD CDP Portal")
+ALIAS_URL="portal-main2-dev.mkr-js-prod.now.sh"
+now alias $NEW_URL $ALIAS_URL
