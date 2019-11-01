@@ -35,7 +35,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       const newMaker = await instantiateMaker({
         network,
         testchainId,
-        backendEnv
+        backendEnv,
+        navigation
       });
       if (newMaker.service('accounts').hasAccount()) {
         initAccount(newMaker.currentAccount());
