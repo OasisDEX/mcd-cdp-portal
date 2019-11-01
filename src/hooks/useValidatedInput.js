@@ -19,8 +19,6 @@ export default function useValidatedInput(
   const [value, setValue] = useState(initialValue);
   const [errors, setErrors] = useState('');
 
-  const defaultErrorMessage = () => lang.input_validations.default;
-
   const defaultValidators = {
     isFloat: {
       validate: value => isNaN(parseFloat(value)),
@@ -45,6 +43,7 @@ export default function useValidatedInput(
   };
 
   const validators = useMemo(() => {
+    const defaultErrorMessage = () => lang.input_validations.default;
     const custom = validationSchema.custom || {};
     delete validationSchema.custom;
 
@@ -73,7 +72,12 @@ export default function useValidatedInput(
     });
 
     return [...fromDefault, ...fromCustom];
-  }, [validationSchema, customMessages]);
+  }, [
+    validationSchema,
+    lang.input_validations.default,
+    defaultValidators,
+    customMessages
+  ]);
 
   const validate = useCallback(
     value => {
@@ -89,7 +93,7 @@ export default function useValidatedInput(
 
       return errors.join(', ');
     },
-    [validationSchema, customMessages]
+    [validators, validationSchema]
   );
 
   const onChange = useCallback(

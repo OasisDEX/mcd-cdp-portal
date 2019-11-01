@@ -63,58 +63,58 @@ function Overview() {
   const { lang } = useLanguage();
 
   useEffect(() => {
+    const buildCdpOverview = async () => {
+      try {
+        const cdpData = await Promise.all(
+          account.cdps.map(({ id }) => {
+            const cdp = getCdp(id, { cdps, feeds });
+            return {
+              token: cdp.gem,
+              id,
+              ratio: getCollateralizationRatio(cdp),
+              ilkLiqRatio: cdp.liquidationRatio,
+              deposited: getCollateralAmount(cdp),
+              withdraw: getCollateralAvailableAmount(cdp),
+              debt: getDebtAmount(cdp),
+              depositedUSD: getCollateralValueUSD(cdp)
+            };
+          })
+        );
+        const sumDeposits = cdpData.reduce(
+          (acc, { depositedUSD }) => depositedUSD + acc,
+          0
+        );
+        const sumDebt = cdpData.reduce((acc, { debt }) => debt + acc, 0);
+        const cleanedCDP = cdpData.map(cdp => {
+          return Object.keys(cdp)
+            .map(k => {
+              switch (k) {
+                case 'deposited':
+                  return `${cdp[k].toFixed(2)} ${cdp['token']}`;
+                case 'withdraw':
+                  return `${cdp[k].toFixed(2)} ${cdp['token']}`;
+                case 'debt':
+                  return `${cdp[k].toFixed(2)} DAI`;
+                case 'depositedUSD':
+                  return null;
+                default:
+                  return cdp[k];
+              }
+            })
+            .filter(e => e !== null);
+        });
+        setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
+        setTotalDaiDebt(sumDebt.toFixed(2));
+        setCdpContent(cleanedCDP);
+      } catch (e) {
+        return null;
+      }
+    };
+
     if (((account || {}).cdps || {}).length) {
       buildCdpOverview();
     }
-  }, [account, buildCdpOverview, cdps, feeds]);
-
-  const buildCdpOverview = async () => {
-    try {
-      const cdpData = await Promise.all(
-        account.cdps.map(({ id }) => {
-          const cdp = getCdp(id, { cdps, feeds });
-          return {
-            token: cdp.gem,
-            id,
-            ratio: getCollateralizationRatio(cdp),
-            ilkLiqRatio: cdp.liquidationRatio,
-            deposited: getCollateralAmount(cdp),
-            withdraw: getCollateralAvailableAmount(cdp),
-            debt: getDebtAmount(cdp),
-            depositedUSD: getCollateralValueUSD(cdp)
-          };
-        })
-      );
-      const sumDeposits = cdpData.reduce(
-        (acc, { depositedUSD }) => depositedUSD + acc,
-        0
-      );
-      const sumDebt = cdpData.reduce((acc, { debt }) => debt + acc, 0);
-      const cleanedCDP = cdpData.map(cdp => {
-        return Object.keys(cdp)
-          .map(k => {
-            switch (k) {
-              case 'deposited':
-                return `${cdp[k].toFixed(2)} ${cdp['token']}`;
-              case 'withdraw':
-                return `${cdp[k].toFixed(2)} ${cdp['token']}`;
-              case 'debt':
-                return `${cdp[k].toFixed(2)} DAI`;
-              case 'depositedUSD':
-                return null;
-              default:
-                return cdp[k];
-            }
-          })
-          .filter(e => e !== null);
-      });
-      setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
-      setTotalDaiDebt(sumDebt.toFixed(2));
-      setCdpContent(cleanedCDP);
-    } catch (e) {
-      return null;
-    }
-  };
+  }, [account, cdps, feeds]);
 
   const { show } = useModal();
 

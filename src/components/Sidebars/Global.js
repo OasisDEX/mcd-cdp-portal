@@ -27,7 +27,7 @@ const SidebarGlobalPanel = () => {
         <Dev />
       </Box>
     );
-  }, [system, feeds]);
+  }, [feeds, routeIsBorrow, system, routeIsSave]);
 };
 
 export default SidebarGlobalPanel;

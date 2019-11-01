@@ -1546,10 +1546,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.2.15":
-  version "0.2.15"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.15.tgz#7c2509fc9458838ce9bd8d3bde6a39df3634ccf4"
-  integrity sha512-rH8m8XMEfUMtMe6QoIrCdBytjwJHIphnE6KcalfZGbcQEkyWCu4TOz8NRYCbNT0xRPuoQ0ROkWIrHf+pFioq8Q==
+"@makerdao/dai-plugin-mcd@^0.2.16":
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.16.tgz#04af26c2e75297e6d30bae0317b23eb062a30f16"
+  integrity sha512-G5Hd3/IWf/PANX5t5DAcAY2RJSXBh+nDq8CpaQvFJ3JvK/XpzAmqPsqqQfXp56xp19w/0GjEJCRYvzLVYcyGaA==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -1575,8 +1575,10 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@file:.yalc/@makerdao/dai":
-  version "0.19.0-rc1-279eb6b4"
+"@makerdao/dai@^0.19.0-rc1":
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.19.0.tgz#f8bd54812ea6be03efd968091a3e59ec7b6ca7ff"
+  integrity sha512-BIxqqTSFa3OBZh8vLm4+jYUlL33oVvAyGM9tndLttXHl+U7Mx0O2fhKrFSWOj6bsAyNkblqEKZBkR1vXEU3aWw==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"

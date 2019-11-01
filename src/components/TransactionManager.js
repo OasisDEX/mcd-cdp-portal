@@ -38,11 +38,11 @@ const txAnimations = {
       opacity: 0,
       marginTop: `-${PLACEHOLDER_HEIGHT + parseInt(getSpace('s'))}px`
     },
-    { opacity: 1, marginTop: `0px` }
+    { opacity: 1, marginTop: '0px' }
   ],
   slide: [
     { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` },
-    { transform: `translate3d(-0px, 0, 0)` }
+    { transform: 'translate3d(-0px, 0, 0)' }
   ]
 };
 
@@ -84,7 +84,7 @@ const TransactionManager = ({
     setTxAnimation({
       to: txCount ? animEnd : animStart
     });
-  }, [txCount]);
+  }, [animEnd, animStart, setTxAnimation, txCount]);
 
   const resolvedState = resolveTxManagerState(
     transactions.map(({ tx }) => tx.state())

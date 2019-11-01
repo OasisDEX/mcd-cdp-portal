@@ -17,7 +17,7 @@
     "@makerdao/dai": "^0.19.0-rc1",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "^0.2.15",
+    "@makerdao/dai-plugin-mcd": "^0.2.16",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletlink": "^0.0.1",
     "@makerdao/test-helpers": "^0.2.1",
@@ -60,7 +60,8 @@
     "testchain": "./node_modules/@makerdao/testchain/scripts/launch -s default --fast",
     "ci": "yarn test --coverage",
     "now-build": "yarn build",
-    "remove-sourcemaps": "rm -rf build/static/js/*.map"
+    "remove-sourcemaps": "rm -rf build/static/js/*.map",
+    "deploy-main": "./scripts/deploy-mainnet"
   },
   "lint-staged": {
     "*.js": [
