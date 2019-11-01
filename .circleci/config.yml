@@ -38,6 +38,9 @@ jobs:
           keys:
             - dependency-cache-{{ checksum "package.json" }}
       - run:
+          name: Install dependencies
+          command: yarn
+      - run:
           name: Deploy to Now
           command: |
             npm i --no-save now
