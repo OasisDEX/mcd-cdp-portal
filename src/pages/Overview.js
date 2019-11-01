@@ -284,7 +284,9 @@ function Overview() {
                                   borderColor="steel"
                                 >
                                   <Link
-                                    href={`/${Routes.BORROW}/${id}${url.search}`}
+                                    href={`/${Routes.BORROW}/${id}${
+                                      url.search
+                                    }`}
                                     prefetch={true}
                                   >
                                     <Text
