@@ -36,7 +36,7 @@ const ProxyAllowanceCheck = ({
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
       <Grid gridRowGap="xs">
-        <Text.h4>lang.cdp_create.setup_vault</Text.h4>
+        <Text.h4>{lang.cdp_create.setup_vault}</Text.h4>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {setup_text}
         </Text.p>
