@@ -132,11 +132,12 @@
     "select_title": "Select a collateral type",
     "select_text": "Each collateral type has its own risk parameters. You can lock up additional collateral types later.",
 
-    "setup_proxy_title": "Deploy Proxy and Set Allowance",
-    "setup_proxy_proxy_text": "Proxies are used in the CDP Portal to bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
+    "setup_proxy_title": "Vault Setup and Management",
+    "setup_proxy_proxy_text": "Setting up your vault will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
     "setup_proxy_allowance_text": "This permission allows Maker smart contracts to interact with your {0}. This has to be done once for each new collateral type.",
     "setup_proxy_proxy_button": "Setup",
     "setup_proxy_allowance_button": "Set",
+    "setup_vault": "Setup Vault",
 
     "deposit_title": "Deposit {0} and Generate Dai",
     "deposit_text": "Different collateral types have different risk parameters and collateralization ratios.",
@@ -191,7 +192,7 @@
   "dsr_deposit": {
     "open_vault": "Open your Maker Save Vault",
     "deposit_form_title": "Enter the amount you would like to deposit.",
-    "setup_proxy_text": "A proxy is used to bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
+    "setup_proxy_text": "Setting up your vault will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
     "confirm_title": "Confirm Deposit",
     "post_confirm_title": "Deposit Confirmed"
   },
