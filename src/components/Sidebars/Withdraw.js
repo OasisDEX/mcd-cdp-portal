@@ -70,7 +70,7 @@ const Withdraw = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(parseFloat(amount))),
+        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(amount)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();
