@@ -43,8 +43,6 @@ export async function instantiateMaker({
       console.error(e);
     }
   }
-
-  const mainnetOverride = { addresses: mainnetAddresses, network: 'mainnet' };
   const kovanCdpTypes = [
     { currency: ETH, ilk: 'ETH-A' },
     { currency: ETH, ilk: 'ETH-B' },
@@ -65,7 +63,7 @@ export async function instantiateMaker({
 
   const mcdPluginConfig = {
     cdpTypes: network === 'mainnet' ? mainnetCdpTypes : kovanCdpTypes,
-    override: network === 'mainnet' ? mainnetOverride : null,
+    addressOverrides: network === 'mainnet' ? mainnetAddresses : null,
     prefetch: false
   };
 
