@@ -96,7 +96,9 @@
   "navbar": {
     "save": "Save",
     "borrow": "Borrow",
-    "trade": "Trade"
+    "trade": "Trade",
+    "privacy": "Privacy",
+    "terms": "Terms"
   },
   "sidebar": {
     "wallet_balances": "Wallet Balances",
@@ -314,6 +316,8 @@
   "risk_parameters": "Risk Parameters",
   "terms_of_service_text": "I have read and accepted the {0}",
   "terms_of_service": "Terms of Service",
+  "cookie_notice": "By using this website you agree to our {0}",
+  "privacy_policy": "privacy policy",
   "providers": {
     "metamask": "MetaMask",
     "trust": "Trust",
