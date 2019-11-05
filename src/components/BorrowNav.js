@@ -58,7 +58,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
           />
         </CDPDropdown>
       ) : (
-        <Link href={path}>
+        <Link href={`${path}${url.search}`}>
           <Flex
             bg={!account && selected && 'grey.200'}
             flexDirection="column"

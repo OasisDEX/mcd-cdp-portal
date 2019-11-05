@@ -7115,17 +7115,17 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-history@^4.7.2:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/history/-/history-4.9.0.tgz#84587c2068039ead8af769e9d6a6860a14fa1bca"
-  integrity sha512-H2DkjCjXf0Op9OAr6nJ56fcRkTSNrUiv41vNJ6IswJjif6wlpZK0BTfFbi7qK9dXLSYZxkq5lBsj3vUjlYBYZA==
+history@^4.9.0:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/history/-/history-4.10.1.tgz#33371a65e3a83b267434e2b3f3b1b4c58aad4cf3"
+  integrity sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
   dependencies:
     "@babel/runtime" "^7.1.2"
     loose-envify "^1.2.0"
-    resolve-pathname "^2.2.0"
+    resolve-pathname "^3.0.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
-    value-equal "^0.4.0"
+    value-equal "^1.0.1"
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -9680,12 +9680,12 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navi@^0.12.4:
-  version "0.12.7"
-  resolved "https://registry.yarnpkg.com/navi/-/navi-0.12.7.tgz#5e7d3d37dcb25b11d035932abdbb447ca5fee627"
-  integrity sha512-WYwto91MN6z5kzwNVPZNL3XUqw5Sr6mQaYRQT4RmDGiGRxnq8KYN7SJHd5e/r8PonUthNnqh7sFtRq3eb9tVqA==
+navi@^0.13.6:
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/navi/-/navi-0.13.6.tgz#2ad7859a022222fbdb02b74807755ee914089018"
+  integrity sha512-qZl/TuG7e/AEYHzvrCqVOAv/RPz2U24MvHapMzS+l/fCrn+LtWbCTNIx7kewI7W46Ko5fkI9kQ8kmt9tyVOgWg==
   dependencies:
-    history "^4.7.2"
+    history "^4.9.0"
 
 needle@^2.2.1:
   version "2.4.0"
@@ -11690,7 +11690,7 @@ react-ga@^2.5.7:
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.5.7.tgz#1c80a289004bf84f84c26d46f3a6a6513081bf2e"
   integrity sha512-UmATFaZpEQDO96KFjB5FRLcT6hFcwaxOmAJZnjrSiFN/msTqylq9G+z5Z8TYzN/dbamDTiWf92m6MnXXJkAivQ==
 
-react-helmet@^5.2.0, react-helmet@^5.2.1:
+react-helmet@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-5.2.1.tgz#16a7192fdd09951f8e0fe22ffccbf9bb3e591ffa"
   integrity sha512-CnwD822LU8NDBnjCpZ4ySh8L6HYyngViTZLfBBb3NjtrpN8m49clH8hidHouq20I51Y6TpCTISCBbqiY5GamwA==
@@ -11742,13 +11742,12 @@ react-localization@^1.0.13:
     localized-strings "^0.2.00"
     react "^16.0.0"
 
-react-navi@^0.12.4:
-  version "0.12.7"
-  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.12.7.tgz#6bb2c3579f26927f1cb059abfb5cf270029ac39e"
-  integrity sha512-hd4G31wYG4aDx1i1ZcIRoDajxTMGJsS66HH7cGhtzIbUFOAlN1eUpTUoZoPRtGCiOJ1zE4OlCiQPDTM8HVmjkA==
+react-navi@^0.13.6:
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.6.tgz#ee0249cb28e961a0af4f2dce459d993d7ff3d50f"
+  integrity sha512-2dG5j5qpxwI5SJru9ilyYxp8Jp3SOB0lkjbshcWv1L5+8Z4fv/UEmAWa5m1v+2We4w8okO4LH5nlgAmG1szlCg==
   dependencies:
     "@types/history" "^4.6.2"
-    react-helmet "^5.2.0"
 
 react-onclickoutside@^6.7.1:
   version "6.8.0"
@@ -12246,10 +12245,10 @@ resolve-from@^4.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-4.0.0.tgz#4abcd852ad32dd7baabfe9b40e00a36db5f392e6"
   integrity sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
 
-resolve-pathname@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/resolve-pathname/-/resolve-pathname-2.2.0.tgz#7e9ae21ed815fd63ab189adeee64dc831eefa879"
-  integrity sha512-bAFz9ld18RzJfddgrO2e/0S2O81710++chRMUxHjXOYKF6jTAMrUNZrEZ1PvV0zlhfjidm08iRPdTLPno1FuRg==
+resolve-pathname@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/resolve-pathname/-/resolve-pathname-3.0.0.tgz#99d02224d3cf263689becbb393bc560313025dcd"
+  integrity sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==
 
 resolve-url-loader@3.1.0:
   version "3.1.0"
@@ -14117,10 +14116,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-value-equal@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-0.4.0.tgz#c5bdd2f54ee093c04839d71ce2e4758a6890abc7"
-  integrity sha512-x+cYdNnaA3CxvMaTX0INdTCN8m8aF2uY9BvEqmxuYp8bL09cs/kWVQPVGcA35fMktdOsP69IgU7wFj/61dJHEw==
+value-equal@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/value-equal/-/value-equal-1.0.1.tgz#1e0b794c734c5c0cade179c437d356d931a34d6c"
+  integrity sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
