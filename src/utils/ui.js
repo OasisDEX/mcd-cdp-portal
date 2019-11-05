@@ -120,3 +120,9 @@ export function formatDate(d) {
     day: 'numeric'
   });
 }
+
+// ensures a result < amount.toFixed(d)
+export function safeToFixed(amount, digits) {
+  const s = amount.toFixed(digits);
+  return s.substring(0, s.length - 1);
+}
