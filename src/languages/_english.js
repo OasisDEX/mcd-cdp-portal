@@ -1,4 +1,4 @@
-{
+export default {
   "cdp_page": {
     "liquidation_price": "Liquidation price",
     "liquidation_ratio": "Liquidation ratio",

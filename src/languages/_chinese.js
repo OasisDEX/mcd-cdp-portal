@@ -1,4 +1,4 @@
-{
+export default {
   "cdp_page": {
     "liquidation_price": "清算价格",
     "liquidation_ratio": "清算比例",
