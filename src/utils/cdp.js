@@ -21,22 +21,22 @@ export function getLockedAndFreeCollateral(cdp) {
 export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
   const { liquidationRatio, debtCeiling } = ilkData;
   const collateralizationRatio = calcCollateralizationRatio({
-    deposited: parseFloat(gemsToLock),
+    deposited: gemsToLock,
     price: getUsdPrice(ilkData),
-    generated: parseFloat(daiToDraw)
+    generated: daiToDraw
   });
   const liquidationPrice = calcLiquidationPrice({
     liquidationRatio,
-    deposited: parseFloat(gemsToLock),
-    generated: parseFloat(daiToDraw),
+    deposited: gemsToLock,
+    generated: daiToDraw,
     price: getUsdPrice(ilkData)
   });
   const daiAvailable = calcDaiAvailable({
     liquidationRatio,
-    deposited: parseFloat(gemsToLock),
-    generated: parseFloat(daiToDraw),
+    deposited: gemsToLock,
+    generated: daiToDraw,
     price: getUsdPrice(ilkData),
-    debtCeiling: parseFloat(debtCeiling)
+    debtCeiling: debtCeiling
   });
 
   return {
