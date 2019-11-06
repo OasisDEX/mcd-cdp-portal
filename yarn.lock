@@ -1567,6 +1567,15 @@
     trezor-connect "^7.0.2"
     web3-provider-engine "14.0.4"
 
+"@makerdao/dai-plugin-walletconnect@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletconnect/-/dai-plugin-walletconnect-0.0.3.tgz#023b652b2fa8606eb1910542e8cf37f63eca360e"
+  integrity sha512-RR2Lq+DSlEglMEW+0BN945eHGuEuZ3q9qrNS9ahOm7t7040X4wjJRpV92DHIy/ucDdaDJVyKE/h5UmtNla76QQ==
+  dependencies:
+    "@walletconnect/browser" "^1.0.0-beta.36"
+    "@walletconnect/qrcode-modal" "^1.0.0-beta.36"
+    babel-runtime "^6.26.0"
+
 "@makerdao/dai-plugin-walletlink@^0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletlink/-/dai-plugin-walletlink-0.0.1.tgz#05914be384df1dde599d21b6a2be1599ceb8cd10"

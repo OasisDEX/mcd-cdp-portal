@@ -12,7 +12,6 @@ import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
-import { getWalletConnectAccounts } from 'utils/walletconnect';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
@@ -70,11 +69,6 @@ function AccountSelection() {
     }
   }
 
-  async function onWalletLinkConnect() {
-    const address = await connectToProviderOfType(AccountTypes.WALLETLINK);
-    mixpanelIdentify(address, AccountTypes.WALLETLINK);
-  }
-
   return (
     <PageContentLayout>
       <Flex
@@ -105,13 +99,13 @@ function AccountSelection() {
             {lang.providers.ledger_nano}
           </IconButton>
           <IconButton
-            onClick={getWalletConnectAccounts}
+            onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
             icon={<StyledWalletConnectLogo />}
           >
             {lang.landing_page.wallet_connect}
           </IconButton>
           <IconButton
-            onClick={onWalletLinkConnect}
+            onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
             disabled={!makerAuthenticated}
             icon={<StyledWalletLinkLogo />}
           >
