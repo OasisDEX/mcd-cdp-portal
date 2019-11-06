@@ -173,7 +173,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    ((token === 'SAI' && (
+                    ((symbol === 'SAI' && (
                       <ActionButton>{lang.sidebar.migrate}</ActionButton>
                     )) || (
                       <ActionButton onClick={() => showSendSidebar({ token })}>
@@ -186,7 +186,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
           )}
         </StripedRows>
       </CardBody>
-      {tokenBalances.length > 3 && (
+      {tokenBalances.length > 4 && (
         <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
           <Flex justifyContent="center" alignItems="center">
             {collapsed ? (

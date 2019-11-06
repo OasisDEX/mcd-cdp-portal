@@ -1,14 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, {
-  ETH,
-  MKR,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  DGD,
-  GNT
-} from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, MKR, BAT } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
@@ -45,19 +36,11 @@ export async function instantiateMaker({
   }
   const kovanCdpTypes = [
     { currency: ETH, ilk: 'ETH-A' },
-    { currency: ETH, ilk: 'ETH-B' },
-    { currency: REP, ilk: 'REP-A' },
-    { currency: ZRX, ilk: 'ZRX-A' },
-    { currency: OMG, ilk: 'OMG-A' },
-    { currency: BAT, ilk: 'BAT-A' },
-    { currency: DGD, ilk: 'DGD-A', decimals: 9 },
-    { currency: GNT, ilk: 'GNT-A' }
+    { currency: BAT, ilk: 'BAT-A' }
   ];
 
   const mainnetCdpTypes = [
     { currency: ETH, ilk: 'ETH-A' },
-    { currency: ETH, ilk: 'ETH-B' },
-    { currency: ZRX, ilk: 'ZRX-A' },
     { currency: BAT, ilk: 'BAT-A' }
   ];
 
