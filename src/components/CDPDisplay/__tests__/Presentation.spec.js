@@ -62,7 +62,12 @@ describe('on mobile', () => {
 
   test('render an action full-screen', async () => {
     const showSidebar = jest.fn();
-    const { findByText, getByText, getByTestId } = renderForSidebar(
+    const {
+      findByText,
+      getByText,
+      getAllByText,
+      getByTestId
+    } = renderForSidebar(
       <Fragment>
         <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
         <div id="portal1" />
@@ -85,7 +90,7 @@ describe('on mobile', () => {
         return newState;
       }
     );
-    await waitForElement(() => getByText('Outstanding Dai debt'));
+    await waitForElement(() => getAllByText('Outstanding Dai debt'));
     fireEvent.click(getByText('Deposit'));
     await findByText(/would you like to deposit/);
     expect(showSidebar).not.toBeCalled();
