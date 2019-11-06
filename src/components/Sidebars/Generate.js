@@ -58,8 +58,7 @@ const Generate = ({ cdpId, reset }) => {
     });
 
     // fractional diffs between daiAvailable & debtAmount can result in a negative amount
-    const daiAvailablePositive =
-      daiAvailable - debtAmount < 0 ? 0 : daiAvailable - debtAmount;
+    const daiAvailablePositive = Math.max(0, daiAvailable - debtAmount);
 
     setDaiAvailable(daiAvailablePositive);
     setLiquidationPrice(liquidationPrice);
