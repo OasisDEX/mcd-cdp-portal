@@ -11,7 +11,6 @@ import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
 import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
-import { GenericNotFound } from 'pages/NotFound';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
@@ -180,10 +179,7 @@ export default mount({
   ),
 
   [`/${Routes.TRADE}`]: route(() => {
-    return {
-      title: 'Trade',
-      view: <GenericNotFound />
-    };
+    window.location.href = 'https://oasis.app/trade';
   }),
 
   [`/${Routes.PRIVACY}`]: route(() => {
