@@ -18,7 +18,8 @@ export const AccountTypes = {
   LEDGER: 'ledger',
   TREZOR: 'trezor',
   METAMASK: 'browser',
-  WALLETLINK: 'walletlink'
+  WALLETLINK: 'walletlink',
+  WALLETCONNECT: 'walletconnect'
 };
 
 export const Routes = {
