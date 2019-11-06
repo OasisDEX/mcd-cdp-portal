@@ -74,7 +74,7 @@ test('system collateralization is calculated correctly', () => {
         key: 'ETH-A'
       },
       {
-        key: 'ETH-B'
+        key: 'BAT-A'
       }
     ],
     raw: {
@@ -85,7 +85,7 @@ test('system collateralization is calculated correctly', () => {
           rate: '1002000000000000000000000000',
           adapterBalance: '210000000000000000'
         },
-        'ETH-B': {
+        'BAT-A': {
           priceWithSafetyMargin: '157850000000000000000000000000',
           ilkArt: '2995628653904063343',
           rate: '1002000000000000000000000000',
@@ -103,7 +103,7 @@ test('system collateralization is calculated correctly', () => {
         value: '2000000000000000000000000000'
       },
       {
-        type: 'ilk.ETH-B.liquidationRatio',
+        type: 'ilk.BAT-A.liquidationRatio',
         value: '2000000000000000000000000000'
       }
     ]
