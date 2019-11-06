@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-navi';
 import styled from 'styled-components';
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { Flex, Text, Link } from '@makerdao/ui-components-core';
 import { ReactComponent as TradeIcon } from 'images/active-trade-icon.svg';
 import { Routes } from '../utils/constants';
 import useLanguage from 'hooks/useLanguage';

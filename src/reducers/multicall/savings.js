@@ -7,13 +7,20 @@ export default function(addresses) {
     {
       target: addresses.MCD_POT,
       call: ['Pie()(uint256)'],
-      returns: [[`savings.Pie`, fromWei]]
+      returns: [['savings.Pie', fromWei]]
     },
     {
       target: addresses.MCD_POT,
       call: ['dsr()(uint256)'],
       returns: [
-        ['savings.yearlyRate', rate => fromRay(rate).pow(SECONDS_PER_YEAR)]
+        [
+          'savings.yearlyRate',
+          rate =>
+            fromRay(rate)
+              .pow(SECONDS_PER_YEAR)
+              .minus(1)
+              .times(100)
+        ]
       ]
     },
     {

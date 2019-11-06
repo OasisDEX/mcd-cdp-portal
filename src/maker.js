@@ -1,8 +1,9 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, { ETH, MKR } from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, MKR, BAT } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
+import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
@@ -18,9 +19,37 @@ export async function instantiateMaker({
   rpcUrl,
   network,
   testchainId,
-  backendEnv
+  backendEnv,
+  navigation
 }) {
-  const mcdPluginConfig = { prefetch: false };
+  let mainnetAddresses;
+  if (network === 'mainnet') {
+    // Fallback to kovan if mainnet addresses are not found
+    try {
+      mainnetAddresses = require('./references/mainnet.json');
+    } catch (e) {
+      navigation.navigate(
+        `${navigation.getCurrentValue().url.pathname}?network=kovan`
+      );
+      network = 'kovan';
+      console.error(e);
+    }
+  }
+  const kovanCdpTypes = [
+    { currency: ETH, ilk: 'ETH-A' },
+    { currency: BAT, ilk: 'BAT-A' }
+  ];
+
+  const mainnetCdpTypes = [
+    { currency: ETH, ilk: 'ETH-A' },
+    { currency: BAT, ilk: 'BAT-A' }
+  ];
+
+  const mcdPluginConfig = {
+    cdpTypes: network === 'mainnet' ? mainnetCdpTypes : kovanCdpTypes,
+    addressOverrides: network === 'mainnet' ? mainnetAddresses : null,
+    prefetch: false
+  };
 
   const config = {
     log: false,
@@ -28,6 +57,7 @@ export async function instantiateMaker({
       trezorPlugin,
       ledgerPlugin,
       walletLinkPlugin,
+      walletConnectPlugin,
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {

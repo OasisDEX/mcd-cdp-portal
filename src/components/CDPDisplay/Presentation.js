@@ -70,12 +70,11 @@ export default function({ cdp, showSidebar, account, network }) {
   useEffect(() => {
     getEventHistory(maker, cdpId).then(events => setEventHistory(events));
   }, [maker, cdpId]);
-
   return (
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {lang.cdp} {cdpId}
+          {cdp.ilk} {lang.cdp} #{cdpId}
         </Text.h2>
       </Box>
       <Grid
@@ -150,7 +149,7 @@ export default function({ cdp, showSidebar, account, network }) {
           />
         </CdpViewCard>
 
-        <CdpViewCard title={`DAI ${lang.cdp_page.position}`}>
+        <CdpViewCard title={lang.cdp_page.outstanding_dai_debt}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
             value={debtAmount + ' DAI'}

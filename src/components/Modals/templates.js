@@ -24,7 +24,6 @@ const Bg = styled(animated.div)`
   left: 0;
   z-index: 10;
   overflow-y: scroll;
-  background-color: white;
 `;
 
 const SimpleBg = styled(Bg)`

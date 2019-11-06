@@ -8,7 +8,6 @@ import {
   Button,
   Flex
 } from '@makerdao/ui-components-core';
-import ilkList from 'references/ilkList';
 import { getSpace } from 'styles/theme';
 import ActiveAccount from 'components/ActiveAccount';
 import StripedRows from 'components/StripedRows';
@@ -28,11 +27,6 @@ import Carat from './Carat';
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
 `;
-
-let uniqueGemsToShow = new Set(ilkList.map(ilk => ilk.gem));
-// this turns out to be the same as MWETH, which we show manually
-uniqueGemsToShow.delete('ETH');
-uniqueGemsToShow = [...uniqueGemsToShow];
 
 const ActionButton = ({ children, ...rest }) => (
   <Button
@@ -179,7 +173,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    ((token === 'SAI' && (
+                    ((symbol === 'SAI' && (
                       <ActionButton>{lang.sidebar.migrate}</ActionButton>
                     )) || (
                       <ActionButton onClick={() => showSendSidebar({ token })}>
@@ -192,7 +186,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
           )}
         </StripedRows>
       </CardBody>
-      {tokenBalances.length > 3 && (
+      {tokenBalances.length > 4 && (
         <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
           <Flex justifyContent="center" alignItems="center">
             {collapsed ? (

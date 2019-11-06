@@ -27,7 +27,7 @@ const SaveNav = ({ account, ...props }) => {
       ? 'black'
       : 'gray';
   return (
-    <Link href={`/${Routes.SAVE}`}>
+    <Link href={`/${Routes.SAVE}${url.search}`}>
       <Flex
         bg={!account && selected && 'grey.200'}
         flexDirection="column"

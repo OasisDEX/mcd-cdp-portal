@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
-import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
-import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
@@ -49,9 +47,8 @@ const WalletConnectDropdown = ({
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
 
-  function onAccountChosen({ address }, type) {
+  function onAccountChosen({ address }) {
     maker.useAccountWithAddress(address);
-    mixpanelIdentify(address, type);
   }
 
   useEffect(() => {
@@ -137,7 +134,7 @@ const WalletConnectDropdown = ({
         </Option>
         <Option
           onClick={() => {
-            getWalletConnectAccounts();
+            connectToProviderOfType(AccountTypes.WALLETCONNECT);
             close();
           }}
         >

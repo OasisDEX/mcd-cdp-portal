@@ -3,7 +3,11 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
-import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  prettifyNumber,
+  safeToFixed
+} from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
@@ -186,8 +190,9 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   const {
     liquidationPrice,
     collateralizationRatio,
-    daiAvailable
+    daiAvailable: estDaiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
+  const daiAvailable = safeToFixed(estDaiAvailable, 3);
   const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
   const { lang } = useLanguage();
 

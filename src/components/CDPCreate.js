@@ -13,7 +13,7 @@ import { TxLifecycle } from 'utils/constants';
 
 const screens = [
   ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
-  ['Proxy Setup', props => <CDPCreateSetAllowance {...props} />],
+  ['Vault Management', props => <CDPCreateSetAllowance {...props} />],
   ['Generate Dai', props => <CDPCreateDeposit {...props} />],
   ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
 ];

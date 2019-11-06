@@ -8,7 +8,7 @@ import theme, { getSpace } from '../styles/theme';
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (
     <Grid
-      bg="backgroundGrey"
+      bg="lightGrey"
       gridTemplateColumns={{
         s: 'minmax(0, 1fr)',
         l: `${theme.measurement.navbarWidth}px 1fr ${

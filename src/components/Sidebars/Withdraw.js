@@ -31,9 +31,9 @@ const Withdraw = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp, true, 9);
+  const collateralAvailableAmount = getCollateralAvailableAmount(cdp, false);
   const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
+  const collateralAmount = getCollateralAmount(cdp, false);
   const debtAmount = getDebtAmount(cdp);
 
   const { symbol } = cdp.currency;
@@ -50,7 +50,7 @@ const Withdraw = ({ cdpId, reset }) => {
     }
   );
 
-  const setMax = () => setAmount(collateralAvailableAmount.toFixed(9));
+  const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
     amount && parseFloat(amount) > collateralAvailableAmount;
 
@@ -70,7 +70,7 @@ const Withdraw = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(parseFloat(amount))),
+        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(amount)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();

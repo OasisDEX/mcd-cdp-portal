@@ -11,7 +11,8 @@ import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
 import {
   formatCollateralizationRatio,
-  formatLiquidationPrice
+  formatLiquidationPrice,
+  safeToFixed
 } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
 
@@ -25,8 +26,8 @@ const Generate = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
 
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, false);
+  const debtAmount = getDebtAmount(cdp, false);
   const undercollateralized = greaterThan(
     cdp.liquidationRatio,
     collateralizationRatio
@@ -45,7 +46,7 @@ const Generate = ({ cdpId, reset }) => {
   );
 
   useEffect(() => {
-    const amountToGenerate = parseFloat(amount || 0);
+    const amountToGenerate = amount || 0;
     const {
       liquidationPrice,
       collateralizationRatio,
@@ -56,7 +57,10 @@ const Generate = ({ cdpId, reset }) => {
       daiToDraw: debtAmount + amountToGenerate
     });
 
-    setDaiAvailable(daiAvailable - debtAmount);
+    // fractional diffs between daiAvailable & debtAmount can result in a negative amount
+    const daiAvailablePositive = Math.max(0, daiAvailable - debtAmount);
+
+    setDaiAvailable(daiAvailablePositive);
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp, collateralAmount, debtAmount]);
@@ -65,7 +69,7 @@ const Generate = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
+        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(amount)),
       lang.transactions.generate_dai
     );
     reset();
@@ -98,7 +102,7 @@ const Generate = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${daiAvailable.toFixed(6)} DAI`}
+          body={`${safeToFixed(daiAvailable, 7)} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}

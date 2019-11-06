@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
-import { Link } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 
 import OasisLayout from '../layouts/OasisLayout';
 import SEO from '../components/SEO';
@@ -394,6 +394,7 @@ const Questions = () => {
 };
 
 function Landing() {
+  const { url } = useCurrentRoute();
   const { lang } = useLanguage();
 
   return (
@@ -415,7 +416,7 @@ function Landing() {
           </div>
           <div className="buttonContainer">
             <a
-              href="https://oasis.app/trade"
+              href="https://staging.oasis.app/trade"
               className="button enabled"
               style={{
                 color: '#5894B5',
@@ -447,7 +448,7 @@ function Landing() {
           <div className="buttonContainer">
             <div className="button">
               <Link
-                href={`/${Routes.BORROW}`}
+                href={`/${Routes.BORROW}${url.search}`}
                 prefetch={true}
                 className="button enabled"
                 style={{
@@ -475,7 +476,7 @@ function Landing() {
           <div className="buttonContainer">
             <div className="button">
               <Link
-                href={`/${Routes.SAVE}`}
+                href={`/${Routes.SAVE}${url.search}`}
                 prefetch={true}
                 className="button enabled"
                 style={{

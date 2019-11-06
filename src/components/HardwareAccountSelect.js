@@ -30,7 +30,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
       confirmAddress(address);
       onClose();
     }, onClose);
-  }, []);
+  }, [confirmAddress, connect, onClose]);
 
   const toPage = useCallback(
     async page => {
@@ -40,7 +40,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
       }
       setPage(page);
     },
-    [accounts]
+    [accounts, fetch]
   );
 
   const selectAddress = useCallback(
@@ -52,7 +52,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
 
   const onConfirm = useCallback(() => {
     pickAccount(selectedAddress);
-  });
+  }, [pickAccount, selectedAddress]);
 
   const start = page * ACCOUNTS_PER_PAGE;
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);

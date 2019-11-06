@@ -36,7 +36,7 @@ const Deposit = ({ cdpId, reset }) => {
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
   const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
+  const collateralAmount = getCollateralAmount(cdp, false);
   const debtAmount = getDebtAmount(cdp);
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
@@ -71,7 +71,7 @@ const Deposit = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, cdp.ilk, cdp.currency(parseFloat(amount))),
+        .lock(cdpId, cdp.ilk, cdp.currency(amount)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
@@ -111,7 +111,7 @@ const Deposit = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.current_account_balance}
-          body={`${gemBalance && gemBalance.toFixed(6)} ${symbol}`}
+          body={`${gemBalance} ${symbol}`}
         />
         <Info
           title={lang.formatString(
