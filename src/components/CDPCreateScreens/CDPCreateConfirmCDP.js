@@ -19,9 +19,16 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 import { TxLifecycle } from 'utils/constants';
-
+import styled from 'styled-components';
+import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
-import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
+
+const StyledExternalLink = styled(ExternalLinkIcon)`
+  path {
+    stroke: ${props => props.color};
+    fill: ${props => props.color};
+  }
+`;
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
@@ -166,10 +173,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <Box m="auto">
-            <SpaceshipIllustration />
-          </Box>
-          <Box my="l" textAlign="center">
+          <Box my="s" textAlign="center">
             {isTestchain ? (
               <Grid gridRowGap="s">
                 <Text>Transaction hash</Text>
@@ -180,7 +184,10 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
-                View transaction details <ExternalLinkIcon />
+                <Button variant="secondary">
+                  View transaction details{' '}
+                  <StyledExternalLink color={getColor('steel')} />
+                </Button>
               </Link>
             )}
           </Box>
