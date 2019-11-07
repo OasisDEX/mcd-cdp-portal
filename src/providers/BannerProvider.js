@@ -1,35 +1,7 @@
 import React, { createContext, useReducer } from 'react';
-import { Text, Card, Button } from '@makerdao/ui-components-core';
-import useLanguage from 'hooks/useLanguage';
+import bannerComponents from 'components/Banners';
 
-const Claim = ({ colName, amount, symbol }) => {
-  const { lang } = useLanguage();
-  const message = lang.formatString(
-    'Your {0} Vault auction(s) have completed. You have {1} {2} to claim',
-    colName,
-    amount,
-    symbol
-  );
-  const buttonLabel = 'click';
-  const onClick = () => console.log('ON CLICK WORKS');
-  const ActionButton = ({ onClick }) => (
-    <Button variant="secondary-outline" m=".5rem" p=".5rem" onClick={onClick}>
-      <Text t="smallCaps">{buttonLabel}</Text>
-    </Button>
-  );
-  return (
-    <Card m="1rem" p="1rem" width="100%">
-      <Text>{message}</Text>
-      <ActionButton onClick={onClick} label={buttonLabel} />
-    </Card>
-  );
-};
-
-const BannerComponents = {
-  claim: Claim
-};
-
-const initialState = { type: '', props: {}, banners: [] };
+const initialState = { type: '', banners: [] };
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
@@ -51,8 +23,10 @@ function BannerProvider({ children }) {
   );
 
   const shouldShow = banners.length > 0;
+
+  const reset = () => dispatch({ type: 'reset' });
+
   const show = ({ type, props }) => {
-    console.log('banner type:', type);
     dispatch({
       type: 'show',
       payload: { type, props }
@@ -61,10 +35,9 @@ function BannerProvider({ children }) {
 
   const Container = () => (
     <div>
-      {banners.map(({ props }) => {
-        const Comp = BannerComponents['claim'];
-        console.log('comp', Comp);
-        return <Comp key="b" {...props} />;
+      {banners.map(({ props }, index) => {
+        const Comp = bannerComponents['claim'];
+        return <Comp key={index} {...props} />;
       })}
     </div>
   );
@@ -72,7 +45,7 @@ function BannerProvider({ children }) {
   // TODO make this nicer:
   const current = { component: Container, props: { ...props } };
   return (
-    <BannerStateContext.Provider value={{ show, current, shouldShow }}>
+    <BannerStateContext.Provider value={{ show, current, shouldShow, reset }}>
       {children}
     </BannerStateContext.Provider>
   );
