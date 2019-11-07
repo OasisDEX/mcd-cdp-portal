@@ -33,9 +33,9 @@ else
 fi
 
 yarn build
-cleanup
-cd build/
-now switch mkr-js-prod
-NEW_URL=$(now --name "MCD CDP Portal")
+
+NEW_URL=$(now --scope mkr-js-prod)
 ALIAS_URL="portal-main2-dev.mkr-js-prod.now.sh"
-now alias $NEW_URL $ALIAS_URL
+now alias --scope mkr-js-prod $NEW_URL $ALIAS_URL
+
+cleanup
