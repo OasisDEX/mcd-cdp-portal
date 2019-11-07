@@ -26,6 +26,7 @@ import {
 } from 'reducers/cdps';
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
+import useBanner from '../hooks/useBanner';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -113,10 +114,16 @@ function Overview() {
 
     if (((account || {}).cdps || {}).length) {
       buildCdpOverview();
+      showBanner({ type: 'claim', props: 'someprops' });
     }
-  }, [account, cdps, feeds]);
+  }, [account, cdps, feeds, showBanner]);
 
   const { show } = useModal();
+
+  //TODO this will need to be moved into a useeffect somewhere that we search for banner related things
+  // eg where we search for liquidated auctions or something.
+  // ...or where we detect if the currently viewed cdp is owned by active account, etc.
+  const { show: showBanner } = useBanner();
 
   return (
     <PageContentLayout>

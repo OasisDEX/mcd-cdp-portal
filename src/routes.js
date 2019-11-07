@@ -16,6 +16,7 @@ import modals, { templates } from 'components/Modals';
 import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
+import { BannerProvider } from 'providers/BannerProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
 import EthBalanceProvider from 'providers/EthBalanceProvider';
@@ -45,17 +46,19 @@ const withBorrowLayout = route =>
               <ToggleProvider>
                 <ModalProvider modals={modals} templates={templates}>
                   <SidebarProvider>
-                    <BorrowLayout
-                      mobileNav={
-                        <MobileNav
-                          viewedAddress={viewedAddress}
-                          cdpId={cdpId}
-                        />
-                      }
-                      navbar={<Navbar viewedAddress={viewedAddress} />}
-                    >
-                      <View />
-                    </BorrowLayout>
+                    <BannerProvider>
+                      <BorrowLayout
+                        mobileNav={
+                          <MobileNav
+                            viewedAddress={viewedAddress}
+                            cdpId={cdpId}
+                          />
+                        }
+                        navbar={<Navbar viewedAddress={viewedAddress} />}
+                      >
+                        <View />
+                      </BorrowLayout>
+                    </BannerProvider>
                   </SidebarProvider>
                 </ModalProvider>
               </ToggleProvider>
