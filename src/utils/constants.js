@@ -33,3 +33,7 @@ export const Routes = {
 export const Toggles = {
   WALLETBALANCES: 'walletbalances'
 };
+
+export const FeatureFlags = {
+  FF_VAULTHISTORY: false
+};

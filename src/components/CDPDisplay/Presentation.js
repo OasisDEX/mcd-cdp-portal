@@ -25,10 +25,13 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
+import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
+
 const log = debug('maker:CDPDisplay/Presentation');
+const { FF_VAULTHISTORY } = FeatureFlags;
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
@@ -181,11 +184,13 @@ export default function({ cdp, showSidebar, account, network }) {
         </CdpViewCard>
       </Grid>
 
-      <History
-        title={lang.cdp_page.tx_history}
-        rows={eventHistory}
-        network={network}
-      />
+      {FF_VAULTHISTORY && (
+        <History
+          title={lang.cdp_page.tx_history}
+          rows={eventHistory}
+          network={network}
+        />
+      )}
 
       {actionShown && (
         <FullScreenAction {...actionShown} reset={() => setActionShown(null)} />
