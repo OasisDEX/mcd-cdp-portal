@@ -114,7 +114,10 @@ function Overview() {
 
     if (((account || {}).cdps || {}).length) {
       buildCdpOverview();
-      showBanner({ type: 'claim', props: 'someprops' });
+      showBanner({
+        type: 'claim',
+        props: { colName: 'NAME', amount: '5.55', symbol: 'SYM' }
+      });
     }
   }, [account, cdps, feeds, showBanner]);
 
