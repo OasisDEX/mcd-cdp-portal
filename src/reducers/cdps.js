@@ -7,6 +7,7 @@ import { fromWei } from 'utils/units';
 
 export const INK = 'ink';
 export const ART = 'art';
+export const UNLOCKED_COLLATERAL = 'unlockedCollateral';
 
 export const initialState = {};
 
@@ -14,6 +15,7 @@ const defaultCdpState = {
   inited: false,
   [INK]: '',
   [ART]: '',
+  [UNLOCKED_COLLATERAL]: '',
   ilk: ''
 };
 
@@ -210,6 +212,7 @@ function convert(valueType, value) {
   switch (valueType) {
     case INK:
     case ART:
+    case UNLOCKED_COLLATERAL:
       return fromWei(value);
     default:
       return value;
