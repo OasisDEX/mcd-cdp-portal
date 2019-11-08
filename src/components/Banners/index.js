@@ -1,5 +1,7 @@
 import CollateralClaim from './CollateralClaim';
+import Ownership from './Ownership';
 
 export default {
-  claim: CollateralClaim
+  claim: CollateralClaim,
+  owner: Ownership
 };

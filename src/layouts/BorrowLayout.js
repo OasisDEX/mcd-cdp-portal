@@ -4,12 +4,8 @@ import { Grid, Box } from '@makerdao/ui-components-core';
 import { hot } from 'react-hot-loader/root';
 import SidebarBase from 'components/SidebarBase';
 import theme, { getSpace } from '../styles/theme';
-import useBanner from '../hooks/useBanner';
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
-  const { current, shouldShow } = useBanner();
-  const { component: BannerContainer } = current;
-
   return (
     <Grid
       bg="lightGrey"
@@ -27,11 +23,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
     >
       <Box display={{ s: 'block', l: 'none' }}>{mobileNav}</Box>
       <Box display={{ s: 'none', l: 'block' }}>{navbar}</Box>
-      <div>
-        {shouldShow && <BannerContainer />}
-        {children}
-      </div>
-
+      {children}
       <Box display={{ s: 'none', l: 'block' }}>
         <SidebarBase />
       </Box>

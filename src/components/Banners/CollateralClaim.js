@@ -21,7 +21,7 @@ const CollateralClaim = ({ colName, amount, symbol }) => {
   );
 
   return (
-    <Card m="1rem" p="1rem" width="100%">
+    <Card my="1rem" p="1rem" width="100%">
       <Text>{message}</Text>
       {onClick && <ActionButton onClick={onClick} label={buttonLabel} />}
     </Card>

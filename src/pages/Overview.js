@@ -115,11 +115,11 @@ function Overview() {
     if (((account || {}).cdps || {}).length) {
       buildCdpOverview();
       showBanner({
-        type: 'claim',
+        banner: 'claim',
         props: { colName: 'NAME', amount: '5.55', symbol: 'SYM' }
       });
     }
-  }, [account, cdps, feeds, showBanner]);
+  }, [account, cdps, feeds]);
 
   const { show } = useModal();
 
