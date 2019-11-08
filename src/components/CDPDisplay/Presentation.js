@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
@@ -13,7 +13,8 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getEventHistory
+  getEventHistory,
+  getUnlockedCollateralAmount
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -29,6 +30,7 @@ import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
+import useBanner from 'hooks/useBanner';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
@@ -56,6 +58,24 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
+  const { show: showBanner } = useBanner();
+
+  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+  // TODO: this causes an infinite loop if uncommented:
+  // useMemo(() => {
+  //   console.log('cdp', cdp);
+  //   console.log('unlockedCollateral', unlockedCollateral);
+  //   if (unlockedCollateral > 0) {
+  //     showBanner({
+  //       banner: 'claim',
+  //       props: {
+  //         colName: 'testName',
+  //         amount: cdp.unlockedCollateral.toNumber(),
+  //         symbol: 'SYM'
+  //       }
+  //     });
+  //   }
+  // }, [cdp, showBanner, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);

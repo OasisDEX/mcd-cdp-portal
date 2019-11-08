@@ -58,6 +58,17 @@ export function getCollateralAmount(cdp, rounded = true, precision = 2) {
   return rounded ? round(cdp.ink, precision) : cdp.ink;
 }
 
+export function getUnlockedCollateralAmount(
+  cdp,
+  rounded = true,
+  precision = 2
+) {
+  if (!cdp.unlockedCollateral) return '';
+  return rounded
+    ? round(cdp.unlockedCollateral, precision)
+    : cdp.unlockedCollateral;
+}
+
 export function getCollateralValueUSD(cdp, rounded = true, precision = 2) {
   if (!cdp.ink) return '';
   const collateralPrice = getCollateralPrice(cdp, false);

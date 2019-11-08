@@ -114,10 +114,11 @@ function Overview() {
 
     if (((account || {}).cdps || {}).length) {
       buildCdpOverview();
-      showBanner({
-        banner: 'claim',
-        props: { colName: 'NAME', amount: '5.55', symbol: 'SYM' }
-      });
+      // TODO: when uncommented, this causes far to many re-renders, but does not cause infinite loop
+      // showBanner({
+      //   banner: 'claim',
+      //   props: { colName: 'NAME', amount: '5.55', symbol: 'SYM' }
+      // });
     }
   }, [account, cdps, feeds]);
 
@@ -126,7 +127,7 @@ function Overview() {
   //TODO this will need to be moved into a useeffect somewhere that we search for banner related things
   // eg where we search for liquidated auctions or something.
   // ...or where we detect if the currently viewed cdp is owned by active account, etc.
-  const { show: showBanner } = useBanner();
+  // const { show: showBanner } = useBanner();
 
   return (
     <PageContentLayout>
