@@ -9,16 +9,14 @@ const initialState = {
   viewable: true
 };
 
-function addNotification(state, payload) {
-  const [[_, id], ...rest] = Object.entries(payload);
-  return {
-    ...state,
-    banners: {
-      ...state.banners,
-      [id]: rest.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
-    }
-  };
-}
+const addNotification = (state, { id, ...rest }) => ({
+  ...state,
+  banners: {
+    ...state.banners,
+    [id]: rest
+  }
+});
+
 
 const reducer = produce((draft, { type, action, payload }) => {
   if (!type) return;
