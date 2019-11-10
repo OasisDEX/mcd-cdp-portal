@@ -32,16 +32,10 @@ function useNotification() {
       action: RESET_NOTIFICATIONS
     });
 
-  const notificationExists = id => {
-    const { banners } = notifications;
-    return banners && !!banners[id];
-  };
-
   return {
     addNotification,
     deleteNotification,
     resetNotification,
-    notificationExists,
     ...notifications
   };
 }

@@ -64,25 +64,21 @@ export default function({ cdp, showSidebar, account, network }) {
   // const { show: showBanner } = useBanner();
   // const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
-  const {
-    addNotification,
-    deleteNotification,
-    notificationExists
-  } = useNotification();
+  const { addNotification, deleteNotification, banners } = useNotification();
 
   useEffect(() => {
-    if (!notificationExists(CDP_DISPLAY_NOTIFICATION)) {
+    if (banners && !banners[CDP_DISPLAY_NOTIFICATION]) {
       addNotification({
         id: CDP_DISPLAY_NOTIFICATION,
         content: `This is the presentation notification for cdp ${cdpId}`
       });
     }
     return () => {
-      if (notificationExists(CDP_DISPLAY_NOTIFICATION)) {
+      if (banners && banners[CDP_DISPLAY_NOTIFICATION]) {
         deleteNotification(CDP_DISPLAY_NOTIFICATION);
       }
     };
-  }, [addNotification, deleteNotification, notificationExists, cdpId]);
+  }, [addNotification, deleteNotification, banners, cdpId]);
 
   // TODO: this causes an infinite loop if uncommented:
   // useMemo(() => {
