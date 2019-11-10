@@ -17,7 +17,7 @@ const addNotification = (state, { id, ...rest }) => ({
   }
 });
 
-const deleteNotification = (state, { id }) => {
+const deleteNotification = (state, id) => {
   const {
     banners: { [id]: _, ...rest }
   } = state;

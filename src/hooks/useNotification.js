@@ -15,30 +15,33 @@ function useNotification() {
       payload
     });
 
-  const addNotification = props => {
+  const addNotification = props =>
     dispatchNotification({
       action: ADD_NOTIFICATION,
       payload: props
     });
-  };
 
-  const deleteNotification = props => {
+  const deleteNotification = props =>
     dispatchNotification({
       action: DELETE_NOTIFICATION,
       payload: props
     });
-  };
 
-  const resetNotification = () => {
+  const resetNotification = () =>
     dispatchNotification({
       action: RESET_NOTIFICATIONS
     });
+
+  const notificationExists = id => {
+    const { banners } = notifications;
+    return banners && !!banners[id];
   };
 
   return {
     addNotification,
     deleteNotification,
     resetNotification,
+    notificationExists,
     ...notifications
   };
 }

@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -14,8 +13,8 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getEventHistory,
-  getUnlockedCollateralAmount
+  getEventHistory
+  //  getUnlockedCollateralAmount
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -31,11 +30,13 @@ import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
-import useBanner from 'hooks/useBanner';
+// import useBanner from 'hooks/useBanner';
 import useNotification from 'hooks/useNotification';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
+
+const CDP_DISPLAY_NOTIFICATION = 'cdpDisplayNotification';
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
@@ -60,17 +61,28 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
-  const { show: showBanner } = useBanner();
-  const { addNotification, deleteNotification } = useNotification();
-  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+  // const { show: showBanner } = useBanner();
+  // const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+
+  const {
+    addNotification,
+    deleteNotification,
+    notificationExists
+  } = useNotification();
 
   useEffect(() => {
-    addNotification({
-      id: 'presentation_notification',
-      content: `This is the presentation notification for cdp ${cdpId}`
-    });
-    return () => deleteNotification({ id: 'presentation_notification' });
-  }, [cdpId]);
+    if (!notificationExists(CDP_DISPLAY_NOTIFICATION)) {
+      addNotification({
+        id: CDP_DISPLAY_NOTIFICATION,
+        content: `This is the presentation notification for cdp ${cdpId}`
+      });
+    }
+    return () => {
+      if (notificationExists(CDP_DISPLAY_NOTIFICATION)) {
+        deleteNotification(CDP_DISPLAY_NOTIFICATION);
+      }
+    };
+  }, [addNotification, deleteNotification, notificationExists, cdpId]);
 
   // TODO: this causes an infinite loop if uncommented:
   // useMemo(() => {

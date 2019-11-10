@@ -4,7 +4,7 @@ import useNotification from 'hooks/useNotification';
 
 function Notifications() {
   const { banners, viewable } = useNotification();
-  const bannerEntries = Object.entries(banners);
+  const bannerEntries = banners && Object.entries(banners);
   return (
     <div>
       {viewable &&
