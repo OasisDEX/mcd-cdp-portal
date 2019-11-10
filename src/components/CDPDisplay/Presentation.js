@@ -32,7 +32,8 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useBanner from 'hooks/useBanner';
-import { ADD_NOTIFICATION } from 'reducers/notifications';
+import useNotification from 'hooks/useNotification';
+
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
 
@@ -60,27 +61,17 @@ export default function({ cdp, showSidebar, account, network }) {
 
   const [actionShown, setActionShown] = useState(null);
   const { show: showBanner } = useBanner();
-
+  const { addNotification, deleteNotification } = useNotification();
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
-  const [{ notifications }, dispatch] = useStore();
   useEffect(() => {
-    dispatch({
-      type: 'notifications',
-      action: 'addNotification',
-      payload: {
-        id: 's',
-        message: 'Hello there now kjn',
-        level: 'success',
-        button: 'btn',
-        onClick: 'fn',
-        onClose: 'fn',
-        shouldShow: false
-      }
+    addNotification({
+      id: 'presentation_notification',
+      content: `This is the presentation notification for cdp ${cdpId}`
     });
-  }, []);
+    return () => deleteNotification({ id: 'presentation_notification' });
+  }, [cdpId]);
 
-  console.log(notifications);
   // TODO: this causes an infinite loop if uncommented:
   // useMemo(() => {
   //   console.log('cdp', cdp);
