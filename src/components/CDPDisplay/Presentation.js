@@ -73,9 +73,8 @@ export default function({ cdp, showSidebar, account, network }) {
           amount: cdp.unlockedCollateral
         }
       });
-    } else {
-      return reset();
     }
+    return () => reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cdpId, unlockedCollateral, cdpId]);
 

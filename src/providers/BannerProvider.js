@@ -25,14 +25,10 @@ function BannerProvider({ children }) {
   const activeBanners = Object.keys(banners);
 
   const bannerEntries = Object.entries(banners);
-  console.log('activeBanners', activeBanners);
-  console.log('banners', banners);
-  console.log('bannerEntries', bannerEntries);
   const shouldShow = viewable && bannerEntries.length > 0;
   const reset = () => dispatch({ type: 'reset' });
 
   const show = ({ banner, props }) => {
-    console.log('show banner', banner, props);
     dispatch({
       type: 'show',
       payload: { [banner]: props }
@@ -48,7 +44,6 @@ function BannerProvider({ children }) {
     </div>
   );
 
-  // TODO make this nicer:
   const current = { component: Container };
 
   return (

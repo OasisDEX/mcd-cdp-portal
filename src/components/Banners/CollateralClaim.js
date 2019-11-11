@@ -12,24 +12,18 @@ const ActionButton = ({ onClick, label }) => (
 const CollateralClaim = ({
   cdpId,
   colName: gem,
-  amount: unlockedCollateral,
-  symbol
+  amount: unlockedCollateral
 }) => {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
+  //TODO: only show the button if active user === owner
+  const showButton = false;
 
   const reclaimCollateral = async () => {
     const txObject = maker
       .service('mcd:cdpManager')
-      .reclaimCollateral(cdpId, unlockedCollateral, 0);
-    newTxListener(txObject, 'Testing frob Tx');
-
-    const txMgr = maker.service('transactionManager');
-    txMgr.listen(txObject, {
-      pending: tx => console.log('pendingTx', tx),
-      confirmed: () => console.log('confirmed'),
-      error: (e, t) => console.log('et', e, t)
-    });
+      .reclaimCollateral(cdpId, unlockedCollateral.toNumber(), 0);
+    newTxListener(txObject, 'Claiming collateral');
   };
 
   const message = lang.formatString(
@@ -42,8 +36,12 @@ const CollateralClaim = ({
   return (
     <Card my="1rem" p="1rem" width="100%">
       <Text>{message}</Text>
-      {reclaimCollateral && (
-        <ActionButton onClick={reclaimCollateral} label="CLAIM" />
+      {showButton && (
+        <ActionButton
+          disabled={true}
+          onClick={reclaimCollateral}
+          label="CLAIM"
+        />
       )}
     </Card>
   );
