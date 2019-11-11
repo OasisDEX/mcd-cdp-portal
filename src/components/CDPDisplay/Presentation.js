@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
@@ -59,38 +59,25 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
-  const { show: showBanner, activeBanners, banners, reset } = useBanner();
+  const { show: showBanner, reset } = useBanner();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
   useEffect(() => {
     if (unlockedCollateral > 0) {
-      console.log('banners in presntation comp', banners);
-      if (banners && banners[CLAIM]?.cdpId !== cdpId) {
-        // if (!activeBanners.includes(CLAIM) ) {
-        console.log('useEffect should only see this once');
-        showBanner({
-          banner: CLAIM,
-          props: {
-            cdpId,
-            colName: cdp.gem,
-            amount: cdp.unlockedCollateral.toFixed(2),
-            symbol: cdp.gem
-          }
-        });
-      }
+      showBanner({
+        banner: CLAIM,
+        props: {
+          cdpId,
+          colName: cdp.gem,
+          amount: cdp.unlockedCollateral
+        }
+      });
+    } else {
+      return reset();
     }
-    const unMount = () => console.log('unmount') || reset();
-    // return unMount();
-  }, [
-    activeBanners,
-    banners,
-    cdp,
-    cdpId,
-    reset,
-    showBanner,
-    unlockedCollateral
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cdpId, unlockedCollateral, cdpId]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -110,7 +97,7 @@ export default function({ cdp, showSidebar, account, network }) {
       getEventHistory(maker, cdpId).then(events => setEventHistory(events));
     }, [maker, cdpId]);
   }
-  
+
   return (
     <PageContentLayout>
       <Box>
