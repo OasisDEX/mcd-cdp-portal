@@ -21,6 +21,7 @@ export const getPreferredLanguage = options => {
   const { languages, overrides, fallback } = options;
 
   if (overrides) {
+    // eslint-disable-next-line no-unused-vars
     for (let override of overrides) {
       const match = languages.find(
         lang => normalizeCode(lang) === normalizeCode(override)

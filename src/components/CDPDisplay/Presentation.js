@@ -105,9 +105,12 @@ export default function({ cdp, showSidebar, account, network }) {
 
   const [eventHistory, setEventHistory] = useState([]);
 
-  useEffect(() => {
-    getEventHistory(maker, cdpId).then(events => setEventHistory(events));
-  }, [maker, cdpId]);
+  if (FF_VAULTHISTORY) {
+    useEffect(() => {
+      getEventHistory(maker, cdpId).then(events => setEventHistory(events));
+    }, [maker, cdpId]);
+  }
+  
   return (
     <PageContentLayout>
       <Box>
