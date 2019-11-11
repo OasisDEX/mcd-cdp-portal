@@ -13,7 +13,8 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getEventHistory
+  getEventHistory,
+  getUnlockedCollateralAmount
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -25,13 +26,15 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags } from '../../utils/constants';
+import { FeatureFlags, BannerTypes } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
+import useBanner from 'hooks/useBanner';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
+const { CLAIM } = BannerTypes;
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
@@ -56,6 +59,24 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
+  const { show: showBanner, reset } = useBanner();
+
+  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+
+  useEffect(() => {
+    if (unlockedCollateral > 0) {
+      showBanner({
+        banner: CLAIM,
+        props: {
+          cdpId,
+          colName: cdp.gem,
+          amount: cdp.unlockedCollateral
+        }
+      });
+    }
+    return () => reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cdpId, unlockedCollateral, cdpId]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -75,7 +96,7 @@ export default function({ cdp, showSidebar, account, network }) {
       getEventHistory(maker, cdpId).then(events => setEventHistory(events));
     }, [maker, cdpId]);
   }
-  
+
   return (
     <PageContentLayout>
       <Box>

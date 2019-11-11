@@ -7,6 +7,7 @@ import { fromWei } from 'utils/units';
 
 export const INK = 'ink';
 export const ART = 'art';
+export const UNLOCKED_COLLATERAL = 'unlockedCollateral';
 
 export const initialState = {};
 
@@ -14,6 +15,7 @@ const defaultCdpState = {
   inited: false,
   [INK]: '',
   [ART]: '',
+  [UNLOCKED_COLLATERAL]: '',
   ilk: ''
 };
 
@@ -54,6 +56,17 @@ export function getCollateralPrice(cdp, rounded = true, precision = 2) {
 export function getCollateralAmount(cdp, rounded = true, precision = 2) {
   if (!cdp.ink) return '';
   return rounded ? round(cdp.ink, precision) : cdp.ink;
+}
+
+export function getUnlockedCollateralAmount(
+  cdp,
+  rounded = true,
+  precision = 2
+) {
+  if (!cdp.unlockedCollateral) return '';
+  return rounded
+    ? round(cdp.unlockedCollateral, precision)
+    : cdp.unlockedCollateral;
 }
 
 export function getCollateralValueUSD(cdp, rounded = true, precision = 2) {
@@ -210,6 +223,7 @@ function convert(valueType, value) {
   switch (valueType) {
     case INK:
     case ART:
+    case UNLOCKED_COLLATERAL:
       return fromWei(value);
     default:
       return value;

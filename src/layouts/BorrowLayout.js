@@ -23,7 +23,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
     >
       <Box display={{ s: 'block', l: 'none' }}>{mobileNav}</Box>
       <Box display={{ s: 'none', l: 'block' }}>{navbar}</Box>
-      <div>{children}</div>
+      {children}
       <Box display={{ s: 'none', l: 'block' }}>
         <SidebarBase />
       </Box>

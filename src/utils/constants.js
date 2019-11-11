@@ -37,3 +37,7 @@ export const Toggles = {
 export const FeatureFlags = {
   FF_VAULTHISTORY: false
 };
+
+export const BannerTypes = {
+  CLAIM: 'claim'
+};

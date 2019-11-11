@@ -26,6 +26,7 @@ import {
 } from 'reducers/cdps';
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
+import useBanner from '../hooks/useBanner';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
