@@ -22,7 +22,12 @@ const BannerStateContext = createContext(initialState);
 function BannerProvider({ children }) {
   const [{ viewable, banners }, dispatch] = useReducer(reducer, initialState);
 
+  const activeBanners = Object.keys(banners);
+
   const bannerEntries = Object.entries(banners);
+  console.log('activeBanners', activeBanners);
+  console.log('banners', banners);
+  console.log('bannerEntries', bannerEntries);
   const shouldShow = viewable && bannerEntries.length > 0;
   const reset = () => dispatch({ type: 'reset' });
 
@@ -47,7 +52,9 @@ function BannerProvider({ children }) {
   const current = { component: Container };
 
   return (
-    <BannerStateContext.Provider value={{ show, current, shouldShow, reset }}>
+    <BannerStateContext.Provider
+      value={{ show, current, shouldShow, reset, activeBanners, banners }}
+    >
       {children}
     </BannerStateContext.Provider>
   );

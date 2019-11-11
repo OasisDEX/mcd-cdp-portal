@@ -3,14 +3,14 @@ import { Text, Card, Button } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
 
-const CollateralClaim = ({ colName, amount, symbol }) => {
+const CollateralClaim = ({ cdpId, colName, amount, symbol }) => {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
   const frobToOwnUrn = async () => {
     //TODO need to fix re-render infinite loop to pass in real props
-    const cdpId = 183;
-    const amount = 0.08;
+    // const cdpId = 183;
+    // const amount = 0.08;
 
     const txObject = maker.service('mcd:cdpManager').frob(cdpId, amount, 0);
     newTxListener(txObject, 'Testing frob Tx');

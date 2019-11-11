@@ -26,7 +26,7 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags } from '../../utils/constants';
+import { FeatureFlags, BannerTypes } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
@@ -34,6 +34,7 @@ import useBanner from 'hooks/useBanner';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
+const { CLAIM } = BannerTypes;
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
@@ -58,24 +59,38 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
-  const { show: showBanner } = useBanner();
+  const { show: showBanner, activeBanners, banners, reset } = useBanner();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
-  // TODO: this causes an infinite loop if uncommented:
-  // useMemo(() => {
-  //   console.log('cdp', cdp);
-  //   console.log('unlockedCollateral', unlockedCollateral);
-  //   if (unlockedCollateral > 0) {
-  //     showBanner({
-  //       banner: 'claim',
-  //       props: {
-  //         colName: 'testName',
-  //         amount: cdp.unlockedCollateral.toNumber(),
-  //         symbol: 'SYM'
-  //       }
-  //     });
-  //   }
-  // }, [cdp, showBanner, unlockedCollateral]);
+
+  useEffect(() => {
+    if (unlockedCollateral > 0) {
+      console.log('banners in presntation comp', banners);
+      if (banners && banners[CLAIM]?.cdpId !== cdpId) {
+        // if (!activeBanners.includes(CLAIM) ) {
+        console.log('useEffect should only see this once');
+        showBanner({
+          banner: CLAIM,
+          props: {
+            cdpId,
+            colName: cdp.gem,
+            amount: cdp.unlockedCollateral.toFixed(2),
+            symbol: cdp.gem
+          }
+        });
+      }
+    }
+    const unMount = () => console.log('unmount') || reset();
+    // return unMount();
+  }, [
+    activeBanners,
+    banners,
+    cdp,
+    cdpId,
+    reset,
+    showBanner,
+    unlockedCollateral
+  ]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
