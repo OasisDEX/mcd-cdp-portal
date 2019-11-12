@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
+import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -25,7 +26,7 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags, BannerTypes } from '../../utils/constants';
+import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
@@ -33,12 +34,13 @@ import useNotification from 'hooks/useNotification';
 import { NOTIFICATION_STATUS } from 'utils/constants';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
-const { CLAIM } = BannerTypes;
 
-const CDP_DISPLAY_NOTIFICATION = 'cdpDisplayNotification';
+const CLAIM_COLLATERAL_NOTIFICAION = 'claimCollateralNotification';
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
+  const { maker, newTxListener } = useMaker();
+
   const cdpId = parseInt(cdp.id);
   const eventHistory = useEventHistory(cdpId);
   log(`Rendering vault #${cdpId}`);
@@ -60,44 +62,38 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
-
   const { addNotification, deleteNotification } = useNotification();
 
+  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+
   useEffect(() => {
-    Object.values(NOTIFICATION_STATUS).map(status =>
-      addNotification({
-        id: `${CDP_DISPLAY_NOTIFICATION}-${status}`,
-        content: `This is the presentation notification for cdp ${cdpId}`,
-        status,
-        showCloseButton: true,
-        textAlign: 'center',
-        hasButton: true,
-        buttonLabel: 'Click Me!'
-      })
-    );
-    return () =>
-      Object.values(NOTIFICATION_STATUS).map(status =>
-        deleteNotification(`${CDP_DISPLAY_NOTIFICATION}-${status}`)
+    const reclaimCollateral = async () => {
+      const txObject = maker
+        .service('mcd:cdpManager')
+        .reclaimCollateral(cdpId, unlockedCollateral.toNumber(), 0);
+      newTxListener(txObject, 'Claiming collateral');
+    };
+
+    if (unlockedCollateral > 0) {
+      const content = lang.formatString(
+        'Your {0} Vault auction(s) have completed. You have {1} {2} to claim',
+        cdp.gem,
+        cdp.unlockedCollateral.toFixed(7),
+        cdp.gem
       );
-  }, [cdpId]);
-  // const { show: showBanner, reset } = useBanner();
 
-  // const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
-
-  // useEffect(() => {
-  //   if (unlockedCollateral > 0) {
-  //     showBanner({
-  //       banner: CLAIM,
-  //       props: {
-  //         cdpId,
-  //         colName: cdp.gem,
-  //         amount: cdp.unlockedCollateral
-  //       }
-  //     });
-  //   }
-  //   return () => reset();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [cdpId, unlockedCollateral, cdpId]);
+      addNotification({
+        id: CLAIM_COLLATERAL_NOTIFICAION,
+        content,
+        status: NOTIFICATION_STATUS.WARNING,
+        hasButton: true,
+        buttonLabel: 'Claim',
+        onClick: () => reclaimCollateral(),
+        textAlign: 'center'
+      });
+      return () => deleteNotification(CLAIM_COLLATERAL_NOTIFICAION);
+    }
+  }, [cdpId, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
