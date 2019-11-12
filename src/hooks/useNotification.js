@@ -27,7 +27,7 @@ function useNotification() {
       payload: props
     });
 
-  const resetNotification = () =>
+  const resetNotifications = () =>
     dispatchNotification({
       action: RESET_NOTIFICATIONS
     });
@@ -35,7 +35,7 @@ function useNotification() {
   return {
     addNotification,
     deleteNotification,
-    resetNotification,
+    resetNotifications,
     ...notifications
   };
 }

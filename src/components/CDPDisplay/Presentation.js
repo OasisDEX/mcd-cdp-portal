@@ -30,7 +30,7 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
-
+import { NOTIFICATION_STATUS } from 'utils/constants';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
 const { CLAIM } = BannerTypes;
@@ -62,12 +62,23 @@ export default function({ cdp, showSidebar, account, network }) {
   const [actionShown, setActionShown] = useState(null);
 
   const { addNotification, deleteNotification } = useNotification();
+
   useEffect(() => {
-    addNotification({
-      id: CDP_DISPLAY_NOTIFICATION,
-      content: `This is the presentation notification for cdp ${cdpId}`
-    });
-    return () => deleteNotification(CDP_DISPLAY_NOTIFICATION);
+    Object.values(NOTIFICATION_STATUS).map(status =>
+      addNotification({
+        id: `${CDP_DISPLAY_NOTIFICATION}-${status}`,
+        content: `This is the presentation notification for cdp ${cdpId}`,
+        status,
+        showCloseButton: true,
+        textAlign: 'center',
+        hasButton: true,
+        buttonLabel: 'Click Me!'
+      })
+    );
+    return () =>
+      Object.values(NOTIFICATION_STATUS).map(status =>
+        deleteNotification(`${CDP_DISPLAY_NOTIFICATION}-${status}`)
+      );
   }, [cdpId]);
   // const { show: showBanner, reset } = useBanner();
 

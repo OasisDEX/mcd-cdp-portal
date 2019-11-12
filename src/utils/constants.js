@@ -41,3 +41,9 @@ export const FeatureFlags = {
 export const BannerTypes = {
   CLAIM: 'claim'
 };
+
+export const NOTIFICATION_STATUS = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  SUCCESS: 'success'
+};
