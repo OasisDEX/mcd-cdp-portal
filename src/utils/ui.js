@@ -1,4 +1,6 @@
+import React from 'react';
 import round from 'lodash/round';
+import BigNumber from 'bignumber.js';
 import lang from 'languages';
 
 export function formatCollateralizationRatio(ratio) {
@@ -15,6 +17,22 @@ export function formatCollateralizationRatio(ratio) {
 export function formatLiquidationPrice(price, symbol) {
   if (price < 0) price = 0;
   return `${round(price, 2).toLocaleString()} ${symbol}/USD`;
+}
+
+function getSeparator(locale, separatorType) {
+  const numberWithGroupAndDecimalSeparator = 1000.1;
+  return Intl.NumberFormat(locale)
+    .formatToParts(numberWithGroupAndDecimalSeparator)
+    .find(part => part.type === separatorType).value;
+}
+
+export function prettifyCurrency(locale, num = null) {
+  if (num === null) return null;
+  return new BigNumber(num).toFormat(null, BigNumber.ROUND_CEIL, {
+    decimalSeparator: getSeparator(locale, 'decimal'),
+    groupSeparator: getSeparator(locale, 'group'),
+    groupSize: 3
+  });
 }
 
 export function prettifyNumber(
@@ -72,53 +90,57 @@ export function cleanSymbol(s) {
   return s;
 }
 
-export const actionToText = {
-  lock: lang.actions_past_tense.deposit,
-  free: lang.actions_past_tense.withdraw,
-  wipe: lang.actions_past_tense.pay_back,
-  draw: lang.actions_past_tense.generate
-};
+export const shortenAddress = address =>
+  `${address.slice(0, 6)}...${address.slice(-4)}`;
 
-export function activityString(action, amount, lowercase) {
-  const and = lowercase ? ' and ' : '';
-  const formattedAction = lowercase
-    ? firstLetterLowercase(actionToText[action])
-    : actionToText[action];
-  return (
-    and +
-    formattedAction +
-    ' ' +
-    prettifyNumber(amount.toNumber()) +
-    cleanSymbol(amount.symbol)
-  );
-}
-
-function auctionString(amount) {
-  return (
-    prettifyNumber(amount.toNumber()) +
-    amount.symbol +
-    ' ' +
-    lang.returned_auction
-  );
-}
-
-export function fullActivityString(e) {
-  if (e.liquidated) return lang.liquidated_event;
-  if (e.auctionProceeds) return auctionString(e.changeInCollateral);
-  let str = '';
-  if (e.collateralAction)
-    str += activityString(e.collateralAction, e.changeInCollateral);
-  if (e.daiAction)
-    str += activityString(e.daiAction, e.changeInDai, e.collateralAction);
-  return str;
+export function formatEventDescription(lang, e) {
+  const interfaceLocale = lang.getInterfaceLanguage();
+  switch (e.type) {
+    case 'OPEN':
+      return lang.formatString(lang.event_history.open, <b>{e.id}</b>);
+    case 'DEPOSIT':
+      return lang.formatString(
+        lang.event_history.deposit,
+        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        e.gem
+      );
+    case 'WITHDRAW':
+      return lang.formatString(
+        lang.event_history.withdraw,
+        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        e.gem
+      );
+    case 'GENERATE':
+      return lang.formatString(
+        lang.event_history.generate,
+        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+      );
+    case 'PAY_BACK':
+      return lang.formatString(
+        lang.event_history.pay_back,
+        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+      );
+    case 'GIVE':
+      return lang.formatString(
+        lang.event_history.give,
+        <b>{shortenAddress(e.newOwner)}</b>,
+        <b>{shortenAddress(e.prevOwner)}</b>
+      );
+    default:
+      return '?';
+  }
 }
 
 export function formatDate(d) {
-  return d.toLocaleDateString(lang.getInterfaceLanguage(), {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  return (
+    d.toLocaleDateString(lang.getInterfaceLanguage(), {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }) +
+    ', ' +
+    d.toLocaleTimeString(lang.getInterfaceLanguage())
+  );
 }
 
 // ensures a result < amount.toFixed(d)

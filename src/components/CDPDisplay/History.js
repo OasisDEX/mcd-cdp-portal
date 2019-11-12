@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, Card, Table, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
-import { fullActivityString, formatDate } from 'utils/ui';
+import { formatEventDescription, formatDate } from 'utils/ui';
 
 export default function({ title, rows, network }) {
   const { lang } = useLanguage();
 
-  rows = formatEventHistory(rows, network);
+  if (rows) rows = formatEventHistory(lang, rows, network);
   return (
     <Box>
       <Text.h4>{title}</Text.h4>
@@ -24,25 +24,15 @@ export default function({ title, rows, network }) {
         >
           <thead>
             <tr>
-              <th>{lang.table.type}</th>
               <th>{lang.table.activity}</th>
-              <th>{lang.table.time}</th>
-              <th>{lang.table.sender_id}</th>
+              <th>{lang.table.date}</th>
               <th>{lang.table.tx_hash}</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map(
-              (
-                [collateralType, actionMsg, dateOfAction, senderId, txHash],
-                i
-              ) => (
+            {rows ? (
+              rows.map(([actionMsg, dateOfAction, txHash], i) => (
                 <tr key={i}>
-                  <td>
-                    <Text color="darkPurple" t="body">
-                      {collateralType}
-                    </Text>
-                  </td>
                   <td
                     css={`
                       white-space: nowrap;
@@ -65,13 +55,18 @@ export default function({ title, rows, network }) {
                     </Text>
                   </td>
                   <td>
-                    <Text t="caption">{senderId}</Text>
-                  </td>
-                  <td>
                     <Text t="caption">{txHash}</Text>
                   </td>
                 </tr>
-              )
+              ))
+            ) : (
+              <tr key={0}>
+                <td colSpan="3">
+                  <Text color="darkLavender" t="caption">
+                    Loading...
+                  </Text>
+                </td>
+              </tr>
             )}
           </tbody>
         </Table>
@@ -80,14 +75,12 @@ export default function({ title, rows, network }) {
   );
 }
 
-function formatEventHistory(events = [], network) {
+function formatEventHistory(lang, events = [], network) {
   return events.map(e => {
     return [
-      e.changeInCollateral.symbol,
-      fullActivityString(e),
-      formatDate(e.time),
-      <ExternalLink key={1} string={e.senderAddress} network={network} />,
-      <ExternalLink key={2} string={e.transactionHash} network={network} />
+      formatEventDescription(lang, e),
+      formatDate(new Date(e.timestamp * 1000)),
+      <ExternalLink key={1} string={e.txHash} network={network} />
     ];
   });
 }

@@ -81,6 +81,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       const txManagerSub = maker
         .service('transactionManager')
         .onTransactionUpdate((tx, state, err) => {
+          if (state === 'mined')
+            maker.service('mcd:cdpManager').resetEventHistoryCache();
           log('Tx ' + state, tx.metadata);
           setTxLastUpdate(Date.now());
         });

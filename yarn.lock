@@ -1594,10 +1594,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^0.2.15-1":
-  version "0.2.15-1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.15-1.tgz#2998566654a8adbfa8788c256cc6798cb892f609"
-  integrity sha512-Lnn+093GPniYLzJo+nUWPUE6GYCJky8VcTzUWNFVsKjTKforT8MHlP1kLNUmw6vTCm85OxysOSW66JSeYK3WKg==
+"@makerdao/dai-plugin-mcd@^0.2.17-rc.1":
+  version "0.2.17-rc.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-0.2.17-rc.1.tgz#13ffaa50c5a7179394a5f769f717a50d9f876958"
+  integrity sha512-/S0vDlM3h8yVr1LbSMajnovhz+sBcG0Z06UdRgx/5MZU3dQe4GWNAgGI4rAESkNXACTjDyaFnmzPmvz1rQ27IA==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"

@@ -1,19 +1,20 @@
-import { fullActivityString, firstLetterLowercase, formatDate } from '../ui';
-import { mockHistoryDataFromSDK } from '../../reducers/cdps';
+import ReactDOMServer from 'react-dom/server';
+import {
+  formatEventDescription,
+  firstLetterLowercase
+} from '../ui';
+import { mockEventDataFromSDK } from '../../reducers/cdps';
+import lang from '../../languages';
 
-test('fullActivityString', () => {
-  expect(fullActivityString(mockHistoryDataFromSDK[4])).toBe(
-    'Deposited 10,000 ETH and generated 120,000 DAI'
-  );
+test('formatEventDescription', () => {
+  expect(
+    ReactDOMServer.renderToStaticMarkup(
+      formatEventDescription(lang, mockEventDataFromSDK[8])
+    )
+  ).toBe('Deposited <b>10,000</b> ETH into Vault');
 });
 
 test('firstLetterLowercase', () => {
   expect(firstLetterLowercase('Word')).toBe('word');
 });
 
-test('formatDate', () => {
-  const date = new Date(0);
-  expect(formatDate(date)).toBe(
-    date.getTimezoneOffset() > 0 ? 'Dec 31, 1969' : 'Jan 1, 1970'
-  );
-});

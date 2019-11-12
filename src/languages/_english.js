@@ -16,7 +16,7 @@ export default {
     "available_generate": "Available to generate",
     // "outstanding_debt": "Outstanding debt",
     // "wallet_balance": "wallet balance",
-    "tx_history": "Transaction history",
+    "tx_history": "Vault history",
     "outstanding_dai_debt": "Outstanding Dai debt",
     "not_applicable": "N/A"
   },
@@ -214,6 +214,14 @@ export default {
     "pay_back": "Paid back",
     "generate": "Generated"
   },
+  "event_history": {
+    "open": "Opened a new Vault with id #{0}",
+    "deposit": "Deposited {0} {1} into Vault",
+    "withdraw": "Withdrew {0} {1} from Vault",
+    "generate": "Generated {0} new Dai from Vault",
+    "pay_back": "Repaid {0} Dai to Vault",
+    "give": "Vault given to {0} by {1}"
+  },
   "action_sidebar": {
     "deposit_title": "Deposit {0}",
     "deposit_description": "How much {0} would you like to deposit?",
@@ -269,6 +277,7 @@ export default {
   "table": {
     "type": "Type",
     "activity": "Activity",
+    "date": "Date",
     "time": "Time",
     "sender_id": "Sender ID",
     "tx_hash": "Tx Hash"
