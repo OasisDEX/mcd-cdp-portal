@@ -2,7 +2,6 @@ import produce from 'immer';
 import round from 'lodash/round';
 import { multiply, divide, subtract } from 'utils/bignumber';
 import { getIlkData } from './feeds';
-import { ETH, MDAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from 'utils/units';
 
 export const INK = 'ink';

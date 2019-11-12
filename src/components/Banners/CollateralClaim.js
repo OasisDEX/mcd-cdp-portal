@@ -17,7 +17,7 @@ const CollateralClaim = ({
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   //TODO: only show the button if active user === owner
-  const showButton = false;
+  const showButton = true;
 
   const reclaimCollateral = async () => {
     const txObject = maker
