@@ -18,6 +18,7 @@ const ExternalLink = ({
   >
     {children}
     {!hideText && <Address full={string} shorten={true} expandable={false} />}
+    &nbsp;
     <ExternalLinkIcon fill={fill} />
   </Link>
 );

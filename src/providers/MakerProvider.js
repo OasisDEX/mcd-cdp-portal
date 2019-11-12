@@ -78,11 +78,20 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       const onNewBlockSub = watcher.onNewBlock(blockHeight =>
         log(`Latest block height: ${blockHeight}`)
       );
+      const txManagerSub = maker
+        .service('transactionManager')
+        .onTransactionUpdate((tx, state, err) => {
+          if (state === 'mined')
+            maker.service('mcd:cdpManager').resetEventHistoryCache();
+          log('Tx ' + state, tx.metadata);
+          setTxLastUpdate(Date.now());
+        });
       dispatch({ type: 'CLEAR_CONTRACT_STATE' });
       startWatcher(maker);
       return () => {
         batchSub.unsub();
         onNewBlockSub.unsub();
+        txManagerSub.unsub();
       };
     }
   }, [maker, dispatch]);
@@ -114,13 +123,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
     }
   };
 
-  const newTxListener = (transaction, txMessage) => {
+  const newTxListener = (transaction, txMessage) =>
     setTxReferences(current => [...current, [transaction, txMessage]]);
-
-    maker.service('transactionManager').listen(transaction, (tx, state) => {
-      setTxLastUpdate(Date.now());
-    });
-  };
 
   const resetTx = () => setTxReferences([]);
 

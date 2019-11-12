@@ -87,17 +87,19 @@ const withSaveLayout = route =>
               <ToggleProvider>
                 <ModalProvider modals={modals} templates={templates}>
                   <SidebarProvider>
-                    <SaveLayout
-                      mobileNav={
-                        <MobileNav
-                          viewedAddress={viewedAddress}
-                          cdpId={cdpId}
-                        />
-                      }
-                      navbar={<Navbar viewedAddress={viewedAddress} />}
-                    >
-                      <View />
-                    </SaveLayout>
+                    <BannerProvider>
+                      <SaveLayout
+                        mobileNav={
+                          <MobileNav
+                            viewedAddress={viewedAddress}
+                            cdpId={cdpId}
+                          />
+                        }
+                        navbar={<Navbar viewedAddress={viewedAddress} />}
+                      >
+                        <View />
+                      </SaveLayout>
+                    </BannerProvider>
                   </SidebarProvider>
                 </ModalProvider>
               </ToggleProvider>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
-import useMaker from 'hooks/useMaker';
+import useEventHistory from 'hooks/useEventHistory';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -13,8 +13,7 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getEventHistory
-  //  getUnlockedCollateralAmount
+  getUnlockedCollateralAmount
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -26,7 +25,7 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags } from '../../utils/constants';
+import { FeatureFlags, BannerTypes } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
@@ -34,14 +33,15 @@ import useNotification from 'hooks/useNotification';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
+const { CLAIM } = BannerTypes;
 
 const CDP_DISPLAY_NOTIFICATION = 'cdpDisplayNotification';
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
-  const { maker } = useMaker();
   const cdpId = parseInt(cdp.id);
-  log(`rendering cdp ${cdpId}`);
+  const eventHistory = useEventHistory(cdpId);
+  log(`Rendering vault #${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
@@ -69,6 +69,24 @@ export default function({ cdp, showSidebar, account, network }) {
     });
     return () => deleteNotification(CDP_DISPLAY_NOTIFICATION);
   }, [cdpId]);
+  // const { show: showBanner, reset } = useBanner();
+
+  // const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+
+  // useEffect(() => {
+  //   if (unlockedCollateral > 0) {
+  //     showBanner({
+  //       banner: CLAIM,
+  //       props: {
+  //         cdpId,
+  //         colName: cdp.gem,
+  //         amount: cdp.unlockedCollateral
+  //       }
+  //     });
+  //   }
+  //   return () => reset();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cdpId, unlockedCollateral, cdpId]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -81,11 +99,6 @@ export default function({ cdp, showSidebar, account, network }) {
     }
   };
 
-  const [eventHistory, setEventHistory] = useState([]);
-
-  useEffect(() => {
-    getEventHistory(maker, cdpId).then(events => setEventHistory(events));
-  }, [maker, cdpId]);
   return (
     <PageContentLayout>
       <Box>

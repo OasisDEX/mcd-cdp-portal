@@ -1,10 +1,11 @@
 import { useContext } from 'react';
 import { BannerStateContext } from 'providers/BannerProvider';
 
-function useModal() {
+//should show determines if the anchor component displays (if there are any banners to show)
+function useBanner() {
   const context = useContext(BannerStateContext);
-  const { show, current, shouldShow } = context;
-  return { show, current, shouldShow };
+  const { show, current, shouldShow, reset } = context;
+  return { show, current, shouldShow, reset };
 }
 
-export default useModal;
+export default useBanner;
