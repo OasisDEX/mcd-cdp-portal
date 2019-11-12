@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
-import useMaker from 'hooks/useMaker';
+import useEventHistory from 'hooks/useEventHistory';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -13,7 +13,6 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getEventHistory,
   getUnlockedCollateralAmount
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
@@ -38,9 +37,9 @@ const { CLAIM } = BannerTypes;
 
 export default function({ cdp, showSidebar, account, network }) {
   const { lang } = useLanguage();
-  const { maker } = useMaker();
   const cdpId = parseInt(cdp.id);
-  log(`rendering cdp ${cdpId}`);
+  const eventHistory = useEventHistory(cdpId);
+  log(`Rendering vault #${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
@@ -88,14 +87,6 @@ export default function({ cdp, showSidebar, account, network }) {
       showSidebar(props);
     }
   };
-
-  const [eventHistory, setEventHistory] = useState([]);
-
-  if (FF_VAULTHISTORY) {
-    useEffect(() => {
-      getEventHistory(maker, cdpId).then(events => setEventHistory(events));
-    }, [maker, cdpId]);
-  }
 
   return (
     <PageContentLayout>
