@@ -49,7 +49,7 @@ export default {
     "answer1": "Oasis is a decentralized application that runs on the Ethereum blockchain. Anyone can use Oasis to trade tokens, borrow against them, and earn savings using Dai.",
     "question2": "What is Dai?",
     "answer2": "Dai is the world’s first unbiased currency and leading decentralized stablecoin soft-pegged to the US Dollar. Learn more about Dai {0}.",
-    "answer2_link1_url": "https://makerdao.com/dai/",
+    "answer2_link1_url": "https://makerdao.com/en/",
     "answer2_link1_text": "here",
     "question3": "Do I need an account?",
     "answer3": "You do not need an account to use Oasis. However, you will need an Ethereum wallet. Oasis supports most Ethereum browser wallets such as {0}, {1}, etc.",
