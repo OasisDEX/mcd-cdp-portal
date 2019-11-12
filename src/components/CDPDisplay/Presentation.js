@@ -37,7 +37,7 @@ const { FF_VAULTHISTORY } = FeatureFlags;
 
 const CLAIM_COLLATERAL_NOTIFICAION = 'claimCollateralNotification';
 
-export default function({ cdp, showSidebar, account, network }) {
+export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
@@ -59,7 +59,7 @@ export default function({ cdp, showSidebar, account, network }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
-  const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
+  const isOwner = account && account.address === cdpOwner;
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotification } = useNotification();

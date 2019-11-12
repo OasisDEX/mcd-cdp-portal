@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
@@ -14,6 +14,19 @@ function CDPView({ cdpId }) {
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ cdps, feeds }, dispatch] = useStore();
+  const [cdpOwner, setOwner] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const proxyAddress = await maker
+        .service('mcd:cdpManager')
+        .getOwner(cdpId);
+      const cdpOwnerAddress = await maker
+        .service('proxy')
+        .getOwner(proxyAddress);
+      setOwner(cdpOwnerAddress);
+    })();
+  }, [maker, cdpId]);
 
   // this workaround (making useMemo depend on just one feed item) ensures that
   // the view does not re-render when an irrelevant price feed is updated.
@@ -34,12 +47,13 @@ function CDPView({ cdpId }) {
 
   return useMemo(
     () =>
-      cdp.inited ? (
+      cdp.inited && cdpOwner ? (
         <CDPViewPresentation
           cdp={cdp}
           showSidebar={showSidebar}
           account={account}
           network={network}
+          cdpOwner={cdpOwner}
         />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
