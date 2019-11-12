@@ -455,6 +455,12 @@ function Landing() {
                   color: '#5894B5',
                   backgroundColor: 'white'
                 }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'BorrowDai',
+                    product: 'oasis-landing'
+                  });
+                }}
               >
                 {lang.landing_page.borrow_card.button}
               </Link>
@@ -482,6 +488,12 @@ function Landing() {
                 style={{
                   color: '#5894B5',
                   backgroundColor: 'white'
+                }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'SaveDai',
+                    product: 'oasis-landing'
+                  });
                 }}
               >
                 {lang.landing_page.save_card.button}
