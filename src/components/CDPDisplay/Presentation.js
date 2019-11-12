@@ -30,7 +30,6 @@ import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
-// import useBanner from 'hooks/useBanner';
 import useNotification from 'hooks/useNotification';
 
 const log = debug('maker:CDPDisplay/Presentation');
@@ -61,40 +60,15 @@ export default function({ cdp, showSidebar, account, network }) {
   const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
 
   const [actionShown, setActionShown] = useState(null);
-  // const { show: showBanner } = useBanner();
-  // const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
-  const { addNotification, deleteNotification, banners } = useNotification();
-
+  const { addNotification, deleteNotification } = useNotification();
   useEffect(() => {
-    if (banners && !banners[CDP_DISPLAY_NOTIFICATION]) {
-      addNotification({
-        id: CDP_DISPLAY_NOTIFICATION,
-        content: `This is the presentation notification for cdp ${cdpId}`
-      });
-    }
-    return () => {
-      if (banners && banners[CDP_DISPLAY_NOTIFICATION]) {
-        deleteNotification(CDP_DISPLAY_NOTIFICATION);
-      }
-    };
-  }, [addNotification, deleteNotification, banners, cdpId]);
-
-  // TODO: this causes an infinite loop if uncommented:
-  // useMemo(() => {
-  //   console.log('cdp', cdp);
-  //   console.log('unlockedCollateral', unlockedCollateral);
-  //   if (unlockedCollateral > 0) {
-  //     showBanner({
-  //       banner: 'claim',
-  //       props: {
-  //         colName: 'testName',
-  //         amount: cdp.unlockedCollateral.toNumber(),
-  //         symbol: 'SYM'
-  //       }
-  //     });
-  //   }
-  // }, [cdp, showBanner, unlockedCollateral]);
+    addNotification({
+      id: CDP_DISPLAY_NOTIFICATION,
+      content: `This is the presentation notification for cdp ${cdpId}`
+    });
+    return () => deleteNotification(CDP_DISPLAY_NOTIFICATION);
+  }, [cdpId]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
