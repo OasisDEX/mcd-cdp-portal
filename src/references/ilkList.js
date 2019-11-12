@@ -6,8 +6,8 @@ export default [
     symbol: 'ETH-A', // how it's displayed in the UI
     key: 'ETH-A', // the actual ilk name used in the vat
     gem: 'ETH', // the actual asset that's being locked
-    currency: ETH // the associated dai.js currency type
-    // (might be able replace "gem" completely)
+    currency: ETH, // the associated dai.js currency type
+    networks: ['kovan', 'mainnet']
   },
   // {
   //   slug: 'eth-b',
@@ -42,8 +42,18 @@ export default [
     symbol: 'BAT-A',
     key: 'BAT-A',
     gem: 'BAT',
-    currency: BAT
+    currency: BAT,
+    networks: ['kovan', 'mainnet']
   }
+  // {
+  //   slug: 'dgd-a',
+  //   symbol: 'DGD-A',
+  //   key: 'DGD-A',
+  //   gem: 'DGD',
+  //   currency: DGD,
+  //   networks: ['kovan', 'mainnet'],
+  //   decimals: 9
+  // }
   // {
   //   slug: 'dgd-a',
   //   symbol: 'DGD-A',

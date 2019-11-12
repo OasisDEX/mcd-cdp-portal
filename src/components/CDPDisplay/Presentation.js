@@ -93,6 +93,7 @@ export default function({ cdp, showSidebar, account, network }) {
       });
       return () => deleteNotification(CLAIM_COLLATERAL_NOTIFICAION);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cdpId, unlockedCollateral]);
 
   const showAction = props => {

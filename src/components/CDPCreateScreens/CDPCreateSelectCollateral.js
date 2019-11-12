@@ -10,11 +10,11 @@ import {
 import { TextBlock } from 'components/Typography';
 
 import { prettifyNumber } from 'utils/ui';
-import ilkList from 'references/ilkList';
 import { getIlkData } from 'reducers/feeds';
 
 import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
+import useCollateralTypes from 'hooks/useCollateralTypes';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
@@ -85,6 +85,7 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const { maker } = useMaker();
   const { lang } = useLanguage();
+  const collateralTypes = useCollateralTypes();
   const balances = useWalletBalances();
   const allowances = useTokenAllowances();
   const hasAllowance =
@@ -93,12 +94,6 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
     selectedIlk.currency && selectedIlk.currency.symbol === 'ETH';
   const hasAllowanceAndProxy = (hasAllowance || ilkIsEth) && !!proxyAddress;
 
-  const displayIlks = ilkList.filter(ilk =>
-    maker
-      .service('mcd:cdpType')
-      .cdpTypes.map(c => c.ilk)
-      .some(cilk => cilk === ilk.key)
-  );
   return (
     <Box
       maxWidth="1040px"
@@ -138,15 +133,18 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {displayIlks.map(ilk => (
-                    <IlkTableRow
-                      key={ilk.key}
-                      checked={ilk.key === selectedIlk.key}
-                      dispatch={dispatch}
-                      ilk={ilk}
-                      gemBalance={balances[ilk.gem]}
-                    />
-                  ))}
+                  {collateralTypes.map(
+                    ilk =>
+                      balances[ilk.gem] && (
+                        <IlkTableRow
+                          key={ilk.key}
+                          checked={ilk.key === selectedIlk.key}
+                          dispatch={dispatch}
+                          ilk={ilk}
+                          gemBalance={balances[ilk.gem]}
+                        />
+                      )
+                  )}
                 </tbody>
               </Table>
             </Overflow>

@@ -38,10 +38,6 @@ export const FeatureFlags = {
   FF_VAULTHISTORY: true
 };
 
-export const BannerTypes = {
-  CLAIM: 'claim'
-};
-
 export const NOTIFICATION_STATUS = {
   ERROR: 'error',
   WARNING: 'warning',
