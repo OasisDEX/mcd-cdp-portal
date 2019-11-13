@@ -10,7 +10,6 @@ const initialState = {
 };
 
 const addNotification = (state, { id: { name, priority }, ...rest }) => {
-  console.log(name, priority);
   return {
     ...state,
     banners: {

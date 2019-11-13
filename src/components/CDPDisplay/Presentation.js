@@ -32,7 +32,7 @@ import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
 import { NotificationStatus, NotificationList } from 'utils/constants';
-import { shortenAddress } from 'utils/ui';
+import { Address } from '@makerdao/ui-components-core';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
@@ -93,14 +93,12 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     }
 
     if (isOwner && account) {
-      const nonVaultOwnerNotification = lang.formatString(
-        lang.notifications.non_vault_owner,
-        shortenAddress(cdpOwner)
-      );
-
       addNotification({
         id: NotificationList.NON_VAULT_OWNER,
-        content: nonVaultOwnerNotification,
+        content: lang.formatString(
+          lang.notifications.non_vault_owner,
+          <Address full={cdpOwner} shorten={true} expandable={false} />
+        ),
         status: NotificationStatus.WARNING
       });
     }

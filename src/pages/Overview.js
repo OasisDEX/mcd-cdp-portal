@@ -28,8 +28,8 @@ import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
 import useCdpTypes from '../hooks/useCdpTypes';
 import { NotificationStatus, NotificationList } from 'utils/constants';
-import { shortenAddress } from 'utils/ui';
 import useNotification from 'hooks/useNotification';
+import { Address } from '@makerdao/ui-components-core';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -75,7 +75,7 @@ function Overview({ viewedAddress }) {
         id: NotificationList.NON_OVERVIEW_OWNER,
         content: lang.formatString(
           lang.notifications.non_overview_owner,
-          shortenAddress(viewedAddress)
+          <Address full={viewedAddress} shorten={true} expandable={false} />
         ),
         status: NotificationStatus.WARNING
       });

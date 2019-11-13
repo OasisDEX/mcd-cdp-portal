@@ -101,12 +101,15 @@ function Notifications() {
                 borderColor={borderColor}
               >
                 <Flex justifyContent="center">
-                  <Box px="s">
+                  <Box px="s" width="100%">
                     <Grid
-                      gridTemplateColumns={hasButton ? '5fr 1fr' : ''}
+                      gridTemplateColumns={hasButton ? '5fr 1fr' : '1fr'}
                       gridColumnGap="m"
                     >
-                      <Text color={textColor} justifySelf="end">
+                      <Text
+                        color={textColor}
+                        justifySelf={hasButton ? 'end' : 'center'}
+                      >
                         {content}
                       </Text>
                       <Box justifySelf="start" alignSelf="center">
