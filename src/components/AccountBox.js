@@ -145,7 +145,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
 
   return (
     <>
-      <CardBody css={{borderRadius: '0 0 4px 4px', overflow:'hidden'}} >
+      <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
         <Box px="s" py="m">
           <Text t="h4">{lang.sidebar.wallet_balances}</Text>
         </Box>
@@ -215,8 +215,7 @@ function AccountBox({ currentAccount }) {
   const type = currentAccount ? currentAccount.type : null;
 
   return (
-    <Card
-    >
+    <Card>
       <CardBody p="s">
         <WalletConnectDropdown
           show={open}

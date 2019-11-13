@@ -7,6 +7,7 @@ import ButtonCard from './ButtonCard';
 import { BreakableText } from './Typography';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as Cross } from 'images/cross.svg';
+import lang from 'languages';
 
 // hack to get around button padding for now
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -26,7 +27,13 @@ function LedgerType({ onClose, onPathSelect }) {
         </Box>
       </Flex>
       <Grid gridRowGap="m">
-        <Text.h3 textAlign="center">Connect Ledger Live or Legacy</Text.h3>
+        <Text.h3 textAlign="center">
+          {lang.formatString(
+            lang.overview_page.connect_ledgers_choice,
+            'Ledger Live',
+            'Legacy'
+          )}
+        </Text.h3>
 
         <Grid gridRowGap="s">
           <ButtonCard
@@ -36,7 +43,7 @@ function LedgerType({ onClose, onPathSelect }) {
             subtitle={
               <BreakableText color="grey">{"m/44'/60'/0'/x"}</BreakableText>
             }
-            buttonText="Connect"
+            buttonText={lang.connect}
           />
           <ButtonCard
             icon={<StyledLedgerLogo />}
@@ -45,13 +52,13 @@ function LedgerType({ onClose, onPathSelect }) {
             subtitle={
               <BreakableText color="grey">{"m/44'/x'/0/0"}</BreakableText>
             }
-            buttonText="Connect"
+            buttonText={lang.connect}
           />
         </Grid>
 
         <Box justifySelf="center">
           <Button variant="secondary-outline" onClick={onClose}>
-            Select another wallet
+            {lang.overview_page.select_another_wallet}
           </Button>
         </Box>
       </Grid>

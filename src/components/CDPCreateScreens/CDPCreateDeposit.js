@@ -166,7 +166,6 @@ const CDPCreateDepositSidebar = ({
           lang.formatString(lang.current_price, selectedIlk.currency.symbol),
           `$${getUsdPrice(selectedIlk.data).toFixed(2)}`
         ],
-
         [lang.stability_fee, `${stabilityFee}%`]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>

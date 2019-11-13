@@ -3,6 +3,7 @@ import { Flex, Grid, Box, Text } from '@makerdao/ui-components-core';
 import ActiveAccount from './ActiveAccount';
 import useMaker from 'hooks/useMaker';
 import { ReactComponent as CloseIcon } from 'images/close-circle.svg';
+import lang from 'languages';
 
 const StepperHeader = ({ onClose }) => {
   const { account } = useMaker();
@@ -32,7 +33,7 @@ const StepperHeader = ({ onClose }) => {
         >
           <CloseIcon />
           <Text color="steel" t="1.6rem" fontWeight="medium">
-            Close
+            {lang.close}
           </Text>
         </Grid>
       </Grid>

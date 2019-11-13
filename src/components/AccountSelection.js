@@ -77,7 +77,7 @@ function AccountSelection() {
         alignItems="center"
         flexDirection="column"
       >
-        <Text.h4>Connect a wallet to get started</Text.h4>
+        <Text.h4>{lang.providers.connect_wallet}</Text.h4>
         <Grid py="l" gridRowGap="s">
           <BrowserProviderButton
             onClick={connectBrowserWallet}

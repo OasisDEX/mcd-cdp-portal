@@ -85,7 +85,7 @@ const ProxyAllowanceCheck = ({
         </Text.p>
       </Grid>
       <Grid gridRowGap="xs" mt="l">
-        <Text.h4>Set allowance</Text.h4>
+        <Text.h4>{lang.cdp_create.set_allowance}</Text.h4>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {allowance_text}
         </Text.p>

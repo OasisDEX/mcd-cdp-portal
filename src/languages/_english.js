@@ -91,7 +91,9 @@ export default {
     "view_cdp_mobile": "View",
     "total_collateral_locked": "total collateral locked",
     "total_dai_debt": "total dai debt",
-    "get_started_title": "Open your first vault to start generating Dai."
+    "get_started_title": "Open your first vault to start generating Dai.",
+    "select_another_wallet": "Select another wallet",
+    "connect_ledgers_choice": "Connect {0} or {1}"
   },
   "navbar": {
     "save": "Save",
@@ -131,6 +133,18 @@ export default {
     }
   },
   "cdp_create": {
+    "screen_titles": {
+      "select_collateral": "Select Collateral",
+      "vault_management": "Vault Management",
+      "generate_dai": "Generate Dai",
+      "confirmation": "Confirmation"
+    },
+    "set_allowance": "Set Allowance",
+    "seconds_wait_time": "seconds",
+    "minutes_wait_time_singular": "minute",
+    "minutes_wait_time_plural": "minutes",
+    "tx_hash": "Transaction hash",
+    "view_tx_details": "View transaction details",
     "select_title": "Select a collateral type",
     "select_text": "Each collateral type has its own risk parameters. You can lock up additional collateral types later.",
 
@@ -190,6 +204,11 @@ export default {
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
   "dsr_deposit": {
+    "screen_titles": {
+      "open_vault": "Open Save Vault",
+      "deposit_dai": "Deposit Dai",
+      "confirmation": "Confirmation"
+    },
     "open_vault": "Earn savings on your Dai by locking into Oasis Save",
     "deposit_form_title": "Enter the amount you would like to deposit.",
     "setup_proxy_text": "Setting up your proxy will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
@@ -291,12 +310,26 @@ export default {
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
   },
+  "transaction_manager": {
+    "transaction_singular_capitalised": "Transaction",
+    "transaction_plural_capitalised": "Transactions",
+    "transaction_singular": "transaction",
+    "transaction_plural": "transactions",
+    "show": "Show",
+    "hide": "Hide"
+  },
   "input_validations": {
     "max_float": "Amount must be less than {0}",
     "min_float": "Amount must be greater than {0}",
     "is_float": "Please enter a valid number",
     "default": "Please enter a valid input"
   },
+  "connect": "Connect",
+  "view": "View",
+  "exit": "Exit",
+  "close": "Close",
+  "connect_to": "Connect to {0}",
+  "overview": "Overview",
   "cdp_type": "Vault Type",
   "not_found": "Not Found",
   // "network": "Network",
@@ -307,6 +340,7 @@ export default {
   "set_max": "Set max",
   "paste": "Paste",
   "cancel": "Cancel",
+  "current_price": "Current Price",
   "stability_fee": "Stability Fee",
   "liquidation_penalty": "Liquidation Fee",
   "collateral_debt_ceiling": "Debt ceiling",
@@ -329,6 +363,7 @@ export default {
   "cookie_notice": "By using this website you agree to our {0}",
   "privacy_policy": "privacy policy",
   "providers": {
+    "connect_wallet": "Connect a wallet to get started",
     "metamask": "MetaMask",
     "trust": "Trust",
     "coinbase": "Coinbase Wallet",
