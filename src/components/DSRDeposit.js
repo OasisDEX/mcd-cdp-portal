@@ -11,11 +11,7 @@ import useMaker from 'hooks/useMaker';
 import { TxLifecycle } from 'utils/constants';
 import lang from 'languages';
 
-const {
-  open_vault,
-  deposit_dai,
-  confirmation
-} = lang.cdp_create.screen_titles;
+const { open_vault, deposit_dai, confirmation } = lang.cdp_create.screen_titles;
 
 const screens = [
   [open_vault, props => <DSRDepositCheckProxy {...props} />],

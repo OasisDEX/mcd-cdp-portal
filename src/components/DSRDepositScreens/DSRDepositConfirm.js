@@ -163,8 +163,7 @@ const DSRDepositWait = ({ hash, onClose, txState }) => {
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
-                {lang.cdp_create.view_tx_details}{' '}
-                <ExternalLinkIcon />
+                {lang.cdp_create.view_tx_details} <ExternalLinkIcon />
               </Link>
             )}
           </Box>
