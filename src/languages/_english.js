@@ -175,6 +175,7 @@ export default {
     "post_confirmed_text": "You can safely leave this page.",
     "insufficient_ilk_balance": "Insufficient {0} balance",
     "draw_too_much_dai": "Vault below liquidation threshold",
+    "below_dust_limit": "Min amount to generate is {0} DAI",
     "stability_fee_description": "The fee calculated based on the outstanding debt of your vault. This is continuously added to your existing debt.",
     "liquidation_ratio_description": "The collateral-to-dai ratio at which the vault becomes vulnerable to liquidation.",
     "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",

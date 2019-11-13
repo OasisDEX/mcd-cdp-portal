@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
-import { greaterThanOrEqual } from 'utils/bignumber';
+import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import {
@@ -28,6 +28,11 @@ function OpenCDPForm({
   );
   const userCanDrawDaiAmount = greaterThanOrEqual(
     daiAvailable,
+    cdpParams.daiToDraw
+  );
+
+  const belowDustLimit = greaterThan(
+    selectedIlk.data.dust,
     cdpParams.daiToDraw
   );
   const fields = [
@@ -87,7 +92,13 @@ function OpenCDPForm({
         width="250px"
         type="number"
         failureMessage={
-          userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
+          (belowDustLimit
+            ? lang.formatString(
+                lang.cdp_create.below_dust_limit,
+                selectedIlk.data.dust
+              )
+            : null) ||
+          (userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai)
         }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
