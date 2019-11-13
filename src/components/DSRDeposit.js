@@ -9,11 +9,18 @@ import {
 } from 'components/DSRDepositScreens';
 import useMaker from 'hooks/useMaker';
 import { TxLifecycle } from 'utils/constants';
+import lang from 'languages';
+
+const {
+  open_vault,
+  deposit_dai,
+  confirmation
+} = lang.cdp_create.screen_titles;
 
 const screens = [
-  ['Open Save Vault', props => <DSRDepositCheckProxy {...props} />],
-  ['Deposit Dai', props => <DSRDepositCreate {...props} />],
-  ['Confirmation', props => <DSRDepositConfirm {...props} />]
+  [open_vault, props => <DSRDepositCheckProxy {...props} />],
+  [deposit_dai, props => <DSRDepositCreate {...props} />],
+  [confirmation, props => <DSRDepositConfirm {...props} />]
 ];
 
 const initialState = {

@@ -202,6 +202,11 @@ export default {
     "exit_to_cdp_portal": "Exit to CDP Portal"
   },
   "dsr_deposit": {
+    "screen_titles": {
+      "open_vault": "Open Save Vault",
+      "deposit_dai": "Deposit Dai",
+      "confirmation": "Confirmation"
+    },
     "open_vault": "Earn savings on your Dai by locking into Oasis Save",
     "deposit_form_title": "Enter the amount you would like to deposit.",
     "setup_proxy_text": "Setting up your proxy will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
