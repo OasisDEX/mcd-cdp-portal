@@ -131,6 +131,18 @@ export default {
     }
   },
   "cdp_create": {
+    "screen_titles": {
+      "select_collateral": "Select Collateral",
+      "vault_management": "Vault Management",
+      "generate_dai": "Generate Dai",
+      "confirmation": "Confirmation"
+    },
+    "set_allowance": "Set Allowance",
+    "seconds_wait_time": "seconds",
+    "minutes_wait_time_singular": "minute",
+    "minutes_wait_time_plural": "minutes",
+    "tx_hash": "Transaction hash",
+    "view_tx_details": "View transaction details",
     "select_title": "Select a collateral type",
     "select_text": "Each collateral type has its own risk parameters. You can lock up additional collateral types later.",
 
@@ -291,12 +303,23 @@ export default {
     "withdrawing_gem": "Withdrawing {0}",
     "depositing_gem": "Depositing {0}"
   },
+  "transaction_manager": {
+    "transaction_singular_capitalised": "Transaction",
+    "transaction_plural_capitalised": "Transactions",
+    "transaction_singular": "transaction",
+    "transaction_plural": "transactions",
+    "show": "Show",
+    "hide": "Hide"
+  },
   "input_validations": {
     "max_float": "Amount must be less than {0}",
     "min_float": "Amount must be greater than {0}",
     "is_float": "Please enter a valid number",
     "default": "Please enter a valid input"
   },
+  "view": "View",
+  "exit": "Exit",
+  "close": "Close",
   "connect_to": "Connect to {0}",
   "overview": "Overview",
   "cdp_type": "Vault Type",
@@ -309,6 +332,7 @@ export default {
   "set_max": "Set max",
   "paste": "Paste",
   "cancel": "Cancel",
+  "current_price": "Current Price",
   "stability_fee": "Stability Fee",
   "liquidation_penalty": "Liquidation Fee",
   "collateral_debt_ceiling": "Debt ceiling",

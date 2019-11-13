@@ -145,8 +145,12 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
 
       const waitTimeText =
         waitTime < 1
-          ? `${seconds} seconds`
-          : `${minutes} minute${minutes === 1 ? '' : 's'}`;
+          ? `${seconds} ${lang.cdp_create.seconds_wait_time}`
+          : `${minutes} ${
+              minutes === 1
+                ? lang.cdp_create.minutes_wait_time_singular
+                : lang.minutes_wait_time_plural
+            }`;
 
       setWaitTime(waitTimeText);
     })();
@@ -176,7 +180,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
           <Box my="s" textAlign="center">
             {isTestchain ? (
               <Grid gridRowGap="s">
-                <Text>Transaction hash</Text>
+                <Text>{lang.cdp_create.tx_hash}</Text>
                 <Text>{hash}</Text>
               </Grid>
             ) : (
@@ -185,7 +189,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
                 <Button variant="secondary">
-                  View transaction details{' '}
+                  {lang.cdp_create.view_tx_details}{' '}
                   <StyledExternalLink color={getColor('steel')} />
                 </Button>
               </Link>
@@ -193,7 +197,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
           </Box>
           <Flex textAlign="center" justifyContent="center">
             <Button onClick={onClose} width="145px">
-              Exit
+              {lang.exit}
             </Button>
           </Flex>
         </Grid>

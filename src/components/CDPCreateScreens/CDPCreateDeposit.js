@@ -166,7 +166,7 @@ const CDPCreateDepositSidebar = ({
           formatCollateralizationRatio(collateralizationRatio)
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-        ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
+        [lang.current_price, `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
 
         [lang.stability_fee, `${stabilityFee}%`],
         [lang.liquidation_ratio, `${liquidationRatio}%`],
