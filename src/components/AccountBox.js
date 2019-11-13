@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { useNavigation, useLinkProps } from 'react-navi';
 import BigNumber from 'bignumber.js';
 import {
   Box,
@@ -24,6 +23,8 @@ import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
 import styled from 'styled-components';
 import Carat from './Carat';
+
+const migrateUrl = 'https://oasis.app/trade/account';
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -93,7 +94,6 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
   const { show: showSidebar } = useSidebar();
-  const navigation = useNavigation();
   const { toggle: collapsed, setToggle: setCollapsed } = useToggle(
     Toggles.WALLETBALANCES,
     true
@@ -108,8 +108,6 @@ const WalletBalances = ({ hasActiveAccount }) => {
     [feeds]
   );
 
-  const migrateUrl = 'https://staging.oasis.app/trade/account';
-  const linkProps = useLinkProps({ href: migrateUrl });
 
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
@@ -179,7 +177,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   button={
                     hasActiveAccount &&
                     ((symbol === 'SAI' && (
-                      <ActionButton as="a" target="_blank" {...linkProps}>
+                      <ActionButton as="a" target="_blank" href={migrateUrl}>
                         {lang.sidebar.migrate}
                       </ActionButton>
                     )) || (
