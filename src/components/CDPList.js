@@ -57,8 +57,7 @@ const AddCdpButton = ({ account, show, mobile }) => (
     }
     width={
       mobile
-        ? `${getMeasurement('navbarItemWidth')}px`
-        : `${getMeasurement('navbarWidth')}px`
+        && `${getMeasurement('navbarItemWidth')}px`
     }
     mx={mobile && '7px'}
     mt={mobile && '15px'}
@@ -281,7 +280,7 @@ const CDPList = memo(function({
               </NavbarItem>
             );
           })}
-          {account && mobile && (
+          {account && (
             <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
         </CdpContainer>
@@ -294,9 +293,6 @@ const CDPList = memo(function({
         >
           <NavDown />
         </DirectionalButton>
-      )}
-      {account && !mobile && (
-        <AddCdpButton account={account} show={show} mobile={mobile} />
       )}
     </Fragment>
   ) : null;

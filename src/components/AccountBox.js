@@ -66,7 +66,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && prettifyNumber(amount, true, 3)) || '--'}
+        {(amount && prettifyNumber(amount, true, 4)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -77,7 +77,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
       >
         {(amount &&
           usdRatio &&
-          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 3)}`) ||
+          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 2)}`) ||
           '--'}
       </Text>
       <Flex width="20%" justifyContent="flex-end">

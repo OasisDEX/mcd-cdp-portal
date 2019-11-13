@@ -67,9 +67,11 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
   }
 
   return (
-    <tr css="white-space: nowrap;">
-      <td onClick={selectIlk}>
-        <Radio checked={checked} readOnly mr="xs" />
+    <tr css="white-space: nowrap;" onClick={selectIlk}>
+      <td>
+        <Radio checked={checked} readOnly mr="xs" css={{
+          appearance: 'none'
+        }}/>
       </td>
       <td>{ilk.symbol}</td>
       <td>{ilk.data.stabilityFee} %</td>

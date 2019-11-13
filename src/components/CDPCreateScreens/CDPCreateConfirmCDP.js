@@ -113,7 +113,7 @@ const CDPCreateConfirmSummary = ({
             <Text color="grey.500" ml="s">
               {lang.formatString(
                 lang.terms_of_service_text,
-                <Link href="/terms" target="_blank">
+                <Link href="/terms" target="_blank" color="blue">
                   {lang.terms_of_service}
                 </Link>
               )}
