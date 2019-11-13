@@ -7,7 +7,6 @@ import { ETH } from '@makerdao/dai';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import rootReducer from '../../src/reducers';
-import { BannerProvider } from '../../src/providers/BannerProvider';
 
 const defaultInitialState = rootReducer({}, {});
 
@@ -27,7 +26,7 @@ export function renderWithStore(children, initialState = {}) {
     <LanguageProvider>
       <ThemeProvider theme={theme}>
         <StoreProvider reducer={rootReducer} initialState={initialState}>
-          <BannerProvider>{children}</BannerProvider>
+          {children}
         </StoreProvider>
       </ThemeProvider>
     </LanguageProvider>

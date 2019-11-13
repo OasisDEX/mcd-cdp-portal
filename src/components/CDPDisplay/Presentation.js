@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
+import useMaker from 'hooks/useMaker';
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -25,18 +26,21 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags, BannerTypes } from '../../utils/constants';
+import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
-import useBanner from 'hooks/useBanner';
+import useNotification from 'hooks/useNotification';
+import { NotificationStatus, NotificationList } from 'utils/constants';
+import { shortenAddress } from 'utils/ui';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
-const { CLAIM } = BannerTypes;
 
-export default function({ cdp, showSidebar, account, network }) {
+export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
+  const { maker, newTxListener } = useMaker();
+
   const cdpId = parseInt(cdp.id);
   const eventHistory = useEventHistory(cdpId);
   log(`Rendering vault #${cdpId}`);
@@ -55,27 +59,60 @@ export default function({ cdp, showSidebar, account, network }) {
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
   const collateralAvailableValue = getCollateralAvailableValue(cdp);
   const daiAvailable = getDaiAvailable(cdp);
-  const isOwner = account && account.cdps.some(userCdp => userCdp.id === cdpId);
+  const isOwner = account && account.address === cdpOwner;
 
   const [actionShown, setActionShown] = useState(null);
-  const { show: showBanner, reset } = useBanner();
+  const { addNotification, deleteNotifications } = useNotification();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
   useEffect(() => {
+    const reclaimCollateral = async () => {
+      const txObject = maker
+        .service('mcd:cdpManager')
+        .reclaimCollateral(cdpId, unlockedCollateral.toNumber(), 0);
+      newTxListener(txObject, 'Claiming collateral');
+    };
+
     if (unlockedCollateral > 0) {
-      showBanner({
-        banner: CLAIM,
-        props: {
-          cdpId,
-          colName: cdp.gem,
-          amount: cdp.unlockedCollateral
-        }
+      const claimCollateralNotification = lang.formatString(
+        lang.notifications.claim_collateral,
+        cdp.gem,
+        cdp.unlockedCollateral.toFixed(7),
+        cdp.gem
+      );
+
+      addNotification({
+        id: NotificationList.CLAIM_COLLATERAL,
+        content: claimCollateralNotification,
+        status: NotificationStatus.WARNING,
+        hasButton: isOwner,
+        buttonLabel: 'Claim',
+        onClick: () => reclaimCollateral()
       });
     }
-    return () => reset();
+
+    if (!isOwner && account) {
+      const nonVaultOwnerNotification = lang.formatString(
+        lang.notifications.non_vault_owner,
+        shortenAddress(cdpOwner)
+      );
+
+      addNotification({
+        id: NotificationList.NON_VAULT_OWNER,
+        content: nonVaultOwnerNotification,
+        status: NotificationStatus.WARNING,
+        showCloseButton: true
+      });
+    }
+
+    return () =>
+      deleteNotifications([
+        NotificationList.CLAIM_COLLATERAL,
+        NotificationList.NON_VAULT_OWNER
+      ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cdpId, unlockedCollateral, cdpId]);
+  }, [isOwner, account, cdpId, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);

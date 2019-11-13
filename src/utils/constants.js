@@ -38,6 +38,13 @@ export const FeatureFlags = {
   FF_VAULTHISTORY: true
 };
 
-export const BannerTypes = {
-  CLAIM: 'claim'
+export const NotificationStatus = {
+  ERROR: 'error',
+  WARNING: 'warning',
+  SUCCESS: 'success'
+};
+
+export const NotificationList = {
+  CLAIM_COLLATERAL: 'claimCollateral',
+  NON_VAULT_OWNER: 'nonVaultOwner'
 };

@@ -1,8 +1,5 @@
 import ReactDOMServer from 'react-dom/server';
-import {
-  formatEventDescription,
-  firstLetterLowercase
-} from '../ui';
+import { formatEventDescription, firstLetterLowercase } from '../ui';
 import { mockEventDataFromSDK } from '../../reducers/cdps';
 import lang from '../../languages';
 
@@ -17,4 +14,3 @@ test('formatEventDescription', () => {
 test('firstLetterLowercase', () => {
   expect(firstLetterLowercase('Word')).toBe('word');
 });
-
