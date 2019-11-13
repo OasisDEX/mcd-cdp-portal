@@ -38,8 +38,13 @@ export const FeatureFlags = {
   FF_VAULTHISTORY: true
 };
 
-export const NOTIFICATION_STATUS = {
+export const NotificationStatus = {
   ERROR: 'error',
   WARNING: 'warning',
   SUCCESS: 'success'
+};
+
+export const NotificationList = {
+  CLAIM_COLLATERAL: 'claimCollateral',
+  NON_VAULT_OWNER: 'nonVaultOwner'
 };

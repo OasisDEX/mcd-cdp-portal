@@ -8,7 +8,7 @@ import {
   Grid
 } from '@makerdao/ui-components-core';
 import useNotification from 'hooks/useNotification';
-import { NOTIFICATION_STATUS } from 'utils/constants';
+import { NotificationStatus } from 'utils/constants';
 import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 import styled from 'styled-components';
 import { getColor } from 'styles/theme';
@@ -42,11 +42,11 @@ const getNotificationColors = status => {
     );
 
   switch (status) {
-    case NOTIFICATION_STATUS.ERROR:
+    case NotificationStatus.ERROR:
       return prependColorLevel('orange');
-    case NOTIFICATION_STATUS.WARNING:
+    case NotificationStatus.WARNING:
       return prependColorLevel('yellow');
-    case NOTIFICATION_STATUS.SUCCESS:
+    case NotificationStatus.SUCCESS:
       return prependColorLevel('teal');
     default:
       return prependColorLevel('slate');

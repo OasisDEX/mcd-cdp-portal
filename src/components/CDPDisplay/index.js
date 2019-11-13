@@ -53,7 +53,7 @@ function CDPView({ cdpId }) {
           showSidebar={showSidebar}
           account={account}
           network={network}
-          cdpOwner={cdpOwner}
+          cdpOwner={cdpOwner.toLowerCase()}
         />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />

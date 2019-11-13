@@ -30,7 +30,6 @@ const deleteNotification = (state, id) => {
 const reducer = produce((draft, { type, action, payload }) => {
   if (!type) return;
   if (type === 'notifications') {
-    console.log(action, payload);
     switch (action) {
       case RESET_NOTIFICATIONS:
         return initialState;

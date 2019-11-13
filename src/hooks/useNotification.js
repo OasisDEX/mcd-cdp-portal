@@ -21,11 +21,14 @@ function useNotification() {
       payload: props
     });
 
-  const deleteNotification = props =>
-    dispatchNotification({
-      action: DELETE_NOTIFICATION,
-      payload: props
-    });
+  const deleteNotifications = notificationIds =>
+    !!notificationIds.length &&
+    notificationIds.map(id =>
+      dispatchNotification({
+        action: DELETE_NOTIFICATION,
+        payload: id
+      })
+    );
 
   const resetNotifications = () =>
     dispatchNotification({
@@ -34,7 +37,7 @@ function useNotification() {
 
   return {
     addNotification,
-    deleteNotification,
+    deleteNotifications,
     resetNotifications,
     ...notifications
   };

@@ -336,5 +336,9 @@ export default {
     "ledger_nano": "Ledger Nano",
     "trezor": "Trezor",
     "other": "Active Wallet"
+  },
+  notifications: {
+    claim_collateral: "Your {0} Vault auction(s) have completed. You have {1} {2} to claim",
+    non_vault_owner: "The owner of this position, {0}, does not match connected walleted address"
   }
 }

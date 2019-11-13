@@ -31,11 +31,11 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
-import { NOTIFICATION_STATUS } from 'utils/constants';
+import { NotificationStatus, NotificationList } from 'utils/constants';
+import { shortenAddress } from 'utils/ui';
+
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULTHISTORY } = FeatureFlags;
-
-const CLAIM_COLLATERAL_NOTIFICAION = 'claimCollateralNotification';
 
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
@@ -62,9 +62,21 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const isOwner = account && account.address === cdpOwner;
 
   const [actionShown, setActionShown] = useState(null);
-  const { addNotification, deleteNotification } = useNotification();
+  const { addNotification, deleteNotifications } = useNotification();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
+
+  const nonVaultOwnerNotification = lang.formatString(
+    lang.notifications.non_vault_owner,
+    shortenAddress(cdpOwner)
+  );
+
+  const claimCollateralNotification = lang.formatString(
+    lang.notifications.claim_collateral,
+    cdp.gem,
+    cdp.unlockedCollateral.toFixed(7),
+    cdp.gem
+  );
 
   useEffect(() => {
     const reclaimCollateral = async () => {
@@ -75,26 +87,34 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     };
 
     if (unlockedCollateral > 0) {
-      const content = lang.formatString(
-        'Your {0} Vault auction(s) have completed. You have {1} {2} to claim',
-        cdp.gem,
-        cdp.unlockedCollateral.toFixed(7),
-        cdp.gem
-      );
-
       addNotification({
-        id: CLAIM_COLLATERAL_NOTIFICAION,
-        content,
-        status: NOTIFICATION_STATUS.WARNING,
-        hasButton: true,
+        id: NotificationList.CLAIM_COLLATERAL,
+        content: claimCollateralNotification,
+        status: NotificationStatus.WARNING,
+        hasButton: isOwner,
         buttonLabel: 'Claim',
         onClick: () => reclaimCollateral(),
         textAlign: 'center'
       });
-      return () => deleteNotification(CLAIM_COLLATERAL_NOTIFICAION);
     }
+
+    if (!isOwner && account) {
+      addNotification({
+        id: Notification.NON_VAULT_OWNER,
+        content: nonVaultOwnerNotification,
+        status: NotificationStatus.WARNING,
+        hasButton: false,
+        textAlign: 'center'
+      });
+    }
+
+    return () =>
+      deleteNotifications([
+        Notification.CLAIM_COLLATERAL,
+        Notification.NON_VAULT_OWNER
+      ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cdpId, unlockedCollateral]);
+  }, [isOwner, account, cdpId, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
