@@ -151,28 +151,22 @@ const CDPCreateDepositSidebar = ({
   collateralizationRatio
 }) => {
   const { lang } = useLanguage();
-  const {
-    liquidationPenalty,
-    liquidationRatio,
-    debtCeiling,
-    ilkDebtAvailable,
-    stabilityFee
-  } = selectedIlk.data;
+  const { liquidationRatio, stabilityFee } = selectedIlk.data;
   return (
     <Grid gridRowGap="m">
       {[
         [
           lang.collateralization,
-          formatCollateralizationRatio(collateralizationRatio)
+          `${formatCollateralizationRatio(
+            collateralizationRatio
+          )} (Min ${liquidationRatio}%)`
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-        [lang.current_price, `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
-
-        [lang.stability_fee, `${stabilityFee}%`],
-        [lang.liquidation_ratio, `${liquidationRatio}%`],
-        [lang.liquidation_penalty, `${liquidationPenalty}%`],
-        [lang.collateral_debt_ceiling, `${prettifyNumber(debtCeiling)} DAI`],
-        [lang.dai_available, prettifyNumber(ilkDebtAvailable)]
+        [
+          lang.formatString(lang.current_price, selectedIlk.currency.symbol),
+          `$${getUsdPrice(selectedIlk.data).toFixed(2)}`
+        ],
+        [lang.stability_fee, `${stabilityFee}%`]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">

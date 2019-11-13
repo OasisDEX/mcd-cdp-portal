@@ -215,7 +215,11 @@ function AccountBox({ currentAccount }) {
   const type = currentAccount ? currentAccount.type : null;
 
   return (
-    <Card>
+    <Card
+      css={{
+        overflow: 'hidden'
+      }}
+    >
       <CardBody p="s">
         <WalletConnectDropdown
           show={open}

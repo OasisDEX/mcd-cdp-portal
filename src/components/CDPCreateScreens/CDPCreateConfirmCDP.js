@@ -60,7 +60,7 @@ const CDPCreateConfirmSummary = ({
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)
     ],
-    [lang.liquidation_ratio, `${liquidationRatio}%`],
+    [lang.collateralization, `${liquidationRatio}%`],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
@@ -90,7 +90,7 @@ const CDPCreateConfirmSummary = ({
                 <Text
                   fontWeight="bold"
                   css="white-space: nowrap"
-                  textAlign={{ s: 'right', m: 'left' }}
+                  textAlign={'right'}
                 >
                   {value}
                 </Text>
@@ -105,18 +105,20 @@ const CDPCreateConfirmSummary = ({
           gridColumnGap="xs"
           gridTemplateColumns="auto auto"
         >
-          <Checkbox
-            checked={hasReadTOS}
-            onChange={() => setHasReadTOS(state => !state)}
-          />
-          <Text color="grey.500">
-            {lang.formatString(
-              lang.terms_of_service_text,
-              <Link href="/terms" target="_blank">
-                {lang.terms_of_service}
-              </Link>
-            )}
-          </Text>
+          <label>
+            <Checkbox
+              checked={hasReadTOS}
+              onChange={() => setHasReadTOS(state => !state)}
+            />
+            <Text color="grey.500" ml="s">
+              {lang.formatString(
+                lang.terms_of_service_text,
+                <Link href="/terms" target="_blank">
+                  {lang.terms_of_service}
+                </Link>
+              )}
+            </Text>
+          </label>
         </Grid>
       </Card>
       <ScreenFooter
