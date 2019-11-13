@@ -100,7 +100,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       );
 
       addNotification({
-        id: Notification.NON_VAULT_OWNER,
+        id: NotificationList.NON_VAULT_OWNER,
         content: nonVaultOwnerNotification,
         status: NotificationStatus.WARNING,
         hasButton: false,
@@ -111,8 +111,8 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
 
     return () =>
       deleteNotifications([
-        Notification.CLAIM_COLLATERAL,
-        Notification.NON_VAULT_OWNER
+        NotificationList.CLAIM_COLLATERAL,
+        NotificationList.NON_VAULT_OWNER
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, account, cdpId, unlockedCollateral]);
