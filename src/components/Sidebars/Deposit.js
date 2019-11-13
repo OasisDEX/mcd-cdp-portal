@@ -17,7 +17,6 @@ import {
 } from 'reducers/cdps';
 import { calcCDPParams } from 'utils/cdp';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
-import SetMax from 'components/SetMax';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
 const Deposit = ({ cdpId, reset }) => {
@@ -39,7 +38,7 @@ const Deposit = ({ cdpId, reset }) => {
   const collateralAmount = getCollateralAmount(cdp, false);
   const debtAmount = getDebtAmount(cdp);
 
-  const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
+  const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
       maxFloat: gemBalance,
@@ -52,8 +51,6 @@ const Deposit = ({ cdpId, reset }) => {
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
-
-  const setMax = () => setAmount(gemBalance);
 
   useEffect(() => {
     let val = parseFloat(amount);
@@ -94,7 +91,6 @@ const Deposit = ({ cdpId, reset }) => {
           value={amount}
           onChange={onAmountChange}
           placeholder={`0.00 ${symbol}`}
-          after={<SetMax onClick={setMax} />}
           failureMessage={amountErrors}
           data-testid="deposit-input"
         />
