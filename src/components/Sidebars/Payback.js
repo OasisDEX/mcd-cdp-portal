@@ -14,6 +14,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import { safeToFixed } from '../../utils/ui';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -64,7 +65,7 @@ const Payback = ({ cdpId, reset }) => {
     }
   );
 
-  const amountToPayback = parseFloat(amount || 0);
+  const amountToPayback = amount || 0;
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
     ilkData: cdp,
     gemsToLock: collateralAmount,
@@ -82,7 +83,7 @@ const Payback = ({ cdpId, reset }) => {
     }
     newTxListener(
       debtAmount !== amount
-        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)), owner)
+        ? cdpManager.wipe(cdpId, MDAI(amount), owner)
         : cdpManager.wipeAll(cdpId, owner),
       lang.transactions.pay_back_dai
     );
@@ -121,7 +122,7 @@ const Payback = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
+          body={`${daiBalance && safeToFixed(daiBalance, 7)} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}
