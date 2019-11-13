@@ -67,6 +67,8 @@ const WalletConnectDropdown = ({
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
 
+  const providerName = getWebClientProviderName();
+
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
@@ -78,9 +80,7 @@ const WalletConnectDropdown = ({
       >
         {otherAccounts.map(account => {
           const providerType =
-            account.type === 'browser'
-              ? getWebClientProviderName()
-              : account.type;
+            account.type === 'browser' ? providerName : account.type;
           return (
             <Option
               key={account.address}
@@ -113,7 +113,10 @@ const WalletConnectDropdown = ({
               close();
             }}
           >
-            Connect to {lang.providers[getWebClientProviderName()]}
+            {lang.formatString(
+              lang.connect_to,
+              providerName !== '' ? lang.providers[providerName] : providerName
+            )}
           </Option>
         )}
         <Option
@@ -122,7 +125,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Connect to Ledger Nano
+          {lang.formatString(lang.connect_to, 'Ledger Nano')}
         </Option>
         <Option
           onClick={() => {
@@ -130,7 +133,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Connect to Trezor
+          {lang.formatString(lang.connect_to, 'Trezor')}
         </Option>
         <Option
           onClick={() => {
