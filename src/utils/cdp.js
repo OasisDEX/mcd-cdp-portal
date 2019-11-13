@@ -93,6 +93,8 @@ export function cdpParamsAreValid(
   });
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
+  // must draw more dai than the dust limit
+  if (greaterThan(ilkData.dust, daiToDraw)) return false;
   return true;
 }
 
