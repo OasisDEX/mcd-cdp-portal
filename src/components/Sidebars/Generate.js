@@ -33,15 +33,24 @@ const Generate = ({ cdpId, reset }) => {
     collateralizationRatio
   );
 
+  const dustLimit = cdp.dust ? cdp.dust : 0;
+
+  // minFloat uses <= so it won't work for dustLimit
+  const dustLimitValidation = value => parseFloat(value) < dustLimit;
+
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
-      minFloat: 0,
       maxFloat: daiAvailable,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        dustLimit: dustLimitValidation
+      }
     },
     {
-      maxFloat: () => lang.action_sidebar.cdp_below_threshold
+      maxFloat: () => lang.action_sidebar.cdp_below_threshold,
+      dustLimit: () =>
+        lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
     }
   );
 
