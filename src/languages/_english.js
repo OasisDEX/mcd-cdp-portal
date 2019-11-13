@@ -124,7 +124,7 @@ export default {
     "balance": "BALANCE",
     "usd": "USD",
     "send": "SEND",
-    "migrate": "MIG",
+    "migrate": "UPGRADE",
     "no_wallet": "Not connected",
     "save_details": {
       "title": "Save Details",
