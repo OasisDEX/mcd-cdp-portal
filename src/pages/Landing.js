@@ -258,6 +258,8 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
 
     window.addEventListener('resize', debouncedHandleResize);
     setHeight(answerElement.current.clientHeight);
+    // set the height after fonts have probably loaded, or system font is used
+    setTimeout(() => setHeight(answerElement.current.clientHeight), 3200);
     return _ => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
