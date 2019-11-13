@@ -91,7 +91,9 @@ export default {
     "view_cdp_mobile": "View",
     "total_collateral_locked": "total collateral locked",
     "total_dai_debt": "total dai debt",
-    "get_started_title": "Open your first vault to start generating Dai."
+    "get_started_title": "Open your first vault to start generating Dai.",
+    "select_another_wallet": "Select another wallet",
+    "connect_ledgers_choice": "Connect {0} or {1}"
   },
   "navbar": {
     "save": "Save",
@@ -322,6 +324,7 @@ export default {
     "is_float": "Please enter a valid number",
     "default": "Please enter a valid input"
   },
+  "connect": "Connect",
   "view": "View",
   "exit": "Exit",
   "close": "Close",
