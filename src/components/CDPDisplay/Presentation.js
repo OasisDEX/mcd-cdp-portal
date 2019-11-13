@@ -88,8 +88,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         status: NotificationStatus.WARNING,
         hasButton: isOwner,
         buttonLabel: 'Claim',
-        onClick: () => reclaimCollateral(),
-        textAlign: 'center'
+        onClick: () => reclaimCollateral()
       });
     }
 
@@ -103,8 +102,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         id: NotificationList.NON_VAULT_OWNER,
         content: nonVaultOwnerNotification,
         status: NotificationStatus.WARNING,
-        hasButton: false,
-        textAlign: 'center',
+        hasButton: true,
         showCloseButton: true
       });
     }

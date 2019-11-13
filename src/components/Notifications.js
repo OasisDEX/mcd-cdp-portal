@@ -23,6 +23,8 @@ const StyledCloseIcon = styled(CloseIcon)`
 const ButtonBackgroundWrapper = styled.div`
   background-color: #fff;
   border-radius: 4px;
+  width: fit-content;
+  height: fit-content;
 `;
 
 const getNotificationColors = status => {
@@ -67,7 +69,7 @@ function Notifications() {
   const { banners, viewable, deleteNotifications } = useNotification();
   const bannerEntries = banners && Object.entries(banners);
   return (
-    <div>
+    <Box mb="l">
       {viewable &&
         !!bannerEntries.length &&
         bannerEntries.map(
@@ -75,7 +77,6 @@ function Notifications() {
             id,
             {
               content,
-              textAlign,
               status,
               hasButton,
               onClick,
@@ -96,43 +97,49 @@ function Notifications() {
                 key={id}
                 my=".75rem"
                 p="1rem"
-                width="100%"
                 bg={backgroundColor}
                 borderColor={borderColor}
               >
-                <Grid gridTemplateColumns="1fr 20px">
-                  <Flex width="100%" justifyContent={textAlign}>
-                    <Text color={textColor} mr="s" alignSelf="center">
-                      {content}
-                    </Text>
-                    {customButton
-                      ? customButton
-                      : hasButton && (
-                          <ActionButton onClick={onClick} label={buttonLabel} />
-                        )}
-                  </Flex>
-                  {showCloseButton && (
-                    <Flex justifyContent="flex-end">
-                      <Box
-                        onClick={() => {
-                          deleteNotifications([id]);
-                          if (onClose) onClose();
-                        }}
-                      >
-                        <StyledCloseIcon
-                          width={12}
-                          height={12}
-                          color={getColor(textColor)}
-                        />
+                <Flex alignItems="space-between">
+                  <Box width={showCloseButton ? '95%' : '100%'} px="s">
+                    <Grid gridTemplateColumns="5fr 1fr" gridColumnGap="s">
+                      <Text color={textColor} justifySelf="end">
+                        {content}
+                      </Text>
+                      <Box justifySelf="start" alignSelf="center">
+                        {customButton
+                          ? customButton
+                          : hasButton && (
+                              <ActionButton
+                                onClick={onClick}
+                                label={buttonLabel}
+                              />
+                            )}
                       </Box>
+                    </Grid>
+                  </Box>
+                  {showCloseButton && (
+                    <Flex
+                      justifyContent="flex-end"
+                      width="5%"
+                      onClick={() => {
+                        deleteNotifications([id]);
+                        if (onClose) onClose();
+                      }}
+                    >
+                      <StyledCloseIcon
+                        width={12}
+                        height={12}
+                        color={getColor(textColor)}
+                      />
                     </Flex>
                   )}
-                </Grid>
+                </Flex>
               </Card>
             );
           }
         )}
-    </div>
+    </Box>
   );
 }
 
