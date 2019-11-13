@@ -66,18 +66,6 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
 
-  const nonVaultOwnerNotification = lang.formatString(
-    lang.notifications.non_vault_owner,
-    shortenAddress(cdpOwner)
-  );
-
-  const claimCollateralNotification = lang.formatString(
-    lang.notifications.claim_collateral,
-    cdp.gem,
-    cdp.unlockedCollateral.toFixed(7),
-    cdp.gem
-  );
-
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
@@ -87,6 +75,13 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     };
 
     if (unlockedCollateral > 0) {
+      const claimCollateralNotification = lang.formatString(
+        lang.notifications.claim_collateral,
+        cdp.gem,
+        cdp.unlockedCollateral.toFixed(7),
+        cdp.gem
+      );
+
       addNotification({
         id: NotificationList.CLAIM_COLLATERAL,
         content: claimCollateralNotification,
@@ -99,12 +94,18 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     }
 
     if (!isOwner && account) {
+      const nonVaultOwnerNotification = lang.formatString(
+        lang.notifications.non_vault_owner,
+        shortenAddress(cdpOwner)
+      );
+
       addNotification({
         id: Notification.NON_VAULT_OWNER,
         content: nonVaultOwnerNotification,
         status: NotificationStatus.WARNING,
         hasButton: false,
-        textAlign: 'center'
+        textAlign: 'center',
+        showCloseButton: true
       });
     }
 
@@ -113,7 +114,6 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         Notification.CLAIM_COLLATERAL,
         Notification.NON_VAULT_OWNER
       ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, account, cdpId, unlockedCollateral]);
 
   const showAction = props => {

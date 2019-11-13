@@ -64,7 +64,7 @@ const ActionButton = ({ onClick, label }) => (
 );
 
 function Notifications() {
-  const { banners, viewable, deleteNotification } = useNotification();
+  const { banners, viewable, deleteNotifications } = useNotification();
   const bannerEntries = banners && Object.entries(banners);
   return (
     <div>
@@ -115,7 +115,7 @@ function Notifications() {
                     <Flex justifyContent="flex-end">
                       <Box
                         onClick={() => {
-                          deleteNotification(id);
+                          deleteNotifications([id]);
                           if (onClose) onClose();
                         }}
                       >
