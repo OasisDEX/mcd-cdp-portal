@@ -24,6 +24,8 @@ import useToggle from 'hooks/useToggle';
 import styled from 'styled-components';
 import Carat from './Carat';
 
+const migrateUrl = 'https://oasis.app/trade/account';
+
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
 `;
@@ -106,6 +108,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
     [feeds]
   );
 
+
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
 
@@ -174,7 +177,9 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   button={
                     hasActiveAccount &&
                     ((symbol === 'SAI' && (
-                      <ActionButton>{lang.sidebar.migrate}</ActionButton>
+                      <ActionButton as="a" target="_blank" href={migrateUrl}>
+                        {lang.sidebar.migrate}
+                      </ActionButton>
                     )) || (
                       <ActionButton onClick={() => showSendSidebar({ token })}>
                         {lang.sidebar.send}

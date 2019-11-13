@@ -36,19 +36,31 @@ const Payback = ({ cdpId, reset }) => {
   const collateralAmount = getCollateralAmount(cdp, true, 9);
   const debtAmount = getDebtAmount(cdp, false);
 
+  const dustLimit = cdp.dust ? cdp.dust : 0;
+  const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
+  const dustLimitValidation = value => maxAmount - value < dustLimit;
+
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
       maxFloat: Math.min(daiBalance, debtAmount),
       minFloat: 0,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        dustLimit: dustLimitValidation
+      }
     },
     {
       maxFloat: amount => {
         return daiBalance < parseFloat(amount)
           ? lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
           : lang.action_sidebar.cannot_payback_more_than_owed;
-      }
+      },
+      dustLimit: () =>
+        lang.formatString(
+          lang.cdp_create.dust_max_payback,
+          maxAmount - dustLimit
+        )
     }
   );
 
@@ -59,8 +71,7 @@ const Payback = ({ cdpId, reset }) => {
     daiToDraw: Math.max(debtAmount - amountToPayback, 0)
   });
 
-  const setMax = () =>
-    debtAmount && daiBalance && setAmount(minimum(debtAmount, daiBalance));
+  const setMax = () => setAmount(maxAmount);
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');

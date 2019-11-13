@@ -124,7 +124,7 @@ export default {
     "balance": "BALANCE",
     "usd": "USD",
     "send": "SEND",
-    "migrate": "MIG",
+    "migrate": "UPGRADE",
     "no_wallet": "Not connected",
     "save_details": {
       "title": "Save Details",
@@ -176,6 +176,7 @@ export default {
     "insufficient_ilk_balance": "Insufficient {0} balance",
     "draw_too_much_dai": "Vault below liquidation threshold",
     "below_dust_limit": "A Vault requires a minimum of {0} Dai to be generated",
+    "dust_max_payback": "You can repay all your outstanding debt, or a maximum of {0} Dai",
     "stability_fee_description": "The fee calculated based on the outstanding debt of your vault. This is continuously added to your existing debt.",
     "liquidation_ratio_description": "The collateral-to-dai ratio at which the vault becomes vulnerable to liquidation.",
     "liquidation_penalty_description": "The fee that is added to the total outstanding DAI debt when a liquidation occurs.",
