@@ -47,7 +47,10 @@ const getNotificationColors = status => {
     case NotificationStatus.ERROR:
       return prependColorLevel('orange');
     case NotificationStatus.WARNING:
-      return prependColorLevel('yellow');
+      return {
+        ...prependColorLevel('yellow'),
+        textColor: '#826318'
+      };
     case NotificationStatus.SUCCESS:
       return prependColorLevel('teal');
     default:
@@ -75,16 +78,7 @@ function Notifications() {
         bannerEntries.map(
           ([
             id,
-            {
-              content,
-              status,
-              hasButton,
-              onClick,
-              buttonLabel,
-              customButton,
-              onClose,
-              showCloseButton
-            }
+            { content, status, hasButton, onClick, buttonLabel, customButton }
           ]) => {
             const {
               textColor,
@@ -100,9 +94,12 @@ function Notifications() {
                 bg={backgroundColor}
                 borderColor={borderColor}
               >
-                <Flex alignItems="space-between">
-                  <Box width={showCloseButton ? '95%' : '100%'} px="s">
-                    <Grid gridTemplateColumns="5fr 1fr" gridColumnGap="s">
+                <Flex justifyContent="center">
+                  <Box px="s">
+                    <Grid
+                      gridTemplateColumns={hasButton ? '5fr 1fr' : ''}
+                      gridColumnGap="m"
+                    >
                       <Text color={textColor} justifySelf="end">
                         {content}
                       </Text>
@@ -118,22 +115,6 @@ function Notifications() {
                       </Box>
                     </Grid>
                   </Box>
-                  {showCloseButton && (
-                    <Flex
-                      justifyContent="flex-end"
-                      width="5%"
-                      onClick={() => {
-                        deleteNotifications([id]);
-                        if (onClose) onClose();
-                      }}
-                    >
-                      <StyledCloseIcon
-                        width={12}
-                        height={12}
-                        color={getColor(textColor)}
-                      />
-                    </Flex>
-                  )}
                 </Flex>
               </Card>
             );

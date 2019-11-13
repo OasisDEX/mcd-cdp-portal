@@ -27,6 +27,9 @@ import {
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
 import useCdpTypes from '../hooks/useCdpTypes';
+import { NotificationStatus, NotificationList } from 'utils/constants';
+import { shortenAddress } from 'utils/ui';
+import useNotification from 'hooks/useNotification';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -54,7 +57,7 @@ const InfoCard = ({ title, amount, denom }) => (
   </Card>
 );
 
-function Overview() {
+function Overview({ viewedAddress }) {
   const { account } = useMaker();
   const [{ cdps, feeds }] = useStore();
   const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);
@@ -63,6 +66,22 @@ function Overview() {
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
+
+  const { addNotification, deleteNotifications } = useNotification();
+
+  useEffect(() => {
+    if (account && viewedAddress !== account.address) {
+      addNotification({
+        id: NotificationList.NON_OVERVIEW_OWNER,
+        content: lang.formatString(
+          lang.notifications.non_overview_owner,
+          shortenAddress(viewedAddress)
+        ),
+        status: NotificationStatus.WARNING
+      });
+    }
+    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
+  }, [viewedAddress]);
 
   useEffect(() => {
     const buildCdpOverview = async () => {
