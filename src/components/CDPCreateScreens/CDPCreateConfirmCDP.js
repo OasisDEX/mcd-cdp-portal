@@ -60,7 +60,7 @@ const CDPCreateConfirmSummary = ({
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)
     ],
-    [lang.liquidation_ratio, `${liquidationRatio}%`],
+    [lang.collateralization, `${liquidationRatio}%`],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
@@ -90,7 +90,7 @@ const CDPCreateConfirmSummary = ({
                 <Text
                   fontWeight="bold"
                   css="white-space: nowrap"
-                  textAlign={{ s: 'right', m: 'left' }}
+                  textAlign={'right'}
                 >
                   {value}
                 </Text>
@@ -105,18 +105,20 @@ const CDPCreateConfirmSummary = ({
           gridColumnGap="xs"
           gridTemplateColumns="auto auto"
         >
-          <Checkbox
-            checked={hasReadTOS}
-            onChange={() => setHasReadTOS(state => !state)}
-          />
-          <Text color="grey.500">
-            {lang.formatString(
-              lang.terms_of_service_text,
-              <Link href="/terms" target="_blank">
-                {lang.terms_of_service}
-              </Link>
-            )}
-          </Text>
+          <label>
+            <Checkbox
+              checked={hasReadTOS}
+              onChange={() => setHasReadTOS(state => !state)}
+            />
+            <Text color="grey.500" ml="s">
+              {lang.formatString(
+                lang.terms_of_service_text,
+                <Link href="/terms" target="_blank">
+                  {lang.terms_of_service}
+                </Link>
+              )}
+            </Text>
+          </label>
         </Grid>
       </Card>
       <ScreenFooter
@@ -145,8 +147,12 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
 
       const waitTimeText =
         waitTime < 1
-          ? `${seconds} seconds`
-          : `${minutes} minute${minutes === 1 ? '' : 's'}`;
+          ? `${seconds} ${lang.cdp_create.seconds_wait_time}`
+          : `${minutes} ${
+              minutes === 1
+                ? lang.cdp_create.minutes_wait_time_singular
+                : lang.minutes_wait_time_plural
+            }`;
 
       setWaitTime(waitTimeText);
     })();
@@ -176,7 +182,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
           <Box my="s" textAlign="center">
             {isTestchain ? (
               <Grid gridRowGap="s">
-                <Text>Transaction hash</Text>
+                <Text>{lang.cdp_create.tx_hash}</Text>
                 <Text>{hash}</Text>
               </Grid>
             ) : (
@@ -185,7 +191,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
                 <Button variant="secondary">
-                  View transaction details{' '}
+                  {lang.cdp_create.view_tx_details}{' '}
                   <StyledExternalLink color={getColor('steel')} />
                 </Button>
               </Link>
@@ -193,7 +199,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
           </Box>
           <Flex textAlign="center" justifyContent="center">
             <Button onClick={onClose} width="145px">
-              Exit
+              {lang.exit}
             </Button>
           </Flex>
         </Grid>

@@ -14,6 +14,7 @@ import IconButton from 'components/IconButton';
 const MMLogo = styled(MetaMaskLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
+  margin-left: -5px;
 `;
 
 export default function BrowserProviderButton({ provider, ...props }) {

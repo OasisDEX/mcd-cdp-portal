@@ -77,17 +77,23 @@ function AccountSelection() {
         alignItems="center"
         flexDirection="column"
       >
-        <Text.h3>Connect a wallet to get started</Text.h3>
-        <Grid py="m" gridRowGap="s">
+        <Text.h4>{lang.providers.connect_wallet}</Text.h4>
+        <Grid py="l" gridRowGap="s">
           <BrowserProviderButton
             onClick={connectBrowserWallet}
             disabled={!makerAuthenticated}
             provider={providerName}
+            css={{
+              backgroundColor: 'white'
+            }}
           />
           <IconButton
             onClick={connectTrezorWallet}
             disabled={!makerAuthenticated}
             icon={<StyledTrezorLogo />}
+            css={{
+              backgroundColor: 'white'
+            }}
           >
             {lang.providers.trezor}
           </IconButton>
@@ -95,12 +101,18 @@ function AccountSelection() {
             onClick={connectLedgerWallet}
             disabled={!makerAuthenticated}
             icon={<StyledLedgerLogo />}
+            css={{
+              backgroundColor: 'white'
+            }}
           >
             {lang.providers.ledger_nano}
           </IconButton>
           <IconButton
             onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
             icon={<StyledWalletConnectLogo />}
+            css={{
+              backgroundColor: 'white'
+            }}
           >
             {lang.landing_page.wallet_connect}
           </IconButton>
@@ -108,6 +120,9 @@ function AccountSelection() {
             onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
             disabled={!makerAuthenticated}
             icon={<StyledWalletLinkLogo />}
+            css={{
+              backgroundColor: 'white'
+            }}
           >
             {lang.landing_page.wallet_link}
           </IconButton>

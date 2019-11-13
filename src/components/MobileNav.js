@@ -18,15 +18,21 @@ import { getMeasurement } from '../styles/theme';
 
 import { ReactComponent as MoreOpenIcon } from 'images/menu-more.svg';
 import { ReactComponent as MoreCloseIcon } from 'images/menu-more-close.svg';
+import { ReactComponent as MoreCloseDarkIcon } from 'images/menu-more-close-dark.svg';
 
-const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen }) => {
+const SidebarDrawerTrigger = ({
+  sidebarDrawerOpen,
+  setSidebarDrawerOpen,
+  account
+}) => {
+  const closeIcon = !account ? <MoreCloseDarkIcon /> : <MoreCloseIcon />;
   return (
     <Box
       ml="auto"
       p="s"
       onClick={() => setSidebarDrawerOpen(!sidebarDrawerOpen)}
     >
-      {sidebarDrawerOpen ? <MoreCloseIcon /> : <MoreOpenIcon />}
+      {sidebarDrawerOpen ? closeIcon : <MoreOpenIcon />}
     </Box>
   );
 };
@@ -40,7 +46,7 @@ const DrawerBg = styled.div`
   width: 100vw;
   z-index: 9;
   height: 100%;
-  background-color: rgba(72, 73, 95, 0.25);
+  background-color: #fff;
   ${({ sidebarDrawerOpen }) =>
     sidebarDrawerOpen
       ? css`
@@ -64,6 +70,12 @@ const MobileNav = ({ viewedAddress }) => {
     }
     return clearAllBodyScrollLocks;
   }, [sidebarDrawerOpen]);
+
+  useEffect(() => {
+    if (account) {
+      setSidebarDrawerOpen(false);
+    }
+  }, [account]);
 
   return (
     <Flex
@@ -92,9 +104,9 @@ const MobileNav = ({ viewedAddress }) => {
           ml="xs"
         />
       </Flex>
-      <Flex alignItems="center" justifyContent="center" pb="10px">
+      <Flex alignItems="center" justifyContent="center">
         <SidebarDrawerTrigger
-          {...{ sidebarDrawerOpen, setSidebarDrawerOpen }}
+          {...{ sidebarDrawerOpen, setSidebarDrawerOpen, account }}
         />
       </Flex>
 

@@ -18,6 +18,7 @@ export const MAX_AUCTION_LOT_SIZE = 'maxAuctionLotSize';
 export const ADAPTER_BALANCE = 'adapterBalance';
 export const ILK_ART = 'ilkArt';
 export const ILK_DEBT_AVAILABLE = 'ilkDebtAvailable';
+export const DUST = 'dust';
 
 const defaultIlkState = {
   [DUTY]: '',
@@ -33,7 +34,8 @@ const defaultIlkState = {
   [MAX_AUCTION_LOT_SIZE]: '',
   [PRICE_WITH_SAFETY_MARGIN]: '',
   [ILK_ART]: '',
-  [ILK_DEBT_AVAILABLE]: ''
+  [ILK_DEBT_AVAILABLE]: '',
+  [DUST]: ''
 };
 
 export function getIlkData(feeds, ilkKey) {
@@ -83,6 +85,7 @@ function convert(valueType, value, decimals) {
     case PRICE_WITH_SAFETY_MARGIN:
       return fromRay(value).toFixed(3);
     case DEBT_CEILING:
+    case DUST:
       return fromRad(value).toFixed(0);
     case MAX_AUCTION_LOT_SIZE:
     case ADAPTER_BALANCE:

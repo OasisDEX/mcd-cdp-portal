@@ -23,11 +23,11 @@ const CollateralClaim = ({
     const txObject = maker
       .service('mcd:cdpManager')
       .reclaimCollateral(cdpId, unlockedCollateral.toNumber(), 0);
-    newTxListener(txObject, 'Claiming collateral');
+    newTxListener(txObject, lang.notifications.claiming_collateral);
   };
 
   const message = lang.formatString(
-    'Your {0} Vault auction(s) have completed. You have {1} {2} to claim',
+    lang.notifications.claim,
     gem,
     unlockedCollateral.toFixed(7),
     gem

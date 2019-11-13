@@ -10,12 +10,20 @@ import {
 } from 'components/CDPCreateScreens';
 import useMaker from 'hooks/useMaker';
 import { TxLifecycle } from 'utils/constants';
+import lang from 'languages';
+
+const {
+  select_collateral,
+  vault_management,
+  generate_dai,
+  confirmation
+} = lang.cdp_create.screen_titles;
 
 const screens = [
-  ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
-  ['Vault Management', props => <CDPCreateSetAllowance {...props} />],
-  ['Generate Dai', props => <CDPCreateDeposit {...props} />],
-  ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
+  [select_collateral, props => <CDPCreateSelectCollateral {...props} />],
+  [vault_management, props => <CDPCreateSetAllowance {...props} />],
+  [generate_dai, props => <CDPCreateDeposit {...props} />],
+  [confirmation, props => <CDPCreateConfirmCDP {...props} />]
 ];
 
 const initialState = {

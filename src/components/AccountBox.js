@@ -145,7 +145,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
 
   return (
     <>
-      <CardBody>
+      <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
         <Box px="s" py="m">
           <Text t="h4">{lang.sidebar.wallet_balances}</Text>
         </Box>

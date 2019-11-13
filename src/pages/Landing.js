@@ -258,6 +258,8 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
 
     window.addEventListener('resize', debouncedHandleResize);
     setHeight(answerElement.current.clientHeight);
+    // set the height after fonts have probably loaded, or system font is used
+    setTimeout(() => setHeight(answerElement.current.clientHeight), 3200);
     return _ => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
@@ -455,6 +457,12 @@ function Landing() {
                   color: '#5894B5',
                   backgroundColor: 'white'
                 }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'BorrowDai',
+                    product: 'oasis-landing'
+                  });
+                }}
               >
                 {lang.landing_page.borrow_card.button}
               </Link>
@@ -482,6 +490,12 @@ function Landing() {
                 style={{
                   color: '#5894B5',
                   backgroundColor: 'white'
+                }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'SaveDai',
+                    product: 'oasis-landing'
+                  });
                 }}
               >
                 {lang.landing_page.save_card.button}

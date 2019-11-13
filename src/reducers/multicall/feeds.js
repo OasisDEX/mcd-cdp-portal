@@ -10,7 +10,8 @@ import {
   LAST_DRIP,
   PRICE_WITH_SAFETY_MARGIN,
   DEBT_CEILING,
-  ILK_ART
+  ILK_ART,
+  DUST
 } from 'reducers/feeds';
 
 export default function(addresses, { key: name, gem }) {
@@ -31,7 +32,7 @@ export default function(addresses, { key: name, gem }) {
         [`ilk.${name}.${RATE}`],
         [`ilk.${name}.${PRICE_WITH_SAFETY_MARGIN}`],
         [`ilk.${name}.${DEBT_CEILING}`],
-        []
+        [`ilk.${name}.${DUST}`]
       ]
     },
     {

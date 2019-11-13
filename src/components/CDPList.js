@@ -22,6 +22,7 @@ import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
 import { getMeasurement } from '../styles/theme';
+import lang from 'languages';
 
 const NavbarItemContent = ({ children, ...props }) => (
   <Flex
@@ -242,7 +243,7 @@ const CDPList = memo(function({
               fontWeight="bold"
               color={account ? 'white' : 'darkPurple'}
             >
-              Overview
+              {lang.overview}
             </Text>
           </NavbarItem>
           {navbarCdps.map((cdp, idx) => {
