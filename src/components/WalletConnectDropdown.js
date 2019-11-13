@@ -67,6 +67,8 @@ const WalletConnectDropdown = ({
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
 
+  const providerName = getWebClientProviderName();
+
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
@@ -78,9 +80,7 @@ const WalletConnectDropdown = ({
       >
         {otherAccounts.map(account => {
           const providerType =
-            account.type === 'browser'
-              ? getWebClientProviderName()
-              : account.type;
+            account.type === 'browser' ? providerName : account.type;
           return (
             <Option
               key={account.address}
@@ -115,7 +115,7 @@ const WalletConnectDropdown = ({
           >
             {lang.formatString(
               lang.connect_to,
-              lang.providers[getWebClientProviderName()]
+              providerName !== '' ? lang.providers[providerName] : providerName
             )}
           </Option>
         )}
