@@ -92,7 +92,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       });
     }
 
-    if (isOwner && account) {
+    if (!isOwner && account) {
       addNotification({
         id: NotificationList.NON_VAULT_OWNER,
         content: lang.formatString(
