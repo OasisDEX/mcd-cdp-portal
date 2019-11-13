@@ -14,7 +14,7 @@ import { getIlkData } from 'reducers/feeds';
 
 import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
-import useCollateralTypes from 'hooks/useCollateralTypes';
+import useCdpTypes from 'hooks/useCdpTypes';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
@@ -85,7 +85,7 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const { maker } = useMaker();
   const { lang } = useLanguage();
-  const { collateralTypes } = useCollateralTypes();
+  const { cdpTypes } = useCdpTypes();
   const balances = useWalletBalances();
   const allowances = useTokenAllowances();
   const hasAllowance =
@@ -133,7 +133,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {collateralTypes.map(
+                  {cdpTypes.map(
                     ilk =>
                       balances[ilk.gem] && (
                         <IlkTableRow

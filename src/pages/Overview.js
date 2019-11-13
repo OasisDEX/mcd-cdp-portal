@@ -26,7 +26,7 @@ import {
 } from 'reducers/cdps';
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
-import useCollateralTypes from '../hooks/useCollateralTypes';
+import useCdpTypes from '../hooks/useCdpTypes';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -53,19 +53,6 @@ const InfoCard = ({ title, amount, denom }) => (
     </Grid>
   </Card>
 );
-/**
- * 
-currency: ƒ creatorFn(amount, shift)
-gem: "ETH"
-key: "ETH-A"
-networks: (2) ["kovan", "mainnet"]
-slug: "eth-a"
-symbol: "ETH-A"
-
-cdps
-id: 150
-ilk: "ETH-A"
- */
 
 function Overview() {
   const { account } = useMaker();
@@ -75,15 +62,13 @@ function Overview() {
   const [cdpContent, setCdpContent] = useState(null);
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-  const { collateralList } = useCollateralTypes();
+  const { cdpTypesList } = useCdpTypes();
 
   useEffect(() => {
     const buildCdpOverview = async () => {
       try {
-        //TODO see if you can put this in maker provider where we tack it to the accts
-        //rename according to getCdpTypes
         const supportedCdps = account.cdps.reduce((acc, cdp) => {
-          if (collateralList.includes(cdp.ilk))
+          if (cdpTypesList.includes(cdp.ilk))
             acc.push({ ilk: cdp.ilk, id: cdp.id });
           return acc;
         }, []);

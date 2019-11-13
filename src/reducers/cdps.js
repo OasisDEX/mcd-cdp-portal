@@ -19,7 +19,6 @@ const defaultCdpState = {
 };
 
 export function getCdp(cdpId, { cdps, feeds }) {
-  console.log('**** getCdpId:', cdpId);
   cdpId = cdpId.toString();
   if (!cdps[cdpId]) return defaultCdpState;
   else
