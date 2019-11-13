@@ -45,7 +45,7 @@ export const NotificationStatus = {
 };
 
 export const NotificationList = {
-  CLAIM_COLLATERAL: 'claimCollateral',
-  NON_VAULT_OWNER: 'nonVaultOwner',
-  NON_OVERVIEW_OWNER: 'nonOverviewOwner'
+  CLAIM_COLLATERAL: { name: 'claimCollateral', priority: 2 },
+  NON_VAULT_OWNER: { name: 'nonVaultOwner', priority: 1 },
+  NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 }
 };

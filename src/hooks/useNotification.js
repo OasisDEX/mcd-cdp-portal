@@ -23,10 +23,10 @@ function useNotification() {
 
   const deleteNotifications = notificationIds =>
     !!notificationIds.length &&
-    notificationIds.map(id =>
+    notificationIds.map(payload =>
       dispatchNotification({
         action: DELETE_NOTIFICATION,
-        payload: id
+        payload: payload
       })
     );
 

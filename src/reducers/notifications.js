@@ -9,17 +9,20 @@ const initialState = {
   viewable: true
 };
 
-const addNotification = (state, { id, ...rest }) => ({
-  ...state,
-  banners: {
-    ...state.banners,
-    [id]: rest
-  }
-});
+const addNotification = (state, { id: { name, priority }, ...rest }) => {
+  console.log(name, priority);
+  return {
+    ...state,
+    banners: {
+      ...state.banners,
+      [name]: { ...rest, priority }
+    }
+  };
+};
 
-const deleteNotification = (state, id) => {
+const deleteNotification = (state, { name }) => {
   const {
-    banners: { [id]: _, ...rest }
+    banners: { [name]: _, ...rest }
   } = state;
   return {
     ...state,

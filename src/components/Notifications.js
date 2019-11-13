@@ -70,14 +70,20 @@ const ActionButton = ({ onClick, label }) => (
 
 function Notifications() {
   const { banners, viewable, deleteNotifications } = useNotification();
-  const bannerEntries = banners && Object.entries(banners);
+  const bannerEntries =
+    banners &&
+    Object.entries(banners).sort((a, b) => {
+      if (a[1]['priority'] < b[1]['priority']) return -1;
+      if (a[1]['priority'] > b[1]['priority']) return 1;
+      return 0;
+    });
   return (
     <Box mb="l">
       {viewable &&
         !!bannerEntries.length &&
         bannerEntries.map(
           ([
-            id,
+            name,
             { content, status, hasButton, onClick, buttonLabel, customButton }
           ]) => {
             const {
@@ -88,7 +94,7 @@ function Notifications() {
 
             return (
               <Card
-                key={id}
+                key={name}
                 my=".75rem"
                 p="1rem"
                 bg={backgroundColor}

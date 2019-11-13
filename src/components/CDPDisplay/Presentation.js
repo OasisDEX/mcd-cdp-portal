@@ -92,7 +92,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       });
     }
 
-    if (!isOwner && account) {
+    if (isOwner && account) {
       const nonVaultOwnerNotification = lang.formatString(
         lang.notifications.non_vault_owner,
         shortenAddress(cdpOwner)
