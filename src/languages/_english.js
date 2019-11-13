@@ -297,6 +297,7 @@ export default {
     "is_float": "Please enter a valid number",
     "default": "Please enter a valid input"
   },
+  "overview": "Overview",
   "cdp_type": "Vault Type",
   "not_found": "Not Found",
   // "network": "Network",
@@ -328,6 +329,7 @@ export default {
   "cookie_notice": "By using this website you agree to our {0}",
   "privacy_policy": "privacy policy",
   "providers": {
+    "connect_wallet": "Connect a wallet to get started",
     "metamask": "MetaMask",
     "trust": "Trust",
     "coinbase": "Coinbase Wallet",
