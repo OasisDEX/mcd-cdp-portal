@@ -55,10 +55,7 @@ const AddCdpButton = ({ account, show, mobile }) => (
     onClick={() =>
       account && show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
     }
-    width={
-      mobile
-        && `${getMeasurement('navbarItemWidth')}px`
-    }
+    width={mobile && `${getMeasurement('navbarItemWidth')}px`}
     mx={mobile && '7px'}
     mt={mobile && '15px'}
     justifyContent="center"
@@ -200,7 +197,7 @@ const CDPList = memo(function({
       : !active && account
       ? 'blueGrayDarker'
       : active && !account
-      ? 'teal.500'
+      ? 'white'
       : 'grey.200';
 
   return listOpen ? (
@@ -215,7 +212,7 @@ const CDPList = memo(function({
         </DirectionalButton>
       )}
       <Box
-        bg={account ? 'blueGrayDarker' : 'white'}
+        bg={account ? 'blueGrayDarker' : 'grey.200'}
         height="100%"
         width={mobile ? '100vw' : `${getMeasurement('navbarWidth')}px`}
         px={mobile ? '15px' : '5px'}
