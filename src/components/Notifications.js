@@ -103,13 +103,10 @@ function Notifications() {
                 <Flex justifyContent="center">
                   <Box px="s" width="100%">
                     <Grid
-                      gridTemplateColumns={hasButton ? '5fr 1fr' : '1fr'}
+                      gridTemplateColumns={hasButton ? '1fr auto' : '1fr'}
                       gridColumnGap="m"
                     >
-                      <Text
-                        color={textColor}
-                        justifySelf={hasButton ? 'end' : 'center'}
-                      >
+                      <Text color={textColor} justifySelf="center">
                         {content}
                       </Text>
                       <Box justifySelf="start" alignSelf="center">

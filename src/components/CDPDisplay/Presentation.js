@@ -74,7 +74,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       newTxListener(txObject, 'Claiming collateral');
     };
 
-    if (unlockedCollateral > 0) {
+    if (isOwner && unlockedCollateral > 0) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         cdp.gem,
@@ -86,7 +86,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         id: NotificationList.CLAIM_COLLATERAL,
         content: claimCollateralNotification,
         status: NotificationStatus.WARNING,
-        hasButton: true,
+        hasButton: isOwner,
         buttonLabel: 'Claim',
         onClick: () => reclaimCollateral()
       });
