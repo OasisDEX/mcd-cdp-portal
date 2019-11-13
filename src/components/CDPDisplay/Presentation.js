@@ -114,6 +114,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         Notification.CLAIM_COLLATERAL,
         Notification.NON_VAULT_OWNER
       ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, account, cdpId, unlockedCollateral]);
 
   const showAction = props => {
