@@ -26,6 +26,7 @@ import {
 } from 'reducers/cdps';
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
+import useCdpTypes from '../hooks/useCdpTypes';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -61,12 +62,18 @@ function Overview() {
   const [cdpContent, setCdpContent] = useState(null);
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
+  const { cdpTypesList } = useCdpTypes();
 
   useEffect(() => {
     const buildCdpOverview = async () => {
       try {
+        const supportedCdps = account.cdps.reduce((acc, cdp) => {
+          if (cdpTypesList.includes(cdp.ilk))
+            acc.push({ ilk: cdp.ilk, id: cdp.id });
+          return acc;
+        }, []);
         const cdpData = await Promise.all(
-          account.cdps.map(({ id }) => {
+          supportedCdps.map(({ id }) => {
             const cdp = getCdp(id, { cdps, feeds });
             return {
               token: cdp.gem,

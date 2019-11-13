@@ -371,5 +371,9 @@ export default {
     "ledger_nano": "Ledger Nano",
     "trezor": "Trezor",
     "other": "Active Wallet"
+  },
+  "notifications": {
+    "claim": "Your {0} Vault auction(s) have completed. You have {1} {2} to claim",
+    "claiming_collateral": "Claiming collateral"
   }
 }
