@@ -201,8 +201,7 @@ function Save() {
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
                       {balance.toFixed(4)}{' '}
-                      <Text t="h5">
-                        <DaiLogo /> DAI
+                      <Text t="h5"> DAI
                       </Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
