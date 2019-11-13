@@ -5,6 +5,8 @@ import ilks from 'references/ilkList';
 
 const uniqueIlkGems = [...new Set(ilks.map(ilk => ilk.gem))];
 
+console.log('***', uniqueIlkGems);
+
 export const tokensWithBalances = [
   ...new Set(['MDAI', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
 ];
@@ -36,6 +38,7 @@ const reducer = produce((draft, { type, value }) => {
   // example type: accounts.0xdead...beef.savings
   const [label, account, key, token] = type.split('.');
   if (label === 'accounts' && !draft[account]) {
+    console.log('***1 accounts reducer', defaultAccountState);
     draft[account] = Object.assign({}, defaultAccountState);
   }
 
@@ -46,6 +49,7 @@ const reducer = produce((draft, { type, value }) => {
   } else if (label === 'accounts' && key === 'savings') {
     draft[account].savings = value;
   }
+  console.log('***account final', account);
 }, initialState);
 
 export default reducer;

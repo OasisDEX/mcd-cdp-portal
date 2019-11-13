@@ -85,7 +85,7 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
   const { maker } = useMaker();
   const { lang } = useLanguage();
-  const collateralTypes = useCollateralTypes();
+  const { collateralTypes } = useCollateralTypes();
   const balances = useWalletBalances();
   const allowances = useTokenAllowances();
   const hasAllowance =
