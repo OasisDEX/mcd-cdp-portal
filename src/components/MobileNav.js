@@ -20,8 +20,12 @@ import { ReactComponent as MoreOpenIcon } from 'images/menu-more.svg';
 import { ReactComponent as MoreCloseIcon } from 'images/menu-more-close.svg';
 import { ReactComponent as MoreCloseDarkIcon } from 'images/menu-more-close-dark.svg';
 
-const SidebarDrawerTrigger = ({ sidebarDrawerOpen, setSidebarDrawerOpen, account }) => {
-  const closeIcon = !account ?  <MoreCloseDarkIcon /> :  <MoreCloseIcon />
+const SidebarDrawerTrigger = ({
+  sidebarDrawerOpen,
+  setSidebarDrawerOpen,
+  account
+}) => {
+  const closeIcon = !account ? <MoreCloseDarkIcon /> : <MoreCloseIcon />;
   return (
     <Box
       ml="auto"
@@ -69,10 +73,9 @@ const MobileNav = ({ viewedAddress }) => {
 
   useEffect(() => {
     if (account) {
-      setSidebarDrawerOpen(false)
+      setSidebarDrawerOpen(false);
     }
-
-  }, [account])
+  }, [account]);
 
   return (
     <Flex
