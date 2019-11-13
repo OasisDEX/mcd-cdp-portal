@@ -160,6 +160,7 @@ export default {
     "post_confirmed_text": "你可以安全离开这个页面",
     "insufficient_ilk_balance": "{0} 余额不足",
     "draw_too_much_dai": "金库低于清算线",
+    "below_dust_limit": "初始化金库需要最低生成 {0} Dai",
     "stability_fee_description": "基于你的金库 Dai 债务累计的稳定费。",
     "liquidation_ratio_description": "清算率是指触发金库清算的最低抵押率（抵押品价值/借 Dai 债务）。",
     "liquidation_penalty_description": "清算发生时，对借 Dai 债务额外收取的罚金。",
