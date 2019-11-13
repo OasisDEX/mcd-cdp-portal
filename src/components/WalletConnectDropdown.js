@@ -113,7 +113,10 @@ const WalletConnectDropdown = ({
               close();
             }}
           >
-            Connect to {lang.providers[getWebClientProviderName()]}
+            {lang.formatString(
+              lang.connect_to,
+              lang.providers[getWebClientProviderName()]
+            )}
           </Option>
         )}
         <Option
@@ -122,7 +125,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Connect to Ledger Nano
+          {lang.formatString(lang.connect_to, 'Ledger Nano')}
         </Option>
         <Option
           onClick={() => {
@@ -130,7 +133,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Connect to Trezor
+          {lang.formatString(lang.connect_to, 'Trezor')}
         </Option>
         <Option
           onClick={() => {

@@ -297,6 +297,7 @@ export default {
     "is_float": "Please enter a valid number",
     "default": "Please enter a valid input"
   },
+  "connect_to": "Connect to {0}",
   "overview": "Overview",
   "cdp_type": "Vault Type",
   "not_found": "Not Found",
