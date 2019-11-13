@@ -102,7 +102,6 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         id: NotificationList.NON_VAULT_OWNER,
         content: nonVaultOwnerNotification,
         status: NotificationStatus.WARNING,
-        hasButton: true,
         showCloseButton: true
       });
     }
