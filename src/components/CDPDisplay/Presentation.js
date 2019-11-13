@@ -78,7 +78,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         cdp.gem,
-        cdp.unlockedCollateral.toFixed(7),
+        cdp.unlockedCollateral && cdp.unlockedCollateral.toFixed(7),
         cdp.gem
       );
 
@@ -86,7 +86,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         id: NotificationList.CLAIM_COLLATERAL,
         content: claimCollateralNotification,
         status: NotificationStatus.WARNING,
-        hasButton: isOwner,
+        hasButton: true,
         buttonLabel: 'Claim',
         onClick: () => reclaimCollateral()
       });
@@ -101,8 +101,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       addNotification({
         id: NotificationList.NON_VAULT_OWNER,
         content: nonVaultOwnerNotification,
-        status: NotificationStatus.WARNING,
-        showCloseButton: true
+        status: NotificationStatus.WARNING
       });
     }
 
