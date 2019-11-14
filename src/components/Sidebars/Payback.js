@@ -35,11 +35,15 @@ const Payback = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp, false);
+  const debtAmount = getDebtAmount(cdp, true, 18);
 
   const dustLimit = cdp.dust ? cdp.dust : 0;
   const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
-  const dustLimitValidation = value => maxAmount - value < dustLimit;
+
+  const dustLimitValidation = value =>
+    maxAmount - value < dustLimit &&
+    maxAmount !== value &&
+    maxAmount - dustLimit > 0;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -71,7 +75,6 @@ const Payback = ({ cdpId, reset }) => {
     gemsToLock: collateralAmount,
     daiToDraw: Math.max(debtAmount - amountToPayback, 0)
   });
-
   const setMax = () => setAmount(maxAmount);
 
   const payback = async () => {
