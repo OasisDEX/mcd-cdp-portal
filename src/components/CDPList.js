@@ -94,7 +94,7 @@ const CDPList = memo(function({
 }) {
   const { url } = useCurrentRoute();
   const [listOpen, setListOpen] = useState(false);
-  const { maker, account } = useMaker();
+  const { maker, account, viewedAddressData } = useMaker();
   const [{ cdps, feeds }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
@@ -115,19 +115,18 @@ const CDPList = memo(function({
       setOverviewPath(`/${Routes.BORROW}/owner/${account.address}`);
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
-    } else if (viewedAddress) {
+    } else if (viewedAddress && viewedAddressData) {
       setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
-      (async () => {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
-        if (!proxy) return;
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-        setNavbarCdps(cdps);
-      })();
+      setNavbarCdps(viewedAddressData.cdps);
     }
-  }, [maker, account, viewedAddress, dispatch, setOverviewPath]);
+  }, [
+    maker,
+    account,
+    viewedAddress,
+    dispatch,
+    setOverviewPath,
+    viewedAddressData
+  ]);
 
   useEffect(() => {
     if (account || viewedAddress) {

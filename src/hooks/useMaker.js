@@ -7,6 +7,7 @@ function useMaker() {
   const {
     maker,
     account,
+    viewedAddressData,
     transactions,
     newTxListener,
     resetTx,
@@ -101,6 +102,7 @@ function useMaker() {
     connectToProviderOfType,
     checkForNewCdps,
     account,
+    viewedAddressData,
     transactions,
     newTxListener,
     resetTx,
