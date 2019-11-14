@@ -83,7 +83,7 @@ function convert(valueType, value, decimals) {
     }
     case RATE:
     case PRICE_WITH_SAFETY_MARGIN:
-      return fromRay(value).toFixed(3);
+      return fromRay(value).toFixed(18);
     case DEBT_CEILING:
     case DUST:
       return fromRad(value).toFixed(0);

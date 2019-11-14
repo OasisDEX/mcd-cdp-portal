@@ -36,7 +36,8 @@ const Generate = ({ cdpId, reset }) => {
   const dustLimit = cdp.dust ? cdp.dust : 0;
 
   // minFloat uses <= so it won't work for dustLimit
-  const dustLimitValidation = value => parseFloat(value) < dustLimit;
+  const dustLimitValidation = value =>
+    parseFloat(value + debtAmount) < dustLimit;
 
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
