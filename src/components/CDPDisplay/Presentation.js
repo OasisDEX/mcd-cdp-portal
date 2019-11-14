@@ -70,7 +70,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     const reclaimCollateral = async () => {
       const txObject = maker
         .service('mcd:cdpManager')
-        .reclaimCollateral(cdpId, unlockedCollateral.toNumber(), 0);
+        .reclaimCollateral(cdpId, unlockedCollateral.toFixed(), 0);
       newTxListener(txObject, 'Claiming collateral');
     };
 
