@@ -119,7 +119,14 @@ const CDPList = memo(function({
       setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
       setNavbarCdps(viewedAddressData.cdps);
     }
-  }, [maker, account, viewedAddress, dispatch, setOverviewPath, viewedAddressData]);
+  }, [
+    maker,
+    account,
+    viewedAddress,
+    dispatch,
+    setOverviewPath,
+    viewedAddressData
+  ]);
 
   useEffect(() => {
     if (account || viewedAddress) {

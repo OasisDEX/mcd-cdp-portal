@@ -113,10 +113,12 @@ function MakerProvider({
           .getProxyAddress(viewedAddress);
         if (!proxy) return;
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        const supportedCDPTypes = ilks.filter(ilk => ilk.networks.includes(network));
+        const supportedCDPTypes = ilks.filter(ilk =>
+          ilk.networks.includes(network)
+        );
 
-        const supportedCdps = cdps.filter((cdp) => {
-          return (supportedCDPTypes.map(t => t.key).includes(cdp.ilk))
+        const supportedCdps = cdps.filter(cdp => {
+          return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
         }, []);
 
         supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
