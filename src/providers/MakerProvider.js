@@ -24,7 +24,8 @@ function MakerProvider({
   network,
   testchainId,
   backendEnv,
-  viewedAddress
+  viewedAddress,
+  test
 }) {
   const [account, setAccount] = useState(null);
   const [viewedAddressData, setViewedAddressData] = useState(null);
@@ -130,7 +131,7 @@ function MakerProvider({
         });
       })();
     }
-  }, [maker, viewedAddress, dispatch]);
+  }, [maker, viewedAddress, dispatch, network]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
@@ -184,11 +185,15 @@ function MakerProvider({
       const systemDebtCeiling =
         maker &&
         (await maker.service('mcd:systemData').getSystemWideDebtCeiling());
-      if (systemDebtCeiling > 0 || window.localStorage.password === KEY) {
+      if (
+        test ||
+        systemDebtCeiling > 0 ||
+        window.localStorage.password === KEY
+      ) {
         setDisplayApp(true);
       }
     })();
-  }, [maker]);
+  }, [maker, test]);
 
   const WaitingPage = () => <div>Coming Soon</div>;
 
