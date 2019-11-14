@@ -69,6 +69,14 @@ const WalletConnectDropdown = ({
 
   const providerName = getWebClientProviderName();
 
+  async function connectBrowserWallet() {
+    try {
+      await connectBrowserProvider();
+    } catch (err) {
+      window.alert(err);
+    }
+  }
+
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
@@ -109,7 +117,7 @@ const WalletConnectDropdown = ({
         {!hasBrowserAccount && (
           <Option
             onClick={() => {
-              connectBrowserProvider();
+              connectBrowserWallet();
               close();
             }}
           >
