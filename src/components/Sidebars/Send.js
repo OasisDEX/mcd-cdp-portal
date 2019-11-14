@@ -16,7 +16,7 @@ const PasteLink = styled(Link)``;
 const StyledPaste = styled(PasteIcon)`
   margin-left: 4px;
   path {
-    fill: ${({ theme }) => theme.colors.linkBlue};
+    fill: ${({ theme }) => theme.colors.blue};
   }
   ${PasteLink}:hover & {
     path {
@@ -199,7 +199,7 @@ const Send = ({ token, reset }) => {
             e.target.value = tmp;
           }}
           placeholder="0x..."
-          after={<PasteAddress onClick={paste} />}
+          after={<PasteAddress onClick={paste} color="blue" />}
           failureMessage={destAddressFailureMessage}
           data-testid="send-address-input"
         />

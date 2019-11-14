@@ -132,7 +132,11 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       <Grid
         py="m"
         gridColumnGap="l"
-        gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
+        gridTemplateColumns={{
+          0: '1fr',
+          1: '1fr',
+          xl: '1fr 1fr'
+        }}
       >
         <CdpViewCard title={lang.cdp_page.liquidation_price}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
