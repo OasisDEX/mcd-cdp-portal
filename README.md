@@ -1,8 +1,8 @@
-# CDP Portal for MCD
+# Oasis Borrow/Save
 
 [![Build Status](https://travis-ci.com/makerdao/mcd-cdp-portal.svg?token=3BTQxsyAmYGZyiaheNXp&branch=master)](https://travis-ci.com/makerdao/mcd-cdp-portal)
 
-## The official Maker dapp for managing CDPs and generating Dai
+## The official Maker dapp for managing Vaults and generating Dai
 
 ### Prerequisites
 
@@ -18,7 +18,7 @@ Have installed:
 
 2. `cd mcd-cdp-portal && yarn`
 
-### Running the CDP Portal
+### Running Oasis
 
 - `yarn start`
 - Go to http://localhost:3000
