@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, redirect, withView } from 'navi';
+import { map, route, mount, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';

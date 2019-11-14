@@ -8,6 +8,7 @@ import {
   Table,
   Box,
   Button,
+  Address,
   Flex
 } from '@makerdao/ui-components-core';
 import { Link, useCurrentRoute } from 'react-navi';
@@ -28,7 +29,6 @@ import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
 import { NotificationStatus, NotificationList } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
-import { Address } from '@makerdao/ui-components-core';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
@@ -84,6 +84,11 @@ function Overview({ viewedAddress }) {
 
   useEffect(() => {
     if (viewedAddressData) {
+      if (viewedAddressData.viewedAddress !== viewedAddress) {
+        setCdpContent(null);
+        setTotalCollateralUSD(0);
+        setTotalDaiDebt(0);
+      }
       const cdpData = viewedAddressData.cdps.map(({ id: cdpId }) => {
         const cdp = getCdp(cdpId, { cdps, feeds });
         return {
@@ -131,10 +136,50 @@ function Overview({ viewedAddress }) {
 
       setCdpContent(cleanedCDP);
     }
-  }, [account, cdps, feeds, viewedAddress]);
+  }, [account, cdps, feeds, viewedAddress, viewedAddressData]);
 
   const { show } = useModal();
 
+  if (!viewedAddressData) {
+    return (
+      <PageContentLayout>
+        <Flex
+          height="70vh"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Text.p t="h4" mb="s">
+            {lang.overview_page.loading_vaults}
+          </Text.p>
+        </Flex>
+      </PageContentLayout>
+    );
+  }
+
+  if (!account && !viewedAddressData.cdps.length) {
+    return (
+      <PageContentLayout>
+        <Flex
+          height="70vh"
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+        >
+          <Text.p t="h4" mb="s">
+            {lang.formatString(
+              lang.overview_page.no_vaults,
+              <Address
+                full={viewedAddressData.viewedAddress}
+                shorten={true}
+                expandable={false}
+              />
+            )}
+          </Text.p>
+        </Flex>
+      </PageContentLayout>
+    );
+  }
   return (
     <PageContentLayout>
       {account && Object.keys(cdps).length === 0 ? (

@@ -93,7 +93,9 @@ export default {
     "total_dai_debt": "total dai debt",
     "get_started_title": "Open your first vault to start generating Dai.",
     "select_another_wallet": "Select another wallet",
-    "connect_ledgers_choice": "Connect {0} or {1}"
+    "connect_ledgers_choice": "Connect {0} or {1}",
+    "no_vaults": "Address {0} has no Vaults.",
+    "loading_vaults": "Loading Vaults..."
   },
   "navbar": {
     "save": "Save",

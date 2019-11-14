@@ -30,7 +30,6 @@ import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
 
-import { ReactComponent as DaiLogo } from 'images/dai.svg';
 import useModal from '../hooks/useModal';
 import useProxy from '../hooks/useProxy';
 

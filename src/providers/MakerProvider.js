@@ -108,6 +108,10 @@ function MakerProvider({
   useEffect(() => {
     if (maker && viewedAddress) {
       (async () => {
+        if (viewedAddressData && viewedAddress !== viewedAddressData.viewedAddress) {
+          setViewedAddressData(null);
+        }
+
         const proxy = await maker
           .service('proxy')
           .getProxyAddress(viewedAddress);
@@ -129,7 +133,7 @@ function MakerProvider({
         });
       })();
     }
-  }, [maker, viewedAddress, dispatch]);
+  }, [maker, viewedAddress, dispatch, viewedAddressData, network]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
