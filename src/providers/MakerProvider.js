@@ -108,7 +108,10 @@ function MakerProvider({
   useEffect(() => {
     if (maker && viewedAddress) {
       (async () => {
-        if (viewedAddressData && viewedAddress !== viewedAddressData.viewedAddress) {
+        if (
+          viewedAddressData &&
+          viewedAddress !== viewedAddressData.viewedAddress
+        ) {
           setViewedAddressData(null);
         }
 
