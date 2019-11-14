@@ -29,43 +29,41 @@ const { networkNames, defaultNetwork } = config;
 
 const withBorrowLayout = route =>
   hasNetwork(
-    withDebtCeilings(
-      withView(async request => {
-        const { network, testchainId, backendEnv } = request.query;
-        const { viewedAddress, cdpId } = request.params;
+    withView(async request => {
+      const { network, testchainId, backendEnv } = request.query;
+      const { viewedAddress, cdpId } = request.params;
 
-        return (
-          <MakerProvider
-            network={network}
-            testchainId={testchainId}
-            backendEnv={backendEnv}
-          >
-            <RouteEffects network={network} />
-            <AwaitMakerAuthentication>
-              <EthBalanceProvider>
-                <ToggleProvider>
-                  <ModalProvider modals={modals} templates={templates}>
-                    <SidebarProvider>
-                      <BorrowLayout
-                        mobileNav={
-                          <MobileNav
-                            viewedAddress={viewedAddress}
-                            cdpId={cdpId}
-                          />
-                        }
-                        navbar={<Navbar viewedAddress={viewedAddress} />}
-                      >
-                        <View />
-                      </BorrowLayout>
-                    </SidebarProvider>
-                  </ModalProvider>
-                </ToggleProvider>
-              </EthBalanceProvider>
-            </AwaitMakerAuthentication>
-          </MakerProvider>
-        );
-      }, route)
-    )
+      return (
+        <MakerProvider
+          network={network}
+          testchainId={testchainId}
+          backendEnv={backendEnv}
+        >
+          <RouteEffects network={network} />
+          <AwaitMakerAuthentication>
+            <EthBalanceProvider>
+              <ToggleProvider>
+                <ModalProvider modals={modals} templates={templates}>
+                  <SidebarProvider>
+                    <BorrowLayout
+                      mobileNav={
+                        <MobileNav
+                          viewedAddress={viewedAddress}
+                          cdpId={cdpId}
+                        />
+                      }
+                      navbar={<Navbar viewedAddress={viewedAddress} />}
+                    >
+                      <View />
+                    </BorrowLayout>
+                  </SidebarProvider>
+                </ModalProvider>
+              </ToggleProvider>
+            </EthBalanceProvider>
+          </AwaitMakerAuthentication>
+        </MakerProvider>
+      );
+    }, route)
   );
 
 const withSaveLayout = route =>
@@ -109,20 +107,20 @@ const withSaveLayout = route =>
 
 const hasNetwork = route =>
   map(request => {
-    if (networkIsUndefined(request)) {
-      return redirect(`./?network=${networkNames[defaultNetwork]}`);
-    } else {
-      return route;
-    }
-  });
+    const ETH_A_DEBT_CEILING = 0;
+    const KEY = 'mcd';
+    const { password } = window.localStorage;
 
-const withDebtCeilings = route =>
-  map(() => {
-    const block = true;
-    if (block) {
-      return redirect('/waiting');
+    if (ETH_A_DEBT_CEILING > 0 || password === KEY) {
+      if (networkIsUndefined(request)) {
+        return redirect(`./?network=${networkNames[defaultNetwork]}`);
+      } else {
+        return route;
+      }
     } else {
-      return route;
+      return withView(async request => {
+        return <WaitingPage />;
+      });
     }
   });
 
@@ -158,12 +156,6 @@ export default mount({
       };
     })
   ),
-  [`/waiting`]: route(() => {
-    return {
-      title: 'Oasis - Waiting',
-      view: <WaitingPage />
-    };
-  }),
 
   [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
     route(request => {
