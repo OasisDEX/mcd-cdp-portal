@@ -95,7 +95,12 @@ function formatEventHistory(lang, events = [], network) {
     return [
       formatEventDescription(lang, e),
       formatDate(new Date(e.timestamp * 1000)),
-      <ExternalLink key={1} string={e.txHash} network={network} />
+      <ExternalLink
+        key={1}
+        string={e.txHash}
+        network={network}
+        arrowInheritsColorOnHover={true}
+      />
     ];
   });
 }

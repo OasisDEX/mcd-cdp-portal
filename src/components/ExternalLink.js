@@ -9,7 +9,8 @@ const ExternalLink = ({
   string,
   network,
   hideText,
-  fill = '#447afb'
+  fill = '#447afb',
+  arrowInheritsColorOnHover = false
 }) => (
   <Link
     fontWeight="400"
@@ -18,17 +19,13 @@ const ExternalLink = ({
     css={`
       whitespace: nowrap;
       &:hover svg {
-        fill: ${getColor('slate.600')};
+        fill: ${arrowInheritsColorOnHover && getColor('slate.600')};
       }
     `}
   >
-    {children}
     <Flex alignItems="center">
-      {!hideText && (
-        <Box mr="2xs">
-          <Address full={string} shorten={true} expandable={false} />
-        </Box>
-      )}
+      {children}
+      {!hideText && <Address full={string} shorten={true} expandable={false} />}
       <ExternalLinkIcon fill={fill} />
     </Flex>
   </Link>
