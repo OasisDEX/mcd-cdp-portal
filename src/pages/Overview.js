@@ -81,7 +81,8 @@ function Overview({ viewedAddress }) {
       });
     }
     return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
-  }, [viewedAddress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewedAddress, account]);
 
   useEffect(() => {
     const buildCdpOverview = async () => {

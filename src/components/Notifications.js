@@ -9,16 +9,7 @@ import {
 } from '@makerdao/ui-components-core';
 import useNotification from 'hooks/useNotification';
 import { NotificationStatus } from 'utils/constants';
-import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 import styled from 'styled-components';
-import { getColor } from 'styles/theme';
-
-const StyledCloseIcon = styled(CloseIcon)`
-  path {
-    stroke: ${props => props.color};
-    fill: ${props => props.color};
-  }
-`;
 
 const ButtonBackgroundWrapper = styled.div`
   background-color: #fff;
@@ -69,7 +60,7 @@ const ActionButton = ({ onClick, label }) => (
 );
 
 function Notifications() {
-  const { banners, viewable, deleteNotifications } = useNotification();
+  const { banners, viewable } = useNotification();
   const bannerEntries =
     banners &&
     Object.entries(banners).sort((a, b) => {

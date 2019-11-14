@@ -357,7 +357,7 @@ export default {
   "collateral_type": "Collateral Type",
   "collateralization": "Your Collateralization Ratio",
   "collateralization_ratio": "Collateralization ratio",
-  "current_price": "Current {0} Price",
+  "current_ilk_price": "Current {0} Price",
   "your_balance": "Your balance",
   // "risk_parameters": "Risk Parameters",
   "terms_of_service_text": "I have read and accepted the {0}",

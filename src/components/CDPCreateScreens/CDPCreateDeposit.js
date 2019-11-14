@@ -174,7 +174,10 @@ const CDPCreateDepositSidebar = ({
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
         [
-          lang.formatString(lang.current_price, selectedIlk.currency.symbol),
+          lang.formatString(
+            lang.current_ilk_price,
+            selectedIlk.currency.symbol
+          ),
           `$${getUsdPrice(selectedIlk.data).toFixed(2)}`
         ],
         [lang.stability_fee, `${stabilityFee}%`]
