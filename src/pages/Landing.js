@@ -324,16 +324,6 @@ const Questions = () => {
       )
     },
     {
-      q: lang.landing_page.question4,
-      a: lang.formatString(
-        lang.landing_page.answer4,
-        link(
-          lang.landing_page.answer4_link1_url,
-          lang.landing_page.answer4_link1_text
-        )
-      )
-    },
-    {
       q: lang.landing_page.question5,
       a: lang.formatString(
         lang.landing_page.answer5,
