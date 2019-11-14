@@ -96,6 +96,7 @@ const TextSection = styled.div`
     font-weight: normal;
     margin-bottom: 20px;
     line-height: 40px;
+    color: #000;
   }
 
   p {
