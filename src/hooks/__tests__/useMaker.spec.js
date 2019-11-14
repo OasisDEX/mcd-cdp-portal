@@ -11,10 +11,9 @@ function TestHook({ callback }) {
   return null;
 }
 
-// TODO remove test={true} after launch
 function testHookWithMakerProvider(callback) {
   renderWithStore(
-    <TestMakerProvider test={true}>
+    <TestMakerProvider>
       <TestHook callback={callback} />
     </TestMakerProvider>
   );
