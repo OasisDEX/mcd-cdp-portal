@@ -6,6 +6,8 @@ import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
+import ilks from 'references/ilkList';
+import { trackCdpById } from 'reducers/multicall/cdps';
 import {
   createWatcher,
   startWatcher,
@@ -17,8 +19,15 @@ const log = debug('maker:MakerProvider');
 
 export const MakerObjectContext = createContext();
 
-function MakerProvider({ children, network, testchainId, backendEnv }) {
+function MakerProvider({
+  children,
+  network,
+  testchainId,
+  backendEnv,
+  viewedAddress
+}) {
   const [account, setAccount] = useState(null);
+  const [viewedAddressData, setViewedAddressData] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
@@ -96,6 +105,30 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
     }
   }, [maker, dispatch]);
 
+  useEffect(() => {
+    if (maker && viewedAddress) {
+      (async () => {
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(viewedAddress);
+        if (!proxy) return;
+        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+        const supportedCDPTypes = ilks.filter(ilk => ilk.networks.includes(network));
+
+        const supportedCdps = cdps.filter((cdp) => {
+          return (supportedCDPTypes.map(t => t.key).includes(cdp.ilk))
+        }, []);
+
+        supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
+
+        setViewedAddressData({
+          cdps: supportedCdps,
+          viewedAddress
+        });
+      })();
+    }
+  }, [maker, viewedAddress, dispatch]);
+
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
     if (proxy) {
@@ -153,7 +186,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
         transactions: txReferences,
         newTxListener,
         checkForNewCdps,
-        selectors
+        selectors,
+        viewedAddressData
       }}
     >
       {children}

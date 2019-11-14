@@ -38,6 +38,7 @@ const withBorrowLayout = route =>
           network={network}
           testchainId={testchainId}
           backendEnv={backendEnv}
+          viewedAddress={viewedAddress}
         >
           <RouteEffects network={network} />
           <AwaitMakerAuthentication>

@@ -26,7 +26,6 @@ import {
 } from 'reducers/cdps';
 import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
-import useCdpTypes from '../hooks/useCdpTypes';
 import { NotificationStatus, NotificationList } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
 import { Address } from '@makerdao/ui-components-core';
@@ -58,14 +57,13 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview({ viewedAddress }) {
-  const { account } = useMaker();
+  const { account, viewedAddressData } = useMaker();
   const [{ cdps, feeds }] = useStore();
   const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);
   const [totalDaiDebt, setTotalDaiDebt] = useState(0);
   const [cdpContent, setCdpContent] = useState(null);
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-  const { cdpTypesList } = useCdpTypes();
 
   const { addNotification, deleteNotifications } = useNotification();
 
@@ -85,63 +83,55 @@ function Overview({ viewedAddress }) {
   }, [viewedAddress, account]);
 
   useEffect(() => {
-    const buildCdpOverview = async () => {
-      try {
-        const supportedCdps = account.cdps.reduce((acc, cdp) => {
-          if (cdpTypesList.includes(cdp.ilk))
-            acc.push({ ilk: cdp.ilk, id: cdp.id });
-          return acc;
-        }, []);
-        const cdpData = await Promise.all(
-          supportedCdps.map(({ id }) => {
-            const cdp = getCdp(id, { cdps, feeds });
-            return {
-              token: cdp.gem,
-              id,
-              ratio: getCollateralizationRatio(cdp),
-              ilkLiqRatio: cdp.liquidationRatio,
-              deposited: getCollateralAmount(cdp),
-              withdraw: getCollateralAvailableAmount(cdp),
-              debt: getDebtAmount(cdp),
-              depositedUSD: getCollateralValueUSD(cdp)
-            };
-          })
-        );
-        const sumDeposits = cdpData.reduce(
-          (acc, { depositedUSD }) => depositedUSD + acc,
-          0
-        );
-        const sumDebt = cdpData.reduce((acc, { debt }) => debt + acc, 0);
-        const cleanedCDP = cdpData.map(cdp => {
-          return Object.keys(cdp)
-            .map(k => {
-              switch (k) {
-                case 'deposited':
-                  return `${cdp[k].toFixed(2)} ${cdp['token']}`;
-                case 'withdraw':
-                  return `${cdp[k].toFixed(2)} ${cdp['token']}`;
-                case 'debt':
-                  return `${cdp[k].toFixed(2)} DAI`;
-                case 'depositedUSD':
-                  return null;
-                default:
-                  return cdp[k];
-              }
-            })
-            .filter(e => e !== null);
-        });
-        setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
-        setTotalDaiDebt(sumDebt.toFixed(2));
-        setCdpContent(cleanedCDP);
-      } catch (e) {
-        return null;
-      }
-    };
+    if (viewedAddressData) {
+      const cdpData = viewedAddressData.cdps.map(({ id: cdpId }) => {
+        const cdp = getCdp(cdpId, { cdps, feeds });
+        return {
+          token: cdp.gem,
+          id: cdpId,
+          ratio: getCollateralizationRatio(cdp),
+          ilkLiqRatio: cdp.liquidationRatio,
+          deposited: getCollateralAmount(cdp),
+          withdraw: getCollateralAvailableAmount(cdp),
+          debt: getDebtAmount(cdp),
+          depositedUSD: getCollateralValueUSD(cdp)
+        };
+      });
+      const sumDeposits = parseFloat(
+        cdpData.reduce((acc, { depositedUSD }) => depositedUSD + acc, 0)
+      );
+      const sumDebt = parseFloat(
+        cdpData.reduce((acc, { debt }) => debt + acc, 0)
+      );
 
-    if (((account || {}).cdps || {}).length) {
-      buildCdpOverview();
+      if (sumDebt) {
+        setTotalDaiDebt(sumDebt.toFixed(2));
+      }
+      if (sumDeposits) {
+        setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
+      }
+
+      const cleanedCDP = cdpData.map(cdp => {
+        return Object.keys(cdp).map(k => {
+          const val = parseFloat(cdp[k]).toFixed(2);
+          switch (k) {
+            case 'deposited':
+              return `${val} ${cdp['token']}`;
+            case 'withdraw':
+              return `${val} ${cdp['token']}`;
+            case 'debt':
+              return `${val} DAI`;
+            case 'depositedUSD':
+              return null;
+            default:
+              return cdp[k];
+          }
+        });
+      });
+
+      setCdpContent(cleanedCDP);
     }
-  }, [account, cdps, feeds]);
+  }, [account, cdps, feeds, viewedAddress]);
 
   const { show } = useModal();
 
@@ -253,89 +243,101 @@ function Overview({ viewedAddress }) {
                             debt
                           ],
                           i
-                        ) => (
-                          <Table.tr key={i}>
-                            <Table.td>
-                              <Text
-                                t="body"
-                                fontSize={{ s: '1.7rem', m: 'm' }}
-                                fontWeight={{ s: 'medium', m: 'normal' }}
-                                color="darkPurple"
-                              >
-                                {token}
-                              </Text>
-                            </Table.td>
-                            <Table.td>
-                              <Text
-                                t="body"
-                                fontSize={{ s: '1.7rem', m: 'm' }}
-                                color={{ s: 'darkLavender', m: 'darkPurple' }}
-                              >
-                                {id}
-                              </Text>
-                            </Table.td>
-                            <Table.td>
-                              {isFinite(ratio) ? (
-                                <RatioDisplay
-                                  fontSize={{ s: '1.7rem', m: '1.3rem' }}
-                                  ratio={ratio}
-                                  ilkLiqRatio={ilkLiqRatio}
-                                />
-                              ) : (
-                                <Text fontSize={{ s: '1.7rem', m: '1.3rem' }}>
-                                  N/A
-                                </Text>
-                              )}
-                            </Table.td>
-                            <Table.td display={{ s: 'none', m: 'table-cell' }}>
-                              <Text t="caption" color="darkLavender">
-                                {deposited}
-                              </Text>
-                            </Table.td>
-                            <Table.td display={{ s: 'none', m: 'table-cell' }}>
-                              <Text t="caption" color="darkLavender">
-                                {withdraw}
-                              </Text>
-                            </Table.td>
-                            <Table.td display={{ s: 'none', m: 'table-cell' }}>
-                              <Text t="caption" color="darkLavender">
-                                {debt}
-                              </Text>
-                            </Table.td>
-                            <Table.td>
-                              <Flex justifyContent="flex-end">
-                                <Button
-                                  variant="secondary-outline"
-                                  px="s"
-                                  py="2xs"
-                                  borderColor="steel"
+                        ) => {
+                          return (
+                            <Table.tr key={i}>
+                              <Table.td>
+                                <Text
+                                  t="body"
+                                  fontSize={{ s: '1.7rem', m: 'm' }}
+                                  fontWeight={{ s: 'medium', m: 'normal' }}
+                                  color="darkPurple"
                                 >
-                                  <Link
-                                    href={`/${Routes.BORROW}/${id}${
-                                      url.search
-                                    }`}
-                                    prefetch={true}
+                                  {token}
+                                </Text>
+                              </Table.td>
+                              <Table.td>
+                                <Text
+                                  t="body"
+                                  fontSize={{ s: '1.7rem', m: 'm' }}
+                                  color={{ s: 'darkLavender', m: 'darkPurple' }}
+                                >
+                                  {id}
+                                </Text>
+                              </Table.td>
+                              <Table.td>
+                                {isFinite(ratio) ? (
+                                  <RatioDisplay
+                                    fontSize={{ s: '1.7rem', m: '1.3rem' }}
+                                    ratio={ratio}
+                                    ilkLiqRatio={ilkLiqRatio}
+                                  />
+                                ) : (
+                                  <Text fontSize={{ s: '1.7rem', m: '1.3rem' }}>
+                                    N/A
+                                  </Text>
+                                )}
+                              </Table.td>
+                              <Table.td
+                                display={{ s: 'none', m: 'table-cell' }}
+                              >
+                                <Text t="caption" color="darkLavender">
+                                  {deposited}
+                                </Text>
+                              </Table.td>
+                              <Table.td
+                                display={{ s: 'none', m: 'table-cell' }}
+                              >
+                                <Text t="caption" color="darkLavender">
+                                  {withdraw}
+                                </Text>
+                              </Table.td>
+                              <Table.td
+                                display={{ s: 'none', m: 'table-cell' }}
+                              >
+                                <Text t="caption" color="darkLavender">
+                                  {debt}
+                                </Text>
+                              </Table.td>
+                              <Table.td>
+                                <Flex justifyContent="flex-end">
+                                  <Button
+                                    variant="secondary-outline"
+                                    px="s"
+                                    py="2xs"
+                                    borderColor="steel"
                                   >
-                                    <Text
-                                      fontSize="1.3rem"
-                                      color="steel"
-                                      css={`
-                                        white-space: nowrap;
-                                      `}
+                                    <Link
+                                      href={`/${Routes.BORROW}/${id}${
+                                        url.search
+                                      }`}
+                                      prefetch={true}
                                     >
-                                      <Box display={{ s: 'none', m: 'inline' }}>
-                                        {lang.overview_page.view_cdp}
-                                      </Box>
-                                      <Box display={{ s: 'inline', m: 'none' }}>
-                                        {lang.overview_page.view_cdp_mobile}
-                                      </Box>
-                                    </Text>
-                                  </Link>
-                                </Button>
-                              </Flex>
-                            </Table.td>
-                          </Table.tr>
-                        )
+                                      <Text
+                                        fontSize="1.3rem"
+                                        color="steel"
+                                        css={`
+                                          white-space: nowrap;
+                                        `}
+                                      >
+                                        <Box
+                                          display={{ s: 'none', m: 'inline' }}
+                                        >
+                                          {lang.overview_page.view_cdp}
+                                        </Box>
+                                        <Box
+                                          display={{ s: 'inline', m: 'none' }}
+                                        >
+                                          {lang.overview_page.view_cdp_mobile}
+                                        </Box>
+                                      </Text>
+                                    </Link>
+                                  </Button>
+                                </Flex>
+                              </Table.td>
+                            </Table.tr>
+                          );
+                        }
                       )}
                     </tbody>
                   </Table>
