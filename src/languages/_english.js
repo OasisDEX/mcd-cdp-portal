@@ -21,7 +21,7 @@ export default {
     "not_applicable": "N/A"
   },
   "landing_page": {
-    "headline": "Trade, borrow, and save using Dai.",
+    "headline": "Trade, Borrow, and Save using Dai.",
     "trade_card": {
       "title": "Trade",
       "description": "Place orders in the Marketplace, or simply exchange your tokens instantly for what's available.",
