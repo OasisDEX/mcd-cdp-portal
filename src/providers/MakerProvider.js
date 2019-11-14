@@ -33,6 +33,7 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const navigation = useNavigation();
   const [, dispatch] = useStore();
+  const [displayApp, setDisplayApp] = useState(false);
 
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
@@ -177,6 +178,20 @@ function MakerProvider({
         .filter(Boolean)
   };
 
+  useEffect(() => {
+    (async () => {
+      const KEY = 'mcd';
+      const systemDebtCeiling =
+        maker &&
+        (await maker.service('mcd:systemData').getSystemWideDebtCeiling());
+      if (systemDebtCeiling > 0 || window.localStorage.password === KEY) {
+        setDisplayApp(true);
+      }
+    })();
+  }, [maker]);
+
+  const WaitingPage = () => <div>Coming Soon</div>;
+
   return (
     <MakerObjectContext.Provider
       value={{
@@ -192,7 +207,7 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {children}
+      {displayApp ? children : <WaitingPage />}
     </MakerObjectContext.Provider>
   );
 }
