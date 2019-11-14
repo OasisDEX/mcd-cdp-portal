@@ -60,7 +60,7 @@ const CDPCreateConfirmSummary = ({
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)
     ],
-    [lang.collateralization, `${liquidationRatio}%`],
+    [lang.liquidation_ratio, `${liquidationRatio}%`],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
