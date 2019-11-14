@@ -6,7 +6,7 @@ import useLanguage from 'hooks/useLanguage';
 export default function SetMax({ ...props }) {
   const { lang } = useLanguage();
   return (
-    <Link fontWeight="medium" {...props}>
+    <Link fontWeight="medium" color="blue" {...props}>
       {lang.set_max}
     </Link>
   );
