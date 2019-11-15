@@ -78,12 +78,12 @@ const Card = styled.div`
   }
 
   .button.enabled {
-    box-shadow: 0 2px 2px #c8e4e6;
+    box-shadow: 0 2px 2px ${props => props.btnShadowColor};
     transition: all 0.15s ease;
   }
 
   .button.enabled:hover {
-    box-shadow: 0 5px 5px #c8e4e6;
+    box-shadow: 0 5px 5px ${props => props.btnShadowColor};
     transform: translateY(-1px);
   }
 `;
@@ -260,7 +260,13 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     window.addEventListener('resize', debouncedHandleResize);
     setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
     // set the height after fonts have probably loaded, or system font is used
-    setTimeout(() => setHeight(answerElement.current ? answerElement.current.clientHeight : 0), 3200);
+    setTimeout(
+      () =>
+        setHeight(
+          answerElement.current ? answerElement.current.clientHeight : 0
+        ),
+      3200
+    );
     return _ => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
@@ -400,6 +406,7 @@ function Landing() {
             background:
               'linear-gradient(180deg, #C2D7E4 0%, #DBF1EC 100%), #7AAAC5'
           }}
+          btnShadowColor="#c8e4e6"
         >
           <div className="title" style={{ color: '#253A44' }}>
             {lang.landing_page.trade_card.title}
@@ -431,6 +438,7 @@ function Landing() {
             background:
               'linear-gradient(180deg, #F0DED8 0%, #FDF2E1 100%), linear-gradient(0deg, #EFBF98, #EFBF98)'
           }}
+          btnShadowColor="#F1E3DB"
         >
           <div className="title" style={{ color: '#5B2E1B' }}>
             {lang.landing_page.borrow_card.title}
@@ -445,7 +453,7 @@ function Landing() {
                 prefetch={true}
                 className="button enabled"
                 style={{
-                  color: '#5894B5',
+                  color: '#945F47',
                   backgroundColor: 'white'
                 }}
                 onClick={() => {
@@ -465,6 +473,7 @@ function Landing() {
             background: 'linear-gradient(180deg, #D5E8E3 0%, #EEF0E4 100%)',
             marginBottom: 0
           }}
+          btnShadowColor="#D7E9E3"
         >
           <div className="title" style={{ color: '#002F28' }}>
             {lang.landing_page.save_card.title}
@@ -479,7 +488,7 @@ function Landing() {
                 prefetch={true}
                 className="button enabled"
                 style={{
-                  color: '#5894B5',
+                  color: '#699C90',
                   backgroundColor: 'white'
                 }}
                 onClick={() => {
