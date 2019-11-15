@@ -292,7 +292,7 @@ const OasisLayout = ({ children }) => {
           </Link>
         </Header>
         {children}
-        <CookieNotice/>
+        <CookieNotice />
         <Footer>
           <nav>
             <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
