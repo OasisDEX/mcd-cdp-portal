@@ -191,10 +191,8 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
                 <Button variant="secondary">
-                  <Text mr="xs">
-                  {lang.cdp_create.view_tx_details}
-                  </Text>
-                  <StyledExternalLink color={getColor('steel')} ml="4px"/>
+                  <Text mr="xs">{lang.cdp_create.view_tx_details}</Text>
+                  <StyledExternalLink color={getColor('steel')} ml="4px" />
                 </Button>
               </Link>
             )}

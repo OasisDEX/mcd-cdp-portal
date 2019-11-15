@@ -21,10 +21,7 @@ const ActiveAccount = ({
     type === 'browser' ? getWebClientProviderName(type) : type;
   return (
     <Flex justifyContent="space-between" alignItems="center" {...rest}>
-      <Text
-        fontSize="0.8rem"
-        color={address ? 'makerTeal' : 'makerOrange'}
-      >
+      <Text fontSize="0.8rem" color={address ? 'makerTeal' : 'makerOrange'}>
         &#11044;
       </Text>
 
