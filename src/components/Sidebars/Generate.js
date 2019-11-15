@@ -9,6 +9,7 @@ import useLanguage from 'hooks/useLanguage';
 import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
+import { add } from '../../utils/bignumber';
 import {
   formatCollateralizationRatio,
   formatLiquidationPrice,
@@ -36,8 +37,7 @@ const Generate = ({ cdpId, reset }) => {
   const dustLimit = cdp.dust ? cdp.dust : 0;
 
   // minFloat uses <= so it won't work for dustLimit
-  const dustLimitValidation = value =>
-    parseFloat(value + debtAmount) < dustLimit;
+  const dustLimitValidation = value => add(value, debtAmount) < dustLimit;
 
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
