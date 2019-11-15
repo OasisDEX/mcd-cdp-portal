@@ -65,7 +65,6 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { addNotification, deleteNotifications } = useNotification();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
-  console.log(unlockedCollateral.toString());
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
