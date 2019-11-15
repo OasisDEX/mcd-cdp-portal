@@ -5,19 +5,13 @@ import useStore from 'hooks/useStore';
 import useActionState from 'hooks/useActionState';
 import useLanguage from 'hooks/useLanguage';
 import { cleanSymbol } from '../utils/ui';
-import { tokensWithBalances } from 'reducers/accounts';
 
 export function useTokenAllowances() {
   const { account } = useMaker();
   const [{ accounts }] = useStore();
   const allowances = useMemo(() => {
-    const defaultTokenAllowances = tokensWithBalances.reduce(
-      (acc, token) => ({ ...acc, [token]: true }),
-      {}
-    );
     return account
       ? {
-          ...defaultTokenAllowances,
           ...((accounts &&
             accounts[account.address] &&
             accounts[account.address].allowances) ||
@@ -25,11 +19,25 @@ export function useTokenAllowances() {
           ETH: true
         }
       : {
-          ...defaultTokenAllowances,
           ETH: true
         };
   }, [account, accounts]);
   return allowances;
+}
+
+export function useFetchedTokenAllowances() {
+  const { account } = useMaker();
+  const [{ accounts }] = useStore();
+
+  const allowancesFetched = useMemo(() => {
+    if (!account) return false;
+    return !!(
+      accounts &&
+      accounts[account.address] &&
+      accounts[account.address].allowances
+    );
+  }, [account, accounts]);
+  return allowancesFetched;
 }
 
 export default function useTokenAllowance(tokenSymbol) {
@@ -38,7 +46,7 @@ export default function useTokenAllowance(tokenSymbol) {
   const token = maker.getToken(tokenSymbol);
   const allowances = useTokenAllowances();
   const hasAllowance = allowances[tokenSymbol];
-
+  const hasFetchedAllowance = useFetchedTokenAllowances();
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
     async () => {
@@ -58,6 +66,7 @@ export default function useTokenAllowance(tokenSymbol) {
 
   return {
     hasAllowance,
+    hasFetchedAllowance,
     setAllowance,
     allowanceLoading,
     allowanceErrors,
