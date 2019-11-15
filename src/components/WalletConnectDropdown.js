@@ -149,7 +149,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Wallet Connect
+          {lang.landing_page.wallet_connect}
         </Option>
         <Option
           onClick={() => {
@@ -157,7 +157,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Coinbase WalletLink
+          {lang.landing_page.wallet_link}
         </Option>
       </Card>
     </Dropdown>

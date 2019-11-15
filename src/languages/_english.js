@@ -75,7 +75,7 @@ export default {
     "answer8": "You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.",
     "read_only": "Read-Only",
     "wallet_connect": "Wallet Connect",
-    "wallet_link": "WalletLink"
+    "wallet_link": "Coinbase Wallet"
   },
   "overview_page": {
     "title": "Overview",

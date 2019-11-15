@@ -64,13 +64,6 @@ const SidebarSystem = ({ system }) => {
       <Card css={'overflow:hidden;'} pt="s">
         <Flex justifyContent="space-between" alignContent="center" px="s">
           <Text t="h4">{lang.sidebar.system_info}</Text>
-          <Link>
-            <Text t="p5" color="steel">
-              {lang.sidebar.view_mkr_tools}
-            </Text>
-            &nbsp;
-            <ExternalLinkIcon fill="#708390" />
-          </Link>
         </Flex>
         {systemParams.map(([param, value], idx) => (
           <Flex
