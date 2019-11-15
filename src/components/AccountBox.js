@@ -108,7 +108,6 @@ const WalletBalances = ({ hasActiveAccount }) => {
     [feeds]
   );
 
-
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
 

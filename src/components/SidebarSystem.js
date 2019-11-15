@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react';
-import { Text, Box, Card, Flex, Link } from '@makerdao/ui-components-core';
+import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
-import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
@@ -35,7 +34,12 @@ const SidebarSystem = ({ system }) => {
   return (
     <Fragment>
       <Card css={'overflow:hidden;'} pt="sm">
-        <Flex justifyContent="space-between" alignContent="center" px="s" pb="s2">
+        <Flex
+          justifyContent="space-between"
+          alignContent="center"
+          px="s"
+          pb="s2"
+        >
           <Text t="h4">{lang.sidebar.system_info}</Text>
         </Flex>
         {systemParams.map(([param, value], idx) => (

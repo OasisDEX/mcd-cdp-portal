@@ -11,7 +11,6 @@ const ActiveAccount = ({
   address,
   type,
   textColor = 'darkPurple',
-  iconSize = 22,
   t = 'body',
   addressTextStyle = 'body',
   readOnly,
@@ -23,7 +22,6 @@ const ActiveAccount = ({
   return (
     <Flex justifyContent="space-between" alignItems="center" {...rest}>
       <Text
-        pr="xs"
         fontSize="0.8rem"
         color={address ? 'makerTeal' : 'makerOrange'}
       >
@@ -44,7 +42,7 @@ const ActiveAccount = ({
       </Box>
       {readOnly ? null : (
         <Box ml="xs" mb="2px">
-          <CaratDownIcon width="11px" height="6px"/>
+          <CaratDownIcon width="11px" height="6px" />
         </Box>
       )}
     </Flex>
