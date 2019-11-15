@@ -48,8 +48,8 @@ export function prettifyNumber(
   if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;
   if (truncate) {
-    if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + ' M';
-    else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + ' K';
+    if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
+    else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
