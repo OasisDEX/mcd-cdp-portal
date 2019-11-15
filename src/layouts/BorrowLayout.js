@@ -11,7 +11,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
       bg="lightGrey"
       gridTemplateColumns={{
         s: 'minmax(0, 1fr)',
-        l: `${theme.measurement.navbarWidth}px 1fr ${
+        l: `${theme.measurement.navbarWidth}px minmax(0, auto) ${
           theme.measurement.sidebarWidth
         }px ${getSpace('s')}px`
       }}

@@ -30,14 +30,13 @@ import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
 
-import { ReactComponent as DaiLogo } from 'images/dai.svg';
 import useModal from '../hooks/useModal';
 import useProxy from '../hooks/useProxy';
 
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const { maker, account } = useMaker();
+  const { maker, account, newTxListener } = useMaker();
   const [{ accounts, savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
@@ -86,16 +85,21 @@ function Save() {
   );
 
   const onStartDeposit = useCallback(() => {
-    return maker.service('mcd:savings').join(MDAI(depositAmount));
-  }, [maker, depositAmount]);
+    newTxListener(
+      maker.service('mcd:savings').join(MDAI(depositAmount)),
+      lang.verbs.depositing
+    );
+  }, [maker, depositAmount, newTxListener]);
 
   const onStartWithdraw = useCallback(() => {
+    let txObject;
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(balance)) {
-      return maker.service('mcd:savings').exitAll();
+      txObject = maker.service('mcd:savings').exitAll();
     } else {
-      return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-  }, [balance, maker, withdrawAmount, withdrawMaxFlag]);
+    newTxListener(txObject, lang.verbs.withdrawing);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener]);
 
   const [
     onDeposit,
@@ -200,9 +204,7 @@ function Save() {
                 <Card>
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
-                      {balance.toFixed(4)}{' '}
-                      <Text t="h5"> DAI
-                      </Text>
+                      {balance.toFixed(4)} <Text t="h5"> DAI</Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD

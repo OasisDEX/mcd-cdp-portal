@@ -22,6 +22,12 @@ export function subtract(numberOne, numberTwo) {
     .toFixed();
 }
 
+export function add(numberOne, numberTwo) {
+  return BigNumber(numberOne.toString())
+    .plus(BigNumber(numberTwo.toString()))
+    .toFixed();
+}
+
 export function multiply(numberOne, numberTwo) {
   return BigNumber(numberOne.toString())
     .times(BigNumber(numberTwo.toString()))

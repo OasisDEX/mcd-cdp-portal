@@ -57,10 +57,6 @@ export default {
     "answer3_link1_text": "Metamask",
     "answer3_link2_url": "https://wallet.coinbase.com/",
     "answer3_link2_text": "Coinbase Wallet",
-    "question4": "When will Borrow and Save be available?",
-    "answer4": "Borrow and Save will be released with the launch of Multi-Collateral Dai. Track Multi-Collateral Dai progress {0}.",
-    "answer4_link1_url": "https://makerdao.com/roadmap/",
-    "answer4_link1_text": "here",
     "question5": "Is Oasis secure?",
     "answer5": "Security is our top priority. The Oasis team regularly conducts audits on our smart contracts. In addition, the Oasis code is {0}, giving the community the ability to pressure test and audit the core technology.",
     "answer5_link1_url": "https://github.com/OasisDEX",
@@ -75,7 +71,7 @@ export default {
     "answer8": "You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.",
     "read_only": "Read-Only",
     "wallet_connect": "Wallet Connect",
-    "wallet_link": "WalletLink"
+    "wallet_link": "Coinbase Wallet"
   },
   "overview_page": {
     "title": "Overview",
@@ -93,7 +89,9 @@ export default {
     "total_dai_debt": "total dai debt",
     "get_started_title": "Open your first vault to start generating Dai.",
     "select_another_wallet": "Select another wallet",
-    "connect_ledgers_choice": "Connect {0} or {1}"
+    "connect_ledgers_choice": "Connect {0} or {1}",
+    "no_vaults": "Address {0} has no Vaults.",
+    "loading_vaults": "Loading Vaults..."
   },
   "navbar": {
     "save": "Save",
@@ -293,7 +291,8 @@ export default {
   },
   "verbs": {
     "depositing": "Depositing",
-    "generating": "Generating"
+    "generating": "Generating",
+    "withdrawing": "Withdrawing"
   },
   "table": {
     "type": "Type",
@@ -310,7 +309,8 @@ export default {
     "generate_dai": "Generating DAI",
     "pay_back_dai": "Paying back DAI",
     "withdrawing_gem": "Withdrawing {0}",
-    "depositing_gem": "Depositing {0}"
+    "depositing_gem": "Depositing {0}",
+    "claiming_collateral": "Claiming collateral"
   },
   "transaction_manager": {
     "transaction_singular_capitalised": "Transaction",
@@ -376,6 +376,7 @@ export default {
     "other": "Active Wallet"
   },
   notifications: {
+    claim: "Claim",
     claim_collateral: "Your {0} Vault auction(s) have completed. You have {1} {2} to claim",
     non_vault_owner: "The owner of this position ({0}) does not match the connected walleted address",
     non_overview_owner: "You are currently viewing the Overview of another address ({0})"

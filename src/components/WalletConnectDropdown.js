@@ -69,6 +69,14 @@ const WalletConnectDropdown = ({
 
   const providerName = getWebClientProviderName();
 
+  async function connectBrowserWallet() {
+    try {
+      await connectBrowserProvider();
+    } catch (err) {
+      window.alert(err);
+    }
+  }
+
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
@@ -101,7 +109,9 @@ const WalletConnectDropdown = ({
                   seed={jsNumberForAddress(account.address)}
                 />
                 <Text t="body">{lang.providers[providerType]}</Text>
-                <Text t="body">{cutMiddle(account.address, 7, 5)}</Text>
+                <Text t="body" fontSize="l">
+                  {cutMiddle(account.address, 7, 5)}
+                </Text>
               </Grid>
             </Option>
           );
@@ -109,7 +119,7 @@ const WalletConnectDropdown = ({
         {!hasBrowserAccount && (
           <Option
             onClick={() => {
-              connectBrowserProvider();
+              connectBrowserWallet();
               close();
             }}
           >
@@ -141,7 +151,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Wallet Connect
+          {lang.landing_page.wallet_connect}
         </Option>
         <Option
           onClick={() => {
@@ -149,7 +159,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Coinbase WalletLink
+          {lang.landing_page.wallet_link}
         </Option>
       </Card>
     </Dropdown>

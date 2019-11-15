@@ -60,7 +60,7 @@ const CDPCreateConfirmSummary = ({
       lang.collateralization_ratio,
       formatCollateralizationRatio(collateralizationRatio)
     ],
-    [lang.collateralization, `${liquidationRatio}%`],
+    [lang.liquidation_ratio, `${liquidationRatio}%`],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
@@ -191,8 +191,8 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
                 <Button variant="secondary">
-                  {lang.cdp_create.view_tx_details}{' '}
-                  <StyledExternalLink color={getColor('steel')} />
+                  <Text mr="xs">{lang.cdp_create.view_tx_details}</Text>
+                  <StyledExternalLink color={getColor('steel')} ml="4px" />
                 </Button>
               </Link>
             )}

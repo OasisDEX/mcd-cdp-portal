@@ -16,7 +16,6 @@ import useStore from 'hooks/useStore';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
-import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
@@ -90,7 +89,6 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
 }
 
 const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
-  const { maker } = useMaker();
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
   const balances = useWalletBalances();

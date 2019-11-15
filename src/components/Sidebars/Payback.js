@@ -15,6 +15,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import { safeToFixed } from '../../utils/ui';
+import { subtract, greaterThan } from '../../utils/bignumber';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -35,11 +36,15 @@ const Payback = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp, false);
+  const debtAmount = getDebtAmount(cdp, true, 18);
 
   const dustLimit = cdp.dust ? cdp.dust : 0;
   const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
-  const dustLimitValidation = value => maxAmount - value < dustLimit;
+
+  const dustLimitValidation = value =>
+    greaterThan(dustLimit, subtract(maxAmount, value)) &&
+    maxAmount !== value &&
+    greaterThan(subtract(maxAmount, dustLimit), 0);
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -53,14 +58,14 @@ const Payback = ({ cdpId, reset }) => {
     },
     {
       maxFloat: amount => {
-        return daiBalance < parseFloat(amount)
+        return greaterThan(amount, daiBalance)
           ? lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
           : lang.action_sidebar.cannot_payback_more_than_owed;
       },
       dustLimit: () =>
         lang.formatString(
           lang.cdp_create.dust_max_payback,
-          maxAmount - dustLimit
+          subtract(maxAmount, dustLimit)
         )
     }
   );
@@ -69,9 +74,8 @@ const Payback = ({ cdpId, reset }) => {
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
     ilkData: cdp,
     gemsToLock: collateralAmount,
-    daiToDraw: Math.max(debtAmount - amountToPayback, 0)
+    daiToDraw: Math.max(subtract(debtAmount, amountToPayback), 0)
   });
-
   const setMax = () => setAmount(maxAmount);
 
   const payback = async () => {

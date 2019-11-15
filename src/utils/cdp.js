@@ -76,8 +76,8 @@ export function cdpParamsAreValid(
   userGemBalance,
   ilkData
 ) {
-  // must not open empty cdp
-  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
+  // must not open empty cdp or cdp with no dai value
+  if (!gemsToLock || !daiToDraw) return false; // we technically can do this, but TODO figure out if we should
   // must lock collateral in order to draw dai
   if (!!daiToDraw && !gemsToLock) return false;
   // must be positive

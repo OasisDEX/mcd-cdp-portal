@@ -1,34 +1,11 @@
 import React, { Fragment } from 'react';
-import { Text, Box, Card, Flex, Link } from '@makerdao/ui-components-core';
+import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import { prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
-import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
-
-  // const GLOBAL_DEBT_CEILING = system => [
-  //   lang.sidebar.global_debt_ceiling,
-  //   prettifyNumber(system.globalDebtCeiling)
-  // ];
-
-  // const CURRENT_DEBT = system => [
-  //   lang.sidebar.current_debt,
-  //   prettifyNumber(system.totalDebt)
-  // ];
-
-  // const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
-
-  // const SURPLUS_AUCTION_LOT_SIZE = system => [
-  //   lang.sidebar.buy_and_burn_lot_size,
-  //   prettifyNumber(system.surplusAuctionLotSize)
-  // ];
-
-  // const DEBT_AUCTION_LOT_SIZE = system => [
-  //   lang.sidebar.inflate_and_sell_lot_size,
-  //   prettifyNumber(system.debtAuctionLotSize)
-  // ];
 
   const ACTIVE_CDPS = system => [
     lang.sidebar.active_cdps,
@@ -49,11 +26,6 @@ const SidebarSystem = ({ system }) => {
   ];
 
   const systemParams = [
-    // GLOBAL_DEBT_CEILING,
-    // CURRENT_DEBT,
-    // BASE_RATE,
-    // SURPLUS_AUCTION_LOT_SIZE,
-    // DEBT_AUCTION_LOT_SIZE
     SYSTEM_COLLATERALIZATION,
     TOTAL_DAI_SUPPLY,
     ACTIVE_CDPS
@@ -61,22 +33,20 @@ const SidebarSystem = ({ system }) => {
 
   return (
     <Fragment>
-      <Card css={'overflow:hidden;'} pt="s">
-        <Flex justifyContent="space-between" alignContent="center" px="s">
+      <Card css={'overflow:hidden;'} pt="sm">
+        <Flex
+          justifyContent="space-between"
+          alignContent="center"
+          px="s"
+          pb="s2"
+        >
           <Text t="h4">{lang.sidebar.system_info}</Text>
-          <Link>
-            <Text t="p5" color="steel">
-              {lang.sidebar.view_mkr_tools}
-            </Text>
-            &nbsp;
-            <ExternalLinkIcon fill="#708390" />
-          </Link>
         </Flex>
         {systemParams.map(([param, value], idx) => (
           <Flex
             key={`system_${param}`}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="baseline"
             width="100%"
             py="xs"
             px="s"
@@ -85,7 +55,7 @@ const SidebarSystem = ({ system }) => {
             <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
               {param}
             </Text>
-            <Box pt="2xs">
+            <Box>
               <Text fontSize="s" color="darkPurple">
                 {value}
               </Text>

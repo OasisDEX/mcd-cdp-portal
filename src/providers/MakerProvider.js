@@ -14,6 +14,7 @@ import {
   updateWatcherWithAccount
 } from '../watch';
 import { batchActions } from '../utils/redux';
+import LoadingLayout from '../layouts/LoadingLayout';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -109,6 +110,13 @@ function MakerProvider({
   useEffect(() => {
     if (maker && viewedAddress) {
       (async () => {
+        if (
+          viewedAddressData &&
+          viewedAddress !== viewedAddressData.viewedAddress
+        ) {
+          setViewedAddressData(null);
+        }
+
         const proxy = await maker
           .service('proxy')
           .getProxyAddress(viewedAddress);
@@ -130,7 +138,7 @@ function MakerProvider({
         });
       })();
     }
-  }, [maker, viewedAddress, dispatch]);
+  }, [maker, viewedAddress, dispatch, viewedAddressData, network]);
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
@@ -197,6 +205,8 @@ function MakerProvider({
 
   const WaitingPage = () => <div>Coming Soon</div>;
 
+  //{displayApp ? children : <WaitingPage />}
+
   return (
     <MakerObjectContext.Provider
       value={{
@@ -212,7 +222,7 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {displayApp ? children : <WaitingPage />}
+      {maker ? displayApp ? children : <WaitingPage /> : <LoadingLayout text="Loading..." />}
     </MakerObjectContext.Provider>
   );
 }

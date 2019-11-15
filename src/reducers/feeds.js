@@ -32,7 +32,6 @@ const defaultIlkState = {
   [LIQUIDATOR_ADDRESS]: '',
   [LIQUIDATION_PENALTY]: '',
   [MAX_AUCTION_LOT_SIZE]: '',
-  [PRICE_WITH_SAFETY_MARGIN]: '',
   [ILK_ART]: '',
   [ILK_DEBT_AVAILABLE]: '',
   [DUST]: ''
@@ -82,8 +81,7 @@ function convert(valueType, value, decimals) {
         .toFixed(3);
     }
     case RATE:
-    case PRICE_WITH_SAFETY_MARGIN:
-      return fromRay(value).toFixed(3);
+      return fromRay(value).toFixed(18);
     case DEBT_CEILING:
     case DUST:
       return fromRad(value).toFixed(0);

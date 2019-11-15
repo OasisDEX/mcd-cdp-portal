@@ -3,15 +3,28 @@ import { Box, Card, Table, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
 import { formatEventDescription, formatDate } from 'utils/ui';
+import theme from 'styles/theme';
 
 export default function({ title, rows, network }) {
   const { lang } = useLanguage();
-
   if (rows) rows = formatEventHistory(lang, rows, network);
+
+  const emSize = parseInt(getComputedStyle(document.body).fontSize);
+  const pxBreakpoint = parseInt(theme.breakpoints.m) * emSize;
+  const overflowX =
+    document.documentElement.clientWidth > pxBreakpoint ? 'hidden' : 'scroll';
+
   return (
     <Box>
       <Text.h4>{title}</Text.h4>
-      <Card px="l" pt="m" pb="l" my="s" css={{ overflowX: 'scroll' }}>
+      <Card
+        px="l"
+        py="m"
+        my="s"
+        css={{
+          overflowX
+        }}
+      >
         <Table
           width="100%"
           variant="normal"
@@ -55,7 +68,9 @@ export default function({ title, rows, network }) {
                     </Text>
                   </td>
                   <td>
-                    <Text t="caption">{txHash}</Text>
+                    <Text t="caption" color="blue">
+                      {txHash}
+                    </Text>
                   </td>
                 </tr>
               ))
@@ -80,7 +95,12 @@ function formatEventHistory(lang, events = [], network) {
     return [
       formatEventDescription(lang, e),
       formatDate(new Date(e.timestamp * 1000)),
-      <ExternalLink key={1} string={e.txHash} network={network} />
+      <ExternalLink
+        key={1}
+        string={e.txHash}
+        network={network}
+        arrowInheritsColorOnHover={true}
+      />
     ];
   });
 }
