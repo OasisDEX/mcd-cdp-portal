@@ -205,8 +205,6 @@ function MakerProvider({
 
   const WaitingPage = () => <div>Coming Soon</div>;
 
-  //{displayApp ? children : <WaitingPage />}
-
   return (
     <MakerObjectContext.Provider
       value={{
@@ -222,7 +220,15 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {maker ? displayApp ? children : <WaitingPage /> : <LoadingLayout text="Loading..." />}
+      {maker ? (
+        displayApp ? (
+          children
+        ) : (
+          <WaitingPage />
+        )
+      ) : (
+        <LoadingLayout text="Loading..." />
+      )}
     </MakerObjectContext.Provider>
   );
 }
