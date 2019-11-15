@@ -1,5 +1,5 @@
 import React from 'react';
-import { Address, Link, Flex, Box } from '@makerdao/ui-components-core';
+import { Address, Link, Flex } from '@makerdao/ui-components-core';
 import { etherscanLink } from '../utils/ethereum';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { getColor } from 'styles/theme';
