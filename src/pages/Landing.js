@@ -78,12 +78,12 @@ const Card = styled.div`
   }
 
   .button.enabled {
-    box-shadow: 0 2px 2px ${props => props.btnShadowColor };
+    box-shadow: 0 2px 2px ${props => props.btnShadowColor};
     transition: all 0.15s ease;
   }
 
   .button.enabled:hover {
-    box-shadow: 0 5px 5px ${props => props.btnShadowColor };
+    box-shadow: 0 5px 5px ${props => props.btnShadowColor};
     transform: translateY(-1px);
   }
 `;
