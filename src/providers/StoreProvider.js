@@ -1,7 +1,6 @@
 import React, { createContext } from 'react';
 import { useReducer } from 'reinspect';
-
-import { initialState as defaultInitialState } from '../reducers/cdps';
+import { initialState as defaultInitialState } from '../reducers';
 
 export const StoreContext = createContext();
 const StoreProvider = ({ reducer, children, initialState }) => (

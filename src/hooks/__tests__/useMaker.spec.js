@@ -30,9 +30,7 @@ afterEach(cleanup);
 // test will throw a warning, see here for explanation:
 // https://github.com/testing-library/react-testing-library/issues/281#issuecomment-480349256
 test('MakerProvider sets up maker instance', async () => {
-  expect(useMakerHookValue.authenticated).toBe(false);
   await waitForExpect(() => {
-    expect(useMakerHookValue.authenticated).toBe(true);
-    expect(useMakerHookValue.maker).not.toBe(null);
+    expect(useMakerHookValue.maker).toBeTruthy();
   }, 10000);
 }, 10500);

@@ -13,7 +13,6 @@ import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
-import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
@@ -44,24 +43,22 @@ const withBorrowLayout = route =>
         viewedAddress={viewedAddress}
       >
         <RouteEffects network={network} />
-        <AwaitMakerAuthentication>
-          <EthBalanceProvider>
-            <ToggleProvider>
-              <ModalProvider modals={modals} templates={templates}>
-                <SidebarProvider>
-                  <BorrowLayout
-                    mobileNav={
-                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                    }
-                    navbar={<Navbar viewedAddress={viewedAddress} />}
-                  >
-                    <View />
-                  </BorrowLayout>
-                </SidebarProvider>
-              </ModalProvider>
-            </ToggleProvider>
-          </EthBalanceProvider>
-        </AwaitMakerAuthentication>
+        <EthBalanceProvider>
+          <ToggleProvider>
+            <ModalProvider modals={modals} templates={templates}>
+              <SidebarProvider>
+                <BorrowLayout
+                  mobileNav={
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                  }
+                  navbar={<Navbar viewedAddress={viewedAddress} />}
+                >
+                  <View />
+                </BorrowLayout>
+              </SidebarProvider>
+            </ModalProvider>
+          </ToggleProvider>
+        </EthBalanceProvider>
       </MakerProvider>
     );
   }, route);
@@ -82,24 +79,22 @@ const withSaveLayout = route =>
         backendEnv={backendEnv}
       >
         <RouteEffects network={network} />
-        <AwaitMakerAuthentication>
-          <EthBalanceProvider>
-            <ToggleProvider>
-              <ModalProvider modals={modals} templates={templates}>
-                <SidebarProvider>
-                  <SaveLayout
-                    mobileNav={
-                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                    }
-                    navbar={<Navbar viewedAddress={viewedAddress} />}
-                  >
-                    <View />
-                  </SaveLayout>
-                </SidebarProvider>
-              </ModalProvider>
-            </ToggleProvider>
-          </EthBalanceProvider>
-        </AwaitMakerAuthentication>
+        <EthBalanceProvider>
+          <ToggleProvider>
+            <ModalProvider modals={modals} templates={templates}>
+              <SidebarProvider>
+                <SaveLayout
+                  mobileNav={
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                  }
+                  navbar={<Navbar viewedAddress={viewedAddress} />}
+                >
+                  <View />
+                </SaveLayout>
+              </SidebarProvider>
+            </ModalProvider>
+          </ToggleProvider>
+        </EthBalanceProvider>
       </MakerProvider>
     );
   }, route);

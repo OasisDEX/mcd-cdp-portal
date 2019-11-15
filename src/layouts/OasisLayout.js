@@ -94,6 +94,7 @@ const OasisLayoutStyle = styled.div`
   font-family: 'FT Switch', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
+  letter-spacing: normal;
   text-align: center;
   color: black;
   width: 100%;
@@ -291,7 +292,7 @@ const OasisLayout = ({ children }) => {
           </Link>
         </Header>
         {children}
-        <CookieNotice/>
+        <CookieNotice />
         <Footer>
           <nav>
             <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>

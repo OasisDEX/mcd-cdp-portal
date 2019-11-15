@@ -34,7 +34,7 @@ const SidebarFeeds = ({ feeds }) => {
               <Flex
                 key={`feed_${pair}`}
                 justifyContent="space-between"
-                alignItems="center"
+                alignItems="baseline"
                 width="100%"
                 py="xs"
                 px="s"

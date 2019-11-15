@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { checkEthereumProvider } from '../utils/ethereum';
 
 import { MakerObjectContext } from '../providers/MakerProvider';
@@ -17,19 +17,6 @@ function useMaker() {
     checkForNewCdps,
     txLastUpdate
   } = useContext(MakerObjectContext) || {};
-  const [authenticated, setAuthenticated] = useState(false);
-
-  useEffect(() => {
-    if (maker) {
-      maker.authenticate().then(() => {
-        setAuthenticated(true);
-      });
-
-      return () => {
-        setAuthenticated(false);
-      };
-    }
-  }, [maker]);
 
   function isConnectedToProvider(provider) {
     return (
@@ -96,7 +83,7 @@ function useMaker() {
 
   return {
     maker,
-    authenticated,
+    authenticated: true,
     isConnectedToProvider,
     connectBrowserProvider,
     connectToProviderOfType,

@@ -14,6 +14,7 @@ import {
   updateWatcherWithAccount
 } from '../watch';
 import { batchActions } from '../utils/redux';
+import LoadingLayout from '../layouts/LoadingLayout';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -199,7 +200,7 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {children}
+      {maker ? children : <LoadingLayout text="Loading..." />}
     </MakerObjectContext.Provider>
   );
 }

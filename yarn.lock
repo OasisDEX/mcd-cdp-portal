@@ -1631,10 +1631,10 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@^0.21.0":
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.21.0.tgz#361707cdaa1da1a58adf41b3b0786c2a19447871"
-  integrity sha512-K6/pZ+u26ewmbjaP/u/nHC22rBGHQNmAct9FCp+TaCxwz5n/VkMzCLvfUBO+IzPvXpMuFIrPdSrgT8+apLHJ+w==
+"@makerdao/dai@^0.21.1":
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.21.1.tgz#67255e518c240be18de997a9adad59cca21a4080"
+  integrity sha512-XAyc1sBXe1BLxW6+0b3saNqEKY2NyEcTV+hxZg1NKvQskQlcGC+2xJz0PeclZyl4+QY6f4aQWb6qt/cTUtQ+nQ==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"

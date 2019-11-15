@@ -10,12 +10,9 @@ import useSidebar from 'hooks/useSidebar';
 import GlobalSidebar from 'components/Sidebars/Global';
 import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import TransactionManager from 'components/TransactionManager';
-import NotificationManager from 'components/NotificationManager';
 import AccountBox from 'components/AccountBox';
 import { getMeasurement } from 'styles/theme';
 const springConfig = { mass: 1, tension: 500, friction: 50 };
-
-const SHOW_MIGRATE_BUTTON = false;
 
 const animations = {
   fade: [{ opacity: 0.9 }, { opacity: 1 }],
@@ -110,7 +107,6 @@ function Sidebar() {
 
   return (
     <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
-      {SHOW_MIGRATE_BUTTON && <NotificationManager mb="s" />}
       <TransactionManager
         transactions={selectors.transactions()}
         network={network}
