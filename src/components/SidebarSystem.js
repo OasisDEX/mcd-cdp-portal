@@ -8,28 +8,6 @@ import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
 
-  // const GLOBAL_DEBT_CEILING = system => [
-  //   lang.sidebar.global_debt_ceiling,
-  //   prettifyNumber(system.globalDebtCeiling)
-  // ];
-
-  // const CURRENT_DEBT = system => [
-  //   lang.sidebar.current_debt,
-  //   prettifyNumber(system.totalDebt)
-  // ];
-
-  // const BASE_RATE = system => [lang.sidebar.base_rate, `${system.baseRate} %`];
-
-  // const SURPLUS_AUCTION_LOT_SIZE = system => [
-  //   lang.sidebar.buy_and_burn_lot_size,
-  //   prettifyNumber(system.surplusAuctionLotSize)
-  // ];
-
-  // const DEBT_AUCTION_LOT_SIZE = system => [
-  //   lang.sidebar.inflate_and_sell_lot_size,
-  //   prettifyNumber(system.debtAuctionLotSize)
-  // ];
-
   const ACTIVE_CDPS = system => [
     lang.sidebar.active_cdps,
     lang.formatString(
@@ -49,11 +27,6 @@ const SidebarSystem = ({ system }) => {
   ];
 
   const systemParams = [
-    // GLOBAL_DEBT_CEILING,
-    // CURRENT_DEBT,
-    // BASE_RATE,
-    // SURPLUS_AUCTION_LOT_SIZE,
-    // DEBT_AUCTION_LOT_SIZE
     SYSTEM_COLLATERALIZATION,
     TOTAL_DAI_SUPPLY,
     ACTIVE_CDPS
@@ -61,8 +34,8 @@ const SidebarSystem = ({ system }) => {
 
   return (
     <Fragment>
-      <Card css={'overflow:hidden;'} pt="s">
-        <Flex justifyContent="space-between" alignContent="center" px="s">
+      <Card css={'overflow:hidden;'} pt="sm">
+        <Flex justifyContent="space-between" alignContent="center" px="s" pb="s2">
           <Text t="h4">{lang.sidebar.system_info}</Text>
         </Flex>
         {systemParams.map(([param, value], idx) => (

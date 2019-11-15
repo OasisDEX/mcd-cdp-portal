@@ -1,5 +1,5 @@
 import { themeLight } from '@makerdao/ui-components-core';
-const { colors, typography } = themeLight;
+const { colors, typography, space, fontSizes } = themeLight;
 
 const theme = {
   ...themeLight,
@@ -23,7 +23,7 @@ const theme = {
     },
 
     smallCaps: {
-      fontSize: '1.2rem',
+      fontSize: '1.1rem',
       textTransform: 'uppercase',
       letterSpacing: '0.3px',
       lineHeight: '22px'
@@ -37,9 +37,17 @@ const theme = {
     mobileNavHeight: 80,
     navbarItemWidth: 70,
     navbarItemHeight: 55
+  },
+  space: {
+    ...space,
+    s2: 10,
+    sm: 16
+  },
+  fontSizes: {
+    ...fontSizes,
+    s2: 13
   }
 };
-
 export default theme;
 
 // the following two functions are taken directly from styled-system

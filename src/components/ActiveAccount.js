@@ -31,20 +31,20 @@ const ActiveAccount = ({
       </Text>
 
       <Box ml="xs" mr="auto">
-        <Text t={t} color={textColor}>
+        <Text t={t} color={textColor} fontSize="m">
           {address ? lang.providers[providerType] : lang.sidebar.no_wallet}
         </Text>
       </Box>
       <Box ml="s">
         {address ? (
-          <Text t={addressTextStyle} color={textColor}>
+          <Text t={addressTextStyle} color={textColor} fontSize="m">
             {cutMiddle(address, 7, 5)}
           </Text>
         ) : null}
       </Box>
       {readOnly ? null : (
         <Box ml="xs" mb="2px">
-          <CaratDownIcon />
+          <CaratDownIcon width="11px" height="6px"/>
         </Box>
       )}
     </Flex>

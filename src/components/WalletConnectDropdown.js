@@ -109,7 +109,7 @@ const WalletConnectDropdown = ({
                   seed={jsNumberForAddress(account.address)}
                 />
                 <Text t="body">{lang.providers[providerType]}</Text>
-                <Text t="body">{cutMiddle(account.address, 7, 5)}</Text>
+                <Text t="body" fontSize="l">{cutMiddle(account.address, 7, 5)}</Text>
               </Grid>
             </Option>
           );
