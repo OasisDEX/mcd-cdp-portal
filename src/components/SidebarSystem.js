@@ -76,7 +76,7 @@ const SidebarSystem = ({ system }) => {
           <Flex
             key={`system_${param}`}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="baseline"
             width="100%"
             py="xs"
             px="s"
@@ -85,7 +85,7 @@ const SidebarSystem = ({ system }) => {
             <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
               {param}
             </Text>
-            <Box pt="2xs">
+            <Box>
               <Text fontSize="s" color="darkPurple">
                 {value}
               </Text>
