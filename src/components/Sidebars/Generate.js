@@ -9,7 +9,7 @@ import useLanguage from 'hooks/useLanguage';
 import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
-import { add } from '../../utils/bignumber';
+import { add, subtract } from '../../utils/bignumber';
 import {
   formatCollateralizationRatio,
   formatLiquidationPrice,
@@ -64,11 +64,14 @@ const Generate = ({ cdpId, reset }) => {
     } = calcCDPParams({
       ilkData: cdp,
       gemsToLock: collateralAmount,
-      daiToDraw: debtAmount + amountToGenerate
+      daiToDraw: add(debtAmount, amountToGenerate)
     });
 
     // fractional diffs between daiAvailable & debtAmount can result in a negative amount
-    const daiAvailablePositive = Math.max(0, daiAvailable - debtAmount);
+    const daiAvailablePositive = Math.max(
+      0,
+      subtract(daiAvailable, debtAmount)
+    );
 
     setDaiAvailable(daiAvailablePositive);
     setLiquidationPrice(liquidationPrice);
