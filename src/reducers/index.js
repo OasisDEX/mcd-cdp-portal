@@ -24,4 +24,6 @@ const rootReducer = (
   return mathReducer(combinedState, action);
 };
 
+export const initialState = rootReducer({}, { type: 'CLEAR_CONTRACT_STATE' });
+
 export default enableBatching(rootReducer);
