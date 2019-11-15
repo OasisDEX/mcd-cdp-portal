@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
+import Waiting from 'pages/Waiting';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
@@ -203,8 +204,6 @@ function MakerProvider({
     })();
   }, [maker]);
 
-  const WaitingPage = () => <div>Coming Soon</div>;
-
   return (
     <MakerObjectContext.Provider
       value={{
@@ -224,7 +223,7 @@ function MakerProvider({
         displayApp ? (
           children
         ) : (
-          <WaitingPage />
+          <Waiting />
         )
       ) : (
         <LoadingLayout text="Loading..." />
