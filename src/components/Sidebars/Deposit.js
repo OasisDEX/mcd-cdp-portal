@@ -16,6 +16,7 @@ import {
   getCollateralAmount
 } from 'reducers/cdps';
 import { calcCDPParams } from 'utils/cdp';
+import { add } from 'utils/bignumber';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
@@ -57,7 +58,7 @@ const Deposit = ({ cdpId, reset }) => {
     val = isNaN(val) ? 0 : val;
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
       ilkData: cdp,
-      gemsToLock: collateralAmount + val,
+      gemsToLock: add(collateralAmount, val),
       daiToDraw: debtAmount
     });
     setLiquidationPrice(liquidationPrice);

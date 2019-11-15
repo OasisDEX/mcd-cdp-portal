@@ -115,11 +115,17 @@ function MakerProvider({
         ) {
           setViewedAddressData(null);
         }
-
         const proxy = await maker
           .service('proxy')
           .getProxyAddress(viewedAddress);
-        if (!proxy) return;
+        if (!proxy) {
+          setViewedAddressData({
+            cdps: [],
+            viewedAddress
+          });
+          return;
+        }
+
         const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
         const supportedCDPTypes = ilks.filter(ilk =>
           ilk.networks.includes(network)
@@ -130,14 +136,13 @@ function MakerProvider({
         }, []);
 
         supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-
         setViewedAddressData({
           cdps: supportedCdps,
           viewedAddress
         });
       })();
     }
-  }, [maker, viewedAddress, dispatch, viewedAddressData, network]);
+  }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);

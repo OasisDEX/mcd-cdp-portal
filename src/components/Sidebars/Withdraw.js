@@ -5,6 +5,7 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
 import { calcCDPParams } from '../../utils/cdp';
+import { subtract, greaterThan } from '../../utils/bignumber';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
@@ -52,14 +53,14 @@ const Withdraw = ({ cdpId, reset }) => {
 
   const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
-    amount && parseFloat(amount) > collateralAvailableAmount;
+    amount && greaterThan(amount, collateralAvailableAmount);
 
   useEffect(() => {
     let val = parseFloat(amount);
     val = isNaN(val) ? 0 : val;
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
       ilkData: cdp,
-      gemsToLock: collateralAmount - val,
+      gemsToLock: subtract(collateralAmount, val),
       daiToDraw: debtAmount
     });
     setLiquidationPrice(liquidationPrice);
