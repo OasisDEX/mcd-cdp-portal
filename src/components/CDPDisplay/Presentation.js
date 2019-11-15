@@ -65,13 +65,15 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { addNotification, deleteNotifications } = useNotification();
 
   const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
-
+  console.log(unlockedCollateral.toString());
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
         .service('mcd:cdpManager')
-        .reclaimCollateral(cdpId, unlockedCollateral.toFixed(), 0);
-      newTxListener(txObject, 'Claiming collateral');
+        .reclaimCollateral(cdpId, unlockedCollateral.toFixed());
+      newTxListener(txObject, lang.transactions.claiming_collateral);
+      await txObject;
+      deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
     };
 
     if (isOwner && unlockedCollateral > 0) {
@@ -87,7 +89,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         content: claimCollateralNotification,
         status: NotificationStatus.WARNING,
         hasButton: isOwner,
-        buttonLabel: 'Claim',
+        buttonLabel: lang.notifications.claim,
         onClick: () => reclaimCollateral()
       });
     }
