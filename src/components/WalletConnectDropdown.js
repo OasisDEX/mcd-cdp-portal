@@ -109,7 +109,9 @@ const WalletConnectDropdown = ({
                   seed={jsNumberForAddress(account.address)}
                 />
                 <Text t="body">{lang.providers[providerType]}</Text>
-                <Text t="body">{cutMiddle(account.address, 7, 5)}</Text>
+                <Text t="body" fontSize="l">
+                  {cutMiddle(account.address, 7, 5)}
+                </Text>
               </Grid>
             </Option>
           );
@@ -149,7 +151,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Wallet Connect
+          {lang.landing_page.wallet_connect}
         </Option>
         <Option
           onClick={() => {
@@ -157,7 +159,7 @@ const WalletConnectDropdown = ({
             close();
           }}
         >
-          Coinbase WalletLink
+          {lang.landing_page.wallet_link}
         </Option>
       </Card>
     </Dropdown>

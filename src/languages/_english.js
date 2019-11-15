@@ -71,7 +71,7 @@ export default {
     "answer8": "You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.",
     "read_only": "Read-Only",
     "wallet_connect": "Wallet Connect",
-    "wallet_link": "WalletLink"
+    "wallet_link": "Coinbase Wallet"
   },
   "overview_page": {
     "title": "Overview",
@@ -291,7 +291,8 @@ export default {
   },
   "verbs": {
     "depositing": "Depositing",
-    "generating": "Generating"
+    "generating": "Generating",
+    "withdrawing": "Withdrawing"
   },
   "table": {
     "type": "Type",
@@ -308,7 +309,8 @@ export default {
     "generate_dai": "Generating DAI",
     "pay_back_dai": "Paying back DAI",
     "withdrawing_gem": "Withdrawing {0}",
-    "depositing_gem": "Depositing {0}"
+    "depositing_gem": "Depositing {0}",
+    "claiming_collateral": "Claiming collateral"
   },
   "transaction_manager": {
     "transaction_singular_capitalised": "Transaction",
@@ -374,6 +376,7 @@ export default {
     "other": "Active Wallet"
   },
   notifications: {
+    claim: "Claim",
     claim_collateral: "Your {0} Vault auction(s) have completed. You have {1} {2} to claim",
     non_vault_owner: "The owner of this position ({0}) does not match the connected walleted address",
     non_overview_owner: "You are currently viewing the Overview of another address ({0})"

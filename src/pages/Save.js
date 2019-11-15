@@ -36,7 +36,7 @@ import useProxy from '../hooks/useProxy';
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const { maker, account } = useMaker();
+  const { maker, account, newTxListener } = useMaker();
   const [{ accounts, savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
@@ -85,16 +85,21 @@ function Save() {
   );
 
   const onStartDeposit = useCallback(() => {
-    return maker.service('mcd:savings').join(MDAI(depositAmount));
-  }, [maker, depositAmount]);
+    newTxListener(
+      maker.service('mcd:savings').join(MDAI(depositAmount)),
+      lang.verbs.depositing
+    );
+  }, [maker, depositAmount, newTxListener]);
 
   const onStartWithdraw = useCallback(() => {
+    let txObject;
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(balance)) {
-      return maker.service('mcd:savings').exitAll();
+      txObject = maker.service('mcd:savings').exitAll();
     } else {
-      return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-  }, [balance, maker, withdrawAmount, withdrawMaxFlag]);
+    newTxListener(txObject, lang.verbs.withdrawing);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener]);
 
   const [
     onDeposit,

@@ -15,11 +15,11 @@ const SidebarFeeds = ({ feeds }) => {
   const { lang } = useLanguage();
 
   return (
-    <Card pt="s" css={'overflow:hidden;'}>
-      <Flex justifyContent="space-between" alignContent="center" px="s">
+    <Card pt="sm" css={'overflow:hidden;'}>
+      <Flex justifyContent="space-between" alignContent="center" px="s" pt="">
         <Text t="h4">{lang.sidebar.price_feeds}</Text>
         <Link href={'https://makerdao.com/feeds'} target="_blank">
-          <Text t="p5" color="steel">
+          <Text t="p5" color="steel" fontSize="s2">
             {lang.sidebar.view_price_feeds}
           </Text>
           &nbsp;
@@ -27,7 +27,7 @@ const SidebarFeeds = ({ feeds }) => {
         </Link>
       </Flex>
 
-      <CardBody mt="xs">
+      <CardBody mt="s2">
         {feeds.map(
           ({ pair, value }, index) =>
             (!collapsed || index < 3) && (
