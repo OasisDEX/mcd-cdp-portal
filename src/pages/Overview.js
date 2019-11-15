@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
+import LoadingLayout from 'layouts/LoadingLayout';
 import {
   Text,
   Grid,
@@ -15,6 +16,7 @@ import { Link, useCurrentRoute } from 'react-navi';
 import useMaker from 'hooks/useMaker';
 import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
+import { getColor } from 'styles/theme';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
 import {
@@ -135,23 +137,10 @@ function Overview({ viewedAddress }) {
   }, [account, cdps, feeds, viewedAddress, viewedAddressData]);
 
   const { show } = useModal();
-
   if (!viewedAddressData) {
-    return (
-      <PageContentLayout>
-        <Flex
-          height="70vh"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
-          <Text.p t="h4" mb="s">
-            {lang.overview_page.loading_vaults}
-          </Text.p>
-        </Flex>
-      </PageContentLayout>
-    );
+    return <LoadingLayout background={getColor('lightGrey')} />;
   }
+
   if (!viewedAddressData.cdps.length) {
     return (
       <PageContentLayout>
