@@ -1,35 +1,30 @@
 import React, { Fragment } from 'react';
 import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
-import { prettifyNumber } from 'utils/ui';
+import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
 
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
-
-  const ACTIVE_CDPS = system => [
-    lang.sidebar.active_cdps,
-    lang.formatString(
-      lang.sidebar.active_cdps_figure,
-      prettifyNumber(parseInt(system.totalCdps))
-    )
-  ];
-
-  const TOTAL_DAI_SUPPLY = system => [
-    lang.sidebar.save_details.total_dai_supply,
-    prettifyNumber(system.totalDebt)
-  ];
-
-  const SYSTEM_COLLATERALIZATION = system => [
-    lang.sidebar.system_collateralization,
-    `${prettifyNumber(system.systemCollateralization, false, 2, false)}%`
-  ];
+  const { systemCollateralization: sc } = system;
 
   const systemParams = [
-    SYSTEM_COLLATERALIZATION,
-    TOTAL_DAI_SUPPLY,
-    ACTIVE_CDPS
-  ].map(f => f(system));
+    [
+      lang.sidebar.system_collateralization,
+      formatCollateralizationRatio(sc && sc.toNumber())
+    ],
+    [
+      lang.sidebar.save_details.total_dai_supply,
+      prettifyNumber(system.totalDebt)
+    ],
+    [
+      lang.sidebar.active_cdps,
+      lang.formatString(
+        lang.sidebar.active_cdps_figure,
+        prettifyNumber(parseInt(system.totalCdps))
+      )
+    ]
+  ];
 
   return (
     <Fragment>

@@ -15,41 +15,18 @@ export function getMaker() {
   return _maker;
 }
 
+const cdpTypes = [
+  { currency: ETH, ilk: 'ETH-A' },
+  { currency: BAT, ilk: 'BAT-A' }
+];
+
 export async function instantiateMaker({
   rpcUrl,
   network,
   testchainId,
-  backendEnv,
-  navigation
+  backendEnv
 }) {
-  let mainnetAddresses;
-  if (network === 'mainnet') {
-    // Fallback to kovan if mainnet addresses are not found
-    try {
-      mainnetAddresses = require('./references/mainnet.json');
-    } catch (e) {
-      navigation.navigate(
-        `${navigation.getCurrentValue().url.pathname}?network=kovan`
-      );
-      network = 'kovan';
-      console.error(e);
-    }
-  }
-  const kovanCdpTypes = [
-    { currency: ETH, ilk: 'ETH-A' },
-    { currency: BAT, ilk: 'BAT-A' }
-  ];
-
-  const mainnetCdpTypes = [
-    { currency: ETH, ilk: 'ETH-A' },
-    { currency: BAT, ilk: 'BAT-A' }
-  ];
-
-  const mcdPluginConfig = {
-    cdpTypes: network === 'mainnet' ? mainnetCdpTypes : kovanCdpTypes,
-    addressOverrides: network === 'mainnet' ? mainnetAddresses : null,
-    prefetch: false
-  };
+  const mcdPluginConfig = { cdpTypes, prefetch: false };
 
   const config = {
     log: false,

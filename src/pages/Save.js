@@ -238,28 +238,26 @@ function Save() {
                   <Grid px="l" py="m" gridRowGap="m">
                     <Text.p t="body">{lang.save.description}</Text.p>
 
-                    <div>
-                      <Text.p t="subheading" mb="s">
-                        {lang.save.deposit_amount}
-                      </Text.p>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0 DAI"
-                        value={depositAmount}
-                        onChange={onDepositAmountChange}
-                        error={depositAmountErrors}
-                        failureMessage={depositAmountErrors}
-                        after={<SetMax onClick={setDepositMax} />}
-                      />
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.deposit_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={depositAmount}
+                      onChange={onDepositAmountChange}
+                      error={depositAmountErrors}
+                      failureMessage={depositAmountErrors}
+                      after={<SetMax onClick={setDepositMax} />}
+                    />
 
-                      <Box my="s" mx="l">
-                        <ProxyAllowanceToggle
-                          token="MDAI"
-                          onlyShowAllowance={true}
-                        />
-                      </Box>
-                    </div>
+                    <Box my="xs" mx="xl" px="xl">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
+                      />
+                    </Box>
 
                     <Box justifySelf="center">
                       <Button
@@ -284,31 +282,29 @@ function Save() {
                   <Grid px="l" py="m" gridRowGap="m">
                     <Text.p t="body">{lang.save.description}</Text.p>
 
-                    <div>
-                      <Text.p t="subheading" mb="s">
-                        {lang.save.withdraw_amount}
-                      </Text.p>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0 DAI"
-                        value={withdrawAmount}
-                        onChange={e => {
-                          if (withdrawMaxFlag) setWithdrawMaxFlag(false);
-                          onWithdrawAmountChange(e);
-                        }}
-                        error={withdrawAmountErrors}
-                        failureMessage={withdrawAmountErrors}
-                        after={<SetMax onClick={setWithdrawMax} />}
-                      />
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.withdraw_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={withdrawAmount}
+                      onChange={e => {
+                        if (withdrawMaxFlag) setWithdrawMaxFlag(false);
+                        onWithdrawAmountChange(e);
+                      }}
+                      error={withdrawAmountErrors}
+                      failureMessage={withdrawAmountErrors}
+                      after={<SetMax onClick={setWithdrawMax} />}
+                    />
 
-                      <Box my="s" mx="l">
-                        <ProxyAllowanceToggle
-                          token="MDAI"
-                          onlyShowAllowance={true}
-                        />
-                      </Box>
-                    </div>
+                    <Box my="xs" mx="xl" px="xl">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
+                      />
+                    </Box>
 
                     <Box justifySelf="center">
                       <Button

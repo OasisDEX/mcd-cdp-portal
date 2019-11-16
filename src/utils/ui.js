@@ -4,14 +4,10 @@ import BigNumber from 'bignumber.js';
 import lang from 'languages';
 
 export function formatCollateralizationRatio(ratio) {
-  if (ratio === Infinity) {
-    return lang.cdp_page.not_applicable;
-  } else if (isNaN(ratio)) {
-    return '---';
-  } else {
-    if (ratio < 0) ratio = 0;
-    return `${ratio.toFixed(2)}%`;
-  }
+  if (ratio === Infinity) return lang.cdp_page.not_applicable;
+  if (isNaN(ratio)) return '---';
+  if (ratio < 0) ratio = 0;
+  return `${ratio.toFixed(2)}%`;
 }
 
 export function formatLiquidationPrice(price, symbol) {
@@ -48,8 +44,8 @@ export function prettifyNumber(
   if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;
   if (truncate) {
-    if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + ' M';
-    else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + ' K';
+    if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
+    else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
@@ -145,6 +141,7 @@ export function formatDate(d) {
 
 // ensures a result < amount.toFixed(d)
 export function safeToFixed(amount, digits) {
+  if (typeof amount === 'string') amount = parseFloat(amount);
   const s = amount.toFixed(digits);
   return s.substring(0, s.length - 1);
 }

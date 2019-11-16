@@ -95,7 +95,6 @@ const Payback = ({ cdpId, reset }) => {
   };
 
   const valid = amount && !amountErrors && hasProxy && hasAllowance;
-
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">

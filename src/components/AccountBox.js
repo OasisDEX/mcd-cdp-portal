@@ -144,7 +144,6 @@ const WalletBalances = ({ hasActiveAccount }) => {
       }, []),
     [balances, uniqueFeeds]
   );
-
   return (
     <>
       <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
