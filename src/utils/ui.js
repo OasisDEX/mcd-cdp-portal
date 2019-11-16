@@ -141,6 +141,7 @@ export function formatDate(d) {
 
 // ensures a result < amount.toFixed(d)
 export function safeToFixed(amount, digits) {
+  if (typeof amount === 'string') amount = parseFloat(amount);
   const s = amount.toFixed(digits);
   return s.substring(0, s.length - 1);
 }
