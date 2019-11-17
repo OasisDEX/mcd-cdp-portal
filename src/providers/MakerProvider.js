@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
+import Waiting from 'pages/Waiting';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
@@ -34,6 +35,7 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const navigation = useNavigation();
   const [, dispatch] = useStore();
+  const [displayApp, setDisplayApp] = useState(false);
 
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
@@ -190,6 +192,23 @@ function MakerProvider({
         .filter(Boolean)
   };
 
+  useEffect(() => {
+    (async () => {
+      const testing = process.env.NODE_ENV === 'test';
+      const KEY = 'mcd';
+      const systemDebtCeiling =
+        maker &&
+        (await maker.service('mcd:systemData').getSystemWideDebtCeiling());
+      if (
+        testing ||
+        systemDebtCeiling > 0 ||
+        window.localStorage.password === KEY
+      ) {
+        setDisplayApp(true);
+      }
+    })();
+  }, [maker]);
+
   return (
     <MakerObjectContext.Provider
       value={{
@@ -205,7 +224,15 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {maker ? children : <LoadingLayout text="Loading..." />}
+      {maker ? (
+        displayApp ? (
+          children
+        ) : (
+          <Waiting />
+        )
+      ) : (
+        <LoadingLayout text="Loading..." />
+      )}
     </MakerObjectContext.Provider>
   );
 }
