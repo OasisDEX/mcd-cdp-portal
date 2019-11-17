@@ -57,7 +57,7 @@ const CDPCreateConfirmSummary = ({
     ],
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
-      lang.collateralization_ratio,
+      lang.collateralization,
       formatCollateralizationRatio(collateralizationRatio)
     ],
     [lang.liquidation_ratio, `${liquidationRatio}%`],
