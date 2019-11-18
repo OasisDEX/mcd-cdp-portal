@@ -19,7 +19,7 @@ function getSeparator(locale, separatorType) {
   const numberWithGroupAndDecimalSeparator = 1000.1;
   return Intl.NumberFormat(locale)
     .formatToParts(numberWithGroupAndDecimalSeparator)
-    .find(part => part.type === separatorType).value;
+    .find(part => part.type === separatorType)?.value;
 }
 
 export function prettifyCurrency(locale, num = null) {
