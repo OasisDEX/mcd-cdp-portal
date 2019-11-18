@@ -192,12 +192,15 @@ function MakerProvider({
         .filter(Boolean)
   };
 
-  const { url } = navigation.getCurrentValue();
-  const isLanding = url.pathname === '/';
+  let isLanding = true;
+  const testing = process.env.NODE_ENV === 'test';
+  if (!testing) {
+    const { url } = navigation.getCurrentValue();
+    isLanding = url.pathname === '/';
+  }
 
   useEffect(() => {
     (async () => {
-      const testing = process.env.NODE_ENV === 'test';
       const KEY = 'mcd';
       const systemDebtCeiling =
         maker &&
