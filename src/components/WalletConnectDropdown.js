@@ -131,44 +131,44 @@ const WalletConnectDropdown = ({
           </Option>
         )}
         <BrowserView>
-        <Option
-          onClick={() => {
-            connectLedgerWallet();
-            close();
-          }}
-        >
-          {lang.formatString(lang.connect_to, 'Ledger Nano')}
-        </Option>
+          <Option
+            onClick={() => {
+              connectLedgerWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Ledger Nano')}
+          </Option>
         </BrowserView>
         <BrowserView>
-        <Option
-          onClick={() => {
-            connectTrezorWallet();
-            close();
-          }}
-        >
-          {lang.formatString(lang.connect_to, 'Trezor')}
-        </Option>
+          <Option
+            onClick={() => {
+              connectTrezorWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Trezor')}
+          </Option>
         </BrowserView>
         <BrowserView>
-        <Option
-          onClick={() => {
-            connectToProviderOfType(AccountTypes.WALLETCONNECT);
-            close();
-          }}
-        >
-          {lang.landing_page.wallet_connect}
-        </Option>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.WALLETCONNECT);
+              close();
+            }}
+          >
+            {lang.landing_page.wallet_connect}
+          </Option>
         </BrowserView>
         <BrowserView>
-        <Option
-          onClick={() => {
-            connectToProviderOfType(AccountTypes.WALLETLINK);
-            close();
-          }}
-        >
-          {lang.landing_page.wallet_link}
-        </Option>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.WALLETLINK);
+              close();
+            }}
+          >
+            {lang.landing_page.wallet_link}
+          </Option>
         </BrowserView>
       </Card>
     </Dropdown>
