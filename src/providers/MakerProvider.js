@@ -192,6 +192,9 @@ function MakerProvider({
         .filter(Boolean)
   };
 
+  const { url } = navigation.getCurrentValue();
+  const isLanding = url.pathname === '/';
+
   useEffect(() => {
     (async () => {
       const testing = process.env.NODE_ENV === 'test';
@@ -200,14 +203,17 @@ function MakerProvider({
         maker &&
         (await maker.service('mcd:systemData').getSystemWideDebtCeiling());
       if (
+        isLanding ||
         testing ||
         systemDebtCeiling > 0 ||
         window.localStorage.password === KEY
       ) {
         setDisplayApp(true);
+      } else {
+        setDisplayApp(false);
       }
     })();
-  }, [maker]);
+  }, [maker, isLanding]);
 
   return (
     <MakerObjectContext.Provider
