@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -56,11 +56,23 @@ function DSRDeposit({ onClose, hideOnboarding }) {
     initialState
   );
 
-  const screens = [
-    [lang.dsr_deposit.screen_titles.open_vault, props => <DSRDepositCheckProxy {...props} />],
-    [lang.dsr_deposit.screen_titles.deposit_dai, props => <DSRDepositCreate {...props} />],
-    [lang.dsr_deposit.screen_titles.confirmation, props => <DSRDepositConfirm {...props} />]
-  ];
+  const screens = useMemo(
+    () => [
+      [
+        lang.dsr_deposit.screen_titles.open_vault,
+        props => <DSRDepositCheckProxy {...props} />
+      ],
+      [
+        lang.dsr_deposit.screen_titles.deposit_dai,
+        props => <DSRDepositCreate {...props} />
+      ],
+      [
+        lang.dsr_deposit.screen_titles.confirmation,
+        props => <DSRDepositConfirm {...props} />
+      ]
+    ],
+    [lang]
+  );
 
   useEffect(() => {
     const checkProxy = async () => {

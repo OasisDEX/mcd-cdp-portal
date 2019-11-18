@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -86,12 +86,27 @@ function CDPCreate({ onClose }) {
     dispatch
   ] = useReducer(reducer, initialState);
 
-  const screens = [
-    [lang.cdp_create.screen_titles.select_collateral, props => <CDPCreateSelectCollateral {...props} />],
-    [lang.cdp_create.screen_titles.vault_management, props => <CDPCreateSetAllowance {...props} />],
-    [lang.cdp_create.screen_titles.generate_dai, props => <CDPCreateDeposit {...props} />],
-    [lang.cdp_create.screen_titles.confirmation, props => <CDPCreateConfirmCDP {...props} />]
-  ];
+  const screens = useMemo(
+    () => [
+      [
+        lang.cdp_create.screen_titles.select_collateral,
+        props => <CDPCreateSelectCollateral {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.vault_management,
+        props => <CDPCreateSetAllowance {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.generate_dai,
+        props => <CDPCreateDeposit {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.confirmation,
+        props => <CDPCreateConfirmCDP {...props} />
+      ]
+    ],
+    [lang]
+  );
 
   useEffect(() => {
     const checkProxy = async () => {
