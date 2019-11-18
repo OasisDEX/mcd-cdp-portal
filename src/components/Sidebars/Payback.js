@@ -86,9 +86,9 @@ const Payback = ({ cdpId, reset }) => {
       return;
     }
     newTxListener(
-      debtAmount !== amount
-        ? cdpManager.wipe(cdpId, MDAI(amount), owner)
-        : cdpManager.wipeAll(cdpId, owner),
+      debtAmount == amount
+        ? cdpManager.wipeAll(cdpId, owner)
+        : cdpManager.wipe(cdpId, MDAI(amount), owner),
       lang.transactions.pay_back_dai
     );
     reset();
