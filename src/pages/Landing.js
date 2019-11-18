@@ -151,7 +151,13 @@ const TokenList = styled.div`
 const Token = ({ name, icon }) => {
   const Icon = icon;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', margin: '38px 35px 22px' }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        margin: '38px 35px 22px'
+      }}
+    >
       <Icon width="22" height="22" style={{ flexGrow: 0, flexShrink: 0 }} />
       <span
         style={{
@@ -516,7 +522,9 @@ function Landing() {
             <Token name={name} icon={icon} key={name} />
           ))}
         </TokenList>
-        <span style={{fontSize: '10px'}}>{lang.landing_page.token_section_only_on_trade}</span>
+        <span style={{ fontSize: '10px' }}>
+          {lang.landing_page.token_section_only_on_trade}
+        </span>
       </TextSection>
       <TextSection style={{ marginTop: '95px' }}>
         <h3>{lang.landing_page.section1_title}</h3>
