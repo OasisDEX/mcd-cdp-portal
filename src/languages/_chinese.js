@@ -186,6 +186,11 @@ export default {
     "exit_to_cdp_portal": "退出 CDP 面板"
   },
   "dsr_deposit": {
+    "screen_titles": {
+      "open_vault": "Open Save Vault",
+      "deposit_dai": "Deposit Dai",
+      "confirmation": "Confirmation"
+    },
     "open_vault": "存 Dai 生息",
     "deposit_form_title": "输入你希望存入的金额",
     "setup_proxy_text": "一键初始化金库。本操作只需设置一次。",
