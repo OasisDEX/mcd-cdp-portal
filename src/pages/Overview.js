@@ -33,10 +33,10 @@ import { NotificationStatus, NotificationList } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
 
 const InfoCard = ({ title, amount, denom }) => (
-  <Card py={{ s: 'm', m: 'l' }} px="m" minWidth="22.4rem">
+  <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
     <Grid gridRowGap="s">
       <Text
-        justifySelf={{ s: 'left', m: 'center' }}
+        justifySelf={{ s: 'left', xl: 'center' }}
         t="subheading"
         css={`
           white-space: nowrap;
@@ -44,13 +44,13 @@ const InfoCard = ({ title, amount, denom }) => (
       >
         {title.toUpperCase()}
       </Text>
-      <Box justifySelf={{ s: 'left', m: 'center' }}>
-        <Box display={{ s: 'none', m: 'unset' }}>
+      <Box justifySelf={{ s: 'left', xl: 'center' }}>
+        <Box display={{ s: 'none', xl: 'unset' }}>
           <Flex alignSelf="end" alignItems="flex-end">
             <Text.h3>{amount}</Text.h3>&nbsp;<Text.h4>{denom}</Text.h4>
           </Flex>
         </Box>
-        <Text.h4 display={{ s: 'unset', m: 'none' }}>
+        <Text.h4 display={{ s: 'unset', xl: 'none' }}>
           {amount} {denom}
         </Text.h4>
       </Box>
@@ -191,9 +191,9 @@ function Overview({ viewedAddress }) {
         {lang.overview_page.title}
       </Text.h2>
       {cdpContent && (
-        <Grid gridRowGap={{ s: 'm', m: 'l' }}>
+        <Grid gridRowGap={{ s: 'm', xl: 'l' }}>
           <Grid
-            gridTemplateColumns={{ s: '1fr', m: 'auto auto 1fr' }}
+            gridTemplateColumns={{ s: '1fr', xl: 'auto auto 1fr' }}
             gridColumnGap="m"
             gridRowGap="s"
           >
@@ -211,7 +211,7 @@ function Overview({ viewedAddress }) {
           <Box>
             <Text.h4>{lang.overview_page.your_cdps}</Text.h4>
             <Card
-              px={{ s: 'm', m: 'l' }}
+              px={{ s: 'm', xl: 'l' }}
               pt="m"
               pb="s"
               my="m"
@@ -237,19 +237,19 @@ function Overview({ viewedAddress }) {
                   <Table.tr>
                     <Table.th>{lang.overview_page.token}</Table.th>
                     <Table.th>{lang.overview_page.id}</Table.th>
-                    <Table.th display={{ s: 'table-cell', m: 'none' }}>
+                    <Table.th display={{ s: 'table-cell', xl: 'none' }}>
                       {lang.overview_page.ratio_mobile}
                     </Table.th>
-                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                    <Table.th display={{ s: 'none', xl: 'table-cell' }}>
                       {lang.overview_page.ratio}
                     </Table.th>
-                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                    <Table.th display={{ s: 'none', xl: 'table-cell' }}>
                       {lang.overview_page.deposited}
                     </Table.th>
-                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                    <Table.th display={{ s: 'none', xl: 'table-cell' }}>
                       {lang.overview_page.withdraw}
                     </Table.th>
-                    <Table.th display={{ s: 'none', m: 'table-cell' }}>
+                    <Table.th display={{ s: 'none', xl: 'table-cell' }}>
                       {lang.overview_page.debt}
                     </Table.th>
                     <Table.th />
@@ -274,8 +274,8 @@ function Overview({ viewedAddress }) {
                           <Table.td>
                             <Text
                               t="body"
-                              fontSize={{ s: '1.7rem', m: 'm' }}
-                              fontWeight={{ s: 'medium', m: 'normal' }}
+                              fontSize={{ s: '1.7rem', xl: 'm' }}
+                              fontWeight={{ s: 'medium', xl: 'normal' }}
                               color="darkPurple"
                             >
                               {token}
@@ -284,8 +284,8 @@ function Overview({ viewedAddress }) {
                           <Table.td>
                             <Text
                               t="body"
-                              fontSize={{ s: '1.7rem', m: 'm' }}
-                              color={{ s: 'darkLavender', m: 'darkPurple' }}
+                              fontSize={{ s: '1.7rem', xl: 'm' }}
+                              color={{ s: 'darkLavender', xl: 'darkPurple' }}
                             >
                               {id}
                             </Text>
@@ -293,27 +293,27 @@ function Overview({ viewedAddress }) {
                           <Table.td>
                             {isFinite(ratio) ? (
                               <RatioDisplay
-                                fontSize={{ s: '1.7rem', m: '1.3rem' }}
+                                fontSize={{ s: '1.7rem', xl: '1.3rem' }}
                                 ratio={ratio}
                                 ilkLiqRatio={ilkLiqRatio}
                               />
                             ) : (
-                              <Text fontSize={{ s: '1.7rem', m: '1.3rem' }}>
+                              <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
                                 N/A
                               </Text>
                             )}
                           </Table.td>
-                          <Table.td display={{ s: 'none', m: 'table-cell' }}>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
                             <Text t="caption" color="darkLavender">
                               {deposited}
                             </Text>
                           </Table.td>
-                          <Table.td display={{ s: 'none', m: 'table-cell' }}>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
                             <Text t="caption" color="darkLavender">
                               {withdraw}
                             </Text>
                           </Table.td>
-                          <Table.td display={{ s: 'none', m: 'table-cell' }}>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
                             <Text t="caption" color="darkLavender">
                               {debt}
                             </Text>
@@ -337,10 +337,10 @@ function Overview({ viewedAddress }) {
                                       white-space: nowrap;
                                     `}
                                   >
-                                    <Box display={{ s: 'none', m: 'inline' }}>
+                                    <Box display={{ s: 'none', xl: 'inline' }}>
                                       {lang.overview_page.view_cdp}
                                     </Box>
-                                    <Box display={{ s: 'inline', m: 'none' }}>
+                                    <Box display={{ s: 'inline', xl: 'none' }}>
                                       {lang.overview_page.view_cdp_mobile}
                                     </Box>
                                   </Text>
