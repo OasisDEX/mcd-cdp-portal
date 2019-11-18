@@ -18,22 +18,22 @@ export default {
     // "wallet_balance": "wallet balance",
     "tx_history": "交易历史",
     "outstanding_dai_debt": "已借 Dai 数量",
-    "not_applicable": "不适用"
+    "not_applicable": "N/A"
   },
   "landing_page": {
     "headline": "一站式 Dai 交易、借贷、存款平台",
     "trade_card": {
-      "title": "交易",
+      "title": "Trade",
       "description": "完全链上撮合、即时结算、无手续费",
       "button": "开始交易"
     },
     "borrow_card": {
-      "title": "借贷",
+      "title": "Borrow",
       "description": "抵押资产，借 Dai (与美元 1:1 锚定的稳定币)",
       "button": "借 Dai"
     },
     "save_card": {
-      "title": "存款",
+      "title": "Save",
       "description": "存 Dai 生息，随存随取",
       "button": "存 Dai"
     },
@@ -87,7 +87,11 @@ export default {
     "view_cdp_mobile": "查看金库",
     "total_collateral_locked": "全部存入抵押品价值",
     "total_dai_debt": "全部借 Dai 数量",
-    "get_started_title": "开启你的第一个金库，抵押生成 Dai"
+    "get_started_title": "开启你的第一个金库，抵押生成 Dai",
+    "select_another_wallet": "选择其他钱包",
+    "connect_ledgers_choice": "连接 {0} 或者 {1}",
+    "no_vaults": "地址 {0} 下没有任何金库",
+    "loading_vaults": "加载金库中..."
   },
   "navbar": {
     "save": "存款",
@@ -101,8 +105,8 @@ export default {
     // "read_only_mode": "Read-Only Mode",
     "price_feeds": "喂价",
     "system_info": "系统信息",
-    "active_cdps": "当前金库 ID",
-    "active_cdps_figure": "{0} 金库",
+    "active_cdps": "金库总数",
+    "active_cdps_figure": "{0} 个金库",
     "global_debt_ceiling": "全局债务上限",
     "current_debt": "当前债务",
     "base_rate": "全局抵押率",
@@ -118,7 +122,7 @@ export default {
     "balance": "余额",
     "usd": "USD",
     "send": "发送",
-    "migrate": "映射",
+    "migrate": "去升级",
     "no_wallet": "没有连接到钱包",
     "save_details": {
       "title": "存款详情",
@@ -128,13 +132,20 @@ export default {
   },
   "cdp_create": {
     "screen_titles": {
-      "select_collateral": "Select Collateral",
-      "vault_management": "Vault Management",
-      "generate_dai": "Generate Dai",
-      "confirmation": "Confirmation"
+      "select_collateral": "选择抵押品",
+      "vault_management": "金库管理",
+      "generate_dai": "生成 Dai",
+      "confirmation": "确认"
     },
+    "set_allowance": "许可资产",
+    "seconds_wait_time": "秒",
+    "minutes_wait_time_singular": "分钟",
+    "minutes_wait_time_plural": "分钟",
+    "tx_hash": "交易哈希",
+    "view_tx_details": "查看交易细节",
     "select_title": "选择一种抵押品类型",
     "select_text": "每种抵押品有不同的风险参数，你可以存入不同的抵押品。",
+
     "setup_proxy_title": "初始化金库和抵押品授权",
     "setup_proxy_proxy_text": "一键初始化金库。本操作只需设置一次。",
     "setup_proxy_allowance_text": "授权 {0} 资产。不同抵押品需要单独授权。",
@@ -157,13 +168,14 @@ export default {
 
     "confirm_title": "确认金库细节",
     "confirmed_title": "你的金库正在创建中...",
-    "confirmed_text": "预计完成时间 {0}，你现在可以安全离开这个页面。",
+    "confirmed_text": "预计完成时间 {0}，你现在也可以安全离开这个页面。",
     "post_confirmed_title": "你的金库已创建完成",
     "post_confirmed_text": "你可以安全离开这个页面",
     "insufficient_ilk_balance": "{0} 余额不足",
-    "draw_too_much_dai": "金库低于清算线",
-    "below_dust_limit": "初始化金库需要最低生成 {0} Dai",
-    "stability_fee_description": "基于你的金库 Dai 债务累计的稳定费。",
+    "draw_too_much_dai": "金库将低于清算线",
+    "below_dust_limit": "金库初次最低借 {0} Dai",
+    "dust_max_payback": "你可以一次性偿还全部借出的 Dai, 或者最多 {0} Dai",
+    "stability_fee_description": "基于你的金库 Dai 债务累计的利息费。",
     "liquidation_ratio_description": "清算率是指触发金库清算的最低抵押率（抵押品价值/借 Dai 债务）。",
     "liquidation_penalty_description": "清算发生时，对借 Dai 债务额外收取的罚金。",
     "waiting_for_comfirmations": "确认中... {0} of {1}",
@@ -184,7 +196,7 @@ export default {
     "trust_site_with_dai": "信任当前网站",
     "pay_and_migrate": "支付并映射",
     "migrate_in_progress_header": "正在映射你的 CDP",
-    "migrate_in_progress_text": "整个过程大致需要 8 分钟。你现在可以安全离开这个页面。",
+    "migrate_in_progress_text": "整个过程大致需要 8 分钟。你现在也可以安全离开这个页面。",
     "migrate_complete_header": "CDP 映射完成",
     "migrate_complete_text": "CDP #{0} 已经成功映射到多抵押 Dai 和新的 CDP 面板。",
     "view_transaction_details": "查看交易细节",
@@ -193,9 +205,9 @@ export default {
   },
   "dsr_deposit": {
     "screen_titles": {
-      "open_vault": "Open Save Vault",
-      "deposit_dai": "Deposit Dai",
-      "confirmation": "Confirmation"
+      "open_vault": "开启存款金库",
+      "deposit_dai": "存 Dai",
+      "confirmation": "确认"
     },
     "open_vault": "存 Dai 生息",
     "deposit_form_title": "输入你希望存入的金额",
@@ -220,6 +232,14 @@ export default {
     "withdraw": "已取回",
     "pay_back": "已偿还",
     "generate": "已生成"
+  },
+  "event_history": {
+    "open": "开启新的金库 ID #{0}",
+    "deposit": "存入 {0} {1} 到金库",
+    "withdraw": "从金库取回 {0} {1}",
+    "generate": "从金库生成 {0} 新 Dai",
+    "pay_back": "偿还 {0} Dai 到金库",
+    "give": "金库转移从 {1} 转移到 {0}"
   },
   "action_sidebar": {
     "deposit_title": "存入 {0}",
@@ -266,7 +286,7 @@ export default {
     "deposit_amount": "存入金额",
     "withdraw_amount": "提取金额",
     "deposit_dai": "存入 Dai",
-    "deposit_dai_subheading": "存入确认即开始生息",
+    "deposit_dai_subheading": "存入即生息，随存随取",
     "get_started_title": "现在开始存 Dai 赚利息吧"
   },
   "verbs": {
@@ -275,7 +295,8 @@ export default {
   },
   "table": {
     "type": "类型",
-    "activity": "Activity",
+    "activity": "活动",
+    "date": "日期",
     "time": "时间",
     "sender_id": "发送者 ID",
     "tx_hash": "交易哈希"
@@ -289,12 +310,26 @@ export default {
     "withdrawing_gem": "取出 {0}",
     "depositing_gem": "存入 {0}"
   },
+  "transaction_manager": {
+    "transaction_singular_capitalised": "交易",
+    "transaction_plural_capitalised": "交易",
+    "transaction_singular": "交易",
+    "transaction_plural": "交易",
+    "show": "显示",
+    "hide": "隐藏"
+  },
   "input_validations": {
     "max_float": "金额需要小于 {0}",
     "min_float": "金额需要大于 {0}",
     "is_float": "请输入有效的数字",
     "default": "请输入有效的信息"
   },
+  "connect": "连接",
+  "view": "查看",
+  "exit": "退出",
+  "close": "关闭",
+  "connect_to": "连接 {0}",
+  "overview": "概览",
   "cdp_type": "金库类型",
   "not_found": "未找到",
   // "network": "Network",
@@ -305,20 +340,22 @@ export default {
   "set_max": "最大值",
   "paste": "粘贴",
   "cancel": "取消",
+  "current_price": "当前价格",
   "stability_fee": "稳定费率",
   "liquidation_penalty": "清算罚金",
   "collateral_debt_ceiling": "债务上限",
   "dai_available": "可用 DAI",
   "returned_auction": "拍卖返还额",
   "liquidated_event": "你的金库已经被清算",
-  "liquidation_ratio": "清算率",
+  "liquidation_ratio": "清算线",
   "liquidation_price": "清算价格",
   "liquidation_penalty_shortened": "清算罚金",
-  "liquidation_ratio_shortened": "清算率",
+  "liquidation_ratio_shortened": "清算线",
   // "liquidation_price_shortened": "Liq Price",
   "collateral_type": "抵押品类型",
   "collateralization": "抵押率",
   "collateralization_ratio": "抵押率",
+  "current_ilk_price": "当前 {0} 价格",
   "your_balance": "你的余额",
   // "risk_parameters": "Risk Parameters",
   "terms_of_service_text": "我已经阅读并接受 {0}",
@@ -326,6 +363,7 @@ export default {
   "cookie_notice": "同意该网站 {0}",
   "privacy_policy": "隐私政策",
   "providers": {
+    "connect_wallet": "选择钱包连接",
     "metamask": "MetaMask",
     "trust": "Trust",
     "coinbase": "Coinbase Wallet",
@@ -334,5 +372,10 @@ export default {
     "ledger_nano": "Ledger Nano",
     "trezor": "Trezor",
     "other": "当前钱包"
+  },
+  notifications: {
+    claim_collateral: "你的 {0} Vault 拍卖已经完成。你可以赎回 {1} {2}。",
+    non_vault_owner: "金库 ({0}) 持有者和当前钱包地址不匹配。",
+    non_overview_owner: "你目前在查看其他地址 ({0}) 的账户概览。"
   }
 }
