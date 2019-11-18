@@ -37,7 +37,8 @@ export default {
       "description": "Earn savings on your Dai by locking it into Oasis Save. Automatic and non-custodial.",
       "button": "Save Dai"
     },
-    "token_section_title": "Currently supported by Oasis Trade",
+    "token_section_title": "Currently supported on Oasis",
+    "token_section_only_on_trade": "* Only available on Oasis Trade",
     "section1_title": "What is Oasis?",
     "section1_p": "Oasis is a platform for decentralized finance. Use it to trade tokens, borrow Dai, and earn savings — all in one place.",
     "section2_title": "Secure protocol built on Ethereum",
