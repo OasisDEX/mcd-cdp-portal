@@ -18,6 +18,7 @@ import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { AccountTypes } from '../utils/constants';
+import { BrowserView } from 'react-device-detect';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -87,45 +88,55 @@ function AccountSelection() {
               backgroundColor: 'white'
             }}
           />
-          <IconButton
-            onClick={connectTrezorWallet}
-            disabled={!makerAuthenticated}
-            icon={<StyledTrezorLogo />}
-            css={{
-              backgroundColor: 'white'
-            }}
-          >
-            {lang.providers.trezor}
-          </IconButton>
-          <IconButton
-            onClick={connectLedgerWallet}
-            disabled={!makerAuthenticated}
-            icon={<StyledLedgerLogo />}
-            css={{
-              backgroundColor: 'white'
-            }}
-          >
-            {lang.providers.ledger_nano}
-          </IconButton>
-          <IconButton
-            onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
-            icon={<StyledWalletConnectLogo />}
-            css={{
-              backgroundColor: 'white'
-            }}
-          >
-            {lang.landing_page.wallet_connect}
-          </IconButton>
-          <IconButton
-            onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
-            disabled={!makerAuthenticated}
-            icon={<StyledWalletLinkLogo />}
-            css={{
-              backgroundColor: 'white'
-            }}
-          >
-            {lang.landing_page.wallet_link}
-          </IconButton>
+          <BrowserView>
+            <IconButton
+              onClick={connectTrezorWallet}
+              disabled={!makerAuthenticated}
+              icon={<StyledTrezorLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.providers.trezor}
+            </IconButton>
+          </BrowserView>
+          <BrowserView>
+            <IconButton
+              onClick={connectLedgerWallet}
+              disabled={!makerAuthenticated}
+              icon={<StyledLedgerLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.providers.ledger_nano}
+            </IconButton>
+          </BrowserView>
+          <BrowserView>
+            <IconButton
+              onClick={() =>
+                connectToProviderOfType(AccountTypes.WALLETCONNECT)
+              }
+              icon={<StyledWalletConnectLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.landing_page.wallet_connect}
+            </IconButton>
+          </BrowserView>
+          <BrowserView>
+            <IconButton
+              onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+              disabled={!makerAuthenticated}
+              icon={<StyledWalletLinkLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.landing_page.wallet_link}
+            </IconButton>
+          </BrowserView>
           {/* <ReadOnlyConnect /> */}
         </Grid>
       </Flex>
