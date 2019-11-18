@@ -9,22 +9,8 @@ import {
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
 import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import { TxLifecycle } from 'utils/constants';
-import lang from 'languages';
-
-const {
-  select_collateral,
-  vault_management,
-  generate_dai,
-  confirmation
-} = lang.cdp_create.screen_titles;
-
-const screens = [
-  [select_collateral, props => <CDPCreateSelectCollateral {...props} />],
-  [vault_management, props => <CDPCreateSetAllowance {...props} />],
-  [generate_dai, props => <CDPCreateDeposit {...props} />],
-  [confirmation, props => <CDPCreateConfirmCDP {...props} />]
-];
 
 const initialState = {
   step: 0,
@@ -94,10 +80,18 @@ function reducer(state, action) {
 
 function CDPCreate({ onClose }) {
   const { maker, account } = useMaker();
+  const { lang } = useLanguage();
   const [
     { step, selectedIlk, proxyAddress, ...cdpParams },
     dispatch
   ] = useReducer(reducer, initialState);
+
+  const screens = [
+    [lang.cdp_create.screen_titles.select_collateral, props => <CDPCreateSelectCollateral {...props} />],
+    [lang.cdp_create.screen_titles.vault_management, props => <CDPCreateSetAllowance {...props} />],
+    [lang.cdp_create.screen_titles.generate_dai, props => <CDPCreateDeposit {...props} />],
+    [lang.cdp_create.screen_titles.confirmation, props => <CDPCreateConfirmCDP {...props} />]
+  ];
 
   useEffect(() => {
     const checkProxy = async () => {

@@ -8,20 +8,8 @@ import {
   DSRDepositConfirm
 } from 'components/DSRDepositScreens';
 import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import { TxLifecycle } from 'utils/constants';
-import lang from 'languages';
-
-const {
-  open_vault,
-  deposit_dai,
-  confirmation
-} = lang.dsr_deposit.screen_titles;
-
-const screens = [
-  [open_vault, props => <DSRDepositCheckProxy {...props} />],
-  [deposit_dai, props => <DSRDepositCreate {...props} />],
-  [confirmation, props => <DSRDepositConfirm {...props} />]
-];
 
 const initialState = {
   step: 0,
@@ -62,10 +50,17 @@ function reducer(state, action) {
 
 function DSRDeposit({ onClose, hideOnboarding }) {
   const { maker, account } = useMaker();
+  const { lang } = useLanguage();
   const [{ step, proxyAddress, depositAmount, txState }, dispatch] = useReducer(
     reducer,
     initialState
   );
+
+  const screens = [
+    [lang.dsr_deposit.screen_titles.open_vault, props => <DSRDepositCheckProxy {...props} />],
+    [lang.dsr_deposit.screen_titles.deposit_dai, props => <DSRDepositCreate {...props} />],
+    [lang.dsr_deposit.screen_titles.confirmation, props => <DSRDepositConfirm {...props} />]
+  ];
 
   useEffect(() => {
     const checkProxy = async () => {
