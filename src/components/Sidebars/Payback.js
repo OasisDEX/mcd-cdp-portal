@@ -2,6 +2,7 @@ import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import round from 'lodash/round';
+import debug from 'debug';
 
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import { calcCDPParams } from 'utils/cdp';
@@ -23,6 +24,8 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
+
+const log = debug('maker:Sidebars/Payback');
 
 const Payback = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -82,11 +85,14 @@ const Payback = ({ cdpId, reset }) => {
     const cdpManager = maker.service('mcd:cdpManager');
     const owner = await cdpManager.getOwner(cdpId);
     if (!owner) {
-      console.error(`Unable to find owner of CDP #${cdpId}`);
+      log(`Unable to find owner of CDP #${cdpId}`);
       return;
     }
+    const wipeAll = debtAmount.toString() === amount;
+    if (wipeAll) log('Calling wipeAll()');
+    else log('Calling wipe()');
     newTxListener(
-      debtAmount == amount
+      wipeAll
         ? cdpManager.wipeAll(cdpId, owner)
         : cdpManager.wipe(cdpId, MDAI(amount), owner),
       lang.transactions.pay_back_dai
