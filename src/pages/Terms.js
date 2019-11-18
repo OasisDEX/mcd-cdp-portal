@@ -8,7 +8,7 @@ const Privacy = () => (
   <OasisLayout>
     <LegalTextLayout>
       <h1>Terms of Service</h1>
-      <span className="subheading">Last Revised: 02 October 2019</span>
+      <span className="subheading">Last Revised: 18 November 2019</span>
 
       <p>
         Please read these Terms of Service (this “<strong>Agreement</strong>”)
@@ -53,12 +53,11 @@ const Privacy = () => (
       </p>
       <p>
         You affirm that you are aware and acknowledge that Company is a
-        non-profit entity and non-custodial provider of software services,
-        meaning that the Company does not custody, control or manage user funds
-        in any manner whatsoever. The Services are deployed in a decentralized
-        environment wherein the Services can be autonomously and directly
-        accessed by the Users without any involvement or actions taken by
-        Company or any third-party.
+        non-custodial provider of software services, meaning that the Company
+        does not custody, control or manage user funds in any manner whatsoever.
+        The Services are deployed in a decentralized environment wherein the
+        Services can be autonomously and directly accessed by the Users without
+        any involvement or actions taken by Company or any third-party.
       </p>
       <h3>1.2. Your Use of Services</h3>
       <p>You represent and warrant to Company that:</p>
