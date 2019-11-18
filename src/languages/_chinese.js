@@ -127,6 +127,12 @@ export default {
     }
   },
   "cdp_create": {
+    "screen_titles": {
+      "select_collateral": "Select Collateral",
+      "vault_management": "Vault Management",
+      "generate_dai": "Generate Dai",
+      "confirmation": "Confirmation"
+    },
     "select_title": "选择一种抵押品类型",
     "select_text": "每种抵押品有不同的风险参数，你可以存入不同的抵押品。",
     "setup_proxy_title": "初始化金库和抵押品授权",
