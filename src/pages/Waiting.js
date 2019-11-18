@@ -13,8 +13,8 @@ const Waiting = () => (
       <Text.h2 textAlign="center">Coming soon</Text.h2>
       <Flex py="m" justifyContent="center">
         <Text>
-          All Sai and CDP Single-Collateral migrations and upgrades will be
-          available on Monday 4:00PM UTC
+          You will be able to create Maker Vaults and secure your Dai into Oasis
+          Save from 16:00 UTC today
         </Text>
       </Flex>
     </div>
