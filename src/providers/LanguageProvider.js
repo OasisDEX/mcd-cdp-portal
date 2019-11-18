@@ -25,12 +25,14 @@ function LanguageProvider({ children }) {
 
   // First time load
   if (locale === null) {
-    const localeOverrideUrl = getQueryParamByName('lang');
+    const langOverrideUrl = getQueryParamByName('lang');
+    const localOverrideUrl = getQueryParamByName('locale');
     const localeOverrideLocalStorage = window.localStorage.getItem('locale');
-    const localeOverrides = [];
-    localeOverrideUrl && localeOverrides.push(localeOverrideUrl);
-    localeOverrideLocalStorage &&
-      localeOverrides.push(localeOverrideLocalStorage);
+    const localeOverrides = [
+      langOverrideUrl,
+      localOverrideUrl,
+      localeOverrideLocalStorage
+    ].filter(x => x);
 
     const detectedLanguage = getPreferredLanguage({
       languages: languages.map(language => language.value),
