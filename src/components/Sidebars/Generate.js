@@ -80,9 +80,7 @@ const Generate = ({ cdpId, reset }) => {
 
   const generate = () => {
     newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(amount)),
+      maker.service('mcd:cdpManager').draw(cdpId, cdp.ilk, MDAI(amount)),
       lang.transactions.generate_dai
     );
     reset();
