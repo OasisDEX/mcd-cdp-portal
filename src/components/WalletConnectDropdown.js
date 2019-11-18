@@ -10,6 +10,7 @@ import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
 import { AccountTypes } from '../utils/constants';
+import { BrowserView } from 'react-device-detect';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -129,6 +130,7 @@ const WalletConnectDropdown = ({
             )}
           </Option>
         )}
+        <BrowserView>
         <Option
           onClick={() => {
             connectLedgerWallet();
@@ -137,6 +139,8 @@ const WalletConnectDropdown = ({
         >
           {lang.formatString(lang.connect_to, 'Ledger Nano')}
         </Option>
+        </BrowserView>
+        <BrowserView>
         <Option
           onClick={() => {
             connectTrezorWallet();
@@ -145,6 +149,8 @@ const WalletConnectDropdown = ({
         >
           {lang.formatString(lang.connect_to, 'Trezor')}
         </Option>
+        </BrowserView>
+        <BrowserView>
         <Option
           onClick={() => {
             connectToProviderOfType(AccountTypes.WALLETCONNECT);
@@ -153,6 +159,8 @@ const WalletConnectDropdown = ({
         >
           {lang.landing_page.wallet_connect}
         </Option>
+        </BrowserView>
+        <BrowserView>
         <Option
           onClick={() => {
             connectToProviderOfType(AccountTypes.WALLETLINK);
@@ -161,6 +169,7 @@ const WalletConnectDropdown = ({
         >
           {lang.landing_page.wallet_link}
         </Option>
+        </BrowserView>
       </Card>
     </Dropdown>
   );
