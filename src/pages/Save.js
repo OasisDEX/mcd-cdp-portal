@@ -172,7 +172,7 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" mb="s">
+          <Text.p t="h4" css={{ marginBottom: '26px' }}>
             {lang.save.get_started_title}
           </Text.p>
           <Button
@@ -187,7 +187,7 @@ function Save() {
             }
           >
             {lang.actions.get_started}
-          </Button>{' '}
+          </Button>
         </Flex>
       ) : (
         <>
