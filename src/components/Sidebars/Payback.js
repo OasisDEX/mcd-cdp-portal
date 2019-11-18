@@ -45,9 +45,7 @@ const Payback = ({ cdpId, reset }) => {
   const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
 
   const dustLimitValidation = value =>
-    greaterThan(dustLimit, subtract(maxAmount, value)) &&
-    maxAmount !== value &&
-    greaterThan(subtract(maxAmount, dustLimit), 0);
+    greaterThan(dustLimit, subtract(maxAmount, value)) && maxAmount !== value;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
