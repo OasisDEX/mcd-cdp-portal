@@ -16,7 +16,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import { safeToFixed } from '../../utils/ui';
-import { subtract, greaterThan } from '../../utils/bignumber';
+import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -44,8 +44,11 @@ const Payback = ({ cdpId, reset }) => {
   const dustLimit = cdp.dust ? cdp.dust : 0;
   const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
 
-  const dustLimitValidation = value =>
-    greaterThan(dustLimit, subtract(maxAmount, value)) && maxAmount !== value;
+  // Amount being repaid can't result in a remaining debt lower than the dust
+  // minimum unless the full amount is being repaid
+  const dustLimitValidation = input =>
+    greaterThan(dustLimit, subtract(debtAmount, input)) &&
+    equalTo(input, debtAmount) !== true;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -66,7 +69,7 @@ const Payback = ({ cdpId, reset }) => {
       dustLimit: () =>
         lang.formatString(
           lang.cdp_create.dust_max_payback,
-          subtract(maxAmount, dustLimit)
+          subtract(debtAmount, dustLimit)
         )
     }
   );
