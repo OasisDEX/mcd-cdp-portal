@@ -15,6 +15,12 @@ const computeAddressBalances = addresses =>
     )
   );
 
+const initialState = {
+  fetching: false,
+  accounts: [],
+  onAccountChosen: () => {}
+};
+
 const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
@@ -52,12 +58,6 @@ const reducer = (state, action) => {
     default:
       throw new Error(`Unexpected action with type '${type}'`);
   }
-};
-
-const initialState = {
-  fetching: false,
-  accounts: [],
-  onAccountChosen: () => {}
 };
 
 const DEFAULT_ACCOUNTS_LENGTH = 25;
@@ -113,7 +113,7 @@ export function useLedger({ onAccountChosen }) {
         }
       });
     },
-    [accountSelection, show]
+    [show]
   );
 
   return { connectLedgerWallet };
