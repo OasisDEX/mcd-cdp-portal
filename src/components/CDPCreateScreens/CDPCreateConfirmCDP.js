@@ -33,7 +33,8 @@ const StyledExternalLink = styled(ExternalLinkIcon)`
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
-  capturedDispatch
+  capturedDispatch,
+  enableSubmit
 }) => {
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
@@ -122,7 +123,7 @@ const CDPCreateConfirmSummary = ({
         </Grid>
       </Card>
       <ScreenFooter
-        canProgress={hasReadTOS}
+        canProgress={hasReadTOS && enableSubmit}
         onNext={() => capturedDispatch({ type: 'increment-step' })}
         onBack={() => capturedDispatch({ type: 'decrement-step' })}
         continueText={lang.actions.create_cdp}
@@ -211,6 +212,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
   const { lang } = useLanguage();
   const { maker, checkForNewCdps, newTxListener } = useMaker();
+  const [enableSubmit, setEnableSubmit] = useState(true);
 
   const { gemsToLock, daiToDraw, txState } = cdpParams;
 
@@ -228,6 +230,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         daiToDraw
       );
 
+    setEnableSubmit(false);
     newTxListener(txObject, lang.transactions.creating_cdp);
 
     const txMgr = maker.service('transactionManager');
@@ -255,6 +258,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       cdpParams={cdpParams}
       selectedIlk={selectedIlk}
       capturedDispatch={capturedDispatch}
+      enableSubmit={enableSubmit}
     />
   );
 };
