@@ -1,5 +1,13 @@
 import BigNumber from 'bignumber.js';
 
+export function equalTo(numberOne, numberTwo) {
+  return (
+    BigNumber(numberOne.toString()).comparedTo(
+      BigNumber(numberTwo.toString())
+    ) === 0
+  );
+}
+
 export function greaterThan(numberOne, numberTwo) {
   return (
     BigNumber(numberOne.toString()).comparedTo(
