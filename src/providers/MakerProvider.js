@@ -90,9 +90,13 @@ function MakerProvider({
       );
       const txManagerSub = maker
         .service('transactionManager')
-        .onTransactionUpdate((tx, state, err) => {
-          if (state === 'mined')
-            maker.service('mcd:cdpManager').resetEventHistoryCache();
+        .onTransactionUpdate((tx, state) => {
+          if (state === 'mined') {
+            const id = tx?.metadata?.id;
+            if (id) log(`Resetting event history cache for Vault #${id}`);
+            else log('Resetting event history cache');
+            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+          }
           log('Tx ' + state, tx.metadata);
           setTxLastUpdate(Date.now());
         });
