@@ -1,6 +1,7 @@
 import round from 'lodash/round';
 import { MKR, ETH } from '../maker';
 import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
 
 export function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
@@ -62,21 +63,21 @@ export const etherscanLink = (string, network = 'mainnet') => {
 };
 
 export async function checkEthereumProvider() {
-  return new Promise(async (res, rej) => {
-    if (typeof window.ethereum !== 'undefined') {
-      const accounts = await window.ethereum.enable();
-      const selectedAddress =
-        window.ethereum._selectedAddress || window.ethereum.selectedAddress;
-      const networkVersion =
-        window.ethereum._network || window.ethereum.networkVersion;
-      const account =
-        !accounts || accounts.length <= 0 ? selectedAddress : accounts[0];
-      res({
-        networkId: parseInt(networkVersion, 10),
-        address: account
-      });
-    } else rej('No web3 provider detected');
-  });
+  let provider;
+  if (typeof window.ethereum !== 'undefined') {
+    await window.ethereum.enable();
+    provider = window.ethereum;
+  } else if (window.web3) {
+    provider = window.web3.currentProvider;
+  } else {
+    throw new Error('No web3 provider detected');
+  }
+
+  const web3 = new Web3(provider);
+  const networkId = await web3.eth.net.getId();
+  const address = (await web3.eth.getAccounts())[0];
+
+  return { networkId, address };
 }
 
 export const calculateGasCost = async (maker, gasLimit = 21000) => {
