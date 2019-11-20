@@ -26,15 +26,7 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
         (accountAddress && proxyAddress && (call?.meta?.accountSavings || call?.meta?.accountProxyAllowanceForToken)))),
     // Add account balance calls
     ...(accountAddress
-      ? flatten(
-          tokensWithBalances
-            // TODO: This can actually be looked up via multicall using the
-            // getEthBalance(address)(uint256) helper function and omitting the target
-            .filter(token => token !== 'ETH')
-            .map(token =>
-              accountBalanceForToken(addresses, token, accountAddress)
-            )
-        )
+      ? flatten(tokensWithBalances.map(token => accountBalanceForToken(addresses, token, accountAddress)))
       : []),
     // Add account savings and proxy allowance calls
     ...(accountAddress && proxyAddress

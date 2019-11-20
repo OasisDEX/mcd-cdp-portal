@@ -130,26 +130,26 @@ const WalletConnectDropdown = ({
             )}
           </Option>
         )}
-        {/* <BrowserView> */}
-        {/*   <Option */}
-        {/*     onClick={() => { */}
-        {/*       connectLedgerWallet(); */}
-        {/*       close(); */}
-        {/*     }} */}
-        {/*   > */}
-        {/*     {lang.formatString(lang.connect_to, 'Ledger Nano')} */}
-        {/*   </Option> */}
-        {/* </BrowserView> */}
-        {/* <BrowserView> */}
-        {/*   <Option */}
-        {/*     onClick={() => { */}
-        {/*       connectTrezorWallet(); */}
-        {/*       close(); */}
-        {/*     }} */}
-        {/*   > */}
-        {/*     {lang.formatString(lang.connect_to, 'Trezor')} */}
-        {/*   </Option> */}
-        {/* </BrowserView> */}
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectLedgerWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Ledger Nano')}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectTrezorWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Trezor')}
+          </Option>
+        </BrowserView>
         <BrowserView>
           <Option
             onClick={() => {
