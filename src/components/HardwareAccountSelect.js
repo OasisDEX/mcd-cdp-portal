@@ -30,7 +30,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
       confirmAddress(address);
       onClose();
     }, onClose);
-  }, []);
+  }, [confirmAddress, onClose]);
 
   const toPage = useCallback(
     async page => {

@@ -239,7 +239,8 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       confirmed: () => {
         checkForNewCdps();
         dispatch({ type: 'transaction-confirmed' });
-      }
+      },
+      error: () => setEnableSubmit(true)
     });
     await txMgr.confirm(txObject, 1);
   }
