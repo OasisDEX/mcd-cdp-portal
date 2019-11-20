@@ -6,6 +6,7 @@ import { MakerObjectContext } from '../providers/MakerProvider';
 function useMaker() {
   const {
     maker,
+    watcher,
     account,
     viewedAddressData,
     transactions,
@@ -83,6 +84,7 @@ function useMaker() {
 
   return {
     maker,
+    watcher,
     authenticated: true,
     isConnectedToProvider,
     connectBrowserProvider,

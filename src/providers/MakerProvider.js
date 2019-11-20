@@ -32,6 +32,7 @@ function MakerProvider({
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
+  const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation();
   const [, dispatch] = useStore();
 
@@ -50,11 +51,22 @@ function MakerProvider({
       });
       if (newMaker.service('accounts').hasAccount()) {
         initAccount(newMaker.currentAccount());
+        (async () => {
+          const { address } = newMaker.currentAccount();
+          log(`Found initial account: ${address}`);
+          const proxy = await newMaker
+            .service('proxy')
+            .getProxyAddress(address);
+          if (proxy) log(`Found proxy address: ${proxy}`);
+          else log('No proxy found');
+          updateWatcherWithAccount(newMaker, address, proxy);
+        })();
       }
       setMaker(newMaker);
 
       newMaker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
+        log(`Account changed to: ${account.address}`);
         initAccount(account);
         (async () => {
           const proxy = await newMaker
@@ -80,6 +92,8 @@ function MakerProvider({
   useEffect(() => {
     if (maker) {
       const watcher = createWatcher(maker);
+      setWatcher(watcher);
+      log('Watcher created');
       const batchSub = watcher.batch().subscribe(updates => {
         dispatch(batchActions(updates));
         // make entire list of updates available in a single reducer call
@@ -198,6 +212,7 @@ function MakerProvider({
     <MakerObjectContext.Provider
       value={{
         maker,
+        watcher,
         account,
         network,
         txLastUpdate,
