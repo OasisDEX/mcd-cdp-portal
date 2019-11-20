@@ -88,30 +88,30 @@ function AccountSelection() {
               backgroundColor: 'white'
             }}
           />
-          {/* <BrowserView> */}
-          {/*   <IconButton */}
-          {/*     onClick={connectTrezorWallet} */}
-          {/*     disabled={!makerAuthenticated} */}
-          {/*     icon={<StyledTrezorLogo />} */}
-          {/*     css={{ */}
-          {/*       backgroundColor: 'white' */}
-          {/*     }} */}
-          {/*   > */}
-          {/*     {lang.providers.trezor} */}
-          {/*   </IconButton> */}
-          {/* </BrowserView> */}
-          {/* <BrowserView> */}
-          {/*   <IconButton */}
-          {/*     onClick={connectLedgerWallet} */}
-          {/*     disabled={!makerAuthenticated} */}
-          {/*     icon={<StyledLedgerLogo />} */}
-          {/*     css={{ */}
-          {/*       backgroundColor: 'white' */}
-          {/*     }} */}
-          {/*   > */}
-          {/*     {lang.providers.ledger_nano} */}
-          {/*   </IconButton> */}
-          {/* </BrowserView> */}
+          <BrowserView>
+            <IconButton
+              onClick={connectTrezorWallet}
+              disabled={!makerAuthenticated}
+              icon={<StyledTrezorLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.providers.trezor}
+            </IconButton>
+          </BrowserView>
+          <BrowserView>
+            <IconButton
+              onClick={connectLedgerWallet}
+              disabled={!makerAuthenticated}
+              icon={<StyledLedgerLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+            >
+              {lang.providers.ledger_nano}
+            </IconButton>
+          </BrowserView>
           <BrowserView>
             <IconButton
               onClick={() =>
