@@ -239,7 +239,8 @@ export default {
     "withdraw": "从金库取回 {0} {1}",
     "generate": "从金库生成 {0} 新 Dai",
     "pay_back": "偿还 {0} Dai 到金库",
-    "give": "金库转移从 {1} 转移到 {0}"
+    "give": "金库转移从 {1} 转移到 {0}",
+    "migrate": "单抵押 Dai 已成功转移到金库"
   },
   "action_sidebar": {
     "deposit_title": "存入 {0}",

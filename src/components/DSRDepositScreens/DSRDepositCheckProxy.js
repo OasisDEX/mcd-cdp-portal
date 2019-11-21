@@ -37,6 +37,7 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
 
   const labels = {
     setup_text: lang.dsr_deposit.setup_proxy_text,
+    setup_header: lang.dsr_deposit.setup_header,
     allowance_text: lang.formatString(
       lang.cdp_create.setup_proxy_allowance_text,
       'DAI'

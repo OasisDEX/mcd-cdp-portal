@@ -18,7 +18,7 @@ function LanguageProvider({ children }) {
     setLocale_(value);
     lang.setLanguage(value);
     if (locale) {
-      console.debug(`Language set to: ${value}`);
+      log(`Language set to: ${value}`);
       window.localStorage.setItem('locale', value);
     }
   };

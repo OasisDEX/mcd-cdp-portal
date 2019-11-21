@@ -206,10 +206,11 @@ export default {
   },
   'dsr_deposit': {
     'screen_titles': {
-      'open_vault': 'Open Save Vault',
+      'open_vault': 'Manage Proxy',
       'deposit_dai': 'Deposit Dai',
       'confirmation': 'Confirmation'
     },
+    'setup_header': 'Deploy Proxy',
     'open_vault': 'Earn savings on your Dai by locking into Oasis Save',
     'deposit_form_title': 'Enter the amount you would like to deposit.',
     'setup_proxy_text': 'Setting up your proxy will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.',
@@ -240,7 +241,8 @@ export default {
     'withdraw': 'Withdrew {0} {1} from Vault',
     'generate': 'Generated {0} new Dai from Vault',
     'pay_back': 'Repaid {0} Dai to Vault',
-    'give': 'Vault given to {0} by {1}'
+    'give': 'Vault given to {0} by {1}',
+    'migrate': 'Vault upgraded from SCD'
   },
   'action_sidebar': {
     'deposit_title': 'Deposit {0}',
@@ -375,7 +377,8 @@ export default {
     'ledger_nano': 'Ledger Nano',
     'trezor': 'Trezor',
     'other': 'Active Wallet',
-    'ledger': 'Ledger'
+    'ledger': 'Ledger',
+    'walletconnect': 'Wallet Connect'
   },
   notifications: {
     claim: 'Claim',
