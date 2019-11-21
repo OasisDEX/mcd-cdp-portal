@@ -240,7 +240,8 @@ export default {
     'withdraw': 'Withdrew {0} {1} from Vault',
     'generate': 'Generated {0} new Dai from Vault',
     'pay_back': 'Repaid {0} Dai to Vault',
-    'give': 'Vault given to {0} by {1}'
+    'give': 'Vault given to {0} by {1}',
+    'migrate': 'Vault upgraded from SCD'
   },
   'action_sidebar': {
     'deposit_title': 'Deposit {0}',

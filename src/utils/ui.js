@@ -122,6 +122,8 @@ export function formatEventDescription(lang, e) {
         <b>{shortenAddress(e.newOwner)}</b>,
         <b>{shortenAddress(e.prevOwner)}</b>
       );
+    case 'MIGRATE':
+      return lang.formatString(lang.event_history.migrate);
     default:
       return '?';
   }
