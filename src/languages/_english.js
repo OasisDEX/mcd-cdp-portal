@@ -376,7 +376,8 @@ export default {
     'ledger_nano': 'Ledger Nano',
     'trezor': 'Trezor',
     'other': 'Active Wallet',
-    'ledger': 'Ledger'
+    'ledger': 'Ledger',
+    'walletconnect': 'Wallet Connect'
   },
   notifications: {
     claim: 'Claim',
