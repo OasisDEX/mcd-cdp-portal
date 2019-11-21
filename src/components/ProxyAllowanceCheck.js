@@ -31,12 +31,17 @@ const ProxyAllowanceCheck = ({
   labels,
   isSettingAllowance
 }) => {
-  const { setup_text, allowance_text, confirmations_text } = labels;
+  const {
+    setup_text,
+    setup_header,
+    allowance_text,
+    confirmations_text
+  } = labels;
 
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
       <Grid gridRowGap="xs">
-        <Text.h4>{lang.cdp_create.setup_vault}</Text.h4>
+        <Text.h4>{setup_header}</Text.h4>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {setup_text}
         </Text.p>

@@ -37,6 +37,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
 
   const labels = {
     setup_text: lang.cdp_create.setup_proxy_proxy_text,
+    setup_header: lang.cdp_create.setup_vault,
     allowance_text: lang.formatString(
       lang.cdp_create.setup_proxy_allowance_text,
       selectedIlk.currency.symbol
