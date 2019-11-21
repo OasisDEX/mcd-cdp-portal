@@ -92,6 +92,7 @@ export default {
     'select_another_wallet': 'Select another wallet',
     'connect_ledgers_choice': 'Connect {0} or {1}',
     'no_vaults': 'Address {0} has no Vaults.',
+    'vault_unavailable': 'Sorry, this vault doesn\'t exist',
     'loading_vaults': 'Loading Vaults...'
   },
   'navbar': {

@@ -8,6 +8,8 @@ import useStore from 'hooks/useStore';
 import { getCdp } from 'reducers/cdps';
 import { trackCdpById } from 'reducers/multicall/cdps';
 import CDPViewPresentation from './Presentation';
+import Unavailable from '../Unavailable';
+import { ZERO_ADDRESS } from '../../utils/constants';
 
 function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
@@ -15,16 +17,22 @@ function CDPView({ cdpId }) {
   const { show: showSidebar } = useSidebar();
   const [{ cdps, feeds }, dispatch] = useStore();
   const [cdpOwner, setOwner] = useState();
+  const [cdpAvailable, setCdpAvailable] = useState(true);
 
   useEffect(() => {
     (async () => {
       const proxyAddress = await maker
         .service('mcd:cdpManager')
         .getOwner(cdpId);
-      const cdpOwnerAddress = await maker
-        .service('proxy')
-        .getOwner(proxyAddress);
-      setOwner(cdpOwnerAddress);
+      try {
+        const cdpOwnerAddress = await maker
+          .service('proxy')
+          .getOwner(proxyAddress);
+        setOwner(cdpOwnerAddress);
+      } catch (err) {
+        setCdpAvailable(false);
+      }
+      if (proxyAddress !== ZERO_ADDRESS) setOwner(proxyAddress);
     })();
   }, [maker, cdpId]);
 
@@ -55,10 +63,12 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={cdpOwner.toLowerCase()}
         />
+      ) : !cdpAvailable ? (
+        <Unavailable />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [cdp, showSidebar, account, network, cdpOwner]
+    [cdp, showSidebar, account, network, cdpOwner, cdpAvailable]
   );
 }
 
