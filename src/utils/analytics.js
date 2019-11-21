@@ -1,5 +1,7 @@
 import mixpanel from 'mixpanel-browser';
 import ReactGA from 'react-ga';
+import debug from 'debug';
+const log = debug('maker:analytics');
 
 const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
 const config = {
@@ -36,7 +38,7 @@ const config = {
 }[env];
 
 export const mixpanelInit = () => {
-  console.debug(
+  log(
     `[Mixpanel] Tracking initialized for ${env} env using ${
       config.mixpanel.token
     }`
@@ -73,9 +75,7 @@ export const userSnapInit = () => {
 };
 
 export const gaInit = () => {
-  console.debug(
-    `[GA] Tracking initialized for ${env} env using ${config.gaTrackingId}`
-  );
+  log(`[GA] Tracking initialized for ${env} env using ${config.gaTrackingId}`);
   ReactGA.initialize(config.gaTrackingId);
   return ReactGA;
 };

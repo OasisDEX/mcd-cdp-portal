@@ -13,6 +13,8 @@ import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
 import rootReducer from 'reducers';
+import debug from 'debug';
+const log = debug('maker:App');
 
 const Body = styled.div`
   display: flex;
@@ -29,10 +31,10 @@ function App() {
     const mixpanel = mixpanelInit(navigation);
     navigation.subscribe(route => {
       if (route.type === 'ready') {
-        console.debug(`[Mixpanel] Tracked: ${route.title}`);
+        log(`[Mixpanel] Tracked: ${route.title}`);
         mixpanel.track('Pageview', { routeName: route.title });
 
-        console.debug(`[GA] Tracked pageview: ${route.url.href}`);
+        log(`[GA] Tracked pageview: ${route.url.href}`);
         reactGa.pageview(route.url.href);
       }
     });
