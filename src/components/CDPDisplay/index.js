@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { hot } from 'react-hot-loader/root';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
+import useCdpTypes from 'hooks/useCdpTypes';
 import { getCdp } from 'reducers/cdps';
 import { trackCdpById } from 'reducers/multicall/cdps';
 import CDPViewPresentation from './Presentation';
@@ -20,16 +21,23 @@ function CDPView({ cdpId }) {
   const [cdpOwner, setOwner] = useState();
   const [cdpAvailable, setCdpAvailable] = useState(true);
   const navigation = useNavigation();
+  const { cdpTypes } = useCdpTypes();
 
-  useEffect(() => {
-    (async () => {
-      async function redirect(account) {
+  const redirect = useCallback(
+    account => {
+      (async function redirect() {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
           pathname: `/${Routes.BORROW}/owner/${account.address}`,
           search
         });
-      }
+      })();
+    },
+    [navigation]
+  );
+
+  useEffect(() => {
+    (async () => {
       const proxyAddress = await maker
         .service('mcd:cdpManager')
         .getOwner(cdpId);
@@ -46,7 +54,7 @@ function CDPView({ cdpId }) {
         }
       }
     })();
-  }, [maker, cdpId, account, navigation]);
+  }, [maker, cdpId, account, navigation, redirect]);
 
   // this workaround (making useMemo depend on just one feed item) ensures that
   // the view does not re-render when an irrelevant price feed is updated.
@@ -62,8 +70,18 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    trackCdpById(maker, cdpId, dispatch);
-  }, [cdpId, dispatch, maker]);
+    (async () => {
+      const ilk = await maker.service('mcd:cdpManager').getIlkByCdpId(cdpId);
+      const type = cdpTypes.find(f => f.key === ilk);
+      if (type) {
+        trackCdpById(maker, cdpId, dispatch).catch(() =>
+          account ? redirect(account) : setCdpAvailable(false)
+        );
+      } else {
+        account ? redirect(account) : setCdpAvailable(false);
+      }
+    })();
+  }, [cdpId, dispatch, maker, account, redirect, cdpTypes]);
 
   return useMemo(
     () =>
