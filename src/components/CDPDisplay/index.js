@@ -33,15 +33,18 @@ function CDPView({ cdpId }) {
       const proxyAddress = await maker
         .service('mcd:cdpManager')
         .getOwner(cdpId);
-      try {
-        const cdpOwnerAddress = await maker
-          .service('proxy')
-          .getOwner(proxyAddress);
-        setOwner(cdpOwnerAddress);
-      } catch (err) {
+      if (proxyAddress === ZERO_ADDRESS) {
         account ? redirect(account) : setCdpAvailable(false);
+      } else {
+        try {
+          const cdpOwnerAddress = await maker
+            .service('proxy')
+            .getOwner(proxyAddress);
+          setOwner(cdpOwnerAddress);
+        } catch (err) {
+          setOwner(proxyAddress);
+        }
       }
-      if (proxyAddress !== ZERO_ADDRESS) setOwner(proxyAddress);
     })();
   }, [maker, cdpId, account, navigation]);
 
