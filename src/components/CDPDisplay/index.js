@@ -42,6 +42,7 @@ function CDPView({ cdpId }) {
             .getOwner(proxyAddress);
           setOwner(cdpOwnerAddress);
         } catch (err) {
+          // cdp is not owned by a proxy
           setOwner(proxyAddress);
         }
       }
