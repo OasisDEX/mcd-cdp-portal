@@ -14,6 +14,7 @@ import { cutMiddle, copyToClipboard } from 'utils/ui';
 import { getColor } from 'styles/theme';
 import { CopyBtn, CopyBtnIcon } from './AddressTable';
 import { ReactComponent as Cross } from 'images/cross.svg';
+import { AccountTypes } from 'utils/constants';
 
 const ACCOUNTS_PER_PAGE = 5;
 const ACCOUNTS_TO_FETCH = 25;
@@ -21,8 +22,10 @@ const ACCOUNTS_TO_FETCH = 25;
 function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const accountsToFetch =
+    type === AccountTypes.LEDGER ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
   const { fetch, connect, accounts, pickAccount, fetching } = useHardwareWallet(
-    { type, accountsLength: ACCOUNTS_TO_FETCH, path }
+    { type, accountsLength: accountsToFetch, path }
   );
 
   useEffect(() => {
