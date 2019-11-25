@@ -5,7 +5,6 @@ import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import useStore from 'hooks/useStore';
-import useCdpTypes from 'hooks/useCdpTypes';
 import { getCdp } from 'reducers/cdps';
 import { trackCdpById } from 'reducers/multicall/cdps';
 import CDPViewPresentation from './Presentation';
@@ -21,7 +20,6 @@ function CDPView({ cdpId }) {
   const [cdpOwner, setOwner] = useState();
   const [cdpAvailable, setCdpAvailable] = useState(true);
   const navigation = useNavigation();
-  const { cdpTypes } = useCdpTypes();
 
   const redirect = useCallback(
     account => {
@@ -70,18 +68,10 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    (async () => {
-      const ilk = await maker.service('mcd:cdpManager').getIlkByCdpId(cdpId);
-      const type = cdpTypes.find(f => f.key === ilk);
-      if (type) {
-        trackCdpById(maker, cdpId, dispatch).catch(() =>
-          account ? redirect(account) : setCdpAvailable(false)
-        );
-      } else {
-        account ? redirect(account) : setCdpAvailable(false);
-      }
-    })();
-  }, [cdpId, dispatch, maker, account, redirect, cdpTypes]);
+    trackCdpById(maker, cdpId, dispatch).then(() => {
+      if (!cdp.inited) account ? redirect(account) : setCdpAvailable(false);
+    });
+  }, [cdpId, dispatch, maker, account, cdp]);
 
   return useMemo(
     () =>
