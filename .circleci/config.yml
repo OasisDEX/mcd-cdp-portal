@@ -43,6 +43,33 @@ jobs:
           command: |
             npm i --no-save now
             ./scripts/now-deploy.sh
+  deploy_aws_staging:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Build production artifact
+          command: |
+            CI=false yarn build
+      - run:
+          name: Deploy to AWS staging
+          command: |
+            sudo apt update
+            sudo apt install python-pip
+            pip install --upgrade --user awscli
+            export PATH=$HOME/.local/bin:$PATH
+
+            aws configure set default.region $STAGE_AWS_REGION
+            aws configure set default.output json
+            aws configure set aws_access_key_id $STAGE_AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $STAGE_AWS_SECRET_ACCESS_KEY
+
+            aws s3 sync build s3://$STAGE_AWS_BUCKET_NAME/ --delete --exclude trade/*
+            aws cloudfront create-invalidation --distribution-id $STAGE_AWS_CF_ID --paths "/*"
   deploy_prod:
     docker:
       - image: circleci/node:lts
@@ -85,6 +112,12 @@ workflows:
           filters:
             branches:
               ignore: master
+      - deploy_aws_staging:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop
       - deploy_prod:
           requires:
             - test
