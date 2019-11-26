@@ -49,3 +49,5 @@ export const NotificationList = {
   NON_VAULT_OWNER: { name: 'nonVaultOwner', priority: 1 },
   NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 }
 };
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

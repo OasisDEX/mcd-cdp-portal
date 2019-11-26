@@ -92,6 +92,7 @@ export default {
     'select_another_wallet': 'Select another wallet',
     'connect_ledgers_choice': 'Connect {0} or {1}',
     'no_vaults': 'Address {0} has no Vaults.',
+    'vault_unavailable': 'Sorry, this vault is unavailable',
     'loading_vaults': 'Loading Vaults...'
   },
   'navbar': {
@@ -127,7 +128,7 @@ export default {
     'no_wallet': 'Not connected',
     'save_details': {
       'title': 'Save Details',
-      'total_savings_dai': 'Total Savings Dai',
+      'total_savings_dai': 'Total Dai in DSR',
       'total_dai_supply': 'Total Dai Supply'
     }
   },
