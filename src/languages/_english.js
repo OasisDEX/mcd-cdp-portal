@@ -128,7 +128,7 @@ export default {
     'no_wallet': 'Not connected',
     'save_details': {
       'title': 'Save Details',
-      'total_savings_dai': 'Total Savings Dai',
+      'total_savings_dai': 'Total Dai in DSR',
       'total_dai_supply': 'Total Dai Supply'
     }
   },
