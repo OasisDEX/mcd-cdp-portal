@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { hot } from 'react-hot-loader/root';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
@@ -21,15 +21,21 @@ function CDPView({ cdpId }) {
   const [cdpAvailable, setCdpAvailable] = useState(true);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    (async () => {
-      async function redirect(account) {
+  const redirect = useCallback(
+    account => {
+      (async function redirect() {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
           pathname: `/${Routes.BORROW}/owner/${account.address}`,
           search
         });
-      }
+      })();
+    },
+    [navigation]
+  );
+
+  useEffect(() => {
+    (async () => {
       const proxyAddress = await maker
         .service('mcd:cdpManager')
         .getOwner(cdpId);
@@ -47,7 +53,7 @@ function CDPView({ cdpId }) {
         }
       }
     })();
-  }, [maker, cdpId, account, navigation]);
+  }, [maker, cdpId, account, navigation, redirect]);
 
   // this workaround (making useMemo depend on just one feed item) ensures that
   // the view does not re-render when an irrelevant price feed is updated.
@@ -63,8 +69,10 @@ function CDPView({ cdpId }) {
   ]);
 
   useEffect(() => {
-    trackCdpById(maker, cdpId, dispatch);
-  }, [cdpId, dispatch, maker]);
+    trackCdpById(maker, cdpId, dispatch).then(() => {
+      if (!cdp.inited) account ? redirect(account) : setCdpAvailable(false);
+    });
+  }, [cdpId, dispatch, maker, account, cdp]);
 
   return useMemo(
     () =>
