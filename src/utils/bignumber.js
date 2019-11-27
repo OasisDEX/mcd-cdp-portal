@@ -55,3 +55,7 @@ export function minimum(numberOne, numberTwo) {
 export function maximum(numberOne, numberTwo) {
   return BigNumber.max(numberOne.toString(), numberTwo.toString()).toFixed();
 }
+
+export function BN(number) {
+  return BigNumber(number);
+}
