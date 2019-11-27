@@ -93,15 +93,11 @@ function MakerProvider({
     if (maker) {
       const watcher = createWatcher(maker);
       setWatcher(watcher);
-      log('Watcher created');
       const batchSub = watcher.batch().subscribe(updates => {
         dispatch(batchActions(updates));
         // make entire list of updates available in a single reducer call
         dispatch({ type: 'watcherUpdates', payload: updates });
       });
-      const onNewBlockSub = watcher.onNewBlock(blockHeight =>
-        log(`Latest block height: ${blockHeight}`)
-      );
       const txManagerSub = maker
         .service('transactionManager')
         .onTransactionUpdate((tx, state) => {
@@ -118,7 +114,6 @@ function MakerProvider({
       startWatcher(maker);
       return () => {
         batchSub.unsub();
-        onNewBlockSub.unsub();
         txManagerSub.unsub();
       };
     }

@@ -14,7 +14,7 @@ export async function trackCdpById(maker, cdpId, dispatch) {
   const urnStateCall = urnState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
   const gemStateCall = gemState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
 
-  getWatcher().tap(calls =>
+  maker.service('multicall').tap(calls =>
     calls
       // filter out duplicate calls
       .filter(call => JSON.stringify(call) !== JSON.stringify(urnStateCall))
