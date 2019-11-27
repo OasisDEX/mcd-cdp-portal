@@ -38,6 +38,7 @@ const CDPCreateConfirmSummary = ({
 }) => {
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
+  const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
 
   const {
     liquidationPenalty,
@@ -103,27 +104,32 @@ const CDPCreateConfirmSummary = ({
           justifyContent="center"
           mt="l"
           alignItems="center"
-          gridColumnGap="xs"
+          gridRowGap="s"
           gridTemplateColumns="auto auto"
         >
-          <label>
-            <Checkbox
-              checked={hasReadTOS}
-              onChange={() => setHasReadTOS(state => !state)}
-            />
-            <Text color="grey.500" ml="s">
-              {lang.formatString(
-                lang.terms_of_service_text,
-                <Link href="/terms" target="_blank" color="blue">
-                  {lang.terms_of_service}
-                </Link>
-              )}
-            </Text>
-          </label>
+          <Checkbox
+            checked={hasReadTOS}
+            onChange={() => setHasReadTOS(state => !state)}
+          />
+          <Text color="grey.500" ml="s">
+            {lang.formatString(
+              lang.terms_of_service_text,
+              <Link href="/terms" target="_blank" color="blue">
+                {lang.terms_of_service}
+              </Link>
+            )}
+          </Text>
+          <Checkbox
+            checked={hasUnderstoodSF}
+            onChange={() => setHasUnderstoodSF(state => !state)}
+          />
+          <Text color="grey.500" ml="s">
+            {lang.cdp_create.has_understood_stability_fee}
+          </Text>
         </Grid>
       </Card>
       <ScreenFooter
-        canProgress={hasReadTOS && enableSubmit}
+        canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
         onNext={() => capturedDispatch({ type: 'increment-step' })}
         onBack={() => capturedDispatch({ type: 'decrement-step' })}
         continueText={lang.actions.create_cdp}
