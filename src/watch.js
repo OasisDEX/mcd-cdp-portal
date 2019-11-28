@@ -19,7 +19,7 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  watcher.tap(calls => [
+  maker.service('multicall').tap(calls => [
     // Filter out existing calls of the same types we're about to add
     ...calls.filter(call =>
       !((accountAddress && call?.meta?.accountBalanceForToken) ||
@@ -61,7 +61,7 @@ export async function updateWatcherWithProxy(
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  watcher.tap(calls => [
+  maker.service('multicall').tap(calls => [
     ...calls,
     ...(accountAddress && proxyAddress
       ? flatten(
@@ -83,7 +83,7 @@ export async function updateWatcherWithProxy(
 
 export function createWatcher(maker) {
   const service = maker.service('multicall');
-  service.createWatcher({ interval: 3000 });
+  service.createWatcher({ interval: 'block', useFetch: true });
   watcher = service.watcher;
   window.watcher = watcher;
   return watcher;
@@ -96,13 +96,15 @@ export async function startWatcher(maker) {
   addresses.MWETH = addresses.ETH;
 
   // Add initial calls to watcher
-  watcher.tap(() => [
+  maker.service('multicall').tap(calls => [
+      ...calls,
       ...createCDPSystemModel(addresses),
       ...flatten(ilks.map(ilk => cdpTypeModel(addresses, ilk))),
       ...savingsModel(addresses)
     ].filter(call => !isMissingContractAddress(call)));
+
   // Our watch has begun
-  watcher.start();
+  maker.service('multicall').start();
 
   return watcher;
 }

@@ -427,7 +427,7 @@ function Landing() {
           </div>
           <div className="buttonContainer">
             <a
-              href="https://oasis.app/trade"
+              href="/trade"
               className="button enabled"
               style={{
                 color: '#5894B5',

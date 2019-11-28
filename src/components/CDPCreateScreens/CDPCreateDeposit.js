@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
-import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
+import { greaterThanOrEqual, greaterThan, BN } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import {
@@ -11,15 +11,17 @@ import {
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
-
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
+import { RatioTextDisplay } from 'components/RatioDisplay';
 
 function OpenCDPForm({
   selectedIlk,
   cdpParams,
   handleInputChange,
-  daiAvailable
+  daiAvailable,
+  collateralizationRatio,
+  showRatioWarning
 }) {
   const { lang } = useLanguage();
   const userHasSufficientGemBalance = greaterThanOrEqual(
@@ -35,6 +37,7 @@ function OpenCDPForm({
     selectedIlk.data.dust,
     cdpParams.daiToDraw
   );
+
   const fields = [
     [
       lang.formatString(
@@ -89,7 +92,7 @@ function OpenCDPForm({
         key="daiToDraw"
         name="daiToDraw"
         after="DAI"
-        width="250px"
+        width={300}
         type="number"
         failureMessage={
           (belowDustLimit
@@ -125,6 +128,14 @@ function OpenCDPForm({
             {prettifyNumber(daiAvailable)} DAI
           </Text>
         </Box>
+        {showRatioWarning && (
+          <RatioTextDisplay
+            text={lang.cdp_create.collateralization_warning}
+            ratio={collateralizationRatio}
+            ilkLiqRatio={selectedIlk.data.liquidationRatio}
+            t="caption"
+          />
+        )}
       </Grid>
     ]
   ];
@@ -168,9 +179,15 @@ const CDPCreateDepositSidebar = ({
       {[
         [
           lang.collateralization,
-          `${formatCollateralizationRatio(
-            collateralizationRatio
-          )} (Min ${liquidationRatio}%)`
+          <RatioTextDisplay
+            key="ba"
+            text={`${formatCollateralizationRatio(
+              collateralizationRatio
+            )} (Min ${liquidationRatio}%)`}
+            ratio={collateralizationRatio}
+            ilkLiqRatio={selectedIlk.data.liquidationRatio}
+            t="caption"
+          />
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
         [
@@ -211,6 +228,9 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
+
+  const cr = BN(collateralizationRatio);
+  const showRatioWarning = !cr.gt(200) && cr.gt(150);
   return (
     <Box
       maxWidth="1040px"
@@ -236,6 +256,8 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             handleInputChange={handleInputChange}
             selectedIlk={selectedIlk}
             daiAvailable={daiAvailable}
+            collateralizationRatio={collateralizationRatio}
+            showRatioWarning={showRatioWarning}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
@@ -243,6 +265,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             selectedIlk={selectedIlk}
             collateralizationRatio={collateralizationRatio}
             liquidationPrice={liquidationPrice}
+            showRatioWarning={showRatioWarning}
           />
         </Card>
       </Grid>

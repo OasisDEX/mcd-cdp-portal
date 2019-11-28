@@ -174,6 +174,8 @@ export default {
     'post_confirmed_title': 'Your Vault has been created',
     'post_confirmed_text': 'You can safely leave this page.',
     'insufficient_ilk_balance': 'Insufficient {0} balance',
+    'has_understood_stability_fee': 'I understand the Stability Fee is not fixed and is likely to change over time',
+    'collateralization_warning': 'The amount of Dai you are generating is putting your Vault at risk of liquidation',
     'draw_too_much_dai': 'Vault below liquidation threshold',
     'below_dust_limit': 'A Vault requires a minimum of {0} Dai to be generated',
     'dust_max_payback': 'You can repay all your outstanding debt, or a maximum of {0} Dai',
