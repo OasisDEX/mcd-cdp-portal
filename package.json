@@ -17,7 +17,7 @@
     "@makerdao/dai": "^0.23.0-rc.2",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "^1.0.1",
+    "@makerdao/dai-plugin-mcd": "^1.0.1-rc.1",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.1",
