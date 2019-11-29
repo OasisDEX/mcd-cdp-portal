@@ -29,6 +29,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
+import useDsrEventHistory from 'hooks/useDsrEventHistory';
 
 import useModal from '../hooks/useModal';
 import useProxy from '../hooks/useProxy';
@@ -41,7 +42,7 @@ function Save() {
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  const { hasProxy, proxyLoading } = useProxy();
+  const { proxyAddress, hasProxy, proxyLoading } = useProxy();
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -116,6 +117,8 @@ function Save() {
     withdrawError,
     withdrawReset
   ] = useActionState(onStartWithdraw);
+
+  const events = useDsrEventHistory(proxyAddress);
 
   useEffect(() => {
     if (!balances.MDAI) return;
