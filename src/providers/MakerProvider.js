@@ -106,6 +106,7 @@ function MakerProvider({
             if (id) log(`Resetting event history cache for Vault #${id}`);
             else log('Resetting event history cache');
             maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            maker.service('mcd:savings').resetEventHistoryCache();
           }
           log('Tx ' + state, tx.metadata);
           setTxLastUpdate(Date.now());
