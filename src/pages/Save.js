@@ -19,6 +19,7 @@ import { getSavingsBalance } from 'reducers/accounts';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
+import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
@@ -37,7 +38,7 @@ import useProxy from '../hooks/useProxy';
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const { maker, account, newTxListener } = useMaker();
+  const { maker, account, newTxListener, network } = useMaker();
   const [{ accounts, savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
@@ -118,7 +119,7 @@ function Save() {
     withdrawReset
   ] = useActionState(onStartWithdraw);
 
-  const events = useDsrEventHistory(proxyAddress);
+  const eventHistory = useDsrEventHistory(proxyAddress);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -334,6 +335,11 @@ function Save() {
               </Grid>
             </Grid>
           </Grid>
+          <History
+            title={lang.cdp_page.tx_history}
+            rows={eventHistory}
+            network={network}
+          />
         </>
       )}
     </PageContentLayout>
