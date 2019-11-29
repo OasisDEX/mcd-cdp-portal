@@ -120,6 +120,7 @@ function Save() {
   ] = useActionState(onStartWithdraw);
 
   const eventHistory = useDsrEventHistory(proxyAddress);
+  console.log('events', eventHistory);
 
   useEffect(() => {
     if (!balances.MDAI) return;
