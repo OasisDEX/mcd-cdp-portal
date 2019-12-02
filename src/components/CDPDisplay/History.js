@@ -5,7 +5,13 @@ import ExternalLink from 'components/ExternalLink';
 import { formatEventDescription, formatDate } from 'utils/ui';
 import theme from 'styles/theme';
 
-export default function({ title, rows, network }) {
+export default function({
+  title,
+  rows,
+  network,
+  emptyTableMessage,
+  isLoading
+}) {
   const { lang } = useLanguage();
   if (rows) rows = formatEventHistory(lang, rows, network);
 
@@ -43,7 +49,15 @@ export default function({ title, rows, network }) {
             </tr>
           </thead>
           <tbody>
-            {rows ? (
+            {isLoading ? (
+              <tr key={0}>
+                <td colSpan="3">
+                  <Text color="darkLavender" t="caption">
+                    Loading...
+                  </Text>
+                </td>
+              </tr>
+            ) : rows && rows.length > 0 ? (
               rows.map(([actionMsg, dateOfAction, txHash], i) => (
                 <tr key={i}>
                   <td
@@ -78,7 +92,7 @@ export default function({ title, rows, network }) {
               <tr key={0}>
                 <td colSpan="3">
                   <Text color="darkLavender" t="caption">
-                    Loading...
+                    {emptyTableMessage}
                   </Text>
                 </td>
               </tr>

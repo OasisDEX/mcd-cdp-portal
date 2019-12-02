@@ -119,8 +119,18 @@ function Save() {
     withdrawReset
   ] = useActionState(onStartWithdraw);
 
-  const eventHistory = useDsrEventHistory(proxyAddress);
-  console.log('events', eventHistory);
+  const { events, isLoading } = useDsrEventHistory(proxyAddress);
+  console.log('events', isLoading);
+
+  // useEffect(() => {
+  //   if (!proxyAddress) return;
+  //   (async function() {
+  //     const earns = await maker
+  //       .service('mcd:savings')
+  //       .getEarningsToDate(proxyAddress);
+  //     console.log('ERANS', earns);
+  //   })();
+  // }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -338,8 +348,10 @@ function Save() {
           </Grid>
           <History
             title={lang.cdp_page.tx_history}
-            rows={eventHistory}
+            rows={events}
             network={network}
+            isLoading={isLoading}
+            emptyTableMessage={lang.save.start_earning}
           />
         </>
       )}
