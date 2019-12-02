@@ -120,17 +120,6 @@ function Save() {
   ] = useActionState(onStartWithdraw);
 
   const { events, isLoading } = useDsrEventHistory(proxyAddress);
-  console.log('events', isLoading);
-
-  // useEffect(() => {
-  //   if (!proxyAddress) return;
-  //   (async function() {
-  //     const earns = await maker
-  //       .service('mcd:savings')
-  //       .getEarningsToDate(proxyAddress);
-  //     console.log('ERANS', earns);
-  //   })();
-  // }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
