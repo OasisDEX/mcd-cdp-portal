@@ -241,7 +241,9 @@ export default {
   'event_history': {
     'open': 'Opened a new Vault with id #{0}',
     'deposit': 'Deposited {0} {1} into Vault',
+    'dsr_deposit': 'Deposited {0} {1}',
     'withdraw': 'Withdrew {0} {1} from Vault',
+    'dsr_withdraw': 'Withdrew {0} {1}',
     'generate': 'Generated {0} new Dai from Vault',
     'pay_back': 'Repaid {0} Dai to Vault',
     'give': 'Vault given to {0} by {1}',
