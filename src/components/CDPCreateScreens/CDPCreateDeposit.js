@@ -13,15 +13,14 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
-import { RatioTextDisplay } from 'components/RatioDisplay';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 function OpenCDPForm({
   selectedIlk,
   cdpParams,
   handleInputChange,
   daiAvailable,
-  collateralizationRatio,
-  showRatioWarning
+  collateralizationRatio
 }) {
   const { lang } = useLanguage();
   const userHasSufficientGemBalance = greaterThanOrEqual(
@@ -128,14 +127,14 @@ function OpenCDPForm({
             {prettifyNumber(daiAvailable)} DAI
           </Text>
         </Box>
-        {showRatioWarning && (
-          <RatioTextDisplay
-            text={lang.cdp_create.collateralization_warning}
-            ratio={collateralizationRatio}
-            ilkLiqRatio={selectedIlk.data.liquidationRatio}
-            t="caption"
-          />
-        )}
+        <RatioDisplay
+          type={RatioDisplayTypes.TEXT}
+          text={lang.cdp_create.collateralization_warning}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={selectedIlk.data.liquidationRatio}
+          onlyWarnings={true}
+          t="caption"
+        />
       </Grid>
     ]
   ];
@@ -179,8 +178,9 @@ const CDPCreateDepositSidebar = ({
       {[
         [
           lang.collateralization,
-          <RatioTextDisplay
+          <RatioDisplay
             key="ba"
+            type={RatioDisplayTypes.TEXT}
             text={`${formatCollateralizationRatio(
               collateralizationRatio
             )} (Min ${liquidationRatio}%)`}
@@ -229,8 +229,6 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     });
   }
 
-  const cr = BN(collateralizationRatio);
-  const showRatioWarning = !cr.gt(200) && cr.gt(150);
   return (
     <Box
       maxWidth="1040px"
@@ -257,7 +255,6 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             selectedIlk={selectedIlk}
             daiAvailable={daiAvailable}
             collateralizationRatio={collateralizationRatio}
-            showRatioWarning={showRatioWarning}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
@@ -265,7 +262,6 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             selectedIlk={selectedIlk}
             collateralizationRatio={collateralizationRatio}
             liquidationPrice={liquidationPrice}
-            showRatioWarning={showRatioWarning}
           />
         </Card>
       </Grid>

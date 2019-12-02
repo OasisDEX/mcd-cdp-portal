@@ -31,7 +31,7 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
-import { NotificationStatus, NotificationList } from 'utils/constants';
+import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { Address } from '@makerdao/ui-components-core';
 
 const log = debug('maker:CDPDisplay/Presentation');
@@ -86,7 +86,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       addNotification({
         id: NotificationList.CLAIM_COLLATERAL,
         content: claimCollateralNotification,
-        status: NotificationStatus.WARNING,
+        level: SAFETY_LEVELS.WARNING,
         hasButton: isOwner,
         buttonLabel: lang.notifications.claim,
         onClick: () => reclaimCollateral()
@@ -100,7 +100,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
           lang.notifications.non_vault_owner,
           <Address full={cdpOwner} shorten={true} expandable={false} />
         ),
-        status: NotificationStatus.WARNING
+        level: SAFETY_LEVELS.WARNING
       });
     }
 

@@ -20,8 +20,8 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
-
 import SetMax from 'components/SetMax';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Withdraw = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -31,7 +31,7 @@ const Withdraw = ({ cdpId, reset }) => {
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
-
+  const { liquidationRatio } = cdp;
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp, false);
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp, false);
@@ -94,6 +94,15 @@ const Withdraw = ({ cdpId, reset }) => {
           after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
           failureMessage={amountErrors}
         />
+        <RatioDisplay
+          type={RatioDisplayTypes.CARD}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={liquidationRatio}
+          text={lang.action_sidebar.withdraw_warning}
+          onlyWarnings={true}
+          show={amount !== '' && amount > 0 && !undercollateralized}
+          textAlign="center"
+        />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button disabled={!amount || amountErrors} onClick={withdraw}>
@@ -122,9 +131,13 @@ const Withdraw = ({ cdpId, reset }) => {
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <Text color={undercollateralized ? 'orange.600' : null}>
-              {formatCollateralizationRatio(collateralizationRatio)}
-            </Text>
+            <RatioDisplay
+              type={RatioDisplayTypes.TEXT}
+              ratio={collateralizationRatio}
+              ilkLiqRatio={liquidationRatio}
+              text={formatCollateralizationRatio(collateralizationRatio)}
+              show={amount !== '' && amount > 0 && !undercollateralized}
+            />
           }
         />
       </InfoContainer>
