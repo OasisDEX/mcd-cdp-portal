@@ -45,6 +45,7 @@ function Save() {
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -123,6 +124,16 @@ function Save() {
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
     ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
     : {};
+
+  useEffect(() => {
+    if (!proxyAddress) return;
+    (async function() {
+      const earns = await maker
+        .service('mcd:savings')
+        .getEarningsToDate(proxyAddress);
+      console.log('Earnings', earns);
+    })();
+  }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
