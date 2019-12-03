@@ -31,9 +31,10 @@ import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
+import useModal from 'hooks/useModal';
+import useProxy from 'hooks/useProxy';
 
-import useModal from '../hooks/useModal';
-import useProxy from '../hooks/useProxy';
+import { FeatureFlags } from 'utils/constants';
 
 function Save() {
   const { lang } = useLanguage();
@@ -119,7 +120,9 @@ function Save() {
     withdrawReset
   ] = useActionState(onStartWithdraw);
 
-  const { events, isLoading } = useDsrEventHistory(proxyAddress);
+  const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
+    ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
+    : {};
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -335,13 +338,15 @@ function Save() {
               </Grid>
             </Grid>
           </Grid>
-          <History
-            title={lang.cdp_page.tx_history}
-            rows={events}
-            network={network}
-            isLoading={isLoading}
-            emptyTableMessage={lang.save.start_earning}
-          />
+          {FeatureFlags.FF_DSR_HISTORY && (
+            <History
+              title={lang.save.tx_history}
+              rows={events}
+              network={network}
+              isLoading={isLoading}
+              emptyTableMessage={lang.save.start_earning}
+            />
+          )}
         </>
       )}
     </PageContentLayout>

@@ -53,7 +53,7 @@ export default function({
               <tr key={0}>
                 <td colSpan="3">
                   <Text color="darkLavender" t="caption">
-                    Loading...
+                    {lang.table.loading}
                   </Text>
                 </td>
               </tr>

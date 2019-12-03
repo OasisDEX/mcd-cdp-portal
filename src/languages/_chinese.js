@@ -237,7 +237,9 @@ export default {
   "event_history": {
     "open": "开启新的金库 ID #{0}",
     "deposit": "存入 {0} {1} 到金库",
+    "dsr_deposit": "Deposited {0} Dai",
     "withdraw": "从金库取回 {0} {1}",
+    "dsr_withdraw": "Withdrew {0} Dai",
     "generate": "从金库生成 {0} 新 Dai",
     "pay_back": "偿还 {0} Dai 到金库",
     "give": "金库转移从 {1} 转移到 {0}",
@@ -289,7 +291,9 @@ export default {
     "withdraw_amount": "提取金额",
     "deposit_dai": "存入 Dai",
     "deposit_dai_subheading": "存入即生息，随存随取",
-    "get_started_title": "现在开始存 Dai 赚利息吧"
+    "get_started_title": "现在开始存 Dai 赚利息吧",
+    "start_earning": "Deposit Dai to see your first transaction and start earning",
+    "tx_history": "History"
   },
   "verbs": {
     "depositing": "存入",
@@ -301,7 +305,8 @@ export default {
     "date": "日期",
     "time": "时间",
     "sender_id": "发送者 ID",
-    "tx_hash": "交易哈希"
+    "tx_hash": "交易哈希",
+    "loading": "Loading..."
   },
   "transactions": {
     "unlocking_token": "授权 {0}",

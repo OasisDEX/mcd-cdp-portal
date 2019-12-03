@@ -35,14 +35,16 @@ import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { Address } from '@makerdao/ui-components-core';
 
 const log = debug('maker:CDPDisplay/Presentation');
-const { FF_VAULTHISTORY } = FeatureFlags;
+const { FF_VAULT_HISTORY } = FeatureFlags;
 
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
   const cdpId = parseInt(cdp.id);
-  const eventHistory = useEventHistory(cdpId);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
+
   log(`Rendering vault #${cdpId}`);
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
@@ -238,11 +240,12 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         </CdpViewCard>
       </Grid>
 
-      {FF_VAULTHISTORY && (
+      {FF_VAULT_HISTORY && (
         <History
           title={lang.cdp_page.tx_history}
           rows={eventHistory}
           network={network}
+          isLoading={eventHistory === null}
         />
       )}
 

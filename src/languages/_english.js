@@ -241,9 +241,9 @@ export default {
   'event_history': {
     'open': 'Opened a new Vault with id #{0}',
     'deposit': 'Deposited {0} {1} into Vault',
-    'dsr_deposit': 'Deposited {0} {1}',
+    'dsr_deposit': 'Deposited {0} Dai',
     'withdraw': 'Withdrew {0} {1} from Vault',
-    'dsr_withdraw': 'Withdrew {0} {1}',
+    'dsr_withdraw': 'Withdrew {0} Dai',
     'generate': 'Generated {0} new Dai from Vault',
     'pay_back': 'Repaid {0} Dai to Vault',
     'give': 'Vault given to {0} by {1}',
@@ -298,7 +298,8 @@ export default {
     'deposit_dai': 'Deposit Dai',
     'deposit_dai_subheading': 'Start earning as soon as your deposit is confirmed.',
     'get_started_title': 'Start earning on your Dai today',
-    'start_earning': 'Deposit Dai to see your first transaction and start earning'
+    'start_earning': 'Deposit Dai to see your first transaction and start earning',
+    'tx_history': 'History'
   },
   'verbs': {
     'depositing': 'Depositing',
@@ -311,7 +312,8 @@ export default {
     'date': 'Date',
     'time': 'Time',
     'sender_id': 'Sender ID',
-    'tx_hash': 'Tx Hash'
+    'tx_hash': 'Tx Hash',
+    'loading': 'Loading...'
   },
   'transactions': {
     'unlocking_token': 'Unlocking {0}',

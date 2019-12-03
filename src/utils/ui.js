@@ -102,13 +102,13 @@ export function formatEventDescription(lang, e) {
       );
     case 'DSR_DEPOSIT':
       return lang.formatString(
-        lang.event_history.deposit,
+        lang.event_history.dsr_deposit,
         <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
         e.gem
       );
     case 'DSR_WITHDRAW':
       return lang.formatString(
-        lang.event_history.withdraw,
+        lang.event_history.dsr_withdraw,
         <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
         e.gem
       );
