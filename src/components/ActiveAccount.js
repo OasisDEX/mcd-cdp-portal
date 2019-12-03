@@ -22,7 +22,7 @@ const ActiveAccount = ({
   return (
     <Flex justifyContent="space-between" alignItems="center" {...rest}>
       <Text fontSize="0.8rem" color={address ? 'makerTeal' : 'makerOrange'}>
-        &#11044;
+        ●
       </Text>
 
       <Box ml="xs" mr="auto">
