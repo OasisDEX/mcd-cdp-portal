@@ -44,6 +44,7 @@ function Save() {
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
+  const [earnings, setEarnings] = useState(MDAI(0));
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
 
   const balance = useMemo(() => {
@@ -128,10 +129,10 @@ function Save() {
   useEffect(() => {
     if (!proxyAddress) return;
     (async function() {
-      const earns = await maker
+      const etd = await maker
         .service('mcd:savings')
         .getEarningsToDate(proxyAddress);
-      console.log('Earnings', earns);
+      setEarnings(etd);
     })();
   }, [maker, proxyAddress]);
 
@@ -231,6 +232,16 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">Dai earned</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <Text t="body">
+                              {earnings.toBigNumber().toFixed(4)}
+                            </Text>
+                          </Table.td>
+                        </Table.tr>
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
