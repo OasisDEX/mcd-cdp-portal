@@ -127,7 +127,7 @@ function Save() {
     : {};
 
   useEffect(() => {
-    if (!proxyAddress) return;
+    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
     (async function() {
       const etd = await maker
         .service('mcd:savings')
@@ -232,16 +232,18 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">Dai earned</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <Text t="body">
-                              {earnings.toBigNumber().toFixed(4)}
-                            </Text>
-                          </Table.td>
-                        </Table.tr>
+                        {FeatureFlags.FF_DSR_ETD && (
+                          <Table.tr>
+                            <Table.td>
+                              <Text t="body">Dai earned</Text>
+                            </Table.td>
+                            <Table.td textAlign="right">
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
+                            </Table.td>
+                          </Table.tr>
+                        )}
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
