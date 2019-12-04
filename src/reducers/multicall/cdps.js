@@ -1,4 +1,3 @@
-import { getWatcher } from '../../watch';
 import { toHex } from 'utils/ethereum';
 import { INK, ART, UNLOCKED_COLLATERAL } from 'reducers/cdps';
 

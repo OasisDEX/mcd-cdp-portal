@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
-import { greaterThanOrEqual, greaterThan, BN } from 'utils/bignumber';
+import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
 import {

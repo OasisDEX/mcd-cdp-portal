@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import useMaker from 'hooks/useMaker';
-import { FeatureFlags } from '../utils/constants';
 import debug from 'debug';
 const log = debug('maker:useDsrEventHistory');
 

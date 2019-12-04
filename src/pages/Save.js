@@ -92,7 +92,7 @@ function Save() {
       maker.service('mcd:savings').join(MDAI(depositAmount)),
       lang.verbs.depositing
     );
-  }, [maker, depositAmount, newTxListener]);
+  }, [maker, depositAmount, newTxListener, lang]);
 
   const onStartWithdraw = useCallback(() => {
     let txObject;
@@ -102,7 +102,7 @@ function Save() {
       txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
     newTxListener(txObject, lang.verbs.withdrawing);
-  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener]);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener, lang]);
 
   const [
     onDeposit,
