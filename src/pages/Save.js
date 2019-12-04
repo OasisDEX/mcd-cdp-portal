@@ -44,7 +44,9 @@ function Save() {
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
+  const [earnings, setEarnings] = useState(MDAI(0));
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -123,6 +125,16 @@ function Save() {
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
     ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
     : {};
+
+  useEffect(() => {
+    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
+    (async function() {
+      const etd = await maker
+        .service('mcd:savings')
+        .getEarningsToDate(proxyAddress);
+      setEarnings(etd);
+    })();
+  }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -220,6 +232,18 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
+                        {FeatureFlags.FF_DSR_ETD && (
+                          <Table.tr>
+                            <Table.td>
+                              <Text t="body">Dai earned</Text>
+                            </Table.td>
+                            <Table.td textAlign="right">
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
+                            </Table.td>
+                          </Table.tr>
+                        )}
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
