@@ -44,7 +44,7 @@ function App() {
     <Body>
       <NotFoundBoundary render={GenericNotFound}>
         <ErrorBoundary>
-          <Suspense fallback={<LoadingLayout text="Loading..." />}>
+          <Suspense fallback={<LoadingLayout />}>
             <Router navigation={navigation} />
           </Suspense>
         </ErrorBoundary>

@@ -220,7 +220,7 @@ function MakerProvider({
         viewedAddressData
       }}
     >
-      {maker ? children : <LoadingLayout text="Loading..." />}
+      {maker ? children : <LoadingLayout />}
     </MakerObjectContext.Provider>
   );
 }

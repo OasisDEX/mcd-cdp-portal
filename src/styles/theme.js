@@ -9,6 +9,7 @@ const theme = {
     xl: '1150px'
   },
   colors: {
+    spinner: '#9FAFB9',
     blackLight: '#222',
     blackLighter: '#383838',
     blueGray: '#1E2C37',

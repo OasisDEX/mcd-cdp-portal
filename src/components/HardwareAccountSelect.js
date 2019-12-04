@@ -61,7 +61,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);
 
   return !renderedAccounts.length ? (
-    <Loader size="5rem" color={getColor('makerTeal')} />
+    <Loader size="5rem" color={getColor('spinner')} />
   ) : (
     <Grid gridRowGap="m" width={['100%', '53rem']}>
       <Flex justifyContent="flex-end">
