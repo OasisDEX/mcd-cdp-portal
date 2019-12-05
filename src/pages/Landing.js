@@ -251,9 +251,9 @@ const QuestionAndAnswerStyle = styled.div`
 `;
 function debounce(fn, ms) {
   let timer;
-  return _ => {
+  return () => {
     clearTimeout(timer);
-    timer = setTimeout(_ => {
+    timer = setTimeout(() => {
       timer = null;
       fn.apply(this, arguments);
     }, ms);
@@ -278,7 +278,7 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
         ),
       3200
     );
-    return _ => {
+    return () => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
   }, [height]);

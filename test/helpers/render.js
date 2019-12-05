@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import LanguageProvider from '../../src/providers/LanguageProvider';
 import StoreProvider from '../../src/providers/StoreProvider';
 import TestMakerProvider from './TestMakerProvider';
-import { ETH } from '@makerdao/dai';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import rootReducer from '../../src/reducers';
