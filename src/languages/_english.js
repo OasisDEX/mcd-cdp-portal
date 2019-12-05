@@ -257,7 +257,7 @@ export default {
     'withdraw_warning': 'The amount of collateral you are withdrawing puts your Vault at risk of liquidation',
     'generate_title': 'Generate DAI',
     'generate_description': 'How much DAI would you like to generate?',
-    'generate_warning': 'The amount Dai you are generating puts your Vault at risk of liquidation',
+    'generate_warning': 'The amount of Dai you are generating puts your Vault at risk of liquidation',
     'payback_title': 'Pay Back DAI',
     'payback_description': 'How much DAI would you like to pay back?',
     'cdp_below_threshold': 'Vault below liquidation threshold',
