@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import useMaker from 'hooks/useMaker';
-import { FeatureFlags } from '../utils/constants';
 import debug from 'debug';
 const log = debug('maker:useEventHistory');
 
@@ -8,15 +7,12 @@ export default function useEventHistory(id) {
   const { maker, txLastUpdate } = useMaker();
   const [events, setEvents] = useState(null);
 
-  if (!FeatureFlags.FF_VAULTHISTORY) return null;
-
   let isCancelled = false;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!maker) return;
     async function getHistory() {
       setEvents(null);
-      log(`Getting event history for #${id}...`);
+      log(`Getting event history for vault #${id}...`);
       const cdp = await maker
         .service('mcd:cdpManager')
         .getCdp(id, { prefetch: false });

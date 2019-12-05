@@ -72,7 +72,7 @@ function CDPView({ cdpId }) {
     trackCdpById(maker, cdpId, dispatch).then(() => {
       if (!cdp.inited) account ? redirect(account) : setCdpAvailable(false);
     });
-  }, [cdpId, dispatch, maker, account, cdp]);
+  }, [cdpId, dispatch, maker, account, cdp, redirect]);
 
   return useMemo(
     () =>

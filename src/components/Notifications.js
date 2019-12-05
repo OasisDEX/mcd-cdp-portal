@@ -8,7 +8,8 @@ import {
   Grid
 } from '@makerdao/ui-components-core';
 import useNotification from 'hooks/useNotification';
-import { NotificationStatus } from 'utils/constants';
+import { getSafetyLevels } from 'styles/theme';
+import { SAFETY_LEVELS } from 'utils/constants';
 import styled from 'styled-components';
 
 const ButtonBackgroundWrapper = styled.div`
@@ -17,37 +18,6 @@ const ButtonBackgroundWrapper = styled.div`
   width: fit-content;
   height: fit-content;
 `;
-
-const getNotificationColors = status => {
-  const levels = {
-    textColor: '900',
-    backgroundColor: '100',
-    borderColor: '400'
-  };
-
-  const prependColorLevel = color =>
-    Object.entries(levels).reduce(
-      (acc, [k, v]) => ({
-        ...acc,
-        [k]: `${color}.${v}`
-      }),
-      {}
-    );
-
-  switch (status) {
-    case NotificationStatus.ERROR:
-      return prependColorLevel('orange');
-    case NotificationStatus.WARNING:
-      return {
-        ...prependColorLevel('yellow'),
-        textColor: '#826318'
-      };
-    case NotificationStatus.SUCCESS:
-      return prependColorLevel('teal');
-    default:
-      return prependColorLevel('slate');
-  }
-};
 
 const ActionButton = ({ onClick, label }) => (
   <ButtonBackgroundWrapper>
@@ -75,14 +45,17 @@ function Notifications() {
         bannerEntries.map(
           ([
             name,
-            { content, status, hasButton, onClick, buttonLabel, customButton }
+            { content, level, hasButton, onClick, buttonLabel, customButton }
           ]) => {
-            const {
-              textColor,
-              backgroundColor,
-              borderColor
-            } = getNotificationColors(status);
-
+            const { textColor, backgroundColor, borderColor } = getSafetyLevels(
+              {
+                level,
+                overrides:
+                  level === SAFETY_LEVELS.WARNING
+                    ? { textColor: '#826318' }
+                    : undefined
+              }
+            );
             return (
               <Card
                 key={name}

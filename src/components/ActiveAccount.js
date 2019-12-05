@@ -22,7 +22,7 @@ const ActiveAccount = ({
   return (
     <Flex justifyContent="space-between" alignItems="center" {...rest}>
       <Text fontSize="0.8rem" color={address ? 'makerTeal' : 'makerOrange'}>
-        &#11044;
+        ●
       </Text>
 
       <Box ml="xs" mr="auto">
@@ -32,7 +32,7 @@ const ActiveAccount = ({
       </Box>
       <Box ml="s">
         {address ? (
-          <Text t={addressTextStyle} color={textColor} fontSize="m">
+          <Text t={addressTextStyle} color={textColor} fontSize="1.4rem">
             {cutMiddle(address, 7, 5)}
           </Text>
         ) : null}

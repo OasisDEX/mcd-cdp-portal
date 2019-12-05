@@ -241,7 +241,9 @@ export default {
   'event_history': {
     'open': 'Opened a new Vault with id #{0}',
     'deposit': 'Deposited {0} {1} into Vault',
+    'dsr_deposit': 'Deposited {0} Dai',
     'withdraw': 'Withdrew {0} {1} from Vault',
+    'dsr_withdraw': 'Withdrew {0} Dai',
     'generate': 'Generated {0} new Dai from Vault',
     'pay_back': 'Repaid {0} Dai to Vault',
     'give': 'Vault given to {0} by {1}',
@@ -252,8 +254,10 @@ export default {
     'deposit_description': 'How much {0} would you like to deposit?',
     'withdraw_title': 'Withdraw {0}',
     'withdraw_description': 'How much {0} would you like to withdraw?',
+    'withdraw_warning': 'The amount of collateral you are withdrawing puts your Vault at risk of liquidation',
     'generate_title': 'Generate DAI',
     'generate_description': 'How much DAI would you like to generate?',
+    'generate_warning': 'The amount of Dai you are generating puts your Vault at risk of liquidation',
     'payback_title': 'Pay Back DAI',
     'payback_description': 'How much DAI would you like to pay back?',
     'cdp_below_threshold': 'Vault below liquidation threshold',
@@ -293,7 +297,9 @@ export default {
     'withdraw_amount': 'Withdraw amount',
     'deposit_dai': 'Deposit Dai',
     'deposit_dai_subheading': 'Start earning as soon as your deposit is confirmed.',
-    'get_started_title': 'Start earning on your Dai today'
+    'get_started_title': 'Start earning on your Dai today',
+    'start_earning': 'Deposit Dai to see your first transaction and start earning',
+    'tx_history': 'History'
   },
   'verbs': {
     'depositing': 'Depositing',
@@ -306,7 +312,8 @@ export default {
     'date': 'Date',
     'time': 'Time',
     'sender_id': 'Sender ID',
-    'tx_hash': 'Tx Hash'
+    'tx_hash': 'Tx Hash',
+    'loading': 'Loading...'
   },
   'transactions': {
     'unlocking_token': 'Unlocking {0}',

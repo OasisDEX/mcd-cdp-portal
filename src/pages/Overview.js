@@ -27,9 +27,8 @@ import {
   getCollateralizationRatio,
   getCollateralAvailableAmount
 } from 'reducers/cdps';
-import { Routes } from '../utils/constants';
 import useModal from '../hooks/useModal';
-import { NotificationStatus, NotificationList } from 'utils/constants';
+import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
 
 const InfoCard = ({ title, amount, denom }) => (
@@ -77,7 +76,7 @@ function Overview({ viewedAddress }) {
           lang.notifications.non_overview_owner,
           <Address full={viewedAddress} shorten={true} expandable={false} />
         ),
-        status: NotificationStatus.WARNING
+        level: SAFETY_LEVELS.WARNING
       });
     }
     return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);

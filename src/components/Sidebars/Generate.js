@@ -15,6 +15,7 @@ import {
   safeToFixed
 } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Generate = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -25,11 +26,12 @@ const Generate = ({ cdpId, reset }) => {
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
+  const { liquidationRatio } = cdp;
 
   const collateralAmount = getCollateralAmount(cdp, false);
   const debtAmount = getDebtAmount(cdp, false);
   const undercollateralized = greaterThan(
-    cdp.liquidationRatio,
+    liquidationRatio,
     collateralizationRatio
   );
 
@@ -101,6 +103,15 @@ const Generate = ({ cdpId, reset }) => {
           placeholder="0.00 DAI"
           failureMessage={amountErrors}
         />
+        <RatioDisplay
+          type={RatioDisplayTypes.CARD}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={liquidationRatio}
+          text={lang.action_sidebar.generate_warning}
+          onlyWarnings={true}
+          show={amount !== '' && amount > 0 && !undercollateralized}
+          textAlign="center"
+        />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button onClick={generate} disabled={!amount || amountErrors}>
@@ -122,9 +133,13 @@ const Generate = ({ cdpId, reset }) => {
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <Text color={undercollateralized ? 'orange.600' : null}>
-              {formatCollateralizationRatio(collateralizationRatio)}
-            </Text>
+            <RatioDisplay
+              type={RatioDisplayTypes.TEXT}
+              ratio={collateralizationRatio}
+              ilkLiqRatio={liquidationRatio}
+              text={formatCollateralizationRatio(collateralizationRatio)}
+              show={amount !== '' && amount > 0 && !undercollateralized}
+            />
           }
         />
       </InfoContainer>

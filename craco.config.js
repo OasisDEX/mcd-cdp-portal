@@ -17,6 +17,11 @@ module.exports = {
     configure: {
       output: {
         path: require('path').resolve(__dirname, 'build/')
+      },
+      // TODO: Remove once the scrypt.js "Critical dependency: the request of a dependency is an expression" issue is resolved
+      // See: https://github.com/ethereum/web3.js/issues/3018
+      module: {
+        exprContextCritical: false
       }
     },
     devServer: {

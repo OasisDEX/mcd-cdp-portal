@@ -1594,10 +1594,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^1.0.1-rc.1":
-  version "1.0.1-rc.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.0.1-rc.1.tgz#f5ccb514865438bbba6acfed6a5ba11237353122"
-  integrity sha512-/lwnPiZC2LNzsM+3ErDbq4mEuOA3hxurQhGPgZKZpxuxYS+9gfJ7lM+IF5CjhcxaIfARui+8ufdAvnss3wY7DQ==
+"@makerdao/dai-plugin-mcd@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.0.3.tgz#af4b65cc7ee2569bc372b3c43de522e5b1468a1c"
+  integrity sha512-VgOlCI7D0uPxuNC67XHDBqbbhh8AjqWbPJOLHzh6sFzivgBZQ24CeWaureCEXzwQoM+GqmgSFOjLuM4y8+XFQQ==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -1692,10 +1692,10 @@
   dependencies:
     node-fetch "^2.6.0"
 
-"@makerdao/testchain@0.2.17-1":
-  version "0.2.17-1"
-  resolved "https://registry.yarnpkg.com/@makerdao/testchain/-/testchain-0.2.17-1.tgz#a4546094d7155cd0b7f024c3b288dc3b27684bc2"
-  integrity sha512-Yl9aeeFGUMv4qOpC8hUA0eY/9MkQSXFexEv9wf2NgmvgA9Y1Lp9B6328e24G6uHOJuJKOBqkaXVJ3jRpFd7xng==
+"@makerdao/testchain@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@makerdao/testchain/-/testchain-1.0.1.tgz#49fdf1a9c870c45bfbf12cabdf2ecb6ab06674c6"
+  integrity sha512-fUOl7gBXgvCqmyMpaDdv0IfB2JUXfKcDt2ZjNOMrvTsBfxrVaasr8B21bXyZkT9rk6jmtwTNUyCzZCH32aurOA==
   dependencies:
     ganache-cli makerdao/ganache-cli#fix/gas-est-crash
 

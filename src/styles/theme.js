@@ -1,4 +1,5 @@
 import { themeLight } from '@makerdao/ui-components-core';
+import { SAFETY_LEVELS } from 'utils/constants';
 const { colors, typography, space, fontSizes } = themeLight;
 
 const theme = {
@@ -8,6 +9,7 @@ const theme = {
     xl: '1150px'
   },
   colors: {
+    spinner: '#9FAFB9',
     blackLight: '#222',
     blackLighter: '#383838',
     blueGray: '#1E2C37',
@@ -74,4 +76,27 @@ export function getSpace(key) {
 
 export function getColor(key) {
   return get(theme.colors, key);
+}
+
+export function getSafetyLevels({ level, overrides = {} }) {
+  const levels = {
+    textColor: '700',
+    backgroundColor: '100',
+    borderColor: '400'
+  };
+  const { DANGER, WARNING, NEUTRAL, SAFE } = SAFETY_LEVELS;
+  const colorPairings = {
+    [DANGER]: 'orange',
+    [WARNING]: 'yellow',
+    [NEUTRAL]: 'slate',
+    [SAFE]: 'teal'
+  };
+
+  return Object.entries(levels).reduce(
+    (acc, [k, v]) => ({
+      ...acc,
+      [k]: overrides[k] ? overrides[k] : `${colorPairings[level]}.${v}`
+    }),
+    {}
+  );
 }

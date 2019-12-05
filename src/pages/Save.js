@@ -19,6 +19,7 @@ import { getSavingsBalance } from 'reducers/accounts';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
+import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
@@ -29,19 +30,23 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
+import useDsrEventHistory from 'hooks/useDsrEventHistory';
+import useModal from 'hooks/useModal';
+import useProxy from 'hooks/useProxy';
 
-import useModal from '../hooks/useModal';
-import useProxy from '../hooks/useProxy';
+import { FeatureFlags } from 'utils/constants';
 
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const { maker, account, newTxListener } = useMaker();
+  const { maker, account, newTxListener, network } = useMaker();
   const [{ accounts, savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  const { hasProxy, proxyLoading } = useProxy();
+  const [earnings, setEarnings] = useState(MDAI(0));
+  const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -89,7 +94,7 @@ function Save() {
       maker.service('mcd:savings').join(MDAI(depositAmount)),
       lang.verbs.depositing
     );
-  }, [maker, depositAmount, newTxListener]);
+  }, [maker, depositAmount, newTxListener, lang]);
 
   const onStartWithdraw = useCallback(() => {
     let txObject;
@@ -99,7 +104,7 @@ function Save() {
       txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
     newTxListener(txObject, lang.verbs.withdrawing);
-  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener]);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener, lang]);
 
   const [
     onDeposit,
@@ -116,6 +121,20 @@ function Save() {
     withdrawError,
     withdrawReset
   ] = useActionState(onStartWithdraw);
+
+  const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
+    ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
+    : {};
+
+  useEffect(() => {
+    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
+    (async function() {
+      const etd = await maker
+        .service('mcd:savings')
+        .getEarningsToDate(proxyAddress);
+      setEarnings(etd);
+    })();
+  }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -213,6 +232,18 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
+                        {FeatureFlags.FF_DSR_ETD && (
+                          <Table.tr>
+                            <Table.td>
+                              <Text t="body">Dai earned</Text>
+                            </Table.td>
+                            <Table.td textAlign="right">
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
+                            </Table.td>
+                          </Table.tr>
+                        )}
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
@@ -331,6 +362,15 @@ function Save() {
               </Grid>
             </Grid>
           </Grid>
+          {FeatureFlags.FF_DSR_HISTORY && (
+            <History
+              title={lang.save.tx_history}
+              rows={events}
+              network={network}
+              isLoading={isLoading}
+              emptyTableMessage={lang.save.start_earning}
+            />
+          )}
         </>
       )}
     </PageContentLayout>

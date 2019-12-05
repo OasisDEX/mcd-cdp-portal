@@ -1,4 +1,4 @@
-export const CDP_SAFETY_LEVELS = {
+export const SAFETY_LEVELS = {
   DANGER: 'danger',
   WARNING: 'warning',
   NEUTRAL: 'neutral',
@@ -35,13 +35,9 @@ export const Toggles = {
 };
 
 export const FeatureFlags = {
-  FF_VAULTHISTORY: true
-};
-
-export const NotificationStatus = {
-  ERROR: 'error',
-  WARNING: 'warning',
-  SUCCESS: 'success'
+  FF_VAULT_HISTORY: true,
+  FF_DSR_HISTORY: false,
+  FF_DSR_ETD: false
 };
 
 export const NotificationList = {

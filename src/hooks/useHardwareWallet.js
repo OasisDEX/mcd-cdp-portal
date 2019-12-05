@@ -38,17 +38,10 @@ const reducer = (state, action) => {
         onAccountChosen: payload.onAccountChosen
       };
     case 'fetch-success':
-      const newAccountsLength = payload.accounts.length;
-      const offset = payload.offset * newAccountsLength;
-      const newAccounts = [
-        ...state.accounts.slice(0, offset),
-        ...payload.accounts,
-        ...state.accounts.slice(offset + newAccountsLength)
-      ];
       return {
         ...state,
         fetching: false,
-        accounts: newAccounts
+        accounts: [...state.accounts, ...payload.accounts]
       };
     case 'error':
       return {
@@ -66,21 +59,18 @@ const DEFAULT_ACCOUNTS_LENGTH = 25;
 export function useTrezor({ onAccountChosen }) {
   const { show } = useModal();
 
-  const connectTrezorWallet = useCallback(
-    path => {
-      show({
-        modalType: 'hardwareaccountselect',
-        modalProps: {
-          type: AccountTypes.TREZOR,
-          path: TREZOR_PATH,
-          confirmAddress: address => {
-            onAccountChosen(address, AccountTypes.TREZOR);
-          }
+  const connectTrezorWallet = useCallback(() => {
+    show({
+      modalType: 'hardwareaccountselect',
+      modalProps: {
+        type: AccountTypes.TREZOR,
+        path: TREZOR_PATH,
+        confirmAddress: address => {
+          onAccountChosen(address, AccountTypes.TREZOR);
         }
-      });
-    },
-    [show, onAccountChosen]
-  );
+      }
+    });
+  }, [show, onAccountChosen]);
 
   return { connectTrezorWallet };
 }
@@ -130,7 +120,7 @@ function useHardwareWallet({
       type,
       path,
       accountsOffset: 0,
-      accountsLength: accountsLength,
+      accountsLength,
       choose: async (addresses, onAccountChosen) => {
         const accounts = await computeAddressBalances(addresses);
         dispatch({ type: 'connect-success', payload: { onAccountChosen } });
@@ -139,40 +129,37 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type]);
 
-  const fetch = useCallback(
-    ({ offset }) => {
-      return new Promise((resolve, reject) => {
-        dispatch({ type: 'fetch-start' });
-        maker
-          .addAccount({
-            type,
-            path,
-            accountsOffset: offset,
-            accountsLength,
-            choose: async addresses => {
-              const accounts = await computeAddressBalances(addresses);
-              dispatch({
-                type: 'fetch-success',
-                payload: { accounts, offset }
-              });
-              resolve(accounts);
-            }
-          })
-          .catch(err => {
-            dispatch({ type: 'error' });
-            reject(err);
-          });
-      });
-    },
-    [accountsLength, maker, path, type]
-  );
+  const fetchMore = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      dispatch({ type: 'fetch-start' });
+      maker
+        .addAccount({
+          type,
+          path,
+          accountsOffset: state.accounts.length,
+          accountsLength,
+          choose: async addresses => {
+            const accounts = await computeAddressBalances(addresses);
+            dispatch({
+              type: 'fetch-success',
+              payload: { accounts, offset: state.accounts.length }
+            });
+            resolve(accounts);
+          }
+        })
+        .catch(err => {
+          dispatch({ type: 'error' });
+          reject(err);
+        });
+    });
+  }, [accountsLength, maker, path, type, state.accounts.length]);
 
   function pickAccount(address) {
     return state.onAccountChosen(null, address);
   }
 
   return {
-    fetch,
+    fetchMore,
     connect,
     fetching: state.fetching,
     accounts: state.accounts,
