@@ -18,19 +18,21 @@ function LanguageProvider({ children }) {
     setLocale_(value);
     lang.setLanguage(value);
     if (locale) {
-      console.debug(`Language set to: ${value}`);
+      log(`Language set to: ${value}`);
       window.localStorage.setItem('locale', value);
     }
   };
 
   // First time load
   if (locale === null) {
-    const localeOverrideUrl = getQueryParamByName('lang');
+    const langOverrideUrl = getQueryParamByName('lang');
+    const localOverrideUrl = getQueryParamByName('locale');
     const localeOverrideLocalStorage = window.localStorage.getItem('locale');
-    const localeOverrides = [];
-    localeOverrideUrl && localeOverrides.push(localeOverrideUrl);
-    localeOverrideLocalStorage &&
-      localeOverrides.push(localeOverrideLocalStorage);
+    const localeOverrides = [
+      langOverrideUrl,
+      localOverrideUrl,
+      localeOverrideLocalStorage
+    ].filter(x => x);
 
     const detectedLanguage = getPreferredLanguage({
       languages: languages.map(language => language.value),

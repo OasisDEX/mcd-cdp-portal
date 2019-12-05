@@ -8,10 +8,10 @@ import theme, { getSpace } from '../styles/theme';
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (
     <Grid
-      bg="backgroundGrey"
+      bg="lightGrey"
       gridTemplateColumns={{
         s: 'minmax(0, 1fr)',
-        l: `${theme.measurement.navbarWidth}px 1fr ${
+        l: `${theme.measurement.navbarWidth}px minmax(0, auto) ${
           theme.measurement.sidebarWidth
         }px ${getSpace('s')}px`
       }}
@@ -23,7 +23,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
     >
       <Box display={{ s: 'block', l: 'none' }}>{mobileNav}</Box>
       <Box display={{ s: 'none', l: 'block' }}>{navbar}</Box>
-      <div>{children}</div>
+      {children}
       <Box display={{ s: 'none', l: 'block' }}>
         <SidebarBase />
       </Box>

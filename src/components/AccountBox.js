@@ -24,6 +24,8 @@ import useToggle from 'hooks/useToggle';
 import styled from 'styled-components';
 import Carat from './Carat';
 
+const migrateUrl = 'https://oasis.app/trade/account';
+
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
 `;
@@ -66,7 +68,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && prettifyNumber(amount, true, 3)) || '--'}
+        {(amount && prettifyNumber(amount, true, 4)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -77,7 +79,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
       >
         {(amount &&
           usdRatio &&
-          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 3)}`) ||
+          `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 2)}`) ||
           '--'}
       </Text>
       <Flex width="20%" justifyContent="flex-end">
@@ -142,21 +144,20 @@ const WalletBalances = ({ hasActiveAccount }) => {
       }, []),
     [balances, uniqueFeeds]
   );
-
   return (
     <>
-      <CardBody>
-        <Box px="s" py="m">
+      <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
+        <Box px="s" pt="sm" pb="s2">
           <Text t="h4">{lang.sidebar.wallet_balances}</Text>
         </Box>
         <Flex justifyContent="space-between" px="s">
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="20%">
+          <Text color="steel" fontWeight="bold" t="smallCaps" width="20%">
             {lang.sidebar.asset}
           </Text>
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+          <Text color="steel" fontWeight="bold" t="smallCaps" width="30%">
             {lang.sidebar.balance}
           </Text>
-          <Text color="steel" fontWeight="semibold" t="smallCaps" width="30%">
+          <Text color="steel" fontWeight="bold" t="smallCaps" width="30%">
             {lang.sidebar.usd}
           </Text>
           <Box width="20%" />
@@ -173,8 +174,10 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    ((token === 'SAI' && (
-                      <ActionButton>{lang.sidebar.migrate}</ActionButton>
+                    ((symbol === 'SAI' && (
+                      <ActionButton as="a" target="_blank" href={migrateUrl}>
+                        {lang.sidebar.migrate}
+                      </ActionButton>
                     )) || (
                       <ActionButton onClick={() => showSendSidebar({ token })}>
                         {lang.sidebar.send}
@@ -186,7 +189,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
           )}
         </StripedRows>
       </CardBody>
-      {tokenBalances.length > 3 && (
+      {tokenBalances.length > 4 && (
         <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
           <Flex justifyContent="center" alignItems="center">
             {collapsed ? (

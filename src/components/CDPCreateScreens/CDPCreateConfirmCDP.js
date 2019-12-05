@@ -19,17 +19,26 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 import { TxLifecycle } from 'utils/constants';
-
+import styled from 'styled-components';
+import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
-import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
+
+const StyledExternalLink = styled(ExternalLinkIcon)`
+  path {
+    stroke: ${props => props.color};
+    fill: ${props => props.color};
+  }
+`;
 
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
-  capturedDispatch
+  capturedDispatch,
+  enableSubmit
 }) => {
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
+  const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
 
   const {
     liquidationPenalty,
@@ -50,7 +59,7 @@ const CDPCreateConfirmSummary = ({
     ],
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
-      lang.collateralization_ratio,
+      lang.collateralization,
       formatCollateralizationRatio(collateralizationRatio)
     ],
     [lang.liquidation_ratio, `${liquidationRatio}%`],
@@ -83,7 +92,7 @@ const CDPCreateConfirmSummary = ({
                 <Text
                   fontWeight="bold"
                   css="white-space: nowrap"
-                  textAlign={{ s: 'right', m: 'left' }}
+                  textAlign={'right'}
                 >
                   {value}
                 </Text>
@@ -95,25 +104,32 @@ const CDPCreateConfirmSummary = ({
           justifyContent="center"
           mt="l"
           alignItems="center"
-          gridColumnGap="xs"
+          gridRowGap="s"
           gridTemplateColumns="auto auto"
         >
           <Checkbox
             checked={hasReadTOS}
             onChange={() => setHasReadTOS(state => !state)}
           />
-          <Text color="grey.500">
+          <Text color="grey.500" ml="s">
             {lang.formatString(
               lang.terms_of_service_text,
-              <Link href="/terms" target="_blank">
+              <Link href="/terms" target="_blank" color="blue">
                 {lang.terms_of_service}
               </Link>
             )}
           </Text>
+          <Checkbox
+            checked={hasUnderstoodSF}
+            onChange={() => setHasUnderstoodSF(state => !state)}
+          />
+          <Text color="grey.500" ml="s">
+            {lang.cdp_create.has_understood_stability_fee}
+          </Text>
         </Grid>
       </Card>
       <ScreenFooter
-        canProgress={hasReadTOS}
+        canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
         onNext={() => capturedDispatch({ type: 'increment-step' })}
         onBack={() => capturedDispatch({ type: 'decrement-step' })}
         continueText={lang.actions.create_cdp}
@@ -138,8 +154,12 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
 
       const waitTimeText =
         waitTime < 1
-          ? `${seconds} seconds`
-          : `${minutes} minute${minutes === 1 ? '' : 's'}`;
+          ? `${seconds} ${lang.cdp_create.seconds_wait_time}`
+          : `${minutes} ${
+              minutes === 1
+                ? lang.cdp_create.minutes_wait_time_singular
+                : lang.minutes_wait_time_plural
+            }`;
 
       setWaitTime(waitTimeText);
     })();
@@ -166,13 +186,10 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
       />
       <Flex my="l" justifyContent="center">
         <Grid gridRowGap="s">
-          <Box m="auto">
-            <SpaceshipIllustration />
-          </Box>
-          <Box my="l" textAlign="center">
+          <Box my="s" textAlign="center">
             {isTestchain ? (
               <Grid gridRowGap="s">
-                <Text>Transaction hash</Text>
+                <Text>{lang.cdp_create.tx_hash}</Text>
                 <Text>{hash}</Text>
               </Grid>
             ) : (
@@ -180,13 +197,16 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
-                View transaction details <ExternalLinkIcon />
+                <Button variant="secondary">
+                  <Text mr="xs">{lang.cdp_create.view_tx_details}</Text>
+                  <StyledExternalLink color={getColor('steel')} ml="4px" />
+                </Button>
               </Link>
             )}
           </Box>
           <Flex textAlign="center" justifyContent="center">
             <Button onClick={onClose} width="145px">
-              Exit
+              {lang.exit}
             </Button>
           </Flex>
         </Grid>
@@ -198,6 +218,7 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
 const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
   const { lang } = useLanguage();
   const { maker, checkForNewCdps, newTxListener } = useMaker();
+  const [enableSubmit, setEnableSubmit] = useState(true);
 
   const { gemsToLock, daiToDraw, txState } = cdpParams;
 
@@ -215,6 +236,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
         daiToDraw
       );
 
+    setEnableSubmit(false);
     newTxListener(txObject, lang.transactions.creating_cdp);
 
     const txMgr = maker.service('transactionManager');
@@ -223,7 +245,8 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       confirmed: () => {
         checkForNewCdps();
         dispatch({ type: 'transaction-confirmed' });
-      }
+      },
+      error: () => setEnableSubmit(true)
     });
     await txMgr.confirm(txObject, 1);
   }
@@ -242,6 +265,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       cdpParams={cdpParams}
       selectedIlk={selectedIlk}
       capturedDispatch={capturedDispatch}
+      enableSubmit={enableSubmit}
     />
   );
 };

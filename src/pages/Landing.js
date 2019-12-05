@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
-import { Link } from 'react-navi';
+import { Link, useCurrentRoute } from 'react-navi';
 
 import OasisLayout from '../layouts/OasisLayout';
 import SEO from '../components/SEO';
@@ -14,6 +14,7 @@ import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
 import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
 import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
+import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
 
 const Hero = styled.div`
   color: #1e2e3a;
@@ -78,12 +79,12 @@ const Card = styled.div`
   }
 
   .button.enabled {
-    box-shadow: 0 2px 2px #c8e4e6;
+    box-shadow: 0 2px 2px ${props => props.btnShadowColor};
     transition: all 0.15s ease;
   }
 
   .button.enabled:hover {
-    box-shadow: 0 5px 5px #c8e4e6;
+    box-shadow: 0 5px 5px ${props => props.btnShadowColor};
     transform: translateY(-1px);
   }
 `;
@@ -96,6 +97,7 @@ const TextSection = styled.div`
     font-weight: normal;
     margin-bottom: 20px;
     line-height: 40px;
+    color: #000;
   }
 
   p {
@@ -116,26 +118,30 @@ const tokens = [
     icon: EthIcon
   },
   {
-    name: 'Augur',
+    name: 'Augur*',
     icon: RepIcon
   },
   {
-    name: '0x',
+    name: '0x*',
     icon: ZrxIcon
   },
   {
     name: 'Basic Attention Token',
     icon: BatIcon
+  },
+  {
+    name: 'USDC*',
+    icon: UsdcIcon
   }
 ];
 
 const TokenList = styled.div`
-  max-width: 978px;
+  max-width: 700px;
   display: flex;
   justify-content: center;
   align-content: space-between;
   flex-wrap: wrap;
-  margin: 40px auto;
+  margin: 22px auto 0;
 
   @media (max-width: 1000px) {
     max-width: 560px;
@@ -145,7 +151,13 @@ const TokenList = styled.div`
 const Token = ({ name, icon }) => {
   const Icon = icon;
   return (
-    <div style={{ display: 'flex', alignItems: 'center', margin: '20px 35px' }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        margin: '38px 35px 22px'
+      }}
+    >
       <Icon width="22" height="22" style={{ flexGrow: 0, flexShrink: 0 }} />
       <span
         style={{
@@ -257,7 +269,15 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     }, 300);
 
     window.addEventListener('resize', debouncedHandleResize);
-    setHeight(answerElement.current.clientHeight);
+    setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
+    // set the height after fonts have probably loaded, or system font is used
+    setTimeout(
+      () =>
+        setHeight(
+          answerElement.current ? answerElement.current.clientHeight : 0
+        ),
+      3200
+    );
     return _ => {
       window.removeEventListener('resize', debouncedHandleResize);
     };
@@ -318,16 +338,6 @@ const Questions = () => {
         link(
           lang.landing_page.answer3_link2_url,
           lang.landing_page.answer3_link2_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question4,
-      a: lang.formatString(
-        lang.landing_page.answer4,
-        link(
-          lang.landing_page.answer4_link1_url,
-          lang.landing_page.answer4_link1_text
         )
       )
     },
@@ -394,6 +404,7 @@ const Questions = () => {
 };
 
 function Landing() {
+  const { url } = useCurrentRoute();
   const { lang } = useLanguage();
 
   return (
@@ -406,6 +417,7 @@ function Landing() {
             background:
               'linear-gradient(180deg, #C2D7E4 0%, #DBF1EC 100%), #7AAAC5'
           }}
+          btnShadowColor="#c8e4e6"
         >
           <div className="title" style={{ color: '#253A44' }}>
             {lang.landing_page.trade_card.title}
@@ -415,7 +427,7 @@ function Landing() {
           </div>
           <div className="buttonContainer">
             <a
-              href="https://oasis.app/trade"
+              href="/trade"
               className="button enabled"
               style={{
                 color: '#5894B5',
@@ -437,6 +449,7 @@ function Landing() {
             background:
               'linear-gradient(180deg, #F0DED8 0%, #FDF2E1 100%), linear-gradient(0deg, #EFBF98, #EFBF98)'
           }}
+          btnShadowColor="#F1E3DB"
         >
           <div className="title" style={{ color: '#5B2E1B' }}>
             {lang.landing_page.borrow_card.title}
@@ -447,12 +460,18 @@ function Landing() {
           <div className="buttonContainer">
             <div className="button">
               <Link
-                href={`/${Routes.BORROW}`}
+                href={`/${Routes.BORROW}${url.search}`}
                 prefetch={true}
                 className="button enabled"
                 style={{
-                  color: '#5894B5',
+                  color: '#945F47',
                   backgroundColor: 'white'
+                }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'BorrowDai',
+                    product: 'oasis-landing'
+                  });
                 }}
               >
                 {lang.landing_page.borrow_card.button}
@@ -465,6 +484,7 @@ function Landing() {
             background: 'linear-gradient(180deg, #D5E8E3 0%, #EEF0E4 100%)',
             marginBottom: 0
           }}
+          btnShadowColor="#D7E9E3"
         >
           <div className="title" style={{ color: '#002F28' }}>
             {lang.landing_page.save_card.title}
@@ -475,12 +495,18 @@ function Landing() {
           <div className="buttonContainer">
             <div className="button">
               <Link
-                href={`/${Routes.SAVE}`}
+                href={`/${Routes.SAVE}${url.search}`}
                 prefetch={true}
                 className="button enabled"
                 style={{
-                  color: '#5894B5',
+                  color: '#699C90',
                   backgroundColor: 'white'
+                }}
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'SaveDai',
+                    product: 'oasis-landing'
+                  });
                 }}
               >
                 {lang.landing_page.save_card.button}
@@ -496,8 +522,11 @@ function Landing() {
             <Token name={name} icon={icon} key={name} />
           ))}
         </TokenList>
+        <span style={{ fontSize: '10px' }}>
+          {lang.landing_page.token_section_only_on_trade}
+        </span>
       </TextSection>
-      <TextSection style={{ marginTop: '108px' }}>
+      <TextSection style={{ marginTop: '95px' }}>
         <h3>{lang.landing_page.section1_title}</h3>
         <p>{lang.landing_page.section1_p}</p>
       </TextSection>

@@ -58,11 +58,13 @@ export default function useProxy() {
     return address;
   });
 
+  let isCancelled = false;
   useEffect(() => {
     if (account) {
       (async () => {
         updateState({ initialProxyCheck: true });
         const proxyAddress = await maker.service('proxy').getProxyAddress();
+        if (isCancelled) return;
         log(`got proxy address: ${proxyAddress}`);
         updateState({
           initialProxyCheck: false,
@@ -71,6 +73,8 @@ export default function useProxy() {
         });
       })();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => (isCancelled = true);
   }, [maker, account]);
 
   return {

@@ -2,6 +2,7 @@ import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import round from 'lodash/round';
+import debug from 'debug';
 
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import { calcCDPParams } from 'utils/cdp';
@@ -14,6 +15,8 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import { safeToFixed } from '../../utils/ui';
+import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -21,6 +24,8 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
+
+const log = debug('maker:Sidebars/Payback');
 
 const Payback = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -34,52 +39,69 @@ const Payback = ({ cdpId, reset }) => {
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
   const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp, false);
+  const debtAmount = getDebtAmount(cdp, true, 18);
+
+  const dustLimit = cdp.dust ? cdp.dust : 0;
+  const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
+
+  // Amount being repaid can't result in a remaining debt lower than the dust
+  // minimum unless the full amount is being repaid
+  const dustLimitValidation = input =>
+    greaterThan(dustLimit, subtract(debtAmount, input)) &&
+    equalTo(input, debtAmount) !== true;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
       maxFloat: Math.min(daiBalance, debtAmount),
       minFloat: 0,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        dustLimit: dustLimitValidation
+      }
     },
     {
       maxFloat: amount => {
-        return daiBalance < parseFloat(amount)
+        return greaterThan(amount, daiBalance)
           ? lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
           : lang.action_sidebar.cannot_payback_more_than_owed;
-      }
+      },
+      dustLimit: () =>
+        lang.formatString(
+          lang.cdp_create.dust_max_payback,
+          subtract(debtAmount, dustLimit)
+        )
     }
   );
 
-  const amountToPayback = parseFloat(amount || 0);
+  const amountToPayback = amount || 0;
   const { liquidationPrice, collateralizationRatio } = calcCDPParams({
     ilkData: cdp,
     gemsToLock: collateralAmount,
-    daiToDraw: Math.max(debtAmount - amountToPayback, 0)
+    daiToDraw: Math.max(subtract(debtAmount, amountToPayback), 0)
   });
-
-  const setMax = () =>
-    debtAmount && daiBalance && setAmount(minimum(debtAmount, daiBalance));
+  const setMax = () => setAmount(maxAmount);
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
     const owner = await cdpManager.getOwner(cdpId);
     if (!owner) {
-      console.error(`Unable to find owner of CDP #${cdpId}`);
+      log(`Unable to find owner of CDP #${cdpId}`);
       return;
     }
+    const wipeAll = debtAmount.toString() === amount;
+    if (wipeAll) log('Calling wipeAll()');
+    else log('Calling wipe()');
     newTxListener(
-      debtAmount !== amount
-        ? cdpManager.wipe(cdpId, MDAI(parseFloat(amount)), owner)
-        : cdpManager.wipeAll(cdpId, owner),
+      wipeAll
+        ? cdpManager.wipeAll(cdpId, owner)
+        : cdpManager.wipe(cdpId, MDAI(amount), owner),
       lang.transactions.pay_back_dai
     );
     reset();
   };
 
   const valid = amount && !amountErrors && hasProxy && hasAllowance;
-
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -110,7 +132,7 @@ const Payback = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && daiBalance.toFixed(6)} DAI`}
+          body={`${daiBalance && safeToFixed(daiBalance, 7)} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}

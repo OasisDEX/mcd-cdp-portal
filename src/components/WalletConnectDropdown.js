@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 
-import { mixpanelIdentify } from 'utils/analytics';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
-import { getWalletConnectAccounts } from 'utils/walletconnect';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
 import { AccountTypes } from '../utils/constants';
+import { BrowserView } from 'react-device-detect';
 
 const Option = ({ children, ...props }) => {
   return (
@@ -49,9 +48,8 @@ const WalletConnectDropdown = ({
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
 
-  function onAccountChosen({ address }, type) {
+  function onAccountChosen({ address }) {
     maker.useAccountWithAddress(address);
-    mixpanelIdentify(address, type);
   }
 
   useEffect(() => {
@@ -70,6 +68,16 @@ const WalletConnectDropdown = ({
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
 
+  const providerName = getWebClientProviderName();
+
+  async function connectBrowserWallet() {
+    try {
+      await connectBrowserProvider();
+    } catch (err) {
+      window.alert(err);
+    }
+  }
+
   return (
     <Dropdown trigger={trigger} display="block" {...props}>
       <Card
@@ -81,9 +89,7 @@ const WalletConnectDropdown = ({
       >
         {otherAccounts.map(account => {
           const providerType =
-            account.type === 'browser'
-              ? getWebClientProviderName()
-              : account.type;
+            account.type === 'browser' ? providerName : account.type;
           return (
             <Option
               key={account.address}
@@ -104,7 +110,9 @@ const WalletConnectDropdown = ({
                   seed={jsNumberForAddress(account.address)}
                 />
                 <Text t="body">{lang.providers[providerType]}</Text>
-                <Text t="body">{cutMiddle(account.address, 7, 5)}</Text>
+                <Text t="body" fontSize="l">
+                  {cutMiddle(account.address, 7, 5)}
+                </Text>
               </Grid>
             </Option>
           );
@@ -112,45 +120,56 @@ const WalletConnectDropdown = ({
         {!hasBrowserAccount && (
           <Option
             onClick={() => {
-              connectBrowserProvider();
+              connectBrowserWallet();
               close();
             }}
           >
-            Connect to {lang.providers[getWebClientProviderName()]}
+            {lang.formatString(
+              lang.connect_to,
+              providerName !== '' ? lang.providers[providerName] : providerName
+            )}
           </Option>
         )}
-        <Option
-          onClick={() => {
-            connectLedgerWallet();
-            close();
-          }}
-        >
-          Connect to Ledger Nano
-        </Option>
-        <Option
-          onClick={() => {
-            connectTrezorWallet();
-            close();
-          }}
-        >
-          Connect to Trezor
-        </Option>
-        <Option
-          onClick={() => {
-            getWalletConnectAccounts();
-            close();
-          }}
-        >
-          Wallet Connect
-        </Option>
-        <Option
-          onClick={() => {
-            connectToProviderOfType(AccountTypes.WALLETLINK);
-            close();
-          }}
-        >
-          Coinbase WalletLink
-        </Option>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectLedgerWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Ledger Nano')}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectTrezorWallet();
+              close();
+            }}
+          >
+            {lang.formatString(lang.connect_to, 'Trezor')}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.WALLETCONNECT);
+              close();
+            }}
+          >
+            {lang.landing_page.wallet_connect}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.WALLETLINK);
+              close();
+            }}
+          >
+            {lang.landing_page.wallet_link}
+          </Option>
+        </BrowserView>
       </Card>
     </Dropdown>
   );

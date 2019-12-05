@@ -75,18 +75,18 @@ const mathReducer = produce((draft, action) => {
           ].includes(prop)
         ) {
           const debts = draft.feeds.map(feed => {
-            if (!draft.raw.ilks[feed.key]) return;
+            if (!draft.raw.ilks[feed.key]) return null;
             const { ilkArt, rate } = draft.raw.ilks[feed.key];
             if (ilkArt && rate) {
               return math.debtValue(ilkArt, rate);
-            }
+            } else return null;
           });
           const combinedDebt = compact(debts).reduce(
             (a, b) => a.plus(b),
             MDAI(0)
           );
           const colVals = draft.feeds.map(feed => {
-            if (!draft.raw.ilks[feed.key]) return;
+            if (!draft.raw.ilks[feed.key]) return null;
             const { adapterBalance } = draft.raw.ilks[feed.key];
             const par = draft.system ? draft.system[PAR] : null;
             const price = recalculatePrice(
@@ -105,7 +105,7 @@ const mathReducer = produce((draft, action) => {
               const currency = getCurrency({ ilk: feed.key });
               colAmount = currency(adapterBalance, -decimals);
               return math.collateralValue(colAmount, price);
-            }
+            } else return null;
           });
           const combinedColVal = compact(colVals).reduce(
             (a, b) => a.plus(b),
@@ -175,7 +175,6 @@ function recalculatePrice(ilk, name, par) {
     ilk[PRICE_WITH_SAFETY_MARGIN],
     ilk[LIQUIDATION_RATIO]
   );
-  // console.log(`calculated price for ${name}: ${price}`);
   return price;
 }
 

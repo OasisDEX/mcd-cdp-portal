@@ -1,21 +1,26 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
-import { greaterThanOrEqual } from 'utils/bignumber';
+import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
 import { getUsdPrice, calcCDPParams } from 'utils/cdp';
-import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  prettifyNumber,
+  safeToFixed
+} from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
-
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 function OpenCDPForm({
   selectedIlk,
   cdpParams,
   handleInputChange,
-  daiAvailable
+  daiAvailable,
+  collateralizationRatio
 }) {
   const { lang } = useLanguage();
   const userHasSufficientGemBalance = greaterThanOrEqual(
@@ -26,6 +31,12 @@ function OpenCDPForm({
     daiAvailable,
     cdpParams.daiToDraw
   );
+
+  const belowDustLimit = greaterThan(
+    selectedIlk.data.dust,
+    cdpParams.daiToDraw
+  );
+
   const fields = [
     [
       lang.formatString(
@@ -80,10 +91,16 @@ function OpenCDPForm({
         key="daiToDraw"
         name="daiToDraw"
         after="DAI"
-        width="250px"
+        width={300}
         type="number"
         failureMessage={
-          userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai
+          (belowDustLimit
+            ? lang.formatString(
+                lang.cdp_create.below_dust_limit,
+                selectedIlk.data.dust
+              )
+            : null) ||
+          (userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai)
         }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
@@ -110,6 +127,14 @@ function OpenCDPForm({
             {prettifyNumber(daiAvailable)} DAI
           </Text>
         </Box>
+        <RatioDisplay
+          type={RatioDisplayTypes.TEXT}
+          text={lang.cdp_create.collateralization_warning}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={selectedIlk.data.liquidationRatio}
+          onlyWarnings={true}
+          t="caption"
+        />
       </Grid>
     ]
   ];
@@ -147,28 +172,32 @@ const CDPCreateDepositSidebar = ({
   collateralizationRatio
 }) => {
   const { lang } = useLanguage();
-  const {
-    liquidationPenalty,
-    liquidationRatio,
-    debtCeiling,
-    ilkDebtAvailable,
-    stabilityFee
-  } = selectedIlk.data;
+  const { liquidationRatio, stabilityFee } = selectedIlk.data;
   return (
     <Grid gridRowGap="m">
       {[
         [
           lang.collateralization,
-          formatCollateralizationRatio(collateralizationRatio)
+          <RatioDisplay
+            key="ba"
+            type={RatioDisplayTypes.TEXT}
+            text={`${formatCollateralizationRatio(
+              collateralizationRatio
+            )} (Min ${liquidationRatio}%)`}
+            ratio={collateralizationRatio}
+            ilkLiqRatio={selectedIlk.data.liquidationRatio}
+            t="caption"
+          />
         ],
         [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-        ['Current Price', `$${getUsdPrice(selectedIlk.data).toFixed(2)}`],
-
-        [lang.stability_fee, `${stabilityFee}%`],
-        [lang.liquidation_ratio, `${liquidationRatio}%`],
-        [lang.liquidation_penalty, `${liquidationPenalty}%`],
-        [lang.collateral_debt_ceiling, `${prettifyNumber(debtCeiling)} DAI`],
-        [lang.dai_available, prettifyNumber(ilkDebtAvailable)]
+        [
+          lang.formatString(
+            lang.current_ilk_price,
+            selectedIlk.currency.symbol
+          ),
+          `$${getUsdPrice(selectedIlk.data).toFixed(2)}`
+        ],
+        [lang.stability_fee, `${stabilityFee}%`]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">
@@ -186,8 +215,9 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
   const {
     liquidationPrice,
     collateralizationRatio,
-    daiAvailable
+    daiAvailable: estDaiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
+  const daiAvailable = safeToFixed(estDaiAvailable, 3);
   const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
   const { lang } = useLanguage();
 
@@ -198,6 +228,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
+
   return (
     <Box
       maxWidth="1040px"
@@ -223,6 +254,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             handleInputChange={handleInputChange}
             selectedIlk={selectedIlk}
             daiAvailable={daiAvailable}
+            collateralizationRatio={collateralizationRatio}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>

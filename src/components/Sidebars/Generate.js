@@ -6,14 +6,16 @@ import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
-import { greaterThan } from '../../utils/bignumber';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
+import { add, subtract, greaterThan } from '../../utils/bignumber';
 import {
   formatCollateralizationRatio,
-  formatLiquidationPrice
+  formatLiquidationPrice,
+  safeToFixed
 } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Generate = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -24,28 +26,39 @@ const Generate = ({ cdpId, reset }) => {
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
+  const { liquidationRatio } = cdp;
 
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp);
+  const collateralAmount = getCollateralAmount(cdp, false);
+  const debtAmount = getDebtAmount(cdp, false);
   const undercollateralized = greaterThan(
-    cdp.liquidationRatio,
+    liquidationRatio,
     collateralizationRatio
   );
+
+  const dustLimit = cdp.dust ? cdp.dust : 0;
+
+  // minFloat uses <= so it won't work for dustLimit
+  const dustLimitValidation = value =>
+    greaterThan(dustLimit, add(value, debtAmount));
 
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
-      minFloat: 0,
       maxFloat: daiAvailable,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        dustLimit: dustLimitValidation
+      }
     },
     {
-      maxFloat: () => lang.action_sidebar.cdp_below_threshold
+      maxFloat: () => lang.action_sidebar.cdp_below_threshold,
+      dustLimit: () =>
+        lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
     }
   );
 
   useEffect(() => {
-    const amountToGenerate = parseFloat(amount || 0);
+    const amountToGenerate = amount || 0;
     const {
       liquidationPrice,
       collateralizationRatio,
@@ -53,19 +66,23 @@ const Generate = ({ cdpId, reset }) => {
     } = calcCDPParams({
       ilkData: cdp,
       gemsToLock: collateralAmount,
-      daiToDraw: debtAmount + amountToGenerate
+      daiToDraw: add(debtAmount, amountToGenerate)
     });
 
-    setDaiAvailable(daiAvailable - debtAmount);
+    // fractional diffs between daiAvailable & debtAmount can result in a negative amount
+    const daiAvailablePositive = Math.max(
+      0,
+      subtract(daiAvailable, debtAmount)
+    );
+
+    setDaiAvailable(daiAvailablePositive);
     setLiquidationPrice(liquidationPrice);
     setCollateralizationRatio(collateralizationRatio);
   }, [amount, cdp, collateralAmount, debtAmount]);
 
   const generate = () => {
     newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .lockAndDraw(cdpId, cdp.ilk, cdp.currency(0), MDAI(parseFloat(amount))),
+      maker.service('mcd:cdpManager').draw(cdpId, cdp.ilk, MDAI(amount)),
       lang.transactions.generate_dai
     );
     reset();
@@ -86,6 +103,15 @@ const Generate = ({ cdpId, reset }) => {
           placeholder="0.00 DAI"
           failureMessage={amountErrors}
         />
+        <RatioDisplay
+          type={RatioDisplayTypes.CARD}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={liquidationRatio}
+          text={lang.action_sidebar.generate_warning}
+          onlyWarnings={true}
+          show={amount !== '' && amount > 0 && !undercollateralized}
+          textAlign="center"
+        />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button onClick={generate} disabled={!amount || amountErrors}>
@@ -98,7 +124,7 @@ const Generate = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${daiAvailable.toFixed(6)} DAI`}
+          body={`${safeToFixed(daiAvailable, 7)} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
@@ -107,9 +133,13 @@ const Generate = ({ cdpId, reset }) => {
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <Text color={undercollateralized ? 'orange.600' : null}>
-              {formatCollateralizationRatio(collateralizationRatio)}
-            </Text>
+            <RatioDisplay
+              type={RatioDisplayTypes.TEXT}
+              ratio={collateralizationRatio}
+              ilkLiqRatio={liquidationRatio}
+              text={formatCollateralizationRatio(collateralizationRatio)}
+              show={amount !== '' && amount > 0 && !undercollateralized}
+            />
           }
         />
       </InfoContainer>

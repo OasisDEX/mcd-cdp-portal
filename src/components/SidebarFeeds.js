@@ -15,11 +15,11 @@ const SidebarFeeds = ({ feeds }) => {
   const { lang } = useLanguage();
 
   return (
-    <Card pt="s" css={'overflow:hidden;'}>
-      <Flex justifyContent="space-between" alignContent="center" px="s">
+    <Card pt="sm" css={'overflow:hidden;'}>
+      <Flex justifyContent="space-between" alignContent="center" px="s" pt="">
         <Text t="h4">{lang.sidebar.price_feeds}</Text>
-        <Link>
-          <Text t="p5" color="steel">
+        <Link href={'https://makerdao.com/feeds'} target="_blank">
+          <Text t="p5" color="steel" fontSize="s2">
             {lang.sidebar.view_price_feeds}
           </Text>
           &nbsp;
@@ -27,14 +27,14 @@ const SidebarFeeds = ({ feeds }) => {
         </Link>
       </Flex>
 
-      <CardBody mt="xs">
+      <CardBody mt="s2">
         {feeds.map(
           ({ pair, value }, index) =>
             (!collapsed || index < 3) && (
               <Flex
                 key={`feed_${pair}`}
                 justifyContent="space-between"
-                alignItems="center"
+                alignItems="baseline"
                 width="100%"
                 py="xs"
                 px="s"
@@ -50,21 +50,23 @@ const SidebarFeeds = ({ feeds }) => {
             )
         )}
       </CardBody>
-      <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
-        <Flex justifyContent="center" alignItems="center">
-          {collapsed ? (
-            <>
-              <Text pr="xs">{lang.sidebar.view_more}</Text>
-              <Carat />
-            </>
-          ) : (
-            <>
-              <Text pr="xs">{lang.sidebar.view_less}</Text>
-              <Carat rotation={180} />
-            </>
-          )}
-        </Flex>
-      </StyledCardBody>
+      {feeds.length > 3 && (
+        <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
+          <Flex justifyContent="center" alignItems="center">
+            {collapsed ? (
+              <>
+                <Text pr="xs">{lang.sidebar.view_more}</Text>
+                <Carat />
+              </>
+            ) : (
+              <>
+                <Text pr="xs">{lang.sidebar.view_less}</Text>
+                <Carat rotation={180} />
+              </>
+            )}
+          </Flex>
+        </StyledCardBody>
+      )}
     </Card>
   );
 };

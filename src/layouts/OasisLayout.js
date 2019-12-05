@@ -4,6 +4,8 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
 import { ReactComponent as Cross } from '../images/cross2.svg';
 import Cookies from 'js-cookie';
+import { Routes } from 'utils/constants';
+import useLanguage from 'hooks/useLanguage';
 
 const OasisLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
@@ -92,6 +94,7 @@ const OasisLayoutStyle = styled.div`
   font-family: 'FT Switch', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
+  letter-spacing: normal;
   text-align: center;
   color: black;
   width: 100%;
@@ -153,6 +156,7 @@ const CookieNoticeStyle = styled.div`
 const CookieNotice = () => {
   const OASIS_APP_PRIVACY_ACCEPTED_DATE = 'oasis_app_privacy_accepted_date';
   const [show, setShow] = useState(false);
+  const { lang } = useLanguage();
 
   useEffect(() => {
     const acceptedDate = Cookies.get(OASIS_APP_PRIVACY_ACCEPTED_DATE);
@@ -172,8 +176,10 @@ const CookieNotice = () => {
     <CookieNoticeStyle style={{ display: show ? 'block' : 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{ fontSize: '14px', color: '#231536', flexShrink: 1 }}>
-          By using this website you agree to our{' '}
-          <Link href="/privacy">privacy policy</Link>
+          {lang.formatString(
+            lang.cookie_notice,
+            <Link href={`/${Routes.PRIVACY}`}>{lang.privacy_policy}</Link>
+          )}
         </span>
         <div style={{ width: '10px' }} />
         <Cross
@@ -238,64 +244,67 @@ const Footer = styled.footer`
   }
 `;
 
-const OasisLayout = ({ children }) => (
-  <OasisLayoutStyle>
-    <div
-      style={{
-        margin: '0 auto',
-        maxWidth: 1203,
-        paddingTop: '41px',
-        width: '100%'
-      }}
-    >
-      <Helmet>
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTSwitch-Regular.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTSwitch-Regular.woff"
-          type="font/woff"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTSwitch-Medium.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTSwitch-Medium.woff"
-          type="font/woff"
-          crossOrigin="anonymous"
-        />
-      </Helmet>
-      <Header>
-        <Link className="logo" href="/">
-          Oasis
-        </Link>
-      </Header>
-      {children}
-      <CookieNotice />
-      <Footer>
-        <nav>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </nav>
-        <div className="copyright">
-          © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
-        </div>
-      </Footer>
-    </div>
-  </OasisLayoutStyle>
-);
+const OasisLayout = ({ children }) => {
+  const { lang } = useLanguage();
+  return (
+    <OasisLayoutStyle>
+      <div
+        style={{
+          margin: '0 auto',
+          maxWidth: 1203,
+          paddingTop: '41px',
+          width: '100%'
+        }}
+      >
+        <Helmet>
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTSwitch-Regular.woff2"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTSwitch-Regular.woff"
+            type="font/woff"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTSwitch-Medium.woff2"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTSwitch-Medium.woff"
+            type="font/woff"
+            crossOrigin="anonymous"
+          />
+        </Helmet>
+        <Header>
+          <Link className="logo" href="/">
+            Oasis
+          </Link>
+        </Header>
+        {children}
+        <CookieNotice />
+        <Footer>
+          <nav>
+            <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
+            <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+          </nav>
+          <div className="copyright">
+            © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
+          </div>
+        </Footer>
+      </div>
+    </OasisLayoutStyle>
+  );
+};
 
 export default OasisLayout;

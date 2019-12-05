@@ -21,7 +21,6 @@ export const initialState = {
   [NUMBER_OF_LIQUIDATIONS]: '0',
   [SURPLUS_AUCTION_LOT_SIZE]: '0',
   [PAR]: '0',
-  [SYSTEM_COLLATERALIZATION]: '0',
   [TOTAL_SAVINGS_DAI]: '0',
   [TOTAL_CDPS]: '0'
 };

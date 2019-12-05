@@ -1,17 +1,9 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, {
-  ETH,
-  MKR,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  DGD,
-  GNT
-} from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, MKR, BAT } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
+import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
@@ -23,51 +15,18 @@ export function getMaker() {
   return _maker;
 }
 
+const cdpTypes = [
+  { currency: ETH, ilk: 'ETH-A' },
+  { currency: BAT, ilk: 'BAT-A' }
+];
+
 export async function instantiateMaker({
   rpcUrl,
   network,
   testchainId,
-  backendEnv,
-  navigation
+  backendEnv
 }) {
-  let mainnetAddresses;
-  if (network === 'mainnet') {
-    // Fallback to kovan if mainnet addresses are not found
-    try {
-      mainnetAddresses = require('./references/mainnet.json');
-    } catch (e) {
-      navigation.navigate(
-        `${navigation.getCurrentValue().url.pathname}?network=kovan`
-      );
-      network = 'kovan';
-      console.error(e);
-    }
-  }
-
-  const mainnetOverride = { addresses: mainnetAddresses, network: 'mainnet' };
-  const kovanCdpTypes = [
-    { currency: ETH, ilk: 'ETH-A' },
-    { currency: ETH, ilk: 'ETH-B' },
-    { currency: REP, ilk: 'REP-A' },
-    { currency: ZRX, ilk: 'ZRX-A' },
-    { currency: OMG, ilk: 'OMG-A' },
-    { currency: BAT, ilk: 'BAT-A' },
-    { currency: DGD, ilk: 'DGD-A', decimals: 9 },
-    { currency: GNT, ilk: 'GNT-A' }
-  ];
-
-  const mainnetCdpTypes = [
-    { currency: ETH, ilk: 'ETH-A' },
-    { currency: ETH, ilk: 'ETH-B' },
-    { currency: ZRX, ilk: 'ZRX-A' },
-    { currency: BAT, ilk: 'BAT-A' }
-  ];
-
-  const mcdPluginConfig = {
-    cdpTypes: network === 'mainnet' ? mainnetCdpTypes : kovanCdpTypes,
-    override: network === 'mainnet' ? mainnetOverride : null,
-    prefetch: false
-  };
+  const mcdPluginConfig = { cdpTypes, prefetch: false };
 
   const config = {
     log: false,
@@ -75,6 +34,7 @@ export async function instantiateMaker({
       trezorPlugin,
       ledgerPlugin,
       walletLinkPlugin,
+      walletConnectPlugin,
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, redirect, withView } from 'navi';
+import { map, route, mount, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -11,15 +11,12 @@ import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
 import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
-import { GenericNotFound } from 'pages/NotFound';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
-import AwaitMakerAuthentication from 'components/AwaitMakerAuthentication';
 import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
-import EthBalanceProvider from 'providers/EthBalanceProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
@@ -29,113 +26,97 @@ import { Routes } from 'utils/constants';
 const { networkNames, defaultNetwork } = config;
 
 const withBorrowLayout = route =>
-  hasNetwork(
-    withView(async request => {
-      const { network, testchainId, backendEnv } = request.query;
-      const { viewedAddress, cdpId } = request.params;
+  withView(async request => {
+    const {
+      network = networkNames[defaultNetwork],
+      testchainId,
+      backendEnv
+    } = request.query;
+    const { viewedAddress, cdpId } = request.params;
 
-      return (
-        <MakerProvider
-          network={network}
-          testchainId={testchainId}
-          backendEnv={backendEnv}
-        >
-          <RouteEffects network={network} />
-          <AwaitMakerAuthentication>
-            <EthBalanceProvider>
-              <ToggleProvider>
-                <ModalProvider modals={modals} templates={templates}>
-                  <SidebarProvider>
-                    <BorrowLayout
-                      mobileNav={
-                        <MobileNav
-                          viewedAddress={viewedAddress}
-                          cdpId={cdpId}
-                        />
-                      }
-                      navbar={<Navbar viewedAddress={viewedAddress} />}
-                    >
-                      <View />
-                    </BorrowLayout>
-                  </SidebarProvider>
-                </ModalProvider>
-              </ToggleProvider>
-            </EthBalanceProvider>
-          </AwaitMakerAuthentication>
-        </MakerProvider>
-      );
-    }, route)
-  );
+    return (
+      <MakerProvider
+        network={network}
+        testchainId={testchainId}
+        backendEnv={backendEnv}
+        viewedAddress={viewedAddress}
+      >
+        <RouteEffects network={network} />
+        <ToggleProvider>
+          <ModalProvider modals={modals} templates={templates}>
+            <SidebarProvider>
+              <BorrowLayout
+                mobileNav={
+                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                }
+                navbar={<Navbar viewedAddress={viewedAddress} />}
+              >
+                <View />
+              </BorrowLayout>
+            </SidebarProvider>
+          </ModalProvider>
+        </ToggleProvider>
+      </MakerProvider>
+    );
+  }, route);
 
 const withSaveLayout = route =>
-  hasNetwork(
-    withView(async request => {
-      const { network, testchainId, backendEnv } = request.query;
-      const { viewedAddress, cdpId } = request.params;
+  withView(async request => {
+    const {
+      network = networkNames[defaultNetwork],
+      testchainId,
+      backendEnv
+    } = request.query;
+    const { viewedAddress, cdpId } = request.params;
 
-      return (
+    return (
+      <MakerProvider
+        network={network}
+        testchainId={testchainId}
+        backendEnv={backendEnv}
+      >
+        <RouteEffects network={network} />
+        <ToggleProvider>
+          <ModalProvider modals={modals} templates={templates}>
+            <SidebarProvider>
+              <SaveLayout
+                mobileNav={
+                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                }
+                navbar={<Navbar viewedAddress={viewedAddress} />}
+              >
+                <View />
+              </SaveLayout>
+            </SidebarProvider>
+          </ModalProvider>
+        </ToggleProvider>
+      </MakerProvider>
+    );
+  }, route);
+
+export default mount({
+  '/': route(async request => {
+    const {
+      network = networkNames[defaultNetwork],
+      testchainId,
+      backendEnv
+    } = request.query;
+    return {
+      title: 'Landing',
+      view: (
         <MakerProvider
           network={network}
           testchainId={testchainId}
           backendEnv={backendEnv}
         >
           <RouteEffects network={network} />
-          <AwaitMakerAuthentication>
-            <EthBalanceProvider>
-              <ToggleProvider>
-                <ModalProvider modals={modals} templates={templates}>
-                  <SidebarProvider>
-                    <SaveLayout
-                      mobileNav={
-                        <MobileNav
-                          viewedAddress={viewedAddress}
-                          cdpId={cdpId}
-                        />
-                      }
-                      navbar={<Navbar viewedAddress={viewedAddress} />}
-                    >
-                      <View />
-                    </SaveLayout>
-                  </SidebarProvider>
-                </ModalProvider>
-              </ToggleProvider>
-            </EthBalanceProvider>
-          </AwaitMakerAuthentication>
+          <ModalProvider modals={modals} templates={templates}>
+            <Landing />
+          </ModalProvider>
         </MakerProvider>
-      );
-    }, route)
-  );
-
-const hasNetwork = route =>
-  map(request => {
-    if (networkIsUndefined(request)) {
-      return redirect(`./?network=${networkNames[defaultNetwork]}`);
-    } else {
-      return route;
-    }
-  });
-
-export default mount({
-  '/': hasNetwork(
-    route(async request => {
-      const { network, testchainId, backendEnv } = request.query;
-      return {
-        title: 'Landing',
-        view: (
-          <MakerProvider
-            network={network}
-            testchainId={testchainId}
-            backendEnv={backendEnv}
-          >
-            <RouteEffects network={network} />
-            <ModalProvider modals={modals} templates={templates}>
-              <Landing />
-            </ModalProvider>
-          </MakerProvider>
-        )
-      };
-    })
-  ),
+      )
+    };
+  }),
 
   [`/${Routes.BORROW}`]: withBorrowLayout(
     route(() => {
@@ -180,10 +161,7 @@ export default mount({
   ),
 
   [`/${Routes.TRADE}`]: route(() => {
-    return {
-      title: 'Trade',
-      view: <GenericNotFound />
-    };
+    window.location.href = 'https://oasis.app/trade';
   }),
 
   [`/${Routes.PRIVACY}`]: route(() => {
@@ -200,11 +178,6 @@ export default mount({
     };
   })
 });
-
-function networkIsUndefined(request) {
-  const { query } = request;
-  return query.network === undefined && query.testchainId === undefined;
-}
 
 function RouteEffects({ network }) {
   useEffect(() => {

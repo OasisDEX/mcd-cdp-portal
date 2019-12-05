@@ -1,4 +1,4 @@
-export const CDP_SAFETY_LEVELS = {
+export const SAFETY_LEVELS = {
   DANGER: 'danger',
   WARNING: 'warning',
   NEUTRAL: 'neutral',
@@ -18,7 +18,8 @@ export const AccountTypes = {
   LEDGER: 'ledger',
   TREZOR: 'trezor',
   METAMASK: 'browser',
-  WALLETLINK: 'walletlink'
+  WALLETLINK: 'walletlink',
+  WALLETCONNECT: 'walletconnect'
 };
 
 export const Routes = {
@@ -32,3 +33,17 @@ export const Routes = {
 export const Toggles = {
   WALLETBALANCES: 'walletbalances'
 };
+
+export const FeatureFlags = {
+  FF_VAULT_HISTORY: true,
+  FF_DSR_HISTORY: false,
+  FF_DSR_ETD: false
+};
+
+export const NotificationList = {
+  CLAIM_COLLATERAL: { name: 'claimCollateral', priority: 2 },
+  NON_VAULT_OWNER: { name: 'nonVaultOwner', priority: 1 },
+  NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 }
+};
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

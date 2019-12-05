@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Flex, Box, Card, Text } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
-
+import lang from 'languages';
 import ExternalLink from 'components/ExternalLink';
 import { ReactComponent as CloseIcon } from 'images/close-simple.svg';
 import { getMeasurement, getColor, getSpace } from 'styles/theme';
@@ -38,11 +38,11 @@ const txAnimations = {
       opacity: 0,
       marginTop: `-${PLACEHOLDER_HEIGHT + parseInt(getSpace('s'))}px`
     },
-    { opacity: 1, marginTop: `0px` }
+    { opacity: 1, marginTop: '0px' }
   ],
   slide: [
     { transform: `translate3d(-${getMeasurement('sidebarWidth')}px, 0, 0)` },
-    { transform: `translate3d(-0px, 0, 0)` }
+    { transform: 'translate3d(-0px, 0, 0)' }
   ]
 };
 
@@ -84,7 +84,7 @@ const TransactionManager = ({
     setTxAnimation({
       to: txCount ? animEnd : animStart
     });
-  }, [txCount]);
+  }, [animEnd, animStart, setTxAnimation, txCount]);
 
   const resolvedState = resolveTxManagerState(
     transactions.map(({ tx }) => tx.state())
@@ -108,13 +108,21 @@ const TransactionManager = ({
             <Box>
               <Flex alignItems="center">
                 <Text color={textColor} t="h5">
-                  {txCount} Transaction{txCount > 1 && 's'}
+                  {txCount}{' '}
+                  {txCount > 1
+                    ? lang.transaction_manager.transaction_plural_capitalised
+                    : lang.transaction_manager.transaction_singular_capitalised}
                 </Text>
               </Flex>
               {multipleTx && (
                 <TinyButton mt="xs" onClick={() => setExpanded(!expanded)}>
                   <Text color={textColor} t="p6">
-                    {expanded ? 'Hide' : 'Show'} transaction{txCount > 1 && 's'}
+                    {expanded
+                      ? lang.transaction_manager.hide
+                      : lang.transaction_manager.show}{' '}
+                    {txCount > 1
+                      ? lang.transaction_manager.transaction_plural
+                      : lang.transaction_manager.transaction_singular}
                   </Text>
                 </TinyButton>
               )}
@@ -145,7 +153,7 @@ const TransactionManager = ({
                                 fill={textColor}
                               >
                                 <Text color={textColor} t="p6" mr="3px">
-                                  View
+                                  {lang.view}
                                 </Text>
                               </ExternalLink>
                             </TinyButton>

@@ -6,22 +6,33 @@ import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
+import ilks from 'references/ilkList';
+import { trackCdpById } from 'reducers/multicall/cdps';
 import {
   createWatcher,
   startWatcher,
   updateWatcherWithAccount
 } from '../watch';
 import { batchActions } from '../utils/redux';
+import LoadingLayout from '../layouts/LoadingLayout';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
 export const MakerObjectContext = createContext();
 
-function MakerProvider({ children, network, testchainId, backendEnv }) {
+function MakerProvider({
+  children,
+  network,
+  testchainId,
+  backendEnv,
+  viewedAddress
+}) {
   const [account, setAccount] = useState(null);
+  const [viewedAddressData, setViewedAddressData] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
+  const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation();
   const [, dispatch] = useStore();
 
@@ -40,11 +51,22 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
       });
       if (newMaker.service('accounts').hasAccount()) {
         initAccount(newMaker.currentAccount());
+        (async () => {
+          const { address } = newMaker.currentAccount();
+          log(`Found initial account: ${address}`);
+          const proxy = await newMaker
+            .service('proxy')
+            .getProxyAddress(address);
+          if (proxy) log(`Found proxy address: ${proxy}`);
+          else log('No proxy found');
+          updateWatcherWithAccount(newMaker, address, proxy);
+        })();
       }
       setMaker(newMaker);
 
       newMaker.on('accounts/CHANGE', eventObj => {
         const { account } = eventObj.payload;
+        log(`Account changed to: ${account.address}`);
         initAccount(account);
         (async () => {
           const proxy = await newMaker
@@ -70,22 +92,71 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
   useEffect(() => {
     if (maker) {
       const watcher = createWatcher(maker);
+      setWatcher(watcher);
       const batchSub = watcher.batch().subscribe(updates => {
         dispatch(batchActions(updates));
         // make entire list of updates available in a single reducer call
         dispatch({ type: 'watcherUpdates', payload: updates });
       });
-      const onNewBlockSub = watcher.onNewBlock(blockHeight =>
-        log(`Latest block height: ${blockHeight}`)
-      );
+      const txManagerSub = maker
+        .service('transactionManager')
+        .onTransactionUpdate((tx, state) => {
+          if (state === 'mined') {
+            const id = tx?.metadata?.id;
+            if (id) log(`Resetting event history cache for Vault #${id}`);
+            else log('Resetting event history cache');
+            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            maker.service('mcd:savings').resetEventHistoryCache();
+          }
+          log('Tx ' + state, tx.metadata);
+          setTxLastUpdate(Date.now());
+        });
       dispatch({ type: 'CLEAR_CONTRACT_STATE' });
       startWatcher(maker);
       return () => {
         batchSub.unsub();
-        onNewBlockSub.unsub();
+        txManagerSub.unsub();
       };
     }
   }, [maker, dispatch]);
+
+  useEffect(() => {
+    if (maker && viewedAddress) {
+      (async () => {
+        if (
+          viewedAddressData &&
+          viewedAddress !== viewedAddressData.viewedAddress
+        ) {
+          setViewedAddressData(null);
+        }
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(viewedAddress);
+        if (!proxy) {
+          setViewedAddressData({
+            cdps: [],
+            viewedAddress
+          });
+          return;
+        }
+
+        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+        const supportedCDPTypes = ilks.filter(ilk =>
+          ilk.networks.includes(network)
+        );
+
+        const supportedCdps = cdps.filter(cdp => {
+          return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
+        }, []);
+
+        supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
+        setViewedAddressData({
+          cdps: supportedCdps,
+          viewedAddress
+        });
+      })();
+    }
+  }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
 
   const checkForNewCdps = async (numTries = 5, timeout = 500) => {
     const proxy = await maker.service('proxy').getProxyAddress(account.address);
@@ -114,13 +185,8 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
     }
   };
 
-  const newTxListener = (transaction, txMessage) => {
+  const newTxListener = (transaction, txMessage) =>
     setTxReferences(current => [...current, [transaction, txMessage]]);
-
-    maker.service('transactionManager').listen(transaction, (tx, state) => {
-      setTxLastUpdate(Date.now());
-    });
-  };
 
   const resetTx = () => setTxReferences([]);
 
@@ -142,6 +208,7 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
     <MakerObjectContext.Provider
       value={{
         maker,
+        watcher,
         account,
         network,
         txLastUpdate,
@@ -149,10 +216,11 @@ function MakerProvider({ children, network, testchainId, backendEnv }) {
         transactions: txReferences,
         newTxListener,
         checkForNewCdps,
-        selectors
+        selectors,
+        viewedAddressData
       }}
     >
-      {children}
+      {maker ? children : <LoadingLayout />}
     </MakerObjectContext.Provider>
   );
 }

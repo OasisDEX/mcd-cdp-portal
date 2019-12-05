@@ -19,6 +19,7 @@ import { getSavingsBalance } from 'reducers/accounts';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
+import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
@@ -29,20 +30,23 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useActionState from 'hooks/useActionState';
 import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
+import useDsrEventHistory from 'hooks/useDsrEventHistory';
+import useModal from 'hooks/useModal';
+import useProxy from 'hooks/useProxy';
 
-import { ReactComponent as DaiLogo } from 'images/dai.svg';
-import useModal from '../hooks/useModal';
-import useProxy from '../hooks/useProxy';
+import { FeatureFlags } from 'utils/constants';
 
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const { maker, account } = useMaker();
+  const { maker, account, newTxListener, network } = useMaker();
   const [{ accounts, savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  const { hasProxy, proxyLoading } = useProxy();
+  const [earnings, setEarnings] = useState(MDAI(0));
+  const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
   const balance = useMemo(() => {
     return account
       ? getSavingsBalance(account.address, { accounts, savings })
@@ -86,16 +90,21 @@ function Save() {
   );
 
   const onStartDeposit = useCallback(() => {
-    return maker.service('mcd:savings').join(MDAI(depositAmount));
-  }, [maker, depositAmount]);
+    newTxListener(
+      maker.service('mcd:savings').join(MDAI(depositAmount)),
+      lang.verbs.depositing
+    );
+  }, [maker, depositAmount, newTxListener, lang]);
 
   const onStartWithdraw = useCallback(() => {
+    let txObject;
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(balance)) {
-      return maker.service('mcd:savings').exitAll();
+      txObject = maker.service('mcd:savings').exitAll();
     } else {
-      return maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-  }, [balance, maker, withdrawAmount, withdrawMaxFlag]);
+    newTxListener(txObject, lang.verbs.withdrawing);
+  }, [balance, maker, withdrawAmount, withdrawMaxFlag, newTxListener, lang]);
 
   const [
     onDeposit,
@@ -112,6 +121,20 @@ function Save() {
     withdrawError,
     withdrawReset
   ] = useActionState(onStartWithdraw);
+
+  const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
+    ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
+    : {};
+
+  useEffect(() => {
+    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
+    (async function() {
+      const etd = await maker
+        .service('mcd:savings')
+        .getEarningsToDate(proxyAddress);
+      setEarnings(etd);
+    })();
+  }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -168,7 +191,7 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" mb="s">
+          <Text.p t="h4" css={{ marginBottom: '26px' }}>
             {lang.save.get_started_title}
           </Text.p>
           <Button
@@ -183,7 +206,7 @@ function Save() {
             }
           >
             {lang.actions.get_started}
-          </Button>{' '}
+          </Button>
         </Flex>
       ) : (
         <>
@@ -200,10 +223,7 @@ function Save() {
                 <Card>
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
-                      {balance.toFixed(4)}{' '}
-                      <Text t="h5">
-                        <DaiLogo /> DAI
-                      </Text>
+                      {balance.toFixed(4)} <Text t="h5"> DAI</Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
@@ -212,6 +232,18 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
+                        {FeatureFlags.FF_DSR_ETD && (
+                          <Table.tr>
+                            <Table.td>
+                              <Text t="body">Dai earned</Text>
+                            </Table.td>
+                            <Table.td textAlign="right">
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
+                            </Table.td>
+                          </Table.tr>
+                        )}
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
@@ -237,28 +269,26 @@ function Save() {
                   <Grid px="l" py="m" gridRowGap="m">
                     <Text.p t="body">{lang.save.description}</Text.p>
 
-                    <div>
-                      <Text.p t="subheading" mb="s">
-                        {lang.save.deposit_amount}
-                      </Text.p>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0 DAI"
-                        value={depositAmount}
-                        onChange={onDepositAmountChange}
-                        error={depositAmountErrors}
-                        failureMessage={depositAmountErrors}
-                        after={<SetMax onClick={setDepositMax} />}
-                      />
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.deposit_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={depositAmount}
+                      onChange={onDepositAmountChange}
+                      error={depositAmountErrors}
+                      failureMessage={depositAmountErrors}
+                      after={<SetMax onClick={setDepositMax} />}
+                    />
 
-                      <Box my="s" mx="l">
-                        <ProxyAllowanceToggle
-                          token="MDAI"
-                          onlyShowAllowance={true}
-                        />
-                      </Box>
-                    </div>
+                    <Box my="xs" mx="xl" px="xl">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
+                      />
+                    </Box>
 
                     <Box justifySelf="center">
                       <Button
@@ -283,31 +313,29 @@ function Save() {
                   <Grid px="l" py="m" gridRowGap="m">
                     <Text.p t="body">{lang.save.description}</Text.p>
 
-                    <div>
-                      <Text.p t="subheading" mb="s">
-                        {lang.save.withdraw_amount}
-                      </Text.p>
-                      <Input
-                        type="number"
-                        min="0"
-                        placeholder="0 DAI"
-                        value={withdrawAmount}
-                        onChange={e => {
-                          if (withdrawMaxFlag) setWithdrawMaxFlag(false);
-                          onWithdrawAmountChange(e);
-                        }}
-                        error={withdrawAmountErrors}
-                        failureMessage={withdrawAmountErrors}
-                        after={<SetMax onClick={setWithdrawMax} />}
-                      />
+                    <Text.p t="subheading" mb="s">
+                      {lang.save.withdraw_amount}
+                    </Text.p>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder="0 DAI"
+                      value={withdrawAmount}
+                      onChange={e => {
+                        if (withdrawMaxFlag) setWithdrawMaxFlag(false);
+                        onWithdrawAmountChange(e);
+                      }}
+                      error={withdrawAmountErrors}
+                      failureMessage={withdrawAmountErrors}
+                      after={<SetMax onClick={setWithdrawMax} />}
+                    />
 
-                      <Box my="s" mx="l">
-                        <ProxyAllowanceToggle
-                          token="MDAI"
-                          onlyShowAllowance={true}
-                        />
-                      </Box>
-                    </div>
+                    <Box my="xs" mx="xl" px="xl">
+                      <ProxyAllowanceToggle
+                        token="MDAI"
+                        onlyShowAllowance={true}
+                      />
+                    </Box>
 
                     <Box justifySelf="center">
                       <Button
@@ -334,6 +362,15 @@ function Save() {
               </Grid>
             </Grid>
           </Grid>
+          {FeatureFlags.FF_DSR_HISTORY && (
+            <History
+              title={lang.save.tx_history}
+              rows={events}
+              network={network}
+              isLoading={isLoading}
+              emptyTableMessage={lang.save.start_earning}
+            />
+          )}
         </>
       )}
     </PageContentLayout>

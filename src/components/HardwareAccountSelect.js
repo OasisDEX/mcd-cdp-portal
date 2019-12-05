@@ -14,6 +14,7 @@ import { cutMiddle, copyToClipboard } from 'utils/ui';
 import { getColor } from 'styles/theme';
 import { CopyBtn, CopyBtnIcon } from './AddressTable';
 import { ReactComponent as Cross } from 'images/cross.svg';
+import { AccountTypes } from 'utils/constants';
 
 const ACCOUNTS_PER_PAGE = 5;
 const ACCOUNTS_TO_FETCH = 25;
@@ -21,8 +22,11 @@ const ACCOUNTS_TO_FETCH = 25;
 function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [offset, setOffset] = useState(1);
+  const accountsToFetch =
+    type === AccountTypes.LEDGER ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
   const { fetch, connect, accounts, pickAccount, fetching } = useHardwareWallet(
-    { type, accountsLength: ACCOUNTS_TO_FETCH, path }
+    { type, accountsLength: accountsToFetch, path }
   );
 
   useEffect(() => {
@@ -30,17 +34,17 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
       confirmAddress(address);
       onClose();
     }, onClose);
-  }, []);
+  }, [confirmAddress, connect, onClose]);
 
   const toPage = useCallback(
     async page => {
       if (accounts.length - page * ACCOUNTS_PER_PAGE <= 0) {
-        const offset = accounts.length / (page * ACCOUNTS_PER_PAGE);
         await fetch({ offset });
       }
+      setOffset(offset + 1);
       setPage(page);
     },
-    [accounts]
+    [accounts, fetch, offset]
   );
 
   const selectAddress = useCallback(
@@ -52,13 +56,13 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
 
   const onConfirm = useCallback(() => {
     pickAccount(selectedAddress);
-  });
+  }, [pickAccount, selectedAddress]);
 
   const start = page * ACCOUNTS_PER_PAGE;
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);
 
   return !renderedAccounts.length ? (
-    <Loader size="5rem" color={getColor('makerTeal')} />
+    <Loader size="5rem" color={getColor('spinner')} />
   ) : (
     <Grid gridRowGap="m" width={['100%', '53rem']}>
       <Flex justifyContent="flex-end">

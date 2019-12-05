@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -8,13 +8,8 @@ import {
   DSRDepositConfirm
 } from 'components/DSRDepositScreens';
 import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import { TxLifecycle } from 'utils/constants';
-
-const screens = [
-  ['Open Save Vault', props => <DSRDepositCheckProxy {...props} />],
-  ['Deposit Dai', props => <DSRDepositCreate {...props} />],
-  ['Confirmation', props => <DSRDepositConfirm {...props} />]
-];
 
 const initialState = {
   step: 0,
@@ -55,9 +50,28 @@ function reducer(state, action) {
 
 function DSRDeposit({ onClose, hideOnboarding }) {
   const { maker, account } = useMaker();
+  const { lang } = useLanguage();
   const [{ step, proxyAddress, depositAmount, txState }, dispatch] = useReducer(
     reducer,
     initialState
+  );
+
+  const screens = useMemo(
+    () => [
+      [
+        lang.dsr_deposit.screen_titles.open_vault,
+        props => <DSRDepositCheckProxy {...props} />
+      ],
+      [
+        lang.dsr_deposit.screen_titles.deposit_dai,
+        props => <DSRDepositCreate {...props} />
+      ],
+      [
+        lang.dsr_deposit.screen_titles.confirmation,
+        props => <DSRDepositConfirm {...props} />
+      ]
+    ],
+    [lang]
   );
 
   useEffect(() => {

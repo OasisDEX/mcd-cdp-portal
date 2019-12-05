@@ -1,20 +1,126 @@
- version: 2
- jobs:
-   build:
-     docker:
-       - image: levity/dapptools-node
-     steps:
-       - checkout
-       - run:
+version: 2
+jobs:
+  install:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
           name: Install dependencies
-          command: yarn
-       - run:
+          command: |
+            yarn install
+      - save_cache:
+          paths:
+            - node_modules
+            - ./node_modules
+          key: dependency-cache-{{ checksum "package.json" }}
+  test:
+    docker:
+      - image: makerdao/dapptools-node
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
           name: Run tests
           command: |
             source /home/circleci/setup-env.sh
             yarn test
-       - run:
+  deploy_staging:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
           name: Deploy to Now
           command: |
             npm i --no-save now
             ./scripts/now-deploy.sh
+  deploy_aws_staging:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Build production artifact
+          command: |
+            CI=false yarn build
+      - run:
+          name: Deploy to AWS staging
+          command: |
+            sudo apt update
+            sudo apt install python-pip
+            pip install --upgrade --user awscli
+            export PATH=$HOME/.local/bin:$PATH
+
+            aws configure set default.region $STAGE_AWS_REGION
+            aws configure set default.output json
+            aws configure set aws_access_key_id $STAGE_AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $STAGE_AWS_SECRET_ACCESS_KEY
+
+            aws s3 sync build s3://$STAGE_AWS_BUCKET_NAME/ --delete --exclude trade/*
+            aws cloudfront create-invalidation --distribution-id $STAGE_AWS_CF_ID --paths "/*"
+  deploy_prod:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Build production artifact
+          command: |
+            CI=false yarn build
+      - run:
+          name: Deploy to production
+          command: |
+            sudo apt update
+            sudo apt install python-pip
+            pip install --upgrade --user awscli
+            export PATH=$HOME/.local/bin:$PATH
+
+            aws configure set default.region $AWS_REGION
+            aws configure set default.output json
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+
+            aws s3 sync build s3://$AWS_BUCKET_NAME/ --delete --exclude trade/*
+            aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
+
+workflows:
+  version: 2
+  mainflow:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - deploy_staging:
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: master
+      - deploy_aws_staging:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop
+      - deploy_prod:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

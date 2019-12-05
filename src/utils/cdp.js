@@ -21,22 +21,22 @@ export function getLockedAndFreeCollateral(cdp) {
 export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
   const { liquidationRatio, debtCeiling } = ilkData;
   const collateralizationRatio = calcCollateralizationRatio({
-    deposited: parseFloat(gemsToLock),
+    deposited: gemsToLock,
     price: getUsdPrice(ilkData),
-    generated: parseFloat(daiToDraw)
+    generated: daiToDraw
   });
   const liquidationPrice = calcLiquidationPrice({
     liquidationRatio,
-    deposited: parseFloat(gemsToLock),
-    generated: parseFloat(daiToDraw),
+    deposited: gemsToLock,
+    generated: daiToDraw,
     price: getUsdPrice(ilkData)
   });
   const daiAvailable = calcDaiAvailable({
     liquidationRatio,
-    deposited: parseFloat(gemsToLock),
-    generated: parseFloat(daiToDraw),
+    deposited: gemsToLock,
+    generated: daiToDraw,
     price: getUsdPrice(ilkData),
-    debtCeiling: parseFloat(debtCeiling)
+    debtCeiling: debtCeiling
   });
 
   return {
@@ -76,8 +76,8 @@ export function cdpParamsAreValid(
   userGemBalance,
   ilkData
 ) {
-  // must not open empty cdp
-  if (!gemsToLock) return false; // we technically can do this, but TODO figure out if we should
+  // must not open empty cdp or cdp with no dai value
+  if (!gemsToLock || !daiToDraw) return false; // we technically can do this, but TODO figure out if we should
   // must lock collateral in order to draw dai
   if (!!daiToDraw && !gemsToLock) return false;
   // must be positive
@@ -93,6 +93,8 @@ export function cdpParamsAreValid(
   });
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
+  // must draw more dai than the dust limit
+  if (greaterThan(ilkData.dust, daiToDraw)) return false;
   return true;
 }
 

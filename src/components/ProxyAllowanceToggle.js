@@ -8,6 +8,7 @@ import ProxyToggle from './ProxyToggle';
 const ProxyAllowanceToggle = ({ token, onlyShowAllowance = false }) => {
   const {
     hasAllowance,
+    hasFetchedAllowance,
     setAllowance,
     allowanceLoading,
     startedWithoutAllowance
@@ -31,7 +32,9 @@ const ProxyAllowanceToggle = ({ token, onlyShowAllowance = false }) => {
     !initialProxyCheck &&
     (startedWithoutProxy || proxyLoading || !hasProxy);
   const showAllowance =
-    startedWithoutAllowance || allowanceLoading || !hasAllowance;
+    startedWithoutAllowance ||
+    allowanceLoading ||
+    (hasFetchedAllowance && !hasAllowance);
 
   const tokenDisplayName =
     token === 'MDAI' ? 'DAI' : token === 'MWETH' ? 'WETH' : token;

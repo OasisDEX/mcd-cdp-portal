@@ -22,6 +22,7 @@ import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
 import { Routes } from '../utils/constants';
 import { getMeasurement } from '../styles/theme';
+import lang from 'languages';
 
 const NavbarItemContent = ({ children, ...props }) => (
   <Flex
@@ -54,11 +55,7 @@ const AddCdpButton = ({ account, show, mobile }) => (
     onClick={() =>
       account && show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
     }
-    width={
-      mobile
-        ? `${getMeasurement('navbarItemWidth')}px`
-        : `${getMeasurement('navbarWidth')}px`
-    }
+    width={mobile && `${getMeasurement('navbarItemWidth')}px`}
     mx={mobile && '7px'}
     mt={mobile && '15px'}
     justifyContent="center"
@@ -97,7 +94,7 @@ const CDPList = memo(function({
 }) {
   const { url } = useCurrentRoute();
   const [listOpen, setListOpen] = useState(false);
-  const { maker, account } = useMaker();
+  const { maker, account, viewedAddressData } = useMaker();
   const [{ cdps, feeds }, dispatch] = useStore();
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
@@ -118,19 +115,18 @@ const CDPList = memo(function({
       setOverviewPath(`/${Routes.BORROW}/owner/${account.address}`);
       account.cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
       setNavbarCdps(account.cdps);
-    } else if (viewedAddress) {
+    } else if (viewedAddress && viewedAddressData) {
       setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
-      (async () => {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
-        if (!proxy) return;
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        cdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-        setNavbarCdps(cdps);
-      })();
+      setNavbarCdps(viewedAddressData.cdps);
     }
-  }, [maker, account, viewedAddress, dispatch, setOverviewPath]);
+  }, [
+    maker,
+    account,
+    viewedAddress,
+    dispatch,
+    setOverviewPath,
+    viewedAddressData
+  ]);
 
   useEffect(() => {
     if (account || viewedAddress) {
@@ -200,7 +196,7 @@ const CDPList = memo(function({
       : !active && account
       ? 'blueGrayDarker'
       : active && !account
-      ? 'teal.500'
+      ? 'white'
       : 'grey.200';
 
   return listOpen ? (
@@ -215,7 +211,7 @@ const CDPList = memo(function({
         </DirectionalButton>
       )}
       <Box
-        bg={account ? 'blueGrayDarker' : 'white'}
+        bg={account ? 'blueGrayDarker' : 'grey.200'}
         height="100%"
         width={mobile ? '100vw' : `${getMeasurement('navbarWidth')}px`}
         px={mobile ? '15px' : '5px'}
@@ -242,7 +238,7 @@ const CDPList = memo(function({
               fontWeight="bold"
               color={account ? 'white' : 'darkPurple'}
             >
-              Overview
+              {lang.overview}
             </Text>
           </NavbarItem>
           {navbarCdps.map((cdp, idx) => {
@@ -280,7 +276,7 @@ const CDPList = memo(function({
               </NavbarItem>
             );
           })}
-          {account && mobile && (
+          {account && (
             <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
         </CdpContainer>
@@ -293,9 +289,6 @@ const CDPList = memo(function({
         >
           <NavDown />
         </DirectionalButton>
-      )}
-      {account && !mobile && (
-        <AddCdpButton account={account} show={show} mobile={mobile} />
       )}
     </Fragment>
   ) : null;

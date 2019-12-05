@@ -5,6 +5,7 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from '../../hooks/useMaker';
 import { calcCDPParams } from '../../utils/cdp';
+import { subtract, greaterThan } from '../../utils/bignumber';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
@@ -19,8 +20,8 @@ import {
   formatCollateralizationRatio,
   formatLiquidationPrice
 } from '../../utils/ui';
-
 import SetMax from 'components/SetMax';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Withdraw = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -30,7 +31,7 @@ const Withdraw = ({ cdpId, reset }) => {
 
   const [storeState] = useStore();
   const cdp = getCdp(cdpId, storeState);
-
+  const { liquidationRatio } = cdp;
   const collateralAvailableAmount = getCollateralAvailableAmount(cdp, false);
   const collateralPrice = getCollateralPrice(cdp);
   const collateralAmount = getCollateralAmount(cdp, false);
@@ -52,14 +53,14 @@ const Withdraw = ({ cdpId, reset }) => {
 
   const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
-    amount && parseFloat(amount) > collateralAvailableAmount;
+    amount && greaterThan(amount, collateralAvailableAmount);
 
   useEffect(() => {
     let val = parseFloat(amount);
     val = isNaN(val) ? 0 : val;
     const { liquidationPrice, collateralizationRatio } = calcCDPParams({
       ilkData: cdp,
-      gemsToLock: collateralAmount - val,
+      gemsToLock: subtract(collateralAmount, val),
       daiToDraw: debtAmount
     });
     setLiquidationPrice(liquidationPrice);
@@ -70,7 +71,7 @@ const Withdraw = ({ cdpId, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(parseFloat(amount))),
+        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(amount)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();
@@ -96,6 +97,15 @@ const Withdraw = ({ cdpId, reset }) => {
             ) : null
           }
           failureMessage={amountErrors}
+        />
+        <RatioDisplay
+          type={RatioDisplayTypes.CARD}
+          ratio={collateralizationRatio}
+          ilkLiqRatio={liquidationRatio}
+          text={lang.action_sidebar.withdraw_warning}
+          onlyWarnings={true}
+          show={amount !== '' && amount > 0 && !undercollateralized}
+          textAlign="center"
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
@@ -125,9 +135,13 @@ const Withdraw = ({ cdpId, reset }) => {
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <Text color={undercollateralized ? 'orange.600' : null}>
-              {formatCollateralizationRatio(collateralizationRatio)}
-            </Text>
+            <RatioDisplay
+              type={RatioDisplayTypes.TEXT}
+              ratio={collateralizationRatio}
+              ilkLiqRatio={liquidationRatio}
+              text={formatCollateralizationRatio(collateralizationRatio)}
+              show={amount !== '' && amount > 0 && !undercollateralized}
+            />
           }
         />
       </InfoContainer>

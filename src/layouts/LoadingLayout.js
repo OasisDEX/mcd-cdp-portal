@@ -15,7 +15,7 @@ const LoadingLayout = ({ text, size = '4rem', background = '#fff' }) => (
     <div>
       <Text.h3 textAlign="center">{text}</Text.h3>
       <Flex py="m" justifyContent="center">
-        <Loader size={size} color={getColor('makerTeal')} bg={background} />
+        <Loader size={size} color={getColor('spinner')} bg={background} />
       </Flex>
     </div>
   </Flex>

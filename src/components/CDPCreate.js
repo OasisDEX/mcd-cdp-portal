@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -9,14 +9,8 @@ import {
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
 import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import { TxLifecycle } from 'utils/constants';
-
-const screens = [
-  ['Select Collateral', props => <CDPCreateSelectCollateral {...props} />],
-  ['Proxy Setup', props => <CDPCreateSetAllowance {...props} />],
-  ['Generate Dai', props => <CDPCreateDeposit {...props} />],
-  ['Confirmation', props => <CDPCreateConfirmCDP {...props} />]
-];
 
 const initialState = {
   step: 0,
@@ -86,10 +80,33 @@ function reducer(state, action) {
 
 function CDPCreate({ onClose }) {
   const { maker, account } = useMaker();
+  const { lang } = useLanguage();
   const [
     { step, selectedIlk, proxyAddress, ...cdpParams },
     dispatch
   ] = useReducer(reducer, initialState);
+
+  const screens = useMemo(
+    () => [
+      [
+        lang.cdp_create.screen_titles.select_collateral,
+        props => <CDPCreateSelectCollateral {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.vault_management,
+        props => <CDPCreateSetAllowance {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.generate_dai,
+        props => <CDPCreateDeposit {...props} />
+      ],
+      [
+        lang.cdp_create.screen_titles.confirmation,
+        props => <CDPCreateConfirmCDP {...props} />
+      ]
+    ],
+    [lang]
+  );
 
   useEffect(() => {
     const checkProxy = async () => {

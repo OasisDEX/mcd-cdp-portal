@@ -1,5 +1,6 @@
 import { themeLight } from '@makerdao/ui-components-core';
-const { colors, typography } = themeLight;
+import { SAFETY_LEVELS } from 'utils/constants';
+const { colors, typography, space, fontSizes } = themeLight;
 
 const theme = {
   ...themeLight,
@@ -8,6 +9,7 @@ const theme = {
     xl: '1150px'
   },
   colors: {
+    spinner: '#9FAFB9',
     blackLight: '#222',
     blackLighter: '#383838',
     blueGray: '#1E2C37',
@@ -23,7 +25,7 @@ const theme = {
     },
 
     smallCaps: {
-      fontSize: '1.2rem',
+      fontSize: '1.1rem',
       textTransform: 'uppercase',
       letterSpacing: '0.3px',
       lineHeight: '22px'
@@ -37,6 +39,15 @@ const theme = {
     mobileNavHeight: 80,
     navbarItemWidth: 70,
     navbarItemHeight: 55
+  },
+  space: {
+    ...space,
+    s2: 10,
+    sm: 16
+  },
+  fontSizes: {
+    ...fontSizes,
+    s2: 13
   }
 };
 
@@ -65,4 +76,27 @@ export function getSpace(key) {
 
 export function getColor(key) {
   return get(theme.colors, key);
+}
+
+export function getSafetyLevels({ level, overrides = {} }) {
+  const levels = {
+    textColor: '700',
+    backgroundColor: '100',
+    borderColor: '400'
+  };
+  const { DANGER, WARNING, NEUTRAL, SAFE } = SAFETY_LEVELS;
+  const colorPairings = {
+    [DANGER]: 'orange',
+    [WARNING]: 'yellow',
+    [NEUTRAL]: 'slate',
+    [SAFE]: 'teal'
+  };
+
+  return Object.entries(levels).reduce(
+    (acc, [k, v]) => ({
+      ...acc,
+      [k]: overrides[k] ? overrides[k] : `${colorPairings[level]}.${v}`
+    }),
+    {}
+  );
 }

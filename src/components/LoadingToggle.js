@@ -24,7 +24,7 @@ function LoadingToggle({
         <Loader
           display="inline-block"
           size="1.8rem"
-          color={getColor('makerTeal')}
+          color={getColor('spinner')}
           mr="xs"
           justifySelf="end"
         />

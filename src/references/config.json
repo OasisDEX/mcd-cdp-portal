@@ -6,6 +6,10 @@
     "999": "http://localhost:2000",
     "1337": "http://localhost:2000"
   },
+  "wsRpcUrls": {
+    "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
+  },
   "networkNames": {
     "1": "mainnet",
     "42": "kovan",

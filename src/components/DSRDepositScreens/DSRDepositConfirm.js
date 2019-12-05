@@ -117,8 +117,12 @@ const DSRDepositWait = ({ hash, onClose, txState }) => {
 
       const waitTimeText =
         waitTime < 1
-          ? `${seconds} seconds`
-          : `${minutes} minute${minutes === 1 ? '' : 's'}`;
+          ? `${seconds} ${lang.cdp_create.seconds_wait_time}`
+          : `${minutes} ${
+              minutes === 1
+                ? lang.cdp_create.minutes_wait_time_singular
+                : lang.minutes_wait_time_plural
+            }`;
 
       setWaitTime(waitTimeText);
     })();
@@ -151,7 +155,7 @@ const DSRDepositWait = ({ hash, onClose, txState }) => {
           <Box my="l" textAlign="center">
             {isTestchain ? (
               <Grid gridRowGap="s">
-                <Text>Transaction hash</Text>
+                <Text>{lang.cdp_create.tx_hash}</Text>
                 <Text>{hash}</Text>
               </Grid>
             ) : (
@@ -159,13 +163,13 @@ const DSRDepositWait = ({ hash, onClose, txState }) => {
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
               >
-                View transaction details <ExternalLinkIcon />
+                {lang.cdp_create.view_tx_details} <ExternalLinkIcon />
               </Link>
             )}
           </Box>
           <Flex textAlign="center" justifyContent="center">
             <Button onClick={onClose} width="145px">
-              Exit
+              {lang.exit}
             </Button>
           </Flex>
         </Grid>
