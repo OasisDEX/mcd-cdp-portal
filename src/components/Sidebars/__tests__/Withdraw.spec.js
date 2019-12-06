@@ -22,13 +22,14 @@ afterAll(() => restoreSnapshot(snapshotData));
 
 afterEach(cleanup);
 
+const initialBat = '303.123456789012345678';
 const setupMockState = state => {
   const newState = {
     ...state,
     cdps: {
       '1': {
         ilk: 'BAT-A',
-        ink: '10',
+        ink: initialBat,
         art: '0',
         currency: {
           symbol: 'BAT'
@@ -45,26 +46,49 @@ const setupMockState = state => {
 test('basic rendering', async () => {
   const { getByText } = render(<Withdraw cdpId="1" />, setupMockState);
 
-  await waitForElement(() => getByText(/10 BAT/));
+  await waitForElement(() => getByText(/40 BAT\/USD/));
 
   getByText('Withdraw BAT');
 });
 
 test('clicking SetMax adds max collateral available to input', async () => {
-  const { getByText } = render(<Withdraw cdpId="1" />, setupMockState);
+  const { getByText, getByRole } = render(
+    <Withdraw cdpId="1" />,
+    setupMockState
+  );
 
-  await waitForElement(() => getByText(/10 BAT/));
+  // BAT amount is rounded correctly in UI
+  await waitForElement(() => getByText(/303.123456 BAT/));
 
   const setMax = await waitForElement(() => getByText('Set max'));
-  const input = getByText((text, el) => el.nodeName === 'INPUT');
+  const input = getByRole('textbox');
 
   expect(input.value).toBe('');
-  expect(setMax).toHaveTextContent(lang.set_max);
 
   act(() => {
     fireEvent.click(setMax);
   });
+  // input gets full amount of bat
+  expect(input.value).toBe(initialBat);
+}, 20000);
 
-  expect(setMax).toHaveTextContent(lang.set_max);
-  expect(input.value).toBe('10');
+test('input validation', async () => {
+  const { getByText, getByRole } = render(
+    <Withdraw cdpId="1" />,
+    setupMockState
+  );
+  await waitForElement(() => getByText(/303.123456 BAT/));
+  const input = getByRole('textbox');
+
+  // can't enter more collateral than available
+  fireEvent.change(input, { target: { value: '500' } });
+  await waitForElement(() => getByText(/Vault below liquidation threshold/));
+
+  // must be greater than 0
+  fireEvent.change(input, { target: { value: '0' } });
+  await waitForElement(() => getByText(/Amount must be greater than 0/));
+
+  // must be a number
+  fireEvent.change(input, { target: { value: 'abc' } });
+  expect(input.value).toBe('');
 }, 20000);
