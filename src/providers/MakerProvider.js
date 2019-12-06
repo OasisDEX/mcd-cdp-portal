@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import { useNavigation } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
@@ -14,6 +14,10 @@ import {
   updateWatcherWithAccount
 } from '../watch';
 import { batchActions } from '../utils/redux';
+import {
+  checkEthereumProvider,
+  browserEthereumProviderAddress
+} from '../utils/ethereum';
 import LoadingLayout from '../layouts/LoadingLayout';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
@@ -41,6 +45,49 @@ function MakerProvider({
     setAccount({ ...account, cdps: [] });
   };
 
+  const connectBrowserProvider = useCallback(async () => {
+    const networkId = maker.service('web3').networkId();
+    const browserProvider = await checkEthereumProvider();
+
+    function getMatchedAccount(address) {
+      return maker
+        .listAccounts()
+        .find(acc => acc.address.toUpperCase() === address.toUpperCase());
+    }
+
+    if (browserProvider.networkId !== networkId)
+      throw new Error(
+        'browser ethereum provider and URL network param do not match.'
+      );
+
+    if (
+      !browserProvider.address ||
+      !browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/)
+    )
+      throw new Error(
+        'browser ethereum provider providing incorrect or non-existent address'
+      );
+
+    let existingAccount;
+    if (maker.service('accounts').hasAccount()) {
+      existingAccount = getMatchedAccount(browserProvider.address);
+      if (existingAccount) {
+        log(`Using existing SDK account: ${existingAccount.address}`);
+        maker.useAccountWithAddress(existingAccount.address);
+      }
+    }
+    if (!existingAccount) {
+      log('Adding new browser account to SDK');
+      await maker.addAccount({
+        type: 'browser',
+        autoSwitch: true
+      });
+    }
+
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
+  }, [maker]);
+
   useEffect(() => {
     (async () => {
       const newMaker = await instantiateMaker({
@@ -49,76 +96,92 @@ function MakerProvider({
         backendEnv,
         navigation
       });
-      if (newMaker.service('accounts').hasAccount()) {
-        initAccount(newMaker.currentAccount());
-        (async () => {
-          const { address } = newMaker.currentAccount();
-          log(`Found initial account: ${address}`);
-          const proxy = await newMaker
-            .service('proxy')
-            .getProxyAddress(address);
-          if (proxy) log(`Found proxy address: ${proxy}`);
-          else log('No proxy found');
-          updateWatcherWithAccount(newMaker, address, proxy);
-        })();
-      }
       setMaker(newMaker);
-
-      newMaker.on('accounts/CHANGE', eventObj => {
-        const { account } = eventObj.payload;
-        log(`Account changed to: ${account.address}`);
-        initAccount(account);
-        (async () => {
-          const proxy = await newMaker
-            .service('proxy')
-            .getProxyAddress(account.address);
-          if (proxy) {
-            log(`Found proxy address: ${proxy}`);
-            const cdpIds = await newMaker
-              .service('mcd:cdpManager')
-              .getCdpIds(proxy);
-            setAccount({ ...account, cdps: cdpIds });
-          } else {
-            log('No proxy found');
-          }
-          updateWatcherWithAccount(newMaker, account.address, proxy);
-        })();
-      });
     })();
     // leaving maker out of the deps because it would create an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backendEnv, dispatch, network, testchainId]);
+  }, [backendEnv, network, testchainId]);
 
   useEffect(() => {
-    if (maker) {
-      const watcher = createWatcher(maker);
-      setWatcher(watcher);
-      const batchSub = watcher.batch().subscribe(updates => {
-        dispatch(batchActions(updates));
-        // make entire list of updates available in a single reducer call
-        dispatch({ type: 'watcherUpdates', payload: updates });
-      });
-      const txManagerSub = maker
-        .service('transactionManager')
-        .onTransactionUpdate((tx, state) => {
-          if (state === 'mined') {
-            const id = tx?.metadata?.id;
-            if (id) log(`Resetting event history cache for Vault #${id}`);
-            else log('Resetting event history cache');
-            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
-            maker.service('mcd:savings').resetEventHistoryCache();
-          }
-          log('Tx ' + state, tx.metadata);
-          setTxLastUpdate(Date.now());
-        });
-      dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-      startWatcher(maker);
-      return () => {
-        batchSub.unsub();
-        txManagerSub.unsub();
-      };
+    if (!maker) return;
+    if (maker.service('accounts').hasAccount()) {
+      initAccount(maker.currentAccount());
+      (async () => {
+        const { address } = maker.currentAccount();
+        log(`Found initial account: ${address}`);
+        const proxy = await maker.service('proxy').getProxyAddress(address);
+        if (proxy) log(`Found proxy address: ${proxy}`);
+        else log('No proxy found');
+        updateWatcherWithAccount(maker, address, proxy);
+      })();
+    } else {
+      // Reconnect browser provider if active address matches last connected
+      const lastConnectedWalletType = localStorage.getItem(
+        'lastConnectedWalletType'
+      );
+      if (lastConnectedWalletType === 'browser') {
+        const activeAddress = browserEthereumProviderAddress();
+        const lastAddress = localStorage.getItem('lastConnectedWalletAddress');
+        if (activeAddress === lastAddress) {
+          log(
+            `Reconnecting address: ${activeAddress} (matches last connected wallet address)`
+          );
+          connectBrowserProvider();
+        }
+      }
     }
-  }, [maker, dispatch]);
+
+    maker.on('accounts/CHANGE', eventObj => {
+      const { account } = eventObj.payload;
+      localStorage.setItem('lastConnectedWalletType', account.type);
+      localStorage.setItem(
+        'lastConnectedWalletAddress',
+        account.address.toLowerCase()
+      );
+      log(`Account changed to: ${account.address}`);
+      initAccount(account);
+      (async () => {
+        const proxy = await maker
+          .service('proxy')
+          .getProxyAddress(account.address);
+        if (proxy) {
+          log(`Found proxy address: ${proxy}`);
+          const cdpIds = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+          setAccount({ ...account, cdps: cdpIds });
+        } else {
+          log('No proxy found');
+        }
+        updateWatcherWithAccount(maker, account.address, proxy);
+      })();
+    });
+
+    const watcher = createWatcher(maker);
+    setWatcher(watcher);
+    const batchSub = watcher.batch().subscribe(updates => {
+      dispatch(batchActions(updates));
+      // make entire list of updates available in a single reducer call
+      dispatch({ type: 'watcherUpdates', payload: updates });
+    });
+    const txManagerSub = maker
+      .service('transactionManager')
+      .onTransactionUpdate((tx, state) => {
+        if (state === 'mined') {
+          const id = tx?.metadata?.id;
+          if (id) log(`Resetting event history cache for Vault #${id}`);
+          else log('Resetting event history cache');
+          maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+          maker.service('mcd:savings').resetEventHistoryCache();
+        }
+        log('Tx ' + state, tx.metadata);
+        setTxLastUpdate(Date.now());
+      });
+    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+    startWatcher(maker);
+    return () => {
+      batchSub.unsub();
+      txManagerSub.unsub();
+    };
+  }, [maker, dispatch, connectBrowserProvider]);
 
   useEffect(() => {
     if (maker && viewedAddress) {
@@ -217,7 +280,8 @@ function MakerProvider({
         newTxListener,
         checkForNewCdps,
         selectors,
-        viewedAddressData
+        viewedAddressData,
+        connectBrowserProvider
       }}
     >
       {maker ? children : <LoadingLayout />}

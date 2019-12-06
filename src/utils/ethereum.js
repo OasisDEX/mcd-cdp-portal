@@ -80,6 +80,29 @@ export async function checkEthereumProvider() {
   return { networkId, address };
 }
 
+export function browserEthereumProviderAddress() {
+  let provider;
+  if (typeof window.ethereum !== 'undefined') {
+    provider = window.ethereum;
+  } else if (window.web3) {
+    provider = window.web3.currentProvider;
+  } else return null;
+  if (typeof provider.selectedAddress === 'string')
+    return provider.selectedAddress.toLowerCase();
+  else return null;
+}
+
+export async function isEthereumProviderApproved() {
+  let provider;
+  if (typeof window.ethereum !== 'undefined') {
+    provider = window.ethereum;
+  } else if (window.web3) {
+    provider = window.web3.currentProvider;
+  } else return false;
+  if (provider.selectedAddress) return true;
+  else return false;
+}
+
 export const calculateGasCost = async (maker, gasLimit = 21000) => {
   const _gasLimit = BigNumber(gasLimit);
   const gasPrice = await maker.service('gas').getGasPrice('fast');
