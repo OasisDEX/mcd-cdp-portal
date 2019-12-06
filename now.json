@@ -12,9 +12,6 @@
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
   ],
-  "github": {
-    "enabled": false
-  },
   "env": {
     "BLANK_SECRET": "@blank-secret"
   }
