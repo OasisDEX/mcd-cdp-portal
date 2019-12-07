@@ -24,13 +24,9 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const accountsToFetch =
     type === AccountTypes.LEDGER ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
-  const {
-    fetchMore,
-    connect,
-    accounts,
-    pickAccount,
-    fetching
-  } = useHardwareWallet({ type, accountsLength: accountsToFetch, path });
+  const { fetch, connect, accounts, pickAccount, fetching } = useHardwareWallet(
+    { type, accountsLength: accountsToFetch, path }
+  );
 
   useEffect(() => {
     connect().then(address => {
@@ -41,10 +37,13 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
 
   const toPage = useCallback(
     async page => {
-      if (accounts.length <= page * ACCOUNTS_PER_PAGE) await fetchMore();
+      if (accounts.length - page * ACCOUNTS_PER_PAGE <= 0) {
+        const offset = accounts.length / (page * ACCOUNTS_PER_PAGE);
+        await fetch({ offset });
+      }
       setPage(page);
     },
-    [accounts, fetchMore]
+    [accounts, fetch]
   );
 
   const selectAddress = useCallback(
