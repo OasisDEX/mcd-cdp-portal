@@ -17,15 +17,18 @@ export function formatLiquidationPrice(price, symbol) {
 
 function getSeparator(locale, separatorType) {
   const numberWithGroupAndDecimalSeparator = 1000.1;
-  return Intl.NumberFormat(locale)
-    .formatToParts(numberWithGroupAndDecimalSeparator)
-    .find(part => part.type === separatorType)?.value;
+  const numFormat = Intl.NumberFormat(locale);
+  return numFormat.formatToParts
+    ? numFormat
+        .formatToParts(numberWithGroupAndDecimalSeparator)
+        .find(part => part.type === separatorType)?.value
+    : null;
 }
 
 export function prettifyCurrency(locale, num = null) {
   if (num === null) return null;
   return new BigNumber(num).toFormat(null, BigNumber.ROUND_CEIL, {
-    decimalSeparator: getSeparator(locale, 'decimal'),
+    decimalSeparator: getSeparator(locale, 'decimal') || '.',
     groupSeparator: getSeparator(locale, 'group'),
     groupSize: 3
   });
