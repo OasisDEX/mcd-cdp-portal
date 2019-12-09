@@ -177,7 +177,8 @@ function MakerProvider({
         log('Tx ' + state, tx.metadata);
         setTxLastUpdate(Date.now());
       });
-    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
+
+    if (!_preventStateResets_) dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     startWatcher(maker);
     return () => {
       batchSub.unsub();
@@ -294,5 +295,12 @@ function MakerProvider({
 MakerProvider.propTypes = {
   network: PropTypes.string.isRequired
 };
+
+let _preventStateResets_ = false;
+
+// useful for testing environments where we don't want the stubbed state to be reset
+export function preventStateResets() {
+  _preventStateResets_ = true;
+}
 
 export default MakerProvider;
