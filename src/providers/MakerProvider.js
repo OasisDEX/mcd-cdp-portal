@@ -97,6 +97,7 @@ function MakerProvider({
         navigation
       });
       setMaker(newMaker);
+      log('Initialized maker instance');
     })();
     // leaving maker out of the deps because it would create an infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,25 +117,26 @@ function MakerProvider({
       })();
     } else {
       // Reconnect browser provider if active address matches last connected
-      const lastConnectedWalletType = localStorage.getItem(
-        'lastConnectedWalletType'
-      );
-      if (lastConnectedWalletType === 'browser') {
-        const activeAddress = browserEthereumProviderAddress();
-        const lastAddress = localStorage.getItem('lastConnectedWalletAddress');
-        if (activeAddress === lastAddress) {
-          log(
-            `Reconnecting address: ${activeAddress} (matches last connected wallet address)`
-          );
-          connectBrowserProvider();
-        }
+      const lastType = sessionStorage.getItem('lastConnectedWalletType');
+      if (lastType === 'browser') {
+        const lastAddress = sessionStorage.getItem(
+          'lastConnectedWalletAddress'
+        );
+        browserEthereumProviderAddress().then(activeAddress => {
+          if (activeAddress === lastAddress) {
+            log(
+              `Reconnecting address: ${activeAddress} (matches last connected wallet address)`
+            );
+            connectBrowserProvider();
+          }
+        });
       }
     }
 
     maker.on('accounts/CHANGE', eventObj => {
       const { account } = eventObj.payload;
-      localStorage.setItem('lastConnectedWalletType', account.type);
-      localStorage.setItem(
+      sessionStorage.setItem('lastConnectedWalletType', account.type);
+      sessionStorage.setItem(
         'lastConnectedWalletAddress',
         account.address.toLowerCase()
       );

@@ -80,16 +80,21 @@ export async function checkEthereumProvider() {
   return { networkId, address };
 }
 
-export function browserEthereumProviderAddress() {
+export async function browserEthereumProviderAddress() {
   let provider;
   if (typeof window.ethereum !== 'undefined') {
     provider = window.ethereum;
   } else if (window.web3) {
     provider = window.web3.currentProvider;
   } else return null;
-  if (typeof provider.selectedAddress === 'string')
+  if (
+    provider.selectedAddress &&
+    typeof provider.selectedAddress === 'string'
+  ) {
     return provider.selectedAddress.toLowerCase();
-  else return null;
+  }
+  const addresses = await new Web3(provider).eth.getAccounts();
+  return addresses.length > 0 ? addresses[0].toLowerCase() : null;
 }
 
 export async function isEthereumProviderApproved() {
@@ -100,7 +105,8 @@ export async function isEthereumProviderApproved() {
     provider = window.web3.currentProvider;
   } else return false;
   if (provider.selectedAddress) return true;
-  else return false;
+  const addresses = await new Web3(provider).eth.getAccounts();
+  return addresses.length > 0 ? true : false;
 }
 
 export const calculateGasCost = async (maker, gasLimit = 21000) => {
