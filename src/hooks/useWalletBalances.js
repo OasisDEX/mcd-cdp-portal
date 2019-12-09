@@ -5,8 +5,12 @@ const useWalletBalances = () => {
   const [{ accounts }] = useStore();
   const { account } = useMaker();
 
-  return account && accounts && accounts[account.address]
-    ? accounts[account.address].balances
+  const walletConnected = account && accounts && accounts[account.address];
+  return walletConnected
+    ? {
+        ...accounts[account.address].balances,
+        DSR: accounts[account.address].savings
+      }
     : {};
 };
 
