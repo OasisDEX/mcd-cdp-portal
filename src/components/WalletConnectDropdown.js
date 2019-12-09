@@ -53,6 +53,7 @@ const WalletConnectDropdown = ({
   }
 
   useEffect(() => {
+    if (!account) return;
     const accounts = maker.listAccounts();
     const otherAccounts = accounts.filter(
       a =>
