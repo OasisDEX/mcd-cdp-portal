@@ -28,19 +28,9 @@ const reducer = (state, action) => {
     case 'connect-start':
       return initialState;
     case 'fetch-start':
-      return {
-        ...state,
-        fetching: true
-      };
+      return { ...state, fetching: true };
     case 'connect-success':
-      return {
-        ...state,
-        fetching: false,
-        chooseCallbacks: {
-          ...state.chooseCallbacks,
-          0: payload.chooseCallback
-        }
-      };
+      return { ...state, fetching: false };
     case 'fetch-success': {
       const pagesFetched = state.pagesFetched + 1;
       return {
@@ -50,7 +40,7 @@ const reducer = (state, action) => {
         accounts: [...state.accounts, ...payload.accounts],
         chooseCallbacks: {
           ...state.chooseCallbacks,
-          [pagesFetched-1]: payload.chooseCallback
+          [pagesFetched - 1]: payload.chooseCallback
         }
       };
     }
@@ -134,8 +124,11 @@ function useHardwareWallet({
       accountsLength,
       choose: async (addresses, chooseCallback) => {
         const accounts = await computeAddressBalances(addresses);
-        dispatch({ type: 'connect-success', payload: { chooseCallback } });
-        dispatch({ type: 'fetch-success', payload: { chooseCallback, accounts, offset: 0 } });
+        dispatch({ type: 'connect-success' });
+        dispatch({
+          type: 'fetch-success',
+          payload: { chooseCallback, accounts, offset: 0 }
+        });
       }
     });
   }, [accountsLength, maker, path, type]);
