@@ -8,13 +8,15 @@ const useWalletBalances = () => {
   const [{ accounts, savings }] = useStore();
   const { account } = useMaker();
 
+  const walletConnected =
+    account && accounts && savings && accounts[account.address];
+
   const dsrBalance = useMemo(() => {
-    return account
+    return walletConnected
       ? getSavingsBalance(account.address, { accounts, savings })
       : 0;
   }, [account, accounts, savings]);
 
-  const walletConnected = account && accounts && accounts[account.address];
   return walletConnected
     ? {
         ...accounts[account.address].balances,
