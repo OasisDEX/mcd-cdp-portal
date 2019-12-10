@@ -40,18 +40,14 @@ function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
   const { maker, account, newTxListener, network } = useMaker();
-  const [{ accounts, savings }] = useStore();
+  const [{ savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const [earnings, setEarnings] = useState(MDAI(0));
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
 
-  const balance = useMemo(() => {
-    return account
-      ? getSavingsBalance(account.address, { accounts, savings })
-      : 0;
-  }, [account, accounts, savings]);
+  const balance = balances.DSR;
 
   const [
     depositAmount,
@@ -238,7 +234,9 @@ function Save() {
                               <Text t="body">Dai earned</Text>
                             </Table.td>
                             <Table.td textAlign="right">
-                              <Text t="body">{earnings.toFixed(4)}</Text>
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
                             </Table.td>
                           </Table.tr>
                         )}
