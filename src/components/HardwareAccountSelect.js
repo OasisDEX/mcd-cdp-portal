@@ -34,6 +34,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
 
   useEffect(() => {
     connect().then(address => {
+      console.log('connect resolved');
       confirmAddress(address);
       onClose();
     }, onClose);

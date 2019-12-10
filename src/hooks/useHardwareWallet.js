@@ -163,6 +163,9 @@ function useHardwareWallet({
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
   function pickAccount(address, page) {
+    for (let i = 0; i < state.pagesFetched; i++){
+      if (i !== page) state.chooseCallbacks[i]('error');
+    }
     return state.chooseCallbacks[page](null, address);
   }
 
