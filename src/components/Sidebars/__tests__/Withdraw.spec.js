@@ -6,42 +6,66 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { createCurrencyRatio } from '@makerdao/currency';
 
 import Withdraw from '../Withdraw';
 import { takeSnapshot, restoreSnapshot } from '@makerdao/test-helpers';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
+import useMaker from '../../../hooks/useMaker';
 
 let snapshotData;
 
+const ILK = 'BAT-A';
+const INITIAL_BAT = '300.123456789012345678';
+const INITIAL_ART = '0';
+
+const RATE = '1.000967514019988230';
+const PRICE = createCurrencyRatio(USD, BAT)('0.24');
+const LIQUIDATION_RATIO = '200';
+
+const originalConsoleError = console.error;
+
 beforeAll(async () => {
   snapshotData = await takeSnapshot();
+  console.error = jest.fn();
 });
 
-afterAll(() => restoreSnapshot(snapshotData));
+afterAll(() => {
+  console.error = originalConsoleError;
+  restoreSnapshot(snapshotData);
+});
 
 afterEach(cleanup);
 
-const initialBat = '303.123456789012345678';
 const setupMockState = state => {
   const newState = {
     ...state,
     cdps: {
-      '1': {
-        ilk: 'BAT-A',
-        ink: initialBat,
-        art: '0',
-        currency: {
-          symbol: 'BAT'
-        },
-        rate: '1.5',
-        liquidationRatio: '150'
+      1: {
+        ilk: ILK,
+        ink: INITIAL_BAT,
+        art: INITIAL_ART
       }
-    }
+    },
+    feeds: [
+      {
+        key: ILK,
+        currency: BAT,
+        rate: RATE,
+        feedValueUSD: PRICE,
+        liquidationRatio: LIQUIDATION_RATIO
+      }
+    ]
   };
-  newState.feeds.find(i => i.key === 'BAT-A').rate = '1.5';
   return newState;
 };
+
+// so that dispatched actions don't affect the mocked state
+const identityReducer = x => x;
+const renderWithMockedStore = component =>
+  render(component, setupMockState, identityReducer);
 
 test('basic rendering', async () => {
   const { getByText } = render(<Withdraw cdpId="1" />, setupMockState);
@@ -58,7 +82,7 @@ test('clicking SetMax adds max collateral available to input', async () => {
   );
 
   // BAT amount is rounded correctly in UI
-  await waitForElement(() => getByText(/303.123456 BAT/));
+  await waitForElement(() => getByText(/300.123456 BAT/));
 
   const setMax = await waitForElement(() => getByText('Set max'));
   const input = getByRole('textbox');
@@ -69,15 +93,15 @@ test('clicking SetMax adds max collateral available to input', async () => {
     fireEvent.click(setMax);
   });
   // input gets full amount of bat
-  expect(input.value).toBe(initialBat);
-}, 20000);
+  expect(input.value).toBe(INITIAL_BAT);
+});
 
 test('input validation', async () => {
   const { getByText, getByRole } = render(
     <Withdraw cdpId="1" />,
     setupMockState
   );
-  await waitForElement(() => getByText(/303.123456 BAT/));
+  await waitForElement(() => getByText(/300.123456 BAT/));
   const input = getByRole('textbox');
 
   // can't enter more collateral than available
@@ -91,4 +115,37 @@ test('input validation', async () => {
   // must be a number
   fireEvent.change(input, { target: { value: 'abc' } });
   expect(input.value).toBe('');
-}, 20000);
+});
+
+test('calls the wipeAndFree function as expected', async () => {
+  let maker;
+  const { getByText, findByText, getByRole } = renderWithMockedStore(
+    React.createElement(() => {
+      maker = useMaker().maker;
+      return <Withdraw cdpId={1} reset={() => {}} />;
+    })
+  );
+
+  await findByText(/BAT\/USD Price feed/);
+
+  const WD_AMT = '100';
+  const input = getByRole('textbox');
+  fireEvent.change(input, { target: { value: WD_AMT } });
+
+  const withdrawButton = getByText(lang.actions.withdraw);
+  const mockWipeAndFree = jest.fn();
+  maker.service('mcd:cdpManager').wipeAndFree = mockWipeAndFree;
+  act(() => {
+    fireEvent.click(withdrawButton);
+  });
+
+  expect(mockWipeAndFree.mock.calls.length).toBe(1);
+  // 1st arg should be the cdp id
+  expect(mockWipeAndFree.mock.calls[0][0]).toBe(1);
+  // next, the ilk
+  expect(mockWipeAndFree.mock.calls[0][1]).toBe(ILK);
+  // next, the amount to wipe
+  expect(mockWipeAndFree.mock.calls[0][2]).toMatchObject(MDAI(0));
+  // finally, the amount to free as a currency object
+  expect(mockWipeAndFree.mock.calls[0][3]).toMatchObject(BAT(WD_AMT));
+});
