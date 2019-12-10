@@ -10,7 +10,7 @@ import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
 
 import Withdraw from '../Withdraw';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 

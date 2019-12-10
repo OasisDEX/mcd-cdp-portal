@@ -6,7 +6,7 @@ import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Generate from '../Generate';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 

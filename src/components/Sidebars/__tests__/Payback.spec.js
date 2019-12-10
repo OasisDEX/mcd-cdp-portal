@@ -9,7 +9,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import Payback from '../Payback';
 import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 

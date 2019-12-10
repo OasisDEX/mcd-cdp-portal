@@ -9,7 +9,7 @@ import rootReducer from '../../src/reducers';
 
 const defaultInitialState = rootReducer({}, {});
 
-export function renderForSidebar(children, updateInitialState, reducer) {
+export function renderWithMaker(children, updateInitialState, reducer) {
   const state = updateInitialState
     ? updateInitialState(defaultInitialState)
     : defaultInitialState;

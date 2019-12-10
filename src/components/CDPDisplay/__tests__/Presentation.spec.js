@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Presentation from '../Presentation';
 import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
-  renderForSidebar,
+  renderWithMaker,
   renderWithStore
 } from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
@@ -67,7 +67,7 @@ describe('on mobile', () => {
       getByText,
       getAllByText,
       getByTestId
-    } = renderForSidebar(
+    } = renderWithMaker(
       <Fragment>
         <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
         <div id="portal1" />
