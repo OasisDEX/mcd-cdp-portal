@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  cleanup,
-  waitForElement,
-  fireEvent,
-  act
-} from '@testing-library/react';
+import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { takeSnapshot, restoreSnapshot } from '@makerdao/test-helpers';
@@ -13,8 +8,8 @@ import BigNumber from 'bignumber.js';
 
 import Generate from '../Generate';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
-import { getMaker } from '../../../maker';
 import lang from '../../../languages';
+import useMaker from '../../../hooks/useMaker';
 
 let snapshotData;
 
@@ -136,8 +131,12 @@ test('verify info container values', async () => {
 });
 
 test('calls the draw function as expected', async () => {
+  let maker;
   const { getByText, findByText, getByRole } = renderWithMockedStore(
-    <Generate cdpId={1} reset={() => {}} />
+    React.createElement(() => {
+      maker = useMaker().maker;
+      return <Generate cdpId={1} reset={() => {}} />;
+    })
   );
 
   await findByText(/BAT\/USD/);
@@ -147,7 +146,6 @@ test('calls the draw function as expected', async () => {
   fireEvent.change(input, { target: { value: DRAW_AMT } });
 
   const generateButton = getByText(lang.actions.generate);
-  const maker = await getMaker();
   const mockDraw = jest.fn();
   maker.service('mcd:cdpManager').draw = mockDraw;
   act(() => {

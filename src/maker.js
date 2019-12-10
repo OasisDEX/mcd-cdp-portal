@@ -26,9 +26,6 @@ export async function instantiateMaker({
   testchainId,
   backendEnv
 }) {
-  let _makerResolve;
-  _maker = new Promise(res => (_makerResolve = res));
-
   const mcdPluginConfig = { cdpTypes, prefetch: false };
 
   const config = {
@@ -67,7 +64,6 @@ export async function instantiateMaker({
 
   // for debugging
   window.maker = maker;
-  _makerResolve(maker);
 
   return maker;
 }
