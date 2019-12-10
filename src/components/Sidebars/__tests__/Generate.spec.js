@@ -14,8 +14,6 @@ import BigNumber from 'bignumber.js';
 import Generate from '../Generate';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import { getMaker } from '../../../maker';
-import { preventWatcherFromPolling } from '../../../watch';
-import { preventStateResets } from '../../../providers/MakerProvider';
 import lang from '../../../languages';
 
 let snapshotData;
@@ -32,13 +30,17 @@ const DUST = '20';
 const PRICE = createCurrencyRatio(USD, BAT)('0.24');
 const LIQUIDATION_RATIO = '200';
 
+const originalConsoleError = console.error;
+
 beforeAll(async () => {
   snapshotData = await takeSnapshot();
-  preventWatcherFromPolling();
-  preventStateResets();
+  console.error = jest.fn();
 });
 
-afterAll(() => restoreSnapshot(snapshotData));
+afterAll(() => {
+  console.error = originalConsoleError;
+  restoreSnapshot(snapshotData);
+});
 
 afterEach(cleanup);
 
@@ -70,17 +72,21 @@ const setupMockState = state => {
   return newState;
 };
 
+// so that dispatched actions don't affect the mocked state
+const identityReducer = x => x;
+const renderWithMockedStore = component =>
+  render(component, setupMockState, identityReducer);
+
 test('basic rendering', async () => {
-  const { findByText } = render(<Generate cdpId={1} />, setupMockState);
+  const { findByText } = renderWithMockedStore(<Generate cdpId={1} />);
 
   await findByText(lang.action_sidebar.generate_title);
   await findByText(/BAT\/USD/);
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole, findByText } = render(
-    <Generate cdpId={1} />,
-    setupMockState
+  const { getByText, getByRole, findByText } = renderWithMockedStore(
+    <Generate cdpId={1} />
   );
 
   await findByText(/BAT\/USD/);
@@ -109,17 +115,14 @@ test('input validation', async () => {
 });
 
 test('verify info container values', async () => {
-  const { getByText, getByRole } = render(
-    <Generate cdpId={1} />,
-    setupMockState
+  const { getByText, findByText, getByRole } = renderWithMockedStore(
+    <Generate cdpId={1} />
   );
 
-  await waitForElement(() => [
-    // initial liquidation price
-    getByText(/0 BAT\/USD/),
-    // dai available
-    getByText(/36.014814 DAI/)
-  ]);
+  // initial liquidation price
+  await findByText(/0 BAT\/USD/);
+  // dai available
+  await findByText(/36.014814 DAI/);
 
   const input = getByRole('textbox');
   fireEvent.change(input, { target: { value: '21' } });
@@ -133,9 +136,8 @@ test('verify info container values', async () => {
 });
 
 test('calls the draw function as expected', async () => {
-  const { getByText, findByText, getByRole } = render(
-    <Generate cdpId={1} reset={() => null} />,
-    setupMockState
+  const { getByText, findByText, getByRole } = renderWithMockedStore(
+    <Generate cdpId={1} reset={() => {}} />
   );
 
   await findByText(/BAT\/USD/);

@@ -12,12 +12,7 @@ import { isMissingContractAddress } from './utils/ethereum';
 import flatten from 'lodash/flatten';
 
 let watcher;
-let _preventWatcherFromPolling_ = false;
 
-// useful for testing environments where we don't want the watcher to override stubbed state
-export function preventWatcherFromPolling() {
-  _preventWatcherFromPolling_ = true;
-}
 
 // Update watcher calls with new address for tracking token balances, proxy allowances and savings
 export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
@@ -110,8 +105,6 @@ export async function startWatcher(maker) {
     ].filter(call => !isMissingContractAddress(call)));
 
   // Our watch has begun
-  if (_preventWatcherFromPolling_) return watcher;
-  
   maker.service('multicall').start();
 
   return watcher;
