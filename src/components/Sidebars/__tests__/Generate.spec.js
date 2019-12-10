@@ -2,7 +2,6 @@ import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { createCurrencyRatio } from '@makerdao/currency';
-import { takeSnapshot, restoreSnapshot } from '@makerdao/test-helpers';
 import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
@@ -10,8 +9,6 @@ import Generate from '../Generate';
 import { renderForSidebar as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
-
-let snapshotData;
 
 const ILK = 'BAT-A';
 const INITIAL_BAT = '300.123456789012345678';
@@ -28,13 +25,11 @@ const LIQUIDATION_RATIO = '200';
 const originalConsoleError = console.error;
 
 beforeAll(async () => {
-  snapshotData = await takeSnapshot();
   console.error = jest.fn();
 });
 
 afterAll(() => {
   console.error = originalConsoleError;
-  restoreSnapshot(snapshotData);
 });
 
 afterEach(cleanup);
