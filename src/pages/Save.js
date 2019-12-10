@@ -238,7 +238,9 @@ function Save() {
                               <Text t="body">Dai earned</Text>
                             </Table.td>
                             <Table.td textAlign="right">
-                              <Text t="body">{earnings.toFixed(4)}</Text>
+                              <Text t="body">
+                                {earnings.toBigNumber().toFixed(4)}
+                              </Text>
                             </Table.td>
                           </Table.tr>
                         )}
