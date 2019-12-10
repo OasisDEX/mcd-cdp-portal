@@ -1,27 +1,21 @@
 import { fromWei, MAX_UINT_BN } from 'utils/units';
 
 export function accountBalanceForToken(addresses, tokenSymbol, accountAddress) {
-  return tokenSymbol === 'ETH'
-    ? [
-        {
-          target: null,
-          call: ['getEthBalance(address)(uint256)', accountAddress],
-          returns: [
-            [`accounts.${accountAddress}.balances.${tokenSymbol}`, fromWei]
-          ],
-          meta: { accountBalanceForToken: true }
-        }
-      ]
-    : [
-        {
-          target: addresses[tokenSymbol],
-          call: ['balanceOf(address)(uint256)', accountAddress],
-          returns: [
-            [`accounts.${accountAddress}.balances.${tokenSymbol}`, fromWei]
-          ],
-          meta: { accountBalanceForToken: true }
-        }
-      ];
+  return [
+    {
+      target: tokenSymbol === 'ETH' ? null : addresses[tokenSymbol],
+      call: [
+        tokenSymbol === 'ETH'
+          ? 'getEthBalance(address)(uint256)'
+          : 'balanceOf(address)(uint256)',
+        accountAddress
+      ],
+      returns: [
+        [`accounts.${accountAddress}.balances.${tokenSymbol}`, fromWei]
+      ],
+      meta: { accountBalanceForToken: true }
+    }
+  ];
 }
 
 export function accountProxyAllowanceForToken(
