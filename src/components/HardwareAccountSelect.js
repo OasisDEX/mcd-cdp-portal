@@ -47,16 +47,9 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
     [accounts, fetchMore]
   );
 
-  const selectAddress = useCallback(
-    address => {
-      setSelectedAddress(address);
-    },
-    [setSelectedAddress]
-  );
-
-  const onConfirm = useCallback(() => {
-    pickAccount(selectedAddress);
-  }, [pickAccount, selectedAddress]);
+  const onConfirm = () => {
+    pickAccount(selectedAddress, page);
+  };
 
   const start = page * ACCOUNTS_PER_PAGE;
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);
@@ -122,7 +115,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
                         name="address"
                         value={index}
                         checked={address === selectedAddress}
-                        onChange={() => selectAddress(address)}
+                        onChange={() => setSelectedAddress(address)}
                       />
                     </Flex>
                   </td>

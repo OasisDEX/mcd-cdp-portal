@@ -18,7 +18,8 @@ const computeAddressBalances = addresses =>
 const initialState = {
   fetching: false,
   accounts: [],
-  onAccountChosen: () => {}
+  chooseCallbacks: {},
+  pagesFetched: 0
 };
 
 const reducer = (state, action) => {
@@ -35,14 +36,24 @@ const reducer = (state, action) => {
       return {
         ...state,
         fetching: false,
-        onAccountChosen: payload.onAccountChosen
+        chooseCallbacks: {
+          ...state.chooseCallbacks,
+          0: payload.chooseCallback
+        }
       };
-    case 'fetch-success':
+    case 'fetch-success': {
+      const pagesFetched = state.pagesFetched + 1;
       return {
         ...state,
+        pagesFetched,
         fetching: false,
-        accounts: [...state.accounts, ...payload.accounts]
+        accounts: [...state.accounts, ...payload.accounts],
+        chooseCallbacks: {
+          ...state.chooseCallbacks,
+          [pagesFetched]: payload.chooseCallback
+        }
       };
+    }
     case 'error':
       return {
         ...state,
@@ -121,9 +132,9 @@ function useHardwareWallet({
       path,
       accountsOffset: 0,
       accountsLength,
-      choose: async (addresses, onAccountChosen) => {
+      choose: async (addresses, chooseCallback) => {
         const accounts = await computeAddressBalances(addresses);
-        dispatch({ type: 'connect-success', payload: { onAccountChosen } });
+        dispatch({ type: 'connect-success', payload: { chooseCallback } });
         dispatch({ type: 'fetch-success', payload: { accounts, offset: 0 } });
       }
     });
@@ -138,11 +149,15 @@ function useHardwareWallet({
           path,
           accountsOffset: state.accounts.length,
           accountsLength,
-          choose: async addresses => {
+          choose: async (addresses, chooseCallback) => {
             const accounts = await computeAddressBalances(addresses);
             dispatch({
               type: 'fetch-success',
-              payload: { accounts, offset: state.accounts.length }
+              payload: {
+                accounts,
+                offset: state.accounts.length,
+                chooseCallback
+              }
             });
             resolve(accounts);
           }
@@ -154,8 +169,8 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
-  function pickAccount(address) {
-    return state.onAccountChosen(null, address);
+  function pickAccount(address, page) {
+    return state.chooseCallbacks[page](null, address);
   }
 
   return {
