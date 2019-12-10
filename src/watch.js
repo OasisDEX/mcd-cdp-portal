@@ -13,7 +13,6 @@ import flatten from 'lodash/flatten';
 
 let watcher;
 
-
 // Update watcher calls with new address for tracking token balances, proxy allowances and savings
 export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
   const addresses = maker.service('smartContract').getContractAddresses();

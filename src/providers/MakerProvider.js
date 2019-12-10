@@ -177,7 +177,6 @@ function MakerProvider({
         log('Tx ' + state, tx.metadata);
         setTxLastUpdate(Date.now());
       });
-
     dispatch({ type: 'CLEAR_CONTRACT_STATE' });
     startWatcher(maker);
     return () => {
