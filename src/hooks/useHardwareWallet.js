@@ -50,7 +50,7 @@ const reducer = (state, action) => {
         accounts: [...state.accounts, ...payload.accounts],
         chooseCallbacks: {
           ...state.chooseCallbacks,
-          [pagesFetched]: payload.chooseCallback
+          [pagesFetched-1]: payload.chooseCallback
         }
       };
     }
@@ -135,7 +135,7 @@ function useHardwareWallet({
       choose: async (addresses, chooseCallback) => {
         const accounts = await computeAddressBalances(addresses);
         dispatch({ type: 'connect-success', payload: { chooseCallback } });
-        dispatch({ type: 'fetch-success', payload: { accounts, offset: 0 } });
+        dispatch({ type: 'fetch-success', payload: { chooseCallback, accounts, offset: 0 } });
       }
     });
   }, [accountsLength, maker, path, type]);
