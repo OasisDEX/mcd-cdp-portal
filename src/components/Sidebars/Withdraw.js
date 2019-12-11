@@ -18,7 +18,8 @@ import {
 } from 'reducers/cdps';
 import {
   formatCollateralizationRatio,
-  formatLiquidationPrice
+  formatLiquidationPrice,
+  safeToFixed
 } from '../../utils/ui';
 import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
@@ -115,7 +116,7 @@ const Withdraw = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_withdraw}
-          body={`${collateralAvailableAmount} ${symbol}`}
+          body={`${safeToFixed(collateralAvailableAmount, 7)} ${symbol}`}
         />
         <Info
           title={lang.formatString(

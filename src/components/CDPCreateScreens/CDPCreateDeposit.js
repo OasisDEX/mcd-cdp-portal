@@ -229,6 +229,12 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     });
   }
 
+  const canProgress = cdpParamsAreValid(
+    cdpParams,
+    selectedIlk.userGemBalance,
+    selectedIlk.data
+  );
+
   return (
     <Box
       maxWidth="1040px"
@@ -273,11 +279,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
             payload: { by: hasAllowance ? 2 : 1 }
           })
         }
-        canProgress={cdpParamsAreValid(
-          cdpParams,
-          selectedIlk.userGemBalance,
-          selectedIlk.data
-        )}
+        canProgress={canProgress}
       />
     </Box>
   );

@@ -23,6 +23,8 @@ import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
 import styled from 'styled-components';
 import Carat from './Carat';
+import { Link, useCurrentRoute } from 'react-navi';
+import { Routes } from 'utils/constants';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -90,6 +92,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
 };
 
 const WalletBalances = ({ hasActiveAccount }) => {
+  const { url } = useCurrentRoute();
   const { lang } = useLanguage();
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
@@ -125,9 +128,9 @@ const WalletBalances = ({ hasActiveAccount }) => {
             ? 'WETH'
             : token;
 
-        const tokenIsDai = token === 'MDAI' || token === 'DAI';
-
-        const usdRatio = tokenIsDai
+        const tokenIsDaiOrDsr =
+          token === 'MDAI' || token === 'DAI' || token === 'DSR';
+        const usdRatio = tokenIsDaiOrDsr
           ? new BigNumber(1)
           : token === 'MWETH'
           ? uniqueFeeds['ETH']
@@ -144,6 +147,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
       }, []),
     [balances, uniqueFeeds]
   );
+
   return (
     <>
       <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
@@ -174,11 +178,15 @@ const WalletBalances = ({ hasActiveAccount }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    ((symbol === 'SAI' && (
+                    (symbol === 'DSR' ? (
+                      <Link href={`/${Routes.SAVE}${url.search}`}>
+                        <ActionButton>{lang.actions.withdraw}</ActionButton>
+                      </Link>
+                    ) : symbol === 'SAI' ? (
                       <ActionButton as="a" target="_blank" href={migrateUrl}>
                         {lang.sidebar.migrate}
                       </ActionButton>
-                    )) || (
+                    ) : (
                       <ActionButton onClick={() => showSendSidebar({ token })}>
                         {lang.sidebar.send}
                       </ActionButton>

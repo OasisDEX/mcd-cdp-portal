@@ -9,22 +9,30 @@ import rootReducer from '../../src/reducers';
 
 const defaultInitialState = rootReducer({}, {});
 
-export function renderForSidebar(children, updateInitialState) {
+export const mocks = { navigation: { navigate: jest.fn() } };
+
+export function renderWithMaker(children, updateInitialState, reducer) {
   const state = updateInitialState
     ? updateInitialState(defaultInitialState)
     : defaultInitialState;
 
   return renderWithStore(
-    <TestMakerProvider waitForAuth={true}>{children}</TestMakerProvider>,
-    state
+    <TestMakerProvider waitForAuth={true} mocks={mocks}>
+      {children}
+    </TestMakerProvider>,
+    state,
+    reducer
   );
 }
 
-export function renderWithStore(children, initialState = {}) {
+export function renderWithStore(children, initialState = {}, reducer = null) {
   return render(
     <LanguageProvider>
       <ThemeProvider theme={theme}>
-        <StoreProvider reducer={rootReducer} initialState={initialState}>
+        <StoreProvider
+          reducer={reducer ? reducer : rootReducer}
+          initialState={initialState}
+        >
           {children}
         </StoreProvider>
       </ThemeProvider>

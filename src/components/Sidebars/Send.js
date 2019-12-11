@@ -33,7 +33,7 @@ const Send = ({ token, reset }) => {
 
   const balances = useWalletBalances();
   const balance = balances[token] ? balances[token] : ZERO;
-  const { address } = account;
+  const { address } = account || {};
   const [gasCost, setGasCost] = useState(ZERO);
   const [destAddress, setDestAddress] = useState('');
 

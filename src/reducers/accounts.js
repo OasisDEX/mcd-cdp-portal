@@ -6,7 +6,7 @@ import ilks from 'references/ilkList';
 const uniqueIlkGems = [...new Set(ilks.map(ilk => ilk.gem))];
 
 export const tokensWithBalances = [
-  ...new Set(['MDAI', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
+  ...new Set(['MDAI', 'DSR', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
 ];
 
 const defaultAccountState = {

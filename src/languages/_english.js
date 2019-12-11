@@ -299,7 +299,8 @@ export default {
     'deposit_dai_subheading': 'Start earning as soon as your deposit is confirmed.',
     'get_started_title': 'Start earning on your Dai today',
     'start_earning': 'Deposit Dai to see your first transaction and start earning',
-    'tx_history': 'History'
+    'tx_history': 'History',
+    'savings_to_date': 'Savings to date'
   },
   'verbs': {
     'depositing': 'Depositing',

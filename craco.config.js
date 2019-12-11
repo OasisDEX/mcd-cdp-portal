@@ -29,12 +29,17 @@ module.exports = {
     }
   },
   babel: {
-    plugins: ['styled-components', 'react-hot-loader/babel', '@babel/plugin-proposal-optional-chaining']
+    plugins: [
+      'styled-components',
+      'react-hot-loader/babel',
+      '@babel/plugin-proposal-optional-chaining'
+    ]
   },
   jest: {
     configure: {
       coverageReporters: ['json', 'lcov', 'text-summary'],
-      setupFilesAfterEnv: '<rootDir>/test/setup.js'
+      setupFilesAfterEnv: '<rootDir>/test/setup.js',
+      collectCoverageFrom: ['src/**/*.js']
     }
   }
 };
