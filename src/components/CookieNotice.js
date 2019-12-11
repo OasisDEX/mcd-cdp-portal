@@ -5,6 +5,7 @@ import { Link } from 'react-navi';
 import { ReactComponent as Cross } from '../images/cross2.svg';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
+import { hot } from 'react-hot-loader/root';
 
 const CookieNoticeStyle = styled.div`
   background: #ffffff;
@@ -28,13 +29,13 @@ const CookieNoticeStyle = styled.div`
     white-space: normal;
     width: 100%;
   }
+`;
 
-  a {
-    color: #447afb;
-    transition: color 0.2s;
-  }
+const NoticeLinkStyle = styled.span`
+  color: #447afb;
+  transition: color 0.2s;
 
-  a:hover {
+  :hover {
     color: #2c4e9c;
   }
 `;
@@ -64,7 +65,9 @@ const CookieNotice = () => {
         <span style={{ fontSize: '14px', color: '#231536', flexShrink: 1 }}>
           {lang.formatString(
             lang.cookie_notice,
-            <Link href={`/${Routes.PRIVACY}`}>{lang.privacy_policy}</Link>
+            <Link href={`/${Routes.PRIVACY}`}>
+              <NoticeLinkStyle>{lang.privacy_policy}</NoticeLinkStyle>
+            </Link>
           )}
         </span>
         <div style={{ width: '10px' }} />
@@ -77,4 +80,4 @@ const CookieNotice = () => {
   );
 };
 
-export default CookieNotice;
+export default hot(CookieNotice);
