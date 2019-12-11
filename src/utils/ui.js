@@ -41,8 +41,8 @@ export function prettifyNumber(
   keepSymbol = true
 ) {
   if (_num === null) return null;
-  let symbol = ' ';
-  if (_num.symbol !== undefined) symbol += cleanSymbol(_num.symbol);
+  let symbol = '';
+  if (_num.symbol !== undefined) symbol += ' ' + cleanSymbol(_num.symbol);
   const num = parseFloat(_num.toString());
   if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;

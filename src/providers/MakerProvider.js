@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
-import { useNavigation } from 'react-navi';
+import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
@@ -24,12 +24,18 @@ const log = debug('maker:MakerProvider');
 
 export const MakerObjectContext = createContext();
 
+function useNavigation(network, mocks) {
+  if (network === 'testnet' && mocks) return mocks.navigation;
+  return useNavigationBase(); // eslint-disable-line react-hooks/rules-of-hooks
+}
+
 function MakerProvider({
   children,
   network,
   testchainId,
   backendEnv,
-  viewedAddress
+  viewedAddress,
+  mocks
 }) {
   const [account, setAccount] = useState(null);
   const [viewedAddressData, setViewedAddressData] = useState(null);
@@ -37,7 +43,7 @@ function MakerProvider({
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation(network, mocks);
   const [, dispatch] = useStore();
 
   const initAccount = account => {
