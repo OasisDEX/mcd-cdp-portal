@@ -25,9 +25,9 @@ function getSeparator(locale, separatorType) {
     : null;
 }
 
-export function prettifyCurrency(locale, num = null) {
+export function prettifyCurrency(locale, num = null, decimalPlaces = null) {
   if (num === null) return null;
-  return new BigNumber(num).toFormat(null, BigNumber.ROUND_CEIL, {
+  return new BigNumber(num).toFormat(decimalPlaces, BigNumber.ROUND_CEIL, {
     decimalSeparator: getSeparator(locale, 'decimal') || '.',
     groupSeparator: getSeparator(locale, 'group'),
     groupSize: 3
@@ -100,36 +100,36 @@ export function formatEventDescription(lang, e) {
     case 'DEPOSIT':
       return lang.formatString(
         lang.event_history.deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
         e.gem
       );
     case 'DSR_DEPOSIT':
       return lang.formatString(
         lang.event_history.dsr_deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
         e.gem
       );
     case 'DSR_WITHDRAW':
       return lang.formatString(
         lang.event_history.dsr_withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
         e.gem
       );
     case 'WITHDRAW':
       return lang.formatString(
         lang.event_history.withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
         e.gem
       );
     case 'GENERATE':
       return lang.formatString(
         lang.event_history.generate,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>
       );
     case 'PAY_BACK':
       return lang.formatString(
         lang.event_history.pay_back,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>
       );
     case 'GIVE':
       return lang.formatString(

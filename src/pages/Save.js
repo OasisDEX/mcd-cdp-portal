@@ -231,7 +231,7 @@ function Save() {
                         {FeatureFlags.FF_DSR_ETD && (
                           <Table.tr>
                             <Table.td>
-                              <Text t="body">Dai earned</Text>
+                              <Text t="body">{lang.save.savings_to_date}</Text>
                             </Table.td>
                             <Table.td textAlign="right">
                               <Text t="body">
