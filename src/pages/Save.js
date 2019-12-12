@@ -277,7 +277,7 @@ function Save() {
                       after={<SetMax onClick={setDepositMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
@@ -325,7 +325,7 @@ function Save() {
                       after={<SetMax onClick={setWithdrawMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
