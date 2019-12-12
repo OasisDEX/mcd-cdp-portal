@@ -20,7 +20,7 @@ import { LEDGER_LIVE_PATH } from './LedgerType';
 const ACCOUNTS_PER_PAGE = 5;
 const ACCOUNTS_TO_FETCH = 25;
 
-function HardwareAccountSelect({ type, path, onClose }) {
+function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const numAccountsPerFetch =
@@ -48,7 +48,7 @@ function HardwareAccountSelect({ type, path, onClose }) {
   );
 
   const onConfirm = () => {
-    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE, type);
+    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE, confirmAddress);
   };
 
   const start = page * ACCOUNTS_PER_PAGE;

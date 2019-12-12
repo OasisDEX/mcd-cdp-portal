@@ -3,7 +3,6 @@ import useMaker from 'hooks/useMaker';
 import useModal from 'hooks/useModal';
 import { AccountTypes } from 'utils/constants';
 import { addMkrAndEthBalance } from 'utils/ethereum';
-import { mixpanelIdentify } from 'utils/analytics';
 
 const TREZOR_PATH = "44'/60'/0'/0/0";
 
@@ -163,14 +162,22 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
-  function pickAccount(address, page, numAccountsPerFetch, numAccountsPerPage, type) {
-    mixpanelIdentify(address, type);
-    const fetchNumber = Math.floor( page * numAccountsPerPage / numAccountsPerFetch);
-    for (let i = 0; i < state.totalNumFetches; i++){
+  function pickAccount(
+    address,
+    page,
+    numAccountsPerFetch,
+    numAccountsPerPage,
+    confirmAddress
+  ) {
+    const fetchNumber = Math.floor(
+      (page * numAccountsPerPage) / numAccountsPerFetch
+    );
+    for (let i = 0; i < state.totalNumFetches; i++) {
       //error out unused callbacks
       if (i !== fetchNumber) state.chooseCallbacks[i]('error');
     }
-    return state.chooseCallbacks[fetchNumber](null, address);
+    state.chooseCallbacks[fetchNumber](null, address);
+    setTimeout(()=> confirmAddress({address}), 1);
   }
 
   return {
