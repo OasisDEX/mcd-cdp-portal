@@ -217,7 +217,7 @@ function Save() {
                 <Card>
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
-                      {balance.toFixed(4)} <Text t="h5"> DAI</Text>
+                      {balance.toFixed(18)} <Text t="h5"> DAI</Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
@@ -233,7 +233,7 @@ function Save() {
                             </Table.td>
                             <Table.td textAlign="right">
                               <Text t="body">
-                                {earnings.toBigNumber().toFixed(4)}
+                                {earnings.toBigNumber().toFixed()}
                               </Text>
                             </Table.td>
                           </Table.tr>
@@ -246,6 +246,48 @@ function Save() {
                             <Text t="body">
                               {savings && savings.yearlyRate
                                 ? `${savings.yearlyRate.toFixed(2)}%`
+                                : '--'}
+                            </Text>
+                          </Table.td>
+                        </Table.tr>
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">{lang.save.estimated_savings}</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <Text t="body">
+                              {balances.estimatedDSR
+                                ? `${balances.estimatedDSR.toFixed(18)}`
+                                : '--'}
+                            </Text>
+                          </Table.td>
+                        </Table.tr>
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">{lang.save.gain_since_drip}</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <Text t="body">
+                              {balance &&
+                              balances.estimatedDSR &&
+                              balances.estimatedDSR.gte(balance)
+                                ? `${balances.estimatedDSR
+                                    .minus(balance)
+                                    .shiftedBy(18)
+                                    .toFixed(0)}`
+                                : '--'}
+                            </Text>
+                          </Table.td>
+                        </Table.tr>
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">{lang.save.seconds_since_drip}</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <Text t="body">
+                              {savings && savings.rho
+                                ? `${Math.round(Date.now() / 1000) -
+                                    savings.rho.toNumber()} s`
                                 : '--'}
                             </Text>
                           </Table.td>
