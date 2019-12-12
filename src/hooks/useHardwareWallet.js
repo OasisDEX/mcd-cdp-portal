@@ -34,8 +34,6 @@ const reducer = (state, action) => {
       return { ...state, fetching: false };
     case 'fetch-success': {
       const totalNumFetches = state.totalNumFetches + 1;
-      console.log('totalNumFetches - 1', totalNumFetches - 1);
-      console.log('payload.chooseCallback', payload.chooseCallback);
       return {
         ...state,
         totalNumFetches,
@@ -172,8 +170,6 @@ function useHardwareWallet({
       //error out unused callbacks
       if (i !== fetchNumber) state.chooseCallbacks[i]('error');
     }
-    console.log('state.chooseCallbacks', state.chooseCallbacks);
-    console.log('page', page);
     return state.chooseCallbacks[fetchNumber](null, address);
   }
 
