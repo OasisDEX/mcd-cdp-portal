@@ -15,7 +15,7 @@ const StyledLedgerLogo = styled(LedgerLogo)`
   margin-bottom: -5px;
 `;
 
-const LEDGER_LIVE_PATH = "44'/60'/0'";
+export const LEDGER_LIVE_PATH = "44'/60'/0'";
 const LEDGER_LEGACY_PATH = "44'/60'/0'/0";
 
 function LedgerType({ onClose, onPathSelect }) {

@@ -15,30 +15,29 @@ import { getColor } from 'styles/theme';
 import { CopyBtn, CopyBtnIcon } from './AddressTable';
 import { ReactComponent as Cross } from 'images/cross.svg';
 import { AccountTypes } from 'utils/constants';
+import { LEDGER_LIVE_PATH } from './LedgerType';
 
 const ACCOUNTS_PER_PAGE = 5;
 const ACCOUNTS_TO_FETCH = 25;
 
-function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
+function HardwareAccountSelect({ type, path, onClose }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const accountsToFetch =
-    type === AccountTypes.LEDGER ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
+  const numAccountsPerFetch =
+    (type === AccountTypes.LEDGER && path === LEDGER_LIVE_PATH) ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
   const {
     fetchMore,
     connect,
     accounts,
     pickAccount,
     fetching
-  } = useHardwareWallet({ type, accountsLength: accountsToFetch, path });
+  } = useHardwareWallet({ type, accountsLength: numAccountsPerFetch, path });
 
   useEffect(() => {
-    connect().then(address => {
-      console.log('connect resolved');
-      confirmAddress(address);
+    connect().then(() => {
       onClose();
     }, onClose);
-  }, [confirmAddress, connect, onClose]);
+  }, [connect, onClose]);
 
   const toPage = useCallback(
     async page => {
@@ -49,7 +48,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   );
 
   const onConfirm = () => {
-    pickAccount(selectedAddress, page);
+    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE, type);
   };
 
   const start = page * ACCOUNTS_PER_PAGE;

@@ -3,6 +3,7 @@ import useMaker from 'hooks/useMaker';
 import useModal from 'hooks/useModal';
 import { AccountTypes } from 'utils/constants';
 import { addMkrAndEthBalance } from 'utils/ethereum';
+import { mixpanelIdentify } from 'utils/analytics';
 
 const TREZOR_PATH = "44'/60'/0'/0/0";
 
@@ -19,7 +20,7 @@ const initialState = {
   fetching: false,
   accounts: [],
   chooseCallbacks: {},
-  pagesFetched: 0
+  totalNumFetches: 0
 };
 
 const reducer = (state, action) => {
@@ -32,15 +33,17 @@ const reducer = (state, action) => {
     case 'connect-success':
       return { ...state, fetching: false };
     case 'fetch-success': {
-      const pagesFetched = state.pagesFetched + 1;
+      const totalNumFetches = state.totalNumFetches + 1;
+      console.log('totalNumFetches - 1', totalNumFetches - 1);
+      console.log('payload.chooseCallback', payload.chooseCallback);
       return {
         ...state,
-        pagesFetched,
+        totalNumFetches,
         fetching: false,
         accounts: [...state.accounts, ...payload.accounts],
         chooseCallbacks: {
           ...state.chooseCallbacks,
-          [pagesFetched - 1]: payload.chooseCallback
+          [totalNumFetches - 1]: payload.chooseCallback
         }
       };
     }
@@ -162,11 +165,16 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
-  function pickAccount(address, page) {
-    for (let i = 0; i < state.pagesFetched; i++){
-      if (i !== page) state.chooseCallbacks[i]('error');
+  function pickAccount(address, page, numAccountsPerFetch, numAccountsPerPage, type) {
+    mixpanelIdentify(address, type);
+    const fetchNumber = Math.floor( page * numAccountsPerPage / numAccountsPerFetch);
+    for (let i = 0; i < state.totalNumFetches; i++){
+      //error out unused callbacks
+      if (i !== fetchNumber) state.chooseCallbacks[i]('error');
     }
-    return state.chooseCallbacks[page](null, address);
+    console.log('state.chooseCallbacks', state.chooseCallbacks);
+    console.log('page', page);
+    return state.chooseCallbacks[fetchNumber](null, address);
   }
 
   return {
