@@ -294,6 +294,7 @@ function Save() {
                         }
                         loading={depositLoading}
                         onClick={onDeposit}
+                        data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
                       </Button>
@@ -341,6 +342,7 @@ function Save() {
                         }
                         loading={withdrawLoading}
                         onClick={onWithdraw}
+                        data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}
                       </Button>
