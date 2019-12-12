@@ -1,100 +1,97 @@
 import React from 'react';
 import assert from 'assert';
-import { wait, fireEvent, waitForElement, act } from '@testing-library/react';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { wait, fireEvent, waitForElement } from '@testing-library/react';
+import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { mineBlocks } from '@makerdao/test-helpers';
 
 import DSRDeposit from '../DSRDeposit';
 import lang from '../../languages';
 import { renderWithMaker } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import useMaker from '../../hooks/useMaker';
-import useProxy from '../../hooks/useProxy';
-import useTokenAllowance from '../../hooks/useTokenAllowance';
-import useWalletBalances from '../../hooks/useWalletBalances';
-const { click } = fireEvent;
+import { prettifyNumber } from '../../utils/ui';
 
-jest.mock('../../hooks/useTokenAllowance');
-jest.mock('../../hooks/useWalletBalances');
+const { click, change } = fireEvent;
 
-const BALANCE = 1;
+const AMOUNT = 80.1234567;
+const ILK = 'ETH-A';
 let maker;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+  await await maker
+    .service('mcd:cdpManager')
+    .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
 });
 
 function WaitForAccount({ children, callback }) {
   const { account } = useMaker();
-  const { proxyAddress } = useProxy();
-  callback({ account });
-  return account && proxyAddress ? children : null;
-}
-
-function prepState(state) {
-  return {
-    ...state,
-    accounts: {
-      [maker.currentAddress()]: {
-        balances: { ETH: '3', MDAI: '100' },
-        allowances: {}
-      }
-    }
-  };
+  callback(account);
+  return account ? children : null;
 }
 
 test('the whole DSR Deposit flow', async () => {
-  useTokenAllowance.mockReturnValue({ hasAllowance: true });
-  useWalletBalances.mockReturnValue({ MDAI: MDAI(BALANCE) });
-
   const hideOnboarding = jest.fn();
   let account;
   const { getAllByText, getByRole, getByText } = renderWithMaker(
     <WaitForAccount
-      callback={({ account: a }) => {
+      callback={a => {
         account = a;
       }}
     >
       <DSRDeposit hideOnboarding={hideOnboarding} />
     </WaitForAccount>,
-    prepState
+    state => state
   );
   await waitForElement(() => account);
-
   getByText(lang.dsr_deposit.open_vault);
 
-  // Proxy and allowances are set
+  // First checkmark is proxy, but need to set allowance for Dai
+  await wait(() => getByText('checkmark.svg'));
+  click(getByText('Set'));
+
+  // Allowance is now set, continue to DepositCreate step
   await wait(() => assert(getAllByText('checkmark.svg').length === 2));
+  click(getByText(lang.actions.continue));
 
-  act(() => {
-    click(getByText(lang.actions.continue));
-  });
-
-  // Enter deposit amount
+  // UI Formats the amount
+  await waitForElement(() => getByText(`${prettifyNumber(AMOUNT)} DAI`));
   getByText(lang.dsr_deposit.deposit_form_title);
-  await waitForElement(() => getByText(/1,000,000 DAI/));
-  const setMax = await waitForElement(() => getByText(lang.set_max));
+
+  // Test input validation
   const input = getByRole('textbox');
   expect(input.value).toBe('');
+  change(input, { target: { value: AMOUNT + 1 } });
+  await waitForElement(() =>
+    getByText(
+      lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+    )
+  );
 
-  act(() => {
-    fireEvent.click(setMax);
-  });
-  expect(input.value).toBe(BALANCE.toString());
+  // Test setmax button
+  fireEvent.click(getByText(lang.set_max));
+  expect(input.value).toBe(AMOUNT.toString());
 
   // Continue and move to confirmation step
-  act(() => {
-    click(getByText(lang.actions.continue));
-  });
+  click(getByText(lang.actions.continue));
 
   getByText(lang.save.deposit_amount);
-  getByText(`${BALANCE} DAI`);
+  getByText(`${prettifyNumber(AMOUNT)} DAI`);
 
-  // Agree to terms to enable button
-  act(() => {
-    click(getByRole('checkbox'));
-  });
+  // Agree to terms to enable deposit button
+  click(getByRole('checkbox'));
+
   const depositButton = getByText(lang.actions.deposit);
   await wait(() => assert(!depositButton.disabled));
 
-  // TODO set DAI allowance in test & open a CDP first to get DAI to finish flow.
+  click(depositButton);
+
+  await wait(() =>
+    getByText(
+      /The estimated time is [0-9]+ seconds. You can safely leave this page./
+    )
+  );
+  await mineBlocks(maker.service('web3'), 5);
+  // The message changes after confirmation
+  await wait(() => getByText('You can safely leave this page.'));
 }, 15000);
