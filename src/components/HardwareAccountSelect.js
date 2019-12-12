@@ -24,7 +24,9 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const numAccountsPerFetch =
-    (type === AccountTypes.LEDGER && path === LEDGER_LIVE_PATH) ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
+    type === AccountTypes.LEDGER && path === LEDGER_LIVE_PATH
+      ? ACCOUNTS_PER_PAGE
+      : ACCOUNTS_TO_FETCH;
   const {
     fetchMore,
     connect,
@@ -48,7 +50,8 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   );
 
   const onConfirm = () => {
-    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE, confirmAddress);
+    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE);
+    setTimeout(() => confirmAddress(selectedAddress));
   };
 
   const start = page * ACCOUNTS_PER_PAGE;
