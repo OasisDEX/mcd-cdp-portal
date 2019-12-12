@@ -185,7 +185,7 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" css={{ marginBottom: '26px' }}>
+          <Text.p t="h4" mb="26px">
             {lang.save.get_started_title}
           </Text.p>
           <Button

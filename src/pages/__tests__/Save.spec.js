@@ -7,11 +7,8 @@ import {
   cleanup
 } from '@testing-library/react';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
-import '@testing-library/jest-dom/extend-expect';
 
-// TODO: fix error when importing this
-// import Save from '../Save';
-
+import Save from '../Save';
 import { renderWithMaker } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 
@@ -21,23 +18,16 @@ const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';
 let maker;
 
-const originalConsoleError = console.error;
-
 beforeAll(async () => {
-  console.error = jest.fn();
   maker = await instantiateMaker({ network: 'testnet' });
   await await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
 });
 
-afterAll(() => {
-  console.error = originalConsoleError;
-});
-
 afterEach(cleanup);
 
-test.skip('render save page and perform deposit and withdraw actions', async () => {
+test('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
     getByTestId,
