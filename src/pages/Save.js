@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import {
   Box,
@@ -14,8 +14,6 @@ import {
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
-
-import { getSavingsBalance } from 'reducers/accounts';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
@@ -187,7 +185,7 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" css={{ marginBottom: '26px' }}>
+          <Text.p t="h4" mb="26px">
             {lang.save.get_started_title}
           </Text.p>
           <Button
@@ -296,6 +294,7 @@ function Save() {
                         }
                         loading={depositLoading}
                         onClick={onDeposit}
+                        data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
                       </Button>
@@ -343,6 +342,7 @@ function Save() {
                         }
                         loading={withdrawLoading}
                         onClick={onWithdraw}
+                        data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}
                       </Button>

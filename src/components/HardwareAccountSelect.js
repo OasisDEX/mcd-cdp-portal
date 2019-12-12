@@ -15,6 +15,7 @@ import { getColor } from 'styles/theme';
 import { CopyBtn, CopyBtnIcon } from './AddressTable';
 import { ReactComponent as Cross } from 'images/cross.svg';
 import { AccountTypes } from 'utils/constants';
+import { LEDGER_LIVE_PATH } from './LedgerType';
 
 const ACCOUNTS_PER_PAGE = 5;
 const ACCOUNTS_TO_FETCH = 25;
@@ -22,40 +23,36 @@ const ACCOUNTS_TO_FETCH = 25;
 function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
   const [page, setPage] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const accountsToFetch =
-    type === AccountTypes.LEDGER ? ACCOUNTS_PER_PAGE : ACCOUNTS_TO_FETCH;
-  const { fetch, connect, accounts, pickAccount, fetching } = useHardwareWallet(
-    { type, accountsLength: accountsToFetch, path }
-  );
+  const numAccountsPerFetch =
+    type === AccountTypes.LEDGER && path === LEDGER_LIVE_PATH
+      ? ACCOUNTS_PER_PAGE
+      : ACCOUNTS_TO_FETCH;
+  const {
+    fetchMore,
+    connect,
+    accounts,
+    pickAccount,
+    fetching
+  } = useHardwareWallet({ type, accountsLength: numAccountsPerFetch, path });
 
   useEffect(() => {
-    connect().then(address => {
-      confirmAddress(address);
+    connect().then(() => {
       onClose();
     }, onClose);
-  }, [confirmAddress, connect, onClose]);
+  }, [connect, onClose]);
 
   const toPage = useCallback(
     async page => {
-      if (accounts.length - page * ACCOUNTS_PER_PAGE <= 0) {
-        const offset = accounts.length / (page * ACCOUNTS_PER_PAGE);
-        await fetch({ offset });
-      }
+      if (accounts.length <= page * ACCOUNTS_PER_PAGE) await fetchMore();
       setPage(page);
     },
-    [accounts, fetch]
+    [accounts, fetchMore]
   );
 
-  const selectAddress = useCallback(
-    address => {
-      setSelectedAddress(address);
-    },
-    [setSelectedAddress]
-  );
-
-  const onConfirm = useCallback(() => {
-    pickAccount(selectedAddress);
-  }, [pickAccount, selectedAddress]);
+  const onConfirm = () => {
+    pickAccount(selectedAddress, page, numAccountsPerFetch, ACCOUNTS_PER_PAGE);
+    setTimeout(() => confirmAddress(selectedAddress));
+  };
 
   const start = page * ACCOUNTS_PER_PAGE;
   const renderedAccounts = accounts.slice(start, start + ACCOUNTS_PER_PAGE);
@@ -121,7 +118,7 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
                         name="address"
                         value={index}
                         checked={address === selectedAddress}
-                        onChange={() => selectAddress(address)}
+                        onChange={() => setSelectedAddress(address)}
                       />
                     </Flex>
                   </td>

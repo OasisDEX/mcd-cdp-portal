@@ -14,7 +14,7 @@ const useWalletBalances = () => {
     return walletConnected
       ? getSavingsBalance(account.address, { accounts, savings })
       : 0;
-  }, [account, accounts, savings]);
+  }, [account, accounts, savings, walletConnected]);
 
   return walletConnected
     ? {

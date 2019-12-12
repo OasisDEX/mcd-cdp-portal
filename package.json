@@ -22,7 +22,7 @@
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.1",
     "@makerdao/test-helpers": "^0.2.1",
-    "@makerdao/ui-components-core": "0.3.1",
+    "@makerdao/ui-components-core": "0.3.4",
     "@makerdao/ui-components-footer": "^0.1.16",
     "@makerdao/ui-components-header": "^0.1.11-alpha.6",
     "@makerdao/ui-components-onboarding": "^0.1.2",
