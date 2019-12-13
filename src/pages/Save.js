@@ -31,8 +31,43 @@ import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
+import useInterval from 'hooks/useInterval';
+import usePrevious from 'hooks/usePrevious';
 
 import { FeatureFlags } from 'utils/constants';
+
+function DSRBalanceCounter() {
+  const [
+    {
+      savings: { rho, dsr }
+    }
+  ] = useStore();
+  const { DSR } = useWalletBalances();
+
+  const [tickingDSR, setTickingDSR] = useState(new BigNumber(0));
+  const [amountChange, setAmountChange] = useState(new BigNumber(0));
+
+  const rateOfChange = 15;
+
+  useEffect(() => {
+    if (DSR) {
+      setAmountChange(
+        dsr
+          .times(DSR)
+          .minus(DSR)
+          .div(rateOfChange)
+      );
+      setTickingDSR(DSR);
+    }
+  }, [DSR]);
+  const show = rho && dsr;
+
+  useInterval(() => {
+    setTickingDSR(tickingDSR.plus(amountChange));
+  }, 1000 / rateOfChange);
+
+  return <Text t="mono">{show ? tickingDSR.toFixed(18) : '--'}</Text>;
+}
 
 function Save() {
   const { lang } = useLanguage();
@@ -250,46 +285,13 @@ function Save() {
                             </Text>
                           </Table.td>
                         </Table.tr>
+
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.estimated_savings}</Text>
                           </Table.td>
                           <Table.td textAlign="right">
-                            <Text t="body">
-                              {balances.estimatedDSR
-                                ? `${balances.estimatedDSR.toFixed(18)}`
-                                : '--'}
-                            </Text>
-                          </Table.td>
-                        </Table.tr>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">{lang.save.gain_since_drip}</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <Text t="body">
-                              {balance &&
-                              balances.estimatedDSR &&
-                              balances.estimatedDSR.gte(balance)
-                                ? `${balances.estimatedDSR
-                                    .minus(balance)
-                                    .shiftedBy(18)
-                                    .toFixed(0)}`
-                                : '--'}
-                            </Text>
-                          </Table.td>
-                        </Table.tr>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">{lang.save.seconds_since_drip}</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <Text t="body">
-                              {savings && savings.rho
-                                ? `${Math.round(Date.now() / 1000) -
-                                    savings.rho.toNumber()} s`
-                                : '--'}
-                            </Text>
+                            <DSRBalanceCounter />
                           </Table.td>
                         </Table.tr>
                       </Table.tbody>
