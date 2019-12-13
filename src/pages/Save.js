@@ -185,7 +185,7 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" css={{ marginBottom: '26px' }}>
+          <Text.p t="h4" mb="26px">
             {lang.save.get_started_title}
           </Text.p>
           <Button
@@ -319,7 +319,7 @@ function Save() {
                       after={<SetMax onClick={setDepositMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
@@ -336,6 +336,7 @@ function Save() {
                         }
                         loading={depositLoading}
                         onClick={onDeposit}
+                        data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
                       </Button>
@@ -366,7 +367,7 @@ function Save() {
                       after={<SetMax onClick={setWithdrawMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
@@ -383,6 +384,7 @@ function Save() {
                         }
                         loading={withdrawLoading}
                         onClick={onWithdraw}
+                        data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}
                       </Button>

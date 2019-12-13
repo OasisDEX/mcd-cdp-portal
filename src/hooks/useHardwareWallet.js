@@ -67,7 +67,7 @@ export function useTrezor({ onAccountChosen }) {
         type: AccountTypes.TREZOR,
         path: TREZOR_PATH,
         confirmAddress: address => {
-          onAccountChosen(address, AccountTypes.TREZOR);
+          onAccountChosen({ address }, AccountTypes.TREZOR);
         }
       }
     });
@@ -87,7 +87,7 @@ export function useLedger({ onAccountChosen }) {
           type: AccountTypes.LEDGER,
           path,
           confirmAddress: address => {
-            onAccountChosen(address, AccountTypes.LEDGER);
+            onAccountChosen({ address }, AccountTypes.LEDGER);
           }
         }
       });
@@ -162,13 +162,7 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
-  function pickAccount(
-    address,
-    page,
-    numAccountsPerFetch,
-    numAccountsPerPage,
-    confirmAddress
-  ) {
+  function pickAccount(address, page, numAccountsPerFetch, numAccountsPerPage) {
     const fetchNumber = Math.floor(
       (page * numAccountsPerPage) / numAccountsPerFetch
     );
@@ -177,7 +171,6 @@ function useHardwareWallet({
       if (i !== fetchNumber) state.chooseCallbacks[i]('error');
     }
     state.chooseCallbacks[fetchNumber](null, address);
-    setTimeout(()=> confirmAddress({address}), 1);
   }
 
   return {

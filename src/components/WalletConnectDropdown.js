@@ -30,12 +30,7 @@ const Option = ({ children, ...props }) => {
   );
 };
 
-const WalletConnectDropdown = ({
-  trigger,
-  children,
-  close = () => {},
-  ...props
-}) => {
+const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { lang } = useLanguage();
   const {
     maker,
