@@ -95,28 +95,7 @@ const withSaveLayout = route =>
   }, route);
 
 export default mount({
-  '/': route(async request => {
-    const {
-      network = networkNames[defaultNetwork],
-      testchainId,
-      backendEnv
-    } = request.query;
-    return {
-      title: 'Landing',
-      view: (
-        <MakerProvider
-          network={network}
-          testchainId={testchainId}
-          backendEnv={backendEnv}
-        >
-          <RouteEffects network={network} />
-          <ModalProvider modals={modals} templates={templates}>
-            <Landing />
-          </ModalProvider>
-        </MakerProvider>
-      )
-    };
-  }),
+  '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
   [`/${Routes.BORROW}`]: withBorrowLayout(
     route(() => {
