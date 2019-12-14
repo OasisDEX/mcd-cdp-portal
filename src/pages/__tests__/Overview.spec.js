@@ -24,11 +24,11 @@ let account;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
-  await await maker
+  await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(VAULT1_ART));
 
-  await await maker
+  await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT2_ETH), MDAI(VAULT2_ART));
 });
