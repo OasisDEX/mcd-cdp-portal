@@ -1,7 +1,8 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import sidebars from 'components/Sidebars';
 import useToggle from 'hooks/useToggle';
 import { Toggles } from 'utils/constants';
+import { useCurrentRoute } from 'react-navi';
 
 const initialState = { type: '', props: {} };
 
@@ -10,7 +11,9 @@ const reducer = (state, { type, payload }) => {
     case 'show':
       return { ...state, ...payload };
     case 'reset':
-      return { ...initialState };
+      return { ...state, ...initialState };
+    case 'update-route':
+      return { ...state, lastPathname: payload };
     default:
       return;
   }
@@ -19,7 +22,10 @@ const reducer = (state, { type, payload }) => {
 const SidebarStateContext = createContext(initialState);
 
 function SidebarProvider({ children }) {
-  const [{ type, props }, dispatch] = useReducer(reducer, initialState);
+  const [{ type, props, lastPathname }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const { setToggle: setWalletBalancesCollapsed } = useToggle(
     Toggles.WALLETBALANCES
   );
@@ -32,6 +38,15 @@ function SidebarProvider({ children }) {
   };
 
   const current = { component: sidebars[type], props: { ...props, reset } };
+
+  // close the sidebar whenever the route changes
+  const { pathname } = useCurrentRoute().url;
+  useEffect(() => {
+    if (pathname !== lastPathname) {
+      dispatch({ type: 'update-route', payload: pathname });
+      if (type !== '') reset();
+    }
+  }, [pathname, type, lastPathname]);
 
   return (
     <SidebarStateContext.Provider value={{ show, reset, current }}>
