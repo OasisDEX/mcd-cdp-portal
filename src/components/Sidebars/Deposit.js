@@ -29,7 +29,7 @@ const Deposit = ({ cdpId, reset }) => {
 
   const gemBalances = useWalletBalances();
   const gemBalance = gemBalances[symbol] || 0;
-  const { hasAllowance } = useTokenAllowance(symbol);
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const { hasProxy } = useProxy();
 
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -44,11 +44,16 @@ const Deposit = ({ cdpId, reset }) => {
     {
       maxFloat: gemBalance,
       minFloat: 0,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        allowanceInvalid: value => !hasSufficientAllowance(value)
+      }
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, symbol)
+        lang.formatString(lang.action_sidebar.insufficient_balance, symbol),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, symbol)
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
