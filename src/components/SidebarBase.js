@@ -39,7 +39,7 @@ const AnimatedWrap = styled(animated.div)`
   width: 100%;
 `;
 
-function Sidebar() {
+function SidebarBase() {
   const { account, resetTx, selectors, network } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
@@ -132,4 +132,4 @@ function Sidebar() {
   );
 }
 
-export default hot(Sidebar);
+export default hot(SidebarBase);
