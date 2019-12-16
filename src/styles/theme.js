@@ -50,7 +50,7 @@ const theme = {
     s2: 13
   }
 };
-console.log(theme);
+
 export default theme;
 
 // the following two functions are taken directly from styled-system
