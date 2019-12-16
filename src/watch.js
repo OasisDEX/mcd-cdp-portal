@@ -87,7 +87,7 @@ export async function updateWatcherWithProxy(
 
 export function createWatcher(maker) {
   const service = maker.service('multicall');
-  service.createWatcher({ interval: 'block' });
+  service.createWatcher({ interval: 'block', useFetch: true });
   watcher = service.watcher;
   window.watcher = watcher;
   return watcher;
