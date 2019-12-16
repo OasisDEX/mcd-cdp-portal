@@ -20,6 +20,7 @@ import SetMax from 'components/SetMax';
 import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
+import DSRBalanceCounter from 'components/DSRBalanceCounter';
 
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
@@ -31,43 +32,8 @@ import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
-import useInterval from 'hooks/useInterval';
-import usePrevious from 'hooks/usePrevious';
 
 import { FeatureFlags } from 'utils/constants';
-
-function DSRBalanceCounter() {
-  const [
-    {
-      savings: { rho, dsr }
-    }
-  ] = useStore();
-  const { DSR } = useWalletBalances();
-
-  const [tickingDSR, setTickingDSR] = useState(new BigNumber(0));
-  const [amountChange, setAmountChange] = useState(new BigNumber(0));
-
-  const rateOfChange = 15;
-
-  useEffect(() => {
-    if (DSR) {
-      setAmountChange(
-        dsr
-          .times(DSR)
-          .minus(DSR)
-          .div(rateOfChange)
-      );
-      setTickingDSR(DSR);
-    }
-  }, [DSR]);
-  const show = rho && dsr;
-
-  useInterval(() => {
-    setTickingDSR(tickingDSR.plus(amountChange));
-  }, 1000 / rateOfChange);
-
-  return <Text t="mono">{show ? tickingDSR.toFixed(18) : '--'}</Text>;
-}
 
 function Save() {
   const { lang } = useLanguage();
@@ -252,7 +218,7 @@ function Save() {
                 <Card>
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
-                      {balance.toFixed(18)} <Text t="h5"> DAI</Text>
+                      {balance.toFixed(6)} <Text t="h5"> DAI</Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
@@ -268,7 +234,7 @@ function Save() {
                             </Table.td>
                             <Table.td textAlign="right">
                               <Text t="body">
-                                {earnings.toBigNumber().toFixed()}
+                                {earnings.toBigNumber().toFixed(6)}
                               </Text>
                             </Table.td>
                           </Table.tr>
