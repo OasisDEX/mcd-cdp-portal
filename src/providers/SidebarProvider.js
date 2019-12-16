@@ -49,7 +49,9 @@ function SidebarProvider({ children }) {
   }, [pathname, type, lastPathname]);
 
   return (
-    <SidebarStateContext.Provider value={{ show, reset, current }}>
+    <SidebarStateContext.Provider
+      value={{ show, reset, current, lastPathname }}
+    >
       {children}
     </SidebarStateContext.Provider>
   );

@@ -4,6 +4,7 @@ import { hot } from 'react-hot-loader/root';
 
 import { Flex, Box, Grid } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
+import { useCurrentRoute } from 'react-navi';
 
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
@@ -38,14 +39,14 @@ const AnimatedWrap = styled(animated.div)`
   width: 100%;
 `;
 
-function Sidebar() {
+function Sidebar({ reset, lastPathname, updatePath }) {
   const { account, resetTx, selectors, network } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
   const [p2off, p2on] = animations.fade;
   const [p1off, p1on] = animations.fadeAway;
-
+  const { pathname } = useCurrentRoute().url;
   const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
     config: springConfig
@@ -104,6 +105,12 @@ function Sidebar() {
     setSlideAnimation,
     slideEnd
   ]);
+
+  useEffect(() => {
+    if (pathname !== lastPathname) {
+      resetSidebarActionAnimated();
+    }
+  }, [pathname, lastPathname]);
 
   return (
     <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
