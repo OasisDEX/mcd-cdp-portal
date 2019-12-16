@@ -4,6 +4,11 @@ import BigNumber from 'bignumber.js';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useStore from 'hooks/useStore';
 import { Text } from '@makerdao/ui-components-core';
+import styled from 'styled-components';
+
+const TextMono = styled(Text)`
+  font-family: SF Mono;
+`;
 
 function DSRBalanceCounter() {
   const [
@@ -36,9 +41,9 @@ function DSRBalanceCounter() {
   }, 1000 / rateOfChange);
 
   return (
-    <Text t="mono" color="darkLavender">
+    <TextMono color="darkLavender">
       {show ? tickingDSR.toFixed(18) : '--'}
-    </Text>
+    </TextMono>
   );
 }
 
