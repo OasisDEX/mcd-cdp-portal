@@ -9,6 +9,7 @@ import useLanguage from 'hooks/useLanguage';
 import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
 import SetMax from '../SetMax';
+import useTokenAllowance from 'hooks/useTokenAllowance';
 
 const placeholder = 'test';
 
@@ -90,6 +91,7 @@ const DSRDepositCreate = ({ dispatch, onClose }) => {
   const balances = useWalletBalances();
   const { MDAI } = balances;
   const daiBalance = MDAI.toFixed(6);
+  const { hasSufficientAllowance } = useTokenAllowance('MDAI');
 
   const [
     depositAmount,
@@ -101,11 +103,16 @@ const DSRDepositCreate = ({ dispatch, onClose }) => {
     {
       isFloat: true,
       minFloat: 0.0,
-      maxFloat: MDAI && MDAI.toNumber()
+      maxFloat: MDAI && MDAI.toNumber(),
+      custom: {
+        allowanceInvalid: value => !hasSufficientAllowance(value)
+      }
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI'),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
 
@@ -148,7 +155,11 @@ const DSRDepositCreate = ({ dispatch, onClose }) => {
         }}
         onBack={onClose}
         secondaryButtonText={lang.actions.skip}
-        canProgress={!!depositAmount && !depositAmountErrors}
+        canProgress={
+          !!depositAmount &&
+          !depositAmountErrors &&
+          hasSufficientAllowance(depositAmount)
+        }
       />
     </Box>
   );

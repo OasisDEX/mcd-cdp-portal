@@ -39,7 +39,7 @@ function Save() {
   const balances = useWalletBalances();
   const { maker, account, newTxListener, network } = useMaker();
   const [{ savings }] = useStore();
-  const { hasAllowance } = useTokenAllowance('MDAI');
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const [earnings, setEarnings] = useState(MDAI(0));
@@ -57,11 +57,16 @@ function Save() {
     {
       isFloat: true,
       minFloat: 0.0,
-      maxFloat: balances.MDAI && balances.MDAI.toNumber()
+      maxFloat: balances.MDAI && balances.MDAI.toNumber(),
+      custom: {
+        allowanceInvalid: value => !hasSufficientAllowance(value)
+      }
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI'),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
 

@@ -62,7 +62,10 @@ function OpenCDPForm({
           userHasSufficientGemBalance || !cdpParams.gemsToLock
             ? hasSufficientAllowance(cdpParams.gemsToLock)
               ? null
-              : 'user doesnt have enough allowance'
+              : lang.formatString(
+                  lang.action_sidebar.invalid_allowance,
+                  selectedIlk.currency.symbol
+                )
             : lang.formatString(
                 lang.cdp_create.insufficient_ilk_balance,
                 selectedIlk.currency.symbol

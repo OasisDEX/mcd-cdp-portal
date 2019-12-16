@@ -48,7 +48,8 @@ export default function useTokenAllowance(tokenSymbol) {
   const allowances = useTokenAllowances();
   const allowance = allowances[tokenSymbol];
   const hasAllowance = !!allowances[tokenSymbol];
-  const hasSufficientAllowance = value => value <= allowance;
+  const hasSufficientAllowance = value =>
+    tokenSymbol === 'ETH' || value <= allowance;
 
   const hasFetchedAllowance = useFetchedTokenAllowances();
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
