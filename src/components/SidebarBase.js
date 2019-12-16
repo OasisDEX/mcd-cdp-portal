@@ -39,7 +39,7 @@ const AnimatedWrap = styled(animated.div)`
   width: 100%;
 `;
 
-function Sidebar({ reset, lastPathname, updatePath }) {
+function Sidebar({ lastPathname }) {
   const { account, resetTx, selectors, network } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
