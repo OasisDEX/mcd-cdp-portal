@@ -110,6 +110,7 @@ function Sidebar({ lastPathname }) {
     if (pathname !== lastPathname) {
       resetSidebarActionAnimated();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, lastPathname]);
 
   return (
