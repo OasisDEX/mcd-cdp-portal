@@ -82,11 +82,11 @@ test('render overview page and display calculated vault values', async () => {
   // Total collateral locked
   getByText('$1050.00 USD');
   // Total Dai debt
-  getByText(/105.2\d DAI/);
+  getByText(/105.\d\d DAI/);
   // Vault1 Dai debt
   getByText(/80.2\d DAI/);
   // Current ratio
-  getByText(/1121.7\d%/);
+  getByText(/1121.\d\d%/);
   // Deposited
   getByText('6.00 ETH');
   // Available to withdraw
