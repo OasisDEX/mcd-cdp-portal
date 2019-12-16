@@ -55,7 +55,11 @@ export async function instantiateMaker({
     delete config.provider;
     config.plugins.push([configPlugin, { testchainId, backendEnv }]);
   } else if (!rpcUrl) {
-    rpcUrl = networkConfig.rpcUrls[networkNameToId(network)];
+    if (config.provider.type === 'HTTP')
+      rpcUrl = networkConfig.rpcUrls[networkNameToId(network)];
+    else if (config.provider.type === 'WEBSOCKET')
+      rpcUrl = networkConfig.wsRpcUrls[networkNameToId(network)];
+    else throw new Error(`Unsupported provider type: ${config.provider.type}`);
     if (!rpcUrl) throw new Error(`Unsupported network: ${network}`);
     config.provider.url = rpcUrl;
   }
