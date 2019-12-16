@@ -7,6 +7,7 @@ import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
+import { getQueryParamByName } from './utils/dev';
 
 let _maker;
 
@@ -42,7 +43,7 @@ export async function instantiateMaker({
     },
     provider: {
       url: rpcUrl,
-      type: 'HTTP'
+      type: getQueryParamByName('ws') ? 'WEBSOCKET' : 'HTTP'
     },
     web3: {
       pollingInterval: network === 'testnet' ? 100 : null
