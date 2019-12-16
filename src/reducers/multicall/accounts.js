@@ -1,4 +1,4 @@
-import { fromWei, MAX_UINT_BN } from 'utils/units';
+import { fromWei } from 'utils/units';
 
 export function accountBalanceForToken(addresses, tokenSymbol, accountAddress) {
   return [
