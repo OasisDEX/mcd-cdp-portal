@@ -1,9 +1,8 @@
 import React from 'react';
 import CDPCreate from '../CDPCreate';
-import { renderWithMaker, mocks } from '../../../test/helpers/render';
-import { wait, fireEvent, waitForElement } from '@testing-library/react';
+import { renderWithAccount, mocks } from '../../../test/helpers/render';
+import { wait, fireEvent } from '@testing-library/react';
 import { instantiateMaker } from '../../maker';
-import useMaker from '../../hooks/useMaker';
 import BigNumber from 'bignumber.js';
 import { mineBlocks } from '@makerdao/test-helpers';
 import assert from 'assert';
@@ -14,12 +13,6 @@ let maker;
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
 });
-
-function WaitForAccount({ children, callback }) {
-  const { account } = useMaker();
-  callback(account);
-  return account ? children : null;
-}
 
 function prepState(state) {
   Object.assign(state.feeds.find(f => f.key === 'ETH-A'), {
@@ -39,24 +32,13 @@ function prepState(state) {
 }
 
 test('the whole flow', async () => {
-  let account;
   const {
     getAllByRole,
     getAllByText,
     getByLabelText,
     getByRole,
     getByText
-  } = renderWithMaker(
-    <WaitForAccount
-      callback={a => {
-        account = a;
-      }}
-    >
-      <CDPCreate />
-    </WaitForAccount>,
-    prepState
-  );
-  await waitForElement(() => account);
+  } = await renderWithAccount(<CDPCreate />, prepState);
 
   getByText('Select a collateral type');
   click(getByRole('radio')); // ETH-A is the only ilk shown

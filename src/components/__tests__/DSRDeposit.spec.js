@@ -6,9 +6,8 @@ import { mineBlocks } from '@makerdao/test-helpers';
 
 import DSRDeposit from '../DSRDeposit';
 import lang from '../../languages';
-import { renderWithMaker } from '../../../test/helpers/render';
+import { renderWithAccount } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
-import useMaker from '../../hooks/useMaker';
 import { prettifyNumber } from '../../utils/ui';
 
 const { click, change } = fireEvent;
@@ -24,26 +23,12 @@ beforeAll(async () => {
     .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
 });
 
-function WaitForAccount({ children, callback }) {
-  const { account } = useMaker();
-  callback(account);
-  return account ? children : null;
-}
-
 test('the whole DSR Deposit flow', async () => {
   const hideOnboarding = jest.fn();
-  let account;
-  const { getAllByText, getByRole, getByText } = renderWithMaker(
-    <WaitForAccount
-      callback={a => {
-        account = a;
-      }}
-    >
-      <DSRDeposit hideOnboarding={hideOnboarding} />
-    </WaitForAccount>,
+  const { getAllByText, getByRole, getByText } = await renderWithAccount(
+    <DSRDeposit hideOnboarding={hideOnboarding} />,
     state => state
   );
-  await waitForElement(() => account);
   getByText(lang.dsr_deposit.open_vault);
 
   // First checkmark is proxy, but need to set allowance for Dai

@@ -65,5 +65,5 @@ export async function renderWithAccount(children, ...args) {
     ...args
   );
   await waitForElement(() => account);
-  return output;
+  return { ...output, account };
 }
