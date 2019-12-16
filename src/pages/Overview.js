@@ -151,7 +151,7 @@ function Overview({ viewedAddress }) {
         >
           {account && account.address === viewedAddressData.viewedAddress ? (
             <>
-              <Text.p t="h4" css={{ marginBottom: '26px' }}>
+              <Text.p t="h4" mb="26px">
                 {lang.overview_page.get_started_title}
               </Text.p>
               <Button

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
@@ -23,6 +23,9 @@ function OpenCDPForm({
   collateralizationRatio
 }) {
   const { lang } = useLanguage();
+  const { hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk.currency.symbol
+  );
   const userHasSufficientGemBalance = greaterThanOrEqual(
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
@@ -57,7 +60,12 @@ function OpenCDPForm({
         width={300}
         failureMessage={
           userHasSufficientGemBalance || !cdpParams.gemsToLock
-            ? null
+            ? hasSufficientAllowance(cdpParams.gemsToLock)
+              ? null
+              : lang.formatString(
+                  lang.action_sidebar.invalid_allowance,
+                  selectedIlk.currency.symbol
+                )
             : lang.formatString(
                 lang.cdp_create.insufficient_ilk_balance,
                 selectedIlk.currency.symbol
@@ -218,7 +226,9 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     daiAvailable: estDaiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
   const daiAvailable = safeToFixed(estDaiAvailable, 3);
-  const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk.currency.symbol
+  );
   const { lang } = useLanguage();
 
   function handleInputChange({ target }) {
@@ -229,11 +239,12 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     });
   }
 
-  const canProgress = cdpParamsAreValid(
-    cdpParams,
-    selectedIlk.userGemBalance,
-    selectedIlk.data
-  );
+  const canProgress =
+    cdpParamsAreValid(
+      cdpParams,
+      selectedIlk.userGemBalance,
+      selectedIlk.data
+    ) && hasSufficientAllowance(cdpParams.gemsToLock);
 
   return (
     <Box

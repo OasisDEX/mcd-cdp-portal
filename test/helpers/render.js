@@ -11,13 +11,18 @@ const defaultInitialState = rootReducer({}, {});
 
 export const mocks = { navigation: { navigate: jest.fn() } };
 
-export function renderWithMaker(children, updateInitialState, reducer) {
+export function renderWithMaker(
+  children,
+  updateInitialState,
+  reducer,
+  providerProps
+) {
   const state = updateInitialState
     ? updateInitialState(defaultInitialState)
     : defaultInitialState;
 
   return renderWithStore(
-    <TestMakerProvider waitForAuth={true} mocks={mocks}>
+    <TestMakerProvider {...providerProps} waitForAuth={true} mocks={mocks}>
       {children}
     </TestMakerProvider>,
     state,
