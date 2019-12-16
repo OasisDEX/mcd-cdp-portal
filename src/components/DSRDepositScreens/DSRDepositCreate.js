@@ -155,11 +155,7 @@ const DSRDepositCreate = ({ dispatch, onClose }) => {
         }}
         onBack={onClose}
         secondaryButtonText={lang.actions.skip}
-        canProgress={
-          !!depositAmount &&
-          !depositAmountErrors &&
-          hasSufficientAllowance(depositAmount)
-        }
+        canProgress={!!depositAmount && !depositAmountErrors}
       />
     </Box>
   );
