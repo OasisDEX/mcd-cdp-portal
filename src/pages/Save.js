@@ -218,7 +218,7 @@ function Save() {
                 <Card>
                   <CardBody px="l" py="m">
                     <Text.p t="h2">
-                      {balance.toFixed(6)} <Text t="h5"> DAI</Text>
+                      <DSRBalanceCounter /> <Text t="h5"> DAI</Text>
                     </Text.p>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
@@ -249,15 +249,6 @@ function Save() {
                                 ? `${savings.yearlyRate.toFixed(2)}%`
                                 : '--'}
                             </Text>
-                          </Table.td>
-                        </Table.tr>
-
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">{lang.save.estimated_savings}</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <DSRBalanceCounter />
                           </Table.td>
                         </Table.tr>
                       </Table.tbody>

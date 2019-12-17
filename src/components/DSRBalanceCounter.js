@@ -10,6 +10,9 @@ const TextMono = styled(Text)`
   font-family: SF Mono;
 `;
 
+const oneThousand = new BigNumber('1000');
+const oneHundredThousand = new BigNumber('100000');
+
 function DSRBalanceCounter() {
   const [
     {
@@ -22,6 +25,12 @@ function DSRBalanceCounter() {
   const [amountChange, setAmountChange] = useState(new BigNumber(0));
 
   const rateOfChange = 10;
+
+  const decimaslOffset = DSR.lt(oneThousand)
+    ? 8
+    : DSR.lt(oneHundredThousand)
+    ? 6
+    : 4;
 
   useEffect(() => {
     if (DSR) {
@@ -41,8 +50,8 @@ function DSRBalanceCounter() {
   }, 1000 / rateOfChange);
 
   return (
-    <TextMono color="darkLavender">
-      {show ? tickingDSR.toFixed(18) : '--'}
+    <TextMono t="h2" color="darkLavender">
+      {show ? tickingDSR.toFixed(decimaslOffset) : '--'}
     </TextMono>
   );
 }
