@@ -49,7 +49,6 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const gem = cdp.currency.symbol;
   const debtAmount = getDebtAmount(cdp);
   let liquidationPrice = getLiquidationPrice(cdp);
-  if (liquidationPrice) liquidationPrice = liquidationPrice.toFixed(2);
   if (liquidationPrice === 'Infinity')
     liquidationPrice = lang.cdp_page.not_applicable;
   const collateralPrice = getCollateralPrice(cdp);
