@@ -1,25 +1,27 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import CDPDisplay from '../';
-import { cleanup, waitForElement } from '@testing-library/react';
-import { MDAI, ETH, BAT, USD } from '@makerdao/dai-plugin-mcd';
+import { cleanup, waitForElement, fireEvent } from '@testing-library/react';
+import { MDAI, ETH, USD } from '@makerdao/dai-plugin-mcd';
 
 import { renderWithAccount } from '../../../../test/helpers/render';
 import { instantiateMaker } from '../../../maker';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { SidebarProvider } from '../../../providers/SidebarProvider';
 import { BigNumber } from 'bignumber.js';
+import SidebarBase from 'components/SidebarBase';
+import * as navi from 'react-navi';
+
+const { click, change } = fireEvent;
+jest.mock('react-navi');
 
 const ILK = 'ETH-A';
-const VAULT1_ETH = '1';
-const VAULT1_ART = '21';
-const AMOUNT = 21;
+const VAULT1_ETH = '5';
+const VAULT1_ART = '210';
+const AMOUNT = 210;
 
-const PAR = new BigNumber('1000000000000000000000000000');
-
-const DEBT_CEILING = '1000';
+const ACCT_BAL = 3;
 const RATE = '1.000967514019988230';
-const DUST = '20';
-const PRICE = createCurrencyRatio(USD, BAT)('0.24');
+const PRICE = createCurrencyRatio(USD, ETH)('150');
 const LIQUIDATION_RATIO = '200';
 
 let maker;
@@ -44,49 +46,48 @@ function prepState(state) {
     },
     accounts: {
       [maker.currentAddress()]: {
-        balances: { ETH: 3 },
-        allowances: {},
-        cdps: [{ id: 1 }]
+        balances: { ETH: new BigNumber(ACCT_BAL) }
       }
     },
     feeds: [
       {
         key: ILK,
         currency: ETH,
-        dust: DUST,
         rate: RATE,
         feedValueUSD: PRICE,
-        debtCeiling: DEBT_CEILING,
         liquidationRatio: LIQUIDATION_RATIO
       }
-    ],
-    system: {
-      par: PAR
-    }
+    ]
   };
 }
 
 afterEach(cleanup);
 const identityReducer = x => x;
 
-test('cdp actions', async () => {
-  const { getByText, getAllByText } = await renderWithAccount(
-    <Fragment>
-      <SidebarProvider>
-        <CDPDisplay cdpId="1" />
-      </SidebarProvider>
-      <div id="portal1" />
-    </Fragment>,
+test('Vault Display page and actions', async () => {
+  navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
+  const { getByText, findByText, getByRole } = await renderWithAccount(
+    <SidebarProvider>
+      <CDPDisplay cdpId="1" />
+      <SidebarBase />
+    </SidebarProvider>,
     prepState,
     identityReducer
   );
 
-  await waitForElement(() => getAllByText('Outstanding Dai debt'));
   await waitForElement(() => getByText('Vault history'));
-
   getByText('ETH-A Vault #1');
-  getByText('Deposit');
-  getByText('Withdraw');
-  getByText('Pay back');
-  getByText('Generate');
+
+  click(getByText('Deposit'));
+  await findByText(/would you like to deposit/);
+
+  // Initial liquidation & collateral ratio values update with input
+  getByText('84.08 ETH/USD');
+  getByText('356.80%');
+
+  const input = getByRole('textbox');
+  change(input, { target: { value: '3' } });
+
+  getByText('52.55 ETH/USD');
+  getByText('570.88%');
 });
