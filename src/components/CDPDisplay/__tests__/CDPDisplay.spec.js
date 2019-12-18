@@ -1,6 +1,11 @@
 import React from 'react';
 import CDPDisplay from '../';
-import { cleanup, waitForElement, fireEvent } from '@testing-library/react';
+import {
+  cleanup,
+  waitForElement,
+  fireEvent,
+  within
+} from '@testing-library/react';
 import { MDAI, ETH, USD } from '@makerdao/dai-plugin-mcd';
 
 import { renderWithAccount } from '../../../../test/helpers/render';
@@ -46,7 +51,8 @@ function prepState(state) {
     },
     accounts: {
       [maker.currentAddress()]: {
-        balances: { ETH: new BigNumber(ACCT_BAL) }
+        balances: { ETH: new BigNumber(ACCT_BAL) },
+        allowances: { MDAI: '5000', DAI: '5000' }
       }
     },
     feeds: [
@@ -66,7 +72,13 @@ const identityReducer = x => x;
 
 test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
-  const { getByText, findByText, getByRole } = await renderWithAccount(
+  const {
+    getByText,
+    findByText,
+    getByRole,
+    getAllByText,
+    debug
+  } = await renderWithAccount(
     <SidebarProvider>
       <CDPDisplay cdpId="1" />
       <SidebarBase />
@@ -74,20 +86,70 @@ test('Vault Display page and actions', async () => {
     prepState,
     identityReducer
   );
-
-  await waitForElement(() => getByText('Vault history'));
+  // Wait for page to render
+  await waitForElement(() => getByText('Opened a new Vault with id #'));
   getByText('ETH-A Vault #1');
 
+  /**Wallet Balances */
+  const balancesEl = getByText('Wallet Balances').parentElement.parentElement;
+  expect(
+    within(balancesEl).getByText('ETH').nextElementSibling.textContent
+  ).toBe('3.0000');
+  expect(
+    within(balancesEl).getByText('ETH').nextElementSibling.nextElementSibling
+      .textContent
+  ).toBe('$450.00');
+
+  /**Deposit */
   click(getByText('Deposit'));
   await findByText(/would you like to deposit/);
+  // ETH locked before
+  const [, depositLabel] = getAllByText('ETH locked');
+  expect(depositLabel.nextElementSibling.textContent).toBe('5 ETH');
+  //TODO figure out why component doesn't receive proxy
+  // change(getByRole('textbox'), { target: { value: '3' } });
 
-  // Initial liquidation & collateral ratio values update with input
-  getByText('84.08 ETH/USD');
-  getByText('356.80%');
+  /**Withdraw */
+  click(getByText('Withdraw'));
+  await findByText(/would you like to withdraw/);
 
-  const input = getByRole('textbox');
-  change(input, { target: { value: '3' } });
+  // amount to withdraw before
+  expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
+    '2.2 ETH'
+  );
 
-  getByText('52.55 ETH/USD');
-  getByText('570.88%');
+  // submit and check event history
+  change(getByRole('textbox'), { target: { value: '2' } });
+  const [, wdSidebarBtn] = getAllByText('Withdraw');
+  click(wdSidebarBtn);
+  const wdEvent = await findByText(/Withdrew/);
+  expect(wdEvent.textContent).toBe('Withdrew 2.0000 ETH from Vault');
+
+  /**Generate */
+  click(getByText('Generate'));
+  await findByText(/would you like to generate/);
+
+  // amount to generate before
+  const generateLabel = getByText('Available to generate');
+  expect(generateLabel.nextElementSibling.textContent).toBe('164.8 DAI');
+
+  // submit and check event history
+  change(getByRole('textbox'), { target: { value: '1' } });
+  const [, genSidebarBtn] = getAllByText('Generate');
+  click(genSidebarBtn);
+  const genEvent = await findByText('1.0000');
+  expect(genEvent.parentElement.textContent).toBe(
+    'Generated 1.0000 new Dai from Vault'
+  );
+
+  /**Pay back */
+  click(getByText('Pay back'));
+  await findByText(/would you like to pay back/);
+  // Outstanding Dai debt before
+  const [, debtLabel] = getAllByText('Outstanding Dai debt');
+  expect(debtLabel.nextElementSibling.textContent).toBe('210.2 DAI');
+  //TODO component doesn't update with proxy
+  // change(getByRole('textbox'), { target: { value: '1' } });
+  // const [, pbSidebarBtn] = getAllByText('Pay back');
+  // click(pbSidebarBtn);
 });
