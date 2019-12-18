@@ -69,7 +69,7 @@ test('render overview page and display calculated vault values', async () => {
   // Vault1 Dai debt
   getByText(/80.\d{1,2} DAI/);
   // Current ratio
-  getByText(/1121.\d{1,2}%/);
+  getByText(/112\d.\d{1,2}%/);
   // Deposited
   getByText('6.00 ETH');
   // Available to withdraw
