@@ -30,11 +30,6 @@ export default function(addresses) {
     },
     {
       target: addresses.MCD_POT,
-      call: ['rho()(uint256)'],
-      returns: [['savings.rho']]
-    },
-    {
-      target: addresses.MCD_POT,
       call: ['dsr()(uint256)'],
       returns: [['savings.dsr', fromRay]]
     }

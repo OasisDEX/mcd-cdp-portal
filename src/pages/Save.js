@@ -14,13 +14,13 @@ import {
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
+import TextMono from 'components/TextMono';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
 import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
-import DSRBalanceCounter from 'components/DSRBalanceCounter';
 
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
@@ -32,7 +32,7 @@ import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
-
+import useSavingsDai from 'hooks/useSavingsDai';
 import { FeatureFlags } from 'utils/constants';
 
 function Save() {
@@ -41,9 +41,14 @@ function Save() {
   const { maker, account, newTxListener, network } = useMaker();
   const [{ savings }] = useStore();
   const { hasAllowance } = useTokenAllowance('MDAI');
+  const {
+    estimatedSavingsDaiBalance,
+    estimatedSavingsDaiEarned,
+    estimatedSavingsDaiIncrementPerSecond,
+    decimalsToShow
+  } = useSavingsDai();
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  const [earnings, setEarnings] = useState(MDAI(0));
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
 
   const balance = balances.DSR;
@@ -120,16 +125,6 @@ function Save() {
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
     ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
     : {};
-
-  useEffect(() => {
-    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
-    (async function() {
-      const etd = await maker
-        .service('mcd:savings')
-        .getEarningsToDate(proxyAddress);
-      setEarnings(etd);
-    })();
-  }, [maker, proxyAddress]);
 
   useEffect(() => {
     if (!balances.MDAI) return;
@@ -217,9 +212,10 @@ function Save() {
               <Flex py="s" height="100%" flexDirection="column">
                 <Card>
                   <CardBody px="l" py="m">
-                    <Text.p t="h2">
-                      <DSRBalanceCounter /> <Text t="h5"> DAI</Text>
-                    </Text.p>
+                    <TextMono t="h2">
+                      {estimatedSavingsDaiBalance.toFixed(decimalsToShow)}
+                    </TextMono>
+                    <Text t="h5"> DAI</Text>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
                     </Text.p>
@@ -227,18 +223,33 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
-                        {FeatureFlags.FF_DSR_ETD && (
-                          <Table.tr>
-                            <Table.td>
-                              <Text t="body">{lang.save.savings_to_date}</Text>
-                            </Table.td>
-                            <Table.td textAlign="right">
-                              <Text t="body">
-                                {earnings.toBigNumber().toFixed(6)}
-                              </Text>
-                            </Table.td>
-                          </Table.tr>
-                        )}
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">{lang.save.savings_to_date}</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <TextMono t="body">
+                              {estimatedSavingsDaiEarned.toFixed(
+                                decimalsToShow
+                              )}
+                            </TextMono>
+                            <Text t="body"> DAI</Text>
+                          </Table.td>
+                        </Table.tr>
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">{lang.save.gain_per_second}</Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <TextMono t="body">
+                              {estimatedSavingsDaiIncrementPerSecond.toFixed(
+                                decimalsToShow
+                              )}
+                            </TextMono>
+                            <Text t="body"> DAI</Text>
+                          </Table.td>
+                        </Table.tr>
+
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>

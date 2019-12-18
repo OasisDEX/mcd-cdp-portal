@@ -302,8 +302,7 @@ export default {
     'tx_history': 'History',
     'savings_to_date': 'Savings to date',
     'estimated_savings': 'Estimated savings',
-    'gain_since_drip': 'Gain Since Last Drip (WEI):',
-    'seconds_since_drip': 'Seconds since last drip'
+    'gain_per_second': 'Gain per second'
   },
   'verbs': {
     'depositing': 'Depositing',

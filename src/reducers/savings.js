@@ -5,8 +5,6 @@ const initialState = {
   Pie: new BigNumber(0),
   yearlyRate: new BigNumber(0),
   totalDai: new BigNumber(0),
-  chi: new BigNumber(0),
-  rho: new BigNumber(0),
   dsr: new BigNumber(0)
 };
 
