@@ -67,7 +67,7 @@ test('render overview page and display calculated vault values', async () => {
   // Total Dai debt
   getByText(/105.\d{1,2} DAI/);
   // Vault1 Dai debt
-  getByText(/80.2\d DAI/);
+  getByText(/80.\d{1,2} DAI/);
   // Current ratio
   getByText(/1121.\d{1,2}%/);
   // Deposited
