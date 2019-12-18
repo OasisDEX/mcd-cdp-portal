@@ -1631,14 +1631,14 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@^0.23.0-rc.2":
-  version "0.23.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.23.0-rc.2.tgz#e36cfd41bdca0af29837bd7bdcc41ab48f3d6fc2"
-  integrity sha512-BnZVuEDXB+RKpwHJqy5RMzxU46VNSt74S/JFm25qIyZl8XvGraiqhrIGtSNuLlGL8jaE6ki1HghM5EZezJUEeA==
+"@makerdao/dai@0.23.0-rc.5":
+  version "0.23.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.23.0-rc.5.tgz#18bcbc196e7c3a1fb745a65b09101669226eaae0"
+  integrity sha512-VgVr9q5oOIN//je678fRNkT3Us3AXAqPzR/XfKv2JMa2GUJK9wDvKHH7DpAeKc8iqFCAp/nV3kP2m9GX9aY2zA==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/multicall" "^0.9.0-rc.1"
+    "@makerdao/multicall" "^0.9.0-rc.2"
     "@makerdao/services-core" "^0.9.9"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
@@ -1666,15 +1666,18 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@^0.9.0-rc.1":
-  version "0.9.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.9.0-rc.1.tgz#0f07d86fde46148d537a825f4f97268176571d66"
-  integrity sha512-X0kdC117WXnsEwSFepDWG1Fhh65+Zov1wKZJpZyXyJE5wiIN9GW9AhXuw6W0oaiwUkpPxVx2UWaclwroQjCsQg==
+"@makerdao/multicall@^0.9.0-rc.2":
+  version "0.9.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.9.0-rc.2.tgz#2a005df4f41f5097784781be077f09d9c82776e2"
+  integrity sha512-WRiMqugAIDvPFAadNg3+dgV16G94K5EGIJUUs2Ee9tzprX8+lPOhytVxQpnkAiLTP3ac108QtjTiKpKYLdOhpw==
   dependencies:
-    cross-fetch "^3.0.1"
+    cross-fetch "^3.0.4"
+    debug "^4.1.1"
     ethers "^4.0.27"
+    isomorphic-ws "^4.0.1"
     js-sha3 "^0.8.0"
     lodash "^4.17.11"
+    ws "^7.2.0"
 
 "@makerdao/services-core@^0.9.9":
   version "0.9.9"
@@ -4671,10 +4674,10 @@ cross-fetch@^2.1.0, cross-fetch@^2.1.1:
     node-fetch "2.1.2"
     whatwg-fetch "2.0.4"
 
-cross-fetch@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.3.tgz#b988beab275939cb77ad4e362c873f7fa8a221a5"
-  integrity sha512-mplYkc4CopHu+AdHK8wxjJcPskUxp5CvPTdtDij3MUgVNBa0xOb9CQqbbn1zO23qISM4WLxIBociyEVQL7WQAg==
+cross-fetch@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.4.tgz#7bef7020207e684a7638ef5f2f698e24d9eb283c"
+  integrity sha512-MSHgpjQqgbT/94D4CyADeNoYh52zMkCX4pcJvPP5WqPsLFMKjr2TCMg381ox5qI0ii2dPwaLx/00477knXqXVw==
   dependencies:
     node-fetch "2.6.0"
     whatwg-fetch "3.0.0"
@@ -8335,6 +8338,11 @@ isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
   dependencies:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
+
+isomorphic-ws@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
+  integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -15385,6 +15393,11 @@ ws@^6.0.0, ws@^6.1.2:
   integrity sha512-GIyAXC2cB7LjvpgMt9EKS2ldqr0MTrORaleiOno6TweZ6r3TKtoFQWay/2PceJ3RuBasOHzXNn5Lrw1X0bEjqA==
   dependencies:
     async-limiter "~1.0.0"
+
+ws@^7.2.0:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.1.tgz#03ed52423cd744084b2cf42ed197c8b65a936b8e"
+  integrity sha512-sucePNSafamSKoOqoNfBd8V0StlkzJKL2ZAhGQinCfNQ+oacw+Pk7lcdAElecBF2VkLNZRiIb5Oi1Q5lVUVt2A==
 
 xdg-basedir@^3.0.0:
   version "3.0.0"
