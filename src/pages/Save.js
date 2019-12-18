@@ -43,7 +43,6 @@ function Save() {
   const {
     estimatedSavingsDaiBalance,
     estimatedSavingsDaiEarned,
-    estimatedSavingsDaiIncrementPerSecond,
     decimalsToShow
   } = useSavingsDai();
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
@@ -241,20 +240,6 @@ function Save() {
                             <Text t="body"> DAI</Text>
                           </Table.td>
                         </Table.tr>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">{lang.save.gain_per_second}</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <TextMono t="body">
-                              {estimatedSavingsDaiIncrementPerSecond.toFixed(
-                                decimalsToShow
-                              )}
-                            </TextMono>
-                            <Text t="body"> DAI</Text>
-                          </Table.td>
-                        </Table.tr>
-
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
