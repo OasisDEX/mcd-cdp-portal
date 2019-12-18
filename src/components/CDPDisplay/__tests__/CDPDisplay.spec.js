@@ -152,4 +152,4 @@ test('Vault Display page and actions', async () => {
   // change(getByRole('textbox'), { target: { value: '1' } });
   // const [, pbSidebarBtn] = getAllByText('Pay back');
   // click(pbSidebarBtn);
-});
+}, 20000);
