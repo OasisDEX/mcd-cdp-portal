@@ -42,6 +42,16 @@ test('basic rendering', () => {
   expect(showSidebar).toBeCalledWith({ type: 'deposit', props: { cdpId: 1 } });
 });
 
+test('render liquidation price correctly when no debt', () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = { ...cdp, price: LOL(0), art: '0', ink: '0' };
+  const { getByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  getByText('N/A');
+  getByText('0 USD');
+});
+
 describe('on mobile', () => {
   let getComputedStyleOrig;
 

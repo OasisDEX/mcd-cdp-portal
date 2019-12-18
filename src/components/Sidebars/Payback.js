@@ -33,7 +33,7 @@ const Payback = ({ cdpId, reset }) => {
   const balances = useWalletBalances();
   const daiBalance = balances.MDAI;
 
-  const { hasAllowance } = useTokenAllowance('MDAI');
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
   const [storeState] = useStore();
@@ -57,7 +57,8 @@ const Payback = ({ cdpId, reset }) => {
       minFloat: 0,
       isFloat: true,
       custom: {
-        dustLimit: dustLimitValidation
+        dustLimit: dustLimitValidation,
+        allowanceInvalid: value => !hasSufficientAllowance(value)
       }
     },
     {
@@ -70,7 +71,9 @@ const Payback = ({ cdpId, reset }) => {
         lang.formatString(
           lang.cdp_create.dust_max_payback,
           subtract(debtAmount, dustLimit)
-        )
+        ),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
 

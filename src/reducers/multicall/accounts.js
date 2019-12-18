@@ -1,4 +1,4 @@
-import { fromWei, MAX_UINT_BN } from 'utils/units';
+import { fromWei } from 'utils/units';
 
 export function accountBalanceForToken(addresses, tokenSymbol, accountAddress) {
   return [
@@ -37,7 +37,7 @@ export function accountProxyAllowanceForToken(
           `accounts.${accountAddress}.allowances.${tokenSymbol}`,
           // Unlimited allowance may be a tiny bit less than MAX_UINT_BN,
           // calling .toNumber() gives us a reasonably large number to compare.
-          allowance => fromWei(allowance).toNumber() === MAX_UINT_BN.toNumber()
+          allowance => fromWei(allowance).toNumber()
         ]
       ],
       meta: { accountProxyAllowanceForToken: true }

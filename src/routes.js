@@ -95,36 +95,10 @@ const withSaveLayout = route =>
   }, route);
 
 export default mount({
-  '/': route(async request => {
-    const {
-      network = networkNames[defaultNetwork],
-      testchainId,
-      backendEnv
-    } = request.query;
-    return {
-      title: 'Landing',
-      view: (
-        <MakerProvider
-          network={network}
-          testchainId={testchainId}
-          backendEnv={backendEnv}
-        >
-          <RouteEffects network={network} />
-          <ModalProvider modals={modals} templates={templates}>
-            <Landing />
-          </ModalProvider>
-        </MakerProvider>
-      )
-    };
-  }),
+  '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
   [`/${Routes.BORROW}`]: withBorrowLayout(
-    route(() => {
-      return {
-        title: 'Borrow',
-        view: <Borrow />
-      };
-    })
+    route(() => ({ title: 'Borrow', view: <Borrow /> }))
   ),
 
   [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
@@ -144,39 +118,27 @@ export default mount({
       if (!/^\d+$/.test(cdpId))
         return route({ view: <div>invalid cdp id</div> });
 
-      return route({
-        title: 'CDP',
-        view: <CDPDisplay cdpId={cdpId} />
-      });
+      return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
     })
   ),
 
   [`/${Routes.SAVE}`]: withSaveLayout(
-    route(() => {
-      return {
-        title: 'Save',
-        view: <Save />
-      };
-    })
+    route(() => ({ title: 'Save', view: <Save /> }))
   ),
 
   [`/${Routes.TRADE}`]: route(() => {
     window.location.href = 'https://oasis.app/trade';
   }),
 
-  [`/${Routes.PRIVACY}`]: route(() => {
-    return {
-      title: 'Oasis - Privacy Policy',
-      view: <Privacy />
-    };
-  }),
+  [`/${Routes.PRIVACY}`]: route(() => ({
+    title: 'Oasis - Privacy Policy',
+    view: <Privacy />
+  })),
 
-  [`/${Routes.TERMS}`]: route(() => {
-    return {
-      title: 'Oasis - Terms of Service',
-      view: <Terms />
-    };
-  })
+  [`/${Routes.TERMS}`]: route(() => ({
+    title: 'Oasis - Terms of Service',
+    view: <Terms />
+  }))
 });
 
 function RouteEffects({ network }) {

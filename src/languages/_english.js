@@ -287,7 +287,8 @@ export default {
     'invalid_max_amount': 'Amount is greater than your balance',
     'invalid_min_gas': 'Balance is below the required tx fee: {0}',
     'invalid_max_gas': 'Balance is below the Amount + tx fee: {0}',
-    'invalid_address': 'This is not a valid address'
+    'invalid_address': 'This is not a valid address',
+    'invalid_allowance': 'Amount is higher than your allowance for {0}'
   },
   'save': {
     'title': 'Balance',

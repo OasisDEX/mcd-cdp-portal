@@ -44,8 +44,13 @@ export default function useTokenAllowance(tokenSymbol) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const token = maker.getToken(tokenSymbol);
+
   const allowances = useTokenAllowances();
-  const hasAllowance = allowances[tokenSymbol];
+  const allowance = allowances[tokenSymbol];
+  const hasAllowance = !!allowances[tokenSymbol];
+  const hasSufficientAllowance = value =>
+    tokenSymbol === 'ETH' || value <= allowance;
+
   const hasFetchedAllowance = useFetchedTokenAllowances();
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
@@ -70,6 +75,8 @@ export default function useTokenAllowance(tokenSymbol) {
     setAllowance,
     allowanceLoading,
     allowanceErrors,
-    startedWithoutAllowance
+    startedWithoutAllowance,
+    allowance,
+    hasSufficientAllowance
   };
 }
