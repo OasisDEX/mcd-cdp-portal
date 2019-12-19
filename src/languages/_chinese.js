@@ -305,7 +305,7 @@ export default {
   },
   "verbs": {
     "depositing": "存入",
-    "generating": "生成"，
+    "generating": "生成",
     'withdrawing': '取回'
   },
   "table": {
@@ -388,7 +388,7 @@ export default {
     "alphawallet": "AlphaWallet",
     "ledger_nano": "Ledger Nano",
     "trezor": "Trezor",
-    "other": "当前钱包"
+    "other": "当前钱包",
     'ledger': 'Ledger',
     'walletconnect': 'Wallet Connect'
   },
