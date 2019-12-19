@@ -46,8 +46,8 @@ test('Vault Display page and actions', async () => {
     </SidebarProvider>
   );
 
-  await waitForElement(() => getByText('Opened a new Vault with id #'));
   await findByText('ETH-A Vault #1');
+  await findByText('Opened a new Vault with id #', {}, { timeout: 15000 });
 
   /**Wallet Balances */
   const getBalancesEl = () =>
@@ -134,4 +134,4 @@ test('Vault Display page and actions', async () => {
   // change(getByRole('textbox'), { target: { value: '1' } });
   // const [, pbSidebarBtn] = getAllByText('Pay back');
   // click(pbSidebarBtn);
-}, 30000);
+}, 45000);
