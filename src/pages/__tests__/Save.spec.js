@@ -6,6 +6,7 @@ import {
   waitForElement,
   cleanup
 } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 
 import Save from '../Save';
@@ -33,7 +34,8 @@ test('render save page and perform deposit and withdraw actions', async () => {
     getByTestId,
     getAllByTestId,
     getByText,
-    getAllByRole
+    getAllByRole,
+    findByText
   } = renderWithMaker(<Save />);
 
   // Wait for page to render
@@ -44,7 +46,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   // Savings to date
   getByText('Savings to date');
   // Dai Savings Rate
-  getByText('1.00%');
+  await findByText('1.00%');
   // Privacy policy
   getByText('privacy policy');
   // CTA in history table when empty
@@ -77,3 +79,56 @@ test('render save page and perform deposit and withdraw actions', async () => {
   // Two entries in the history table
   await wait(() => assert(getAllByText('external-link.svg').length === 2));
 }, 15000);
+
+test('cannot deposit more than token allowance', async () => {
+  const setupMockState = state => {
+    const newState = {
+      ...state,
+      accounts: {
+        [maker.currentAddress()]: {
+          allowances: { MDAI: 10 }
+        }
+      }
+    };
+    return newState;
+  };
+  const { getByText, findByText, getAllByRole } = renderWithMaker(
+    <Save />,
+    setupMockState
+  );
+
+  await findByText('Balance');
+  const [depositInput, withdrawInput] = getAllByRole('textbox');
+
+  expect(depositInput.disabled).toBe(false);
+  expect(withdrawInput.disabled).toBe(false);
+
+  change(depositInput, { target: { value: '20' } });
+  const warningEl = getByText('Amount is higher than your allowance for DAI');
+  change(depositInput, { target: { value: '10' } });
+  expect(warningEl).not.toBeInTheDocument();
+});
+
+test('if allowance is 0, show toggle & disable input', async () => {
+  const setupMockState = state => {
+    const newState = {
+      ...state,
+      accounts: {
+        [maker.currentAddress()]: {
+          allowances: { MDAI: 0 }
+        }
+      }
+    };
+    return newState;
+  };
+  const { getAllByText, getAllByRole } = renderWithMaker(
+    <Save />,
+    setupMockState
+  );
+
+  await waitForElement(() => getAllByText('Unlock DAI to continue'));
+  const [depositInput, withdrawInput] = getAllByRole('textbox');
+
+  expect(depositInput.disabled).toBe(true);
+  expect(withdrawInput.disabled).toBe(true);
+});
