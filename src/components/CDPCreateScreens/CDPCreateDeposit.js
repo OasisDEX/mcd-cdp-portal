@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';

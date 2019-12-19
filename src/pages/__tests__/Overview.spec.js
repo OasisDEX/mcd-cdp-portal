@@ -3,10 +3,8 @@ import * as navi from 'react-navi';
 import { waitForElement, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
-import useMaker from '../../hooks/useMaker';
-
 import Overview from '../Overview';
-import { renderWithMaker } from '../../../test/helpers/render';
+import { renderWithAccount } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import styled from 'styled-components';
 
@@ -20,7 +18,6 @@ const VAULT2_ART = '25';
 const VIEWED_ADDRESS = '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6';
 
 let maker;
-let account;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
@@ -32,12 +29,6 @@ beforeAll(async () => {
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT2_ETH), MDAI(VAULT2_ART));
 });
-
-function WaitForAccount({ children, callback }) {
-  const { account } = useMaker();
-  callback(account);
-  return account ? children : null;
-}
 
 function prepState(state) {
   return {
@@ -62,31 +53,23 @@ afterEach(cleanup);
 test('render overview page and display calculated vault values', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { search: '?network=testnet' } });
   navi.Link = styled.a``;
-  const { getByText, getAllByText } = renderWithMaker(
-    <WaitForAccount
-      callback={a => {
-        account = a;
-      }}
-    >
-      <Overview viewedAddress={VIEWED_ADDRESS} />
-    </WaitForAccount>,
+  const { getByText, getAllByText } = await renderWithAccount(
+    <Overview viewedAddress={VIEWED_ADDRESS} />,
     prepState,
     null,
     { viewedAddress: VIEWED_ADDRESS }
   );
 
-  // Wait for page to render
-  await waitForElement(() => account);
   await waitForElement(() => getByText('Overview'));
 
   // Total collateral locked
   getByText('$1050.00 USD');
   // Total Dai debt
-  getByText(/105.\d\d DAI/);
+  getByText(/105.\d{1,2} DAI/);
   // Vault1 Dai debt
-  getByText(/80.2\d DAI/);
+  getByText(/80.\d{1,2} DAI/);
   // Current ratio
-  getByText(/1121.\d\d%/);
+  getByText(/112\d.\d{1,2}%/);
   // Deposited
   getByText('6.00 ETH');
   // Available to withdraw
