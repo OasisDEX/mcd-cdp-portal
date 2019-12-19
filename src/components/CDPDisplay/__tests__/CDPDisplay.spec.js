@@ -1,13 +1,7 @@
 import React from 'react';
 import CDPDisplay from '../';
-import {
-  cleanup,
-  waitForElement,
-  fireEvent,
-  within
-} from '@testing-library/react';
+import { cleanup, fireEvent, within } from '@testing-library/react';
 import { MDAI, ETH, USD } from '@makerdao/dai-plugin-mcd';
-
 import { renderWithAccount } from '../../../../test/helpers/render';
 import { instantiateMaker } from '../../../maker';
 import { createCurrencyRatio } from '@makerdao/currency';
@@ -77,7 +71,7 @@ test('Vault Display page and actions', async () => {
     findByText,
     getByRole,
     getAllByText,
-    debug
+    debug // eslint-disable-line no-unused-vars
   } = await renderWithAccount(
     <SidebarProvider>
       <CDPDisplay cdpId="1" />
@@ -86,9 +80,7 @@ test('Vault Display page and actions', async () => {
     prepState,
     identityReducer
   );
-  // Wait for page to render
-  await waitForElement(() => getByText('Opened a new Vault with id #'));
-  getByText('ETH-A Vault #1');
+  await findByText('ETH-A Vault #1');
 
   /**Wallet Balances */
   const balancesEl = getByText('Wallet Balances').parentElement.parentElement;
@@ -122,7 +114,7 @@ test('Vault Display page and actions', async () => {
   change(getByRole('textbox'), { target: { value: '2' } });
   const [, wdSidebarBtn] = getAllByText('Withdraw');
   click(wdSidebarBtn);
-  const wdEvent = await findByText(/Withdrew/);
+  const wdEvent = await findByText(/Withdrew/, {}, { timeout: 15000 });
   expect(wdEvent.textContent).toBe('Withdrew 2.0000 ETH from Vault');
 
   /**Generate */
@@ -137,7 +129,7 @@ test('Vault Display page and actions', async () => {
   change(getByRole('textbox'), { target: { value: '1' } });
   const [, genSidebarBtn] = getAllByText('Generate');
   click(genSidebarBtn);
-  const genEvent = await findByText('1.0000');
+  const genEvent = await findByText('1.0000', {}, { timeout: 15000 });
   expect(genEvent.parentElement.textContent).toBe(
     'Generated 1.0000 new Dai from Vault'
   );
@@ -152,4 +144,4 @@ test('Vault Display page and actions', async () => {
   // change(getByRole('textbox'), { target: { value: '1' } });
   // const [, pbSidebarBtn] = getAllByText('Pay back');
   // click(pbSidebarBtn);
-}, 20000);
+}, 30000);
