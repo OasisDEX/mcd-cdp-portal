@@ -43,7 +43,12 @@ export async function instantiateMaker({
     },
     provider: {
       url: rpcUrl,
-      type: getQueryParamByName('ws') ? 'WEBSOCKET' : 'HTTP'
+      type:
+        network === 'testnet'
+          ? 'HTTP'
+          : getQueryParamByName('ws') === '0'
+          ? 'HTTP'
+          : 'WEBSOCKET'
     },
     web3: {
       pollingInterval: network === 'testnet' ? 100 : null
