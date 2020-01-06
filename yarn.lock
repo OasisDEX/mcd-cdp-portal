@@ -1623,10 +1623,10 @@
     "@walletconnect/web3-subprovider" "^1.0.0-beta.38"
     babel-runtime "^6.26.0"
 
-"@makerdao/dai-plugin-walletlink@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletlink/-/dai-plugin-walletlink-0.0.1.tgz#05914be384df1dde599d21b6a2be1599ceb8cd10"
-  integrity sha512-8IJ+61zLU80bWE2RllV5eYrt2CxAZX8hhj5dvDzoYJErR4GSWTNwLKFrudXnQy4n5GG1Ejgc8p69cpwsqFOhfw==
+"@makerdao/dai-plugin-walletlink@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-walletlink/-/dai-plugin-walletlink-0.0.2.tgz#105e4ac646f131d93de4a788796d0f74392adceb"
+  integrity sha512-5UGtcgGrSGqLcQsaa/u+oGOXNZX4Rsc4hb5p65pH59x3q2Zmcgsa5L8A1CS7L75H69YTBulYE+LgkDHpkJbHqw==
   dependencies:
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"

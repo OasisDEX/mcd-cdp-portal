@@ -301,7 +301,8 @@ export default {
     'get_started_title': 'Start earning on your Dai today',
     'start_earning': 'Deposit Dai to see your first transaction and start earning',
     'tx_history': 'History',
-    'savings_to_date': 'Savings to date'
+    'savings_to_date': 'Savings to date',
+    'estimated_savings': 'Estimated savings'
   },
   'verbs': {
     'depositing': 'Depositing',

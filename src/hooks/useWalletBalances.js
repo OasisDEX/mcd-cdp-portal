@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import useStore from 'hooks/useStore';
 import useMaker from 'hooks/useMaker';
 import { getSavingsBalance } from 'reducers/accounts';
+import BigNumber from 'bignumber.js';
 
 const useWalletBalances = () => {
   const [{ accounts, savings }] = useStore();
@@ -13,7 +14,7 @@ const useWalletBalances = () => {
   const dsrBalance = useMemo(() => {
     return walletConnected
       ? getSavingsBalance(account.address, { accounts, savings })
-      : 0;
+      : new BigNumber(0);
   }, [account, accounts, savings, walletConnected]);
 
   return walletConnected
