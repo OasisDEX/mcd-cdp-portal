@@ -1,11 +1,6 @@
 import React from 'react';
 import CDPDisplay from '../';
-import {
-  cleanup,
-  fireEvent,
-  within,
-  waitForElement
-} from '@testing-library/react';
+import { cleanup, fireEvent, within } from '@testing-library/react';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { renderWithAccount } from '../../../../test/helpers/render';
 import { instantiateMaker } from '../../../maker';
@@ -110,8 +105,8 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getDaiBal()).toContain('235.'); //TODO relax this?
-  expect(getDaiUsdValue()).toBe('$235.00'); //TODO relax this?
+  expect(getDaiBal()).toContain('235.');
+  expect(getDaiUsdValue()).toBe('$235.00');
 
   /**Deposit */
   click(getByText('Deposit'));
@@ -119,10 +114,6 @@ test('Vault Display page and actions', async () => {
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
   expect(depositLabel.nextElementSibling.textContent).toBe('3 ETH');
-  // //TODO figure out why component doesn't receive proxy
-  // change(getByRole('textbox'), { target: { value: '3' } });
-  // // const [, depSidebarBtn] = getAllByText('Deposit');
-  // // click(depSidebarBtn);
 
   /**Pay back */
   click(getByText('Pay back'));
@@ -130,8 +121,4 @@ test('Vault Display page and actions', async () => {
   // Outstanding Dai debt before
   const [, debtLabel] = getAllByText('Outstanding Dai debt');
   expect(debtLabel.nextElementSibling.textContent).toBe('235 DAI');
-  //TODO component doesn't update with proxy
-  // change(getByRole('textbox'), { target: { value: '1' } });
-  // const [, pbSidebarBtn] = getAllByText('Pay back');
-  // click(pbSidebarBtn);
 }, 45000);
