@@ -28,13 +28,16 @@ export async function instantiateMaker({
   backendEnv
 }) {
   const mcdPluginConfig = { cdpTypes, prefetch: false };
+  const walletLinkPluginConfig = {
+    rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
+  };
 
   const config = {
     log: false,
     plugins: [
       trezorPlugin,
       ledgerPlugin,
-      walletLinkPlugin,
+      [walletLinkPlugin, walletLinkPluginConfig],
       walletConnectPlugin,
       [McdPlugin, mcdPluginConfig]
     ],
