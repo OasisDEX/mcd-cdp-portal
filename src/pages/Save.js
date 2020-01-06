@@ -229,7 +229,9 @@ function Save() {
                       <Table.tbody>
                         <Table.tr>
                           <Table.td>
-                            <Text t="body">{lang.save.savings_to_date}</Text>
+                            <Text t="body">
+                              {lang.save.savings_earned_to_date}
+                            </Text>
                           </Table.td>
                           <Table.td textAlign="right">
                             <TextMono t="body">

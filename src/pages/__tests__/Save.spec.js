@@ -44,7 +44,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   // Initial balance
   getByText('0.0000 USD');
   // Savings to date
-  getByText('Savings to date');
+  getByText('Savings earned to date');
   // Dai Savings Rate
   await findByText('1.00%');
   // Privacy policy
