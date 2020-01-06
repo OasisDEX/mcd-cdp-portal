@@ -36,8 +36,7 @@ export const Toggles = {
 
 export const FeatureFlags = {
   FF_VAULT_HISTORY: true,
-  FF_DSR_HISTORY: true,
-  FF_DSR_ETD: true
+  FF_DSR_HISTORY: true
 };
 
 export const NotificationList = {
