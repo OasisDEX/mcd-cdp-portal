@@ -269,6 +269,7 @@ function Save() {
                       {lang.save.deposit_amount}
                     </Text.p>
                     <Input
+                      disabled={!hasAllowance}
                       type="number"
                       min="0"
                       placeholder="0 DAI"
@@ -314,6 +315,7 @@ function Save() {
                       {lang.save.withdraw_amount}
                     </Text.p>
                     <Input
+                      disabled={!hasAllowance}
                       type="number"
                       min="0"
                       placeholder="0 DAI"
