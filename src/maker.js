@@ -49,9 +49,9 @@ export async function instantiateMaker({
       type:
         network === 'testnet'
           ? 'HTTP'
-          : getQueryParamByName('ws') === '0'
-          ? 'HTTP'
-          : 'WEBSOCKET'
+          : getQueryParamByName('ws') === '1'
+          ? 'WEBSOCKET'
+          : 'HTTP'
     },
     web3: {
       pollingInterval: network === 'testnet' ? 100 : null
