@@ -65,7 +65,7 @@ const renderWithMockedStore = component =>
 test('basic rendering', async () => {
   const { getByText } = render(<Withdraw cdpId="1" />, setupMockState);
 
-  await waitForElement(() => getByText(/40 BAT\/USD/));
+  await waitForElement(() => getByText(/40.00 BAT\/USD/));
 
   getByText('Withdraw BAT');
 });

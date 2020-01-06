@@ -33,8 +33,8 @@ test('basic rendering', () => {
   const { getByText } = renderWithStore(
     <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
   );
-  getByText('9.1 LOL');
-  getByText('1820 USD');
+  getByText('9.10 LOL');
+  getByText('1820.00 USD');
   getByText('120 DAI');
   getByText('1213.33 DAI');
 
@@ -49,7 +49,7 @@ test('render liquidation price correctly when no debt', () => {
     <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
   );
   getByText('N/A');
-  getByText('0 USD');
+  getByText('0.0000 USD');
 });
 
 describe('on mobile', () => {

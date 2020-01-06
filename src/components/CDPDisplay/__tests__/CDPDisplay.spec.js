@@ -69,7 +69,7 @@ test('Vault Display page and actions', async () => {
 
   // amount to withdraw before
   expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
-    '2.9 ETH'
+    '2.90 ETH'
   );
 
   // submit withdraw
@@ -91,7 +91,7 @@ test('Vault Display page and actions', async () => {
 
   // amount to generate before
   const generateLabel = getByText('Available to generate');
-  expect(generateLabel.nextElementSibling.textContent).toBe('90 DAI');
+  expect(generateLabel.nextElementSibling.textContent).toBe('90.00 DAI');
 
   // submit generate
   change(getByRole('textbox'), { target: { value: '25' } });
@@ -113,7 +113,7 @@ test('Vault Display page and actions', async () => {
   await findByText(/would you like to deposit/);
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
-  expect(depositLabel.nextElementSibling.textContent).toBe('3 ETH');
+  expect(depositLabel.nextElementSibling.textContent).toBe('3.00 ETH');
 
   /**Pay back */
   click(getByText('Pay back'));
