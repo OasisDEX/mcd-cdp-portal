@@ -45,6 +45,7 @@ function Save() {
     estimatedSavingsDaiEarned,
     decimalsToShow
   } = useSavingsDai();
+
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
@@ -186,7 +187,10 @@ function Save() {
           flexDirection="column"
         >
           <Text.p t="h4" mb="26px">
-            {lang.save.get_started_title}
+            {lang.formatString(
+              lang.save.get_started_title,
+              `${savings?.yearlyRate.toFixed(2)}%`
+            )}
           </Text.p>
           <Button
             p="s"
