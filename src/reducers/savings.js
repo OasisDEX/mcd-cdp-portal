@@ -5,7 +5,8 @@ const initialState = {
   Pie: new BigNumber(0),
   yearlyRate: new BigNumber(0),
   totalDai: new BigNumber(0),
-  dsr: new BigNumber(0)
+  dsr: new BigNumber(0),
+  rho: 0
 };
 
 const reducer = produce((draft, { type, value }) => {
