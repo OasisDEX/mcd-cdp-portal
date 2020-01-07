@@ -298,10 +298,11 @@ export default {
     "withdraw_amount": "提取金额",
     "deposit_dai": "存入 Dai",
     "deposit_dai_subheading": "存入即生息，随存随取",
-    "get_started_title": "现在开始存 Dai 赚利息吧",
+    "get_started_title": "现在开始存 Dai 赚 {0} 利息吧",
     "start_earning": "存入 Dai 进行你的第一笔交易，开始赚利息",
     "tx_history": "历史记录",
-    'savings_to_date': '已赚利息'
+    'savings_earned_to_date': '已赚利息',
+    'estimated_savings': '预计收益'
   },
   "verbs": {
     "depositing": "存入",
