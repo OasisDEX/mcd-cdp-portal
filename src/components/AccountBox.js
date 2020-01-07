@@ -152,7 +152,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
     <>
       <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
         <Box px="s" pt="sm" pb="s2">
-          <Text t="h4">{lang.sidebar.wallet_balances}</Text>
+          <Text t="large">{lang.sidebar.wallet_balances}</Text>
         </Box>
         <Flex justifyContent="space-between" px="s">
           <Text color="steel" fontWeight="bold" t="smallCaps" width="20%">
