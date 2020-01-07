@@ -101,8 +101,9 @@ function Overview({ viewedAddress }) {
       const sumDeposits = parseFloat(
         cdpData.reduce((acc, { depositedUSD }) => depositedUSD + acc, 0)
       );
-      const sumDebt = parseFloat(
-        cdpData.reduce((acc, { debt }) => debt + acc, 0)
+      const sumDebt = cdpData.reduce(
+        (acc, { debt }) => parseFloat(debt) + acc,
+        0
       );
 
       if (sumDebt) {

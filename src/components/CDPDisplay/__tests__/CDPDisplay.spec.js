@@ -120,5 +120,5 @@ test('Vault Display page and actions', async () => {
   await findByText(/would you like to pay back/);
   // Outstanding Dai debt before
   const [, debtLabel] = getAllByText('Outstanding Dai debt');
-  expect(debtLabel.nextElementSibling.textContent).toBe('235 DAI');
+  expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 }, 45000);

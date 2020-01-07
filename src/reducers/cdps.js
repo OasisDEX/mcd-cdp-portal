@@ -38,7 +38,7 @@ export function getCdp(cdpId, { cdps, feeds }) {
 export function getDebtAmount(cdp, rounded = true, precision = 2) {
   if (!cdp.art || !cdp.rate) return '';
   return rounded
-    ? round(multiply(cdp.art, cdp.rate), precision)
+    ? withPrecision(multiply(cdp.art, cdp.rate), precision)
     : multiply(cdp.art, cdp.rate);
 }
 

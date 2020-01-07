@@ -92,7 +92,9 @@ const Withdraw = ({ cdpId, reset }) => {
           value={amount}
           min="0"
           onChange={onAmountChange}
-          after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
+          after={
+            parseFloat(debtAmount) === 0 ? <SetMax onClick={setMax} /> : null
+          }
           failureMessage={amountErrors}
         />
         <RatioDisplay

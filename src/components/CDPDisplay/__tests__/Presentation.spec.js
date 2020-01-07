@@ -35,7 +35,7 @@ test('basic rendering', () => {
   );
   getByText('9.10 LOL');
   getByText('1820.00 USD');
-  getByText('120 DAI');
+  getByText('120.00 DAI');
   getByText('1213.33 DAI');
 
   fireEvent.click(getByText('Deposit'));
