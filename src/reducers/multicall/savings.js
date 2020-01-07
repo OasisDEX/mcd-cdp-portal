@@ -1,5 +1,4 @@
 import { fromWei, fromRad, fromRay } from 'utils/units';
-import BigNumber from 'bignumber.js';
 
 const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 
