@@ -79,7 +79,7 @@ test('Vault Display page and actions', async () => {
 
   //check event history
   const wdEvent = await findByText(/Withdrew/, {}, { timeout: 15000 });
-  expect(wdEvent.textContent).toBe('Withdrew 2.0000 ETH from Vault');
+  expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
 
   // check updated balances
   expect(getEthBal()).toContain('72.');
@@ -99,9 +99,9 @@ test('Vault Display page and actions', async () => {
   click(genSidebarBtn);
 
   //check event history
-  const genEvent = await findByText('25.0000', {}, { timeout: 15000 });
+  const genEvent = await findByText('25.00', {}, { timeout: 15000 });
   expect(genEvent.parentElement.textContent).toBe(
-    'Generated 25.0000 new Dai from Vault'
+    'Generated 25.00 new Dai from Vault'
   );
 
   // check updated balances
