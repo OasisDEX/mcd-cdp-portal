@@ -70,7 +70,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && prettifyNumber(amount, true, 4)) || '--'}
+        {(amount && prettifyNumber(amount, true)) || '--'}
       </Text>
       <Text
         color="darkLavender"

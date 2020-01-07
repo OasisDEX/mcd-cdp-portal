@@ -49,6 +49,7 @@ export function prettifyNumber(
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
     else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
+    else if (num < 1) formattedNumber = num.toFixed(4);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
@@ -161,4 +162,8 @@ export function safeToFixed(amount, digits) {
   if (typeof amount === 'string') amount = parseFloat(amount);
   const s = amount.toFixed(digits);
   return s.substring(0, s.length - 1);
+}
+
+export function formatPrecision(amount, precision = 4) {
+  return amount < 1 ? 4 : precision;
 }
