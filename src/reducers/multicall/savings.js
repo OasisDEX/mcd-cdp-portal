@@ -1,4 +1,5 @@
 import { fromWei, fromRad, fromRay } from 'utils/units';
+import BigNumber from 'bignumber.js';
 
 const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 
@@ -32,6 +33,11 @@ export default function(addresses) {
       target: addresses.MCD_POT,
       call: ['dsr()(uint256)'],
       returns: [['savings.dsr', fromRay]]
+    },
+    {
+      target: addresses.MCD_POT,
+      call: ['rho()(uint256)'],
+      returns: [['savings.rho', val => val.toNumber()]] // Date value, use native JS number
     }
   ];
 }
