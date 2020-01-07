@@ -58,8 +58,6 @@ const theme = {
   }
 };
 
-console.log(theme);
-
 export default theme;
 
 // the following two functions are taken directly from styled-system

@@ -98,8 +98,9 @@ function Overview({ viewedAddress }) {
           depositedUSD: getCollateralValueUSD(cdp)
         };
       });
-      const sumDeposits = parseFloat(
-        cdpData.reduce((acc, { depositedUSD }) => depositedUSD + acc, 0)
+      const sumDeposits = cdpData.reduce(
+        (acc, { depositedUSD }) => parseFloat(depositedUSD) + acc,
+        0
       );
       const sumDebt = cdpData.reduce(
         (acc, { debt }) => parseFloat(debt) + acc,

@@ -14,7 +14,8 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getUnlockedCollateralAmount
+  getUnlockedCollateralAmount,
+  withPrecision
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -80,7 +81,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         cdp.gem,
-        cdp.unlockedCollateral && cdp.unlockedCollateral.toFixed(7),
+        cdp.unlockedCollateral && withPrecision(cdp.unlockedCollateral, 2),
         cdp.gem
       );
 

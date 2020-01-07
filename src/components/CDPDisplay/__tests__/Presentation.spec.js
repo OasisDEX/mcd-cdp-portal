@@ -6,6 +6,7 @@ import {
   renderWithStore
 } from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
+import BigNumber from 'bignumber.js';
 
 const LOL = createCurrency('LOL');
 
@@ -50,6 +51,34 @@ test('render liquidation price correctly when no debt', () => {
   );
   getByText('N/A');
   getByText('0.0000 USD');
+});
+
+test('reclaim banner rounds correctly when value is > 1', async () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = {
+    ...cdp,
+    gem: 'LOL',
+    unlockedCollateral: new BigNumber('213.1234567890123456')
+  };
+  const { findByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  // two decimal places for values > 1
+  await findByText(/213.12 LOL/);
+});
+
+test('reclaim banner rounds correctly when number is < 1', async () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = {
+    ...cdp,
+    gem: 'LOL',
+    unlockedCollateral: new BigNumber('0.1234567890123456')
+  };
+  const { findByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  // four decimal places for values < 1
+  await findByText(/0.1235 LOL/);
 });
 
 describe('on mobile', () => {
