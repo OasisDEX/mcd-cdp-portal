@@ -66,58 +66,13 @@ test('Vault Display page and actions', async () => {
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
-  /**Withdraw */
-  click(getByText('Withdraw'));
-  await findByText(/would you like to withdraw/);
-
-  // amount to withdraw before
-  expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
-    '2.90 ETH'
-  );
-
-  // submit withdraw
-  change(getByRole('textbox'), { target: { value: '2' } });
-  const [, wdSidebarBtn] = getAllByText('Withdraw');
-  click(wdSidebarBtn);
-
-  //check event history
-  const wdEvent = await findByText(/Withdrew/, {}, { timeout: 15000 });
-  expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
-
-  // check updated balances
-  expect(getEthBal()).toContain('72.');
-  expect(getEthUsdValue()).toBe('$10.9K');
-
-  /**Generate */
-  click(getByText('Generate'));
-  await findByText(/would you like to generate/);
-
-  // amount to generate before
-  const generateLabel = getByText('Available to generate');
-  expect(generateLabel.nextElementSibling.textContent).toBe('90.00 DAI');
-
-  // submit generate
-  change(getByRole('textbox'), { target: { value: '25' } });
-  const [, genSidebarBtn] = getAllByText('Generate');
-  click(genSidebarBtn);
-
-  //check event history
-  const genEvent = await findByText('25.00', {}, { timeout: 15000 });
-  expect(genEvent.parentElement.textContent).toBe(
-    'Generated 25.00 new Dai from Vault'
-  );
-
-  // check updated balances
-  expect(getDaiBal()).toContain('235.');
-  expect(getDaiUsdValue()).toBe('$235.00');
-
   /**Deposit */
   click(getByText('Deposit'));
   await findByText(/would you like to deposit/);
 
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
-  expect(depositLabel.nextElementSibling.textContent).toBe('3.00 ETH');
+  expect(depositLabel.nextElementSibling.textContent).toBe('5.00 ETH');
 
   // submit deposit
   change(getByRole('textbox'), { target: { value: '2.33' } });
@@ -136,8 +91,31 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('70.');
-  expect(getEthUsdValue()).toBe('$10.6K');
+  expect(getEthBal()).toContain('68.');
+  expect(getEthUsdValue()).toBe('$10.3K');
+
+  /**Generate */
+  click(getByText('Generate'));
+  await findByText(/would you like to generate/);
+
+  // amount to generate before
+  const generateLabel = getByText('Available to generate');
+  expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
+
+  // submit generate
+  change(getByRole('textbox'), { target: { value: '25' } });
+  const [, genSidebarBtn] = getAllByText('Generate');
+  click(genSidebarBtn);
+
+  //check event history
+  const genEvent = await findByText('25.00', {}, { timeout: 15000 });
+  expect(genEvent.parentElement.textContent).toBe(
+    'Generated 25.00 new Dai from Vault'
+  );
+
+  // check updated balances
+  expect(getDaiBal()).toContain('235.');
+  expect(getDaiUsdValue()).toBe('$235.00');
 
   /**Pay back */
   click(getByText('Pay back'));
@@ -172,4 +150,26 @@ test('Vault Display page and actions', async () => {
   // check updated balances
   expect(getDaiBal()).toContain('233.');
   expect(getDaiUsdValue()).toBe('$233.77');
+
+  /**Withdraw */
+  click(getByText('Withdraw'));
+  await findByText(/would you like to withdraw/);
+
+  // amount to withdraw before
+  expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
+    '4.99 ETH'
+  );
+
+  // submit withdraw
+  change(getByRole('textbox'), { target: { value: '2' } });
+  const [, wdSidebarBtn] = getAllByText('Withdraw');
+  click(wdSidebarBtn);
+
+  //check event history
+  const wdEvent = await findByText(/Withdrew/, {}, { timeout: 15000 });
+  expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
+
+  // check updated balances
+  expect(getEthBal()).toContain('70.');
+  expect(getEthUsdValue()).toBe('$10.6K');
 }, 45000);
