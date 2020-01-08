@@ -46,6 +46,7 @@ function useSavingsDai(rateOfChange = 10) {
       savings: { dsr: daiSavingsRate, rho }
     }
   ] = useStore();
+
   const { DSR } = useWalletBalances();
   const { proxyAddress } = useProxy();
   const { maker } = useMaker();
