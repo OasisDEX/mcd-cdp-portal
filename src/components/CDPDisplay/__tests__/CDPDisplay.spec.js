@@ -1,7 +1,9 @@
 import React from 'react';
-import CDPDisplay from '../';
-import { cleanup, fireEvent, within } from '@testing-library/react';
+import { cleanup, fireEvent, within, wait } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+
+import CDPDisplay from '../';
 import { renderWithAccount } from '../../../../test/helpers/render';
 import { instantiateMaker } from '../../../maker';
 import { SidebarProvider } from '../../../providers/SidebarProvider';
@@ -30,9 +32,10 @@ test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
     getByText,
-    findByText,
-    getByRole,
     getAllByText,
+    getByTestId,
+    getByRole,
+    findByText,
     debug // eslint-disable-line no-unused-vars
   } = await renderWithAccount(
     <SidebarProvider>
@@ -111,14 +114,62 @@ test('Vault Display page and actions', async () => {
   /**Deposit */
   click(getByText('Deposit'));
   await findByText(/would you like to deposit/);
+
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
   expect(depositLabel.nextElementSibling.textContent).toBe('3.00 ETH');
 
+  // submit deposit
+  change(getByRole('textbox'), { target: { value: '2.33' } });
+  const [, depSidebarBtn] = getAllByText('Deposit');
+
+  // wait for hasProxy check to complete
+  await wait(() => {
+    expect(depSidebarBtn).not.toHaveAttribute('disabled');
+  });
+  click(depSidebarBtn);
+
+  //check event history
+  const depEvent = await findByText('2.33', {}, { timeout: 15000 });
+  expect(depEvent.parentElement.textContent).toBe(
+    'Deposited 2.33 ETH into Vault'
+  );
+
+  // check updated balances
+  expect(getEthBal()).toContain('70.');
+  expect(getEthUsdValue()).toBe('$10.6K');
+
   /**Pay back */
   click(getByText('Pay back'));
   await findByText(/would you like to pay back/);
+
   // Outstanding Dai debt before
   const [, debtLabel] = getAllByText('Outstanding Dai debt');
   expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
+
+  // must unlock Dai first
+  const allowanceBtn = getByTestId('allowance-toggle').children[1];
+  await wait(() => {
+    expect(allowanceBtn).not.toHaveAttribute('disabled');
+  });
+  click(allowanceBtn);
+  await findByText('DAI unlocked');
+
+  // submit pay back
+  change(getByRole('textbox'), { target: { value: '1.23' } });
+  const [, pbSidebarBtn] = getAllByText('Pay back');
+
+  // wait for hasProxy check to complete
+  await wait(() => {
+    expect(pbSidebarBtn).not.toHaveAttribute('disabled');
+  });
+  click(pbSidebarBtn);
+
+  //check event history
+  const pbEvent = await findByText('1.23', {}, { timeout: 15000 });
+  expect(pbEvent.parentElement.textContent).toBe('Repaid 1.23 Dai to Vault');
+
+  // check updated balances
+  expect(getDaiBal()).toContain('233.');
+  expect(getDaiUsdValue()).toBe('$233.77');
 }, 45000);
