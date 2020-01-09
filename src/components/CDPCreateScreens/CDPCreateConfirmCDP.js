@@ -12,6 +12,7 @@ import {
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { calcCDPParams } from 'utils/cdp';
+import { mixpanelFactory } from 'utils/analytics';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
@@ -22,6 +23,12 @@ import { TxLifecycle } from 'utils/constants';
 import styled from 'styled-components';
 import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+
+const { trackBtnClick } = mixpanelFactory(
+  'Borrow',
+  'VaultCreate',
+  'ConfirmVault'
+);
 
 const StyledExternalLink = styled(ExternalLinkIcon)`
   path {
@@ -34,7 +41,8 @@ const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
   capturedDispatch,
-  enableSubmit
+  enableSubmit,
+  isFirstVault
 }) => {
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
@@ -109,7 +117,10 @@ const CDPCreateConfirmSummary = ({
         >
           <Checkbox
             checked={hasReadTOS}
-            onChange={() => setHasReadTOS(state => !state)}
+            onChange={() => {
+              trackBtnClick('Terms', { isFirstVault });
+              setHasReadTOS(state => !state);
+            }}
           />
           <Text color="grey.500" ml="s">
             {lang.formatString(
@@ -130,15 +141,21 @@ const CDPCreateConfirmSummary = ({
       </Card>
       <ScreenFooter
         canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
-        onNext={() => capturedDispatch({ type: 'increment-step' })}
-        onBack={() => capturedDispatch({ type: 'decrement-step' })}
+        onNext={() => {
+          trackBtnClick('Next', { isFirstVault });
+          capturedDispatch({ type: 'increment-step' });
+        }}
+        onBack={() => {
+          trackBtnClick('Back', { isFirstVault });
+          capturedDispatch({ type: 'decrement-step' });
+        }}
         continueText={lang.actions.create_cdp}
       />
     </Box>
   );
 };
 
-const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
+const CDPCreateConfirmed = ({ hash, isFirstVault, onClose, txState }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');
@@ -196,6 +213,9 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
               <Link
                 target="_blank"
                 href={etherscanLink(hash, networkIdToName(networkId))}
+                onClick={() => {
+                  trackBtnClick('TxDetails', { isFirstVault });
+                }}
               >
                 <Button variant="secondary">
                   <Text mr="xs">{lang.cdp_create.view_tx_details}</Text>
@@ -205,7 +225,13 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
             )}
           </Box>
           <Flex textAlign="center" justifyContent="center">
-            <Button onClick={onClose} width="145px">
+            <Button
+              onClick={() => {
+                trackBtnClick('Exit', { isFirstVault });
+                onClose();
+              }}
+              width="145px"
+            >
               {lang.exit}
             </Button>
           </Flex>
@@ -215,7 +241,13 @@ const CDPCreateConfirmed = ({ hash, onClose, txState }) => {
   );
 };
 
-const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
+const CDPCreateConfirmCDP = ({
+  dispatch,
+  cdpParams,
+  selectedIlk,
+  isFirstVault,
+  onClose
+}) => {
   const { lang } = useLanguage();
   const { maker, checkForNewCdps, newTxListener } = useMaker();
   const [enableSubmit, setEnableSubmit] = useState(true);
@@ -266,6 +298,7 @@ const CDPCreateConfirmCDP = ({ dispatch, cdpParams, selectedIlk, onClose }) => {
       selectedIlk={selectedIlk}
       capturedDispatch={capturedDispatch}
       enableSubmit={enableSubmit}
+      isFirstVault={isFirstVault}
     />
   );
 };

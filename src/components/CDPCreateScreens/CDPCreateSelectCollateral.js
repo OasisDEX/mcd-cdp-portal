@@ -10,6 +10,7 @@ import {
 import { TextBlock } from 'components/Typography';
 
 import { prettifyNumber } from 'utils/ui';
+import { mixpanelFactory } from 'utils/analytics';
 import { getIlkData } from 'reducers/feeds';
 
 import useStore from 'hooks/useStore';
@@ -19,6 +20,12 @@ import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
+
+const { trackBtnClick, trackInputChange } = mixpanelFactory(
+  'Borrow',
+  'VaultCreate',
+  'SelectCollateral'
+);
 
 const CDPCreateSelectCollateralSidebar = () => {
   const { lang } = useLanguage();
@@ -48,12 +55,16 @@ const CDPCreateSelectCollateralSidebar = () => {
   );
 };
 
-function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
+function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
   const [{ feeds }] = useStore();
 
   ilk.data = getIlkData(feeds, ilk.key);
 
   async function selectIlk() {
+    trackInputChange('CollateralType', {
+      selectedCollateral: ilk.key,
+      isFirstVault
+    });
     dispatch({
       type: 'set-ilk',
       payload: {
@@ -88,7 +99,12 @@ function IlkTableRow({ ilk, checked, gemBalance, dispatch }) {
   );
 }
 
-const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
+const CDPCreateSelectCollateral = ({
+  selectedIlk,
+  proxyAddress,
+  isFirstVault,
+  dispatch
+}) => {
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
   const balances = useWalletBalances();
@@ -147,6 +163,7 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
                           dispatch={dispatch}
                           ilk={ilk}
                           gemBalance={balances[ilk.gem]}
+                          isFirstVault={isFirstVault}
                         />
                       )
                   )}
@@ -160,13 +177,20 @@ const CDPCreateSelectCollateral = ({ selectedIlk, proxyAddress, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        onNext={() =>
+        onNext={() => {
+          trackBtnClick('Next', {
+            selectedCollateral: selectedIlk.key,
+            isFirstVault
+          });
           dispatch({
             type: 'increment-step',
             payload: { by: hasAllowanceAndProxy ? 2 : 1 }
-          })
-        }
-        onBack={() => dispatch({ type: 'decrement-step' })}
+          });
+        }}
+        onBack={() => {
+          trackBtnClick('Back', { isFirstVault });
+          dispatch({ type: 'decrement-step' });
+        }}
         canGoBack={false}
         canProgress={!!selectedIlk.key}
       />

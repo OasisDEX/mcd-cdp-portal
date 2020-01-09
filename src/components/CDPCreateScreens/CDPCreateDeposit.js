@@ -9,11 +9,18 @@ import {
   safeToFixed
 } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
+import { mixpanelFactory } from 'utils/analytics';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+
+const { trackBtnClick } = mixpanelFactory(
+  'Borrow',
+  'VaultCreate',
+  'DepositGenerate'
+);
 
 function OpenCDPForm({
   selectedIlk,
@@ -218,7 +225,12 @@ const CDPCreateDepositSidebar = ({
   );
 };
 
-const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
+const CDPCreateDeposit = ({
+  selectedIlk,
+  cdpParams,
+  isFirstVault,
+  dispatch
+}) => {
   const { gemsToLock, daiToDraw } = cdpParams;
   const {
     liquidationPrice,
@@ -283,13 +295,21 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        onNext={() => dispatch({ type: 'increment-step' })}
-        onBack={() =>
+        onNext={() => {
+          trackBtnClick('Next', {
+            lock: gemsToLock,
+            generate: daiToDraw,
+            isFirstVault
+          });
+          dispatch({ type: 'increment-step' });
+        }}
+        onBack={() => {
+          trackBtnClick('Back', { isFirstVault });
           dispatch({
             type: 'decrement-step',
             payload: { by: hasAllowance ? 2 : 1 }
-          })
-        }
+          });
+        }}
         canProgress={canProgress}
       />
     </Box>
