@@ -14,21 +14,7 @@ import spanish from './_spanish';
 
 export const defaultLocale = 'en';
 
-export const languages = [
-  { value: 'da', text: 'Dansk' },
-  { value: 'de', text: 'Deutsch' },
-  { value: 'en', text: 'English' },
-  { value: 'es', text: 'Español' },
-  { value: 'fr', text: 'Français' },
-  { value: 'it', text: 'Italiano' },
-  { value: 'ja', text: '日本語' },
-  { value: 'ko', text: '한국어' },
-  { value: 'pt-BR', text: 'Português (Brasil)' },
-  { value: 'ru', text: 'Pусский' },
-  { value: 'zh-CN', text: '中文 (简体)' },
-];
-
-export default new LocalizedStrings({
+const languageFiles = {
   'zh-CN': chinese,
   'da': danish,
   'en': english,
@@ -40,7 +26,11 @@ export default new LocalizedStrings({
   'pt-BR': portuguese,
   'ru': russian,
   'es': spanish,
-});
+};
+
+export const languages = Object.keys(languageFiles);
+
+export default new LocalizedStrings(languageFiles);
 
 /*
 Paste in terminal to open all langs:

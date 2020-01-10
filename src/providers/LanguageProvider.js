@@ -35,7 +35,7 @@ function LanguageProvider({ children }) {
     ].filter(x => x);
 
     const detectedLanguage = getPreferredLanguage({
-      languages: languages.map(language => language.value),
+      languages,
       overrides: localeOverrides,
       fallback: defaultLocale
     });
