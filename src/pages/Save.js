@@ -34,6 +34,18 @@ import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
 import useSavingsDai from 'hooks/useSavingsDai';
 import { FeatureFlags } from 'utils/constants';
+import { mixpanelFactory } from 'utils/analytics';
+
+const { trackBtnClick: trackDeposit } = mixpanelFactory(
+  'Save',
+  'Overview',
+  'Deposit'
+);
+const { trackBtnClick: trackWithdraw } = mixpanelFactory(
+  'Save',
+  'Overview',
+  'Withdraw'
+);
 
 function Save() {
   const { lang } = useLanguage();
@@ -302,7 +314,10 @@ function Save() {
                           depositLoading
                         }
                         loading={depositLoading}
-                        onClick={onDeposit}
+                        onClick={() => {
+                          trackDeposit('Deposit', { amount: depositAmount });
+                          onDeposit();
+                        }}
                         data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
@@ -351,7 +366,10 @@ function Save() {
                           withdrawLoading
                         }
                         loading={withdrawLoading}
-                        onClick={onWithdraw}
+                        onClick={() => {
+                          trackWithdraw('Withdraw', { amount: withdrawAmount });
+                          onWithdraw();
+                        }}
                         data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}

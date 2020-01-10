@@ -15,6 +15,11 @@ import { instantiateMaker } from '../../maker';
 
 const { click, change } = fireEvent;
 
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
 const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';
 let maker;
