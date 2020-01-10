@@ -3,19 +3,7 @@ import ilkList from '../references/ilkList';
 import assert from 'assert';
 
 export function getUsdPrice(ilkData) {
-  // return cdp.ilkData.feedSetUSD
-  //   ? cdp.ilkData.feedValueUSD.toNumber()
-  //   : 0;
   return (ilkData.feedValueUSD && ilkData.feedValueUSD.toNumber()) || 0;
-}
-
-export function getLockedAndFreeCollateral(cdp) {
-  const locked =
-    (cdp.debt.toNumber() * (cdp.ilkData.liquidationRatio / 100)) /
-    getUsdPrice(cdp.ilkData);
-  const free = cdp.collateral.toNumber() - locked;
-
-  return { locked, free };
 }
 
 export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
