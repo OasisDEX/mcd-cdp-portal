@@ -50,7 +50,7 @@ export default {
     "answer1": "Oasisは、イーサリアムのブロックチェーン上で実行している分散型アプリケーションです。Oasis上なら誰でも、Daiを使ってトークンのトレード、借り入れ、貯蓄ができます。",
     "question2": "Daiとは？",
     "answer2": "Daiは、世界初の公平な通貨であり、米ドルにソフトペッグされた、代表的な分散型ステーブルコインです。Daiについてもっと詳しく {0}。",
-    "answer2_link1_url": "https://makerdao.com/en/",
+    "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "こちらで",
     "question3": "口座が必要ですか？",
     "answer3": "Oasisを使うのに口座は必要ありませんが、イーサリアムのウォレットは必要になります。Oasisは、{0}、{1}などといったイーサリアムのほぼすべてのブラウザーウォレットに対応しています。",

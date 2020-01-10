@@ -50,7 +50,7 @@ export default {
     "answer1": "Oasis er en decentraliseret applikation, der kører på Ethereum-blockchain. Alle og enhver kan bruge Oasis til at handle tokens, låne med dem og spare op med dai.",
     "question2": "Hvad er Dai?",
     "answer2": "Dai er verdens første gennemsigtige valuta og førende decentraliserede stablecoin knyttet til den amerikanske dollar. Få mere at vide om dai {0}.",
-    "answer2_link1_url": "https://makerdao.com/en/",
+    "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "her",
     "question3": "Skal jeg bruge en konto?",
     "answer3": "Du behøver ikke en konto for at bruge Oasis. Men du skal bruge en Ethereum-wallet. Oasis understøtter de fleste Ethereum-browser wallets såsom {0}, {1} osv.",

@@ -50,7 +50,7 @@ export default {
     "answer1": "Oasis est une application décentralisée exécutée sur la blockchain Ethereum. N\'importe qui peut utiliser Oasis pour négocier des tokens, les échanger et épargner à l\'aide du Dai.",
     "question2": "Qu\'est-ce que le Dai ?",
     "answer2": "Le Dai est la première devise neutre au monde et le premier stablecoin décentralisé à parité souple au dollar US. En savoir plus sur le Dai {0}.",
-    "answer2_link1_url": "https://makerdao.com/en/",
+    "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "ici",
     "question3": "Ai-je besoin d\'un compte ?",
     "answer3": "Vous n\'avez pas besoin de compte pour utiliser Oasis. Vous aurez toutefois besoin d\'un portefeuille Ethereum. Oasis prend en charge la plupart des portefeuilles Ethereum en ligne tels que {0}, {1}, etc.",

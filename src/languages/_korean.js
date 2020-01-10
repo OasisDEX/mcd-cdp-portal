@@ -50,7 +50,7 @@ export default {
     "answer1": "오아시스란 이더리움 블록체인에서 실행되는 탈중앙형 애플리케이션입니다. 오아시스에서는 누구나 토큰을 교환하고, 토큰을 담보로 대출하며, Dai 예치를 통해 보상받을 수 있습니다.",
     "question2": "Dai를 선택해야 하는 이유",
     "answer2": "Dai는 세계 최초의 공정한 통화이자 미국 달러에 연동된 탈중앙형 스테이블코인입니다. Dai {0}에 대해 자세히 알아보기.",
-    "answer2_link1_url": "https://makerdao.com/kr/",
+    "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "여기",
     "question3": "계정을 만들어야 하나요?",
     "answer3": "Oasis를 이용하기 위해 계정이 필요하지는 않지만, 이더리움 지갑은 필요합니다. Oasis는 {0} 및 {1} 등의 이더리움 브라우저 지갑 대부분을 지원합니다.",
