@@ -11,7 +11,7 @@ import { BAT, USD } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Deposit from '../Deposit';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 
@@ -33,6 +33,10 @@ const LIQUIDATION_RATIO = '200';
 const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
 
 const originalConsoleError = console.error;
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
 
 beforeAll(async () => {
   snapshotData = await takeSnapshot();
@@ -78,7 +82,7 @@ const setupMockState = state => {
           [BAT.symbol]: BAT_ACCOUNT_BALANCE
         },
         allowances: {
-          [BAT.symbol]: true
+          [BAT.symbol]: 201
         }
       }
     }
