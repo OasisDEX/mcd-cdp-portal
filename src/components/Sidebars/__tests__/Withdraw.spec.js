@@ -23,6 +23,10 @@ const PRICE = createCurrencyRatio(USD, BAT)('0.24');
 const LIQUIDATION_RATIO = '200';
 
 const originalConsoleError = console.error;
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
 
 beforeAll(async () => {
   console.error = jest.fn();

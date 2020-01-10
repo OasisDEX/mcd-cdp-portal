@@ -8,6 +8,11 @@ import {
 import { createCurrency } from '@makerdao/currency';
 import BigNumber from 'bignumber.js';
 
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
 const LOL = createCurrency('LOL');
 
 afterEach(cleanup);

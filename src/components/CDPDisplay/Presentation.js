@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Address } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
@@ -27,16 +28,21 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
+import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
-import { Address } from '@makerdao/ui-components-core';
+import { mixpanelFactory } from 'utils/analytics';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
+const { trackBtnClick } = mixpanelFactory(
+  'Borrow',
+  'Dashboard',
+  'CollateralView'
+);
 
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
@@ -183,9 +189,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account}
-                onClick={() =>
-                  showAction({ type: 'deposit', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Deposit');
+                  showAction({ type: 'deposit', props: { cdpId } });
+                }}
               >
                 {lang.actions.deposit}
               </ActionButton>
@@ -198,9 +205,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account || !isOwner}
-                onClick={() =>
-                  showAction({ type: 'withdraw', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Withdraw');
+                  showAction({ type: 'withdraw', props: { cdpId } });
+                }}
               >
                 {lang.actions.withdraw}
               </ActionButton>
@@ -215,9 +223,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account}
-                onClick={() =>
-                  showAction({ type: 'payback', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Payback');
+                  showAction({ type: 'payback', props: { cdpId } });
+                }}
               >
                 {lang.actions.pay_back}
               </ActionButton>
@@ -229,9 +238,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account || !isOwner}
-                onClick={() =>
-                  showAction({ type: 'generate', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Generate');
+                  showAction({ type: 'generate', props: { cdpId } });
+                }}
               >
                 {lang.actions.generate}
               </ActionButton>

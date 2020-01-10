@@ -12,6 +12,10 @@ import * as navi from 'react-navi';
 
 const { click, change } = fireEvent;
 jest.mock('react-navi');
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
 
 const ILK = 'ETH-A';
 const VAULT1_ETH = '5';

@@ -25,6 +25,7 @@ import styled from 'styled-components';
 import Carat from './Carat';
 import { Link, useCurrentRoute } from 'react-navi';
 import { Routes } from 'utils/constants';
+import { mixpanelFactory, getProductName, getPageName } from 'utils/analytics';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -92,7 +93,13 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
 };
 
 const WalletBalances = ({ hasActiveAccount }) => {
-  const { url } = useCurrentRoute();
+  const { url, title } = useCurrentRoute();
+  const { trackBtnClick } = mixpanelFactory(
+    getProductName(url.pathname),
+    getPageName(title),
+    'WalletBalances'
+  );
+
   const { lang } = useLanguage();
   const balances = useWalletBalances();
   const [{ feeds }] = useStore();
@@ -114,19 +121,22 @@ const WalletBalances = ({ hasActiveAccount }) => {
   const showSendSidebar = props =>
     hasActiveAccount && showSidebar({ type: 'send', props });
 
+  const formatSymbol = token => {
+    return token === 'MDAI'
+      ? 'DAI'
+      : token === 'DAI'
+      ? 'SAI'
+      : token === 'MWETH'
+      ? 'WETH'
+      : token;
+  };
+
   const tokenBalances = useMemo(
     () =>
       tokensWithBalances.reduceRight((acc, token) => {
         const balanceGtZero = !!(balances[token] && balances[token].gt(0));
         if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
-        const symbol =
-          token === 'MDAI'
-            ? 'DAI'
-            : token === 'DAI'
-            ? 'SAI'
-            : token === 'MWETH'
-            ? 'WETH'
-            : token;
+        const symbol = formatSymbol(token);
 
         const tokenIsDaiOrDsr =
           token === 'MDAI' || token === 'DAI' || token === 'DSR';
@@ -180,14 +190,28 @@ const WalletBalances = ({ hasActiveAccount }) => {
                     hasActiveAccount &&
                     (symbol === 'DSR' ? (
                       <Link href={`/${Routes.SAVE}${url.search}`}>
-                        <ActionButton>{lang.actions.withdraw}</ActionButton>
+                        <ActionButton onClick={() => trackBtnClick('Withdraw')}>
+                          {lang.actions.withdraw}
+                        </ActionButton>
                       </Link>
                     ) : symbol === 'SAI' ? (
-                      <ActionButton as="a" target="_blank" href={migrateUrl}>
+                      <ActionButton
+                        onClick={() => trackBtnClick('Migrate')}
+                        as="a"
+                        target="_blank"
+                        href={migrateUrl}
+                      >
                         {lang.sidebar.migrate}
                       </ActionButton>
                     ) : (
-                      <ActionButton onClick={() => showSendSidebar({ token })}>
+                      <ActionButton
+                        onClick={() => {
+                          trackBtnClick('Send', {
+                            collateral: formatSymbol(token)
+                          });
+                          showSendSidebar({ token, trackBtnClick });
+                        }}
+                      >
                         {lang.sidebar.send}
                       </ActionButton>
                     ))

@@ -23,5 +23,10 @@
     "1337": "Ex_Testchain"
   },
   "defaultNetwork": "1",
-  "exTestchainApiUrl": "http://localhost:4000/chain"
+  "exTestchainApiUrl": "http://localhost:4000/chain",
+  "trackingPages": {
+    "Overview": "Overview",
+    "CDP": "Dashboard",
+    "Save": "Overview"
+  }
 }

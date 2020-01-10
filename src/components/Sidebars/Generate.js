@@ -14,8 +14,11 @@ import {
   formatLiquidationPrice,
   safeToFixed
 } from '../../utils/ui';
+import { mixpanelFactory } from 'utils/analytics';
 import useMaker from '../../hooks/useMaker';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+
+const { trackBtnClick } = mixpanelFactory('Borrow', 'Sidebar', 'Generate');
 
 const Generate = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -114,10 +117,22 @@ const Generate = ({ cdpId, reset }) => {
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={generate} disabled={!amount || amountErrors}>
+        <Button
+          disabled={!amount || amountErrors}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            generate();
+          }}
+        >
           {lang.actions.generate}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

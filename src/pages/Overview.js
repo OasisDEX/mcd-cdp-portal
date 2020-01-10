@@ -28,8 +28,11 @@ import {
   getCollateralAvailableAmount
 } from 'reducers/cdps';
 import useModal from '../hooks/useModal';
-import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
+import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import { mixpanelFactory } from 'utils/analytics';
+
+const { trackBtnClick } = mixpanelFactory('Borrow', 'Overview', 'Table');
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -159,12 +162,13 @@ function Overview({ viewedAddress }) {
               <Button
                 p="s"
                 css={{ cursor: 'pointer' }}
-                onClick={() =>
+                onClick={() => {
+                  trackBtnClick('CreateFirst');
                   show({
                     modalType: 'cdpcreate',
                     modalTemplate: 'fullscreen'
-                  })
-                }
+                  });
+                }}
               >
                 {lang.actions.get_started}
               </Button>
@@ -326,6 +330,12 @@ function Overview({ viewedAddress }) {
                                 px="s"
                                 py="2xs"
                                 borderColor="steel"
+                                onClick={() => {
+                                  trackBtnClick('Manage', {
+                                    collateral: token,
+                                    vaultId: id
+                                  });
+                                }}
                               >
                                 <Link
                                   href={`/${Routes.BORROW}/${id}${url.search}`}

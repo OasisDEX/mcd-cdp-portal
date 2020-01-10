@@ -18,7 +18,10 @@ import {
 import { calcCDPParams } from 'utils/cdp';
 import { add } from 'utils/bignumber';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
+import { mixpanelFactory } from 'utils/analytics';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
+
+const { trackBtnClick } = mixpanelFactory('Borrow', 'Sidebar', 'Deposit');
 
 const Deposit = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -101,12 +104,24 @@ const Deposit = ({ cdpId, reset }) => {
           data-testid="deposit-input"
         />
       </Grid>
-      <ProxyAllowanceToggle token={symbol} />
+      <ProxyAllowanceToggle token={symbol} trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={deposit} disabled={!valid}>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            deposit();
+          }}
+        >
           {lang.actions.deposit}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

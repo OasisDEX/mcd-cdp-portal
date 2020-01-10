@@ -17,6 +17,7 @@ import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import { safeToFixed } from '../../utils/ui';
 import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
+import { mixpanelFactory } from 'utils/analytics';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -26,6 +27,8 @@ import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
 
 const log = debug('maker:Sidebars/Payback');
+
+const { trackBtnClick } = mixpanelFactory('Borrow', 'Sidebar', 'Payback');
 
 const Payback = ({ cdpId, reset }) => {
   const { lang } = useLanguage();
@@ -120,15 +123,34 @@ const Payback = ({ cdpId, reset }) => {
           placeholder="0.00 DAI"
           failureMessage={amountErrors}
           data-testid="payback-input"
-          after={<SetMax onClick={setMax} />}
+          after={
+            <SetMax
+              onClick={() => {
+                setMax();
+                trackBtnClick('SetMax', { maxAmount, setMax: true });
+              }}
+            />
+          }
         />
       </Grid>
-      <ProxyAllowanceToggle token="MDAI" />
+      <ProxyAllowanceToggle token="MDAI" trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!valid} onClick={payback}>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            payback();
+          }}
+        >
           {lang.actions.pay_back}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>
