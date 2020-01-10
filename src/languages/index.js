@@ -28,7 +28,7 @@ const languageFiles = {
   'es': spanish,
 };
 
-export const languages = Object.keys(languageFiles);
+export const locales = Object.keys(languageFiles);
 
 export default new LocalizedStrings(languageFiles);
 
