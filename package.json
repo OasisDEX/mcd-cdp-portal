@@ -66,14 +66,23 @@
     "remove-sourcemaps": "rm -rf build/static/js/*.map",
     "deploy-main": "./scripts/deploy-mainnet"
   },
-  "engines": { "node": ">=10.x.x" },
+  "engines": {
+    "node": ">=10.x.x"
+  },
   "lint-staged": {
-    "*.js": ["prettier --write --single-quote"]
+    "*.js": [
+      "prettier --write --single-quote"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",

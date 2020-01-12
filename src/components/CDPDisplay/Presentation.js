@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
+
+import useMCDObservables from 'hooks/useMCDObservables';
+
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -125,8 +128,22 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     }
   };
 
+  const {
+    encumberedCollateral,
+    encumberedDebt,
+    debtScalingFactor,
+    daiGenerated
+  } = useMCDObservables({
+    ilkName: cdp.ilk,
+    vaultId: cdpId
+  });
+
   return (
     <PageContentLayout>
+      <Box>{encumberedCollateral}</Box>
+      <Box>{encumberedDebt}</Box>
+      <Box>{debtScalingFactor}</Box>
+      <Box>{daiGenerated}</Box>
       <Box>
         <Text.h2>
           {cdp.ilk} {lang.cdp} #{cdpId}
