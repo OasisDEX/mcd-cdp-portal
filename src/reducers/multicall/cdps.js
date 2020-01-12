@@ -16,11 +16,10 @@ export async function trackCdpById(maker, cdpId, dispatch) {
 
   maker
     .service('multicall')
-    .registerDerivedSchema([mcdSchema.debt(cdp.ilk, cdpId)]);
-
-  maker
-    .service('multicall')
-    .registerLogicalSchema([mcdSchema.urn(cdp.ilk, cdpHandlerAddress, cdpId)]);
+    .registerSchemas([
+      mcdSchema.debt(cdp.ilk, cdpId),
+      mcdSchema.urn(cdp.ilk, cdpHandlerAddress, cdpId)
+    ]);
 
   maker.service('multicall').tap(calls =>
     calls

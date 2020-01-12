@@ -125,7 +125,7 @@ export async function startWatcher(maker) {
 
   maker
     .service('multicall')
-    .registerLogicalSchema([
+    .registerSchemas([
       ...flatten(ilks.map(({ key: ilkName }) => mcdSchema.ilk(ilkName)))
     ]);
 
