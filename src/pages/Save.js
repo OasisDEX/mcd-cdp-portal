@@ -36,16 +36,15 @@ import useSavingsDai from 'hooks/useSavingsDai';
 import { FeatureFlags } from 'utils/constants';
 import { mixpanelFactory } from 'utils/analytics';
 
-const { trackBtnClick: trackDeposit } = mixpanelFactory(
-  'Save',
-  'Overview',
-  'Deposit'
-);
-const { trackBtnClick: trackWithdraw } = mixpanelFactory(
-  'Save',
-  'Overview',
+const [{ trackBtnClick: trackDeposit }, { trackBtnClick: trackWithdraw }] = [
+  'Deposit',
   'Withdraw'
-);
+].map(section => mixpanelFactory('Save', 'Dashboard', section));
+
+const trackTab = tabName => {
+  const { trackBtnClick } = mixpanelFactory('Save', 'Dashboard', tabName);
+  trackBtnClick(tabName);
+};
 
 function Save() {
   const { lang } = useLanguage();
@@ -278,6 +277,7 @@ function Save() {
 
               <Grid py="s" height="100%" flexDirection="column">
                 <CardTabs
+                  trackTab={trackTab}
                   headers={[lang.actions.deposit, lang.actions.withdraw]}
                 >
                   <Grid px="l" py="m" gridRowGap="m">
