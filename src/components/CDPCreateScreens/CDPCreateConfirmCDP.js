@@ -11,8 +11,8 @@ import {
 } from '@makerdao/ui-components-core';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import { calcCDPParams } from 'utils/cdp';
-import { mixpanelFactory } from 'utils/analytics';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
@@ -23,12 +23,6 @@ import { TxLifecycle } from 'utils/constants';
 import styled from 'styled-components';
 import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
-
-const { trackBtnClick } = mixpanelFactory(
-  'Borrow',
-  'VaultCreate',
-  'ConfirmVault'
-);
 
 const StyledExternalLink = styled(ExternalLinkIcon)`
   path {
@@ -44,6 +38,7 @@ const CDPCreateConfirmSummary = ({
   enableSubmit,
   isFirstVault
 }) => {
+  const { trackBtnClick } = useAnalytics('ConfirmVault', 'VaultCreate');
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
   const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
@@ -156,6 +151,7 @@ const CDPCreateConfirmSummary = ({
 };
 
 const CDPCreateConfirmed = ({ hash, isFirstVault, onClose, txState }) => {
+  const { trackBtnClick } = useAnalytics('ConfirmVault', 'VaultCreate');
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const [waitTime, setWaitTime] = useState('8 minutes');

@@ -10,7 +10,6 @@ import {
 import { TextBlock } from 'components/Typography';
 
 import { prettifyNumber } from 'utils/ui';
-import { mixpanelFactory } from 'utils/analytics';
 import { getIlkData } from 'reducers/feeds';
 
 import useStore from 'hooks/useStore';
@@ -18,14 +17,9 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
-
-const { trackBtnClick, trackInputChange } = mixpanelFactory(
-  'Borrow',
-  'VaultCreate',
-  'SelectCollateral'
-);
 
 const CDPCreateSelectCollateralSidebar = () => {
   const { lang } = useLanguage();
@@ -57,6 +51,7 @@ const CDPCreateSelectCollateralSidebar = () => {
 
 function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
   const [{ feeds }] = useStore();
+  const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
 
   ilk.data = getIlkData(feeds, ilk.key);
 
@@ -105,6 +100,7 @@ const CDPCreateSelectCollateral = ({
   isFirstVault,
   dispatch
 }) => {
+  const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
   const balances = useWalletBalances();

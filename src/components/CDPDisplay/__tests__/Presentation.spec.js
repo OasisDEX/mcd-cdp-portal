@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import * as navi from 'react-navi';
 import Presentation from '../Presentation';
 import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
@@ -7,11 +8,18 @@ import {
 } from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
 import BigNumber from 'bignumber.js';
+import styled from 'styled-components';
 
 jest.mock('mixpanel-browser', () => ({
   init: jest.fn(),
   track: jest.fn()
 }));
+
+jest.mock('react-navi');
+navi.useCurrentRoute.mockReturnValue({
+  url: { search: '?network=testnet', pathname: '/test' }
+});
+navi.Link = styled.a``;
 
 const LOL = createCurrency('LOL');
 

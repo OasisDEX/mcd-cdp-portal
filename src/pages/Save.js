@@ -33,18 +33,8 @@ import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
 import useSavingsDai from 'hooks/useSavingsDai';
+import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
-import { mixpanelFactory } from 'utils/analytics';
-
-const [{ trackBtnClick: trackDeposit }, { trackBtnClick: trackWithdraw }] = [
-  'Deposit',
-  'Withdraw'
-].map(section => mixpanelFactory('Save', 'Dashboard', section));
-
-const trackTab = tabName => {
-  const { trackBtnClick } = mixpanelFactory('Save', 'Dashboard', tabName);
-  trackBtnClick(tabName);
-};
 
 function Save() {
   const { lang } = useLanguage();
@@ -61,6 +51,14 @@ function Save() {
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
+  const { trackBtnClick: trackDeposit } = useAnalytics('Deposit');
+  const { trackBtnClick: trackWithdraw } = useAnalytics('Withdraw');
+
+  const trackTab = tabName => {
+    if (tabName === 'Deposit') trackDeposit('SelectDeposit');
+    else if (tabName === 'Withdraw') trackWithdraw('SelectWithdraw');
+  };
 
   const balance = balances.DSR;
 

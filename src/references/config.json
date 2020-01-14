@@ -27,6 +27,7 @@
   "trackingPages": {
     "Overview": "Overview",
     "CDP": "Dashboard",
-    "Save": "Overview"
+    "Save": "Dashboard",
+    "Landing": "Landing"
   }
 }

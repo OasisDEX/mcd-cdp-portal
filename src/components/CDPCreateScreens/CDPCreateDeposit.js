@@ -9,18 +9,12 @@ import {
   safeToFixed
 } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
-import { mixpanelFactory } from 'utils/analytics';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
-
-const { trackBtnClick } = mixpanelFactory(
-  'Borrow',
-  'VaultCreate',
-  'DepositGenerate'
-);
 
 function OpenCDPForm({
   selectedIlk,
@@ -242,6 +236,7 @@ const CDPCreateDeposit = ({
     selectedIlk.currency.symbol
   );
   const { lang } = useLanguage();
+  const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;

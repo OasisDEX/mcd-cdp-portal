@@ -1,8 +1,6 @@
 import mixpanel from 'mixpanel-browser';
 import ReactGA from 'react-ga';
 import debug from 'debug';
-import { Routes } from 'utils/constants';
-import references from 'references/config';
 const log = debug('maker:analytics');
 
 const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
@@ -38,36 +36,6 @@ const config = {
     }
   }
 }[env];
-
-export const getProductName = pathname => {
-  return pathname.startsWith(`/${Routes.BORROW}`)
-    ? 'Borrow'
-    : pathname.startsWith(`/${Routes.SAVE}`)
-    ? 'Save'
-    : 'Landing';
-};
-
-export const getPageName = title => {
-  return references.trackingPages[title];
-};
-
-export const mixpanelFactory = (product, page, section, props) => {
-  const options = {
-    product,
-    page,
-    section,
-    ...props
-  };
-  const trackBtnClick = (id, additionalProps) => {
-    mixpanel.track('btn_click', { id, ...options, ...additionalProps });
-  };
-
-  const trackInputChange = (id, additionalProps) => {
-    mixpanel.track('input_change', { id, ...options, ...additionalProps });
-  };
-
-  return { trackBtnClick, trackInputChange };
-};
 
 export const mixpanelInit = () => {
   log(

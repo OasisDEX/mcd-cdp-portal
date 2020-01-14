@@ -9,6 +9,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import {
   getCdp,
   getDebtAmount,
@@ -18,12 +19,10 @@ import {
 import { calcCDPParams } from 'utils/cdp';
 import { add } from 'utils/bignumber';
 import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
-import { mixpanelFactory } from 'utils/analytics';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
-const { trackBtnClick } = mixpanelFactory('Borrow', 'Sidebar', 'Deposit');
-
 const Deposit = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [storeState] = useStore();

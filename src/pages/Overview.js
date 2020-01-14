@@ -29,10 +29,8 @@ import {
 } from 'reducers/cdps';
 import useModal from '../hooks/useModal';
 import useNotification from 'hooks/useNotification';
+import useAnalytics from 'hooks/useAnalytics';
 import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
-import { mixpanelFactory } from 'utils/analytics';
-
-const { trackBtnClick } = mixpanelFactory('Borrow', 'Overview', 'Table');
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -61,6 +59,7 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview({ viewedAddress }) {
+  const { trackBtnClick } = useAnalytics('Table');
   const { account, viewedAddressData } = useMaker();
   const [{ cdps, feeds }] = useStore();
   const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);

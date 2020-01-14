@@ -1,4 +1,5 @@
 import React from 'react';
+import * as navi from 'react-navi';
 import assert from 'assert';
 import {
   wait,
@@ -12,6 +13,7 @@ import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 import Save from '../Save';
 import { renderWithMaker } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
+import styled from 'styled-components';
 
 const { click, change } = fireEvent;
 
@@ -19,6 +21,12 @@ jest.mock('mixpanel-browser', () => ({
   init: jest.fn(),
   track: jest.fn()
 }));
+
+jest.mock('react-navi');
+navi.useCurrentRoute.mockReturnValue({
+  url: { search: '?network=testnet', pathname: '/test' }
+});
+navi.Link = styled.a``;
 
 const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';

@@ -32,21 +32,17 @@ import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
+import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
-import { mixpanelFactory } from 'utils/analytics';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
-const { trackBtnClick } = mixpanelFactory(
-  'Borrow',
-  'Dashboard',
-  'CollateralView'
-);
 
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
+  const { trackBtnClick } = useAnalytics('CollateralView');
 
   const cdpId = parseInt(cdp.id);
   // eslint-disable-next-line react-hooks/rules-of-hooks

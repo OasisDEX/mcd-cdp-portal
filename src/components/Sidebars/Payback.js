@@ -15,9 +15,9 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import { safeToFixed } from '../../utils/ui';
 import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
-import { mixpanelFactory } from 'utils/analytics';
 
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
@@ -28,9 +28,8 @@ import SetMax from 'components/SetMax';
 
 const log = debug('maker:Sidebars/Payback');
 
-const { trackBtnClick } = mixpanelFactory('Borrow', 'Sidebar', 'Payback');
-
 const Payback = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Payback', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const balances = useWalletBalances();

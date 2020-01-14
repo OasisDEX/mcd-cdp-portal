@@ -21,11 +21,11 @@ import { tokensWithBalances } from 'reducers/accounts';
 import { prettifyNumber } from 'utils/ui';
 import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
+import useAnalytics from 'hooks/useAnalytics';
 import styled from 'styled-components';
 import Carat from './Carat';
 import { Link, useCurrentRoute } from 'react-navi';
 import { Routes } from 'utils/constants';
-import { mixpanelFactory, getProductName, getPageName } from 'utils/analytics';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -93,12 +93,8 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
 };
 
 const WalletBalances = ({ hasActiveAccount }) => {
-  const { url, title } = useCurrentRoute();
-  const { trackBtnClick } = mixpanelFactory(
-    getProductName(url.pathname),
-    getPageName(title),
-    'WalletBalances'
-  );
+  const { url } = useCurrentRoute();
+  const { trackBtnClick } = useAnalytics('WalletBalances');
 
   const { lang } = useLanguage();
   const balances = useWalletBalances();

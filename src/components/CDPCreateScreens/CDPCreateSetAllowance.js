@@ -1,20 +1,15 @@
 import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
 import ScreenFooter from '../ScreenFooter';
-import { mixpanelFactory } from 'utils/analytics';
 import useProxy from 'hooks/useProxy';
-import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
-
-const { trackBtnClick } = mixpanelFactory(
-  'Borrow',
-  'VaultCreate',
-  'ProxyDeploy'
-);
+import useAnalytics from 'hooks/useAnalytics';
+import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 
 const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
+  const { trackBtnClick } = useAnalytics('ProxyDeploy', 'VaultCreate');
   const { lang } = useLanguage();
   const blockHeight = useBlockHeight(0);
 

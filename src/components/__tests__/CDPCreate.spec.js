@@ -13,6 +13,10 @@ jest.mock('mixpanel-browser', () => ({
   track: jest.fn()
 }));
 
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/borrow' } })
+}));
+
 let maker;
 
 beforeAll(async () => {

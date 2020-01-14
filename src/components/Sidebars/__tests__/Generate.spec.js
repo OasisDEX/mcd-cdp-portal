@@ -28,6 +28,10 @@ jest.mock('mixpanel-browser', () => ({
   track: jest.fn()
 }));
 
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
+
 beforeAll(async () => {
   console.error = jest.fn();
 });
