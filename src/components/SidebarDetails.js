@@ -8,7 +8,7 @@ const SidebarDetails = ({ system }) => {
 
   const TOTAL_DAI_SUPPLY = system => [
     lang.sidebar.save_details.total_dai_supply,
-    prettifyNumber(system.totalDebt)
+    prettifyNumber(system.totalDaiSupply)
   ];
 
   const TOTAL_SAVINGS_DAI = system => [

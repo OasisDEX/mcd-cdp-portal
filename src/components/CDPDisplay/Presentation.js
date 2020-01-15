@@ -3,8 +3,6 @@ import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
 
-import useMCDObservables from 'hooks/useMCDObservables';
-
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
 import {
@@ -37,6 +35,7 @@ import debug from 'debug';
 import useNotification from 'hooks/useNotification';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { Address } from '@makerdao/ui-components-core';
+import useObservable from 'hooks/useObservable';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
@@ -44,6 +43,19 @@ const { FF_VAULT_HISTORY } = FeatureFlags;
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
+  const manager = maker
+    .service('smartContract')
+    .getContractAddress('CDP_MANAGER');
+
+  // Testing:
+  const { dsProxy } = useObservable('dsProxy', account?.address);
+  const { getVaults } = useObservable('getVaults', manager, dsProxy);
+  const { ilkPrice } = useObservable('ilkPrice', 'ETH-A');
+  // const cdpIds = useObservable('cdpIds', manager, dsProxy);
+  // const cdpIlks = useObservable('cdpIlks', manager, dsProxy);
+  // const cdpUrns = useObservable('cdpUrns', manager, dsProxy);
+  // const { liquidationRatio } = useObservable('liquidationRatio', 'ETH-A');
+  // const { priceFeedAddress } = useObservable('priceFeedAddress', 'ETH-A');
 
   const cdpId = parseInt(cdp.id);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -128,22 +140,17 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     }
   };
 
-  const {
-    encumberedCollateral,
-    encumberedDebt,
-    debtScalingFactor,
-    daiGenerated
-  } = useMCDObservables({
-    ilkName: cdp.ilk,
-    vaultId: cdpId
-  });
-
   return (
     <PageContentLayout>
-      <Box>{encumberedCollateral}</Box>
-      <Box>{encumberedDebt}</Box>
-      <Box>{debtScalingFactor}</Box>
-      <Box>{daiGenerated}</Box>
+      <Box>
+        <pre>dsProxy: {dsProxy}</pre>
+      </Box>
+      <Box>
+        <pre>ilkPrice: {`${ilkPrice}`}</pre>
+      </Box>
+      <Box>
+        <pre>Vaults: {getVaults && JSON.stringify(getVaults, null, 2)}</pre>
+      </Box>
       <Box>
         <Text.h2>
           {cdp.ilk} {lang.cdp} #{cdpId}

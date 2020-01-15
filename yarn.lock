@@ -1594,8 +1594,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@file:.yalc/@makerdao/dai-plugin-mcd":
-  version "1.0.5-8061db9d"
+"@makerdao/dai-plugin-mcd@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.0.5.tgz#294587079e42d1d65af1d42b0b34f558ac78671b"
+  integrity sha512-Suy/t6dseLc4UbKFWSrrJy6xjRudPv6SF20vIcKq4HFN4BO24kUGArneMfq8AgIVDnjspYu9OYpnYp8L/qbB3A==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -1629,8 +1631,10 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@file:.yalc/@makerdao/dai":
-  version "0.23.0-rc.4-1ce2c0bf"
+"@makerdao/dai@0.23.0-rc.5":
+  version "0.23.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.23.0-rc.5.tgz#18bcbc196e7c3a1fb745a65b09101669226eaae0"
+  integrity sha512-VgVr9q5oOIN//je678fRNkT3Us3AXAqPzR/XfKv2JMa2GUJK9wDvKHH7DpAeKc8iqFCAp/nV3kP2m9GX9aY2zA==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
@@ -1648,7 +1652,6 @@
     isomorphic-fetch "^2.2.1"
     lodash "^4.17.11"
     promise-props "^1.0.0"
-    rxjs "^6.5.4"
     toposort "^2.0.2"
     web3 "1.2.1"
     web3-provider-engine makerdao/provider-engine#kovan-fix-dist
@@ -12824,13 +12827,6 @@ rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.2.tgz#2e35ce815cd46d84d02a209fb4e5921e051dbec7"
   integrity sha512-HUb7j3kvb7p7eCUHE3FqjoDsC1xfZQ4AHFWfTKSpZ+sAhhz5X1WX0ZuUqWbzB2QhSLp3DoLUG+hMdEDKqWo2Zg==
-  dependencies:
-    tslib "^1.9.0"
-
-rxjs@^6.5.4:
-  version "6.5.4"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.4.tgz#e0777fe0d184cec7872df147f303572d414e211c"
-  integrity sha512-naMQXcgEo3csAEGvw/NydRA0fuS2nDZJiw1YUWFKU7aPPAPGZEsD4Iimit96qwCieH6y614MCLYwdkrWx7z/7Q==
   dependencies:
     tslib "^1.9.0"
 

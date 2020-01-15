@@ -10,7 +10,9 @@ import { tokensWithBalances } from 'reducers/accounts';
 import savingsModel from './reducers/multicall/savings';
 import { isMissingContractAddress } from './utils/ethereum';
 import flatten from 'lodash/flatten';
-import { mcdSchema } from '@makerdao/dai-plugin-mcd';
+import schemas from './references/schemas/index.js';
+
+let multicall;
 let watcher;
 
 // Update watcher calls with new address for tracking token balances, proxy allowances and savings
@@ -19,7 +21,7 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  maker.service('multicall').tap(calls =>
+  multicall.tap(calls =>
     [
       // Filter out existing calls of the same types we're about to add
       ...calls.filter(
@@ -75,7 +77,7 @@ export async function updateWatcherWithProxy(
   addresses.MDAI = addresses.MCD_DAI;
   addresses.MWETH = addresses.ETH;
 
-  maker.service('multicall').tap(calls =>
+  multicall.tap(calls =>
     [
       ...calls,
       ...(accountAddress && proxyAddress
@@ -98,10 +100,10 @@ export async function updateWatcherWithProxy(
 }
 
 export function createWatcher(maker) {
-  const service = maker.service('multicall');
-  service.createWatcher({ interval: 'block' });
-  watcher = service.watcher;
+  multicall = maker.service('multicall');
+  watcher = multicall.createWatcher({ interval: 'block' });
   window.watcher = watcher;
+  multicall.registerSchemas(schemas);
   return watcher;
 }
 
@@ -112,26 +114,17 @@ export async function startWatcher(maker) {
   addresses.MWETH = addresses.ETH;
 
   // Add initial calls to watcher
-  maker
-    .service('multicall')
-    .tap(calls =>
-      [
+  multicall.tap(calls => {
+    return [
         ...calls,
         ...createCDPSystemModel(addresses),
         ...flatten(ilks.map(ilk => cdpTypeModel(addresses, ilk))),
         ...savingsModel(addresses)
       ].filter(call => !isMissingContractAddress(call))
-    );
-
-  maker
-    .service('multicall')
-    .registerSchemas([
-      ...flatten(ilks.map(({ key: ilkName }) => mcdSchema.ilk(ilkName)))
-    ]);
+  });
 
   // Our watch has begun
-  maker.service('multicall').start();
-  maker.service('multicall').startObservable();
+  multicall.start();
 
   return watcher;
 }

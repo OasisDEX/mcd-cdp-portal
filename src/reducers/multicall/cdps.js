@@ -1,6 +1,5 @@
 import { toHex } from 'utils/ethereum';
 import { INK, ART, UNLOCKED_COLLATERAL } from 'reducers/cdps';
-import { mcdSchema } from '@makerdao/dai-plugin-mcd';
 
 export async function trackCdpById(maker, cdpId, dispatch) {
   const addresses = maker.service('smartContract').getContractAddresses();
@@ -13,13 +12,6 @@ export async function trackCdpById(maker, cdpId, dispatch) {
 
   const urnStateCall = urnState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
   const gemStateCall = gemState(addresses)(cdp.ilk, cdpHandlerAddress, cdpId);
-
-  maker
-    .service('multicall')
-    .registerSchemas([
-      mcdSchema.debt(cdp.ilk, cdpId),
-      mcdSchema.urn(cdp.ilk, cdpHandlerAddress, cdpId)
-    ]);
 
   maker.service('multicall').tap(calls =>
     calls

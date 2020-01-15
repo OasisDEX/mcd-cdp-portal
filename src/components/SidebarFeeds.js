@@ -29,10 +29,10 @@ const SidebarFeeds = ({ feeds }) => {
 
       <CardBody mt="s2">
         {feeds.map(
-          ({ pair, value }, index) =>
+          (value, index) =>
             (!collapsed || index < 3) && (
               <Flex
-                key={`feed_${pair}`}
+                key={`feed_${index}`}
                 justifyContent="space-between"
                 alignItems="baseline"
                 width="100%"
@@ -41,7 +41,10 @@ const SidebarFeeds = ({ feeds }) => {
                 bg={index % 2 ? 'coolGrey.100' : 'white'}
               >
                 <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
-                  {pair}
+                  {value.symbol
+                    .split('/')
+                    .reverse()
+                    .join('/')}
                 </Text>
                 <Text fontSize="1.4rem" color="darkPurple">
                   {prettifyNumber(value)}
