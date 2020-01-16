@@ -24,12 +24,12 @@ export default {
     "headline": "Négociez, empruntez et épargnez avec le Dai",
     "trade_card": {
       "title": "Négociez",
-      "description": "Passez des commandes sur le marché, ou échangez simplement vos tokens instantanément contre l\'équivalent disponible.",
+      "description": "Passez des commandes sur le marché, ou échangez simplement vos tokens instantanément contre l'équivalent disponible.",
       "button": "Commencez à négocier"
     },
     "borrow_card": {
       "title": "Empruntez",
-      "description": "Bloquez vos tokens en tant que garantie pour générer des Dai, un stablecoin décentralisé à parité souple à l\'USD.",
+      "description": "Bloquez vos tokens en tant que garantie pour générer des Dai, un stablecoin décentralisé à parité souple à l'USD.",
       "button": "Empruntez des Dai"
     },
     "save_card": {
@@ -39,37 +39,37 @@ export default {
     },
     "token_section_title": "Actuellement pris en charge dans Oasis",
     "token_section_only_on_trade": "* Uniquement disponible sur Oasis Trade",
-    "section1_title": "Qu\'est-ce que Oasis ?",
+    "section1_title": "Qu'est-ce que Oasis ?",
     "section1_p": "Oasis est une plateforme financière décentralisée. Utilisez-la pour réaliser toutes vos opérations en un même endroit : négocier des tokens, emprunter des Dai et épargner.",
-    "section2_title": "Protocole sécurisé reposant sur l\'Ethereum",
-    "section2_p": "Oasis s\'appuie sur des contrats intelligents audités et vérifiés formellement, créés par Maker, le leader dans le secteur de la finance décentralisée sécurisée.",
+    "section2_title": "Protocole sécurisé reposant sur l'Ethereum",
+    "section2_p": "Oasis s'appuie sur des contrats intelligents audités et vérifiés formellement, créés par Maker, le leader dans le secteur de la finance décentralisée sécurisée.",
     "section3_title": "Sans aucune autorisation",
-    "section3_p": "Oasis est une plateforme décentralisée non privative, accessible via un portefeuille prenant en charge l\'Ethereum. Vous êtes le seul à pouvoir contrôler vos actifs.",
+    "section3_p": "Oasis est une plateforme décentralisée non privative, accessible via un portefeuille prenant en charge l'Ethereum. Vous êtes le seul à pouvoir contrôler vos actifs.",
     "questions_title": "Questions",
-    "question1": "Qu\'est-ce que Oasis ?",
-    "answer1": "Oasis est une application décentralisée exécutée sur la blockchain Ethereum. N\'importe qui peut utiliser Oasis pour négocier des tokens, les échanger et épargner à l\'aide du Dai.",
-    "question2": "Qu\'est-ce que le Dai ?",
+    "question1": "Qu'est-ce que Oasis ?",
+    "answer1": "Oasis est une application décentralisée exécutée sur la blockchain Ethereum. N'importe qui peut utiliser Oasis pour négocier des tokens, les échanger et épargner à l'aide du Dai.",
+    "question2": "Qu'est-ce que le Dai ?",
     "answer2": "Le Dai est la première devise neutre au monde et le premier stablecoin décentralisé à parité souple au dollar US. En savoir plus sur le Dai {0}.",
     "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "ici",
-    "question3": "Ai-je besoin d\'un compte ?",
-    "answer3": "Vous n\'avez pas besoin de compte pour utiliser Oasis. Vous aurez toutefois besoin d\'un portefeuille Ethereum. Oasis prend en charge la plupart des portefeuilles Ethereum en ligne tels que {0}, {1}, etc.",
+    "question3": "Ai-je besoin d'un compte ?",
+    "answer3": "Vous n'avez pas besoin de compte pour utiliser Oasis. Vous aurez toutefois besoin d'un portefeuille Ethereum. Oasis prend en charge la plupart des portefeuilles Ethereum en ligne tels que {0}, {1}, etc.",
     "answer3_link1_url": "https://metamask.io/",
     "answer3_link1_text": "Metamask",
     "answer3_link2_url": "https://wallet.coinbase.com/",
     "answer3_link2_text": "Portefeuille Coinbase",
     "question5": "La plateforme Oasis est-elle sécurisée ?",
-    "answer5": "La sécurité est notre priorité. L\'équipe d\'Oasis vérifie régulièrement nos contrats intelligents. Par ailleurs, le code Oasis est {0}, ce qui permet à la communauté de tester sous pression et d\'auditer la technologie de base.",
+    "answer5": "La sécurité est notre priorité. L'équipe d'Oasis vérifie régulièrement nos contrats intelligents. Par ailleurs, le code Oasis est {0}, ce qui permet à la communauté de tester sous pression et d'auditer la technologie de base.",
     "answer5_link1_url": "https://github.com/OasisDEX",
     "answer5_link1_text": "open-source",
-    "question6": "L\'utilisation d\'Oasis est-elle payante ?",
+    "question6": "L'utilisation d'Oasis est-elle payante ?",
     "answer6": "Oasis est une plateforme gratuite. Toutefois, vous devrez payer les frais de \"gas\" et autres frais associés au Maker Protocol, tels que les frais de stabilité.",
-    "question7": "Comment puis-je contacter l\'équipe d\'Oasis ?",
-    "answer7": "Vous pouvez joindre l\'équipe d\'Oasis en nous contactant via {0}.",
+    "question7": "Comment puis-je contacter l'équipe d'Oasis ?",
+    "answer7": "Vous pouvez joindre l'équipe d'Oasis en nous contactant via {0}.",
     "answer7_link1_url": "https://chat.makerdao.com",
     "answer7_link1_text": "chat",
-    "question8": "Puis-je acheter des Bitcoin ou des Ethereum sur Oasis à l\'aide d\'une carte de crédit ou via mon compte bancaire ?",
-    "answer8": "Vous ne pouvez pas acheter de cryptomonnaies à partir de votre compte bancaire via Oasis. Au lieu de cela, vous pouvez utiliser le Dai pour acheter des Ethereum et d\'autres tokens pris en charge.",
+    "question8": "Puis-je acheter des Bitcoin ou des Ethereum sur Oasis à l'aide d'une carte de crédit ou via mon compte bancaire ?",
+    "answer8": "Vous ne pouvez pas acheter de cryptomonnaies à partir de votre compte bancaire via Oasis. Au lieu de cela, vous pouvez utiliser le Dai pour acheter des Ethereum et d'autres tokens pris en charge.",
     "read_only": "En lecture seule",
     "wallet_connect": "Se connecter au portefeuille",
     "wallet_link": "Portefeuille Coinbase"
@@ -91,7 +91,7 @@ export default {
     "get_started_title": "Ouvrez votre premier coffre-fort pour commencer à générer des Dai.",
     "select_another_wallet": "Sélectionnez un autre portefeuille",
     "connect_ledgers_choice": "Connectez {0} ou {1}",
-    "no_vaults": "L\'adresse {0} n\'a pas de coffres-forts.",
+    "no_vaults": "L'adresse {0} n'a pas de coffres-forts.",
     "loading_vaults": "Chargement de coffres-forts..."
   },
   "navbar": {
@@ -127,8 +127,8 @@ export default {
     "no_wallet": "Non connecté",
     "save_details": {
       "title": "Enregistrer les détails",
-      "total_savings_dai": "Total de l\'épargne en Dai",
-      "total_dai_supply": "Total de l\'approvisionnement en Dai"
+      "total_savings_dai": "Total de l'épargne en Dai",
+      "total_dai_supply": "Total de l'approvisionnement en Dai"
     }
   },
   "cdp_create": {
@@ -145,11 +145,11 @@ export default {
     "tx_hash": "Empreinte de transaction",
     "view_tx_details": "Voir les détails de la transaction",
     "select_title": "Sélectionner un type de garantie",
-    "select_text": "Chaque type de garantie a ses propres paramètres de risque. Vous pouvez bloquer d\'autres types de garantie par la suite.",
+    "select_text": "Chaque type de garantie a ses propres paramètres de risque. Vous pouvez bloquer d'autres types de garantie par la suite.",
 
     "setup_proxy_title": "Configuration et gestion du coffre-fort",
-    "setup_proxy_proxy_text": "Configurer votre coffre-fort pour une gestion facile. Cette opération n\'est nécessaire qu\'une fois.",
-    "setup_proxy_allowance_text": "Cette autorisation permet à Oasis d\'interagir avec votre {0}. Cela doit être fait une fois pour chaque nouveau type de garantie.",
+    "setup_proxy_proxy_text": "Configurer votre coffre-fort pour une gestion facile. Cette opération n'est nécessaire qu'une fois.",
+    "setup_proxy_allowance_text": "Cette autorisation permet à Oasis d'interagir avec votre {0}. Cela doit être fait une fois pour chaque nouveau type de garantie.",
     "setup_proxy_proxy_button": "Configuration",
     "setup_proxy_allowance_button": "Défini",
     "setup_vault": "Configurer le coffre-fort",
@@ -174,14 +174,14 @@ export default {
     "post_confirmed_text": "Vous pouvez quitter cette page sans problème.",
     "insufficient_ilk_balance": "Solde de {0} insuffisant",
     "draw_too_much_dai": "Coffre-fort inférieur au seuil de liquidation",
-    "below_dust_limit": "La génération d\'un coffre-fort requiert au moins {0} Dai",
+    "below_dust_limit": "La génération d'un coffre-fort requiert au moins {0} Dai",
     "dust_max_payback": "Vous pouvez rembourser toutes vos créances à récupérer ou un maximum de {0} Dai",
     "stability_fee_description": "Les frais calculés sur la base des créances à récupérer de votre coffre-fort. Il sont constamment ajoutés à vos créances actuelles.",
-    "liquidation_ratio_description": "Le ratio garantie/dai auquel le coffre-fort risque d\'être liquidé.",
+    "liquidation_ratio_description": "Le ratio garantie/dai auquel le coffre-fort risque d'être liquidé.",
     "liquidation_penalty_description": "Les frais ajoutés au total de créances à récupérer en DAI en cas de liquidation.",
     "waiting_for_comfirmations": "Attente de confirmations... {0} sur {1}",
     "confirmed_with_confirmations": "Confirmé ({0} confirmations)",
-    "waiting_for_confirmations_info": "L\'attente de confirmations réduit le risque de changement d\'adresse de votre coffre-fort. Nous demandons aux utilisateurs d\'attendre 10 confirmations de blocs pour s\'assurer qu\'elle a été créée avec succès. Cela prend généralement 2 minutes environ.",
+    "waiting_for_confirmations_info": "L'attente de confirmations réduit le risque de changement d'adresse de votre coffre-fort. Nous demandons aux utilisateurs d'attendre 10 confirmations de blocs pour s'assurer qu'elle a été créée avec succès. Cela prend généralement 2 minutes environ.",
     "proxy_failure_not_mined": "Cette transaction est plus longue que prévu...",
     "proxy_failure_not_mined_info": "Il arrive que les transactions vers le réseau soient plus longues que prévu. Cela peut être dû à plusieurs raisons, notamment un réseau encombré ou une transaction envoyée à un prix de \"gas\" faible. Certains portefeuilles permettent aux utilisateurs de renvoyer une transaction avec un prix de \"gas\" plus élevé. Sinon, consultez votre transaction sur etherscan et revenez plus tard"
   },
@@ -212,7 +212,7 @@ export default {
     },
     "open_vault": "Épargnez sur vos Dai en les bloquant dans Oasis Save",
     "deposit_form_title": "Saisissez le montant que vous souhaitez déposer.",
-    "setup_proxy_text": "La configuration de votre proxy regroupe plusieurs transactions, ce qui permet d\'effectuer des transactions plus rapidement et d\'économiser des frais de \"gas\". Cette opération n\'est nécessaire qu\'une fois.",
+    "setup_proxy_text": "La configuration de votre proxy regroupe plusieurs transactions, ce qui permet d'effectuer des transactions plus rapidement et d'économiser des frais de \"gas\". Cette opération n'est nécessaire qu'une fois.",
     "confirm_title": "Confirmer le dépôt",
     // "post_confirm_title": "Deposit Confirmed"
   },
@@ -235,7 +235,7 @@ export default {
     "generate": "Généré"
   },
   "event_history": {
-    "open": "Nouveau coffre-fort ouvert avec le n° d\'ID{0}",
+    "open": "Nouveau coffre-fort ouvert avec le n° d'ID{0}",
     "deposit": "{0} {1} déposé dans le coffre-fort",
     "withdraw": "{0} {1} retiré du coffre-fort",
     "generate": "{0} nouveaux Dai générés depuis le coffre-fort",
@@ -266,29 +266,29 @@ export default {
     "new_liquidation_price": "Nouveau prix de liquidation",
     "new_collateralization_ratio": "Nouveau taux de garantie",
     "create_proxy": "Créer un proxy pour continuer",
-    "creating_proxy": "Création d\'un proxy...",
+    "creating_proxy": "Création d'un proxy...",
     "proxy_created": "Proxy créé",
     "send_title": "Envoyer {0}",
     "send_description": "Quel montant de {0} voulez-vous envoyer ?",
     "your_balance": "Votre solde",
     "dest_address": "Adresse de destination",
     "send_token_desc": "{0} envoyé",
-    "invalid_input": "Cette saisie n\'est pas valide",
+    "invalid_input": "Cette saisie n'est pas valide",
     "invalid_min_amount": "Peut uniquement envoyer un montant positif de {0}",
     "invalid_max_amount": "Le montant est supérieur à votre solde",
     "invalid_min_gas": "Le solde est inférieur aux frais de transaction requis : {0}",
     "invalid_max_gas": "Le solde est inférieur au montant + frais de transaction : {0}",
-    "invalid_address": "Cette adresse n\'est pas valide"
+    "invalid_address": "Cette adresse n'est pas valide"
   },
   "save": {
     "title": "Solde",
-    "dai_savings_rate": "Taux d\'épargne en Dai",
+    "dai_savings_rate": "Taux d'épargne en Dai",
     "description": "Recevoir une épargne sur vos Dai. Déposer ou retirer à tout moment.",
     "deposit_amount": "Déposer un montant",
     "withdraw_amount": "Retirer un montant",
     "deposit_dai": "Déposer des Dai",
-    "deposit_dai_subheading": "Commencez à gagner de l\'argent dès que votre dépôt est confirmé.",
-    "get_started_title": "Commencez à gagner de l\'argent sur vos Dai dès aujourd\'hui"
+    "deposit_dai_subheading": "Commencez à gagner de l'argent dès que votre dépôt est confirmé.",
+    "get_started_title": "Commencez à gagner de l'argent sur vos Dai dès aujourd'hui"
   },
   "verbs": {
     "depositing": "Dépôt",
@@ -300,13 +300,13 @@ export default {
     "activity": "Activité",
     "date": "Date",
     "time": "Heure",
-    "sender_id": "ID d\'expéditeur",
+    "sender_id": "ID d'expéditeur",
     "tx_hash": "Empreinte de transaction"
   },
   "transactions": {
     "unlocking_token": "Déblocage de {0}",
-    "setting_up_proxy": "Configuration d\'un proxy",
-    "creating_cdp": "Création d\'un coffre-fort",
+    "setting_up_proxy": "Configuration d'un proxy",
+    "creating_cdp": "Création d'un coffre-fort",
     "generate_dai": "Génération de DAI",
     "pay_back_dai": "Remboursement de DAI",
     "withdrawing_gem": "Retrait de {0}",
@@ -348,7 +348,7 @@ export default {
   "liquidation_penalty": "Frais de liquidation",
   "collateral_debt_ceiling": "Limite de créance",
   "dai_available": "DAI disponible",
-  "returned_auction": "généré par l\'enchère",
+  "returned_auction": "généré par l'enchère",
   "liquidated_event": "Votre coffre-fort a été liquidé",
   "liquidation_ratio": "Taux de liquidation",
   "liquidation_price": "Votre prix de liquidation",
@@ -361,8 +361,8 @@ export default {
   "current_ilk_price": "Prix du {0} actuel",
   "your_balance": "Votre solde",
   // "risk_parameters": "Risk Parameters",
-  "terms_of_service_text": "J\'ai lu et j\'accepte les {0}",
-  "terms_of_service": "Conditions d\'utilisation",
+  "terms_of_service_text": "J'ai lu et j'accepte les {0}",
+  "terms_of_service": "Conditions d'utilisation",
   "cookie_notice": "En utilisant ce site web, vous acceptez notre {0}",
   "privacy_policy": "politique de confidentialité",
   "providers": {
@@ -379,7 +379,7 @@ export default {
   notifications: {
     claim: "Demander",
     claim_collateral: "Les enchères de votre coffre-fort {0} sont terminées. Vous avez {1} {2} à demander",
-    non_vault_owner: "Le propriétaire de cette position ({0}) ne correspond pas à l\'adresse du portefeuille connecté",
-    non_overview_owner: "Vous visualisez actuellement l\'aperçu d\'une autre adresse ({0})"
+    non_vault_owner: "Le propriétaire de cette position ({0}) ne correspond pas à l'adresse du portefeuille connecté",
+    non_overview_owner: "Vous visualisez actuellement l'aperçu d'une autre adresse ({0})"
   }
 }
