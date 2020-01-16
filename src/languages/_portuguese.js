@@ -29,12 +29,12 @@ export default {
     },
     "borrow_card": {
       "title": "Obtenha empréstimos",
-      "description": "Bloqueie seus tokens como garantia para a geração de Dai, uma stablecoin descentralizada com regime cambial intermediário, indexada em 1:1 em relação ao dólar.",
+      "description": "Deposite seus tokens como garantia para a geração de Dai, uma stablecoin descentralizada indexada ao dólar norte-Americano em regime similar ao de bandas cambiais.",
       "button": "Obtenha empréstimos em Dai"
     },
     "save_card": {
       "title": "Receba rendimentos",
-      "description": "Bloqueie seu Dai no Oasis Save e receba rendimentos de poupança. Automático e sem custódia.",
+      "description": "Deposite seu Dai no Oasis Save e receba rendimentos de poupança. Automático e sem custódia.",
       "button": "Receba rendimentos com o Dai"
     },
     "token_section_title": "Compatível atualmente com o Oasis",
