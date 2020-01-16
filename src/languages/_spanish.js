@@ -21,45 +21,45 @@ export default {
     "not_applicable": "N/A"
   },
   "landing_page": {
-    "headline": "Comercie, preste y ahorre con Dai.",
+    "headline": "Intercambie, Preste y Ahorre con Dai.",
     "trade_card": {
-      "title": "Comercie",
-      "description": "Realice pedidos en el marketplace, o simplemente intercambie sus tokens instantáneamente por lo que esté disponible.",
-      "button": "Empiece a comerciar"
+      "title": "Intercambie",
+      "description": "Realice pedidos en el marketplace o simplemente intercambie sus tokens instantáneamente.",
+      "button": "Intercambiar Dai"
     },
     "borrow_card": {
       "title": "Preste",
-      "description": "Bloquee sus tokens como un colateral para generar Dai, una stablecoin descentralizada con una tasa de cambio blanda anclada en 1 USD.",
-      "button": "Preste Dai"
+      "description": "Deposite sus tokens como colateral para generar DAI, una stablecoin descentralizada con valor cercano a 1 USD.",
+      "button": "Prestar Dai"
     },
     "save_card": {
       "title": "Ahorre",
-      "description": "Gane con ahorros en su Dai al bloquearlo en Oasis Save. Automático y no privativo.",
-      "button": "Ahorre Dai"
+      "description": "Gane mas Dai con sus ahorros al depositarlos en Ahorros Oasis. Automático y no privativo.",
+      "button": "Ahorrar Dai"
     },
     "token_section_title": "Actualmente admitido en Oasis",
     "token_section_only_on_trade": "* Solamente disponible en Oasis Trade",
     "section1_title": "¿Qué es Oasis?",
-    "section1_p": "Oasis es una plataforma de finanzas descentralizadas. Úsela para comercializar tokens, prestar Dai y ganar ahorros: todo en un mismo lugar.",
-    "section2_title": "Asegure el protocolo creado en Ethereum",
-    "section2_p": "Oasis está creado sobre contratos inteligentes auditados y verificados de manera formal creados por Maker, el líder en finanzas descentralizadas seguras del sector.",
-    "section3_title": "Completamente sin permisos",
-    "section3_p": "Oasis es una plataforma descentralizada, no privativa a la cual se puede acceder a través del monedero admitido por Ethereum. Usted, y solamente usted, controla sus activos.",
+    "section1_p": "Oasis es una plataforma de Finanzas Descentralizadas. Úsela para intercambiar tokens, prestar Dai y ahorrar. Todo en un mismo lugar.",
+    "section2_title": "Protocolo Seguro creado sobre Ethereum",
+    "section2_p": "Oasis está desarrollado por Maker sobre contratos inteligentes auditados y verificados formalmente, siendo los líderes en el sector de finanzas descentralizadas seguras.",
+    "section3_title": "Sin permisos",
+    "section3_p": "Oasis es una plataforma descentralizada, no privativa, la cual se puede acceder a través de una billetera en Ethereum. Usted, y solamente usted, controla sus activos.",
     "questions_title": "Preguntas",
     "question1": "¿Qué es Oasis?",
-    "answer1": "Oasis es una aplicación descentralizada que funciona en la cadenas de bloques Ethereum. Cualquier persona puede utilizar Oasis para comercializar tokens, pedir préstamos respaldados por ellos, y ganar ahorros con Dai.",
+    "answer1": "Oasis es una aplicación descentralizada que funciona sobre la blockchain de ethereum. Cualquier persona puede utilizar Oasis para comercializar tokens, pedir préstamos respaldados por ellos, y ganar ahorros con Dai.",
     "question2": "¿Qué es Dai?",
     "answer2": "Dai es la primera moneda imparcial del mundo, y la stablecoin descentralizada líder anclada en el dólar estadounidense. Conozca más acerca de Dai {0}.",
     "answer2_link1_url": "https://makerdao.com",
     "answer2_link1_text": "aquí",
     "question3": "¿Necesito tener una cuenta?",
-    "answer3": "No necesita tener una cuenta para poder usar Oasis. Sin embargo, necesitará un monedero Ethereum. Oasis admite la mayoría de los monederos de navegadores Ethereum tales como {0}, {1}, etc.",
+    "answer3": "No necesita tener una cuenta para poder usar Oasis. Sin embargo, necesitará una billetera en Ethereum. Oasis admite la mayoria de billeteras en Ethereum tales como {0}, {1}, etc.",
     "answer3_link1_url": "https://metamask.io/",
     "answer3_link1_text": "Metamask",
     "answer3_link2_url": "https://wallet.coinbase.com/",
     "answer3_link2_text": "Coinbase Wallet",
     "question5": "¿Es segura Oasis?",
-    "answer5": "La seguridad es nuestra principal prioridad. El equipo de Oasis realiza auditorias regularmente sobre nuestros contratos inteligentes. Además, el código de Oasis es {0}, lo que le proporciona a la comunidad la capacidad de realizar pruebas de presión y auditorias sobre las tecnologías centrales.",
+    "answer5": "La seguridad es nuestra principal prioridad. El equipo de Oasis realiza auditorias regularmente sobre nuestros contratos inteligentes. Además, el código de Oasis es {0}, lo que le proporciona a la comunidad la capacidad de realizar pruebas de presión y auditorías.",
     "answer5_link1_url": "https://github.com/OasisDEX",
     "answer5_link1_text": "código abierto",
     "question6": "¿Se me cobrará una tarifa por usar Oasis?",
