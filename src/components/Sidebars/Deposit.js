@@ -9,6 +9,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import {
   getCdp,
   getDebtAmount,
@@ -21,6 +22,7 @@ import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
 const Deposit = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [storeState] = useStore();
@@ -101,12 +103,24 @@ const Deposit = ({ cdpId, reset }) => {
           data-testid="deposit-input"
         />
       </Grid>
-      <ProxyAllowanceToggle token={symbol} />
+      <ProxyAllowanceToggle token={symbol} trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={deposit} disabled={!valid}>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            deposit();
+          }}
+        >
           {lang.actions.deposit}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

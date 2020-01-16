@@ -23,6 +23,14 @@ const PRICE = createCurrencyRatio(USD, BAT)('0.24');
 const LIQUIDATION_RATIO = '200';
 
 const originalConsoleError = console.error;
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 beforeAll(async () => {
   console.error = jest.fn();
@@ -65,7 +73,7 @@ const renderWithMockedStore = component =>
 test('basic rendering', async () => {
   const { getByText } = render(<Withdraw cdpId="1" />, setupMockState);
 
-  await waitForElement(() => getByText(/40 BAT\/USD/));
+  await waitForElement(() => getByText(/40.00 BAT\/USD/));
 
   getByText('Withdraw BAT');
 });

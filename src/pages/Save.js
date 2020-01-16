@@ -33,6 +33,7 @@ import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
 import useSavingsDai from 'hooks/useSavingsDai';
+import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 
 function Save() {
@@ -50,6 +51,14 @@ function Save() {
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+
+  const { trackBtnClick: trackDeposit } = useAnalytics('Deposit');
+  const { trackBtnClick: trackWithdraw } = useAnalytics('Withdraw');
+
+  const trackTab = tabName => {
+    if (tabName === 'Deposit') trackDeposit('SelectDeposit');
+    else if (tabName === 'Withdraw') trackWithdraw('SelectWithdraw');
+  };
 
   const balance = balances.DSR;
 
@@ -266,6 +275,7 @@ function Save() {
 
               <Grid py="s" height="100%" flexDirection="column">
                 <CardTabs
+                  trackTab={trackTab}
                   headers={[lang.actions.deposit, lang.actions.withdraw]}
                 >
                   <Grid px="l" py="m" gridRowGap="m">
@@ -302,7 +312,10 @@ function Save() {
                           depositLoading
                         }
                         loading={depositLoading}
-                        onClick={onDeposit}
+                        onClick={() => {
+                          trackDeposit('Deposit', { amount: depositAmount });
+                          onDeposit();
+                        }}
                         data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
@@ -351,7 +364,10 @@ function Save() {
                           withdrawLoading
                         }
                         loading={withdrawLoading}
-                        onClick={onWithdraw}
+                        onClick={() => {
+                          trackWithdraw('Withdraw', { amount: withdrawAmount });
+                          onWithdraw();
+                        }}
                         data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}

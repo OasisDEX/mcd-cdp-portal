@@ -23,7 +23,14 @@ const theme = {
       fontSize: '1.2rem',
       lineHeight: '17px'
     },
-
+    large: {
+      fontSize: '1.8rem',
+      lineHeight: '1',
+      fontWeight: '500',
+      fontFamily:
+        "-apple-system, system-ui, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;",
+      color: '#231536'
+    },
     smallCaps: {
       fontSize: '1.1rem',
       textTransform: 'uppercase',

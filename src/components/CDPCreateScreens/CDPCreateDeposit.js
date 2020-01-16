@@ -11,6 +11,7 @@ import {
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
@@ -218,7 +219,12 @@ const CDPCreateDepositSidebar = ({
   );
 };
 
-const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
+const CDPCreateDeposit = ({
+  selectedIlk,
+  cdpParams,
+  isFirstVault,
+  dispatch
+}) => {
   const { gemsToLock, daiToDraw } = cdpParams;
   const {
     liquidationPrice,
@@ -230,6 +236,7 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     selectedIlk.currency.symbol
   );
   const { lang } = useLanguage();
+  const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -283,13 +290,21 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        onNext={() => dispatch({ type: 'increment-step' })}
-        onBack={() =>
+        onNext={() => {
+          trackBtnClick('Next', {
+            lock: gemsToLock,
+            generate: daiToDraw,
+            isFirstVault
+          });
+          dispatch({ type: 'increment-step' });
+        }}
+        onBack={() => {
+          trackBtnClick('Back', { isFirstVault });
           dispatch({
             type: 'decrement-step',
             payload: { by: hasAllowance ? 2 : 1 }
-          })
-        }
+          });
+        }}
         canProgress={canProgress}
       />
     </Box>

@@ -6,6 +6,7 @@ import InfoContainer from './shared/InfoContainer';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 import { calcCDPParams } from '../../utils/cdp';
 import { add, subtract, greaterThan } from '../../utils/bignumber';
@@ -18,6 +19,7 @@ import useMaker from '../../hooks/useMaker';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Generate = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [daiAvailable, setDaiAvailable] = useState(0);
@@ -114,10 +116,22 @@ const Generate = ({ cdpId, reset }) => {
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={generate} disabled={!amount || amountErrors}>
+        <Button
+          disabled={!amount || amountErrors}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            generate();
+          }}
+        >
           {lang.actions.generate}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

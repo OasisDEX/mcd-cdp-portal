@@ -8,6 +8,15 @@ import { mineBlocks } from '@makerdao/test-helpers';
 import assert from 'assert';
 const { click, change } = fireEvent;
 
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/borrow' } })
+}));
+
 let maker;
 
 beforeAll(async () => {

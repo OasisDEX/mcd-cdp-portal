@@ -44,7 +44,8 @@ const reducer = produce((draft, { type, value }) => {
   if (!type) return;
   if (type === 'CLEAR_CONTRACT_STATE') return initialState;
   const [label, valueType] = type.split('.');
-  if (label === 'system') draft[valueType] = convert(valueType, value);
+  if (label === 'system')
+    if (value !== undefined) draft[valueType] = convert(valueType, value);
 }, initialState);
 
 export default reducer;

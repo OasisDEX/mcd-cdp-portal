@@ -15,7 +15,7 @@ const Hideable = styled.div`
   }`}
 `;
 
-const Tabs = ({ header, children }) => {
+const Tabs = ({ header, trackTab, children }) => {
   const [selected, setSelected] = useState(0);
 
   return (
@@ -23,7 +23,11 @@ const Tabs = ({ header, children }) => {
       {React.cloneElement(header, {
         children: React.Children.map(header.props.children, (child, i) => {
           return React.cloneElement(child, {
-            onClick: () => setSelected(i),
+            onClick: () => {
+              setSelected(i);
+              if (trackTab && typeof child.props.children === 'string')
+                trackTab(child.props.children);
+            },
             selected: selected === i
           });
         })

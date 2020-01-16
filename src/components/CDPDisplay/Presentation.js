@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Address } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
@@ -14,7 +15,8 @@ import {
   getCollateralAvailableAmount,
   getCollateralAvailableValue,
   getDaiAvailable,
-  getUnlockedCollateralAmount
+  getUnlockedCollateralAmount,
+  withPrecision
 } from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
@@ -26,13 +28,13 @@ import {
   ExtraInfo,
   InfoContainerRow
 } from './subcomponents';
-import { FeatureFlags } from '../../utils/constants';
 import theme from '../../styles/theme';
 import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
+import useAnalytics from 'hooks/useAnalytics';
+import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
-import { Address } from '@makerdao/ui-components-core';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
@@ -40,6 +42,7 @@ const { FF_VAULT_HISTORY } = FeatureFlags;
 export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
+  const { trackBtnClick } = useAnalytics('CollateralView');
 
   const cdpId = parseInt(cdp.id);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -80,7 +83,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         cdp.gem,
-        cdp.unlockedCollateral && cdp.unlockedCollateral.toFixed(7),
+        cdp.unlockedCollateral && withPrecision(cdp.unlockedCollateral, 2),
         cdp.gem
       );
 
@@ -182,9 +185,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account}
-                onClick={() =>
-                  showAction({ type: 'deposit', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Deposit');
+                  showAction({ type: 'deposit', props: { cdpId } });
+                }}
               >
                 {lang.actions.deposit}
               </ActionButton>
@@ -197,9 +201,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account || !isOwner}
-                onClick={() =>
-                  showAction({ type: 'withdraw', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Withdraw');
+                  showAction({ type: 'withdraw', props: { cdpId } });
+                }}
               >
                 {lang.actions.withdraw}
               </ActionButton>
@@ -214,9 +219,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account}
-                onClick={() =>
-                  showAction({ type: 'payback', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Payback');
+                  showAction({ type: 'payback', props: { cdpId } });
+                }}
               >
                 {lang.actions.pay_back}
               </ActionButton>
@@ -228,9 +234,10 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
             button={
               <ActionButton
                 disabled={!account || !isOwner}
-                onClick={() =>
-                  showAction({ type: 'generate', props: { cdpId } })
-                }
+                onClick={() => {
+                  trackBtnClick('Generate');
+                  showAction({ type: 'generate', props: { cdpId } });
+                }}
               >
                 {lang.actions.generate}
               </ActionButton>

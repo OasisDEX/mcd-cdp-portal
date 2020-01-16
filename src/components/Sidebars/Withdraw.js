@@ -9,6 +9,7 @@ import { subtract, greaterThan } from '../../utils/bignumber';
 import useStore from 'hooks/useStore';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import {
   getCdp,
   getDebtAmount,
@@ -25,6 +26,7 @@ import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const Withdraw = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -92,7 +94,19 @@ const Withdraw = ({ cdpId, reset }) => {
           value={amount}
           min="0"
           onChange={onAmountChange}
-          after={debtAmount === 0 ? <SetMax onClick={setMax} /> : null}
+          after={
+            parseFloat(debtAmount) === 0 ? (
+              <SetMax
+                onClick={() => {
+                  setMax();
+                  trackBtnClick('SetMax', {
+                    collateralAvailableAmount,
+                    setMax: true
+                  });
+                }}
+              />
+            ) : null
+          }
           failureMessage={amountErrors}
         />
         <RatioDisplay
@@ -106,10 +120,22 @@ const Withdraw = ({ cdpId, reset }) => {
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!amount || amountErrors} onClick={withdraw}>
+        <Button
+          disabled={!amount || amountErrors}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            withdraw();
+          }}
+        >
           {lang.actions.withdraw}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

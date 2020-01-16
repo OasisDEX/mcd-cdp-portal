@@ -17,6 +17,7 @@ import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useStore from 'hooks/useStore';
+import useAnalytics from 'hooks/useAnalytics';
 import { trackCdpById } from 'reducers/multicall/cdps';
 import { getCdp, getCollateralizationRatio } from 'reducers/cdps';
 import round from 'lodash/round';
@@ -36,38 +37,46 @@ const NavbarItemContent = ({ children, ...props }) => (
   </Flex>
 );
 
-const NavbarItem = ({ href, owned, active, ...props }) => (
-  <Link
-    href={href}
-    active={active}
-    prefetch={true}
-    css={`
-      display: block;
-    `}
-    {...props}
-  >
-    <NavbarItemContent {...props} />
-  </Link>
-);
+const NavbarItem = ({ href, active, trackBtnClick, ...props }) => {
+  return (
+    <Link
+      href={href}
+      active={active}
+      prefetch={true}
+      onClick={trackBtnClick}
+      css={`
+        display: block;
+      `}
+      {...props}
+    >
+      <NavbarItemContent {...props} />
+    </Link>
+  );
+};
 
-const AddCdpButton = ({ account, show, mobile }) => (
-  <Flex
-    onClick={() =>
-      account && show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' })
-    }
-    width={mobile && `${getMeasurement('navbarItemWidth')}px`}
-    mx={mobile && '7px'}
-    mt={mobile && '15px'}
-    justifyContent="center"
-    borderRadius="4px"
-    py="s"
-    css={`
-      cursor: pointer;
-    `}
-  >
-    <Plus />
-  </Flex>
-);
+const AddCdpButton = ({ account, show, mobile }) => {
+  const { trackBtnClick } = useAnalytics('NavBar');
+  return (
+    <Flex
+      onClick={() => {
+        trackBtnClick('CreateNew');
+        account &&
+          show({ modalType: 'cdpcreate', modalTemplate: 'fullscreen' });
+      }}
+      width={mobile && `${getMeasurement('navbarItemWidth')}px`}
+      mx={mobile && '7px'}
+      mt={mobile && '15px'}
+      justifyContent="center"
+      borderRadius="4px"
+      py="s"
+      css={`
+        cursor: pointer;
+      `}
+    >
+      <Plus />
+    </Flex>
+  );
+};
 
 const DirectionalButton = styled(NavbarItemContent)`
   height: 35px;
@@ -99,6 +108,7 @@ const CDPList = memo(function({
   const [ratios, setRatios] = useState([]);
   const [navbarCdps, setNavbarCdps] = useState([]);
   const [overviewPath, setOverviewPath] = useState(currentPath);
+  const { trackBtnClick } = useAnalytics('NavBar');
   const active = currentPath === overviewPath;
 
   useMemo(() => {
@@ -232,6 +242,7 @@ const CDPList = memo(function({
             bg={getBgColor(active, account)}
             height={`${getMeasurement('navbarItemHeight')}px`}
             width={`${getMeasurement('navbarItemWidth')}px`}
+            trackBtnClick={() => trackBtnClick('SelectOverview')}
           >
             <Text
               t="p6"
@@ -259,6 +270,12 @@ const CDPList = memo(function({
                 bg={getBgColor(active, account)}
                 height={`${getMeasurement('navbarItemHeight')}px`}
                 width={`${getMeasurement('navbarItemWidth')}px`}
+                trackBtnClick={() =>
+                  trackBtnClick('SelectVault', {
+                    collateral: cdp.ilk,
+                    vaultId: cdp.id
+                  })
+                }
               >
                 <Text
                   t="p6"

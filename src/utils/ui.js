@@ -27,6 +27,7 @@ function getSeparator(locale, separatorType) {
 
 export function prettifyCurrency(locale, num = null, decimalPlaces = null) {
   if (num === null) return null;
+  if (decimalPlaces && num < 1) decimalPlaces = 4;
   return new BigNumber(num).toFormat(decimalPlaces, BigNumber.ROUND_CEIL, {
     decimalSeparator: getSeparator(locale, 'decimal') || '.',
     groupSeparator: getSeparator(locale, 'group'),
@@ -49,6 +50,7 @@ export function prettifyNumber(
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
     else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
+    else if (num < 1) formattedNumber = num.toFixed(4);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
@@ -100,36 +102,36 @@ export function formatEventDescription(lang, e) {
     case 'DEPOSIT':
       return lang.formatString(
         lang.event_history.deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'DSR_DEPOSIT':
       return lang.formatString(
         lang.event_history.dsr_deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'DSR_WITHDRAW':
       return lang.formatString(
         lang.event_history.dsr_withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'WITHDRAW':
       return lang.formatString(
         lang.event_history.withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'GENERATE':
       return lang.formatString(
         lang.event_history.generate,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
       );
     case 'PAY_BACK':
       return lang.formatString(
         lang.event_history.pay_back,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 4)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
       );
     case 'GIVE':
       return lang.formatString(
@@ -161,4 +163,8 @@ export function safeToFixed(amount, digits) {
   if (typeof amount === 'string') amount = parseFloat(amount);
   const s = amount.toFixed(digits);
   return s.substring(0, s.length - 1);
+}
+
+export function formatPrecision(amount, precision = 4) {
+  return amount < 1 ? 4 : precision;
 }

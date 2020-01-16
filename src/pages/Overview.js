@@ -28,8 +28,9 @@ import {
   getCollateralAvailableAmount
 } from 'reducers/cdps';
 import useModal from '../hooks/useModal';
-import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 import useNotification from 'hooks/useNotification';
+import useAnalytics from 'hooks/useAnalytics';
+import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -58,6 +59,7 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview({ viewedAddress }) {
+  const { trackBtnClick } = useAnalytics('Table');
   const { account, viewedAddressData } = useMaker();
   const [{ cdps, feeds }] = useStore();
   const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);
@@ -98,11 +100,13 @@ function Overview({ viewedAddress }) {
           depositedUSD: getCollateralValueUSD(cdp)
         };
       });
-      const sumDeposits = parseFloat(
-        cdpData.reduce((acc, { depositedUSD }) => depositedUSD + acc, 0)
+      const sumDeposits = cdpData.reduce(
+        (acc, { depositedUSD }) => parseFloat(depositedUSD) + acc,
+        0
       );
-      const sumDebt = parseFloat(
-        cdpData.reduce((acc, { debt }) => debt + acc, 0)
+      const sumDebt = cdpData.reduce(
+        (acc, { debt }) => parseFloat(debt) + acc,
+        0
       );
 
       if (sumDebt) {
@@ -157,12 +161,13 @@ function Overview({ viewedAddress }) {
               <Button
                 p="s"
                 css={{ cursor: 'pointer' }}
-                onClick={() =>
+                onClick={() => {
+                  trackBtnClick('CreateFirst');
                   show({
                     modalType: 'cdpcreate',
                     modalTemplate: 'fullscreen'
-                  })
-                }
+                  });
+                }}
               >
                 {lang.actions.get_started}
               </Button>
@@ -324,6 +329,12 @@ function Overview({ viewedAddress }) {
                                 px="s"
                                 py="2xs"
                                 borderColor="steel"
+                                onClick={() => {
+                                  trackBtnClick('Manage', {
+                                    collateral: token,
+                                    vaultId: id
+                                  });
+                                }}
                               >
                                 <Link
                                   href={`/${Routes.BORROW}/${id}${url.search}`}

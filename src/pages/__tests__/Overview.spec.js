@@ -9,6 +9,10 @@ import { instantiateMaker } from '../../maker';
 import styled from 'styled-components';
 
 jest.mock('react-navi');
+navi.useCurrentRoute.mockReturnValue({
+  url: { search: '?network=testnet', pathname: '/test' }
+});
+navi.Link = styled.a``;
 
 const ILK = 'ETH-A';
 const VAULT1_ETH = '6';
@@ -51,8 +55,6 @@ function prepState(state) {
 afterEach(cleanup);
 
 test('render overview page and display calculated vault values', async () => {
-  navi.useCurrentRoute.mockReturnValue({ url: { search: '?network=testnet' } });
-  navi.Link = styled.a``;
   const { getByText, getAllByText } = await renderWithAccount(
     <Overview viewedAddress={VIEWED_ADDRESS} />,
     prepState,
@@ -69,7 +71,7 @@ test('render overview page and display calculated vault values', async () => {
   // Vault1 Dai debt
   getByText(/80.\d{1,2} DAI/);
   // Current ratio
-  getByText(/112\d.\d{1,2}%/);
+  getByText(/11\d\d.\d\d%/);
   // Deposited
   getByText('6.00 ETH');
   // Available to withdraw
