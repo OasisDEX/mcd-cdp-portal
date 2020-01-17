@@ -40,7 +40,7 @@ export default {
     "token_section_title": "Actualmente admitido en Oasis",
     "token_section_only_on_trade": "* Solamente disponible en Oasis Trade",
     "section1_title": "¿Qué es Oasis?",
-    "section1_p": "Oasis es una plataforma de Finanzas Descentralizadas. Úsela para intercambiar tokens, prestar Dai y ahorrar. Todo en un mismo lugar.",
+    "section1_p": "Oasis es una plataforma de Finanzas Descentralizadas. Úsela para intercambiar tokens, obtener préstamos en Dai y ahorrar. Todo en un mismo lugar.",
     "section2_title": "Protocolo Seguro creado sobre Ethereum",
     "section2_p": "Oasis está desarrollado por Maker sobre contratos inteligentes auditados y verificados formalmente, siendo los líderes en el sector de finanzas descentralizadas seguras.",
     "section3_title": "Sin permisos",
