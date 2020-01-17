@@ -21,20 +21,20 @@ export default {
     "not_applicable": "N/A"
   },
   "landing_page": {
-    "headline": "Intercambie, Preste y Ahorre con Dai.",
+    "headline": "Intercambio, Prestamos y Ahorro con Dai.",
     "trade_card": {
-      "title": "Intercambie",
+      "title": "Intercambio",
       "description": "Realice pedidos en el marketplace o simplemente intercambie sus tokens instantáneamente.",
       "button": "Intercambiar Dai"
     },
     "borrow_card": {
-      "title": "Preste",
+      "title": "Prestamos",
       "description": "Deposite sus tokens como colateral para generar DAI, una stablecoin descentralizada con valor cercano a 1 USD.",
-      "button": "Prestar Dai"
+      "button": "Obtener Prestamo"
     },
     "save_card": {
-      "title": "Ahorre",
-      "description": "Gane mas Dai con sus ahorros al depositarlos en Ahorros Oasis. Automático y no privativo.",
+      "title": "Ahorro",
+      "description": "Gane más Dai con sus ahorros al depositarlos en Ahorros Oasis. Automático y no privativo.",
       "button": "Ahorrar Dai"
     },
     "token_section_title": "Actualmente admitido en Oasis",
