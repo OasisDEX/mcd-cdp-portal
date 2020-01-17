@@ -25,11 +25,11 @@ export default function useAnalytics(section, page = null, product = null) {
   };
 
   const trackBtnClick = (id, additionalProps) => {
-    mixpanel.track('btn_click', { id, ...options, ...additionalProps });
+    mixpanel.track('btn-click', { id, ...options, ...additionalProps });
   };
 
   const trackInputChange = (id, additionalProps) => {
-    mixpanel.track('input_change', { id, ...options, ...additionalProps });
+    mixpanel.track('input-change', { id, ...options, ...additionalProps });
   };
 
   return { trackBtnClick, trackInputChange, getProductName, getPageName };
