@@ -10,7 +10,6 @@ import { tokensWithBalances } from 'reducers/accounts';
 import savingsModel from './reducers/multicall/savings';
 import { isMissingContractAddress } from './utils/ethereum';
 import flatten from 'lodash/flatten';
-import schemas from './references/schemas/index.js';
 
 let multicall;
 let watcher;
@@ -103,7 +102,6 @@ export function createWatcher(maker) {
   multicall = maker.service('multicall');
   watcher = multicall.createWatcher({ interval: 'block' });
   window.watcher = watcher;
-  multicall.registerSchemas(schemas);
   return watcher;
 }
 

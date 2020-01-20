@@ -28,4 +28,7 @@ function useObservable(key, ...args) {
   return values;
 }
 
+/** @type {WatchInterface} */
+export const watch = {};
+
 export default useObservable;

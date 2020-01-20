@@ -19,6 +19,8 @@ import {
   browserEthereumProviderAddress
 } from '../utils/ethereum';
 import LoadingLayout from '../layouts/LoadingLayout';
+import schemas from '../references/schemas/index.js';
+import useObservable, { watch } from 'hooks/useObservable';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -103,6 +105,13 @@ function MakerProvider({
         backendEnv,
         navigation
       });
+
+      // Register multicall schemas and map useObservable hook to watch convenience helper
+      newMaker.service('multicall').registerSchemas(schemas);
+      newMaker.service('multicall').observableKeys.forEach(
+        key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
+      );
+
       setMaker(newMaker);
       log('Initialized maker instance');
     })();
