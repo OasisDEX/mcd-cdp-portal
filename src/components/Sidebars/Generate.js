@@ -6,14 +6,7 @@ import InfoContainer from './shared/InfoContainer';
 import useCdp from 'hooks/useCdp';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-// import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
-// import { calcCDPParams } from '../../utils/cdp';
-// import { add, subtract, greaterThan } from '../../utils/bignumber';
-// import {
-//   formatCollateralizationRatio,
-//   formatLiquidationPrice,
-//   safeToFixed
-// } from '../../utils/ui';
+import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
 
 const Generate = ({ cdpId, reset }) => {
@@ -84,7 +77,7 @@ const Generate = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={cdp.daiAvailable().toString()}
+          body={`${safeToFixed(cdp.daiAvailable().toNumber(), 7)} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
@@ -94,9 +87,12 @@ const Generate = ({ cdpId, reset }) => {
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <Text color={cdpUnderCollateralized ? 'orange.600' : null}>
-              {cdp
-                .collateralizationRatio({ dart: amountToGenerate })
-                .toString()}
+              {formatCollateralizationRatio(
+                cdp
+                  .collateralizationRatio({ dart: amountToGenerate })
+                  .times(100)
+                  .toNumber()
+              )}
             </Text>
           }
         />

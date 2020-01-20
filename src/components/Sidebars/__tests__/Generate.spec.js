@@ -1,8 +1,8 @@
 import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { createCurrencyRatio } from '@makerdao/currency';
-import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import { BAT, MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Generate from '../Generate';
@@ -11,16 +11,17 @@ import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 
 const ILK = 'BAT-A';
-const INITIAL_BAT = '300.123456789012345678';
-const INITIAL_ART = '0';
+const PAR = new BigNumber('1000000000000000000000000000'); //
 
-const PAR = new BigNumber('1000000000000000000000000000');
-
-const DEBT_CEILING = '1000';
 const RATE = '1.000967514019988230';
 const DUST = '20';
-const PRICE = createCurrencyRatio(USD, BAT)('0.24');
 const LIQUIDATION_RATIO = '200';
+
+const INK_RAW = '0x10450cb5d3cf60f34e';
+const SPOT_RAW = '0x6342fd08f00f6378000000';
+const LR_RAW = math.liquidationRatio('0x6765c793fa10079d0000000');
+const RATE_RAY = BigNumber(RATE).shiftedBy(27);
+const PAR_RAW = '0x033b2e3c9fd0803ce8000000';
 
 const originalConsoleError = console.error;
 jest.mock('mixpanel-browser', () => ({
@@ -47,9 +48,7 @@ const setupMockState = state => {
     ...state,
     cdps: {
       1: {
-        ilk: ILK,
-        ink: INITIAL_BAT,
-        art: INITIAL_ART
+        ilk: ILK
       }
     },
     feeds: [
@@ -57,14 +56,29 @@ const setupMockState = state => {
         key: ILK,
         currency: BAT,
         dust: DUST,
-        rate: RATE,
-        feedValueUSD: PRICE,
-        debtCeiling: DEBT_CEILING,
         liquidationRatio: LIQUIDATION_RATIO
       }
     ],
     system: {
       par: PAR
+    },
+    raw: {
+      cdps: {
+        1: {
+          ink: INK_RAW,
+          art: 0
+        }
+      },
+      ilks: {
+        [ILK]: {
+          priceWithSafetyMargin: SPOT_RAW,
+          liquidationRatio: LR_RAW,
+          rate: RATE_RAY
+        }
+      },
+      system: {
+        par: PAR_RAW
+      }
     }
   };
   return newState;
@@ -79,7 +93,8 @@ test('basic rendering', async () => {
   const { findByText } = renderWithMockedStore(<Generate cdpId={1} />);
 
   await findByText(lang.action_sidebar.generate_title);
-  await findByText(/BAT\/USD/);
+  await findByText(/USD\/BAT/);
+  // await findByText(/BAT\/USD/);
 });
 
 test('input validation', async () => {
@@ -87,7 +102,8 @@ test('input validation', async () => {
     <Generate cdpId={1} />
   );
 
-  await findByText(/BAT\/USD/);
+  await findByText(/USD\/BAT/);
+  // await findByText(/BAT\/USD/);
 
   const input = getByRole('textbox');
 
@@ -118,7 +134,8 @@ test('verify info container values', async () => {
   );
 
   // initial liquidation price
-  await findByText(/0 BAT\/USD/);
+  await findByText(/0 USD\/BAT/);
+  // await findByText(/0 BAT\/USD/);
   // dai available
   await findByText(/36.014814 DAI/);
 
@@ -126,7 +143,8 @@ test('verify info container values', async () => {
   fireEvent.change(input, { target: { value: '21' } });
 
   // new liquidation price
-  getByText(/0.14 BAT\/USD/);
+  getByText(/0.14 USD\/BAT/);
+  // getByText(/0.14 BAT\/USD/);
   // new simulated collat ratio
   getByText(/343.00%/);
   // dai available remains the same
@@ -142,7 +160,8 @@ test('calls the draw function as expected', async () => {
     })
   );
 
-  await findByText(/BAT\/USD/);
+  // await findByText(/BAT\/USD/);
+  await findByText(/USD\/BAT/);
 
   const DRAW_AMT = '21';
   const input = getByRole('textbox');

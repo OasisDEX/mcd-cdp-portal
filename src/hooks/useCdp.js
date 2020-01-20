@@ -4,7 +4,7 @@ import { getCdp } from 'reducers/cdps';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 
 export default function useCdp(cdpId) {
-  assert(cdpId, `a cdp id must be provided to useCdp`);
+  assert(cdpId, 'a cdp id must be provided to useCdp');
 
   const [storeState] = useStore();
 
@@ -25,23 +25,30 @@ export default function useCdp(cdpId) {
   const collateralValue = math.collateralValue(collateralAmount, price);
   const debtValue = math.debtValue(art, rate);
 
+  const liquidationPrice = ({ dart = 0 } = {}) => {
+    return math.liquidationPrice(
+      collateralAmount,
+      debtValue.plus(dart),
+      liquidationRatio
+    );
+  };
+
+  const daiAvailable = () => {
+    return math.daiAvailable(collateralValue, debtValue, liquidationRatio);
+  };
+
+  const collateralizationRatio = ({ dart = 0 } = {}) => {
+    return math.collateralizationRatio(collateralValue, debtValue.plus(dart));
+  };
+
   //   todo: what about the 0 case
   return {
+    ilk,
     dust,
     debtValue,
     liquidationRatio,
-    daiAvailable() {
-      return math.daiAvailable(collateralValue, debtValue, liquidationRatio);
-    },
-    liquidationPrice({ dart = 0 } = {}) {
-      return math.liquidationPrice(
-        collateralAmount,
-        debtValue.plus(dart),
-        liquidationRatio
-      );
-    },
-    collateralizationRatio({ dart = 0 } = {}) {
-      return math.collateralizationRatio(collateralValue, debtValue.plus(dart));
-    }
+    daiAvailable,
+    liquidationPrice,
+    collateralizationRatio
   };
 }
