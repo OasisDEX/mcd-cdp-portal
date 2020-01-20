@@ -23,7 +23,7 @@ function useObservable(key, ...args) {
       log(`Unsubscribed from observable ${key}(${args && args.join(',')})`);
       sub.unsubscribe();
     };
-  }, [maker, multicall.watcher, key, ...args]); // eslint-disable-line
+  }, [maker, multicall.watcher, key, ...args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg)]); // eslint-disable-line
 
   return values;
 }
