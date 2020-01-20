@@ -35,7 +35,7 @@ import debug from 'debug';
 import useNotification from 'hooks/useNotification';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { Address } from '@makerdao/ui-components-core';
-import useObservable from 'hooks/useObservable';
+import { watch } from 'hooks/useObservable';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
@@ -48,9 +48,9 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     .getContractAddress('CDP_MANAGER');
 
   // Testing:
-  const { dsProxy } = useObservable('dsProxy', account?.address);
-  const { getVaults } = useObservable('getVaults', manager, dsProxy);
-  const { ilkPrice } = useObservable('ilkPrice', 'ETH-A');
+  const { dsProxy } = watch.dsProxy(account?.address);
+  const { getVaults } = watch.getVaults(manager, dsProxy);
+  const { ilkPrice } = watch.ilkPrice('ETH-A');
   // const cdpIds = useObservable('cdpIds', manager, dsProxy);
   // const cdpIlks = useObservable('cdpIlks', manager, dsProxy);
   // const cdpUrns = useObservable('cdpUrns', manager, dsProxy);
