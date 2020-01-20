@@ -13,7 +13,7 @@
   "dependencies": {
     "@craco/craco": "^5.4.0",
     "@hot-loader/react-dom": "^16.8.4",
-    "@makerdao/currency": "^0.9.7",
+    "@makerdao/currency": "^0.9.5",
     "@makerdao/dai": "0.23.0-rc.5",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
@@ -88,7 +88,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
-    "@makerdao/testchain": "^1.0.5",
+    "@makerdao/testchain": "1.0.3",
     "@testing-library/react": "^8.0.4",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0",
