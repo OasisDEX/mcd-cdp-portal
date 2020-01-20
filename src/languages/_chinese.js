@@ -38,6 +38,7 @@ export default {
       "button": "存 Dai"
     },
     "token_section_title": "Oasis Trade 支持的交易对",
+    'token_section_only_on_trade': '* 只在 Oasis Trade 支持',
     "section1_title": "Oasis 是什么?",
     "section1_p": "Oasis 是去中心化金融 (DeFi) 的一站式平台。你可以交易数字资产、借 Dai 和存 Dai 赚利息。",
     "section2_title": "基于以太坊的安全协议",
@@ -91,6 +92,7 @@ export default {
     "select_another_wallet": "选择其他钱包",
     "connect_ledgers_choice": "连接 {0} 或者 {1}",
     "no_vaults": "地址 {0} 下没有任何金库",
+    'vault_unavailable': '抱歉，该金库不可用',
     "loading_vaults": "加载金库中..."
   },
   "navbar": {
@@ -172,6 +174,8 @@ export default {
     "post_confirmed_title": "你的金库已创建完成",
     "post_confirmed_text": "你可以安全离开这个页面",
     "insufficient_ilk_balance": "{0} 余额不足",
+    'has_understood_stability_fee': '我知晓稳定费率非固定，未来可能会变化',
+    'collateralization_warning': '你生成 Dai 的数量会让金库接近清算线风险',
     "draw_too_much_dai": "金库将低于清算线",
     "below_dust_limit": "金库初次最低借 {0} Dai",
     "dust_max_payback": "你可以一次性偿还全部借出的 Dai, 或者最多 {0} Dai",
@@ -250,8 +254,10 @@ export default {
     "deposit_description": "你希望存入多少 {0} ?",
     "withdraw_title": "取回 {0}",
     "withdraw_description": "你希望取回多少 {0} ?",
+    'withdraw_warning': '你取回的抵押品数量会让金库接近清算线风险',
     "generate_title": "生成 DAI",
     "generate_description": "你希望生成多少 DAI?",
+    'generate_warning': '你生成的 Dai 的数量会让金额接近清算线风险',
     "payback_title": "偿还 DAI",
     "payback_description": "你希望偿还多少 DAI?",
     "cdp_below_threshold": "金库低于清算线",
@@ -281,7 +287,8 @@ export default {
     "invalid_max_amount": "余额不足",
     "invalid_min_gas": "余额不足矿工费: {0}",
     "invalid_max_gas": "余额不足转账金额+矿工费: {0}",
-    "invalid_address": "无效地址"
+    "invalid_address": "无效地址",
+    'invalid_allowance': '数量超过你对 {} 的许可额'
   },
   "save": {
     "title": "存款余额",
@@ -291,13 +298,16 @@ export default {
     "withdraw_amount": "提取金额",
     "deposit_dai": "存入 Dai",
     "deposit_dai_subheading": "存入即生息，随存随取",
-    "get_started_title": "现在开始存 Dai 赚利息吧",
-    "start_earning": "Deposit Dai to see your first transaction and start earning",
-    "tx_history": "History"
+    "get_started_title": "现在开始存 Dai 赚 {0} 利息吧",
+    "start_earning": "存入 Dai 进行你的第一笔交易，开始赚利息",
+    "tx_history": "历史记录",
+    'savings_earned_to_date': '已赚利息',
+    'estimated_savings': '预计收益'
   },
   "verbs": {
     "depositing": "存入",
-    "generating": "生成"
+    "generating": "生成",
+    'withdrawing': '取回'
   },
   "table": {
     "type": "类型",
@@ -306,7 +316,7 @@ export default {
     "time": "时间",
     "sender_id": "发送者 ID",
     "tx_hash": "交易哈希",
-    "loading": "Loading..."
+    "loading": "加载中..."
   },
   "transactions": {
     "unlocking_token": "授权 {0}",
@@ -315,7 +325,8 @@ export default {
     "generate_dai": "生成 DAI",
     "pay_back_dai": "偿还 DAI",
     "withdrawing_gem": "取出 {0}",
-    "depositing_gem": "存入 {0}"
+    "depositing_gem": "存入 {0}",
+    'claiming_collateral': '赎回抵押品'
   },
   "transaction_manager": {
     "transaction_singular_capitalised": "交易",
@@ -378,9 +389,12 @@ export default {
     "alphawallet": "AlphaWallet",
     "ledger_nano": "Ledger Nano",
     "trezor": "Trezor",
-    "other": "当前钱包"
+    "other": "当前钱包",
+    'ledger': 'Ledger',
+    'walletconnect': 'Wallet Connect'
   },
   notifications: {
+    claim: '赎回',
     claim_collateral: "你的 {0} Vault 拍卖已经完成。你可以赎回 {1} {2}。",
     non_vault_owner: "金库 ({0}) 持有者和当前钱包地址不匹配。",
     non_overview_owner: "你目前在查看其他地址 ({0}) 的账户概览。"

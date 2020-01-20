@@ -30,12 +30,7 @@ const Option = ({ children, ...props }) => {
   );
 };
 
-const WalletConnectDropdown = ({
-  trigger,
-  children,
-  close = () => {},
-  ...props
-}) => {
+const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { lang } = useLanguage();
   const {
     maker,
@@ -53,6 +48,7 @@ const WalletConnectDropdown = ({
   }
 
   useEffect(() => {
+    if (!account) return;
     const accounts = maker.listAccounts();
     const otherAccounts = accounts.filter(
       a =>

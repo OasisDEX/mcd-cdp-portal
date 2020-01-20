@@ -18,6 +18,11 @@ const defaultCdpState = {
   ilk: ''
 };
 
+export const withPrecision = (val, precision) => {
+  if (val < 1) precision = 4;
+  return round(val, precision).toFixed(precision);
+};
+
 export function getCdp(cdpId, { cdps, feeds }) {
   cdpId = cdpId.toString();
   feeds = feeds.filter(feed => feed !== undefined);
@@ -33,7 +38,7 @@ export function getCdp(cdpId, { cdps, feeds }) {
 export function getDebtAmount(cdp, rounded = true, precision = 2) {
   if (!cdp.art || !cdp.rate) return '';
   return rounded
-    ? round(multiply(cdp.art, cdp.rate), precision)
+    ? withPrecision(multiply(cdp.art, cdp.rate), precision)
     : multiply(cdp.art, cdp.rate);
 }
 
@@ -43,19 +48,21 @@ export function getLiquidationPrice(cdp, rounded = true, precision = 2) {
   if (!debtAmount) return '';
   if (!parseFloat(cdp.ink)) return Infinity;
   const val = divide(multiply(debtAmount, cdp.liquidationRatio / 100), cdp.ink);
-  return rounded ? round(val, precision) : val;
+  return rounded ? withPrecision(val, precision) : val;
 }
 
 export function getCollateralPrice(cdp, rounded = true, precision = 2) {
   if (!cdp.price) return '';
+  if (cdp.price.toNumber() < 1) precision = 4;
   return rounded
-    ? round(cdp.price.toNumber(), precision)
+    ? withPrecision(cdp.price.toNumber(), precision)
     : cdp.price.toNumber();
 }
 
 export function getCollateralAmount(cdp, rounded = true, precision = 2) {
   if (!cdp.ink) return '';
-  return rounded ? round(cdp.ink, precision) : cdp.ink;
+  if (cdp.ink < 1) precision = 4;
+  return rounded ? withPrecision(cdp.ink, precision) : cdp.ink;
 }
 
 export function getUnlockedCollateralAmount(
@@ -65,7 +72,7 @@ export function getUnlockedCollateralAmount(
 ) {
   if (!cdp.unlockedCollateral) return '';
   return rounded
-    ? round(cdp.unlockedCollateral, precision)
+    ? withPrecision(cdp.unlockedCollateral, precision)
     : cdp.unlockedCollateral;
 }
 
@@ -74,7 +81,7 @@ export function getCollateralValueUSD(cdp, rounded = true, precision = 2) {
   const collateralPrice = getCollateralPrice(cdp, false);
   if (!collateralPrice) return;
   return rounded
-    ? round(multiply(cdp.ink, collateralPrice), precision)
+    ? withPrecision(multiply(cdp.ink, collateralPrice), precision)
     : multiply(cdp.ink, collateralPrice);
 }
 
@@ -83,9 +90,8 @@ export function getCollateralizationRatio(cdp, rounded = true, precision = 2) {
   if (!collateralValueUSD) return '';
   const debtAmount = getDebtAmount(cdp, false);
   if (!parseFloat(debtAmount)) return Infinity;
-  return rounded
-    ? round(multiply(divide(collateralValueUSD, debtAmount), 100), precision)
-    : multiply(divide(collateralValueUSD, debtAmount), 100);
+  const val = multiply(divide(collateralValueUSD, debtAmount), 100);
+  return rounded ? withPrecision(val, precision) : val;
 }
 
 export function getMinCollateralNeeded(cdp, rounded = true, precision = 2) {
@@ -122,7 +128,7 @@ export function getCollateralAvailableAmount(
     minCollateralNeeded
   );
   return rounded
-    ? round(
+    ? withPrecision(
         collateralAvailableAmount < 0 ? 0 : collateralAvailableAmount,
         precision
       )
@@ -140,9 +146,8 @@ export function getCollateralAvailableValue(
   if (!collateralAvailableAmount) return '';
   const collateralPrice = getCollateralPrice(cdp, false);
   if (!collateralPrice) return;
-  return rounded
-    ? round(multiply(collateralAvailableAmount, collateralPrice), precision)
-    : multiply(collateralAvailableAmount, collateralPrice);
+  const val = multiply(collateralAvailableAmount, collateralPrice);
+  return rounded ? withPrecision(val, precision) : val;
 }
 
 export function getDaiAvailable(cdp, rounded = true, precision = 2) {
@@ -151,18 +156,11 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
   if (!collateralValueUSD) return '';
   const debtAmount = getDebtAmount(cdp, false);
   if (!debtAmount) return '';
-  return rounded
-    ? round(
-        subtract(
-          divide(collateralValueUSD, cdp.liquidationRatio / 100),
-          debtAmount
-        ),
-        precision
-      )
-    : subtract(
-        divide(collateralValueUSD, cdp.liquidationRatio / 100),
-        debtAmount
-      );
+  const val = subtract(
+    divide(collateralValueUSD, cdp.liquidationRatio / 100),
+    debtAmount
+  );
+  return rounded ? withPrecision(val, precision) : val;
 }
 
 export async function getEventHistory(maker, cdpId) {

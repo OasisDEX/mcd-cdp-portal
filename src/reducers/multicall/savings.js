@@ -27,6 +27,16 @@ export default function(addresses) {
       target: addresses.MCD_VAT,
       call: ['dai(address)(uint256)', addresses.MCD_POT],
       returns: [['savings.totalDai', fromRad]]
+    },
+    {
+      target: addresses.MCD_POT,
+      call: ['dsr()(uint256)'],
+      returns: [['savings.dsr', fromRay]]
+    },
+    {
+      target: addresses.MCD_POT,
+      call: ['rho()(uint256)'],
+      returns: [['savings.rho', val => val.toNumber()]] // Date value, use native JS number
     }
   ];
 }

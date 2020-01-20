@@ -26,7 +26,11 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
         (accountAddress && proxyAddress && (call?.meta?.accountSavings || call?.meta?.accountProxyAllowanceForToken)))),
     // Add account balance calls
     ...(accountAddress
-      ? flatten(tokensWithBalances.map(token => accountBalanceForToken(addresses, token, accountAddress)))
+      ? flatten(
+          tokensWithBalances
+            .filter(token => token !== 'DSR')
+            .map(token => accountBalanceForToken(addresses, token, accountAddress))
+        )
       : []),
     // Add account savings and proxy allowance calls
     ...(accountAddress && proxyAddress
@@ -34,8 +38,8 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
         ...accountSavings(addresses, accountAddress, proxyAddress),
         ...flatten(
             tokensWithBalances
-              // ETH can't have an allowance
-              .filter(token => token && token.symbol !== 'ETH')
+              // ETH/DSR can't have an allowance
+              .filter(token => token !== 'ETH' && token !== 'DSR')
               .map(token =>
                 accountProxyAllowanceForToken(
                   addresses,
@@ -66,8 +70,8 @@ export async function updateWatcherWithProxy(
     ...(accountAddress && proxyAddress
       ? flatten(
           tokensWithBalances
-            // ETH can't have an allowance
-            .filter(token => token && token.symbol !== 'ETH')
+            // ETH/DSR can't have an allowance
+            .filter(token => token !== 'ETH' && token !== 'DSR')
             .map(token =>
               accountProxyAllowanceForToken(
                 addresses,
@@ -83,7 +87,7 @@ export async function updateWatcherWithProxy(
 
 export function createWatcher(maker) {
   const service = maker.service('multicall');
-  service.createWatcher({ interval: 'block', useFetch: true });
+  service.createWatcher({ interval: 'block' });
   watcher = service.watcher;
   window.watcher = watcher;
   return watcher;

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 
 import { Flex, Box, Grid } from '@makerdao/ui-components-core';
 import { useSpring, animated } from 'react-spring';
+import { useCurrentRoute } from 'react-navi';
 
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
@@ -38,14 +39,15 @@ const AnimatedWrap = styled(animated.div)`
   width: 100%;
 `;
 
-function Sidebar() {
+function SidebarBase() {
   const { account, resetTx, selectors, network } = useMaker();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
   const [p2off, p2on] = animations.fade;
   const [p1off, p1on] = animations.fadeAway;
-
+  const { pathname } = useCurrentRoute().url;
+  const [lastPathname, setLastPathname] = useState();
   const [slideAnimation, setSlideAnimation] = useSpring(() => ({
     to: slideStart,
     config: springConfig
@@ -61,40 +63,25 @@ function Sidebar() {
     config: springConfig
   }));
 
-  const resetSidebarActionAnimated = () => {
-    const { reset } = props;
-
-    setP1Animation({
-      to: p1on
-    });
-
-    setP2Animation({
-      to: p2off
-    });
-
-    setSlideAnimation({
-      to: slideStart,
-      onRest() {
-        reset();
-      }
-    });
-  };
+  const resetSidebarActionAnimated = useCallback(() => {
+    setP1Animation({ to: p1on });
+    setP2Animation({ to: p2off });
+    setSlideAnimation({ to: slideStart, onRest: props.reset });
+  }, [
+    setP1Animation,
+    p1on,
+    setP2Animation,
+    p2off,
+    setSlideAnimation,
+    slideStart,
+    props.reset
+  ]);
 
   useEffect(() => {
-    if (SidebarComponent) {
-      setP1Animation({
-        to: p1off
-      });
-
-      setP2Animation({
-        to: p2on
-      });
-
-      setSlideAnimation({
-        to: slideEnd,
-        onRest() {}
-      });
-    }
+    if (!SidebarComponent) return;
+    setP1Animation({ to: p1off });
+    setP2Animation({ to: p2on });
+    setSlideAnimation({ to: slideEnd, onRest: () => {} });
   }, [
     SidebarComponent,
     p1off,
@@ -104,6 +91,13 @@ function Sidebar() {
     setSlideAnimation,
     slideEnd
   ]);
+
+  useEffect(() => {
+    if (pathname !== lastPathname) {
+      resetSidebarActionAnimated();
+      setLastPathname(pathname);
+    }
+  }, [pathname, lastPathname, resetSidebarActionAnimated]);
 
   return (
     <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
@@ -138,4 +132,4 @@ function Sidebar() {
   );
 }
 
-export default hot(Sidebar);
+export default hot(SidebarBase);

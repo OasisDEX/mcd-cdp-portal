@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import {
   Box,
@@ -14,8 +14,7 @@ import {
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
-
-import { getSavingsBalance } from 'reducers/accounts';
+import TextMono from 'components/TextMono';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
@@ -33,25 +32,35 @@ import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
-
+import useSavingsDai from 'hooks/useSavingsDai';
+import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 
 function Save() {
   const { lang } = useLanguage();
   const balances = useWalletBalances();
   const { maker, account, newTxListener, network } = useMaker();
-  const [{ accounts, savings }] = useStore();
-  const { hasAllowance } = useTokenAllowance('MDAI');
+  const [{ savings }] = useStore();
+  const {
+    estimatedSavingsDaiBalance,
+    estimatedSavingsDaiEarned,
+    decimalsToShow
+  } = useSavingsDai();
+
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
 
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  const [earnings, setEarnings] = useState(MDAI(0));
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
 
-  const balance = useMemo(() => {
-    return account
-      ? getSavingsBalance(account.address, { accounts, savings })
-      : 0;
-  }, [account, accounts, savings]);
+  const { trackBtnClick: trackDeposit } = useAnalytics('Deposit');
+  const { trackBtnClick: trackWithdraw } = useAnalytics('Withdraw');
+
+  const trackTab = tabName => {
+    if (tabName === 'Deposit') trackDeposit('SelectDeposit');
+    else if (tabName === 'Withdraw') trackWithdraw('SelectWithdraw');
+  };
+
+  const balance = balances.DSR;
 
   const [
     depositAmount,
@@ -63,11 +72,16 @@ function Save() {
     {
       isFloat: true,
       minFloat: 0.0,
-      maxFloat: balances.MDAI && balances.MDAI.toNumber()
+      maxFloat: balances.MDAI && balances.MDAI.toNumber(),
+      custom: {
+        allowanceInvalid: value => !hasSufficientAllowance(value)
+      }
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI'),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
 
@@ -127,16 +141,6 @@ function Save() {
     : {};
 
   useEffect(() => {
-    if (!proxyAddress || !FeatureFlags.FF_DSR_ETD) return;
-    (async function() {
-      const etd = await maker
-        .service('mcd:savings')
-        .getEarningsToDate(proxyAddress);
-      setEarnings(etd);
-    })();
-  }, [maker, proxyAddress]);
-
-  useEffect(() => {
     if (!balances.MDAI) return;
     if (depositSuccess) {
       setDepositAmount('', { validate: false });
@@ -191,8 +195,11 @@ function Save() {
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" css={{ marginBottom: '26px' }}>
-            {lang.save.get_started_title}
+          <Text.p t="h4" mb="26px">
+            {lang.formatString(
+              lang.save.get_started_title,
+              `${savings?.yearlyRate.toFixed(2)}%`
+            )}
           </Text.p>
           <Button
             p="s"
@@ -222,9 +229,10 @@ function Save() {
               <Flex py="s" height="100%" flexDirection="column">
                 <Card>
                   <CardBody px="l" py="m">
-                    <Text.p t="h2">
-                      {balance.toFixed(4)} <Text t="h5"> DAI</Text>
-                    </Text.p>
+                    <TextMono t="h2">
+                      {estimatedSavingsDaiBalance.toFixed(decimalsToShow)}
+                    </TextMono>
+                    <Text t="h5"> DAI</Text>
                     <Text.p t="h5" mt="s" color="steel">
                       {balance.toFixed(4)} USD
                     </Text.p>
@@ -232,16 +240,21 @@ function Save() {
                   <CardBody px="l">
                     <Table width="100%">
                       <Table.tbody>
-                        {FeatureFlags.FF_DSR_ETD && (
-                          <Table.tr>
-                            <Table.td>
-                              <Text t="body">Dai earned</Text>
-                            </Table.td>
-                            <Table.td textAlign="right">
-                              <Text t="body">{earnings.toFixed(4)}</Text>
-                            </Table.td>
-                          </Table.tr>
-                        )}
+                        <Table.tr>
+                          <Table.td>
+                            <Text t="body">
+                              {lang.save.savings_earned_to_date}
+                            </Text>
+                          </Table.td>
+                          <Table.td textAlign="right">
+                            <TextMono t="body">
+                              {estimatedSavingsDaiEarned.toFixed(
+                                decimalsToShow
+                              )}
+                            </TextMono>
+                            <Text t="body"> DAI</Text>
+                          </Table.td>
+                        </Table.tr>
                         <Table.tr>
                           <Table.td>
                             <Text t="body">{lang.save.dai_savings_rate}</Text>
@@ -262,6 +275,7 @@ function Save() {
 
               <Grid py="s" height="100%" flexDirection="column">
                 <CardTabs
+                  trackTab={trackTab}
                   headers={[lang.actions.deposit, lang.actions.withdraw]}
                 >
                   <Grid px="l" py="m" gridRowGap="m">
@@ -271,6 +285,7 @@ function Save() {
                       {lang.save.deposit_amount}
                     </Text.p>
                     <Input
+                      disabled={!hasAllowance}
                       type="number"
                       min="0"
                       placeholder="0 DAI"
@@ -281,7 +296,7 @@ function Save() {
                       after={<SetMax onClick={setDepositMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
@@ -297,7 +312,11 @@ function Save() {
                           depositLoading
                         }
                         loading={depositLoading}
-                        onClick={onDeposit}
+                        onClick={() => {
+                          trackDeposit('Deposit', { amount: depositAmount });
+                          onDeposit();
+                        }}
+                        data-testid={'deposit-button'}
                       >
                         {lang.actions.deposit}
                       </Button>
@@ -315,6 +334,7 @@ function Save() {
                       {lang.save.withdraw_amount}
                     </Text.p>
                     <Input
+                      disabled={!hasAllowance}
                       type="number"
                       min="0"
                       placeholder="0 DAI"
@@ -328,7 +348,7 @@ function Save() {
                       after={<SetMax onClick={setWithdrawMax} />}
                     />
 
-                    <Box my="xs" mx="xl" px="xl">
+                    <Box my="xs">
                       <ProxyAllowanceToggle
                         token="MDAI"
                         onlyShowAllowance={true}
@@ -344,7 +364,11 @@ function Save() {
                           withdrawLoading
                         }
                         loading={withdrawLoading}
-                        onClick={onWithdraw}
+                        onClick={() => {
+                          trackWithdraw('Withdraw', { amount: withdrawAmount });
+                          onWithdraw();
+                        }}
+                        data-testid={'withdraw-button'}
                       >
                         {lang.actions.withdraw}
                       </Button>

@@ -18,7 +18,8 @@ const computeAddressBalances = addresses =>
 const initialState = {
   fetching: false,
   accounts: [],
-  onAccountChosen: () => {}
+  chooseCallbacks: {},
+  totalNumFetches: 0
 };
 
 const reducer = (state, action) => {
@@ -27,22 +28,22 @@ const reducer = (state, action) => {
     case 'connect-start':
       return initialState;
     case 'fetch-start':
-      return {
-        ...state,
-        fetching: true
-      };
+      return { ...state, fetching: true };
     case 'connect-success':
+      return { ...state, fetching: false };
+    case 'fetch-success': {
+      const totalNumFetches = state.totalNumFetches + 1;
       return {
         ...state,
+        totalNumFetches,
         fetching: false,
-        onAccountChosen: payload.onAccountChosen
+        accounts: [...state.accounts, ...payload.accounts],
+        chooseCallbacks: {
+          ...state.chooseCallbacks,
+          [totalNumFetches - 1]: payload.chooseCallback
+        }
       };
-    case 'fetch-success':
-      return {
-        ...state,
-        fetching: false,
-        accounts: [...state.accounts, ...payload.accounts]
-      };
+    }
     case 'error':
       return {
         ...state,
@@ -66,7 +67,7 @@ export function useTrezor({ onAccountChosen }) {
         type: AccountTypes.TREZOR,
         path: TREZOR_PATH,
         confirmAddress: address => {
-          onAccountChosen(address, AccountTypes.TREZOR);
+          onAccountChosen({ address }, AccountTypes.TREZOR);
         }
       }
     });
@@ -86,7 +87,7 @@ export function useLedger({ onAccountChosen }) {
           type: AccountTypes.LEDGER,
           path,
           confirmAddress: address => {
-            onAccountChosen(address, AccountTypes.LEDGER);
+            onAccountChosen({ address }, AccountTypes.LEDGER);
           }
         }
       });
@@ -121,10 +122,13 @@ function useHardwareWallet({
       path,
       accountsOffset: 0,
       accountsLength,
-      choose: async (addresses, onAccountChosen) => {
+      choose: async (addresses, chooseCallback) => {
         const accounts = await computeAddressBalances(addresses);
-        dispatch({ type: 'connect-success', payload: { onAccountChosen } });
-        dispatch({ type: 'fetch-success', payload: { accounts, offset: 0 } });
+        dispatch({ type: 'connect-success' });
+        dispatch({
+          type: 'fetch-success',
+          payload: { chooseCallback, accounts, offset: 0 }
+        });
       }
     });
   }, [accountsLength, maker, path, type]);
@@ -138,11 +142,15 @@ function useHardwareWallet({
           path,
           accountsOffset: state.accounts.length,
           accountsLength,
-          choose: async addresses => {
+          choose: async (addresses, chooseCallback) => {
             const accounts = await computeAddressBalances(addresses);
             dispatch({
               type: 'fetch-success',
-              payload: { accounts, offset: state.accounts.length }
+              payload: {
+                accounts,
+                offset: state.accounts.length,
+                chooseCallback
+              }
             });
             resolve(accounts);
           }
@@ -154,8 +162,15 @@ function useHardwareWallet({
     });
   }, [accountsLength, maker, path, type, state.accounts.length]);
 
-  function pickAccount(address) {
-    return state.onAccountChosen(null, address);
+  function pickAccount(address, page, numAccountsPerFetch, numAccountsPerPage) {
+    const fetchNumber = Math.floor(
+      (page * numAccountsPerPage) / numAccountsPerFetch
+    );
+    for (let i = 0; i < state.totalNumFetches; i++) {
+      //error out unused callbacks
+      if (i !== fetchNumber) state.chooseCallbacks[i]('error');
+    }
+    state.chooseCallbacks[fetchNumber](null, address);
   }
 
   return {

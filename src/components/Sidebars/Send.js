@@ -27,13 +27,13 @@ const StyledPaste = styled(PasteIcon)`
 
 const ZERO = BigNumber(0);
 
-const Send = ({ token, reset }) => {
+const Send = ({ token, trackBtnClick, reset }) => {
   const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
 
   const balances = useWalletBalances();
   const balance = balances[token] ? balances[token] : ZERO;
-  const { address } = account;
+  const { address } = account || {};
   const [gasCost, setGasCost] = useState(ZERO);
   const [destAddress, setDestAddress] = useState('');
 
@@ -205,7 +205,14 @@ const Send = ({ token, reset }) => {
         />
         <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s" mt="m">
           <Button
-            onClick={transfer}
+            onClick={() => {
+              if (trackBtnClick)
+                trackBtnClick('WalletSend', {
+                  collateral: displayToken,
+                  amount
+                });
+              transfer();
+            }}
             disabled={!valid}
             data-testid="send-button"
           >

@@ -15,6 +15,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import { safeToFixed } from '../../utils/ui';
 import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
 
@@ -28,12 +29,13 @@ import SetMax from 'components/SetMax';
 const log = debug('maker:Sidebars/Payback');
 
 const Payback = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Payback', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const balances = useWalletBalances();
   const daiBalance = balances.MDAI;
 
-  const { hasAllowance } = useTokenAllowance('MDAI');
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
   const [storeState] = useStore();
@@ -57,7 +59,8 @@ const Payback = ({ cdpId, reset }) => {
       minFloat: 0,
       isFloat: true,
       custom: {
-        dustLimit: dustLimitValidation
+        dustLimit: dustLimitValidation,
+        allowanceInvalid: value => !hasSufficientAllowance(value)
       }
     },
     {
@@ -70,7 +73,9 @@ const Payback = ({ cdpId, reset }) => {
         lang.formatString(
           lang.cdp_create.dust_max_payback,
           subtract(debtAmount, dustLimit)
-        )
+        ),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
 
@@ -117,15 +122,34 @@ const Payback = ({ cdpId, reset }) => {
           placeholder="0.00 DAI"
           failureMessage={amountErrors}
           data-testid="payback-input"
-          after={<SetMax onClick={setMax} />}
+          after={
+            <SetMax
+              onClick={() => {
+                setMax();
+                trackBtnClick('SetMax', { maxAmount, setMax: true });
+              }}
+            />
+          }
         />
       </Grid>
-      <ProxyAllowanceToggle token="MDAI" />
+      <ProxyAllowanceToggle token="MDAI" trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!valid} onClick={payback}>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            payback();
+          }}
+        >
           {lang.actions.pay_back}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

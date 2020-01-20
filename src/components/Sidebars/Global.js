@@ -24,29 +24,9 @@ const SidebarGlobalPanel = () => {
           {routeIsBorrow && <SidebarSystem system={system} />}
           {routeIsSave && <SidebarDetails system={system} />}
         </Grid>
-        <Dev />
       </Box>
     );
   }, [feeds, routeIsBorrow, system, routeIsSave]);
 };
 
 export default SidebarGlobalPanel;
-
-const Dev = () => {
-  const [, dispatch] = useStore();
-
-  window.randomizeEthPrice = () => {
-    const num = Math.round(Math.random() * 50) + 100;
-    const value = num.toString() + '000000000000000000000000000';
-    dispatch({
-      type: 'watcherUpdates',
-      payload: [{ type: 'ilk.ETH-A.priceWithSafetyMargin', value }]
-    });
-  };
-
-  window.updateCdps = () => {
-    dispatch({ type: 'cdps/FETCHED_CDPS', payload: { cdps: [] } });
-  };
-
-  return null;
-};

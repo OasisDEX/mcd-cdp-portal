@@ -1,11 +1,25 @@
 import React, { Fragment } from 'react';
+import * as navi from 'react-navi';
 import Presentation from '../Presentation';
 import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
-  renderForSidebar,
+  renderWithMaker,
   renderWithStore
 } from '../../../../test/helpers/render';
 import { createCurrency } from '@makerdao/currency';
+import BigNumber from 'bignumber.js';
+import styled from 'styled-components';
+
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi');
+navi.useCurrentRoute.mockReturnValue({
+  url: { search: '?network=testnet', pathname: '/test' }
+});
+navi.Link = styled.a``;
 
 const LOL = createCurrency('LOL');
 
@@ -33,13 +47,51 @@ test('basic rendering', () => {
   const { getByText } = renderWithStore(
     <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
   );
-  getByText('9.1 LOL');
-  getByText('1820 USD');
-  getByText('120 DAI');
+  getByText('9.10 LOL');
+  getByText('1820.00 USD');
+  getByText('120.00 DAI');
   getByText('1213.33 DAI');
 
   fireEvent.click(getByText('Deposit'));
   expect(showSidebar).toBeCalledWith({ type: 'deposit', props: { cdpId: 1 } });
+});
+
+test('render liquidation price correctly when no debt', () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = { ...cdp, price: LOL(0), art: '0', ink: '0' };
+  const { getByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  getByText('N/A');
+  getByText('0.0000 USD');
+});
+
+test('reclaim banner rounds correctly when value is > 1', async () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = {
+    ...cdp,
+    gem: 'LOL',
+    unlockedCollateral: new BigNumber('213.1234567890123456')
+  };
+  const { findByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  // two decimal places for values > 1
+  await findByText(/213.12 LOL/);
+});
+
+test('reclaim banner rounds correctly when number is < 1', async () => {
+  const showSidebar = jest.fn(() => {});
+  const newCdp = {
+    ...cdp,
+    gem: 'LOL',
+    unlockedCollateral: new BigNumber('0.1234567890123456')
+  };
+  const { findByText } = renderWithStore(
+    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  );
+  // four decimal places for values < 1
+  await findByText(/0.1235 LOL/);
 });
 
 describe('on mobile', () => {
@@ -67,7 +119,7 @@ describe('on mobile', () => {
       getByText,
       getAllByText,
       getByTestId
-    } = renderForSidebar(
+    } = renderWithMaker(
       <Fragment>
         <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
         <div id="portal1" />

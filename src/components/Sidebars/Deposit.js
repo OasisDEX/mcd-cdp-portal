@@ -9,6 +9,7 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import {
   getCdp,
   getDebtAmount,
@@ -21,6 +22,7 @@ import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 
 const Deposit = ({ cdpId, reset }) => {
+  const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [storeState] = useStore();
@@ -29,7 +31,7 @@ const Deposit = ({ cdpId, reset }) => {
 
   const gemBalances = useWalletBalances();
   const gemBalance = gemBalances[symbol] || 0;
-  const { hasAllowance } = useTokenAllowance(symbol);
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const { hasProxy } = useProxy();
 
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -44,11 +46,16 @@ const Deposit = ({ cdpId, reset }) => {
     {
       maxFloat: gemBalance,
       minFloat: 0,
-      isFloat: true
+      isFloat: true,
+      custom: {
+        allowanceInvalid: value => !hasSufficientAllowance(value)
+      }
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, symbol)
+        lang.formatString(lang.action_sidebar.insufficient_balance, symbol),
+      allowanceInvalid: () =>
+        lang.formatString(lang.action_sidebar.invalid_allowance, symbol)
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
@@ -96,12 +103,24 @@ const Deposit = ({ cdpId, reset }) => {
           data-testid="deposit-input"
         />
       </Grid>
-      <ProxyAllowanceToggle token={symbol} />
+      <ProxyAllowanceToggle token={symbol} trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={deposit} disabled={!valid}>
+        <Button
+          disabled={!valid}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            deposit();
+          }}
+        >
           {lang.actions.deposit}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

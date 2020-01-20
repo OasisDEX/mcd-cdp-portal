@@ -6,7 +6,7 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import Send from '../Send';
 import lang from 'languages';
 import { mineBlocks } from '@makerdao/test-helpers';

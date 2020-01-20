@@ -6,7 +6,7 @@ import ilks from 'references/ilkList';
 const uniqueIlkGems = [...new Set(ilks.map(ilk => ilk.gem))];
 
 export const tokensWithBalances = [
-  ...new Set(['MDAI', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
+  ...new Set(['MDAI', 'DSR', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
 ];
 
 const defaultAccountState = {
@@ -39,6 +39,7 @@ const reducer = produce((draft, { type, value }) => {
     draft[account] = Object.assign({}, defaultAccountState);
   }
 
+  // TODO Only instantiate balances and allowances for the tokens that are eligible for them
   if (label === 'accounts' && key === 'balances') {
     draft[account].balances[token] = value;
   } else if (label === 'accounts' && key === 'allowances') {

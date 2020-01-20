@@ -70,7 +70,7 @@ function CDPView({ cdpId }) {
 
   useEffect(() => {
     trackCdpById(maker, cdpId, dispatch).then(() => {
-      if (!cdp.inited) account ? redirect(account) : setCdpAvailable(false);
+      if (!cdp.inited && !account) setCdpAvailable(false);
     });
   }, [cdpId, dispatch, maker, account, cdp, redirect]);
 

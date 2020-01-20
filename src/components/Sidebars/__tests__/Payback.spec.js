@@ -8,23 +8,14 @@ import {
 import '@testing-library/jest-dom/extend-expect';
 
 import Payback from '../Payback';
-import {
-  TestAccountProvider,
-  takeSnapshot,
-  restoreSnapshot,
-  mineBlocks
-} from '@makerdao/test-helpers';
-import { renderForSidebar as render } from '../../../../test/helpers/render';
+import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
+import { renderWithMaker as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
-let snapshotData;
-
-beforeAll(async () => {
-  snapshotData = await takeSnapshot();
-});
-
-afterAll(() => restoreSnapshot(snapshotData));
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 afterEach(cleanup);
 

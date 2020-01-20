@@ -8,7 +8,7 @@ test('formatEventDescription', () => {
     ReactDOMServer.renderToStaticMarkup(
       formatEventDescription(lang, mockEventDataFromSDK[8])
     )
-  ).toBe('Deposited <b>10,000</b> ETH into Vault');
+  ).toBe('Deposited <b>10,000.00</b> ETH into Vault');
 });
 
 test('firstLetterLowercase', () => {

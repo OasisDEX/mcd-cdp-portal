@@ -17,15 +17,19 @@ export function formatLiquidationPrice(price, symbol) {
 
 function getSeparator(locale, separatorType) {
   const numberWithGroupAndDecimalSeparator = 1000.1;
-  return Intl.NumberFormat(locale)
-    .formatToParts(numberWithGroupAndDecimalSeparator)
-    .find(part => part.type === separatorType)?.value;
+  const numFormat = Intl.NumberFormat(locale);
+  return numFormat.formatToParts
+    ? numFormat
+        .formatToParts(numberWithGroupAndDecimalSeparator)
+        .find(part => part.type === separatorType)?.value
+    : null;
 }
 
-export function prettifyCurrency(locale, num = null) {
+export function prettifyCurrency(locale, num = null, decimalPlaces = null) {
   if (num === null) return null;
-  return new BigNumber(num).toFormat(null, BigNumber.ROUND_CEIL, {
-    decimalSeparator: getSeparator(locale, 'decimal'),
+  if (decimalPlaces && num < 1) decimalPlaces = 4;
+  return new BigNumber(num).toFormat(decimalPlaces, BigNumber.ROUND_CEIL, {
+    decimalSeparator: getSeparator(locale, 'decimal') || '.',
     groupSeparator: getSeparator(locale, 'group'),
     groupSize: 3
   });
@@ -38,14 +42,15 @@ export function prettifyNumber(
   keepSymbol = true
 ) {
   if (_num === null) return null;
-  let symbol = ' ';
-  if (_num.symbol !== undefined) symbol += cleanSymbol(_num.symbol);
+  let symbol = '';
+  if (_num.symbol !== undefined) symbol += ' ' + cleanSymbol(_num.symbol);
   const num = parseFloat(_num.toString());
   if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;
   if (truncate) {
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
     else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
+    else if (num < 1) formattedNumber = num.toFixed(4);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
@@ -97,36 +102,36 @@ export function formatEventDescription(lang, e) {
     case 'DEPOSIT':
       return lang.formatString(
         lang.event_history.deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'DSR_DEPOSIT':
       return lang.formatString(
         lang.event_history.dsr_deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'DSR_WITHDRAW':
       return lang.formatString(
         lang.event_history.dsr_withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'WITHDRAW':
       return lang.formatString(
         lang.event_history.withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
     case 'GENERATE':
       return lang.formatString(
         lang.event_history.generate,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
       );
     case 'PAY_BACK':
       return lang.formatString(
         lang.event_history.pay_back,
-        <b>{prettifyCurrency(interfaceLocale, e.amount)}</b>
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
       );
     case 'GIVE':
       return lang.formatString(
@@ -158,4 +163,8 @@ export function safeToFixed(amount, digits) {
   if (typeof amount === 'string') amount = parseFloat(amount);
   const s = amount.toFixed(digits);
   return s.substring(0, s.length - 1);
+}
+
+export function formatPrecision(amount, precision = 4) {
+  return amount < 1 ? 4 : precision;
 }

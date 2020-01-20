@@ -11,6 +11,7 @@ import {
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
@@ -23,6 +24,9 @@ function OpenCDPForm({
   collateralizationRatio
 }) {
   const { lang } = useLanguage();
+  const { hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk.currency.symbol
+  );
   const userHasSufficientGemBalance = greaterThanOrEqual(
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
@@ -57,7 +61,12 @@ function OpenCDPForm({
         width={300}
         failureMessage={
           userHasSufficientGemBalance || !cdpParams.gemsToLock
-            ? null
+            ? hasSufficientAllowance(cdpParams.gemsToLock)
+              ? null
+              : lang.formatString(
+                  lang.action_sidebar.invalid_allowance,
+                  selectedIlk.currency.symbol
+                )
             : lang.formatString(
                 lang.cdp_create.insufficient_ilk_balance,
                 selectedIlk.currency.symbol
@@ -210,7 +219,12 @@ const CDPCreateDepositSidebar = ({
   );
 };
 
-const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
+const CDPCreateDeposit = ({
+  selectedIlk,
+  cdpParams,
+  isFirstVault,
+  dispatch
+}) => {
   const { gemsToLock, daiToDraw } = cdpParams;
   const {
     liquidationPrice,
@@ -218,8 +232,11 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
     daiAvailable: estDaiAvailable
   } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
   const daiAvailable = safeToFixed(estDaiAvailable, 3);
-  const { hasAllowance } = useTokenAllowance(selectedIlk.currency.symbol);
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk.currency.symbol
+  );
   const { lang } = useLanguage();
+  const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -228,6 +245,13 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
       payload: { value: target.value }
     });
   }
+
+  const canProgress =
+    cdpParamsAreValid(
+      cdpParams,
+      selectedIlk.userGemBalance,
+      selectedIlk.data
+    ) && hasSufficientAllowance(cdpParams.gemsToLock);
 
   return (
     <Box
@@ -266,18 +290,22 @@ const CDPCreateDeposit = ({ selectedIlk, cdpParams, dispatch }) => {
         </Card>
       </Grid>
       <ScreenFooter
-        onNext={() => dispatch({ type: 'increment-step' })}
-        onBack={() =>
+        onNext={() => {
+          trackBtnClick('Next', {
+            lock: gemsToLock,
+            generate: daiToDraw,
+            isFirstVault
+          });
+          dispatch({ type: 'increment-step' });
+        }}
+        onBack={() => {
+          trackBtnClick('Back', { isFirstVault });
           dispatch({
             type: 'decrement-step',
             payload: { by: hasAllowance ? 2 : 1 }
-          })
-        }
-        canProgress={cdpParamsAreValid(
-          cdpParams,
-          selectedIlk.userGemBalance,
-          selectedIlk.data
-        )}
+          });
+        }}
+        canProgress={canProgress}
       />
     </Box>
   );
