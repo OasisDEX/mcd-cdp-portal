@@ -11,7 +11,7 @@ import useCdpTypes from 'hooks/useCdpTypes';
 const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
   const { totalDaiSupply } = useObservable('totalDaiSupply');
-  const { ilkPrices } = useObservable('ilkPrices', ...cdpTypesList);
+  const { ilkPrices } = useObservable('ilkPrices', cdpTypesList);
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
   const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);

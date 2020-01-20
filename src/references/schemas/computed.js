@@ -28,7 +28,7 @@ export const ilkPrice = {
 };
 
 export const ilkPrices = {
-  generate: (...ilkNames) => ({
+  generate: (ilkNames) => ({
     // Dynamically generate dependencies
     dependencies: () => [
       ['refPerDai'],
