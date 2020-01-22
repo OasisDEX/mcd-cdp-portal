@@ -1,3 +1,4 @@
+/// <reference path="../../typings/main.d.ts" />
 import { useEffect, useState } from 'react';
 import useMaker from 'hooks/useMaker';
 import findIndex from 'lodash/findIndex';
