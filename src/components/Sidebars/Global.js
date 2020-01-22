@@ -10,7 +10,7 @@ import { watch } from 'hooks/useObservable';
 
 const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
-  const prices = watch.ilkPrices(cdpTypesList);
+  const prices = watch.collateralTypesPrices(cdpTypesList);
   const totalDaiSupply = watch.totalDaiSupply();
 
   const { url } = useCurrentRoute();

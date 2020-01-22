@@ -48,9 +48,9 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     .getContractAddress('CDP_MANAGER');
 
   // Testing:
-  const dsProxy = watch.dsProxy(account?.address);
+  const dsProxy = watch.proxyAddress(account?.address);
   const getVaults = watch.getVaults(manager, dsProxy);
-  const ilkPrice = watch.ilkPrice('ETH-A');
+  const ilkPrice = watch.collateralTypePrice('ETH-A');
   // const cdpIds = useObservable('cdpIds', manager, dsProxy);
   // const cdpIlks = useObservable('cdpIlks', manager, dsProxy);
   // const cdpUrns = useObservable('cdpUrns', manager, dsProxy);

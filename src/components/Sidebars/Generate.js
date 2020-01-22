@@ -1,84 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import useStore from 'hooks/useStore';
-import useValidatedInput from 'hooks/useValidatedInput';
+// import useCdp from 'hooks/useCdp';
 import useLanguage from 'hooks/useLanguage';
-import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
-import { calcCDPParams } from '../../utils/cdp';
-import { add, subtract, greaterThan } from '../../utils/bignumber';
-import {
-  formatCollateralizationRatio,
-  formatLiquidationPrice,
-  safeToFixed
-} from '../../utils/ui';
+// import useAnalytics from 'hooks/useAnalytics';
+import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
-import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import { watch } from 'hooks/useObservable';
 
 const Generate = ({ cdpId, reset }) => {
+  // const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [daiAvailable, setDaiAvailable] = useState(0);
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+  const [amount, setAmount] = useState('');
 
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const { liquidationRatio } = cdp;
+  // const cdp = useCdp(cdpId);
+  const cdp = watch.vault(cdpId);
+  if (!cdp) return null;
+  console.log('vault', cdp);
 
-  const collateralAmount = getCollateralAmount(cdp, false);
-  const debtAmount = getDebtAmount(cdp, false);
-  const undercollateralized = greaterThan(
-    liquidationRatio,
-    collateralizationRatio
-  );
+  const dustLimit = cdp.dust || 0;
+  const amountToGenerate = amount || 0;
 
-  const dustLimit = cdp.dust ? cdp.dust : 0;
+  const cdpBelowDustLimit = cdp.debtValue.plus(amountToGenerate).lt(dustLimit);
+  const cdpUnderCollateralized = cdp.daiAvailable.lt(amount);
+  const failureMessage = cdpUnderCollateralized
+    ? lang.action_sidebar.cdp_below_threshold
+    : cdpBelowDustLimit
+    ? lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
+    : null;
 
-  // minFloat uses <= so it won't work for dustLimit
-  const dustLimitValidation = value =>
-    greaterThan(dustLimit, add(value, debtAmount));
-
-  const [amount, , onAmountChange, amountErrors] = useValidatedInput(
-    '',
-    {
-      maxFloat: daiAvailable,
-      isFloat: true,
-      custom: {
-        dustLimit: dustLimitValidation
-      }
-    },
-    {
-      maxFloat: () => lang.action_sidebar.cdp_below_threshold,
-      dustLimit: () =>
-        lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
-    }
-  );
-
-  useEffect(() => {
-    const amountToGenerate = amount || 0;
-    const {
-      liquidationPrice,
-      collateralizationRatio,
-      daiAvailable
-    } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: collateralAmount,
-      daiToDraw: add(debtAmount, amountToGenerate)
-    });
-
-    // fractional diffs between daiAvailable & debtAmount can result in a negative amount
-    const daiAvailablePositive = Math.max(
-      0,
-      subtract(daiAvailable, debtAmount)
-    );
-
-    setDaiAvailable(daiAvailablePositive);
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp, collateralAmount, debtAmount]);
+  // verify we're doing the same as that calc cdp params function
 
   const generate = () => {
     newTxListener(
@@ -99,47 +53,51 @@ const Generate = ({ cdpId, reset }) => {
           type="number"
           value={amount}
           min="0"
-          onChange={onAmountChange}
+          onChange={({ target }) => setAmount(target.value)}
           placeholder="0.00 DAI"
-          failureMessage={amountErrors}
-        />
-        <RatioDisplay
-          type={RatioDisplayTypes.CARD}
-          ratio={collateralizationRatio}
-          ilkLiqRatio={liquidationRatio}
-          text={lang.action_sidebar.generate_warning}
-          onlyWarnings={true}
-          show={amount !== '' && amount > 0 && !undercollateralized}
-          textAlign="center"
+          failureMessage={failureMessage}
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button onClick={generate} disabled={!amount || amountErrors}>
+        <Button
+          disabled={!amount || failureMessage} //this had amountErrors
+          onClick={() => {
+            // trackBtnClick('Confirm', { amount });
+            generate();
+          }}
+        >
           {lang.actions.generate}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            // trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${safeToFixed(daiAvailable, 7)} DAI`}
+          body={`${safeToFixed(cdp.daiAvailable.toNumber(), 7)} DAI`}
         />
-        <Info
+        {/* <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
-        />
+          body={cdp.liquidationPrice({ dart: amountToGenerate }).toString()}
+        /> */}
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
-            <RatioDisplay
-              type={RatioDisplayTypes.TEXT}
-              ratio={collateralizationRatio}
-              ilkLiqRatio={liquidationRatio}
-              text={formatCollateralizationRatio(collateralizationRatio)}
-              show={amount !== '' && amount > 0 && !undercollateralized}
-            />
+            <Text color={cdpUnderCollateralized ? 'orange.600' : null}>
+              {/* {formatCollateralizationRatio(
+                cdp
+                  .collateralizationRatio({ dart: amountToGenerate })
+                  .times(100)
+                  .toNumber()
+              )} */}
+            </Text>
           }
         />
       </InfoContainer>
