@@ -48,14 +48,14 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     .getContractAddress('CDP_MANAGER');
 
   // Testing:
-  const { dsProxy } = watch.dsProxy(account?.address);
-  const { getVaults } = watch.getVaults(manager, dsProxy);
-  const { ilkPrice } = watch.ilkPrice('ETH-A');
+  const dsProxy = watch.dsProxy(account?.address);
+  const getVaults = watch.getVaults(manager, dsProxy);
+  const ilkPrice = watch.ilkPrice('ETH-A');
   // const cdpIds = useObservable('cdpIds', manager, dsProxy);
   // const cdpIlks = useObservable('cdpIlks', manager, dsProxy);
   // const cdpUrns = useObservable('cdpUrns', manager, dsProxy);
-  // const { liquidationRatio } = useObservable('liquidationRatio', 'ETH-A');
-  // const { priceFeedAddress } = useObservable('priceFeedAddress', 'ETH-A');
+  // const liquidationRatio = useObservable('liquidationRatio', 'ETH-A');
+  // const priceFeedAddress = useObservable('priceFeedAddress', 'ETH-A');
 
   const cdpId = parseInt(cdp.id);
   // eslint-disable-next-line react-hooks/rules-of-hooks

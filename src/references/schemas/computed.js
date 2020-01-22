@@ -65,9 +65,7 @@ export const getVaults = {
       ['cdpUrns', manager, proxy],
       ['cdpIlks', manager, proxy]
     ],
-    computed: (cdpIds, cdpUrns, cdpIlks) => {
-    return zipWith(cdpIds, cdpUrns, cdpIlks, (id, urn, ilk) => ({ id, urn, ilk }))
-    }
+    computed: (cdpIds, cdpUrns, cdpIlks) => zipWith(cdpIds, cdpUrns, cdpIlks, (id, urn, ilk) => ({ id, urn, ilk }))
   })
 };
 
