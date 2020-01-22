@@ -7,7 +7,7 @@ const log = debug('hook:useObservable');
 function useObservable(key, ...args) {
   const { maker } = useMaker();
   const multicall = maker.service('multicall');
-  const [values, setValues] = useState({});
+  const [value, setValue] = useState(undefined);
 
   useEffect(() => {
     if (!maker || !multicall.watcher) return;
@@ -16,7 +16,7 @@ function useObservable(key, ...args) {
     log(`Subscribed to observable ${key}(${args && args.join(',')})`);
     const sub = multicall.watchObservable(key, ...args).subscribe(val => {
       log(`Got value for observable ${key}: ${val}`);
-      setValues(values => ({ ...values, [key]: val }));
+      setValue(val);
     });
 
     return () => {
@@ -25,10 +25,9 @@ function useObservable(key, ...args) {
     };
   }, [maker, multicall.watcher, key, ...args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg)]); // eslint-disable-line
 
-  return values;
+  return value;
 }
 
-/** @type {WatchInterface} */
 export const watch = {};
 
 export default useObservable;
