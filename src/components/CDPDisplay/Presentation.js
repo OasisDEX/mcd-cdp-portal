@@ -58,6 +58,8 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   // const priceFeedAddress = useObservable('priceFeedAddress', 'ETH-A');
 
   const cdpId = parseInt(cdp.id);
+  const vault = watch.vault(cdpId);
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
 
