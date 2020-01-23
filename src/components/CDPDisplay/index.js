@@ -79,6 +79,7 @@ function CDPView({ cdpId }) {
       cdp.inited && cdpOwner ? (
         <CDPViewPresentation
           cdp={cdp}
+          cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
           account={account}
           network={network}

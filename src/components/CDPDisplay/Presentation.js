@@ -1,23 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import round from 'lodash/round';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
 
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
-import {
-  getDebtAmount,
-  getLiquidationPrice,
-  getCollateralPrice,
-  getCollateralAmount,
-  getCollateralValueUSD,
-  getCollateralizationRatio,
-  getCollateralAvailableAmount,
-  getCollateralAvailableValue,
-  getDaiAvailable,
-  getUnlockedCollateralAmount,
-  withPrecision
-} from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
 import {
@@ -40,7 +28,20 @@ import { watch } from 'hooks/useObservable';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
-export default function({ cdp, showSidebar, account, network, cdpOwner }) {
+const formatValue = (val, precision) => {
+  if (!val || val === undefined || typeof val !== 'object') return;
+  if (val < 1) precision = 4;
+  return round(val.toNumber(), precision).toFixed(precision);
+};
+
+export default function({
+  cdp,
+  cdpId,
+  showSidebar,
+  account,
+  network,
+  cdpOwner
+}) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const manager = maker
@@ -57,33 +58,49 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
   // const liquidationRatio = useObservable('liquidationRatio', 'ETH-A');
   // const priceFeedAddress = useObservable('priceFeedAddress', 'ETH-A');
 
-  const cdpId = parseInt(cdp.id);
-  const vault = watch.vault(cdpId);
+  log(`Rendering vault #${cdpId}`);
+
+  //TODO better way to deal with awaiting vals:
+  const vault = watch.vault(cdpId) || {};
+  console.log('^^vault', vault);
+  let {
+    debtValue,
+    collateralAmount,
+    collateralValue,
+    collateralTypePrice,
+    collateralizationRatio,
+    liquidationPrice,
+    collateralAvailableAmount,
+    collateralAvailableValue,
+    daiAvailable,
+    vaultType,
+    unlockedCollateral
+  } = vault;
+  const gem = collateralAmount?.symbol;
+
+  //TODO find better ways to transform the return values into desired display values
+  debtValue = formatValue(debtValue, 2);
+  collateralAmount = formatValue(collateralAmount, 2);
+  collateralValue = formatValue(collateralValue, 2);
+  collateralTypePrice = formatValue(collateralTypePrice, 2);
+  collateralizationRatio = formatValue(collateralizationRatio, 4) * 100; //note special attn: must mul to get a %
+  liquidationPrice = formatValue(liquidationPrice, 2);
+  collateralAvailableAmount = formatValue(collateralAvailableAmount, 2);
+  collateralAvailableValue = formatValue(collateralAvailableValue, 2);
+  daiAvailable = formatValue(daiAvailable, 2);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
 
-  log(`Rendering vault #${cdpId}`);
-  const gem = cdp.currency.symbol;
-  const debtAmount = getDebtAmount(cdp);
-  let liquidationPrice = getLiquidationPrice(cdp);
   if (['Infinity', Infinity].includes(liquidationPrice))
     liquidationPrice = lang.cdp_page.not_applicable;
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp);
-  const collateralUSDValue = getCollateralValueUSD(cdp);
-  let collateralizationRatio = getCollateralizationRatio(cdp);
   if (collateralizationRatio === Infinity)
     collateralizationRatio = lang.cdp_page.not_applicable;
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
-  const collateralAvailableValue = getCollateralAvailableValue(cdp);
-  const daiAvailable = getDaiAvailable(cdp);
   const isOwner = account && account.address === cdpOwner;
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
 
-  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
@@ -97,9 +114,9 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     if (isOwner && unlockedCollateral > 0) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
-        cdp.gem,
-        cdp.unlockedCollateral && withPrecision(cdp.unlockedCollateral, 2),
-        cdp.gem
+        gem,
+        unlockedCollateral && formatValue(unlockedCollateral, 2),
+        gem
       );
 
       addNotification({
@@ -155,7 +172,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
       </Box>
       <Box>
         <Text.h2>
-          {cdp.ilk} {lang.cdp} #{cdpId}
+          {vaultType} {lang.cdp} #{cdpId}
         </Text.h2>
       </Box>
       <Grid
@@ -179,7 +196,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
                 <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={`${collateralPrice} USD`}
+            value={`${collateralTypePrice} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
@@ -205,7 +222,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
             value={`${collateralAmount} ${gem}`}
-            conversion={`${collateralUSDValue} USD`}
+            conversion={`${collateralValue} USD`}
             button={
               <ActionButton
                 disabled={!account}
@@ -237,7 +254,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         <CdpViewCard title={lang.cdp_page.outstanding_dai_debt}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={debtAmount + ' DAI'}
+            value={debtValue + ' DAI'}
             button={
               <ActionButton
                 disabled={!account}
