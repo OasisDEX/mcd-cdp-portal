@@ -29,19 +29,13 @@ const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
 const formatValue = (val, precision) => {
+  console.log('typeof val', typeof val);
   if (!val || val === undefined || typeof val !== 'object') return;
   if (val < 1) precision = 4;
   return round(val.toNumber(), precision).toFixed(precision);
 };
 
-export default function({
-  cdp,
-  cdpId,
-  showSidebar,
-  account,
-  network,
-  cdpOwner
-}) {
+export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const manager = maker
@@ -74,7 +68,10 @@ export default function({
     collateralAvailableValue,
     daiAvailable,
     vaultType,
-    unlockedCollateral
+    unlockedCollateral,
+    liquidationRatioSimple,
+    liquidationPenalty,
+    annualStabilityFee
   } = vault;
   const gem = collateralAmount?.symbol;
 
@@ -88,6 +85,9 @@ export default function({
   collateralAvailableAmount = formatValue(collateralAvailableAmount, 2);
   collateralAvailableValue = formatValue(collateralAvailableValue, 2);
   daiAvailable = formatValue(daiAvailable, 2);
+  liquidationRatioSimple = formatValue(liquidationRatioSimple, 4) * 100; //note special attn: must mul to get a %
+  liquidationPenalty = (formatValue(liquidationPenalty, 4) * 100).toFixed(2); //note special attn: mul & toFixed
+  annualStabilityFee = (formatValue(annualStabilityFee, 4) * 100).toFixed(2); //note special attn: mul & toFixed
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
@@ -200,7 +200,7 @@ export default function({
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={cdp.liquidationPenalty + '%'}
+            value={liquidationPenalty + '%'}
           />
         </CdpViewCard>
 
@@ -210,11 +210,11 @@ export default function({
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={cdp.liquidationRatio + '.00%'}
+            value={liquidationRatioSimple + '.00%'}
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={cdp.stabilityFee + '%'}
+            value={annualStabilityFee + '%'}
           />
         </CdpViewCard>
 

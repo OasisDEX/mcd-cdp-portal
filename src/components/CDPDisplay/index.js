@@ -78,7 +78,6 @@ function CDPView({ cdpId }) {
     () =>
       cdp.inited && cdpOwner ? (
         <CDPViewPresentation
-          cdp={cdp}
           cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
           account={account}
@@ -90,7 +89,7 @@ function CDPView({ cdpId }) {
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [cdp, showSidebar, account, network, cdpOwner, cdpAvailable]
+    [cdpId, showSidebar, account, network, cdpOwner, cdpAvailable]
   );
 }
 
