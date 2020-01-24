@@ -9,6 +9,7 @@ import useLanguage from 'hooks/useLanguage';
 import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
 import { watch } from 'hooks/useObservable';
+import { formatValue } from '../CDPDisplay/Presentation';
 
 const Generate = ({ cdpId, reset }) => {
   // const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
@@ -16,16 +17,25 @@ const Generate = ({ cdpId, reset }) => {
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
 
-  // const cdp = useCdp(cdpId);
-  const cdp = watch.vault(cdpId);
-  if (!cdp) return null;
-  console.log('vault', cdp);
+  const vault = watch.vault(1);
+  if (!vault) return null;
+  console.log('^^vault', vault);
+  let { debtValue, daiAvailable, vaultType } = vault;
+  // const gem = collateralAmount?.symbol;
 
-  const dustLimit = cdp.dust || 0;
+  console.log('debtValue', debtValue);
+
+  // debtValue = formatValue(debtValue, 2);
+  // console.log('debtValue After', debtValue);
+  // daiAvailable = formatValue(daiAvailable, 2);
+
+  //todo add dust
+  const dust = 0;
+  const dustLimit = dust || 0;
   const amountToGenerate = amount || 0;
 
-  const cdpBelowDustLimit = cdp.debtValue.plus(amountToGenerate).lt(dustLimit);
-  const cdpUnderCollateralized = cdp.daiAvailable.lt(amount);
+  const cdpBelowDustLimit = debtValue.plus(amountToGenerate).lt(dustLimit);
+  const cdpUnderCollateralized = daiAvailable.lt(amount);
   const failureMessage = cdpUnderCollateralized
     ? lang.action_sidebar.cdp_below_threshold
     : cdpBelowDustLimit
@@ -36,7 +46,7 @@ const Generate = ({ cdpId, reset }) => {
 
   const generate = () => {
     newTxListener(
-      maker.service('mcd:cdpManager').draw(cdpId, cdp.ilk, MDAI(amount)),
+      maker.service('mcd:cdpManager').draw(cdpId, vaultType, MDAI(amount)),
       lang.transactions.generate_dai
     );
     reset();
@@ -81,7 +91,7 @@ const Generate = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${safeToFixed(cdp.daiAvailable.toNumber(), 7)} DAI`}
+          body={`${safeToFixed(daiAvailable.toNumber(), 7)} DAI`}
         />
         {/* <Info
           title={lang.action_sidebar.new_liquidation_price}

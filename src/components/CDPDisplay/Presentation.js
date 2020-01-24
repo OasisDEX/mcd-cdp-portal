@@ -28,8 +28,7 @@ import { watch } from 'hooks/useObservable';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
-const formatValue = (val, precision) => {
-  console.log('typeof val', typeof val);
+export const formatValue = (val, precision) => {
   if (!val || val === undefined || typeof val !== 'object') return;
   if (val < 1) precision = 4;
   return round(val.toNumber(), precision).toFixed(precision);
@@ -56,7 +55,7 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
 
   //TODO better way to deal with awaiting vals:
   const vault = watch.vault(cdpId) || {};
-  console.log('^^vault', vault);
+  // console.log('^^vault', vault);
   let {
     debtValue,
     collateralAmount,
@@ -161,15 +160,6 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
 
   return (
     <PageContentLayout>
-      <Box>
-        <pre>dsProxy: {dsProxy}</pre>
-      </Box>
-      <Box>
-        <pre>ilkPrice: {`${ilkPrice}`}</pre>
-      </Box>
-      <Box>
-        <pre>Vaults: {getVaults && JSON.stringify(getVaults, null, 2)}</pre>
-      </Box>
       <Box>
         <Text.h2>
           {vaultType} {lang.cdp} #{cdpId}

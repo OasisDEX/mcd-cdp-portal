@@ -76,7 +76,7 @@ function CDPView({ cdpId }) {
 
   return useMemo(
     () =>
-      cdp.inited && cdpOwner ? (
+      cdpOwner ? (
         <CDPViewPresentation
           cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
