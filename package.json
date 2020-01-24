@@ -17,7 +17,7 @@
     "@makerdao/dai": "0.23.0-rc.5",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "^1.0.5",
+    "@makerdao/dai-plugin-mcd": "^1.0.6",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.2",
@@ -66,20 +66,29 @@
     "remove-sourcemaps": "rm -rf build/static/js/*.map",
     "deploy-main": "./scripts/deploy-mainnet"
   },
-  "engines": { "node": ">=10.x.x" },
+  "engines": {
+    "node": ">=10.x.x"
+  },
   "lint-staged": {
-    "*.js": ["prettier --write --single-quote"]
+    "*.js": [
+      "prettier --write --single-quote"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
-    "@makerdao/testchain": "1.0.3",
+    "@makerdao/testchain": "^1.0.7",
     "@testing-library/react": "^8.0.4",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0",

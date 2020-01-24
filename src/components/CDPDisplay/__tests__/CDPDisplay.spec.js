@@ -65,8 +65,8 @@ test('Vault Display page and actions', async () => {
     within(getBalancesEl()).getByText('DAI').nextElementSibling
       .nextElementSibling.textContent;
 
-  expect(getEthBal()).toContain('70.');
-  expect(getEthUsdValue()).toBe('$10.6K');
+  expect(getEthBal()).toContain('89.');
+  expect(getEthUsdValue()).toBe('$13.5K');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
@@ -95,8 +95,8 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('68.');
-  expect(getEthUsdValue()).toBe('$10.3K');
+  expect(getEthBal()).toContain('87.');
+  expect(getEthUsdValue()).toBe('$13.1K');
 
   /**Generate */
   click(getByText('Generate'));
@@ -174,6 +174,6 @@ test('Vault Display page and actions', async () => {
   expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
 
   // check updated balances
-  expect(getEthBal()).toContain('70.');
-  expect(getEthUsdValue()).toBe('$10.6K');
+  expect(getEthBal()).toContain('89.');
+  expect(getEthUsdValue()).toBe('$13.4K');
 }, 45000);
