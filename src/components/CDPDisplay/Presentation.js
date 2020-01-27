@@ -29,33 +29,23 @@ const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
 export const formatValue = (val, precision) => {
-  if (!val || val === undefined || typeof val !== 'object') return;
   if (val < 1) precision = 4;
   return round(val.toNumber(), precision).toFixed(precision);
 };
 
-export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
+export default function({
+  vault,
+  cdpId,
+  showSidebar,
+  account,
+  network,
+  cdpOwner
+}) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const manager = maker
-    .service('smartContract')
-    .getContractAddress('CDP_MANAGER');
-
-  // Testing:
-  const dsProxy = watch.proxyAddress(account?.address);
-  const getVaults = watch.getVaults(manager, dsProxy);
-  const ilkPrice = watch.collateralTypePrice('ETH-A');
-  // const cdpIds = useObservable('cdpIds', manager, dsProxy);
-  // const cdpIlks = useObservable('cdpIlks', manager, dsProxy);
-  // const cdpUrns = useObservable('cdpUrns', manager, dsProxy);
-  // const liquidationRatio = useObservable('liquidationRatio', 'ETH-A');
-  // const priceFeedAddress = useObservable('priceFeedAddress', 'ETH-A');
 
   log(`Rendering vault #${cdpId}`);
 
-  //TODO better way to deal with awaiting vals:
-  const vault = watch.vault(cdpId) || {};
-  // console.log('^^vault', vault);
   let {
     debtValue,
     collateralAmount,
@@ -79,7 +69,9 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
   collateralAmount = formatValue(collateralAmount, 2);
   collateralValue = formatValue(collateralValue, 2);
   collateralTypePrice = formatValue(collateralTypePrice, 2);
-  collateralizationRatio = formatValue(collateralizationRatio, 4) * 100; //note special attn: must mul to get a %
+  collateralizationRatio = (
+    formatValue(collateralizationRatio, 4) * 100
+  ).toFixed(2); //note special attn: must mul to get a %
   liquidationPrice = formatValue(liquidationPrice, 2);
   collateralAvailableAmount = formatValue(collateralAvailableAmount, 2);
   collateralAvailableValue = formatValue(collateralAvailableValue, 2);
@@ -217,7 +209,7 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
               <ActionButton
                 disabled={!account}
                 onClick={() =>
-                  showAction({ type: 'deposit', props: { cdpId } })
+                  showAction({ type: 'deposit', props: { cdpId, vault } })
                 }
               >
                 {lang.actions.deposit}
@@ -232,7 +224,7 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() =>
-                  showAction({ type: 'withdraw', props: { cdpId } })
+                  showAction({ type: 'withdraw', props: { cdpId, vault } })
                 }
               >
                 {lang.actions.withdraw}
@@ -263,7 +255,7 @@ export default function({ cdpId, showSidebar, account, network, cdpOwner }) {
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() =>
-                  showAction({ type: 'generate', props: { cdpId } })
+                  showAction({ type: 'generate', props: { cdpId, vault } })
                 }
               >
                 {lang.actions.generate}

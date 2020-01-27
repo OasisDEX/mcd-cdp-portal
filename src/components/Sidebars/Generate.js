@@ -1,48 +1,48 @@
 import React, { useState } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-// import useCdp from 'hooks/useCdp';
 import useLanguage from 'hooks/useLanguage';
-// import useAnalytics from 'hooks/useAnalytics';
 import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
-import { watch } from 'hooks/useObservable';
-import { formatValue } from '../CDPDisplay/Presentation';
 
-const Generate = ({ cdpId, reset }) => {
+//TODO move these into utility fn?
+export const recalculateLiquidationPrice = ({ vault, dart = 0 } = {}) => {
+  const val = math.liquidationPrice(
+    vault.collateralAmount,
+    vault.debtValue.plus(dart),
+    vault.liquidationRatioSimple
+  );
+  return val;
+};
+
+const recalculateCollateralizationRatio = ({ vault, dart = 0 } = {}) => {
+  const ratio = math.collateralizationRatio(
+    vault.collateralValue,
+    vault.debtValue.plus(dart)
+  );
+  return ratio.times(100).toNumber();
+};
+
+const Generate = ({ cdpId, vault, reset }) => {
   // const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
 
-  const vault = watch.vault(1);
-  if (!vault) return null;
-  console.log('^^vault', vault);
-  let { debtValue, daiAvailable, vaultType } = vault;
-  // const gem = collateralAmount?.symbol;
+  let { debtValue, daiAvailable, vaultType, debtFloor } = vault;
 
-  console.log('debtValue', debtValue);
-
-  // debtValue = formatValue(debtValue, 2);
-  // console.log('debtValue After', debtValue);
-  // daiAvailable = formatValue(daiAvailable, 2);
-
-  //todo add dust
-  const dust = 0;
-  const dustLimit = dust || 0;
   const amountToGenerate = amount || 0;
 
-  const cdpBelowDustLimit = debtValue.plus(amountToGenerate).lt(dustLimit);
+  const cdpBelowDustLimit = debtValue.plus(amountToGenerate).lt(debtFloor);
   const cdpUnderCollateralized = daiAvailable.lt(amount);
   const failureMessage = cdpUnderCollateralized
     ? lang.action_sidebar.cdp_below_threshold
     : cdpBelowDustLimit
-    ? lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
+    ? lang.formatString(lang.cdp_create.below_dust_limit, debtFloor)
     : null;
-
-  // verify we're doing the same as that calc cdp params function
 
   const generate = () => {
     newTxListener(
@@ -70,7 +70,7 @@ const Generate = ({ cdpId, reset }) => {
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
-          disabled={!amount || failureMessage} //this had amountErrors
+          disabled={!amount || failureMessage}
           onClick={() => {
             // trackBtnClick('Confirm', { amount });
             generate();
@@ -93,20 +93,23 @@ const Generate = ({ cdpId, reset }) => {
           title={lang.action_sidebar.maximum_available_to_generate}
           body={`${safeToFixed(daiAvailable.toNumber(), 7)} DAI`}
         />
-        {/* <Info
+        <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={cdp.liquidationPrice({ dart: amountToGenerate }).toString()}
-        /> */}
+          body={recalculateLiquidationPrice({
+            vault,
+            dart: amountToGenerate
+          }).toString()}
+        />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <Text color={cdpUnderCollateralized ? 'orange.600' : null}>
-              {/* {formatCollateralizationRatio(
-                cdp
-                  .collateralizationRatio({ dart: amountToGenerate })
-                  .times(100)
-                  .toNumber()
-              )} */}
+              {formatCollateralizationRatio(
+                recalculateCollateralizationRatio({
+                  vault,
+                  dart: amountToGenerate
+                })
+              )}
             </Text>
           }
         />

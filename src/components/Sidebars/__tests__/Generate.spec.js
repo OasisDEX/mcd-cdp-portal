@@ -2,22 +2,25 @@ import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
-import { BAT, MDAI } from '@makerdao/dai-plugin-mcd';
+import { BAT, MDAI, USD } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Generate from '../Generate';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
+import { createCurrencyRatio } from '@makerdao/currency';
 
 const ILK = 'BAT-A';
 const PAR = new BigNumber('1000000000000000000000000000');
 
 const RATE = '1.000967514019988230';
 const DUST = '20';
-const LIQUIDATION_RATIO = '200';
+const LIQUIDATION_RATIO = '2';
 
 const INK_RAW = '0x10450cb5d3cf60f34e';
+const COL_AMT = 300.123456789012345678;
+
 const SPOT_RAW = '0x6342fd08f00f6378000000';
 const LR_RAW = math.liquidationRatio('0x6765c793fa10079d0000000');
 const RATE_RAY = BigNumber(RATE).shiftedBy(27);
@@ -43,45 +46,47 @@ afterAll(() => {
 
 afterEach(cleanup);
 
+//todo remove these references
 const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      1: {
-        ilk: ILK
-      }
-    },
-    feeds: [
-      {
-        key: ILK,
-        currency: BAT,
-        dust: DUST,
-        liquidationRatio: LIQUIDATION_RATIO
-      }
-    ],
-    system: {
-      par: PAR
-    },
-    raw: {
-      cdps: {
-        1: {
-          ink: INK_RAW,
-          art: 0
-        }
-      },
-      ilks: {
-        [ILK]: {
-          priceWithSafetyMargin: SPOT_RAW,
-          liquidationRatio: LR_RAW,
-          rate: RATE_RAY
-        }
-      },
-      system: {
-        par: PAR_RAW
-      }
-    }
-  };
-  return newState;
+  return state;
+  // const newState = {
+  //   ...state,
+  //   cdps: {
+  //     1: {
+  //       ilk: ILK
+  //     }
+  //   },
+  //   feeds: [
+  //     {
+  //       key: ILK,
+  //       currency: BAT,
+  //       dust: DUST,
+  //       liquidationRatio: LIQUIDATION_RATIO
+  //     }
+  //   ],
+  //   system: {
+  //     par: PAR
+  //   },
+  //   raw: {
+  //     cdps: {
+  //       1: {
+  //         ink: INK_RAW,
+  //         art: 0
+  //       }
+  //     },
+  //     ilks: {
+  //       [ILK]: {
+  //         priceWithSafetyMargin: SPOT_RAW,
+  //         liquidationRatio: LR_RAW,
+  //         rate: RATE_RAY
+  //       }
+  //     },
+  //     system: {
+  //       par: PAR_RAW
+  //     }
+  //   }
+  // };
+  // return newState;
 };
 
 // so that dispatched actions don't affect the mocked state
@@ -89,17 +94,28 @@ const identityReducer = x => x;
 const renderWithMockedStore = component =>
   render(component, setupMockState, identityReducer);
 
+const mockVault = {
+  debtValue: MDAI(0),
+  daiAvailable: MDAI(36.014814),
+  vaultType: ILK,
+  collateralAmount: BAT(COL_AMT),
+  liquidationRatioSimple: createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO),
+  debtFloor: BigNumber(DUST),
+  collateralValue: USD(72.03)
+};
+
 test('basic rendering', async () => {
-  const { findByText } = renderWithMockedStore(<Generate cdpId={1} />);
+  const { findByText } = renderWithMockedStore(
+    <Generate vault={mockVault} cdpId={1} />
+  );
 
   await findByText(lang.action_sidebar.generate_title);
   await findByText(/USD\/BAT/);
-  // await findByText(/BAT\/USD/);
 });
 
 test('input validation', async () => {
   const { getByText, getByRole, findByText } = renderWithMockedStore(
-    <Generate cdpId={1} />
+    <Generate vault={mockVault} cdpId={1} />
   );
 
   await findByText(/USD\/BAT/);
@@ -128,9 +144,9 @@ test('input validation', async () => {
   expect(underDustLimitEl).not.toBeInTheDocument();
 });
 
-test.only('verify info container values', async () => {
+test('verify info container values', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
-    <Generate cdpId={1} />
+    <Generate vault={mockVault} cdpId={1} />
   );
 
   // initial liquidation price
@@ -144,7 +160,6 @@ test.only('verify info container values', async () => {
 
   // new liquidation price
   getByText(/0.14 USD\/BAT/);
-  // getByText(/0.14 BAT\/USD/);
   // new simulated collat ratio
   getByText(/343.00%/);
   // dai available remains the same
@@ -156,7 +171,7 @@ test('calls the draw function as expected', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
     React.createElement(() => {
       maker = useMaker().maker;
-      return <Generate cdpId={1} reset={() => {}} />;
+      return <Generate vault={mockVault} cdpId={1} reset={() => {}} />;
     })
   );
 

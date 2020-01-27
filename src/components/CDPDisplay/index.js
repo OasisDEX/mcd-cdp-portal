@@ -11,6 +11,7 @@ import CDPViewPresentation from './Presentation';
 import Unavailable from '../Unavailable';
 import { Routes, ZERO_ADDRESS } from '../../utils/constants';
 import { useNavigation } from 'react-navi';
+import { watch } from 'hooks/useObservable';
 
 function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
@@ -68,6 +69,8 @@ function CDPView({ cdpId }) {
     feed
   ]);
 
+  const vault = watch.vault(cdpId);
+
   useEffect(() => {
     trackCdpById(maker, cdpId, dispatch).then(() => {
       if (!cdp.inited && !account) setCdpAvailable(false);
@@ -76,8 +79,9 @@ function CDPView({ cdpId }) {
 
   return useMemo(
     () =>
-      cdpOwner ? (
+      vault && cdpOwner ? (
         <CDPViewPresentation
+          vault={vault}
           cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
           account={account}
