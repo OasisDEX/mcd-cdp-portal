@@ -95,19 +95,19 @@ const Generate = ({ cdpId, vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={recalculateLiquidationPrice({
-            vault,
-            dart: amountToGenerate
-          }).toString()}
+          body={vault
+            .calculateLiquidationPrice({
+              debtValue: vault?.debtValue.plus(amountToGenerate)
+            })
+            ?.toString()}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <Text color={cdpUnderCollateralized ? 'orange.600' : null}>
               {formatCollateralizationRatio(
-                recalculateCollateralizationRatio({
-                  vault,
-                  dart: amountToGenerate
+                vault.calculateCollateralizationRatio({
+                  debtValue: vault?.debtValue.plus(amountToGenerate)
                 })
               )}
             </Text>
