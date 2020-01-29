@@ -87,7 +87,8 @@ export default function({
     liquidationPrice = lang.cdp_page.not_applicable;
   if (collateralizationRatio === Infinity)
     collateralizationRatio = lang.cdp_page.not_applicable;
-  const isOwner = account && account.address.toLowerCase() === cdpOwner.toLowerCase();
+  const isOwner =
+    account && account.address.toLowerCase() === cdpOwner.toLowerCase();
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
@@ -241,7 +242,7 @@ export default function({
               <ActionButton
                 disabled={!account}
                 onClick={() =>
-                  showAction({ type: 'payback', props: { cdpId } })
+                  showAction({ type: 'payback', props: { cdpId, vault } })
                 }
               >
                 {lang.actions.pay_back}

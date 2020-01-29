@@ -6,9 +6,12 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { createCurrencyRatio } from '@makerdao/currency';
+import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 
 import Payback from '../Payback';
-import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
@@ -33,8 +36,40 @@ const setupMockState = state => {
   return newState;
 };
 
+const ILK = 'ETH-A';
+const LIQUIDATION_RATIO = '200';
+const COL_AMT = 300.123456789012345678;
+
+const collateralAmount = BAT(0); //only used to retrieve gem symbol
+const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
+  LIQUIDATION_RATIO
+);
+const collateralValue = USD(12004.938271560493);
+
+const mockVault = {
+  collateralType: ILK,
+  debtValue: MDAI(0),
+  daiAvailable: MDAI(36.014814),
+  vaultType: ILK,
+  collateralAmount,
+  liquidationRatioSimple,
+  collateralValue,
+  collateralAvailableAmount: BAT(COL_AMT),
+  collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
+  calculateLiquidationPrice: ({ debtValue: _debtValue }) =>
+    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatioSimple),
+  calculateCollateralizationRatio: ({ debtValue: _debtValue }) =>
+    math
+      .collateralizationRatio(collateralValue, _debtValue)
+      .times(100)
+      .toNumber()
+};
+
 test('basic rendering', async () => {
-  const { getByText } = render(<Payback cdpId="1" />, setupMockState);
+  const { getByText } = render(
+    <Payback cdpId="1" vault={mockVault} />,
+    setupMockState
+  );
 
   // this waits for the initial proxy & allowance check to finish
   await waitForElement(() => getByText(/Unlock DAI/));
@@ -64,7 +99,7 @@ const SetupProxyAndAllowance = () => {
     changeAccount();
   }, []);
 
-  return changedAccount ? <Payback cdpId="1" /> : <div />;
+  return changedAccount ? <Payback cdpId="1" vault={mockVault} /> : <div />;
 };
 
 test('proxy toggle', async () => {

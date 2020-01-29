@@ -1,24 +1,19 @@
 import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
-import round from 'lodash/round';
 import debug from 'debug';
 
-import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
-import { calcCDPParams } from 'utils/cdp';
+import { formatCollateralizationRatio } from 'utils/ui';
 import { minimum } from 'utils/bignumber';
 
 import useMaker from 'hooks/useMaker';
 import useProxy from 'hooks/useProxy';
-import useStore from 'hooks/useStore';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import { safeToFixed } from '../../utils/ui';
 import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
-
-import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
@@ -27,7 +22,7 @@ import SetMax from 'components/SetMax';
 
 const log = debug('maker:Sidebars/Payback');
 
-const Payback = ({ cdpId, reset }) => {
+const Payback = ({ cdpId, vault, reset }) => {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const balances = useWalletBalances();
@@ -36,24 +31,21 @@ const Payback = ({ cdpId, reset }) => {
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp, true, 18);
+  let { debtValue, debtFloor } = vault;
+  debtValue = debtValue.toBigNumber();
 
-  const dustLimit = cdp.dust ? cdp.dust : 0;
-  const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
+  const maxAmount = debtValue && daiBalance && minimum(debtValue, daiBalance);
 
   // Amount being repaid can't result in a remaining debt lower than the dust
   // minimum unless the full amount is being repaid
   const dustLimitValidation = input =>
-    greaterThan(dustLimit, subtract(debtAmount, input)) &&
-    equalTo(input, debtAmount) !== true;
+    greaterThan(debtFloor, subtract(debtValue, input)) &&
+    equalTo(input, debtValue) !== true;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
-      maxFloat: Math.min(daiBalance, debtAmount),
+      maxFloat: Math.min(daiBalance, debtValue),
       minFloat: 0,
       isFloat: true,
       custom: {
@@ -70,7 +62,7 @@ const Payback = ({ cdpId, reset }) => {
       dustLimit: () =>
         lang.formatString(
           lang.cdp_create.dust_max_payback,
-          subtract(debtAmount, dustLimit)
+          subtract(debtValue, debtFloor)
         ),
       allowanceInvalid: () =>
         lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
@@ -78,11 +70,6 @@ const Payback = ({ cdpId, reset }) => {
   );
 
   const amountToPayback = amount || 0;
-  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-    ilkData: cdp,
-    gemsToLock: collateralAmount,
-    daiToDraw: Math.max(subtract(debtAmount, amountToPayback), 0)
-  });
   const setMax = () => setAmount(maxAmount);
 
   const payback = async () => {
@@ -92,7 +79,7 @@ const Payback = ({ cdpId, reset }) => {
       log(`Unable to find owner of CDP #${cdpId}`);
       return;
     }
-    const wipeAll = debtAmount.toString() === amount;
+    const wipeAll = debtValue.toString() === amount;
     if (wipeAll) log('Calling wipeAll()');
     else log('Calling wipe()');
     newTxListener(
@@ -139,15 +126,23 @@ const Payback = ({ cdpId, reset }) => {
         />
         <Info
           title={lang.action_sidebar.dai_debt}
-          body={`${round(debtAmount, 6)} DAI`}
+          body={`${debtValue.decimalPlaces(6)} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+          body={vault
+            .calculateLiquidationPrice({
+              debtValue: vault?.debtValue.minus(amountToPayback)
+            })
+            ?.toString()}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
+          body={formatCollateralizationRatio(
+            vault.calculateCollateralizationRatio({
+              debtValue: vault?.debtValue.minus(amountToPayback)
+            })
+          )}
         />
       </InfoContainer>
     </Grid>
