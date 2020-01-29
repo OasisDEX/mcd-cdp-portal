@@ -29,8 +29,9 @@ const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
 export const formatValue = (val, precision) => {
+  val = val.toNumber();
   if (val < 1) precision = 4;
-  return round(val.toNumber(), precision).toFixed(precision);
+  return round(val, precision).toFixed(precision);
 };
 
 export default function({
@@ -84,9 +85,9 @@ export default function({
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
 
-  if (['Infinity', Infinity].includes(liquidationPrice))
+  if (['Infinity', Infinity, 'NaN'].includes(liquidationPrice))
     liquidationPrice = lang.cdp_page.not_applicable;
-  if (collateralizationRatio === Infinity)
+  if (['Infinity', Infinity, 'NaN'].includes(collateralizationRatio))
     collateralizationRatio = lang.cdp_page.not_applicable;
   const isOwner =
     account && account.address.toLowerCase() === cdpOwner.toLowerCase();
