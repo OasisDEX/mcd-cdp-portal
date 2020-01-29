@@ -10,6 +10,7 @@ function LoadingToggle({
   isComplete,
   onToggle,
   disabled,
+  trackBtnClick,
   ...props
 }) {
   const text = isLoading
@@ -32,7 +33,10 @@ function LoadingToggle({
       <Toggle
         css={{ opacity: disabled ? 0.4 : 1 }}
         active={isComplete || isLoading}
-        onClick={onToggle}
+        onClick={() => {
+          if (trackBtnClick) trackBtnClick('Allowance');
+          onToggle();
+        }}
         justifySelf="end"
         disabled={disabled}
       />

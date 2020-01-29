@@ -10,6 +10,7 @@ import {
 } from 'components/CDPCreateScreens';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
+import useStore from 'hooks/useStore';
 import { TxLifecycle } from 'utils/constants';
 
 const initialState = {
@@ -85,6 +86,8 @@ function CDPCreate({ onClose }) {
     { step, selectedIlk, proxyAddress, ...cdpParams },
     dispatch
   ] = useReducer(reducer, initialState);
+  const [{ cdps }] = useStore();
+  const isFirstVault = Object.entries(cdps).length === 0 ? true : false;
 
   const screens = useMemo(
     () => [
@@ -123,6 +126,7 @@ function CDPCreate({ onClose }) {
     selectedIlk,
     proxyAddress,
     cdpParams,
+    isFirstVault,
     dispatch,
     onClose
   };

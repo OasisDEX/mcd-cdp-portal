@@ -16,6 +16,10 @@ import { renderWithMaker as render } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
+
 afterEach(cleanup);
 
 const setupMockState = state => {

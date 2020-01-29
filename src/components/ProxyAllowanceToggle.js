@@ -5,7 +5,11 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import AllowanceToggle from './AllowanceToggle';
 import ProxyToggle from './ProxyToggle';
 
-const ProxyAllowanceToggle = ({ token, onlyShowAllowance = false }) => {
+const ProxyAllowanceToggle = ({
+  token,
+  trackBtnClick,
+  onlyShowAllowance = false
+}) => {
   const {
     hasAllowance,
     hasFetchedAllowance,
@@ -56,6 +60,7 @@ const ProxyAllowanceToggle = ({ token, onlyShowAllowance = false }) => {
           isComplete={hasAllowance}
           onToggle={setAllowance}
           disabled={(!onlyShowAllowance && !hasProxy) || hasAllowance}
+          trackBtnClick={trackBtnClick}
           data-testid="allowance-toggle"
         />
       )}

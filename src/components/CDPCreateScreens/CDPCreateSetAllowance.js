@@ -2,12 +2,14 @@ import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
 import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
-import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
+import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 
-const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
+const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
+  const { trackBtnClick } = useAnalytics('ProxyDeploy', 'VaultCreate');
   const { lang } = useLanguage();
   const blockHeight = useBlockHeight(0);
 
@@ -70,7 +72,10 @@ const CDPCreateSetAllowance = ({ selectedIlk, dispatch }) => {
         isSettingAllowance={isSettingAllowance}
       />
       <ScreenFooter
-        onNext={() => dispatch({ type: 'increment-step' })}
+        onNext={() => {
+          trackBtnClick('Next', { isFirstVault });
+          dispatch({ type: 'increment-step' });
+        }}
         onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={!proxyLoading}
         canProgress={hasProxy && hasAllowance}

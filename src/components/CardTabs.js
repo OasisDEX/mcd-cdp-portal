@@ -38,10 +38,11 @@ const TabHeader = ({ selected, children, ...props }) => {
   );
 };
 
-const CardTabs = ({ headers, children }) => {
+const CardTabs = ({ headers, trackTab, children }) => {
   return (
     <Card>
       <Tabs
+        trackTab={trackTab}
         header={
           <Flex>
             {headers.map((header, idx) => (

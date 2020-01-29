@@ -30,6 +30,14 @@ const PRICE = createCurrencyRatio(USD, BAT)('0.24');
 const LIQUIDATION_RATIO = '200';
 
 const originalConsoleError = console.error;
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 beforeAll(async () => {
   console.error = jest.fn();

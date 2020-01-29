@@ -12,8 +12,10 @@ import { formatCollateralizationRatio } from '../../utils/ui';
 import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
+import useAnalytics from 'hooks/useAnalytics';
 
 const Withdraw = ({ cdpId, vault, reset }) => {
+  const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [liquidationPrice, setLiquidationPrice] = useState(0);
@@ -99,7 +101,17 @@ const Withdraw = ({ cdpId, vault, reset }) => {
           min="0"
           onChange={onAmountChange}
           after={
-            parseFloat(debtAmount) === 0 ? <SetMax onClick={setMax} /> : null
+            parseFloat(debtAmount) === 0 ? (
+              <SetMax
+                onClick={() => {
+                  setMax();
+                  trackBtnClick('SetMax', {
+                    collateralAvailableAmount,
+                    setMax: true
+                  });
+                }}
+              />
+            ) : null
           }
           failureMessage={amountErrors}
         />
@@ -114,10 +126,22 @@ const Withdraw = ({ cdpId, vault, reset }) => {
         />
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button disabled={!amount || amountErrors} onClick={withdraw}>
+        <Button
+          disabled={!amount || amountErrors}
+          onClick={() => {
+            trackBtnClick('Confirm', { amount });
+            withdraw();
+          }}
+        >
           {lang.actions.withdraw}
         </Button>
-        <Button variant="secondary-outline" onClick={reset}>
+        <Button
+          variant="secondary-outline"
+          onClick={() => {
+            trackBtnClick('Cancel');
+            reset();
+          }}
+        >
           {lang.cancel}
         </Button>
       </Grid>

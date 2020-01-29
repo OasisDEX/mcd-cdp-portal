@@ -12,6 +12,10 @@ import * as navi from 'react-navi';
 
 const { click, change } = fireEvent;
 jest.mock('react-navi');
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
 
 const ILK = 'ETH-A';
 const VAULT1_ETH = '5';
@@ -91,7 +95,7 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('87.3');
+  expect(getEthBal()).toContain('87.');
   expect(getEthUsdValue()).toBe('$13.1K');
 
   /**Generate */

@@ -7,6 +7,7 @@ import InfoContainer from './shared/InfoContainer';
 import useLanguage from 'hooks/useLanguage';
 import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
+import useAnalytics from 'hooks/useAnalytics';
 
 //TODO move these into utility fn?
 export const recalculateLiquidationPrice = ({ vault, dart = 0 } = {}) => {
@@ -27,7 +28,7 @@ const recalculateCollateralizationRatio = ({ vault, dart = 0 } = {}) => {
 };
 
 const Generate = ({ cdpId, vault, reset }) => {
-  // const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
+  const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const [amount, setAmount] = useState('');
@@ -72,7 +73,7 @@ const Generate = ({ cdpId, vault, reset }) => {
         <Button
           disabled={!amount || failureMessage}
           onClick={() => {
-            // trackBtnClick('Confirm', { amount });
+            trackBtnClick('Confirm', { amount });
             generate();
           }}
         >
@@ -81,7 +82,7 @@ const Generate = ({ cdpId, vault, reset }) => {
         <Button
           variant="secondary-outline"
           onClick={() => {
-            // trackBtnClick('Cancel');
+            trackBtnClick('Cancel');
             reset();
           }}
         >
