@@ -22,7 +22,7 @@ const Withdraw = ({ cdpId, vault, reset }) => {
   const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
   let {
-    collateralType,
+    vaultType,
     liquidationRatioSimple: liquidationRatio,
     collateralAvailableAmount,
     collateralTypePrice,
@@ -77,7 +77,7 @@ const Withdraw = ({ cdpId, vault, reset }) => {
     newTxListener(
       maker.service('mcd:cdpManager').wipeAndFree(
         cdpId,
-        collateralType,
+        vaultType,
         MDAI(0),
         cdpManagerCollateralAmount.type(amount) //TODO better way to get currency?
       ),

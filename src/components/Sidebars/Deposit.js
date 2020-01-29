@@ -1,45 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
 import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import {
-  getCdp,
-  getDebtAmount,
-  getCollateralPrice,
-  getCollateralAmount
-} from 'reducers/cdps';
-import { calcCDPParams } from 'utils/cdp';
-import { add } from 'utils/bignumber';
-import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
+import { formatCollateralizationRatio } from 'utils/ui';
+import { multiply } from 'utils/bignumber';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
+import BigNumber from 'bignumber.js';
 
-const Deposit = ({ cdpId, reset }) => {
+const Deposit = ({ cdpId, vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const { symbol } = cdp.currency;
-
-  const gemBalances = useWalletBalances();
-  const gemBalance = gemBalances[symbol] || 0;
-  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const { hasProxy } = useProxy();
 
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+  let {
+    vaultType,
+    collateralTypePrice,
+    collateralValue,
+    collateralAmount
+  } = vault;
 
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp, false);
-  const debtAmount = getDebtAmount(cdp);
+  const symbol = collateralAmount?.symbol;
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
+  const gemBalances = useWalletBalances();
+  const gemBalance = gemBalances[symbol] || 0;
 
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -59,29 +50,20 @@ const Deposit = ({ cdpId, reset }) => {
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
-
-  useEffect(() => {
-    let val = parseFloat(amount);
-    val = isNaN(val) ? 0 : val;
-    const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: add(collateralAmount, val),
-      daiToDraw: debtAmount
-    });
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp, collateralAmount, debtAmount]);
+  const amountToDeposit = amount || BigNumber(0);
 
   const deposit = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, cdp.ilk, cdp.currency(amount)),
+        .lock(cdpId, vaultType, collateralAmount.type(amountToDeposit)), // this might not work
+      //.lock(cdpId, cdp.ilk, cdp.currency(amount)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
   };
 
+  const valueDiff = multiply(amountToDeposit, collateralTypePrice.toNumber());
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -134,15 +116,23 @@ const Deposit = ({ cdpId, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralPrice} ${symbol}/USD`}
+          body={`${collateralTypePrice} ${symbol}/USD`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, symbol)}
+          body={vault
+            .calculateLiquidationPrice({
+              collateralAmount: collateralAmount.plus(amountToDeposit)
+            })
+            ?.toString()}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
+          body={formatCollateralizationRatio(
+            vault.calculateCollateralizationRatio({
+              collateralValue: collateralValue.plus(valueDiff)
+            })
+          )}
         />
       </InfoContainer>
     </Grid>

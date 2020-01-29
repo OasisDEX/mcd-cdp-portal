@@ -1,13 +1,15 @@
 import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { createCurrencyRatio } from '@makerdao/currency';
 import {
   TestAccountProvider,
   takeSnapshot,
   restoreSnapshot
 } from '@makerdao/test-helpers';
-import { BAT, USD } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Deposit from '../Deposit';
@@ -28,7 +30,7 @@ const DEBT_CEILING = '1000';
 const RATE = '1.000967514019988230';
 const DUST = '20';
 const PRICE = createCurrencyRatio(USD, BAT)('0.24');
-const LIQUIDATION_RATIO = '200';
+const LIQUIDATION_RATIO = '2';
 
 const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
 
@@ -99,9 +101,32 @@ const identityReducer = x => x;
 const renderWithMockedStore = component =>
   render(component, setupMockState, identityReducer);
 
+const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
+  LIQUIDATION_RATIO
+);
+const collateralValue = USD(74.852);
+const debtValue = MDAI(26);
+
+const mockVault = {
+  debtValue,
+  vaultType: ILK,
+  collateralAmount: BAT(INITIAL_BAT),
+  encumberedCollateral: fromWei(300123456789012345678),
+  liquidationRatioSimple,
+  collateralValue,
+  collateralTypePrice: PRICE,
+  calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatioSimple),
+  calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
+    math
+      .collateralizationRatio(_collateralValue, debtValue)
+      .times(100)
+      .toNumber()
+};
+
 test('basic rendering', async () => {
   const { findByText, findAllByText } = renderWithMockedStore(
-    <Deposit cdpId={1} />
+    <Deposit cdpId={1} vault={mockVault} />
   );
 
   await findByText(
@@ -125,7 +150,7 @@ test('input validation', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} />;
+      return <Deposit cdpId={1} vault={mockVault} />;
     })
   );
 
@@ -158,7 +183,7 @@ test('verify info container values', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} />;
+      return <Deposit cdpId={1} vault={mockVault} />;
     })
   );
 
@@ -167,7 +192,7 @@ test('verify info container values', async () => {
   // BAT/USD price
   await findByText(PRICE.toNumber().toString(), { exact: false });
   // initial liquidation price
-  await findByText(/0.17 BAT\/USD/);
+  await findByText(/0.17 USD\/BAT/);
   // initial collat ratio
   await findByText(/287.89%/);
 
@@ -175,9 +200,9 @@ test('verify info container values', async () => {
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   // new liquidation price
-  getByText(/0.1 BAT\/USD/);
+  getByText(/0.10 USD\/BAT/);
   // new simulated collat ratio
-  getByText(/479.85%/);
+  getByText(/472.62%/);
   // BAT available remains the same
   getByText(`${BAT_ACCOUNT_BALANCE} BAT`);
   // BAT/USD price remains the same
@@ -201,7 +226,7 @@ test('calls the lock function as expected', async () => {
           '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E';
       }, []);
 
-      return <Deposit cdpId={1} reset={() => {}} />;
+      return <Deposit cdpId={1} vault={mockVault} reset={() => {}} />;
     })
   );
 
