@@ -13,6 +13,7 @@ import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
 import useAnalytics from 'hooks/useAnalytics';
+import { getCurrency } from 'utils/cdp';
 
 const Withdraw = ({ cdpId, vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
@@ -74,13 +75,11 @@ const Withdraw = ({ cdpId, vault, reset }) => {
   }, [amount, vault]);
 
   const withdraw = () => {
+    const currency = getCurrency({ ilk: vaultType });
     newTxListener(
-      maker.service('mcd:cdpManager').wipeAndFree(
-        cdpId,
-        vaultType,
-        MDAI(0),
-        cdpManagerCollateralAmount.type(amount) //TODO better way to get currency?
-      ),
+      maker
+        .service('mcd:cdpManager')
+        .wipeAndFree(cdpId, vaultType, MDAI(0), currency(amount)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();

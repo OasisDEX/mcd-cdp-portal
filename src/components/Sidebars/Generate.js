@@ -19,14 +19,6 @@ export const recalculateLiquidationPrice = ({ vault, dart = 0 } = {}) => {
   return val;
 };
 
-const recalculateCollateralizationRatio = ({ vault, dart = 0 } = {}) => {
-  const ratio = math.collateralizationRatio(
-    vault.collateralValue,
-    vault.debtValue.plus(dart)
-  );
-  return ratio.times(100).toNumber();
-};
-
 const Generate = ({ cdpId, vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();

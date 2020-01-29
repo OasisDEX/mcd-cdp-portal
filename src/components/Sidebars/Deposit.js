@@ -11,6 +11,7 @@ import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import { formatCollateralizationRatio } from 'utils/ui';
 import { multiply } from 'utils/bignumber';
+import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import BigNumber from 'bignumber.js';
 
@@ -53,11 +54,11 @@ const Deposit = ({ cdpId, vault, reset }) => {
   const amountToDeposit = amount || BigNumber(0);
 
   const deposit = () => {
+    const currency = getCurrency({ ilk: vaultType });
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, vaultType, collateralAmount.type(amountToDeposit)), // this might not work
-      //.lock(cdpId, cdp.ilk, cdp.currency(amount)),
+        .lock(cdpId, vaultType, currency(amountToDeposit)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();

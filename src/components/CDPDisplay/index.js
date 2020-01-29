@@ -94,7 +94,15 @@ function CDPView({ cdpId }) {
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [cdpId, vault, vaultType, vaultExternalAccountOwner, showSidebar, account, network]
+    [
+      cdpId,
+      vault,
+      vaultType,
+      vaultExternalAccountOwner,
+      showSidebar,
+      account,
+      network
+    ]
   );
 }
 
