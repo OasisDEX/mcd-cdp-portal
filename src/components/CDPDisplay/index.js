@@ -18,8 +18,7 @@ function CDPView({ cdpId }) {
   const { maker, account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
   const [{ cdps, feeds }, dispatch] = useStore();
-  const [cdpOwner, setOwner] = useState();
-  const [cdpAvailable, setCdpAvailable] = useState(true);
+  // const [cdpAvailable, setCdpAvailable] = useState(true);
   const navigation = useNavigation();
 
   const redirect = useCallback(
@@ -35,26 +34,26 @@ function CDPView({ cdpId }) {
     [navigation]
   );
 
-  useEffect(() => {
-    (async () => {
-      const proxyAddress = await maker
-        .service('mcd:cdpManager')
-        .getOwner(cdpId);
-      if (proxyAddress === ZERO_ADDRESS) {
-        account ? redirect(account) : setCdpAvailable(false);
-      } else {
-        try {
-          const cdpOwnerAddress = await maker
-            .service('proxy')
-            .getOwner(proxyAddress);
-          setOwner(cdpOwnerAddress);
-        } catch (err) {
-          // cdp is not owned by a proxy
-          setOwner(proxyAddress);
-        }
-      }
-    })();
-  }, [maker, cdpId, account, navigation, redirect]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const proxyAddress = await maker
+  //       .service('mcd:cdpManager')
+  //       .getOwner(cdpId);
+  //     if (proxyAddress === ZERO_ADDRESS) {
+  //       account ? redirect(account) : setCdpAvailable(false);
+  //     } else {
+  //       try {
+  //         const cdpOwnerAddress = await maker
+  //           .service('proxy')
+  //           .getOwner(proxyAddress);
+  //         setOwner(cdpOwnerAddress);
+  //       } catch (err) {
+  //         // cdp is not owned by a proxy
+  //         setOwner(proxyAddress);
+  //       }
+  //     }
+  //   })();
+  // }, [maker, cdpId, account, navigation, redirect]);
 
   // this workaround (making useMemo depend on just one feed item) ensures that
   // the view does not re-render when an irrelevant price feed is updated.
@@ -69,31 +68,33 @@ function CDPView({ cdpId }) {
     feed
   ]);
 
+  const vaultType = watch.vaultType(cdpId);
   const vault = watch.vault(cdpId);
+  const vaultExternalAccountOwner = watch.proxyOwner(vault?.ownerAddress);
 
-  useEffect(() => {
-    trackCdpById(maker, cdpId, dispatch).then(() => {
-      if (!cdp.inited && !account) setCdpAvailable(false);
-    });
-  }, [cdpId, dispatch, maker, account, cdp, redirect]);
+  // useEffect(() => {
+  //   trackCdpById(maker, cdpId, dispatch).then(() => {
+  //     if (!cdp.inited && !account) setCdpAvailable(false);
+  //   });
+  // }, [cdpId, dispatch, maker, account, cdp, redirect]);
 
   return useMemo(
     () =>
-      vault && cdpOwner ? (
+      vault && vaultExternalAccountOwner ? (
         <CDPViewPresentation
           vault={vault}
           cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
           account={account}
           network={network}
-          cdpOwner={cdpOwner.toLowerCase()}
+          cdpOwner={vaultExternalAccountOwner}
         />
-      ) : !cdpAvailable ? (
+      ) : vaultType === null ? (
         <Unavailable />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [cdpId, showSidebar, account, network, cdpOwner, cdpAvailable]
+    [cdpId, vault, vaultType, vaultExternalAccountOwner, showSidebar, account, network]
   );
 }
 

@@ -87,7 +87,7 @@ export default function({
     liquidationPrice = lang.cdp_page.not_applicable;
   if (collateralizationRatio === Infinity)
     collateralizationRatio = lang.cdp_page.not_applicable;
-  const isOwner = account && account.address === cdpOwner;
+  const isOwner = account && account.address.toLowerCase() === cdpOwner.toLowerCase();
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
