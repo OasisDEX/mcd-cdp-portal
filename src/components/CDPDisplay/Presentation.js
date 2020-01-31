@@ -34,20 +34,10 @@ export const formatValue = (val, precision) => {
   return round(val, precision).toFixed(precision);
 };
 
-export default function({
-  vault,
-  cdpId,
-  showSidebar,
-  account,
-  network,
-  cdpOwner
-}) {
+export default function({ vault, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const { trackBtnClick } = useAnalytics('CollateralView');
-
-  log(`Rendering vault #${cdpId}`);
-
   let {
     debtValue,
     collateralAmount,
@@ -64,6 +54,9 @@ export default function({
     liquidationPenalty,
     annualStabilityFee
   } = vault;
+
+  log(`Rendering vault #${vault.id}`);
+
   const gem = collateralAmount?.symbol;
 
   //TODO find better ways to transform the return values into desired display values
@@ -83,7 +76,7 @@ export default function({
   annualStabilityFee = (formatValue(annualStabilityFee, 4) * 100).toFixed(2); //note special attn: mul & toFixed
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
+  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(vault.id) : null;
 
   if (['Infinity', Infinity, 'NaN'].includes(liquidationPrice))
     liquidationPrice = lang.cdp_page.not_applicable;
@@ -99,7 +92,7 @@ export default function({
     const reclaimCollateral = async () => {
       const txObject = maker
         .service('mcd:cdpManager')
-        .reclaimCollateral(cdpId, unlockedCollateral.toFixed());
+        .reclaimCollateral(vault.id, unlockedCollateral.toFixed());
       newTxListener(txObject, lang.transactions.claiming_collateral);
       await txObject;
       deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
@@ -140,7 +133,7 @@ export default function({
         NotificationList.NON_VAULT_OWNER
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, account, cdpId, unlockedCollateral]);
+  }, [isOwner, account, vault, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -157,7 +150,7 @@ export default function({
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {vaultType} {lang.cdp} #{cdpId}
+          {vaultType} {lang.cdp} #{vault.id}
         </Text.h2>
       </Box>
       <Grid
@@ -213,7 +206,10 @@ export default function({
                 disabled={!account}
                 onClick={() => {
                   trackBtnClick('Deposit');
-                  showAction({ type: 'deposit', props: { cdpId, vault } });
+                  showAction({
+                    type: 'deposit',
+                    props: { cdpId: vault.id, vault }
+                  });
                 }}
               >
                 {lang.actions.deposit}
@@ -229,7 +225,10 @@ export default function({
                 disabled={!account || !isOwner}
                 onClick={() => {
                   trackBtnClick('Withdraw');
-                  showAction({ type: 'withdraw', props: { cdpId, vault } });
+                  showAction({
+                    type: 'withdraw',
+                    props: { cdpId: vault.id, vault }
+                  });
                 }}
               >
                 {lang.actions.withdraw}
@@ -247,7 +246,10 @@ export default function({
                 disabled={!account}
                 onClick={() => {
                   trackBtnClick('Payback');
-                  showAction({ type: 'payback', props: { cdpId, vault } });
+                  showAction({
+                    type: 'payback',
+                    props: { cdpId: vault.id, vault }
+                  });
                 }}
               >
                 {lang.actions.pay_back}
@@ -262,7 +264,10 @@ export default function({
                 disabled={!account || !isOwner}
                 onClick={() => {
                   trackBtnClick('Generate');
-                  showAction({ type: 'generate', props: { cdpId, vault } });
+                  showAction({
+                    type: 'generate',
+                    props: { cdpId: vault.id, vault }
+                  });
                 }}
               >
                 {lang.actions.generate}

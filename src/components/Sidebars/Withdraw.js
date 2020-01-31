@@ -72,7 +72,7 @@ const Withdraw = ({ cdpId, vault, reset }) => {
       .times(100)
       .toNumber();
     setCollateralizationRatio(newCollateralizationRatio);
-  }, [amount, vault]);
+  }, [amount, vault]); // eslint-disable-line
 
   const withdraw = () => {
     const currency = getCurrency({ ilk: vaultType });
