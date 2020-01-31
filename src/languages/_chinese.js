@@ -129,7 +129,8 @@ export default {
     "save_details": {
       "title": "存款详情",
       "total_savings_dai": "全部存 Dai 数量",
-      "total_dai_supply": "全部 Dai 供给量"
+      "total_dai_supply": "全部 Dai 供给量",
+      "dai_savings_rate": "Dai 存款利率"
     }
   },
   "cdp_create": {

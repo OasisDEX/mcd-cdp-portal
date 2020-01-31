@@ -142,7 +142,8 @@ export default {
     save_details: {
       title: 'Save Details',
       total_savings_dai: 'Total Dai in DSR',
-      total_dai_supply: 'Total Dai Supply'
+      total_dai_supply: 'Total Dai Supply',
+      dai_savings_rate: 'Dai Savings Rate'
     }
   },
   cdp_create: {
