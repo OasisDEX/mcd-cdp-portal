@@ -2,6 +2,7 @@ import React from 'react';
 import round from 'lodash/round';
 import BigNumber from 'bignumber.js';
 import lang from 'languages';
+import { Currency } from '@makerdao/currency';
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) return lang.cdp_page.not_applicable;
@@ -173,13 +174,15 @@ export const formatCurrencyValue = ({
   value,
   precision = 2,
   percentage = false
-} = {}) => {
-  if (percentage) value = value.times(100);
-  value = value.toNumber();
-  if (value < 1) precision = 4; //add to theme?
-  let res = round(value, precision);
+}) => {
+  if (value instanceof Currency) value = value.toBigNumber();
+  else if (!(value instanceof BigNumber))
+    new Error('Value must be a Currency or BigNumber object');
 
-  return res.toFixed(precision);
+  if (percentage) value = value.times(100);
+  if (value.lt(1)) precision = 4; //add to theme?
+
+  return value.toFixed(precision);
 };
 
 export function formatter(target, options = {}) {
