@@ -23,7 +23,7 @@ import SetMax from 'components/SetMax';
 
 const log = debug('maker:Sidebars/Payback');
 
-const Payback = ({ cdpId, vault, reset }) => {
+const Payback = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Payback', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
@@ -76,9 +76,9 @@ const Payback = ({ cdpId, vault, reset }) => {
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
-    const owner = await cdpManager.getOwner(cdpId);
+    const owner = await cdpManager.getOwner(vault.id);
     if (!owner) {
-      log(`Unable to find owner of CDP #${cdpId}`);
+      log(`Unable to find owner of CDP #${vault.id}`);
       return;
     }
     const wipeAll = debtValue.toString() === amount;
@@ -86,8 +86,8 @@ const Payback = ({ cdpId, vault, reset }) => {
     else log('Calling wipe()');
     newTxListener(
       wipeAll
-        ? cdpManager.wipeAll(cdpId, owner)
-        : cdpManager.wipe(cdpId, MDAI(amount), owner),
+        ? cdpManager.wipeAll(vault.id, owner)
+        : cdpManager.wipe(vault.id, MDAI(amount), owner),
       lang.transactions.pay_back_dai
     );
     reset();

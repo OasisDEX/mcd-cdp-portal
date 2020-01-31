@@ -194,7 +194,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
                   trackBtnClick('Deposit');
                   showAction({
                     type: 'deposit',
-                    props: { cdpId: vault.id, vault }
+                    props: { vault }
                   });
                 }}
               >
@@ -213,7 +213,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
                   trackBtnClick('Withdraw');
                   showAction({
                     type: 'withdraw',
-                    props: { cdpId: vault.id, vault }
+                    props: { vault }
                   });
                 }}
               >
@@ -234,7 +234,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
                   trackBtnClick('Payback');
                   showAction({
                     type: 'payback',
-                    props: { cdpId: vault.id, vault }
+                    props: { vault }
                   });
                 }}
               >
@@ -252,7 +252,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
                   trackBtnClick('Generate');
                   showAction({
                     type: 'generate',
-                    props: { cdpId: vault.id, vault }
+                    props: { vault }
                   });
                 }}
               >

@@ -19,7 +19,7 @@ export const recalculateLiquidationPrice = ({ vault, dart = 0 } = {}) => {
   return val;
 };
 
-const Generate = ({ cdpId, vault, reset }) => {
+const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
@@ -39,7 +39,7 @@ const Generate = ({ cdpId, vault, reset }) => {
 
   const generate = () => {
     newTxListener(
-      maker.service('mcd:cdpManager').draw(cdpId, vaultType, MDAI(amount)),
+      maker.service('mcd:cdpManager').draw(vault.id, vaultType, MDAI(amount)),
       lang.transactions.generate_dai
     );
     reset();

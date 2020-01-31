@@ -108,6 +108,7 @@ const collateralValue = USD(74.852);
 const debtValue = MDAI(26);
 
 const mockVault = {
+  id: 1,
   debtValue,
   vaultType: ILK,
   collateralAmount: BAT(INITIAL_BAT),
@@ -126,7 +127,7 @@ const mockVault = {
 
 test('basic rendering', async () => {
   const { findByText, findAllByText } = renderWithMockedStore(
-    <Deposit cdpId={1} vault={mockVault} />
+    <Deposit vault={mockVault} />
   );
 
   await findByText(
@@ -150,7 +151,7 @@ test('input validation', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} vault={mockVault} />;
+      return <Deposit vault={mockVault} />;
     })
   );
 
@@ -183,7 +184,7 @@ test('verify info container values', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} vault={mockVault} />;
+      return <Deposit vault={mockVault} />;
     })
   );
 
@@ -228,7 +229,7 @@ test('calls the lock function as expected', async () => {
           '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E';
       }, []);
 
-      return <Deposit cdpId={1} vault={mockVault} reset={() => {}} />;
+      return <Deposit vault={mockVault} reset={() => {}} />;
     })
   );
 

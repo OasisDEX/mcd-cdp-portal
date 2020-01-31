@@ -15,7 +15,7 @@ import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import BigNumber from 'bignumber.js';
 
-const Deposit = ({ cdpId, vault, reset }) => {
+const Deposit = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
@@ -58,7 +58,7 @@ const Deposit = ({ cdpId, vault, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, vaultType, currency(amountToDeposit)),
+        .lock(vault.id, vaultType, currency(amountToDeposit)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();

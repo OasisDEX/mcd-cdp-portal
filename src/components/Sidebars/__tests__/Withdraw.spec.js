@@ -80,6 +80,7 @@ const renderWithMockedStore = component =>
 BigNumber.set({ DECIMAL_PLACES: 50 });
 
 const mockVault = {
+  id: 1,
   collateralType: ILK,
   debtValue: MDAI(0),
   encumberedDebt: fromWei(0),
@@ -94,10 +95,7 @@ const mockVault = {
 };
 
 test('basic rendering', async () => {
-  const { getByText } = render(
-    <Withdraw cdpId="1" vault={mockVault} />,
-    setupMockState
-  );
+  const { getByText } = render(<Withdraw vault={mockVault} />, setupMockState);
 
   await waitForElement(() => getByText(/40.00 USD\/BAT/));
 
@@ -106,7 +104,7 @@ test('basic rendering', async () => {
 
 test('clicking SetMax adds max collateral available to input', async () => {
   const { getByText, getByRole } = render(
-    <Withdraw cdpId="1" vault={mockVault} />,
+    <Withdraw vault={mockVault} />,
     setupMockState
   );
 
@@ -127,7 +125,7 @@ test('clicking SetMax adds max collateral available to input', async () => {
 
 test('input validation', async () => {
   const { getByText, getByRole } = render(
-    <Withdraw cdpId="1" vault={mockVault} />,
+    <Withdraw vault={mockVault} />,
     setupMockState
   );
   await waitForElement(() => getByText(/300.123456 BAT/));
@@ -152,7 +150,7 @@ test('calls the wipeAndFree function as expected', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
     React.createElement(() => {
       maker = useMaker().maker;
-      return <Withdraw cdpId={1} vault={mockVault} reset={() => {}} />;
+      return <Withdraw vault={mockVault} reset={() => {}} />;
     })
   );
 

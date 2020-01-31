@@ -101,6 +101,7 @@ const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
 const collateralValue = USD(72.03);
 
 const mockVault = {
+  id: 1,
   debtValue: MDAI(0),
   daiAvailable: MDAI(36.014814),
   vaultType: ILK,
@@ -118,9 +119,7 @@ const mockVault = {
 };
 
 test('basic rendering', async () => {
-  const { findByText } = renderWithMockedStore(
-    <Generate vault={mockVault} cdpId={1} />
-  );
+  const { findByText } = renderWithMockedStore(<Generate vault={mockVault} />);
 
   await findByText(lang.action_sidebar.generate_title);
   await findByText(/USD\/BAT/);
@@ -128,7 +127,7 @@ test('basic rendering', async () => {
 
 test('input validation', async () => {
   const { getByText, getByRole, findByText } = renderWithMockedStore(
-    <Generate vault={mockVault} cdpId={1} />
+    <Generate vault={mockVault} />
   );
 
   await findByText(/USD\/BAT/);
@@ -159,7 +158,7 @@ test('input validation', async () => {
 
 test('verify info container values', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
-    <Generate vault={mockVault} cdpId={1} />
+    <Generate vault={mockVault} />
   );
 
   // initial liquidation price
@@ -184,7 +183,7 @@ test('calls the draw function as expected', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
     React.createElement(() => {
       maker = useMaker().maker;
-      return <Generate vault={mockVault} cdpId={1} reset={() => {}} />;
+      return <Generate vault={mockVault} reset={() => {}} />;
     })
   );
 

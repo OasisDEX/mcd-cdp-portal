@@ -15,7 +15,7 @@ import BigNumber from 'bignumber.js';
 import useAnalytics from 'hooks/useAnalytics';
 import { getCurrency } from 'utils/cdp';
 
-const Withdraw = ({ cdpId, vault, reset }) => {
+const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
@@ -79,7 +79,7 @@ const Withdraw = ({ cdpId, vault, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(cdpId, vaultType, MDAI(0), currency(amount)),
+        .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amount)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();

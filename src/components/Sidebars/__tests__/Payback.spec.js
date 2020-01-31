@@ -51,6 +51,7 @@ const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
 const collateralValue = USD(12004.938271560493);
 
 const mockVault = {
+  id: 1,
   collateralType: ILK,
   debtValue: MDAI(0),
   daiAvailable: MDAI(36.014814),
@@ -70,10 +71,7 @@ const mockVault = {
 };
 
 test('basic rendering', async () => {
-  const { getByText } = render(
-    <Payback cdpId="1" vault={mockVault} />,
-    setupMockState
-  );
+  const { getByText } = render(<Payback vault={mockVault} />, setupMockState);
 
   // this waits for the initial proxy & allowance check to finish
   await waitForElement(() => getByText(/Unlock DAI/));
@@ -103,7 +101,7 @@ const SetupProxyAndAllowance = () => {
     changeAccount();
   }, []);
 
-  return changedAccount ? <Payback cdpId="1" vault={mockVault} /> : <div />;
+  return changedAccount ? <Payback vault={mockVault} /> : <div />;
 };
 
 test('proxy toggle', async () => {
