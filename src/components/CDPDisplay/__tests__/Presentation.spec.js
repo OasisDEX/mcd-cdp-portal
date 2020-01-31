@@ -66,7 +66,6 @@ test('basic rendering', () => {
     <Presentation
       account={account}
       showSidebar={showSidebar}
-      cdpId={1}
       vault={mockVault}
       cdpOwner={mockOwnerAddress}
     />
@@ -79,7 +78,7 @@ test('basic rendering', () => {
   fireEvent.click(getByText('Deposit'));
   expect(showSidebar).toBeCalledWith({
     type: 'deposit',
-    props: { cdpId: 1, vault: mockVault }
+    props: { vault: mockVault }
   });
 });
 
@@ -87,19 +86,18 @@ test('render liquidation price correctly when no debt', () => {
   const showSidebar = jest.fn(() => {});
   const newMockVault = {
     ...mockVault,
-    liquidationPrice: { toNumber: () => 'NaN' },
+    liquidationPrice: createCurrencyRatio(USD, LOL)(Infinity),
     collateralTypePrice: createCurrencyRatio(USD, LOL)('0')
   };
   const { getByText } = renderWithStore(
     <Presentation
       account={account}
       showSidebar={showSidebar}
-      cdpId={1}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
     />
   );
-  getByText('N/A');
+  getByText('N/A'); //liquidation price
   getByText('0.0000 USD');
 });
 
@@ -113,7 +111,6 @@ test('reclaim banner rounds correctly when value is > 1', async () => {
     <Presentation
       account={account}
       showSidebar={showSidebar}
-      cdpId={1}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
     />
@@ -132,7 +129,6 @@ test('reclaim banner rounds correctly when number is < 1', async () => {
     <Presentation
       account={account}
       showSidebar={showSidebar}
-      cdpId={1}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
     />
@@ -198,7 +194,6 @@ describe('on mobile', () => {
         <Presentation
           account={account}
           showSidebar={showSidebar}
-          cdpId={1}
           vault={mockVault2}
           cdpOwner={mockOwnerAddress}
         />

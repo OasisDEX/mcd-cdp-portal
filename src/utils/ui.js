@@ -168,3 +168,20 @@ export function safeToFixed(amount, digits) {
 export function formatPrecision(amount, precision = 4) {
   return amount < 1 ? 4 : precision;
 }
+
+export const formatCurrencyValue = ({
+  value,
+  precision = 2,
+  percentage = false
+} = {}) => {
+  if (percentage) value = value.times(100);
+  value = value.toNumber();
+  if (value < 1) precision = 4; //add to theme?
+  let res = round(value, precision);
+
+  return res.toFixed(precision);
+};
+
+export function formatter(target, options = {}) {
+  return formatCurrencyValue({ value: target, ...options });
+}
