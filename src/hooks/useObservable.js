@@ -15,9 +15,15 @@ function useObservable(key, ...args) {
     if (findIndex(args, arg => typeof arg === 'undefined') !== -1) return;
 
     log(`Subscribed to observable ${key}(${args && args.join(',')})`);
-    const sub = multicall.watchObservable(key, ...args).subscribe(val => {
-      log(`Got value for observable ${key}: ${val}`);
-      setValue(val);
+    const sub = multicall.watchObservable(key, ...args).subscribe({
+      next: val => {
+        log('Got value from observable ' + key + ':', val);
+        setValue(val);
+      },
+      error: val => {
+        log('Got error from observable ' + key + ':', val);
+        setValue(null);
+      }
     });
 
     return () => {

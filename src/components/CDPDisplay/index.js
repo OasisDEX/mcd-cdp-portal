@@ -1,26 +1,22 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { hot } from 'react-hot-loader/root';
 import LoadingLayout from 'layouts/LoadingLayout';
 import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
-import useStore from 'hooks/useStore';
-import { getCdp } from 'reducers/cdps';
-import { trackCdpById } from 'reducers/multicall/cdps';
 import CDPViewPresentation from './Presentation';
 import Unavailable from '../Unavailable';
-import { Routes, ZERO_ADDRESS } from '../../utils/constants';
+import { Routes } from '../../utils/constants';
 import { useNavigation } from 'react-navi';
 import { watch } from 'hooks/useObservable';
 
 function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
-  const { maker, account, network } = useMaker();
+  const { account, network } = useMaker();
   const { show: showSidebar } = useSidebar();
-  const [{ cdps, feeds }, dispatch] = useStore();
-  // const [cdpAvailable, setCdpAvailable] = useState(true);
   const navigation = useNavigation();
 
+  // eslint-disable-next-line
   const redirect = useCallback(
     account => {
       (async function redirect() {
@@ -60,17 +56,13 @@ function CDPView({ cdpId }) {
   // TODO: there's definitely a more general solution to this issue, but i'm not
   // going to try to figure it out right now. let's collect more data first
   // about how it shows up in different situations.
-  const ilk = cdps[cdpId] ? cdps[cdpId].ilk : null;
-  const feed = ilk ? feeds.find(f => f.key === ilk) : null;
-  const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds: [feed] }), [
-    cdpId,
-    cdps,
-    feed
-  ]);
-
-  const vaultType = watch.vaultType(cdpId);
-  const vault = watch.vault(cdpId);
-  const vaultExternalAccountOwner = watch.proxyOwner(vault?.ownerAddress);
+  // const ilk = cdps[cdpId] ? cdps[cdpId].ilk : null;
+  // const feed = ilk ? feeds.find(f => f.key === ilk) : null;
+  // const cdp = useMemo(() => getCdp(cdpId, { cdps, feeds: [feed] }), [
+  //   cdpId,
+  //   cdps,
+  //   feed
+  // ]);
 
   // useEffect(() => {
   //   trackCdpById(maker, cdpId, dispatch).then(() => {
@@ -78,31 +70,24 @@ function CDPView({ cdpId }) {
   //   });
   // }, [cdpId, dispatch, maker, account, cdp, redirect]);
 
+  const vault = watch.vault(cdpId);
+
   return useMemo(
     () =>
-      vault && vaultExternalAccountOwner ? (
+      vault && vault.externalOwnerAddress ? (
         <CDPViewPresentation
           vault={vault}
-          cdpId={parseInt(cdpId)}
           showSidebar={showSidebar}
           account={account}
           network={network}
-          cdpOwner={vaultExternalAccountOwner}
+          cdpOwner={vault.externalOwnerAddress}
         />
-      ) : vaultType === null ? (
+      ) : vault === null ? (
         <Unavailable />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [
-      cdpId,
-      vault,
-      vaultType,
-      vaultExternalAccountOwner,
-      showSidebar,
-      account,
-      network
-    ]
+    [vault, showSidebar, account, network]
   );
 }
 
