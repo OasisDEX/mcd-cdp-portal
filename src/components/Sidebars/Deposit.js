@@ -117,7 +117,7 @@ const Deposit = ({ cdpId, vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralTypePrice} ${symbol}/USD`}
+          body={`${collateralTypePrice}`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}

@@ -14,6 +14,13 @@ import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
 import useAnalytics from 'hooks/useAnalytics';
 import { getCurrency } from 'utils/cdp';
+import { collateralTypePrice } from '../../../.yalc/@makerdao/dai-plugin-mcd/src/schemas/computed';
+
+// const sidebar = fmt => {
+//   if (instanceof )
+
+// // }
+// const fmt = formatter('sidebar');
 
 const Withdraw = ({ cdpId, vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
@@ -159,6 +166,7 @@ const Withdraw = ({ cdpId, vault, reset }) => {
         <Info
           title={lang.action_sidebar.new_liquidation_price}
           body={liquidationPrice.toString()}
+          // body={fmt(collateralTypePrice, preset)}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

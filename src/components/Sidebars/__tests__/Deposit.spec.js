@@ -190,7 +190,9 @@ test('verify info container values', async () => {
   // BAT account balance
   await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
   // BAT/USD price
-  await findByText(PRICE.toNumber().toString(), { exact: false });
+  await findByText(`${PRICE.toNumber().toString()} USD/BAT`, {
+    exact: true
+  });
   // initial liquidation price
   await findByText(/0.17 USD\/BAT/);
   // initial collat ratio
