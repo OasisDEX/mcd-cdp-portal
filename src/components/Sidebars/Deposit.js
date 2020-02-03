@@ -9,7 +9,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { formatCollateralizationRatio } from 'utils/ui';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
 import { multiply } from 'utils/bignumber';
 import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
@@ -117,7 +117,7 @@ const Deposit = ({ vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralTypePrice}`}
+          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}

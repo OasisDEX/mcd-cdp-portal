@@ -14,6 +14,7 @@ import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
 import useAnalytics from 'hooks/useAnalytics';
 import { getCurrency } from 'utils/cdp';
+import { formatter } from 'utils/ui';
 
 const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
@@ -154,7 +155,7 @@ const Withdraw = ({ vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralTypePrice}`}
+          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
