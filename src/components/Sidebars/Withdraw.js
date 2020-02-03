@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
@@ -15,13 +14,12 @@ import BigNumber from 'bignumber.js';
 import useAnalytics from 'hooks/useAnalytics';
 import { getCurrency } from 'utils/cdp';
 import { formatter } from 'utils/ui';
+import { multiply } from 'utils/bignumber';
 
 const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
   let {
     vaultType,
@@ -31,8 +29,7 @@ const Withdraw = ({ vault, reset }) => {
     collateralAmount: cdpManagerCollateralAmount,
     collateralValue,
     encumberedCollateral,
-    encumberedDebt: debtAmount,
-    debtValue
+    encumberedDebt: debtAmount
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   collateralAvailableAmount = collateralAvailableAmount.toBigNumber();
@@ -55,26 +52,6 @@ const Withdraw = ({ vault, reset }) => {
   const undercollateralized =
     amount && greaterThan(amount, collateralAvailableAmount);
 
-  useEffect(() => {
-    let val = parseFloat(amount);
-    val = isNaN(val) ? BigNumber(0) : BigNumber(val);
-
-    const newColAmount = encumberedCollateral.minus(val);
-    const newLiquidationPrice = math.liquidationPrice(
-      newColAmount,
-      debtValue,
-      liquidationRatio
-    );
-    setLiquidationPrice(newLiquidationPrice);
-
-    const valueDiff = val.times(collateralTypePrice.toNumber());
-    const newCollateralizationRatio = math
-      .collateralizationRatio(collateralValue.minus(valueDiff), debtValue)
-      .times(100)
-      .toNumber();
-    setCollateralizationRatio(newCollateralizationRatio);
-  }, [amount, vault]); // eslint-disable-line
-
   const withdraw = () => {
     const currency = getCurrency({ ilk: vaultType });
     newTxListener(
@@ -85,6 +62,19 @@ const Withdraw = ({ vault, reset }) => {
     );
     reset();
   };
+
+  const valueDiff = amount
+    ? multiply(amount, collateralTypePrice.toNumber())
+    : 0;
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.minus(valueDiff)
+  });
+
+  const liquidationPrice = vault.calculateLiquidationPrice({
+    collateralAmount: encumberedCollateral.minus(amount || 0)
+  });
+
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -148,7 +138,9 @@ const Withdraw = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_withdraw}
-          body={`${collateralAvailableAmount.decimalPlaces(6)} ${symbol}`}
+          body={`${formatter(collateralAvailableAmount, {
+            precision: 6
+          })} ${symbol}`}
         />
         <Info
           title={lang.formatString(
@@ -159,7 +151,7 @@ const Withdraw = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={liquidationPrice.toString()}
+          body={`${formatter(liquidationPrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

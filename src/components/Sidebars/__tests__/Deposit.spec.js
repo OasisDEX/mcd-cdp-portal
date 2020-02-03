@@ -16,6 +16,7 @@ import Deposit from '../Deposit';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
+import { formatter } from 'utils/ui';
 
 let snapshotData;
 let account;
@@ -29,7 +30,7 @@ const PAR = new BigNumber('1000000000000000000000000000');
 const DEBT_CEILING = '1000';
 const RATE = '1.000967514019988230';
 const DUST = '20';
-const PRICE = createCurrencyRatio(USD, BAT)('0.24');
+const PRICE = createCurrencyRatio(USD, BAT)('0.2424');
 const LIQUIDATION_RATIO = '2';
 
 const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
@@ -191,7 +192,7 @@ test('verify info container values', async () => {
   // BAT account balance
   await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
   // BAT/USD price
-  await findByText(`${PRICE.toNumber().toString()} USD/BAT`, {
+  await findByText(`${formatter(PRICE)} USD/BAT`, {
     exact: true
   });
   // initial liquidation price
@@ -205,11 +206,11 @@ test('verify info container values', async () => {
   // new liquidation price
   getByText(/0.10 USD\/BAT/);
   // new simulated collat ratio
-  getByText(/472.62%/);
+  getByText(/474.47%/);
   // BAT available remains the same
   getByText(`${BAT_ACCOUNT_BALANCE} BAT`);
   // BAT/USD price remains the same
-  await findByText(PRICE.toNumber().toString(), { exact: false });
+  await findByText(`${formatter(PRICE)} USD/BAT`, { exact: true });
 });
 
 test('calls the lock function as expected', async () => {

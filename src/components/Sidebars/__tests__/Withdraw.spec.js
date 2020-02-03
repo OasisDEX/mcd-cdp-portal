@@ -9,12 +9,12 @@ import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
 import { createCurrencyRatio } from '@makerdao/currency';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 
 import Withdraw from '../Withdraw';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
-import BigNumber from 'bignumber.js';
 
 const ILK = 'BAT-A';
 const COL_AMT = 300.123456789012345678;
@@ -77,21 +77,32 @@ const identityReducer = x => x;
 const renderWithMockedStore = component =>
   render(component, setupMockState, identityReducer);
 
-BigNumber.set({ DECIMAL_PLACES: 50 });
+const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
+  LIQUIDATION_RATIO
+);
+const collateralValue = USD(12004.938271560493);
+const debtValue = MDAI(0);
 
 const mockVault = {
   id: 1,
   collateralType: ILK,
-  debtValue: MDAI(0),
+  debtValue,
   encumberedDebt: fromWei(0),
   daiAvailable: MDAI(36.014814),
   vaultType: ILK,
-  collateralAmount: BAT(0), //only used to retrieve gem symbol
+  collateralAmount: BAT(0), // used to retrieve gem symbol
   encumberedCollateral: fromWei(1000000000000000000),
-  liquidationRatioSimple: createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO),
-  collateralValue: USD(12004.938271560493),
+  liquidationRatioSimple,
+  collateralValue,
   collateralAvailableAmount: BAT(COL_AMT),
-  collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0)
+  collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
+  calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatioSimple),
+  calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
+    math
+      .collateralizationRatio(_collateralValue, debtValue)
+      .times(100)
+      .toNumber()
 };
 
 test('basic rendering', async () => {
