@@ -13,7 +13,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { safeToFixed } from '../../utils/ui';
+import { formatter } from '../../utils/ui';
 import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
 
 import Info from './shared/Info';
@@ -143,11 +143,11 @@ const Payback = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && safeToFixed(daiBalance, 7)} DAI`}
+          body={`${daiBalance && formatter(debtValue, { precision: 6 })} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}
-          body={`${debtValue.decimalPlaces(6)} DAI`}
+          body={`${formatter(debtValue, { precision: 6 })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}

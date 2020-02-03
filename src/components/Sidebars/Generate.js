@@ -1,23 +1,12 @@
 import React, { useState } from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useLanguage from 'hooks/useLanguage';
-import { formatCollateralizationRatio, safeToFixed } from '../../utils/ui';
+import { formatCollateralizationRatio, formatter } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
 import useAnalytics from 'hooks/useAnalytics';
-
-//TODO move these into utility fn?
-export const recalculateLiquidationPrice = ({ vault, dart = 0 } = {}) => {
-  const val = math.liquidationPrice(
-    vault.collateralAmount,
-    vault.debtValue.plus(dart),
-    vault.liquidationRatioSimple
-  );
-  return val;
-};
 
 const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
@@ -84,7 +73,7 @@ const Generate = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${safeToFixed(daiAvailable.toNumber(), 7)} DAI`}
+          body={`${formatter(daiAvailable, { precision: 6 })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
