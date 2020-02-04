@@ -171,7 +171,7 @@ test('verify info container values', async () => {
   fireEvent.change(input, { target: { value: '21' } });
 
   // new liquidation price
-  getByText(/0.14 USD\/BAT/);
+  getByText(/0.1399 USD\/BAT/);
   // new simulated collat ratio
   getByText(/343.00%/);
   // dai available remains the same

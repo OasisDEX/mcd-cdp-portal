@@ -196,7 +196,7 @@ test('verify info container values', async () => {
     exact: true
   });
   // initial liquidation price
-  await findByText(/0.17 USD\/BAT/);
+  await findByText(/0.1733 USD\/BAT/);
   // initial collat ratio
   await findByText(/287.89%/);
 
@@ -204,7 +204,7 @@ test('verify info container values', async () => {
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   // new liquidation price
-  getByText(/0.10 USD\/BAT/);
+  getByText(/0.1039 USD\/BAT/);
   // new simulated collat ratio
   getByText(/474.47%/);
   // BAT available remains the same

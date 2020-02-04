@@ -65,6 +65,15 @@ const Deposit = ({ vault, reset }) => {
   };
 
   const valueDiff = multiply(amountToDeposit, collateralTypePrice.toNumber());
+
+  const liquidationPrice = vault.calculateLiquidationPrice({
+    collateralAmount: collateralAmount.plus(amountToDeposit)
+  });
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.plus(valueDiff)
+  });
+
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -121,19 +130,11 @@ const Deposit = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={vault
-            .calculateLiquidationPrice({
-              collateralAmount: collateralAmount.plus(amountToDeposit)
-            })
-            ?.toString()}
+          body={`${formatter(liquidationPrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(
-            vault.calculateCollateralizationRatio({
-              collateralValue: collateralValue.plus(valueDiff)
-            })
-          )}
+          body={formatCollateralizationRatio(collateralizationRatio)}
         />
       </InfoContainer>
     </Grid>

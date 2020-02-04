@@ -67,12 +67,12 @@ const Withdraw = ({ vault, reset }) => {
     ? multiply(amount, collateralTypePrice.toNumber())
     : 0;
 
-  const collateralizationRatio = vault.calculateCollateralizationRatio({
-    collateralValue: collateralValue.minus(valueDiff)
-  });
-
   const liquidationPrice = vault.calculateLiquidationPrice({
     collateralAmount: encumberedCollateral.minus(amount || 0)
+  });
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.minus(valueDiff)
   });
 
   return (
