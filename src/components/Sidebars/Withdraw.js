@@ -108,7 +108,7 @@ const Withdraw = ({ vault, reset }) => {
         <RatioDisplay
           type={RatioDisplayTypes.CARD}
           ratio={collateralizationRatio}
-          ilkLiqRatio={liquidationRatio}
+          ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
           text={lang.action_sidebar.withdraw_warning}
           onlyWarnings={true}
           show={amount !== '' && amount > 0 && !undercollateralized}
@@ -159,7 +159,7 @@ const Withdraw = ({ vault, reset }) => {
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
               ratio={collateralizationRatio}
-              ilkLiqRatio={liquidationRatio}
+              ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
               show={amount !== '' && amount > 0 && !undercollateralized}
             />
