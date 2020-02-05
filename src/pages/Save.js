@@ -4,24 +4,20 @@ import {
   Box,
   Flex,
   Grid,
-  Card,
-  CardBody,
   Text,
-  Table,
   Input,
   Button
 } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
-import TextMono from 'components/TextMono';
 
 import CardTabs from 'components/CardTabs';
 import SetMax from 'components/SetMax';
 import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
-
+import DSRInfo from 'components/DSRInfo';
 import useMaker from 'hooks/useMaker';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
@@ -32,7 +28,6 @@ import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
-import useSavingsDai from 'hooks/useSavingsDai';
 import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 
@@ -41,11 +36,6 @@ function Save() {
   const balances = useWalletBalances();
   const { maker, account, newTxListener, network } = useMaker();
   const [{ savings }] = useStore();
-  const {
-    estimatedSavingsDaiBalance,
-    estimatedSavingsDaiEarned,
-    decimalsToShow
-  } = useSavingsDai();
 
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
 
@@ -226,53 +216,7 @@ function Save() {
               gridColumnGap="m"
               gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
             >
-              <Flex py="s" height="100%" flexDirection="column">
-                <Card>
-                  <CardBody px="l" py="m">
-                    <TextMono t="h2">
-                      {estimatedSavingsDaiBalance.toFixed(decimalsToShow)}
-                    </TextMono>
-                    <Text t="h5"> DAI</Text>
-                    <Text.p t="h5" mt="s" color="steel">
-                      {balance.toFixed(4)} USD
-                    </Text.p>
-                  </CardBody>
-                  <CardBody px="l">
-                    <Table width="100%">
-                      <Table.tbody>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">
-                              {lang.save.savings_earned_to_date}
-                            </Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <TextMono t="body">
-                              {estimatedSavingsDaiEarned.toFixed(
-                                decimalsToShow
-                              )}
-                            </TextMono>
-                            <Text t="body"> DAI</Text>
-                          </Table.td>
-                        </Table.tr>
-                        <Table.tr>
-                          <Table.td>
-                            <Text t="body">{lang.save.dai_savings_rate}</Text>
-                          </Table.td>
-                          <Table.td textAlign="right">
-                            <Text t="body">
-                              {savings && savings.yearlyRate
-                                ? `${savings.yearlyRate.toFixed(2)}%`
-                                : '--'}
-                            </Text>
-                          </Table.td>
-                        </Table.tr>
-                      </Table.tbody>
-                    </Table>
-                  </CardBody>
-                </Card>
-              </Flex>
-
+              <DSRInfo />
               <Grid py="s" height="100%" flexDirection="column">
                 <CardTabs
                   trackTab={trackTab}
