@@ -15,7 +15,7 @@ function useObservable(key, ...args) {
     if (findIndex(args, arg => typeof arg === 'undefined') !== -1) return;
 
     log(`Subscribed to observable ${key}(${args && args.join(',')})`);
-    const sub = multicall.watchObservable(key, ...args).subscribe({
+    const sub = multicall.watch(key, ...args).subscribe({
       next: val => {
         log('Got value from observable ' + key + ':', val);
         setValue(val);
@@ -30,7 +30,12 @@ function useObservable(key, ...args) {
       log(`Unsubscribed from observable ${key}(${args && args.join(',')})`);
       sub.unsubscribe();
     };
-  }, [maker, multicall.watcher, key, ...args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg)]); // eslint-disable-line
+  }, [
+    maker,
+    multicall.watcher,
+    key,
+    ...args.map(arg => (typeof arg === 'object' ? JSON.stringify(arg) : arg))
+  ]); // eslint-disable-line
 
   return value;
 }
