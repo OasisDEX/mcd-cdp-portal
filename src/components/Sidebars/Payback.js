@@ -20,6 +20,7 @@ import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
+import { BigNumber } from 'bignumber.js';
 
 const log = debug('maker:Sidebars/Payback');
 
@@ -33,8 +34,9 @@ const Payback = ({ vault, reset }) => {
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
-  let { debtValue, debtFloor } = vault;
+  let { debtValue, debtFloor, collateralAmount } = vault;
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
+  const symbol = collateralAmount?.symbol;
 
   const maxAmount = debtValue && daiBalance && minimum(debtValue, daiBalance);
 
@@ -94,6 +96,18 @@ const Payback = ({ vault, reset }) => {
   };
 
   const valid = amount && !amountErrors && hasProxy && hasAllowance;
+  const undercollateralized = debtValue.minus(amountToPayback).lt(0);
+
+  const liquidationPrice = undercollateralized
+    ? BigNumber(0)
+    : vault.calculateLiquidationPrice({
+        debtValue: MDAI(debtValue.minus(amountToPayback))
+      });
+  const collateralizationRatio = undercollateralized
+    ? Infinity
+    : vault.calculateCollateralizationRatio({
+        debtValue: MDAI(debtValue.minus(amountToPayback))
+      });
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -151,19 +165,11 @@ const Payback = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={vault
-            .calculateLiquidationPrice({
-              debtValue: vault?.debtValue.minus(amountToPayback)
-            })
-            ?.toString()}
+          body={`${formatter(liquidationPrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(
-            vault.calculateCollateralizationRatio({
-              debtValue: vault?.debtValue.minus(amountToPayback)
-            })
-          )}
+          body={formatCollateralizationRatio(collateralizationRatio)}
         />
       </InfoContainer>
     </Grid>

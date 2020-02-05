@@ -48,6 +48,8 @@ const Withdraw = ({ vault, reset }) => {
     }
   );
 
+  const amountToWithdraw = amount || BigNumber(0);
+
   const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
     amount && greaterThan(amount, collateralAvailableAmount);
@@ -57,23 +59,25 @@ const Withdraw = ({ vault, reset }) => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amount)),
+        .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amountToWithdraw)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();
   };
 
-  const valueDiff = amount
-    ? multiply(amount, collateralTypePrice.toNumber())
-    : 0;
+  const valueDiff = multiply(amountToWithdraw, collateralTypePrice.toNumber());
 
-  const liquidationPrice = vault.calculateLiquidationPrice({
-    collateralAmount: encumberedCollateral.minus(amount || 0)
-  });
+  const liquidationPrice = undercollateralized
+    ? BigNumber(0)
+    : vault.calculateLiquidationPrice({
+        collateralAmount: encumberedCollateral.minus(amountToWithdraw)
+      });
 
-  const collateralizationRatio = vault.calculateCollateralizationRatio({
-    collateralValue: collateralValue.minus(valueDiff)
-  });
+  const collateralizationRatio = undercollateralized
+    ? Infinity
+    : vault.calculateCollateralizationRatio({
+        collateralValue: collateralValue.minus(valueDiff)
+      });
 
   return (
     <Grid gridRowGap="m">
@@ -161,7 +165,6 @@ const Withdraw = ({ vault, reset }) => {
               ratio={collateralizationRatio}
               ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
-              show={amount !== '' && amount > 0 && !undercollateralized}
             />
           }
         />
