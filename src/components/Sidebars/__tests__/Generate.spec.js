@@ -15,7 +15,7 @@ const ILK = 'BAT-A';
 const PAR = new BigNumber('1000000000000000000000000000');
 
 const RATE = '1.000967514019988230';
-const DUST = '20';
+const DUST = '20.00';
 const LIQUIDATION_RATIO = '2';
 
 const INK_RAW = '0x10450cb5d3cf60f34e';

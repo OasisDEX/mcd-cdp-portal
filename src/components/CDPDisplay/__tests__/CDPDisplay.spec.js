@@ -164,7 +164,7 @@ test('Vault Display page and actions', async () => {
   // amount to withdraw before
   //TODO figure out why this changes with MC service but not MC in the UI (was: 4.99 ETH)
   expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
-    '5.23 ETH'
+    '5.22 ETH'
   );
 
   // submit withdraw

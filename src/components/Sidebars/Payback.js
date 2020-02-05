@@ -34,7 +34,7 @@ const Payback = ({ vault, reset }) => {
   const { hasProxy } = useProxy();
 
   let { debtValue, debtFloor } = vault;
-  debtValue = debtValue.toBigNumber();
+  debtValue = debtValue.toBigNumber().decimalPlaces(18);
 
   const maxAmount = debtValue && daiBalance && minimum(debtValue, daiBalance);
 
@@ -143,7 +143,7 @@ const Payback = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && formatter(debtValue, { precision: 6 })} DAI`}
+          body={`${daiBalance && formatter(daiBalance, { precision: 6 })} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}

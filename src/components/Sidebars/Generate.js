@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
@@ -9,12 +9,13 @@ import { formatCollateralizationRatio, formatter } from '../../utils/ui';
 import useMaker from '../../hooks/useMaker';
 import useAnalytics from 'hooks/useAnalytics';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import useValidatedInput from 'hooks/useValidatedInput';
+import { add, greaterThan } from '../../utils/bignumber';
 
 const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [amount, setAmount] = useState('');
 
   let {
     debtValue,
@@ -25,17 +26,34 @@ const Generate = ({ vault, reset }) => {
     liquidationRatioSimple: liquidationRatio
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+  debtValue = debtValue.toBigNumber().decimalPlaces(18);
   const symbol = collateralAmount?.symbol;
 
-  const amountToGenerate = amount || 0;
+  const dustLimitValidation = value =>
+    greaterThan(debtFloor, add(value, debtValue));
 
-  const belowDustLimit = debtValue.plus(amountToGenerate).lt(debtFloor);
+  const [amount, , onAmountChange, failureMessage] = useValidatedInput(
+    '',
+    {
+      maxFloat: formatter(daiAvailable),
+      minFloat: 0,
+      isFloat: true,
+      custom: {
+        dustLimit: dustLimitValidation
+      }
+    },
+    {
+      maxFloat: () => lang.action_sidebar.cdp_below_threshold,
+      dustLimit: () =>
+        lang.formatString(
+          lang.cdp_create.below_dust_limit,
+          formatter(debtFloor)
+        )
+    }
+  );
+
+  const amountToGenerate = amount || 0;
   const undercollateralized = daiAvailable.lt(amount);
-  const failureMessage = undercollateralized
-    ? lang.action_sidebar.cdp_below_threshold
-    : belowDustLimit
-    ? lang.formatString(lang.cdp_create.below_dust_limit, debtFloor)
-    : null;
 
   const generate = () => {
     newTxListener(
@@ -64,7 +82,7 @@ const Generate = ({ vault, reset }) => {
           type="number"
           value={amount}
           min="0"
-          onChange={({ target }) => setAmount(target.value)}
+          onChange={onAmountChange}
           placeholder="0.00 DAI"
           failureMessage={failureMessage}
         />
@@ -115,6 +133,7 @@ const Generate = ({ vault, reset }) => {
               ratio={collateralizationRatio}
               ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
+              show={amount !== '' && amount > 0 && !undercollateralized}
             />
           }
         />
