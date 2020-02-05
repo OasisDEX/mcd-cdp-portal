@@ -17,7 +17,38 @@ import useProxy from 'hooks/useProxy';
 import useMaker from 'hooks/useMaker';
 import theme from '../styles/theme';
 
+function Ticker({ amount, increment, decimals, ...props }) {
+  const [counter, setCounter] = useState(amount);
+
+  const requestRef = useRef();
+  const previousTimeRef = useRef(0);
+
+  const animate = time => {
+    const deltaTime = time - previousTimeRef.current;
+    if (deltaTime > 0) {
+      setCounter(prevCount => deltaTime * increment + prevCount);
+    }
+    previousTimeRef.current = time;
+    requestRef.current = requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
+    requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(requestRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <TextMono {...props}>
+      {counter ? counter.toFixed(decimals) : (0).toFixed(decimals)}
+    </TextMono>
+  );
+}
+
 const initialState = {
+  balance: BigNumber(0),
+  earnings: BigNumber(0),
+  amountChange: BigNumber(0),
   decimalsToShow: 4,
   interestAccrued: 0,
   rawEarnings: 0,
@@ -28,8 +59,6 @@ const initialState = {
   renderUpdates: false,
   earningsDispatched: false
 };
-
-const FPS = 1000 / 9;
 
 function DSRInfo() {
   const { lang } = useLanguage();
@@ -51,15 +80,18 @@ function DSRInfo() {
   const prevDsr = usePrevious(DSR.toNumber());
   const prevProxy = usePrevious(proxyAddress);
   const mobileViewChange = usePrevious(isMobile);
+  const dsrChanged = prevDsr !== DSR.toNumber();
 
   const addressChanged =
     address !== undefined &&
     prevAddress !== undefined &&
     prevAddress !== address;
-  const dsrChanged = prevDsr !== DSR.toNumber();
 
   const [
     {
+      balance,
+      earnings,
+      amountChange,
       decimalsToShow,
       rawEarnings,
       interestAccrued,
@@ -73,27 +105,6 @@ function DSRInfo() {
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
 
-  const requestRef = useRef();
-  const previousTimeRef = useRef(0);
-
-  const [balance, setBalance] = useState(0);
-  const [earnings, setEarnings] = useState(0);
-  const [amountChange, setAmountChange] = useState(0);
-
-  const animate = time => {
-    const deltaTime = time - previousTimeRef.current;
-    if (deltaTime > FPS) {
-      if (earningsDispatched) {
-        setEarnings(prevEarnings => deltaTime * amountChange + prevEarnings);
-        setBalance(prevBalance => deltaTime * amountChange + prevBalance);
-      } else {
-        setBalance(prevBalance => deltaTime * amountChange + prevBalance);
-      }
-      previousTimeRef.current = time;
-    }
-    requestRef.current = requestAnimationFrame(animate);
-  };
-
   const fetchEarnings = async () => {
     const etd = await maker
       .service('mcd:savings')
@@ -105,20 +116,7 @@ function DSRInfo() {
     });
   };
 
-  const startTicker = () => {
-    requestRef.current = requestAnimationFrame(animate);
-  };
-
-  const stopTicker = () => {
-    cancelAnimationFrame(requestRef.current);
-  };
-
   useEffect(() => {
-    if (renderUpdates) {
-      dispatch({ renderUpdates: false });
-      startTicker();
-    }
-
     if (
       proxyAddress !== undefined &&
       prevProxy !== proxyAddress &&
@@ -130,15 +128,10 @@ function DSRInfo() {
     }
 
     if (addressChanged) {
-      setBalance(0);
-      setEarnings(0);
-      setAmountChange(0);
       dispatch(initialState);
-      stopTicker();
     }
 
     if (dsrChanged) {
-      stopTicker();
       dispatch({ initialised: false });
       if (DSR.gt(0)) {
         const amountChangePerSecond = daiSavingsRate.minus(1).times(DSR);
@@ -147,37 +140,29 @@ function DSRInfo() {
         );
         const amountChangePerMillisecond = amountChangePerSecond.div(1000);
         dispatch({
+          balance: DSR.plus(accruedInterestSinceDrip),
+          amountChange: amountChangePerMillisecond,
           interestAccrued: accruedInterestSinceDrip,
           decimalsToShow: amountChangePerMillisecond.times(100).e * -1,
           amountChangeMillisecond: amountChangePerMillisecond,
           initialised: true,
           renderUpdates: true
         });
-        setBalance(DSR.plus(accruedInterestSinceDrip).toNumber());
-        setAmountChange(amountChangePerMillisecond.toNumber());
       } else {
-        stopTicker();
         dispatch({
+          balance: BigNumber(0),
+          amountChange: BigNumber(0),
           initialised: true,
           decimalsToShow: 4
         });
-        setBalance(0);
-        setAmountChange(0);
       }
     }
 
-    if (fetchedEarnings && (initialised || DSR.eq(0)) && !earningsDispatched) {
-      stopTicker();
+    if (fetchedEarnings && initialised && !earningsDispatched) {
       dispatch({
-        renderUpdates: DSR.eq(0) ? false : true,
-        earningsDispatched: true
+        earningsDispatched: true,
+        earnings: rawEarnings.toBigNumber().plus(interestAccrued)
       });
-      setEarnings(
-        rawEarnings
-          .toBigNumber()
-          .plus(interestAccrued)
-          .toNumber()
-      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -201,15 +186,17 @@ function DSRInfo() {
     });
   }, [mobileViewChange]); // eslint-disable-line
 
-  useEffect(() => {
-    return () => stopTicker();
-  }, []); // eslint-disable-line
-
   return (
     <Flex py="s" height="100%" flexDirection="column">
       <Card>
         <CardBody px="l" py="m">
-          <TextMono t="h2">{balance.toFixed(decimalsToShow)}</TextMono>
+          <Ticker
+            key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
+            amount={balance.toNumber()}
+            increment={amountChange.toNumber()}
+            decimals={decimalsToShow}
+            t="h2"
+          />
           <Text t="h5"> DAI</Text>
           <Text.p t="h5" mt="s" color="steel">
             {DSR.toFixed(4)} USD
@@ -223,9 +210,17 @@ function DSRInfo() {
                   <Text t="body">{lang.save.savings_earned_to_date}</Text>
                 </Table.td>
                 <Table.td textAlign="right">
-                  <TextMono t="body">
-                    {earnings.toFixed(decimalsToShow)}
-                  </TextMono>
+                  {earningsDispatched ? (
+                    <Ticker
+                      key={`${proxyAddress}.${earnings.toString()}.${amountChange}.${decimalsToShow}`}
+                      amount={earnings.toNumber()}
+                      increment={amountChange.toNumber()}
+                      decimals={decimalsToShow}
+                      t="body"
+                    />
+                  ) : (
+                    <TextMono t="body">{(0).toFixed(decimalsToShow)}</TextMono>
+                  )}
                   <Text t="body"> DAI</Text>
                 </Table.td>
               </Table.tr>
