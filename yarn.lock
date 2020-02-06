@@ -1104,6 +1104,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.7.4":
+  version "7.8.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.4.tgz#d79f5a2040f7caa24d53e563aad49cbc05581308"
+  integrity sha512-neAp3zt80trRVBI1x0azq6c57aNBqYZH8KhMm3TaB7wEI5Q4A2SHfBHE8w9gOhI/lrqxtEbXZgQIrHP+wvSGwQ==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/template@^7.1.0", "@babel/template@^7.4.4":
   version "7.4.4"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.4.4.tgz#f4b88d1225689a08f5bc3a17483545be9e4ed237"
@@ -1595,7 +1602,7 @@
     web3-provider-engine "14.0.4"
 
 "@makerdao/dai-plugin-mcd@file:.yalc/@makerdao/dai-plugin-mcd":
-  version "1.0.6-6f68b315"
+  version "1.0.6-a1e7f8ad"
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
@@ -1631,11 +1638,11 @@
     walletlink "^1.0.0"
 
 "@makerdao/dai@file:.yalc/@makerdao/dai":
-  version "0.23.1-cfbae65e"
+  version "0.23.1-e72e0dbc"
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/multicall" "^0.9.0-rc.2"
+    "@makerdao/multicall" "^0.10.0-rc.4"
     "@makerdao/services-core" "^0.9.9"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
@@ -1664,16 +1671,17 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@^0.9.0-rc.2":
-  version "0.9.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.9.0-rc.2.tgz#2a005df4f41f5097784781be077f09d9c82776e2"
-  integrity sha512-WRiMqugAIDvPFAadNg3+dgV16G94K5EGIJUUs2Ee9tzprX8+lPOhytVxQpnkAiLTP3ac108QtjTiKpKYLdOhpw==
+"@makerdao/multicall@^0.10.0-rc.4":
+  version "0.10.0-rc.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.10.0-rc.4.tgz#05cd24b3db34ba46f9173ede1c34347a2001e560"
+  integrity sha512-TTHXf78SPnBkNUGMhDKs42TnLCa8aoNBy4cMO/QzqWB+a0+/H8wI1SlFxD7mHLMjTdxVdncZ/99/p0Mk375kVg==
   dependencies:
+    "@babel/runtime" "^7.7.4"
     cross-fetch "^3.0.4"
     debug "^4.1.1"
     ethers "^4.0.27"
+    invariant "^2.2.4"
     isomorphic-ws "^4.0.1"
-    js-sha3 "^0.8.0"
     lodash "^4.17.11"
     ws "^7.2.0"
 
@@ -8814,11 +8822,6 @@ js-sha3@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.6.1.tgz#5b89f77a7477679877f58c4a075240934b1f95c0"
   integrity sha1-W4n3enR3Z5h39YxKB1JAk0sflcA=
-
-js-sha3@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
-  integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

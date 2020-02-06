@@ -3,21 +3,26 @@ import useLanguage from 'hooks/useLanguage';
 import { Text, Box, Card, CardBody, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber } from 'utils/ui';
 
-const SidebarDetails = ({ system }) => {
+const SidebarDetails = ({ system, savings }) => {
   const { lang } = useLanguage();
 
-  const TOTAL_DAI_SUPPLY = system => [
+  const TOTAL_DAI_SUPPLY = ({ system }) => [
     lang.sidebar.save_details.total_dai_supply,
     prettifyNumber(system.totalDaiSupply)
   ];
 
-  const TOTAL_SAVINGS_DAI = system => [
+  const TOTAL_SAVINGS_DAI = ({ system }) => [
     lang.sidebar.save_details.total_savings_dai,
     prettifyNumber(system.totalSavingsDai)
   ];
 
-  const systemParams = [TOTAL_DAI_SUPPLY, TOTAL_SAVINGS_DAI].map(f =>
-    f(system)
+  const DAI_SAVINGS_RATE = ({ savings }) => [
+    lang.sidebar.save_details.dai_savings_rate,
+    savings?.yearlyRate.toFixed(2) + '%'
+  ];
+
+  const params = [TOTAL_DAI_SUPPLY, TOTAL_SAVINGS_DAI, DAI_SAVINGS_RATE].map(
+    f => f({ system, savings })
   );
 
   return (
@@ -26,7 +31,7 @@ const SidebarDetails = ({ system }) => {
         <Text t="h4">{lang.sidebar.save_details.title}</Text>
       </Box>
       <CardBody mt="xs">
-        {systemParams.map(([param, value], idx) => (
+        {params.map(([param, value], idx) => (
           <Flex
             key={`details_${param}`}
             justifyContent="space-between"
