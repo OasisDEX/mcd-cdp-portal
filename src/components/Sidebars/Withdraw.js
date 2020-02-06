@@ -26,15 +26,16 @@ const Withdraw = ({ vault, reset }) => {
     liquidationRatio,
     collateralAvailableAmount,
     collateralTypePrice,
-    collateralAmount: cdpManagerCollateralAmount,
+    collateralAmount,
     collateralValue,
     encumberedCollateral,
     encumberedDebt: debtAmount
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   collateralAvailableAmount = collateralAvailableAmount.toBigNumber();
+  collateralValue = collateralValue.toBigNumber();
 
-  const symbol = cdpManagerCollateralAmount?.symbol;
+  const symbol = collateralAmount?.symbol;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -53,9 +54,9 @@ const Withdraw = ({ vault, reset }) => {
   const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
     amount && greaterThan(amount, collateralAvailableAmount);
+  const currency = getCurrency({ ilk: vaultType });
 
   const withdraw = () => {
-    const currency = getCurrency({ ilk: vaultType });
     newTxListener(
       maker
         .service('mcd:cdpManager')
@@ -67,11 +68,14 @@ const Withdraw = ({ vault, reset }) => {
 
   const valueDiff = multiply(amountToWithdraw, collateralTypePrice.toNumber());
 
-  const liquidationPrice = undercollateralized
-    ? BigNumber(0)
-    : vault.calculateLiquidationPrice({
-        collateralAmount: encumberedCollateral.minus(amountToWithdraw)
-      });
+  const liquidationPrice =
+    undercollateralized || debtAmount.eq(0)
+      ? BigNumber(0)
+      : vault.calculateLiquidationPrice({
+          collateralAmount: currency(
+            encumberedCollateral.minus(amountToWithdraw)
+          )
+        });
 
   const collateralizationRatio = undercollateralized
     ? Infinity
@@ -100,7 +104,7 @@ const Withdraw = ({ vault, reset }) => {
                 onClick={() => {
                   setMax();
                   trackBtnClick('SetMax', {
-                    collateralAvailableAmount,
+                    collateralAvailableAmount: collateralAvailableAmount.toString(),
                     setMax: true
                   });
                 }}

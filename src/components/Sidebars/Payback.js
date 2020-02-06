@@ -4,7 +4,6 @@ import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import debug from 'debug';
 
 import { formatCollateralizationRatio } from 'utils/ui';
-import { minimum } from 'utils/bignumber';
 
 import useMaker from 'hooks/useMaker';
 import useProxy from 'hooks/useProxy';
@@ -37,8 +36,6 @@ const Payback = ({ vault, reset }) => {
   let { debtValue, debtFloor, collateralAmount } = vault;
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
   const symbol = collateralAmount?.symbol;
-
-  const maxAmount = debtValue && daiBalance && minimum(debtValue, daiBalance);
 
   // Amount being repaid can't result in a remaining debt lower than the dust
   // minimum unless the full amount is being repaid
@@ -74,7 +71,7 @@ const Payback = ({ vault, reset }) => {
   );
 
   const amountToPayback = amount || 0;
-  const setMax = () => setAmount(maxAmount);
+  const setMax = () => setAmount(debtValue.toString());
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
@@ -127,7 +124,10 @@ const Payback = ({ vault, reset }) => {
             <SetMax
               onClick={() => {
                 setMax();
-                trackBtnClick('SetMax', { maxAmount, setMax: true });
+                trackBtnClick('SetMax', {
+                  maxAmount: debtValue.toString(),
+                  setMax: true
+                });
               }}
             />
           }
