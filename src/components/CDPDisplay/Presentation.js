@@ -167,7 +167,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
             value={
-              formatter(vault.liquidationRatioSimple, {
+              formatter(vault.liquidationRatio, {
                 percentage: true
               }) + '%'
             }

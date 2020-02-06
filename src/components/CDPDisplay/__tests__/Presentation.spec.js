@@ -33,7 +33,7 @@ const account = {
 };
 const mockOwnerAddress = '0xtest';
 
-const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(1.5);
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(1.5);
 const collateralValue = USD(74.852);
 const debtValue = MDAI(120);
 
@@ -46,13 +46,13 @@ const mockVault = {
   collateralAvailableAmount: LOL(9.1),
   collateralAvailableValue: USD(1820),
   daiAvailable: MDAI(1213.33),
-  liquidationRatioSimple,
+  liquidationRatio,
   liquidationPenalty: BigNumber('0.05'),
   annualStabilityFee: BigNumber('0.04999999999989363'),
   collateralValue,
   collateralTypePrice: createCurrencyRatio(USD, LOL)('200'),
   calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
-    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatioSimple),
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
   calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
     math
       .collateralizationRatio(_collateralValue, debtValue)
@@ -164,17 +164,13 @@ describe('on mobile', () => {
       collateralAvailableAmount: ETH(9.1),
       collateralAvailableValue: USD(1820),
       daiAvailable: MDAI(1213.33),
-      liquidationRatioSimple,
+      liquidationRatio,
       liquidationPenalty: BigNumber('0.05'),
       annualStabilityFee: BigNumber('0.04999999999989363'),
       collateralValue,
       collateralTypePrice: createCurrencyRatio(USD, ETH)('200'),
       calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
-        math.liquidationPrice(
-          _collateralAmount,
-          debtValue,
-          liquidationRatioSimple
-        ),
+        math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
       calculateCollateralizationRatio: ({
         collateralValue: _collateralValue
       }) =>

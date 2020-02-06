@@ -77,9 +77,7 @@ const identityReducer = x => x;
 const renderWithMockedStore = component =>
   render(component, setupMockState, identityReducer);
 
-const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
-  LIQUIDATION_RATIO
-);
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(12004.938271560493);
 const debtValue = MDAI(0);
 
@@ -92,12 +90,12 @@ const mockVault = {
   vaultType: ILK,
   collateralAmount: BAT(0), // used to retrieve gem symbol
   encumberedCollateral: fromWei(1000000000000000000),
-  liquidationRatioSimple,
+  liquidationRatio,
   collateralValue,
   collateralAvailableAmount: BAT(COL_AMT),
   collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
   calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
-    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatioSimple),
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
   calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
     math
       .collateralizationRatio(_collateralValue, debtValue)

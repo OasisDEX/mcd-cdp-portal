@@ -45,9 +45,7 @@ const LIQUIDATION_RATIO = '200';
 const COL_AMT = 300.123456789012345678;
 
 const collateralAmount = BAT(0); //only used to retrieve gem symbol
-const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
-  LIQUIDATION_RATIO
-);
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(12004.938271560493);
 
 const mockVault = {
@@ -57,12 +55,12 @@ const mockVault = {
   daiAvailable: MDAI(36.014814),
   vaultType: ILK,
   collateralAmount,
-  liquidationRatioSimple,
+  liquidationRatio,
   collateralValue,
   collateralAvailableAmount: BAT(COL_AMT),
   collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
   calculateLiquidationPrice: ({ debtValue: _debtValue }) =>
-    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatioSimple),
+    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatio),
   calculateCollateralizationRatio: ({ debtValue: _debtValue }) =>
     math
       .collateralizationRatio(collateralValue, _debtValue)

@@ -23,7 +23,7 @@ const Withdraw = ({ vault, reset }) => {
 
   let {
     vaultType,
-    liquidationRatioSimple: liquidationRatio,
+    liquidationRatio,
     collateralAvailableAmount,
     collateralTypePrice,
     collateralAmount: cdpManagerCollateralAmount,

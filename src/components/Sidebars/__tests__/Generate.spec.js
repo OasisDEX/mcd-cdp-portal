@@ -95,9 +95,7 @@ const renderWithMockedStore = component =>
   render(component, setupMockState, identityReducer);
 
 const collateralAmount = BAT(COL_AMT);
-const liquidationRatioSimple = createCurrencyRatio(USD, MDAI)(
-  LIQUIDATION_RATIO
-);
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(72.03);
 
 const mockVault = {
@@ -106,11 +104,11 @@ const mockVault = {
   daiAvailable: MDAI(36.014814),
   vaultType: ILK,
   collateralAmount,
-  liquidationRatioSimple,
+  liquidationRatio,
   debtFloor: BigNumber(DUST),
   collateralValue,
   calculateLiquidationPrice: ({ debtValue: _debtValue }) =>
-    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatioSimple),
+    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatio),
   calculateCollateralizationRatio: ({ debtValue: _debtValue }) =>
     math
       .collateralizationRatio(collateralValue, _debtValue)

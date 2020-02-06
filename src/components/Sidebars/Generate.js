@@ -23,7 +23,7 @@ const Generate = ({ vault, reset }) => {
     vaultType,
     debtFloor,
     collateralAmount,
-    liquidationRatioSimple: liquidationRatio
+    liquidationRatio
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
