@@ -26,6 +26,8 @@ import styled from 'styled-components';
 import Carat from './Carat';
 import { Link, useCurrentRoute } from 'react-navi';
 import { Routes } from 'utils/constants';
+import theme from '../styles/theme';
+import FullScreenAction from './CDPDisplay/FullScreenAction';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -92,9 +94,10 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
   );
 };
 
-const WalletBalances = ({ hasActiveAccount }) => {
+const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
   const { url } = useCurrentRoute();
   const { trackBtnClick } = useAnalytics('WalletBalances');
+  const [actionShown, setActionShown] = useState(null);
 
   const { lang } = useLanguage();
   const balances = useWalletBalances();
@@ -104,6 +107,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
     Toggles.WALLETBALANCES,
     true
   );
+
   const uniqueFeeds = useMemo(
     () =>
       getAllFeeds(feeds).reduce((acc, feed) => {
@@ -114,8 +118,17 @@ const WalletBalances = ({ hasActiveAccount }) => {
     [feeds]
   );
 
-  const showSendSidebar = props =>
-    hasActiveAccount && showSidebar({ type: 'send', props });
+  const showAction = props => {
+    const emSize = parseInt(getComputedStyle(document.body).fontSize);
+    const pxBreakpoint = parseInt(theme.breakpoints.l) * emSize;
+    const isMobile = document.documentElement.clientWidth < pxBreakpoint;
+    if (isMobile) {
+      closeSidebarDrawer();
+      setActionShown(props);
+    } else {
+      showSidebar(props);
+    }
+  };
 
   const formatSymbol = token => {
     return token === 'MDAI'
@@ -160,7 +173,7 @@ const WalletBalances = ({ hasActiveAccount }) => {
         <Box px="s" pt="sm" pb="s2">
           <Text t="large">{lang.sidebar.wallet_balances}</Text>
         </Box>
-        <Flex justifyContent="space-between" px="s">
+        <Flex justifyContent="space-between" px="s" mb="4px">
           <Text color="steel" fontWeight="bold" t="smallCaps" width="20%">
             {lang.sidebar.asset}
           </Text>
@@ -201,11 +214,15 @@ const WalletBalances = ({ hasActiveAccount }) => {
                       </ActionButton>
                     ) : (
                       <ActionButton
+                        disabled={!hasActiveAccount}
                         onClick={() => {
                           trackBtnClick('Send', {
                             collateral: formatSymbol(token)
                           });
-                          showSendSidebar({ token, trackBtnClick });
+                          showAction({
+                            type: 'send',
+                            props: { token, trackBtnClick }
+                          });
                         }}
                       >
                         {lang.sidebar.send}
@@ -234,11 +251,14 @@ const WalletBalances = ({ hasActiveAccount }) => {
           </Flex>
         </StyledCardBody>
       )}
+      {actionShown && (
+        <FullScreenAction {...actionShown} reset={() => setActionShown(null)} />
+      )}
     </>
   );
 };
 
-function AccountBox({ currentAccount }) {
+function AccountBox({ currentAccount, closeSidebarDrawer }) {
   const [open, setOpen] = useState(false);
   const toggleDropdown = useCallback(() => setOpen(!open), [open, setOpen]);
   const closeDropdown = useCallback(() => setOpen(false), [setOpen]);
@@ -257,7 +277,10 @@ function AccountBox({ currentAccount }) {
           trigger={<ActiveAccount address={address} type={type} />}
         />
       </CardBody>
-      <WalletBalances hasActiveAccount={!!currentAccount} />
+      <WalletBalances
+        hasActiveAccount={!!currentAccount}
+        closeSidebarDrawer={closeSidebarDrawer}
+      />
     </Card>
   );
 }

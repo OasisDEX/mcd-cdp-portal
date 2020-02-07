@@ -9,7 +9,7 @@ import { useCurrentRoute } from 'react-navi';
 import { Routes } from '../../utils/constants';
 
 const SidebarGlobalPanel = () => {
-  const [{ system, feeds }] = useStore();
+  const [{ system, feeds, savings }] = useStore();
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
   const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);
@@ -22,11 +22,11 @@ const SidebarGlobalPanel = () => {
         <Grid gridRowGap="s">
           {routeIsBorrow && <SidebarFeeds feeds={uniqueFeeds} />}
           {routeIsBorrow && <SidebarSystem system={system} />}
-          {routeIsSave && <SidebarDetails system={system} />}
+          {routeIsSave && <SidebarDetails system={system} savings={savings} />}
         </Grid>
       </Box>
     );
-  }, [feeds, routeIsBorrow, system, routeIsSave]);
+  }, [feeds, routeIsBorrow, system, savings, routeIsSave]);
 };
 
 export default SidebarGlobalPanel;
