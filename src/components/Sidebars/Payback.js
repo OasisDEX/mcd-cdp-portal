@@ -13,7 +13,7 @@ import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import { formatter } from '../../utils/ui';
-import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
+import { subtract, greaterThan, equalTo, minimum } from '../../utils/bignumber';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
@@ -71,7 +71,11 @@ const Payback = ({ vault, reset }) => {
   );
 
   const amountToPayback = amount || 0;
-  const setMax = () => setAmount(debtValue.toString());
+
+  // Don't enter more than the user's balance if there isn't enough to cover the debt.
+  const maxPaybackAmount =
+    debtValue && daiBalance && minimum(debtValue, daiBalance);
+  const setMax = () => setAmount(maxPaybackAmount.toString());
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
