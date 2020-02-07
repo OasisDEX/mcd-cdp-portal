@@ -8,7 +8,8 @@ const initialState = {
   annualDaiSavingsRate: BigNumber(0),
   daiSavingsRate: BigNumber(1),
   dateEarningsLastAccrued: Date.now(),
-  daiLockedInDsr: DSR_DAI(0)
+  daiLockedInDsr: DSR_DAI(0),
+  fetchedSavings: false
 };
 
 function useSavings(address) {
@@ -23,7 +24,7 @@ function useSavings(address) {
       .service('multicall')
       .watch('savings', address)
       .subscribe(updates => {
-        dispatch(updates);
+        dispatch({ fetchedSavings: true, ...updates });
       });
     return () => sub.unsubscribe();
   });

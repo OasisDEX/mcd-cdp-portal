@@ -31,7 +31,7 @@ function Ticker({ amount, increment, decimals, ...props }) {
   };
 
   useEffect(() => {
-    requestAnimationFrame(animate);
+    requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -49,12 +49,11 @@ const initialState = {
   amountChange: BigNumber(0),
   decimalsToShow: 4,
   interestAccrued: 0,
-  rawEarnings: 0,
+  rawEarnings: BigNumber(0),
   amountChangeMillisecond: BigNumber(0.000001),
   fetchedEarnings: false,
   fetchingEarnings: false,
   initialised: false,
-  renderUpdates: false,
   earningsDispatched: false
 };
 
@@ -67,19 +66,11 @@ function DSRInfo({ address, isMobile }) {
     annualDaiSavingsRate,
     daiSavingsRate,
     dateEarningsLastAccrued,
-    daiLockedInDsr
+    daiLockedInDsr,
+    fetchedSavings
   } = useSavings(address);
 
-  const prevAddress = usePrevious(address);
-  const prevDsr = usePrevious(daiLockedInDsr?.toNumber());
-  const prevProxy = usePrevious(proxyAddress);
   const mobileViewChange = usePrevious(isMobile);
-  const daiLockedInDsrChanged = prevDsr !== daiLockedInDsr?.toNumber();
-
-  const addressChanged =
-    address !== undefined &&
-    prevAddress !== undefined &&
-    prevAddress !== address;
 
   const [
     {
@@ -89,15 +80,20 @@ function DSRInfo({ address, isMobile }) {
       decimalsToShow,
       rawEarnings,
       interestAccrued,
-      amountChangeMillisecond,
       fetchedEarnings,
       fetchingEarnings,
-      initialised,
-      renderUpdates,
       earningsDispatched
     },
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
+
+  const mobileDecimals = isMobile
+    ? decimalsToShow
+    : daiLockedInDsr.lt(1000)
+    ? 8
+    : daiLockedInDsr.lt(100000)
+    ? 6
+    : 4;
 
   const fetchEarnings = async () => {
     const etd = await maker
@@ -106,104 +102,83 @@ function DSRInfo({ address, isMobile }) {
     dispatch({
       fetchingEarnings: false,
       fetchedEarnings: true,
-      rawEarnings: etd
+      rawEarnings: etd.toBigNumber()
     });
   };
 
   useEffect(() => {
-    if (
-      proxyAddress !== undefined &&
-      prevProxy !== proxyAddress &&
-      !fetchedEarnings &&
-      !fetchingEarnings
-    ) {
-      dispatch({ fetchingEarnings: true });
-      fetchEarnings();
-    }
+    if (fetchedSavings) {
+      if (proxyAddress && !fetchedEarnings && !fetchingEarnings) {
+        fetchEarnings();
+        dispatch({ fetchingEarnings: true });
+      }
 
-    if (addressChanged) {
-      dispatch(initialState);
-    }
+      const amountChangePerSecond = daiSavingsRate
+        .minus(1)
+        .times(daiLockedInDsr);
 
-    if (daiLockedInDsr && daiLockedInDsrChanged) {
-      dispatch({ initialised: false });
-      if (daiLockedInDsr.gt(0)) {
-        const amountChangePerSecond = daiSavingsRate
-          .minus(1)
-          .times(daiLockedInDsr);
-        const accruedInterestSinceDrip = amountChangePerSecond.times(
-          Math.floor(Date.now() / 1000) -
-            dateEarningsLastAccrued.getTime() / 1000
-        );
-        const amountChangePerMillisecond = amountChangePerSecond.div(1000);
-        dispatch({
-          balance: daiLockedInDsr.plus(accruedInterestSinceDrip),
-          amountChange: amountChangePerMillisecond,
-          interestAccrued: accruedInterestSinceDrip,
-          decimalsToShow: !isMobile
+      const accruedInterestSinceDrip = daiLockedInDsr.gt(0)
+        ? amountChangePerSecond.times(
+            Math.floor(Date.now() / 1000) -
+              dateEarningsLastAccrued.getTime() / 1000
+          )
+        : BigNumber(0);
+
+      const amountChangePerMillisecond = amountChangePerSecond.div(1000);
+      dispatch({
+        balance: daiLockedInDsr.plus(accruedInterestSinceDrip),
+        amountChange: amountChangePerMillisecond,
+        interestAccrued: accruedInterestSinceDrip,
+        decimalsToShow: !isMobile
+          ? daiLockedInDsr.gt(0)
             ? amountChangePerMillisecond.times(100).e * -1
-            : daiLockedInDsr.lt(1000)
-            ? 8
-            : daiLockedInDsr.lt(100000)
-            ? 6
-            : 4,
-          amountChangeMillisecond: amountChangePerMillisecond,
-          initialised: true,
-          renderUpdates: true
-        });
-      } else {
-        console.log('no savings in dsr');
+            : initialState.decimalsToShow
+          : mobileDecimals
+      });
+
+      if (fetchedEarnings) {
         dispatch({
-          balance: BigNumber(0),
-          amountChange: BigNumber(0),
-          initialised: true,
-          decimalsToShow: 4
+          earningsDispatched: true,
+          earnings: rawEarnings.plus(interestAccrued)
         });
       }
     }
-
-    if (fetchedEarnings && initialised && !earningsDispatched) {
-      dispatch({
-        earningsDispatched: true,
-        earnings: rawEarnings.toBigNumber().plus(interestAccrued)
-      });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    addressChanged,
-    daiLockedInDsrChanged,
-    fetchedEarnings,
-    fetchingEarnings,
-    renderUpdates,
-    proxyAddress
+    fetchedSavings,
+    daiLockedInDsr.toString(),
+    rawEarnings.toString(),
+    fetchedEarnings
   ]);
 
   useEffect(() => {
-    dispatch({
-      decimalsToShow: !isMobile
-        ? amountChangeMillisecond.times(100).e * -1
-        : daiLockedInDsr.lt(1000)
-        ? 8
-        : daiLockedInDsr.lt(100000)
-        ? 6
-        : 4
-    });
+    if (fetchedEarnings) {
+      dispatch({
+        decimalsToShow: !isMobile
+          ? amountChange.times(100).e * -1
+          : daiLockedInDsr.lt(1000)
+          ? 8
+          : daiLockedInDsr.lt(100000)
+          ? 6
+          : 4
+      });
+    }
   }, [mobileViewChange]); // eslint-disable-line
 
   return (
     <Flex py="s" height="100%" flexDirection="column">
       <Card>
         <CardBody px="l" py="m">
-          {balance.gt(0) ? (
+          {fetchedSavings ? (
             <Ticker
-              key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
+              key={`${balance.toNumber()}.${amountChange.toNumber()}.${decimalsToShow}`}
               amount={balance.toNumber()}
               increment={amountChange.toNumber()}
               decimals={decimalsToShow}
               t="h2"
             />
           ) : (
-            <TextMono t="h2">{(0).toFixed(decimalsToShow)}</TextMono>
+            <TextMono t="h2">{(0).toFixed(4)}</TextMono>
           )}
           <Text t="h5"> DAI</Text>
           <Text.p t="h5" mt="s" color="steel">
@@ -227,7 +202,7 @@ function DSRInfo({ address, isMobile }) {
                       t="body"
                     />
                   ) : (
-                    <TextMono t="body">{(0).toFixed(decimalsToShow)}</TextMono>
+                    <TextMono t="body">{(0).toFixed(4)}</TextMono>
                   )}
                   <Text t="body"> DAI</Text>
                 </Table.td>

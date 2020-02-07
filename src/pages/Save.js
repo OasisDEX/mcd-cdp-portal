@@ -222,7 +222,11 @@ function Save() {
               gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
             >
               {account ? (
-                <DSRInfo address={account.address} isMobile={isMobile} />
+                <DSRInfo
+                  key={account.address}
+                  address={account.address}
+                  isMobile={isMobile}
+                />
               ) : (
                 <div />
               )}
