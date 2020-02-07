@@ -9,24 +9,22 @@ import {
   Text,
   Table
 } from '@makerdao/ui-components-core';
-import useStore from 'hooks/useStore';
-import useWalletBalances from 'hooks/useWalletBalances';
 import useLanguage from 'hooks/useLanguage';
 import usePrevious from 'hooks/usePrevious';
-import useProxy from 'hooks/useProxy';
 import useMaker from 'hooks/useMaker';
-import theme from '../styles/theme';
+import useSavings from 'hooks/useSavings';
 
 function Ticker({ amount, increment, decimals, ...props }) {
   const [counter, setCounter] = useState(amount);
-
   const requestRef = useRef();
-  const previousTimeRef = useRef(0);
+  const previousTimeRef = useRef();
 
   const animate = time => {
-    const deltaTime = time - previousTimeRef.current;
-    if (deltaTime > 0) {
-      setCounter(prevCount => deltaTime * increment + prevCount);
+    if (previousTimeRef.current !== undefined) {
+      const deltaTime = time - previousTimeRef.current;
+      if (deltaTime > 0) {
+        setCounter(prevCount => deltaTime * increment + prevCount);
+      }
     }
     previousTimeRef.current = time;
     requestRef.current = requestAnimationFrame(animate);
@@ -60,27 +58,23 @@ const initialState = {
   earningsDispatched: false
 };
 
-function DSRInfo() {
+function DSRInfo({ address, isMobile }) {
   const { lang } = useLanguage();
-  const [
-    {
-      savings: { dsr: daiSavingsRate, rho, yearlyRate }
-    }
-  ] = useStore();
-  const { DSR } = useWalletBalances();
-  const { proxyAddress } = useProxy();
-  const { maker, account } = useMaker();
+  const { maker } = useMaker();
 
-  const emSize = parseInt(getComputedStyle(document.body).fontSize);
-  const pxBreakpoint = parseInt(theme.breakpoints.l) * emSize;
-  const isMobile = document.documentElement.clientWidth < pxBreakpoint;
+  const {
+    proxyAddress,
+    annualDaiSavingsRate,
+    daiSavingsRate,
+    dateEarningsLastAccrued,
+    daiLockedInDsr
+  } = useSavings(address);
 
-  const address = account?.address;
   const prevAddress = usePrevious(address);
-  const prevDsr = usePrevious(DSR.toNumber());
+  const prevDsr = usePrevious(daiLockedInDsr?.toNumber());
   const prevProxy = usePrevious(proxyAddress);
   const mobileViewChange = usePrevious(isMobile);
-  const dsrChanged = prevDsr !== DSR.toNumber();
+  const daiLockedInDsrChanged = prevDsr !== daiLockedInDsr?.toNumber();
 
   const addressChanged =
     address !== undefined &&
@@ -131,24 +125,34 @@ function DSRInfo() {
       dispatch(initialState);
     }
 
-    if (dsrChanged) {
+    if (daiLockedInDsr && daiLockedInDsrChanged) {
       dispatch({ initialised: false });
-      if (DSR.gt(0)) {
-        const amountChangePerSecond = daiSavingsRate.minus(1).times(DSR);
+      if (daiLockedInDsr.gt(0)) {
+        const amountChangePerSecond = daiSavingsRate
+          .minus(1)
+          .times(daiLockedInDsr);
         const accruedInterestSinceDrip = amountChangePerSecond.times(
-          Math.floor(Date.now() / 1000) - rho
+          Math.floor(Date.now() / 1000) -
+            dateEarningsLastAccrued.getTime() / 1000
         );
         const amountChangePerMillisecond = amountChangePerSecond.div(1000);
         dispatch({
-          balance: DSR.plus(accruedInterestSinceDrip),
+          balance: daiLockedInDsr.plus(accruedInterestSinceDrip),
           amountChange: amountChangePerMillisecond,
           interestAccrued: accruedInterestSinceDrip,
-          decimalsToShow: amountChangePerMillisecond.times(100).e * -1,
+          decimalsToShow: !isMobile
+            ? amountChangePerMillisecond.times(100).e * -1
+            : daiLockedInDsr.lt(1000)
+            ? 8
+            : daiLockedInDsr.lt(100000)
+            ? 6
+            : 4,
           amountChangeMillisecond: amountChangePerMillisecond,
           initialised: true,
           renderUpdates: true
         });
       } else {
+        console.log('no savings in dsr');
         dispatch({
           balance: BigNumber(0),
           amountChange: BigNumber(0),
@@ -167,7 +171,7 @@ function DSRInfo() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addressChanged,
-    dsrChanged,
+    daiLockedInDsrChanged,
     fetchedEarnings,
     fetchingEarnings,
     renderUpdates,
@@ -178,9 +182,9 @@ function DSRInfo() {
     dispatch({
       decimalsToShow: !isMobile
         ? amountChangeMillisecond.times(100).e * -1
-        : DSR.lt(1000)
+        : daiLockedInDsr.lt(1000)
         ? 8
-        : DSR.lt(100000)
+        : daiLockedInDsr.lt(100000)
         ? 6
         : 4
     });
@@ -190,16 +194,20 @@ function DSRInfo() {
     <Flex py="s" height="100%" flexDirection="column">
       <Card>
         <CardBody px="l" py="m">
-          <Ticker
-            key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
-            amount={balance.toNumber()}
-            increment={amountChange.toNumber()}
-            decimals={decimalsToShow}
-            t="h2"
-          />
+          {balance.gt(0) ? (
+            <Ticker
+              key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
+              amount={balance.toNumber()}
+              increment={amountChange.toNumber()}
+              decimals={decimalsToShow}
+              t="h2"
+            />
+          ) : (
+            <TextMono t="h2">{(0).toFixed(decimalsToShow)}</TextMono>
+          )}
           <Text t="h5"> DAI</Text>
           <Text.p t="h5" mt="s" color="steel">
-            {DSR.toFixed(4)} USD
+            {daiLockedInDsr?.toFixed(4)} USD
           </Text.p>
         </CardBody>
         <CardBody px="l">
@@ -230,7 +238,9 @@ function DSRInfo() {
                 </Table.td>
                 <Table.td textAlign="right">
                   <Text t="body">
-                    {yearlyRate ? `${yearlyRate.toFixed(2)}%` : '--'}
+                    {annualDaiSavingsRate
+                      ? `${annualDaiSavingsRate.toFixed(2)}%`
+                      : '--'}
                   </Text>
                 </Table.td>
               </Table.tr>

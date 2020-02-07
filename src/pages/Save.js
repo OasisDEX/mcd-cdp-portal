@@ -30,6 +30,7 @@ import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
 import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
+import theme from '../styles/theme';
 
 function Save() {
   const { lang } = useLanguage();
@@ -172,6 +173,10 @@ function Save() {
 
   const { show } = useModal();
 
+  const emSize = parseInt(getComputedStyle(document.body).fontSize);
+  const pxBreakpoint = parseInt(theme.breakpoints.l) * emSize;
+  const isMobile = document.documentElement.clientWidth < pxBreakpoint;
+
   return (
     <PageContentLayout>
       {!account ? (
@@ -216,7 +221,11 @@ function Save() {
               gridColumnGap="m"
               gridTemplateColumns={['1fr', '1fr', '1fr 1fr']}
             >
-              <DSRInfo />
+              {account ? (
+                <DSRInfo address={account.address} isMobile={isMobile} />
+              ) : (
+                <div />
+              )}
               <Grid py="s" height="100%" flexDirection="column">
                 <CardTabs
                   trackTab={trackTab}
