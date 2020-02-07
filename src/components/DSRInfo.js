@@ -106,6 +106,9 @@ function DSRInfo({ address, isMobile }) {
     });
   };
 
+  const daiLockedString = daiLockedInDsr.toString();
+  const rawEarningsString = rawEarnings.toString();
+
   useEffect(() => {
     if (fetchedSavings) {
       if (proxyAddress && !fetchedEarnings && !fetchingEarnings) {
@@ -144,12 +147,7 @@ function DSRInfo({ address, isMobile }) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    fetchedSavings,
-    daiLockedInDsr.toString(),
-    rawEarnings.toString(),
-    fetchedEarnings
-  ]);
+  }, [fetchedSavings, daiLockedString, rawEarningsString, fetchedEarnings]);
 
   useEffect(() => {
     if (fetchedEarnings) {
