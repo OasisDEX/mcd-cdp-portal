@@ -3,21 +3,19 @@ import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
-// import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
-import useActionState from '../../hooks/useActionState';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
 import { safeToFixed } from '../../utils/ui';
 
 const Withdraw = ({ reset }) => {
-  const { trackBtnClick } = useAnalytics('Withdraw');
+  const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
 
@@ -27,7 +25,6 @@ const Withdraw = ({ reset }) => {
   const { MDAI: daiBalance, DSR: dsrBalance } = useWalletBalances();
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
-  // const { proxyAddress, hasProxy, proxyLoading } = useProxy();
 
   const [
     withdrawAmount,
@@ -46,9 +43,12 @@ const Withdraw = ({ reset }) => {
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI'),
+        lang.formatString(
+          lang.action_sidebar.insufficient_balance,
+          displaySymbol
+        ),
       allowanceInvalid: () =>
-        lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
+        lang.formatString(lang.action_sidebar.invalid_allowance, displaySymbol)
     }
   );
 
@@ -61,7 +61,7 @@ const Withdraw = ({ reset }) => {
     }
   }, [dsrBalance, setWithdrawAmount]);
 
-  const onStartWithdraw = useCallback(() => {
+  const withdraw = () => {
     let txObject;
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(dsrBalance)) {
       txObject = maker.service('mcd:savings').exitAll();
@@ -72,18 +72,10 @@ const Withdraw = ({ reset }) => {
       txObject,
       lang.formatString(lang.transactions.withdrawing_gem, displaySymbol)
     );
-  }, [dsrBalance, maker, withdrawAmount, withdrawMaxFlag, newTxListener, lang]);
+    reset();
+  };
 
-  const [
-    onWithdraw,
-    withdrawLoading,
-    withdrawSuccess,
-    withdrawError,
-    withdrawReset
-  ] = useActionState(onStartWithdraw);
-
-  const valid =
-    withdrawAmount && !withdrawAmountErrors && hasAllowance && !withdrawLoading;
+  const valid = withdrawAmount && !withdrawAmountErrors && hasAllowance;
 
   return (
     <Grid gridRowGap="m">
@@ -109,8 +101,17 @@ const Withdraw = ({ reset }) => {
           }}
           error={withdrawAmountErrors}
           failureMessage={withdrawAmountErrors}
-          after={<SetMax onClick={setWithdrawMax} />}
-          // data-testid="dsrdeposit-input"
+          after={
+            <SetMax
+              onClick={() => {
+                setWithdrawMax();
+                trackBtnClick('SetMax', {
+                  amount: withdrawAmount,
+                  setMax: true
+                });
+              }}
+            />
+          }
         />
       </Grid>
       <ProxyAllowanceToggle
@@ -122,9 +123,8 @@ const Withdraw = ({ reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Withdraw', { amount: withdrawAmount });
-            onWithdraw();
-            reset();
+            trackBtnClick('Confirm', { amount: withdrawAmount });
+            withdraw();
           }}
           data-testid={'withdraw-button'}
         >
@@ -139,12 +139,6 @@ const Withdraw = ({ reset }) => {
         >
           {lang.cancel}
         </Button>
-        {/* Is this nec re: validation hook? see dsrDeposit */}
-        {withdrawError && (
-          <Text.p t="caption" color="orange.600" textAlign="center">
-            {withdrawError}
-          </Text.p>
-        )}
       </Grid>
       <InfoContainer>
         <Info
