@@ -50,8 +50,6 @@ const Deposit = ({ reset }) => {
         lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }
   );
-  const valid =
-    depositAmount && !depositAmountErrors && hasAllowance && !depositLoading;
 
   const setDepositMax = useCallback(() => {
     if (daiBalance && !daiBalance.eq(0)) {
@@ -79,6 +77,9 @@ const Deposit = ({ reset }) => {
     depositError,
     depositReset
   ] = useActionState(onStartDeposit);
+
+  const valid =
+    depositAmount && !depositAmountErrors && hasAllowance && !depositLoading;
 
   return (
     <Grid gridRowGap="m">

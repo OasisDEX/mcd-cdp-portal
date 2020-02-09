@@ -251,6 +251,7 @@ function Save() {
                   // conversion={`${collateralUSDValue} USD`}
                   button={
                     <ActionButton
+                      data-testid={'sidebar-deposit-button'}
                       disabled={!account}
                       onClick={() => {
                         trackBtnClick('Deposit');
@@ -268,6 +269,7 @@ function Save() {
                   button={
                     <ActionButton
                       disabled={!account}
+                      data-testid={'sidebar-withdraw-button'}
                       onClick={() => {
                         trackBtnClick('Withdraw');
                         showAction({ type: 'dsrwithdraw' });

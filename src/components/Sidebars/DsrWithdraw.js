@@ -52,10 +52,6 @@ const Withdraw = ({ reset }) => {
     }
   );
 
-  const valid =
-    withdrawAmount && !withdrawAmountErrors && hasAllowance && !withdrawLoading;
-  // const setMax = () => setAmount(collateralAvailableAmount);
-
   const setWithdrawMax = useCallback(() => {
     if (dsrBalance && !dsrBalance.eq(0)) {
       setWithdrawAmount(dsrBalance.toFixed(18).replace(/\.?0+$/, ''));
@@ -85,6 +81,9 @@ const Withdraw = ({ reset }) => {
     withdrawError,
     withdrawReset
   ] = useActionState(onStartWithdraw);
+
+  const valid =
+    withdrawAmount && !withdrawAmountErrors && hasAllowance && !withdrawLoading;
 
   return (
     <Grid gridRowGap="m">
