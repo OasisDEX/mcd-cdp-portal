@@ -4,6 +4,8 @@ import Payback from './Payback';
 import Deposit from './Deposit';
 import Withdraw from './Withdraw';
 import Send from './Send';
+import DsrDeposit from './DsrDeposit';
+import DsrWithdraw from './DsrWithdraw';
 
 export default {
   global: Global,
@@ -11,5 +13,7 @@ export default {
   payback: Payback,
   deposit: Deposit,
   withdraw: Withdraw,
-  send: Send
+  send: Send,
+  dsrdeposit: DsrDeposit,
+  dsrwithdraw: DsrWithdraw
 };

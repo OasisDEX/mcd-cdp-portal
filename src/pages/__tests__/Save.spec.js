@@ -1,6 +1,8 @@
 import React from 'react';
 import * as navi from 'react-navi';
 import assert from 'assert';
+import styled from 'styled-components';
+import BigNumber from 'bignumber.js';
 import {
   wait,
   fireEvent,
@@ -11,9 +13,13 @@ import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 
 import Save from '../Save';
-import { renderWithMaker } from '../../../test/helpers/render';
+import {
+  renderWithAccount,
+  renderWithMaker
+} from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
-import styled from 'styled-components';
+import { SidebarProvider } from '../../providers/SidebarProvider';
+import SidebarBase from 'components/SidebarBase';
 
 const { click, change } = fireEvent;
 
@@ -47,14 +53,18 @@ test('render save page and perform deposit and withdraw actions', async () => {
     getByTestId,
     getAllByTestId,
     getByText,
-    getAllByRole,
+    getByRole,
     findByText
-  } = renderWithMaker(<Save />);
+  } = await renderWithAccount(
+    <SidebarProvider>
+      <Save />
+      <SidebarBase />
+    </SidebarProvider>
+  );
 
   // Wait for page to render
   await waitForElement(() => getByText('Balance'));
-
-  // Initial balance
+  // Initial DSR balance
   getByText('0.0000 USD');
   // Savings to date
   getByText('Savings earned to date');
@@ -67,13 +77,17 @@ test('render save page and perform deposit and withdraw actions', async () => {
     getByText('Deposit Dai to see your first transaction and start earning')
   );
 
+  /**Deposit */
+  click(getByTestId('sidebar-deposit-button'));
+  await findByText(/would you like to deposit/);
+
   // Unlock dai to continue
   const [allowanceToggle] = getAllByTestId('allowance-toggle');
   click(allowanceToggle.children[1]);
   await waitForElement(() => getByText('DAI unlocked'));
 
   // Input amount to deposit and click
-  const [depositInput, withdrawInput] = getAllByRole('textbox');
+  const depositInput = getByRole('textbox');
   change(depositInput, { target: { value: '21.123456789' } });
   click(getByTestId('deposit-button'));
 
@@ -81,7 +95,12 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await wait(() => getByText('21.1235 USD'));
   await wait(() => getByText(/Deposited/));
 
+  /**Withdraw */
+  click(getByTestId('sidebar-withdraw-button'));
+  await findByText(/would you like to withdraw/);
+
   // Input amount to withdraw and click
+  const withdrawInput = getByRole('textbox');
   change(withdrawInput, { target: { value: '7' } });
   click(getByTestId('withdraw-button'));
 
@@ -99,25 +118,31 @@ test('cannot deposit more than token allowance', async () => {
       ...state,
       accounts: {
         [maker.currentAddress()]: {
-          allowances: { MDAI: 10 }
+          allowances: { MDAI: 10 },
+          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
         }
       }
     };
     return newState;
   };
-  const { getByText, findByText, getAllByRole } = renderWithMaker(
-    <Save />,
+  const { getByText, findByText, getByRole, getByTestId } = renderWithMaker(
+    <SidebarProvider>
+      <Save />
+      <SidebarBase />
+    </SidebarProvider>,
     setupMockState
   );
 
   await findByText('Balance');
-  const [depositInput, withdrawInput] = getAllByRole('textbox');
+  click(getByTestId('sidebar-deposit-button'));
+  await findByText(/would you like to deposit/);
 
+  const depositInput = getByRole('textbox');
   expect(depositInput.disabled).toBe(false);
-  expect(withdrawInput.disabled).toBe(false);
 
   change(depositInput, { target: { value: '20' } });
   const warningEl = getByText('Amount is higher than your allowance for DAI');
+
   change(depositInput, { target: { value: '10' } });
   expect(warningEl).not.toBeInTheDocument();
 });
@@ -128,20 +153,25 @@ test('if allowance is 0, show toggle & disable input', async () => {
       ...state,
       accounts: {
         [maker.currentAddress()]: {
-          allowances: { MDAI: 0 }
+          allowances: { MDAI: 0 },
+          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
         }
       }
     };
     return newState;
   };
-  const { getAllByText, getAllByRole } = renderWithMaker(
-    <Save />,
+  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
+    <SidebarProvider>
+      <Save />
+      <SidebarBase />
+    </SidebarProvider>,
     setupMockState
   );
 
+  await findByText('Balance');
+  click(getByTestId('sidebar-deposit-button'));
   await waitForElement(() => getAllByText('Unlock DAI to continue'));
-  const [depositInput, withdrawInput] = getAllByRole('textbox');
 
+  const depositInput = getByRole('textbox');
   expect(depositInput.disabled).toBe(true);
-  expect(withdrawInput.disabled).toBe(true);
 });

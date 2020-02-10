@@ -188,7 +188,8 @@ function DSRInfo() {
 
   return (
     <Flex py="s" height="100%" flexDirection="column">
-      <Card>
+      <Text.h4>{lang.save.dai_locked_dsr}</Text.h4>
+      <Card px={{ s: 'm', m: 'l' }} py="s" mt="s" flexGrow="1">
         <CardBody px="l" py="m">
           <Ticker
             key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
