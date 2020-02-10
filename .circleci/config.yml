@@ -2,7 +2,7 @@ version: 2
 jobs:
   install:
     docker:
-      - image: circleci/node:11.10.1
+      - image: circleci/node:lts
     steps:
       - checkout
       - restore_cache:
@@ -34,7 +34,7 @@ jobs:
             ./node_modules/.bin/codecov
   deploy_staging:
     docker:
-      - image: circleci/node:11.10.1
+      - image: circleci/node:lts
     steps:
       - checkout
       - restore_cache:
@@ -47,7 +47,7 @@ jobs:
             ./scripts/now-deploy.sh
   deploy_aws_staging:
     docker:
-      - image: circleci/node:11.10.1
+      - image: circleci/node:lts
     steps:
       - checkout
       - restore_cache:
@@ -74,7 +74,7 @@ jobs:
             aws cloudfront create-invalidation --distribution-id $STAGE_AWS_CF_ID --paths "/*"
   deploy_prod:
     docker:
-      - image: circleci/node:11.10.1
+      - image: circleci/node:lts
     steps:
       - checkout
       - restore_cache:
