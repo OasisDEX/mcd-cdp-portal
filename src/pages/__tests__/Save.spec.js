@@ -47,7 +47,7 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test('render save page and perform deposit and withdraw actions', async () => {
+xtest('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
     getByTestId,
