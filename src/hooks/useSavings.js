@@ -27,7 +27,7 @@ function useSavings(address) {
         dispatch({ fetchedSavings: true, ...updates });
       });
     return () => sub.unsubscribe();
-  });
+  }, [maker, address]);
 
   return {
     daiLockedInDsr: daiLockedInDsr.toBigNumber(),
