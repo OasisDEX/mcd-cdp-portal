@@ -104,8 +104,7 @@ test('Vault Display page and actions', async () => {
 
   // amount to generate before
   const generateLabel = getByText('Available to generate');
-  //TODO figure out why this changes with MC service but not MC in the UI (was: 523.00 DAI)
-  expect(generateLabel.nextElementSibling.textContent).toBe('290.00 DAI');
+  expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
 
   // submit generate
   change(getByRole('textbox'), { target: { value: '25' } });
@@ -128,8 +127,7 @@ test('Vault Display page and actions', async () => {
 
   // Outstanding Dai debt before
   const [, debtLabel] = getAllByText('Outstanding Dai debt');
-  //TODO figure out why this changes with MC service but not MC in the UI (was: 235.00 DAI)
-  expect(debtLabel.nextElementSibling.textContent).toBe('210.00 DAI');
+  expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 
   // must unlock Dai first
   const allowanceBtn = getByTestId('allowance-toggle').children[1];
@@ -162,9 +160,8 @@ test('Vault Display page and actions', async () => {
   await findByText(/would you like to withdraw/);
 
   // amount to withdraw before
-  //TODO figure out why this changes with MC service but not MC in the UI (was: 4.99 ETH)
   expect(getByText('Able to withdraw').nextElementSibling.textContent).toBe(
-    '5.22 ETH'
+    '4.99 ETH'
   );
 
   // submit withdraw

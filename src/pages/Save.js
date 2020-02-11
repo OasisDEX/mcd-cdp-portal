@@ -14,21 +14,20 @@ import History from 'components/CDPDisplay/History';
 import AccountSelection from 'components/AccountSelection';
 import DSRInfo from 'components/DSRInfo';
 import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
 import useProxy from 'hooks/useProxy';
 import useAnalytics from 'hooks/useAnalytics';
 import useSidebar from 'hooks/useSidebar';
+import useSavings from 'hooks/useSavings';
 import { FeatureFlags } from 'utils/constants';
 
 function Save() {
   const { lang } = useLanguage();
   const { account, network } = useMaker();
-  const [{ savings }] = useStore();
-
   const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+  const savings = useSavings(account?.address);
   const { trackBtnClick } = useAnalytics('DsrView');
 
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
@@ -72,7 +71,7 @@ function Save() {
           <Text.p t="h4" mb="26px">
             {lang.formatString(
               lang.save.get_started_title,
-              `${savings?.yearlyRate.toFixed(2)}%`
+              `${savings?.annualDaiSavingsRate.toFixed(2)}%`
             )}
           </Text.p>
           <Button
@@ -104,8 +103,8 @@ function Save() {
             {account ? (
               <DSRInfo
                 key={account.address}
-                address={account.address}
                 isMobile={isMobile}
+                savings={savings}
               />
             ) : (
               <div />
@@ -119,7 +118,7 @@ function Save() {
                     disabled={!account}
                     onClick={() => {
                       trackBtnClick('Deposit');
-                      showAction({ type: 'dsrdeposit' });
+                      showAction({ type: 'dsrdeposit', props: { savings } });
                     }}
                   >
                     {lang.actions.deposit}
@@ -134,7 +133,7 @@ function Save() {
                     data-testid={'sidebar-withdraw-button'}
                     onClick={() => {
                       trackBtnClick('Withdraw');
-                      showAction({ type: 'dsrwithdraw' });
+                      showAction({ type: 'dsrwithdraw', props: { savings } });
                     }}
                   >
                     {lang.actions.withdraw}

@@ -6,7 +6,6 @@ import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import usePrevious from 'hooks/usePrevious';
 import useMaker from 'hooks/useMaker';
-import useSavings from 'hooks/useSavings';
 
 import { InfoContainerRow, CdpViewCard } from './CDPDisplay/subcomponents';
 import { TextBlock } from 'components/Typography';
@@ -55,7 +54,7 @@ const initialState = {
   earningsDispatched: false
 };
 
-function DSRInfo({ address, isMobile }) {
+function DSRInfo({ isMobile, savings }) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
 
@@ -66,7 +65,7 @@ function DSRInfo({ address, isMobile }) {
     dateEarningsLastAccrued,
     daiLockedInDsr,
     fetchedSavings
-  } = useSavings(address);
+  } = savings;
 
   const mobileViewChange = usePrevious(isMobile);
 

@@ -47,7 +47,7 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-xtest('render save page and perform deposit and withdraw actions', async () => {
+test('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
     getByTestId,
@@ -152,7 +152,7 @@ test('if allowance is 0, show toggle & disable input', async () => {
     const newState = {
       ...state,
       accounts: {
-        [maker.currentAddress()]: {
+        '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6': {
           allowances: { MDAI: 0 },
           balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
         }
