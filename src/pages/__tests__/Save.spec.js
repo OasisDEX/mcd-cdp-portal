@@ -63,9 +63,9 @@ xtest('render save page and perform deposit and withdraw actions', async () => {
   );
 
   // Wait for page to render
-  await waitForElement(() => getByText('Balance'));
+  await waitForElement(() => getByText('Savings'));
   // Initial DSR balance
-  getByText('0.0000 USD');
+  getByText('DAI locked in DSR');
   // Savings to date
   getByText('Savings earned to date');
   // Dai Savings Rate
@@ -92,7 +92,7 @@ xtest('render save page and perform deposit and withdraw actions', async () => {
   click(getByTestId('deposit-button'));
 
   // Balance and history table update after deposit
-  await wait(() => getByText('21.1235 USD'));
+  await wait(() => getByText('21.12345', { exact: false }));
   await wait(() => getByText(/Deposited/));
 
   /**Withdraw */
@@ -105,7 +105,7 @@ xtest('render save page and perform deposit and withdraw actions', async () => {
   click(getByTestId('withdraw-button'));
 
   // Balance and history table update after withdraw
-  await wait(() => getByText('14.1235 USD'));
+  await wait(() => getByText('14.12345', { exact: false }));
   await wait(() => getByText(/Withdrew/));
 
   // Two entries in the history table
@@ -133,7 +133,7 @@ test('cannot deposit more than token allowance', async () => {
     setupMockState
   );
 
-  await findByText('Balance');
+  await findByText('Savings');
   click(getByTestId('sidebar-deposit-button'));
   await findByText(/would you like to deposit/);
 
@@ -168,7 +168,7 @@ test('if allowance is 0, show toggle & disable input', async () => {
     setupMockState
   );
 
-  await findByText('Balance');
+  await findByText('Savings');
   click(getByTestId('sidebar-deposit-button'));
   await waitForElement(() => getAllByText('Unlock DAI to continue'));
 

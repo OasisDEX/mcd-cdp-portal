@@ -2,19 +2,15 @@ import React, { useReducer, useEffect, useState, useRef } from 'react';
 import BigNumber from 'bignumber.js';
 
 import TextMono from 'components/TextMono';
-import {
-  Flex,
-  Card,
-  CardBody,
-  Text,
-  Table
-} from '@makerdao/ui-components-core';
+import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import usePrevious from 'hooks/usePrevious';
 import useMaker from 'hooks/useMaker';
 import useSavings from 'hooks/useSavings';
 
 const FF_DYNAMIC_DECIMALS = false;
+import { InfoContainerRow, CdpViewCard } from './CDPDisplay/subcomponents';
+import { TextBlock } from 'components/Typography';
 
 function Ticker({ amount, increment, decimals, ...props }) {
   const [counter, setCounter] = useState(amount);
@@ -159,65 +155,53 @@ function DSRInfo({ address, isMobile }) {
   }, [mobileViewChange]); // eslint-disable-line
 
   return (
-    <Flex py="s" height="100%" flexDirection="column">
-      <Text.h4>{lang.save.dai_locked_dsr}</Text.h4>
-      <Card px={{ s: 'm', m: 'l' }} py="s" mt="s" flexGrow="1">
-        <CardBody px="l" py="m">
-          {fetchedSavings ? (
-            <Ticker
-              key={`${balance.toNumber()}.${amountChange.toNumber()}.${decimalsToShow}`}
-              amount={balance.toNumber()}
-              increment={amountChange.toNumber()}
-              decimals={decimalsToShow}
-              t="h2"
-            />
+    <CdpViewCard title={lang.save.dai_locked_dsr}>
+      <Flex alignItems="flex-end" mt="s" mb="xs">
+        <Ticker
+          key={`${proxyAddress}.${balance.toString()}.${amountChange}.${decimalsToShow}`}
+          amount={balance.toNumber()}
+          increment={amountChange.toNumber()}
+          decimals={decimalsToShow}
+          t="h2"
+        />
+        <Box>
+          <Text.h4 mb=".175rem" ml="s">
+            DAI
+          </Text.h4>
+        </Box>
+      </Flex>
+      <InfoContainerRow
+        title={
+          <TextBlock fontSize="l">{lang.save.savings_earned_to_date}</TextBlock>
+        }
+        value={
+          <>
+            {earningsDispatched ? (
+              <Ticker
+                key={`${proxyAddress}.${earnings.toString()}.${amountChange}.${decimalsToShow}`}
+                amount={earnings.toNumber()}
+                increment={amountChange.toNumber()}
+                decimals={decimalsToShow}
+                t="body"
+              />
+            ) : (
+              <TextMono t="body">{(0).toFixed(decimalsToShow)}</TextMono>
+            )}
+            <Text ml="xs">DAI</Text>
+          </>
+        }
+      />
+      <InfoContainerRow
+        title={lang.save.dai_savings_rate}
+        value={
+          annualDaiSavingsRate ? (
+            <TextMono>{annualDaiSavingsRate.toFixed(2)}%</TextMono>
           ) : (
-            <TextMono t="h2">{(0).toFixed(4)}</TextMono>
-          )}
-          <Text t="h5"> DAI</Text>
-          <Text.p t="h5" mt="s" color="steel">
-            {daiLockedInDsr?.toFixed(4)} USD
-          </Text.p>
-        </CardBody>
-        <CardBody px="l">
-          <Table width="100%">
-            <Table.tbody>
-              <Table.tr>
-                <Table.td>
-                  <Text t="body">{lang.save.savings_earned_to_date}</Text>
-                </Table.td>
-                <Table.td textAlign="right">
-                  {earningsDispatched ? (
-                    <Ticker
-                      key={`${proxyAddress}.${earnings.toString()}.${amountChange}.${decimalsToShow}`}
-                      amount={earnings.toNumber()}
-                      increment={amountChange.toNumber()}
-                      decimals={decimalsToShow}
-                      t="body"
-                    />
-                  ) : (
-                    <TextMono t="body">{(0).toFixed(4)}</TextMono>
-                  )}
-                  <Text t="body"> DAI</Text>
-                </Table.td>
-              </Table.tr>
-              <Table.tr>
-                <Table.td>
-                  <Text t="body">{lang.save.dai_savings_rate}</Text>
-                </Table.td>
-                <Table.td textAlign="right">
-                  <Text t="body">
-                    {annualDaiSavingsRate
-                      ? `${annualDaiSavingsRate.toFixed(2)}%`
-                      : '--'}
-                  </Text>
-                </Table.td>
-              </Table.tr>
-            </Table.tbody>
-          </Table>
-        </CardBody>
-      </Card>
-    </Flex>
+            '--'
+          )
+        }
+      />
+    </CdpViewCard>
   );
 }
 

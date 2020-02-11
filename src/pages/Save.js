@@ -91,9 +91,7 @@ function Save() {
         </Flex>
       ) : (
         <>
-          <Text.h2 pr="m" mb="m" color="darkPurple">
-            {lang.save.title}
-          </Text.h2>
+          <Text.h2>{lang.save.title}</Text.h2>
           <Grid
             py="m"
             gridColumnGap="l"

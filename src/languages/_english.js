@@ -328,7 +328,7 @@ export default {
     invalid_allowance: 'Amount is higher than your allowance for {0}'
   },
   save: {
-    title: 'Balance',
+    title: 'Savings',
     dai_savings_rate: 'Dai Savings rate',
     description:
       'Receive savings on your Dai. Deposit or withdraw at any time.',
