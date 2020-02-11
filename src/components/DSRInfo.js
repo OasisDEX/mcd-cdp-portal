@@ -8,10 +8,10 @@ import usePrevious from 'hooks/usePrevious';
 import useMaker from 'hooks/useMaker';
 import useSavings from 'hooks/useSavings';
 
-const FF_DYNAMIC_DECIMALS = false;
 import { InfoContainerRow, CdpViewCard } from './CDPDisplay/subcomponents';
 import { TextBlock } from 'components/Typography';
 
+const FF_DYNAMIC_DECIMALS = false;
 function Ticker({ amount, increment, decimals, ...props }) {
   const [counter, setCounter] = useState(amount);
   const requestRef = useRef();
