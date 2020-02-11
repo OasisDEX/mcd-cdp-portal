@@ -14,6 +14,8 @@ import usePrevious from 'hooks/usePrevious';
 import useMaker from 'hooks/useMaker';
 import useSavings from 'hooks/useSavings';
 
+const FF_DYNAMIC_DECIMALS = false;
+
 function Ticker({ amount, increment, decimals, ...props }) {
   const [counter, setCounter] = useState(amount);
   const requestRef = useRef();
@@ -87,13 +89,16 @@ function DSRInfo({ address, isMobile }) {
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
 
-  const mobileDecimals = isMobile
-    ? decimalsToShow
-    : daiLockedInDsr.lt(1000)
-    ? 8
-    : daiLockedInDsr.lt(100000)
-    ? 6
-    : 4;
+  const decimals =
+    !isMobile && FF_DYNAMIC_DECIMALS
+      ? amountChange.times(100).e * -1
+      : daiLockedInDsr.eq(0)
+      ? 4
+      : daiLockedInDsr.lt(1000)
+      ? 8
+      : daiLockedInDsr.lt(100000)
+      ? 6
+      : 4;
 
   const fetchEarnings = async () => {
     const etd = await maker
@@ -132,11 +137,7 @@ function DSRInfo({ address, isMobile }) {
         balance: daiLockedInDsr.plus(accruedInterestSinceDrip),
         amountChange: amountChangePerMillisecond,
         interestAccrued: accruedInterestSinceDrip,
-        decimalsToShow: !isMobile
-          ? daiLockedInDsr.gt(0)
-            ? amountChangePerMillisecond.times(100).e * -1
-            : initialState.decimalsToShow
-          : mobileDecimals
+        decimalsToShow: decimals
       });
 
       if (fetchedEarnings) {
@@ -152,13 +153,7 @@ function DSRInfo({ address, isMobile }) {
   useEffect(() => {
     if (fetchedEarnings) {
       dispatch({
-        decimalsToShow: !isMobile
-          ? amountChange.times(100).e * -1
-          : daiLockedInDsr.lt(1000)
-          ? 8
-          : daiLockedInDsr.lt(100000)
-          ? 6
-          : 4
+        decimalsToShow: decimals
       });
     }
   }, [mobileViewChange]); // eslint-disable-line
