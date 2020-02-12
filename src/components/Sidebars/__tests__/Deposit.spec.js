@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
-import { createCurrencyRatio } from '@makerdao/currency';
+import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import {
   TestAccountProvider,
   takeSnapshot,
@@ -17,6 +17,7 @@ import { renderWithMaker as render } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 import { formatter } from 'utils/ui';
+import { of } from 'rxjs';
 
 let snapshotData;
 let account;
@@ -124,6 +125,16 @@ const mockVault = {
       .toNumber()
 };
 
+const watchMock = services => (key, ...args) =>
+  services[key] && services[key](...args);
+
+const mockBatAmt = BAT(BAT_ACCOUNT_BALANCE);
+
+const tokenBalanceMock = (address, token) => {
+  if (token === 'BAT') return of(mockBatAmt);
+  else return of(createCurrency(token)(0));
+};
+
 test('basic rendering', async () => {
   const { findByText, findAllByText } = renderWithMockedStore(
     <Deposit vault={mockVault} />
@@ -139,6 +150,10 @@ test('input validation', async () => {
   const { getByText, getByRole, findByText } = renderWithMockedStore(
     React.createElement(() => {
       const { maker } = useMaker();
+
+      maker.service('multicall').watch = watchMock({
+        tokenBalance: tokenBalanceMock
+      });
 
       React.useEffect(() => {
         const accountService = maker.service('accounts');
@@ -172,6 +187,10 @@ test('verify info container values', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
     React.createElement(() => {
       const { maker } = useMaker();
+
+      maker.service('multicall').watch = watchMock({
+        tokenBalance: tokenBalanceMock
+      });
 
       React.useEffect(() => {
         const accountService = maker.service('accounts');
@@ -216,6 +235,11 @@ test('calls the lock function as expected', async () => {
   const { getByText, findByText, getByRole } = renderWithMockedStore(
     React.createElement(() => {
       maker = useMaker().maker;
+
+      maker.service('multicall').watch = watchMock({
+        tokenBalance: tokenBalanceMock
+      });
+
       React.useEffect(() => {
         const accountService = maker.service('accounts');
         accountService

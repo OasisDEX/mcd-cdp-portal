@@ -1,4 +1,6 @@
 import React from 'react';
+import { ETH } from '@makerdao/dai-plugin-mcd';
+import { createCurrency } from '@makerdao/currency';
 import CDPCreate from '../CDPCreate';
 import { renderWithAccount, mocks } from '../../../test/helpers/render';
 import { wait, fireEvent } from '@testing-library/react';
@@ -6,6 +8,8 @@ import { instantiateMaker } from '../../maker';
 import BigNumber from 'bignumber.js';
 import { mineBlocks } from '@makerdao/test-helpers';
 import assert from 'assert';
+import { of } from 'rxjs';
+import useMaker from '../../hooks/useMaker';
 const { click, change } = fireEvent;
 
 jest.mock('mixpanel-browser', () => ({
@@ -40,17 +44,35 @@ function prepState(state) {
   };
 }
 
+const watchMock = services => (key, ...args) =>
+  services[key] && services[key](...args);
+
+const tokenBalanceMock = (address, token) => {
+  if (token === 'ETH') return of(ETH(3));
+  else return of(createCurrency(token)(0));
+};
+
 test('the whole flow', async () => {
   const {
     getAllByRole,
     getAllByText,
     getByLabelText,
-    getByRole,
     getByText
-  } = await renderWithAccount(<CDPCreate />, prepState);
+  } = await renderWithAccount(
+    React.createElement(() => {
+      maker = useMaker().maker;
+
+      maker.service('multicall').watch = watchMock({
+        tokenBalance: tokenBalanceMock
+      });
+      return <CDPCreate />;
+    }),
+    prepState
+  );
 
   getByText('Select a collateral type');
-  click(getByRole('radio')); // ETH-A is the only ilk shown
+  const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
+  click(ethRadioButton);
   click(getByText('Continue'));
 
   getByText('Vault Setup and Management');

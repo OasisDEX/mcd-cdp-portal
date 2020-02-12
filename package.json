@@ -98,6 +98,7 @@
     "lighthouse": "^4.0.0",
     "lint-staged": "^9.2.5",
     "prettier": "^1.15.3",
+    "rxjs": "^6.5.4",
     "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
   },
