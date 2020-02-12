@@ -12,6 +12,8 @@ const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
   const prices = watch.collateralTypesPrices(cdpTypesList);
   const totalDaiSupply = watch.totalDaiSupply();
+  const totalDaiLockedInDsr = watch.totalDaiLockedInDsr();
+  const annualDaiSavingsRate = watch.annualDaiSavingsRate();
 
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
@@ -23,11 +25,26 @@ const SidebarGlobalPanel = () => {
         <Grid gridRowGap="s">
           {routeIsBorrow && <SidebarFeeds feeds={prices} />}
           {routeIsBorrow && <SidebarSystem system={{ totalDaiSupply }} />}
-          {routeIsSave && <SidebarDetails system={{ totalDaiSupply }} />}
+          {routeIsSave && (
+            <SidebarDetails
+              system={{
+                totalDaiSupply,
+                totalDaiLockedInDsr,
+                annualDaiSavingsRate
+              }}
+            />
+          )}
         </Grid>
       </Box>
     );
-  }, [routeIsBorrow, routeIsSave, prices, totalDaiSupply]);
+  }, [
+    routeIsBorrow,
+    routeIsSave,
+    prices,
+    totalDaiSupply,
+    totalDaiLockedInDsr,
+    annualDaiSavingsRate
+  ]);
 };
 
 export default SidebarGlobalPanel;

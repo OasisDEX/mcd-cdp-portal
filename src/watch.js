@@ -26,27 +26,27 @@ export function updateWatcherWithAccount(maker, accountAddress, proxyAddress) {
       ...calls.filter(
         call =>
           !(
-            (accountAddress && call?.meta?.accountBalanceForToken) ||
+            // (accountAddress && call?.meta?.accountBalanceForToken) ||
             (accountAddress &&
               proxyAddress &&
-              (call?.meta?.accountSavings ||
-                call?.meta?.accountProxyAllowanceForToken))
+              // (call?.meta?.accountSavings ||
+                call?.meta?.accountProxyAllowanceForToken)
           )
       ),
       // Add account balance calls
-      ...(accountAddress
-        ? flatten(
-            tokensWithBalances
-              .filter(token => token !== 'DSR')
-              .map(token =>
-                accountBalanceForToken(addresses, token, accountAddress)
-              )
-          )
-        : []),
+      // ...(accountAddress
+      //   ? flatten(
+      //       tokensWithBalances
+      //         .filter(token => token !== 'DSR')
+      //         .map(token =>
+      //           accountBalanceForToken(addresses, token, accountAddress)
+      //         )
+      //     )
+      //   : []),
       // Add account savings and proxy allowance calls
       ...(accountAddress && proxyAddress
         ? [
-            ...accountSavings(addresses, accountAddress, proxyAddress),
+            // ...accountSavings(addresses, accountAddress, proxyAddress),
             ...flatten(
               tokensWithBalances
                 // ETH/DSR can't have an allowance
@@ -118,7 +118,7 @@ export async function startWatcher(maker) {
         ...createCDPSystemModel(addresses),
         ...flatten(ilks.map(ilk => cdpTypeModel(addresses, ilk))),
         ...savingsModel(addresses)
-      ].filter(call => !isMissingContractAddress(call))
+      ].filter(call => !isMissingContractAddress(call));
   });
 
   // Our watch has begun
