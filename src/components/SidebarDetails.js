@@ -1,7 +1,7 @@
 import React from 'react';
 import useLanguage from 'hooks/useLanguage';
 import { Text, Box, Card, CardBody, Flex } from '@makerdao/ui-components-core';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatter } from 'utils/ui';
 
 const SidebarDetails = ({ system, savings }) => {
   const { lang } = useLanguage();
@@ -13,12 +13,12 @@ const SidebarDetails = ({ system, savings }) => {
 
   const TOTAL_SAVINGS_DAI = ({ system }) => [
     lang.sidebar.save_details.total_savings_dai,
-    prettifyNumber(system.totalSavingsDai)
+    prettifyNumber(system.totalDaiLockedInDsr)
   ];
 
-  const DAI_SAVINGS_RATE = ({ savings }) => [
+  const DAI_SAVINGS_RATE = ({ system }) => [
     lang.sidebar.save_details.dai_savings_rate,
-    savings?.yearlyRate.toFixed(2) + '%'
+    formatter(system.annualDaiSavingsRate) + '%'
   ];
 
   const params = [TOTAL_DAI_SUPPLY, TOTAL_SAVINGS_DAI, DAI_SAVINGS_RATE].map(

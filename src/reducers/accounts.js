@@ -18,16 +18,16 @@ const defaultAccountState = {
 const initialState = {};
 
 // this math should eventually be moved into the SDK
-export function getSavingsBalance(
-  address,
-  { accounts, savings: { Pie, chi, totalDai } }
-) {
-  const pie =
-    (accounts[address] && accounts[address].savings) || new BigNumber(0);
-  const slice = Pie.isZero() ? Pie : pie.div(Pie);
+// export function getSavingsBalance(
+//   address,
+//   { accounts, savings: { Pie, chi, totalDai } }
+// ) {
+//   const pie =
+//     (accounts[address] && accounts[address].savings) || new BigNumber(0);
+//   const slice = Pie.isZero() ? Pie : pie.div(Pie);
 
-  return totalDai.times(slice);
-}
+//   return totalDai.times(slice);
+// }
 
 const reducer = produce((draft, { type, value }) => {
   if (!type) return;
