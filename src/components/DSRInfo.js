@@ -70,7 +70,6 @@ function DSRInfo({ isMobile, savings }) {
     savingsDai
   } = savings;
 
-  const mobileViewChange = usePrevious(isMobile);
   const [
     {
       balance,
@@ -83,7 +82,8 @@ function DSRInfo({ isMobile, savings }) {
       earningsDispatched,
       totalDaiLockedAmountDelta,
       tickerInterest,
-      tickerStartTime
+      tickerStartTime,
+      initialised
     },
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
@@ -151,18 +151,18 @@ function DSRInfo({ isMobile, savings }) {
           : BigNumber(0);
 
         const amountChangePerMillisecond = amountChangePerSecond.div(1000);
-
         const daiLockedAmountDelta =
           !savingsDaiChanged && savingsRateAccChanged
             ? daiBalance.minus(prevDaiLocked)
             : BigNumber(0);
 
-        if (fetchedEarnings) {
+        if (fetchedEarnings && initialised) {
           if (!earningsDispatched) {
-            const timeSinceTickerStart = Date.now() - tickerStartTime - 250;
-            const interestSinceTickerStart = amountChangePerSecond.times(
-              timeSinceTickerStart / 1000
-            );
+            const timeSinceTickerStart = Date.now() - tickerStartTime;
+            const interestSinceTickerStart =
+              timeSinceTickerStart > 2500
+                ? amountChangePerSecond.times(timeSinceTickerStart / 1000)
+                : BigNumber(0);
 
             dispatch({
               balance: daiBalance.plus(accruedInterestSinceDrip),
@@ -184,7 +184,6 @@ function DSRInfo({ isMobile, savings }) {
               balance: daiBalance.plus(accruedInterestSinceDrip),
               amountChange: amountChangePerMillisecond,
               decimalsToShow: decimals,
-              earningsDispatched: true,
               totalDaiLockedAmountDelta: totalDaiLockedAmountDelta.plus(
                 daiLockedAmountDelta
               ),
@@ -200,27 +199,29 @@ function DSRInfo({ isMobile, savings }) {
             balance: daiBalance.plus(accruedInterestSinceDrip),
             amountChange: amountChangePerMillisecond,
             decimalsToShow: decimals,
-            tickerStartTime: Date.now()
+            tickerStartTime: Date.now(),
+            initialised: true
           });
         }
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     fetchedSavings,
     savingsRateAccChanged,
     savingsDaiChanged,
     rawEarningsString,
-    fetchedEarnings
+    fetchedEarnings,
+    initialised
   ]);
 
   useEffect(() => {
-    if (fetchedEarnings) {
-      dispatch({
-        decimalsToShow: decimals
-      });
-    }
-  }, [mobileViewChange]); // eslint-disable-line
+    return () => {
+      console.log('unmounting');
+      dispatch(initialState);
+    };
+  }, []);
 
   return (
     <CdpViewCard title={lang.save.dai_locked_dsr}>
