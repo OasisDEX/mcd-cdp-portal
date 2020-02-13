@@ -216,13 +216,6 @@ function DSRInfo({ isMobile, savings }) {
     initialised
   ]);
 
-  useEffect(() => {
-    return () => {
-      console.log('unmounting');
-      dispatch(initialState);
-    };
-  }, []);
-
   return (
     <CdpViewCard title={lang.save.dai_locked_dsr}>
       <Flex alignItems="flex-end" mt="s" mb="xs">
