@@ -7,7 +7,9 @@ const initialState = {
   daiSavingsRate: BigNumber(1),
   dateEarningsLastAccrued: Date.now(),
   daiLockedInDsr: BigNumber(0),
-  fetchedSavings: false
+  fetchedSavings: false,
+  savingsRateAccumulator: undefined,
+  savingsDai: BigNumber(0)
 };
 
 function useSavings(address) {

@@ -32,7 +32,6 @@ function Ticker({ amount, increment, decimals, ...props }) {
     return () => cancelAnimationFrame(requestRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <TextMono {...props}>
       {counter ? counter.toFixed(decimals) : (0).toFixed(decimals)}
@@ -45,13 +44,15 @@ const initialState = {
   earnings: BigNumber(0),
   amountChange: BigNumber(0),
   decimalsToShow: 4,
-  interestAccrued: 0,
   rawEarnings: BigNumber(0),
   amountChangeMillisecond: BigNumber(0.000001),
   fetchedEarnings: false,
   fetchingEarnings: false,
   initialised: false,
-  earningsDispatched: false
+  earningsDispatched: false,
+  totalDaiLockedAmountDelta: BigNumber(0),
+  tickerInterest: BigNumber(0),
+  tickerStartTime: 0
 };
 
 function DSRInfo({ isMobile, savings }) {
@@ -64,11 +65,12 @@ function DSRInfo({ isMobile, savings }) {
     daiSavingsRate,
     dateEarningsLastAccrued,
     daiLockedInDsr,
-    fetchedSavings
+    fetchedSavings,
+    savingsRateAccumulator,
+    savingsDai
   } = savings;
 
   const mobileViewChange = usePrevious(isMobile);
-
   const [
     {
       balance,
@@ -76,10 +78,12 @@ function DSRInfo({ isMobile, savings }) {
       amountChange,
       decimalsToShow,
       rawEarnings,
-      interestAccrued,
       fetchedEarnings,
       fetchingEarnings,
-      earningsDispatched
+      earningsDispatched,
+      totalDaiLockedAmountDelta,
+      tickerInterest,
+      tickerStartTime
     },
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
@@ -106,44 +110,109 @@ function DSRInfo({ isMobile, savings }) {
     });
   };
 
-  const daiLockedString = daiLockedInDsr.toString();
+  const daiBalance = savingsDai.times(savingsRateAccumulator);
+  const prevDaiLocked = usePrevious(daiBalance);
   const rawEarningsString = rawEarnings.toString();
+
+  const prevSavingsDai = usePrevious(savingsDai);
+  const savingsDaiChanged =
+    prevSavingsDai !== undefined &&
+    prevSavingsDai.toString() !== savingsDai.toString();
+
+  const prevSavingsRateAccumulator = usePrevious(savingsRateAccumulator);
+  const savingsRateAccChanged =
+    prevSavingsRateAccumulator !== undefined &&
+    prevSavingsRateAccumulator.toString() !== savingsRateAccumulator.toString();
 
   useEffect(() => {
     if (fetchedSavings) {
       if (proxyAddress && !fetchedEarnings && !fetchingEarnings) {
         fetchEarnings();
-        dispatch({ fetchingEarnings: true });
+        dispatch({
+          fetchingEarnings: true
+        });
       }
 
-      const amountChangePerSecond = daiSavingsRate
-        .minus(1)
-        .times(daiLockedInDsr);
+      if (
+        savingsRateAccChanged ||
+        savingsDaiChanged ||
+        (fetchedEarnings && !earningsDispatched)
+      ) {
+        const amountChangePerSecond = daiSavingsRate
+          .minus(1)
+          .times(daiLockedInDsr);
 
-      const accruedInterestSinceDrip = daiLockedInDsr.gt(0)
-        ? amountChangePerSecond.times(
-            Math.floor(Date.now() / 1000) -
-              dateEarningsLastAccrued.getTime() / 1000
-          )
-        : BigNumber(0);
+        const secondsSinceDrip =
+          Math.floor(Date.now() / 1000) -
+          dateEarningsLastAccrued.getTime() / 1000;
 
-      const amountChangePerMillisecond = amountChangePerSecond.div(1000);
-      dispatch({
-        balance: daiLockedInDsr.plus(accruedInterestSinceDrip),
-        amountChange: amountChangePerMillisecond,
-        interestAccrued: accruedInterestSinceDrip,
-        decimalsToShow: decimals
-      });
+        const accruedInterestSinceDrip = daiLockedInDsr.gt(0)
+          ? amountChangePerSecond.times(secondsSinceDrip)
+          : BigNumber(0);
 
-      if (fetchedEarnings) {
-        dispatch({
-          earningsDispatched: true,
-          earnings: rawEarnings.plus(interestAccrued)
-        });
+        const amountChangePerMillisecond = amountChangePerSecond.div(1000);
+
+        const daiLockedAmountDelta =
+          !savingsDaiChanged && savingsRateAccChanged
+            ? daiBalance.minus(prevDaiLocked)
+            : BigNumber(0);
+
+        if (fetchedEarnings) {
+          if (!earningsDispatched) {
+            const timeSinceTickerStart = Date.now() - tickerStartTime - 250;
+            const interestSinceTickerStart = amountChangePerSecond.times(
+              timeSinceTickerStart / 1000
+            );
+
+            dispatch({
+              balance: daiBalance.plus(accruedInterestSinceDrip),
+              amountChange: amountChangePerMillisecond,
+              decimalsToShow: decimals,
+              earningsDispatched: true,
+              totalDaiLockedAmountDelta: totalDaiLockedAmountDelta.plus(
+                daiLockedAmountDelta
+              ),
+              tickerInterest: interestSinceTickerStart,
+              earnings: rawEarnings
+                .plus(accruedInterestSinceDrip)
+                .plus(daiLockedAmountDelta)
+                .plus(totalDaiLockedAmountDelta)
+                .plus(interestSinceTickerStart)
+            });
+          } else {
+            dispatch({
+              balance: daiBalance.plus(accruedInterestSinceDrip),
+              amountChange: amountChangePerMillisecond,
+              decimalsToShow: decimals,
+              earningsDispatched: true,
+              totalDaiLockedAmountDelta: totalDaiLockedAmountDelta.plus(
+                daiLockedAmountDelta
+              ),
+              earnings: rawEarnings
+                .plus(accruedInterestSinceDrip)
+                .plus(daiLockedAmountDelta)
+                .plus(totalDaiLockedAmountDelta)
+                .plus(tickerInterest)
+            });
+          }
+        } else {
+          dispatch({
+            balance: daiBalance.plus(accruedInterestSinceDrip),
+            amountChange: amountChangePerMillisecond,
+            decimalsToShow: decimals,
+            tickerStartTime: Date.now()
+          });
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchedSavings, daiLockedString, rawEarningsString, fetchedEarnings]);
+  }, [
+    fetchedSavings,
+    savingsRateAccChanged,
+    savingsDaiChanged,
+    rawEarningsString,
+    fetchedEarnings
+  ]);
 
   useEffect(() => {
     if (fetchedEarnings) {
