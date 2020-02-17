@@ -122,7 +122,7 @@ test('proxy toggle', async () => {
     expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
   }, 20000);
 
-  expect(queryByTestId('allowance-toggle')).toBeEnabled();
+  expect(allowanceToggle).toBeEnabled();
 }, 25000);
 
 // commented out for now because this doesn't seem to work well with allowances

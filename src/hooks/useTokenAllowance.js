@@ -6,6 +6,7 @@ import useActionState from 'hooks/useActionState';
 import useLanguage from 'hooks/useLanguage';
 import { cleanSymbol } from '../utils/ui';
 import { watch } from 'hooks/useObservable';
+import BigNumber from 'bignumber.js';
 
 export function useTokenAllowances() {
   const { account } = useMaker();
@@ -50,17 +51,24 @@ export default function useTokenAllowance(tokenSymbol) {
   let proxyAddress = watch.proxyAddress(account?.address);
   if (proxyAddress === '0x0000000000000000000000000000000000000000')
     proxyAddress = null;
-  const allowance = watch.allowance(
-    account?.address,
-    proxyAddress === null ? undefined : proxyAddress,
-    tokenSymbol
-  );
+
+  const allowance =
+    tokenSymbol === 'ETH'
+      ? BigNumber(Infinity)
+      : watch.tokenAllowance(
+          account?.address,
+          proxyAddress === null ? undefined : proxyAddress,
+          tokenSymbol
+        );
+
   const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
   const token = maker.getToken(tokenSymbol);
-  const hasAllowance = allowance !== undefined && allowance !== null;
+  const hasAllowance =
+    tokenSymbol === 'ETH' ||
+    (allowance !== undefined && allowance !== null && !allowance.eq(0));
 
   const hasSufficientAllowance = value =>
-    tokenSymbol === 'ETH' || value <= allowance;
+    tokenSymbol === 'ETH' || BigNumber(value).isLessThanOrEqualTo(allowance);
 
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(

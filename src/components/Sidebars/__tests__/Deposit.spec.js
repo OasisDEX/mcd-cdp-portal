@@ -135,6 +135,10 @@ const tokenBalanceMock = (address, token) => {
   else return of(createCurrency(token)(0));
 };
 
+const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
+const proxyAddressMock = () => of(TEST_ADDRESS_PROXY);
+const tokenAllowanceMock = () => of(BigNumber(Infinity));
+
 test('basic rendering', async () => {
   const { findByText, findAllByText } = renderWithMockedStore(
     <Deposit vault={mockVault} />
@@ -152,7 +156,9 @@ test('input validation', async () => {
       const { maker } = useMaker();
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock
+        tokenBalance: tokenBalanceMock,
+        proxyAddress: proxyAddressMock,
+        tokenAllowance: tokenAllowanceMock
       });
 
       React.useEffect(() => {
@@ -189,7 +195,9 @@ test('verify info container values', async () => {
       const { maker } = useMaker();
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock
+        tokenBalance: tokenBalanceMock,
+        proxyAddress: proxyAddressMock,
+        tokenAllowance: tokenAllowanceMock
       });
 
       React.useEffect(() => {
@@ -237,7 +245,9 @@ test('calls the lock function as expected', async () => {
       maker = useMaker().maker;
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock
+        tokenBalance: tokenBalanceMock,
+        proxyAddress: proxyAddressMock,
+        tokenAllowance: tokenAllowanceMock
       });
 
       React.useEffect(() => {

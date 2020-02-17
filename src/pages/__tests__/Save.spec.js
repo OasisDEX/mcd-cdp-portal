@@ -11,6 +11,7 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { createCurrency } from '@makerdao/currency';
 
 import Save from '../Save';
 import {
@@ -20,6 +21,8 @@ import {
 import { instantiateMaker } from '../../maker';
 import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
+import useMaker from '../../hooks/useMaker';
+import { of } from 'rxjs';
 
 const { click, change } = fireEvent;
 
@@ -111,6 +114,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await findByText(/would you like to deposit/);
 
   // Unlock dai to continue
+  await waitForElement(() => getByTestId('allowance-toggle'));
   const [allowanceToggle] = getAllByTestId('allowance-toggle');
   click(allowanceToggle.children[1]);
   await waitForElement(() => getByText('DAI unlocked'));
@@ -139,27 +143,48 @@ test('render save page and perform deposit and withdraw actions', async () => {
 
   // Two entries in the history table
   await wait(() => assert(getAllByText('external-link.svg').length === 2));
-}, 15000);
+}, 25000);
 
 test('cannot deposit more than token allowance', async () => {
-  const setupMockState = state => {
-    const newState = {
-      ...state,
-      accounts: {
-        [maker.currentAddress()]: {
-          allowances: { MDAI: 10 },
-          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
-        }
-      }
-    };
-    return newState;
+  const MOCK_OBS_RESPONSE = () => of(BigNumber(Infinity));
+  const watchMock = services => (key, ...args) =>
+    services[key] && services[key](...args);
+
+  const tokenBalanceMock = (address, token) => {
+    if (token === 'MDAI') return of(MDAI(BigNumber(50)));
+    else return of(createCurrency(token)(0));
   };
+
+  const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
+  const savingsMock = () =>
+    of({
+      daiLockedInDsr: MDAI('5000'),
+      annualDaiSavingsRate: BigNumber(1),
+      savingsDai: MDAI('100'),
+      savingsRateAccumulator: BigNumber(1)
+    });
   const { getByText, findByText, getByRole, getByTestId } = renderWithMaker(
-    <SidebarProvider>
-      <Save />
-      <SidebarBase />
-    </SidebarProvider>,
-    setupMockState
+    React.createElement(() => {
+      const { maker } = useMaker();
+
+      maker.service('multicall').watch = watchMock({
+        tokenBalance: tokenBalanceMock,
+        proxyAddress: () => of(TEST_ADDRESS_PROXY),
+        tokenAllowance: () => of(BigNumber('10')),
+        savings: savingsMock,
+        collateralTypesPrices: MOCK_OBS_RESPONSE,
+        totalDaiSupply: MOCK_OBS_RESPONSE,
+        totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
+        annualDaiSavingsRate: MOCK_OBS_RESPONSE
+      });
+
+      return (
+        <SidebarProvider>
+          <Save />
+          <SidebarBase />
+        </SidebarProvider>
+      );
+    })
   );
 
   await findByText('Savings');

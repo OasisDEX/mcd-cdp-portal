@@ -1,5 +1,11 @@
 import React from 'react';
-import { cleanup, fireEvent, within, wait } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  within,
+  wait,
+  waitForElement
+} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 
@@ -130,6 +136,7 @@ test('Vault Display page and actions', async () => {
   expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 
   // must unlock Dai first
+  await waitForElement(() => getByTestId('allowance-toggle'));
   const allowanceBtn = getByTestId('allowance-toggle').children[1];
   await wait(() => {
     expect(allowanceBtn).not.toHaveAttribute('disabled');
