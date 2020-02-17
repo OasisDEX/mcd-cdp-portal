@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
@@ -14,22 +14,13 @@ import {
 } from '@makerdao/ui-components-core';
 import { Link, useCurrentRoute } from 'react-navi';
 import useMaker from 'hooks/useMaker';
-import round from 'lodash/round';
 import RatioDisplay from '../components/RatioDisplay';
 import { getColor } from 'styles/theme';
-import useStore from 'hooks/useStore';
 import useLanguage from 'hooks/useLanguage';
-import {
-  getCdp,
-  getDebtAmount,
-  getCollateralAmount,
-  getCollateralValueUSD,
-  getCollateralizationRatio,
-  getCollateralAvailableAmount
-} from 'reducers/cdps';
 import useModal from '../hooks/useModal';
 import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
+import useVaults from 'hooks/useVaults';
 import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 
 const InfoCard = ({ title, amount, denom }) => (
@@ -60,11 +51,8 @@ const InfoCard = ({ title, amount, denom }) => (
 
 function Overview({ viewedAddress }) {
   const { trackBtnClick } = useAnalytics('Table');
-  const { account, viewedAddressData } = useMaker();
-  const [{ cdps, feeds }] = useStore();
-  const [totalCollateralUSD, setTotalCollateralUSD] = useState(0);
-  const [totalDaiDebt, setTotalDaiDebt] = useState(0);
-  const [cdpContent, setCdpContent] = useState(null);
+  const { account } = useMaker();
+  const { viewedAddressVaults } = useVaults();
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
 
@@ -85,66 +73,12 @@ function Overview({ viewedAddress }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewedAddress, account]);
 
-  useEffect(() => {
-    if (viewedAddressData) {
-      const cdpData = viewedAddressData.cdps.map(({ id: cdpId }) => {
-        const cdp = getCdp(cdpId, { cdps, feeds });
-        return {
-          token: cdp.gem,
-          id: cdpId,
-          ratio: getCollateralizationRatio(cdp),
-          ilkLiqRatio: cdp.liquidationRatio,
-          deposited: getCollateralAmount(cdp),
-          withdraw: getCollateralAvailableAmount(cdp),
-          debt: getDebtAmount(cdp),
-          depositedUSD: getCollateralValueUSD(cdp)
-        };
-      });
-      const sumDeposits = cdpData.reduce(
-        (acc, { depositedUSD }) => parseFloat(depositedUSD) + acc,
-        0
-      );
-      const sumDebt = cdpData.reduce(
-        (acc, { debt }) => parseFloat(debt) + acc,
-        0
-      );
-
-      if (sumDebt) {
-        setTotalDaiDebt(sumDebt.toFixed(2));
-      }
-      if (sumDeposits) {
-        setTotalCollateralUSD(round(sumDeposits, 2).toFixed(2));
-      }
-
-      const cleanedCDP = cdpData.map(cdp => {
-        return Object.keys(cdp).map(k => {
-          if (!cdp[k]) return null;
-          const val = parseFloat(cdp[k]).toFixed(2);
-          switch (k) {
-            case 'deposited':
-              return `${val} ${cdp['token']}`;
-            case 'withdraw':
-              return `${val} ${cdp['token']}`;
-            case 'debt':
-              return `${val} DAI`;
-            case 'depositedUSD':
-              return null;
-            default:
-              return cdp[k];
-          }
-        });
-      });
-
-      setCdpContent(cleanedCDP);
-    }
-  }, [account, cdps, feeds, viewedAddress, viewedAddressData]);
-
   const { show } = useModal();
-  if (!viewedAddressData) {
+  if (!viewedAddressVaults) {
     return <LoadingLayout background={getColor('lightGrey')} />;
   }
 
-  if (!viewedAddressData.cdps.length) {
+  if (viewedAddressVaults && !viewedAddressVaults.length) {
     return (
       <PageContentLayout>
         <Flex
@@ -153,7 +87,7 @@ function Overview({ viewedAddress }) {
           alignItems="center"
           flexDirection="column"
         >
-          {account && account.address === viewedAddressData.viewedAddress ? (
+          {account && account.address === viewedAddress ? (
             <>
               <Text.p t="h4" mb="26px">
                 {lang.overview_page.get_started_title}
@@ -177,7 +111,7 @@ function Overview({ viewedAddress }) {
               {lang.formatString(
                 lang.overview_page.no_vaults,
                 <Address
-                  full={viewedAddressData.viewedAddress}
+                  full={viewedAddress}
                   shorten={true}
                   expandable={false}
                 />
@@ -188,13 +122,12 @@ function Overview({ viewedAddress }) {
       </PageContentLayout>
     );
   }
-
   return (
     <PageContentLayout>
       <Text.h2 pr="m" mb="m" color="darkPurple">
         {lang.overview_page.title}
       </Text.h2>
-      {cdpContent && (
+      {viewedAddressVaults && (
         <Grid gridRowGap={{ s: 'm', xl: 'l' }}>
           <Grid
             gridTemplateColumns={{ s: '1fr', xl: 'auto auto 1fr' }}
@@ -203,12 +136,21 @@ function Overview({ viewedAddress }) {
           >
             <InfoCard
               title={lang.overview_page.total_collateral_locked}
-              amount={`$${totalCollateralUSD}`}
+              amount={`$${viewedAddressVaults
+                .reduce(
+                  (acc, { collateralValue }) => collateralValue.plus(acc),
+                  0
+                )
+                .toBigNumber()
+                .toFixed(2)}`}
               denom={'USD'}
             />
             <InfoCard
               title={lang.overview_page.total_dai_debt}
-              amount={totalDaiDebt}
+              amount={`${viewedAddressVaults
+                .reduce((acc, { debtValue }) => debtValue.plus(acc), 0)
+                .toBigNumber()
+                .toFixed(2)}`}
               denom={'DAI'}
             />
           </Grid>
@@ -260,107 +202,107 @@ function Overview({ viewedAddress }) {
                   </Table.tr>
                 </Table.thead>
                 <tbody>
-                  {cdpContent.map(
-                    (
-                      [
-                        token,
-                        id,
-                        ratio,
-                        ilkLiqRatio,
-                        deposited,
-                        withdraw,
-                        debt
-                      ],
-                      i
-                    ) => {
-                      return (
-                        <Table.tr key={i}>
-                          <Table.td>
-                            <Text
-                              t="body"
-                              fontSize={{ s: '1.7rem', xl: 'm' }}
-                              fontWeight={{ s: 'medium', xl: 'normal' }}
-                              color="darkPurple"
+                  {viewedAddressVaults.map(
+                    ({
+                      id,
+                      collateralizationRatio,
+                      liquidationRatio,
+                      collateralAmount,
+                      collateralAvailableAmount,
+                      debtValue
+                    }) => (
+                      <Table.tr key={id}>
+                        <Table.td>
+                          <Text
+                            t="body"
+                            fontSize={{ s: '1.7rem', xl: 'm' }}
+                            fontWeight={{ s: 'medium', xl: 'normal' }}
+                            color="darkPurple"
+                          >
+                            {collateralAmount.symbol}
+                          </Text>
+                        </Table.td>
+                        <Table.td>
+                          <Text
+                            t="body"
+                            fontSize={{ s: '1.7rem', xl: 'm' }}
+                            color={{ s: 'darkLavender', xl: 'darkPurple' }}
+                          >
+                            {id}
+                          </Text>
+                        </Table.td>
+                        <Table.td>
+                          {isFinite(collateralizationRatio.toNumber()) ? (
+                            <RatioDisplay
+                              fontSize={{ s: '1.7rem', xl: '1.3rem' }}
+                              ratio={collateralizationRatio
+                                .toBigNumber()
+                                .dp(4)
+                                .times(100)}
+                              ilkLiqRatio={liquidationRatio
+                                .toBigNumber()
+                                .dp(4)
+                                .times(100)}
+                            />
+                          ) : (
+                            <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
+                              N/A
+                            </Text>
+                          )}
+                        </Table.td>
+                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                          <Text t="caption" color="darkLavender">
+                            {collateralAmount.toString()}
+                          </Text>
+                        </Table.td>
+                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                          <Text t="caption" color="darkLavender">
+                            {collateralAvailableAmount.toString()}
+                          </Text>
+                        </Table.td>
+                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                          <Text t="caption" color="darkLavender">
+                            {debtValue.toBigNumber().toFixed(2)} DAI
+                          </Text>
+                        </Table.td>
+                        <Table.td>
+                          <Flex justifyContent="flex-end">
+                            <Button
+                              variant="secondary-outline"
+                              px="s"
+                              py="2xs"
+                              borderColor="steel"
+                              onClick={() => {
+                                trackBtnClick('Manage', {
+                                  collateral: collateralAmount.symbol,
+                                  vaultId: id
+                                });
+                              }}
                             >
-                              {token}
-                            </Text>
-                          </Table.td>
-                          <Table.td>
-                            <Text
-                              t="body"
-                              fontSize={{ s: '1.7rem', xl: 'm' }}
-                              color={{ s: 'darkLavender', xl: 'darkPurple' }}
-                            >
-                              {id}
-                            </Text>
-                          </Table.td>
-                          <Table.td>
-                            {isFinite(ratio) ? (
-                              <RatioDisplay
-                                fontSize={{ s: '1.7rem', xl: '1.3rem' }}
-                                ratio={ratio}
-                                ilkLiqRatio={ilkLiqRatio}
-                              />
-                            ) : (
-                              <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
-                                N/A
-                              </Text>
-                            )}
-                          </Table.td>
-                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                            <Text t="caption" color="darkLavender">
-                              {deposited}
-                            </Text>
-                          </Table.td>
-                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                            <Text t="caption" color="darkLavender">
-                              {withdraw}
-                            </Text>
-                          </Table.td>
-                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                            <Text t="caption" color="darkLavender">
-                              {debt}
-                            </Text>
-                          </Table.td>
-                          <Table.td>
-                            <Flex justifyContent="flex-end">
-                              <Button
-                                variant="secondary-outline"
-                                px="s"
-                                py="2xs"
-                                borderColor="steel"
-                                onClick={() => {
-                                  trackBtnClick('Manage', {
-                                    collateral: token,
-                                    vaultId: id
-                                  });
-                                }}
+                              <Link
+                                href={`/${Routes.BORROW}/${id}${url.search}`}
+                                prefetch={true}
                               >
-                                <Link
-                                  href={`/${Routes.BORROW}/${id}${url.search}`}
-                                  prefetch={true}
+                                <Text
+                                  fontSize="1.3rem"
+                                  color="steel"
+                                  css={`
+                                    white-space: nowrap;
+                                  `}
                                 >
-                                  <Text
-                                    fontSize="1.3rem"
-                                    color="steel"
-                                    css={`
-                                      white-space: nowrap;
-                                    `}
-                                  >
-                                    <Box display={{ s: 'none', xl: 'inline' }}>
-                                      {lang.overview_page.view_cdp}
-                                    </Box>
-                                    <Box display={{ s: 'inline', xl: 'none' }}>
-                                      {lang.overview_page.view_cdp_mobile}
-                                    </Box>
-                                  </Text>
-                                </Link>
-                              </Button>
-                            </Flex>
-                          </Table.td>
-                        </Table.tr>
-                      );
-                    }
+                                  <Box display={{ s: 'none', xl: 'inline' }}>
+                                    {lang.overview_page.view_cdp}
+                                  </Box>
+                                  <Box display={{ s: 'inline', xl: 'none' }}>
+                                    {lang.overview_page.view_cdp_mobile}
+                                  </Box>
+                                </Text>
+                              </Link>
+                            </Button>
+                          </Flex>
+                        </Table.td>
+                      </Table.tr>
+                    )
                   )}
                 </tbody>
               </Table>
