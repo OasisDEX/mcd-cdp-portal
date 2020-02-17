@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 import useActionState from 'hooks/useActionState';
 import useLanguage from 'hooks/useLanguage';
 import { cleanSymbol } from '../utils/ui';
+import { watch } from 'hooks/useObservable';
 
 export function useTokenAllowances() {
   const { account } = useMaker();
@@ -42,16 +43,25 @@ export function useFetchedTokenAllowances() {
 
 export default function useTokenAllowance(tokenSymbol) {
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
-  const token = maker.getToken(tokenSymbol);
+  const { maker, account, newTxListener } = useMaker();
 
-  const allowances = useTokenAllowances();
-  const allowance = allowances[tokenSymbol];
-  const hasAllowance = !!allowances[tokenSymbol];
+  // TODO: Return null from proxyRegistry schema if proxy address
+  // returned is 0x0000000000000000000000000000000000000000
+  let proxyAddress = watch.proxyAddress(account?.address);
+  if (proxyAddress === '0x0000000000000000000000000000000000000000')
+    proxyAddress = null;
+  const allowance = watch.allowance(
+    account?.address,
+    proxyAddress === null ? undefined : proxyAddress,
+    tokenSymbol
+  );
+  const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
+  const token = maker.getToken(tokenSymbol);
+  const hasAllowance = allowance !== undefined && allowance !== null;
+
   const hasSufficientAllowance = value =>
     tokenSymbol === 'ETH' || value <= allowance;
 
-  const hasFetchedAllowance = useFetchedTokenAllowances();
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
     async () => {

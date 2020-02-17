@@ -10,6 +10,7 @@ import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import waitForExpect from 'wait-for-expect';
 
 import Payback from '../Payback';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
@@ -68,17 +69,6 @@ const mockVault = {
       .toNumber()
 };
 
-test('basic rendering', async () => {
-  const { getByText } = render(<Payback vault={mockVault} />, setupMockState);
-
-  // this waits for the initial proxy & allowance check to finish
-  await waitForElement(() => getByText(/Unlock DAI/));
-
-  // these throw errors if they don't match anything
-  getByText('Pay Back DAI');
-  // getByText('7.5 DAI'); // art * rate from mock state
-});
-
 let web3;
 
 const SetupProxyAndAllowance = () => {
@@ -103,7 +93,10 @@ const SetupProxyAndAllowance = () => {
 };
 
 test('proxy toggle', async () => {
-  const { getByTestId } = render(<SetupProxyAndAllowance />, setupMockState);
+  const { getByTestId, queryByTestId } = render(
+    <SetupProxyAndAllowance />,
+    setupMockState
+  );
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))
@@ -124,11 +117,13 @@ test('proxy toggle', async () => {
   });
 
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.creating_proxy);
-  await mineBlocks(web3, 11);
-  expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
+  await waitForExpect(async () => {
+    await mineBlocks(web3, 3);
+    expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
+  }, 20000);
 
-  expect(allowanceButton).toBeEnabled();
-}, 20000);
+  expect(queryByTestId('allowance-toggle')).toBeEnabled();
+}, 25000);
 
 // commented out for now because this doesn't seem to work well with allowances
 // from multicall
@@ -156,4 +151,15 @@ xtest('allowance toggle', async () => {
   expect(allowanceToggle).toHaveTextContent(
     lang.formatString(lang.action_sidebar.token_unlocked, 'DAI')
   );
+});
+
+test('basic rendering', async () => {
+  const { getByText } = render(<Payback vault={mockVault} />, setupMockState);
+
+  // this waits for the initial proxy & allowance check to finish
+  await waitForElement(() => getByText(/Unlock DAI/));
+
+  // these throw errors if they don't match anything
+  getByText('Pay Back DAI');
+  // getByText('7.5 DAI'); // art * rate from mock state
 });
