@@ -1,19 +1,8 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import isEqual from 'lodash/isEqual';
 import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
-import { Routes } from 'utils/constants';
-import useStore from '../hooks/useStore';
-import ilks from 'references/ilkList';
-import { trackCdpById } from 'reducers/multicall/cdps';
-import {
-  createWatcher,
-  startWatcher,
-  updateWatcherWithAccount
-} from '../watch';
-import { batchActions } from '../utils/redux';
 import {
   checkEthereumProvider,
   browserEthereumProviderAddress
@@ -23,6 +12,7 @@ import localSchemas from '../references/schemas/index.js';
 import schemas from '@makerdao/dai-plugin-mcd/dist/schemas';
 import useObservable, { watch } from 'hooks/useObservable';
 import debug from 'debug';
+
 const log = debug('maker:MakerProvider');
 
 const { getVaults, getCdpIds } = localSchemas;
@@ -43,17 +33,14 @@ function MakerProvider({
   mocks
 }) {
   const [account, setAccount] = useState(null);
-  const [viewedAddressData, setViewedAddressData] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
-  const [, dispatch] = useStore();
-
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
-    setAccount({ ...account, cdps: [] });
+    setAccount({ ...account });
   };
 
   const connectBrowserProvider = useCallback(async () => {
@@ -100,41 +87,9 @@ function MakerProvider({
   }, [maker]);
 
   useEffect(() => {
-    (async () => {
-      const newMaker = await instantiateMaker({
-        network,
-        testchainId,
-        backendEnv,
-        navigation
-      });
-
-      // Register multicall schemas and map useObservable hook to watch convenience helper
-      newMaker
-        .service('multicall')
-        .registerSchemas({ ...schemas, getVaults, getCdpIds });
-      newMaker.service('multicall').observableKeys.forEach(
-        key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
-      );
-
-      setMaker(newMaker);
-      log('Initialized maker instance');
-    })();
-    // leaving maker out of the deps because it would create an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backendEnv, network, testchainId]);
-
-  useEffect(() => {
     if (!maker) return;
     if (maker.service('accounts').hasAccount()) {
       initAccount(maker.currentAccount());
-      (async () => {
-        const { address } = maker.currentAccount();
-        log(`Found initial account: ${address}`);
-        const proxy = await maker.service('proxy').getProxyAddress(address);
-        if (proxy) log(`Found proxy address: ${proxy}`);
-        else log('No proxy found');
-        updateWatcherWithAccount(maker, address, proxy);
-      })();
     } else {
       // Reconnect browser provider if active address matches last connected
       const lastType = sessionStorage.getItem('lastConnectedWalletType');
@@ -162,28 +117,8 @@ function MakerProvider({
       );
       log(`Account changed to: ${account.address}`);
       initAccount(account);
-      (async () => {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(account.address);
-        if (proxy) {
-          log(`Found proxy address: ${proxy}`);
-          const cdpIds = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-          setAccount({ ...account, cdps: cdpIds });
-        } else {
-          log('No proxy found');
-        }
-        updateWatcherWithAccount(maker, account.address, proxy);
-      })();
     });
 
-    const watcher = createWatcher(maker);
-    setWatcher(watcher);
-    const batchSub = watcher.batch().subscribe(updates => {
-      dispatch(batchActions(updates));
-      // make entire list of updates available in a single reducer call
-      dispatch({ type: 'watcherUpdates', payload: updates });
-    });
     const txManagerSub = maker
       .service('transactionManager')
       .onTransactionUpdate((tx, state) => {
@@ -197,78 +132,42 @@ function MakerProvider({
         log('Tx ' + state, tx.metadata);
         setTxLastUpdate(Date.now());
       });
-    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    startWatcher(maker);
     return () => {
-      batchSub.unsub();
       txManagerSub.unsub();
     };
-  }, [maker, dispatch, connectBrowserProvider]);
+  }, [maker, viewedAddress, connectBrowserProvider]);
 
   useEffect(() => {
-    if (maker && viewedAddress) {
-      (async () => {
-        if (
-          viewedAddressData &&
-          viewedAddress !== viewedAddressData.viewedAddress
-        ) {
-          setViewedAddressData(null);
-        }
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
-        if (!proxy) {
-          setViewedAddressData({
-            cdps: [],
-            viewedAddress
-          });
-          return;
-        }
+    (async () => {
+      const newMaker = await instantiateMaker({
+        network,
+        testchainId,
+        backendEnv,
+        navigation
+      });
 
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        const supportedCDPTypes = ilks.filter(ilk =>
-          ilk.networks.includes(network)
-        );
+      // Register multicall schemas and map useObservable hook to watch convenience helper
+      //
+      const makerWatcher = newMaker
+        .service('multicall')
+        .createWatcher({ interval: 'block' });
+      setWatcher(makerWatcher);
+      window.watcher = makerWatcher;
 
-        const supportedCdps = cdps.filter(cdp => {
-          return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
-        }, []);
+      newMaker
+        .service('multicall')
+        .registerSchemas({ ...schemas, getVaults, getCdpIds });
+      newMaker.service('multicall').observableKeys.forEach(
+        key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
+      );
+      newMaker.service('multicall').start();
 
-        supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-        setViewedAddressData({
-          cdps: supportedCdps,
-          viewedAddress
-        });
-      })();
-    }
-  }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
-
-  const checkForNewCdps = async (numTries = 5, timeout = 500) => {
-    const proxy = await maker.service('proxy').getProxyAddress(account.address);
-    if (proxy) {
-      maker.service('mcd:cdpManager').reset();
-
-      const _checkForNewCdps = async triesRemaining => {
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        if (isEqual(account.cdps, cdps)) {
-          if (triesRemaining === 0) return;
-          setTimeout(() => {
-            _checkForNewCdps(triesRemaining - 1, timeout);
-          }, timeout);
-        } else {
-          const newId = cdps
-            .map(cdp => cdp.id)
-            .filter(
-              cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
-            )[0];
-          setAccount({ ...account, cdps: cdps });
-          navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
-        }
-      };
-
-      _checkForNewCdps(numTries - 1);
-    }
-  };
+      setMaker(newMaker);
+      log('Initialized maker instance');
+    })();
+    // leaving maker out of the deps because it would create an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [backendEnv, network, testchainId]);
 
   const newTxListener = (transaction, txMessage) =>
     setTxReferences(current => [...current, [transaction, txMessage]]);
@@ -293,17 +192,17 @@ function MakerProvider({
     <MakerObjectContext.Provider
       value={{
         maker,
-        watcher,
         account,
         network,
+        navigation,
         txLastUpdate,
         resetTx,
         transactions: txReferences,
         newTxListener,
-        checkForNewCdps,
         selectors,
-        viewedAddressData,
-        connectBrowserProvider
+        viewedAddress,
+        connectBrowserProvider,
+        watcher
       }}
     >
       {maker ? children : <LoadingLayout />}

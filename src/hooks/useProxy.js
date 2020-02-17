@@ -4,7 +4,6 @@ import useActionState from 'hooks/useActionState';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import { updateWatcherWithProxy } from '../watch';
 
 import debug from 'debug';
 const log = debug('maker:useProxy');
@@ -51,7 +50,6 @@ export default function useProxy() {
       proxyAddress: address
     });
 
-    await updateWatcherWithProxy(maker, account.address, address);
     await maker.service('transactionManager').confirm(txPromise, 7);
 
     updateState({ proxyDeployed: true });

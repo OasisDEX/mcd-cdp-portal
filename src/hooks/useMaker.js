@@ -7,7 +7,7 @@ function useMaker() {
     maker,
     watcher,
     account,
-    viewedAddressData,
+    viewedAddress,
     transactions,
     newTxListener,
     resetTx,
@@ -16,7 +16,8 @@ function useMaker() {
     network,
     checkForNewCdps,
     txLastUpdate,
-    connectBrowserProvider
+    connectBrowserProvider,
+    navigation
   } = useContext(MakerObjectContext) || {};
 
   function isConnectedToProvider(provider) {
@@ -45,14 +46,15 @@ function useMaker() {
     connectToProviderOfType,
     checkForNewCdps,
     account,
-    viewedAddressData,
+    viewedAddress,
     transactions,
     newTxListener,
     resetTx,
     hideTx,
     selectors,
     network,
-    txLastUpdate
+    txLastUpdate,
+    navigation
   };
 }
 
