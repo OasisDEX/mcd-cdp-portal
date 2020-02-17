@@ -17,7 +17,7 @@ function useObservable(key, ...args) {
     log(`Subscribed to observable ${key}(${args && args.join(',')})`);
     const sub = multicall.watch(key, ...args).subscribe({
       next: val => {
-        log('Got value from observable ' + key + ':', val);
+        log('Got value from observable ' + key + ':', val, args);
         setValue(val);
       },
       error: val => {

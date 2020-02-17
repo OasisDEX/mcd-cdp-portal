@@ -104,7 +104,9 @@ const CDPCreateSelectCollateral = ({
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
   const balances = useWalletBalances();
+  console.log(balances);
   const allowances = useTokenAllowances();
+  console.log(allowances);
   const hasAllowance =
     selectedIlk.currency && allowances[selectedIlk.currency.symbol];
   const ilkIsEth =
