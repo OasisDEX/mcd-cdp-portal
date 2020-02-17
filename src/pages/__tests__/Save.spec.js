@@ -47,6 +47,35 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
+test('if allowance is 0, show toggle & disable input', async () => {
+  const setupMockState = state => {
+    const newState = {
+      ...state,
+      accounts: {
+        '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6': {
+          allowances: { MDAI: 0 },
+          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
+        }
+      }
+    };
+    return newState;
+  };
+  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
+    <SidebarProvider>
+      <Save />
+      <SidebarBase />
+    </SidebarProvider>,
+    setupMockState
+  );
+
+  await findByText('Savings');
+  click(getByTestId('sidebar-deposit-button'));
+  await waitForElement(() => getAllByText('Unlock DAI to continue'));
+
+  const depositInput = getByRole('textbox');
+  expect(depositInput.disabled).toBe(true);
+});
+
 test('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
@@ -145,33 +174,4 @@ test('cannot deposit more than token allowance', async () => {
 
   change(depositInput, { target: { value: '10' } });
   expect(warningEl).not.toBeInTheDocument();
-});
-
-test('if allowance is 0, show toggle & disable input', async () => {
-  const setupMockState = state => {
-    const newState = {
-      ...state,
-      accounts: {
-        '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6': {
-          allowances: { MDAI: 0 },
-          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
-        }
-      }
-    };
-    return newState;
-  };
-  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
-    <SidebarProvider>
-      <Save />
-      <SidebarBase />
-    </SidebarProvider>,
-    setupMockState
-  );
-
-  await findByText('Savings');
-  click(getByTestId('sidebar-deposit-button'));
-  await waitForElement(() => getAllByText('Unlock DAI to continue'));
-
-  const depositInput = getByRole('textbox');
-  expect(depositInput.disabled).toBe(true);
 });
