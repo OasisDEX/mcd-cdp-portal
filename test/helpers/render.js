@@ -2,12 +2,12 @@ import React from 'react';
 import { render, waitForElement } from '@testing-library/react';
 import LanguageProvider from '../../src/providers/LanguageProvider';
 import StoreProvider from '../../src/providers/StoreProvider';
+import VaultsProvider from '../../src/providers/VaultsProvider';
 import TestMakerProvider from './TestMakerProvider';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import rootReducer from '../../src/reducers';
 import useMaker from '../../src/hooks/useMaker';
-
 const defaultInitialState = rootReducer({}, {});
 
 export const mocks = { navigation: { navigate: jest.fn() } };
@@ -66,4 +66,13 @@ export async function renderWithAccount(children, ...args) {
   );
   await waitForElement(() => account);
   return { ...output, account };
+}
+
+export function renderWithVaults(children, viewedAddress) {
+  return renderWithMaker(
+    <VaultsProvider viewedAddress={viewedAddress}>{children}</VaultsProvider>,
+    null,
+    null,
+    {}
+  );
 }

@@ -64,5 +64,6 @@ test('the whole flow', async () => {
   await wait(() => getByText('Your Vault has been created'));
 
   // expect to be redirected to the new cdp page
-  // expect(mocks.navigation.navigate).toBeCalled();
+  // should be triggered in VaultsProvider
+  expect(mocks.navigation.navigate).toBeCalled();
 }, 15000);

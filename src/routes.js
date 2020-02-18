@@ -16,6 +16,7 @@ import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
+import VaultsProvider from 'providers/VaultsProvider';
 
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
@@ -41,20 +42,22 @@ const withBorrowLayout = route =>
         viewedAddress={viewedAddress}
       >
         <RouteEffects network={network} />
-        <ToggleProvider>
-          <ModalProvider modals={modals} templates={templates}>
-            <SidebarProvider>
-              <BorrowLayout
-                mobileNav={
-                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                }
-                navbar={<Navbar viewedAddress={viewedAddress} />}
-              >
-                <View />
-              </BorrowLayout>
-            </SidebarProvider>
-          </ModalProvider>
-        </ToggleProvider>
+        <VaultsProvider viewedAddress={viewedAddress}>
+          <ToggleProvider>
+            <ModalProvider modals={modals} templates={templates}>
+              <SidebarProvider>
+                <BorrowLayout
+                  mobileNav={
+                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                  }
+                  navbar={<Navbar viewedAddress={viewedAddress} />}
+                >
+                  <View />
+                </BorrowLayout>
+              </SidebarProvider>
+            </ModalProvider>
+          </ToggleProvider>
+        </VaultsProvider>
       </MakerProvider>
     );
   }, route);
