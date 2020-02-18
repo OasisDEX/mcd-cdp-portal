@@ -42,7 +42,7 @@ const withBorrowLayout = route =>
         viewedAddress={viewedAddress}
       >
         <RouteEffects network={network} />
-        <VaultsProvider>
+        <VaultsProvider viewedAddress={viewedAddress}>
           <ToggleProvider>
             <ModalProvider modals={modals} templates={templates}>
               <SidebarProvider>

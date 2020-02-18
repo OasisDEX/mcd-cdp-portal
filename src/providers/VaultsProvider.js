@@ -8,8 +8,8 @@ import useCdpTypes from 'hooks/useCdpTypes';
 
 export const VaultsContext = createContext({});
 
-function VaultsProvider({ children }) {
-  const { account, viewedAddress, navigation, network } = useMaker();
+function VaultsProvider({ children, viewedAddress }) {
+  const { account, navigation, network } = useMaker();
   const { cdpTypesList } = useCdpTypes();
 
   const rawUserVaultsList = watch.userVaultsList(account?.address);
