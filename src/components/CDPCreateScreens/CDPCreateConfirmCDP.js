@@ -245,7 +245,7 @@ const CDPCreateConfirmCDP = ({
   onClose
 }) => {
   const { lang } = useLanguage();
-  const { maker, checkForNewCdps, newTxListener } = useMaker();
+  const { maker, newTxListener } = useMaker();
   const [enableSubmit, setEnableSubmit] = useState(true);
 
   const { gemsToLock, daiToDraw, txState } = cdpParams;
@@ -271,7 +271,6 @@ const CDPCreateConfirmCDP = ({
     txMgr.listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),
       confirmed: () => {
-        checkForNewCdps();
         dispatch({ type: 'transaction-confirmed' });
       },
       error: () => setEnableSubmit(true)

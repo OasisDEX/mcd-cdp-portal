@@ -1,13 +1,9 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import isEqual from 'lodash/isEqual';
 import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
-import { Routes } from 'utils/constants';
 import useStore from '../hooks/useStore';
-import ilks from 'references/ilkList';
-import { trackCdpById } from 'reducers/multicall/cdps';
 import {
   createWatcher,
   startWatcher,
@@ -43,7 +39,6 @@ function MakerProvider({
   mocks
 }) {
   const [account, setAccount] = useState(null);
-  const [viewedAddressData, setViewedAddressData] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState(0);
   const [maker, setMaker] = useState(null);
@@ -127,6 +122,7 @@ function MakerProvider({
     if (!maker) return;
     if (maker.service('accounts').hasAccount()) {
       initAccount(maker.currentAccount());
+
       (async () => {
         const { address } = maker.currentAccount();
         log(`Found initial account: ${address}`);
@@ -205,70 +201,70 @@ function MakerProvider({
     };
   }, [maker, dispatch, connectBrowserProvider]);
 
-  useEffect(() => {
-    if (maker && viewedAddress) {
-      (async () => {
-        if (
-          viewedAddressData &&
-          viewedAddress !== viewedAddressData.viewedAddress
-        ) {
-          setViewedAddressData(null);
-        }
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
-        if (!proxy) {
-          setViewedAddressData({
-            cdps: [],
-            viewedAddress
-          });
-          return;
-        }
+  // useEffect(() => {
+  //   if (maker && viewedAddress) {
+  //     (async () => {
+  //       if (
+  //         viewedAddressData &&
+  //         viewedAddress !== viewedAddressData.viewedAddress
+  //       ) {
+  //         setViewedAddressData(null);
+  //       }
+  //       const proxy = await maker
+  //         .service('proxy')
+  //         .getProxyAddress(viewedAddress);
+  //       if (!proxy) {
+  //         setViewedAddressData({
+  //           cdps: [],
+  //           viewedAddress
+  //         });
+  //         return;
+  //       }
 
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        const supportedCDPTypes = ilks.filter(ilk =>
-          ilk.networks.includes(network)
-        );
+  //       const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+  //       const supportedCDPTypes = ilks.filter(ilk =>
+  //         ilk.networks.includes(network)
+  //       );
 
-        const supportedCdps = cdps.filter(cdp => {
-          return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
-        }, []);
+  //       const supportedCdps = cdps.filter(cdp => {
+  //         return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
+  //       }, []);
 
-        supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-        setViewedAddressData({
-          cdps: supportedCdps,
-          viewedAddress
-        });
-      })();
-    }
-  }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
+  //       supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
+  //       setViewedAddressData({
+  //         cdps: supportedCdps,
+  //         viewedAddress
+  //       });
+  //     })();
+  //   }
+  // }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
 
-  const checkForNewCdps = async (numTries = 5, timeout = 500) => {
-    const proxy = await maker.service('proxy').getProxyAddress(account.address);
-    if (proxy) {
-      maker.service('mcd:cdpManager').reset();
+  // const checkForNewCdps = async (numTries = 5, timeout = 500) => {
+  //   const proxy = await maker.service('proxy').getProxyAddress(account.address);
+  //   if (proxy) {
+  //     maker.service('mcd:cdpManager').reset();
 
-      const _checkForNewCdps = async triesRemaining => {
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        if (isEqual(account.cdps, cdps)) {
-          if (triesRemaining === 0) return;
-          setTimeout(() => {
-            _checkForNewCdps(triesRemaining - 1, timeout);
-          }, timeout);
-        } else {
-          const newId = cdps
-            .map(cdp => cdp.id)
-            .filter(
-              cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
-            )[0];
-          setAccount({ ...account, cdps: cdps });
-          navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
-        }
-      };
+  //     const _checkForNewCdps = async triesRemaining => {
+  //       const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
+  //       if (isEqual(account.cdps, cdps)) {
+  //         if (triesRemaining === 0) return;
+  //         setTimeout(() => {
+  //           _checkForNewCdps(triesRemaining - 1, timeout);
+  //         }, timeout);
+  //       } else {
+  //         const newId = cdps
+  //           .map(cdp => cdp.id)
+  //           .filter(
+  //             cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
+  //           )[0];
+  //         setAccount({ ...account, cdps: cdps });
+  //         navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
+  //       }
+  //     };
 
-      _checkForNewCdps(numTries - 1);
-    }
-  };
+  //     _checkForNewCdps(numTries - 1);
+  //   }
+  // };
 
   const newTxListener = (transaction, txMessage) =>
     setTxReferences(current => [...current, [transaction, txMessage]]);
@@ -300,10 +296,11 @@ function MakerProvider({
         resetTx,
         transactions: txReferences,
         newTxListener,
-        checkForNewCdps,
+        /* checkForNewCdps, */
         selectors,
-        viewedAddressData,
-        connectBrowserProvider
+        connectBrowserProvider,
+        viewedAddress,
+        navigation
       }}
     >
       {maker ? children : <LoadingLayout />}
