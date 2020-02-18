@@ -46,29 +46,20 @@ export default function useTokenAllowance(tokenSymbol) {
   const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
 
-  // TODO: Return null from proxyRegistry schema if proxy address
-  // returned is 0x0000000000000000000000000000000000000000
-  let proxyAddress = watch.proxyAddress(account?.address);
-  if (proxyAddress === '0x0000000000000000000000000000000000000000')
-    proxyAddress = null;
-
-  const allowance =
-    tokenSymbol === 'ETH'
-      ? BigNumber(Infinity)
-      : watch.tokenAllowance(
-          account?.address,
-          proxyAddress === null ? undefined : proxyAddress,
-          tokenSymbol
-        );
+  const proxyAddress = watch.proxyAddress(account?.address);
+  const allowance = watch.tokenAllowance(
+    account?.address,
+    proxyAddress || undefined,
+    tokenSymbol
+  );
 
   const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
   const token = maker.getToken(tokenSymbol);
   const hasAllowance =
-    tokenSymbol === 'ETH' ||
-    (allowance !== undefined && allowance !== null && !allowance.eq(0));
+    allowance !== undefined && allowance !== null && !allowance.eq(0);
 
   const hasSufficientAllowance = value =>
-    tokenSymbol === 'ETH' || BigNumber(value).isLessThanOrEqualTo(allowance);
+    BigNumber(value).isLessThanOrEqualTo(allowance);
 
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(

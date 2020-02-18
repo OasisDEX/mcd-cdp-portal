@@ -12,6 +12,7 @@ import {
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrency } from '@makerdao/currency';
+import { mineBlocks } from '@makerdao/test-helpers';
 
 import Save from '../Save';
 import {
@@ -40,9 +41,11 @@ navi.Link = styled.a``;
 const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';
 let maker;
+let web3;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+  web3 = maker.service('web3');
   await await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
@@ -131,6 +134,9 @@ test('render save page and perform deposit and withdraw actions', async () => {
   /**Withdraw */
   click(getByTestId('sidebar-withdraw-button'));
   await findByText(/would you like to withdraw/);
+
+  // wait for proxy and allowance check
+  await mineBlocks(web3, 5);
 
   // Input amount to withdraw and click
   const withdrawInput = getByRole('textbox');

@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { mineBlocks } from '@makerdao/test-helpers';
 
 import CDPDisplay from '../';
 import { renderWithAccount } from '../../../../test/helpers/render';
@@ -28,9 +29,11 @@ const VAULT1_ETH = '5';
 const AMOUNT = 210;
 
 let maker;
+let web3;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+  web3 = maker.service('web3');
   await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(AMOUNT));
@@ -80,6 +83,9 @@ test('Vault Display page and actions', async () => {
   click(getByText('Deposit'));
   await findByText(/would you like to deposit/);
 
+  // wait for proxy check to complete
+  await mineBlocks(web3, 5);
+
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
   expect(depositLabel.nextElementSibling.textContent).toBe('5.00 ETH');
@@ -88,7 +94,6 @@ test('Vault Display page and actions', async () => {
   change(getByRole('textbox'), { target: { value: '2.33' } });
   const [, depSidebarBtn] = getAllByText('Deposit');
 
-  // wait for hasProxy check to complete
   await wait(() => {
     expect(depSidebarBtn).not.toHaveAttribute('disabled');
   });
