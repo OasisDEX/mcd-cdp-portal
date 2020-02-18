@@ -429,7 +429,7 @@ export default {
     metamask: 'MetaMask',
     trust: 'Trust',
     coinbase: 'Coinbase Wallet',
-    imtoken: 'mToken',
+    imtoken: 'imToken',
     alphawallet: 'Alpha Wallet',
     ledger_nano: 'Ledger Nano',
     trezor: 'Trezor',
