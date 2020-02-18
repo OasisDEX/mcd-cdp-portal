@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useMemo } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -8,10 +8,11 @@ import {
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
-import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useStore from 'hooks/useStore';
 import { TxLifecycle } from 'utils/constants';
+import useTokenAllowance from 'hooks/useTokenAllowance';
+import useWalletBalances from 'hooks/useWalletBalances';
 
 const initialState = {
   step: 0,
@@ -80,14 +81,23 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
-  const { maker, account } = useMaker();
   const { lang } = useLanguage();
-  const [
-    { step, selectedIlk, proxyAddress, ...cdpParams },
-    dispatch
-  ] = useReducer(reducer, initialState);
+
+  let [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+
+  const { hasAllowance, proxyAddress } = useTokenAllowance(
+    selectedIlk?.currency?.symbol
+  );
+
+  const balances = useWalletBalances();
+
   const [{ cdps }] = useStore();
   const isFirstVault = Object.entries(cdps).length === 0 ? true : false;
+
+  cdpParams = { ...cdpParams, hasAllowance, proxyAddress };
 
   const screens = useMemo(
     () => [
@@ -111,23 +121,13 @@ function CDPCreate({ onClose }) {
     [lang]
   );
 
-  useEffect(() => {
-    const checkProxy = async () => {
-      try {
-        const address = await maker.service('proxy').currentProxy();
-        dispatch({ type: 'set-proxy-address', payload: { address } });
-      } catch (err) {}
-    };
-
-    checkProxy();
-  }, [maker, account]);
-
   const screenProps = {
     selectedIlk,
     proxyAddress,
     cdpParams,
     isFirstVault,
     dispatch,
+    balances,
     onClose
   };
 

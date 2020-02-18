@@ -13,9 +13,7 @@ import { prettifyNumber } from 'utils/ui';
 import { getIlkData } from 'reducers/feeds';
 
 import useStore from 'hooks/useStore';
-import useWalletBalances from 'hooks/useWalletBalances';
 import useCdpTypes from 'hooks/useCdpTypes';
-import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
@@ -97,19 +95,15 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
 const CDPCreateSelectCollateral = ({
   selectedIlk,
   proxyAddress,
+  balances,
   isFirstVault,
+  hasAllowance,
   dispatch
 }) => {
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
-  const balances = useWalletBalances();
-  const allowances = useTokenAllowances();
-  const hasAllowance =
-    selectedIlk.currency && allowances[selectedIlk.currency.symbol];
-  const ilkIsEth =
-    selectedIlk.currency && selectedIlk.currency.symbol === 'ETH';
-  const hasAllowanceAndProxy = (hasAllowance || ilkIsEth) && !!proxyAddress;
+  const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
     <Box

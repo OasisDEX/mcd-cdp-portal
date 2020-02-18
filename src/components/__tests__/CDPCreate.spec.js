@@ -1,15 +1,10 @@
 import React from 'react';
-import { ETH } from '@makerdao/dai-plugin-mcd';
-import { createCurrency } from '@makerdao/currency';
 import CDPCreate from '../CDPCreate';
-import { renderWithAccount, mocks } from '../../../test/helpers/render';
+import { renderWithAccount } from '../../../test/helpers/render';
 import { wait, fireEvent } from '@testing-library/react';
 import { instantiateMaker } from '../../maker';
-import BigNumber from 'bignumber.js';
 import { mineBlocks } from '@makerdao/test-helpers';
 import assert from 'assert';
-import { of } from 'rxjs';
-import useMaker from '../../hooks/useMaker';
 const { click, change } = fireEvent;
 
 jest.mock('mixpanel-browser', () => ({
@@ -27,51 +22,19 @@ beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
 });
 
-function prepState(state) {
-  Object.assign(state.feeds.find(f => f.key === 'ETH-A'), {
-    liquidationRatio: '150',
-    debtCeiling: '1000000',
-    feedValueUSD: BigNumber(200)
-  });
-  return {
-    ...state,
-    accounts: {
-      [maker.currentAddress()]: {
-        balances: { ETH: 3 },
-        allowances: {}
-      }
-    }
-  };
-}
-
-const watchMock = services => (key, ...args) =>
-  services[key] && services[key](...args);
-
-const tokenBalanceMock = (address, token) => {
-  if (token === 'ETH') return of(ETH(3));
-  else return of(createCurrency(token)(0));
-};
-
 test('the whole flow', async () => {
   const {
     getAllByRole,
     getAllByText,
     getByLabelText,
-    getByText
-  } = await renderWithAccount(
-    React.createElement(() => {
-      maker = useMaker().maker;
-
-      maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock
-      });
-      return <CDPCreate />;
-    }),
-    prepState
-  );
+    getByText,
+    findByText
+  } = await renderWithAccount(<CDPCreate />);
 
   getByText('Select a collateral type');
   const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
+  await findByText(/94.69 ETH/); // ETH Balance
+  await mineBlocks(maker.service('web3'), 5);
   click(ethRadioButton);
   click(getByText('Continue'));
 
@@ -90,7 +53,7 @@ test('the whole flow', async () => {
   getByText('Confirm Vault Details');
   getByText('2.128 ETH');
   getByText('31.119 DAI');
-  getByText('1367.94%'); // collateralization ratio
+  getByText('1025.96%');
   getAllByRole('checkbox').forEach(click); // terms & privacy
   const openButton = getByText('Open Vault');
   await wait(() => assert(!openButton.disabled));

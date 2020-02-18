@@ -54,7 +54,6 @@ export default function useTokenAllowance(tokenSymbol) {
   );
 
   const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
-  const token = maker.getToken(tokenSymbol);
   const hasAllowance =
     allowance !== undefined && allowance !== null && !allowance.eq(0);
 
@@ -64,6 +63,7 @@ export default function useTokenAllowance(tokenSymbol) {
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
     async () => {
+      const token = maker.getToken(tokenSymbol);
       const proxyAddress = await maker.service('proxy').getProxyAddress();
       const txPromise = token.approveUnlimited(proxyAddress);
       setStartedWithoutAllowance(true);
