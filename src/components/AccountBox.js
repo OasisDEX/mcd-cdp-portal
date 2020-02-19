@@ -13,11 +13,9 @@ import ActiveAccount from 'components/ActiveAccount';
 import StripedRows from 'components/StripedRows';
 import WalletConnectDropdown from 'components/WalletConnectDropdown';
 import useWalletBalances from 'hooks/useWalletBalances';
-import useStore from 'hooks/useStore';
 import useSidebar from 'hooks/useSidebar';
 import useLanguage from 'hooks/useLanguage';
-import { getAllFeeds } from 'reducers/feeds';
-import { tokensWithBalances } from 'reducers/accounts';
+import { showWalletTokens } from 'references/config';
 import { prettifyNumber } from 'utils/ui';
 import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
@@ -28,6 +26,8 @@ import { Link, useCurrentRoute } from 'react-navi';
 import { Routes } from 'utils/constants';
 import theme from '../styles/theme';
 import FullScreenAction from './CDPDisplay/FullScreenAction';
+import useCdpTypes from '../hooks/useCdpTypes';
+import { watch } from 'hooks/useObservable';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -95,27 +95,31 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
 };
 
 const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
+  const { lang } = useLanguage();
   const { url } = useCurrentRoute();
   const { trackBtnClick } = useAnalytics('WalletBalances');
   const [actionShown, setActionShown] = useState(null);
 
-  const { lang } = useLanguage();
   const balances = useWalletBalances();
-  const [{ feeds }] = useStore();
+
   const { show: showSidebar } = useSidebar();
   const { toggle: collapsed, setToggle: setCollapsed } = useToggle(
     Toggles.WALLETBALANCES,
     true
   );
 
+  const { cdpTypesList } = useCdpTypes();
+  const prices = watch.collateralTypesPrices(cdpTypesList);
   const uniqueFeeds = useMemo(
     () =>
-      getAllFeeds(feeds).reduce((acc, feed) => {
-        const [token] = feed.pair.split('/');
-        acc[token] = feed.value;
-        return acc;
-      }, {}),
-    [feeds]
+      prices
+        ? prices.reduce((acc, price) => {
+            const [, symbol] = price.symbol.split('/');
+            acc[symbol] = price;
+            return acc;
+          }, {})
+        : {},
+    [prices]
   );
 
   const showAction = props => {
@@ -142,13 +146,16 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
 
   const tokenBalances = useMemo(
     () =>
-      tokensWithBalances.reduceRight((acc, token) => {
+      showWalletTokens.reduceRight((acc, token) => {
         const balanceGtZero = !!(balances[token] && balances[token].gt(0));
         if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
         const symbol = formatSymbol(token);
 
         const tokenIsDaiOrDsr =
-          token === 'MDAI' || token === 'DAI' || token === 'DSR';
+          token === 'MDAI' ||
+          token === 'DAI' ||
+          token === 'SAI' ||
+          token === 'DSR';
         const usdRatio = tokenIsDaiOrDsr
           ? new BigNumber(1)
           : token === 'MWETH'
