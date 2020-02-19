@@ -6,22 +6,26 @@ import SiteVersion from 'components/SiteVersion';
 
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
-  const { systemCollateralization: sc } = system;
+  const {
+    systemCollateralization: sc,
+    totalDaiSupply,
+    totalVaultsCreated
+  } = system;
 
   const systemParams = [
     [
       lang.sidebar.system_collateralization,
-      formatCollateralizationRatio(sc && sc.toNumber())
+      formatCollateralizationRatio(sc?.toNumber())
     ],
     [
       lang.sidebar.save_details.total_dai_supply,
-      prettifyNumber(system.totalDaiSupply)
+      prettifyNumber(totalDaiSupply)
     ],
     [
       lang.sidebar.active_cdps,
       lang.formatString(
         lang.sidebar.active_cdps_figure,
-        prettifyNumber(parseInt(system.totalCdps))
+        prettifyNumber(parseInt(totalVaultsCreated))
       )
     ]
   ];
