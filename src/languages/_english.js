@@ -301,6 +301,7 @@ export default {
     cannot_payback_more_than_owed: 'Cannot pay back more than owed',
     dai_balance: 'Your Dai balance',
     dai_debt: 'Dai debt',
+    locked_dsr: 'Locked in DSR',
     unlock_token: 'Unlock {0} to continue',
     unlocking_token: 'Unlocking {0}...',
     token_unlocked: '{0} unlocked',
@@ -327,7 +328,7 @@ export default {
     invalid_allowance: 'Amount is higher than your allowance for {0}'
   },
   save: {
-    title: 'Balance',
+    title: 'Savings',
     dai_savings_rate: 'Dai Savings rate',
     description:
       'Receive savings on your Dai. Deposit or withdraw at any time.',
@@ -341,7 +342,11 @@ export default {
       'Deposit Dai to see your first transaction and start earning',
     tx_history: 'History',
     savings_earned_to_date: 'Savings earned to date',
-    estimated_savings: 'Estimated savings'
+    estimated_savings: 'Estimated savings',
+    dai_locked_dsr: 'DAI locked in DSR',
+    deposit_withdraw: 'Deposit and withdraw',
+    deposit_btn_cta: 'Receive savings on your Dai. Deposit at any time',
+    withdraw_btn_cta: 'Safely withdraw your Dai at any time'
   },
   verbs: {
     depositing: 'Depositing',
