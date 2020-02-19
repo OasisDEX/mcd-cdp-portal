@@ -2,63 +2,6 @@ import { greaterThan } from './bignumber';
 import ilkList from '../references/ilkList';
 import assert from 'assert';
 
-export function getUsdPrice(ilkData) {
-  return (ilkData.feedValueUSD && ilkData.feedValueUSD.toNumber()) || 0;
-}
-
-export function calcCDPParams({ ilkData, gemsToLock, daiToDraw }) {
-  const { liquidationRatio, debtCeiling } = ilkData;
-  const collateralizationRatio = calcCollateralizationRatio({
-    deposited: gemsToLock,
-    price: getUsdPrice(ilkData),
-    generated: daiToDraw
-  });
-  const liquidationPrice = calcLiquidationPrice({
-    liquidationRatio,
-    deposited: gemsToLock,
-    generated: daiToDraw,
-    price: getUsdPrice(ilkData)
-  });
-  const daiAvailable = calcDaiAvailable({
-    liquidationRatio,
-    deposited: gemsToLock,
-    generated: daiToDraw,
-    price: getUsdPrice(ilkData),
-    debtCeiling: debtCeiling
-  });
-
-  return {
-    collateralizationRatio,
-    liquidationPrice,
-    daiAvailable
-  };
-}
-
-export function calcCollateralizationRatio({ deposited, price, generated }) {
-  const value = ((deposited * price) / generated) * 100;
-  return isNaN(value) ? 0 : value;
-}
-
-export function calcLiquidationPrice({
-  liquidationRatio,
-  deposited,
-  generated
-}) {
-  const value = (liquidationRatio * generated) / (100 * deposited);
-  return isNaN(value) ? 0 : value;
-}
-
-export function calcDaiAvailable({
-  deposited,
-  price,
-  liquidationRatio,
-  debtCeiling
-}) {
-  const value = deposited * price * (100 / liquidationRatio);
-  const daiAvailable = isNaN(value) ? 0 : value;
-  return daiAvailable >= debtCeiling ? debtCeiling : daiAvailable;
-}
-
 export function cdpParamsAreValid(
   { gemsToLock, daiToDraw },
   userGemBalance,
