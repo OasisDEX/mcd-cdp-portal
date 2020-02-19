@@ -62,7 +62,8 @@ export function calcDaiAvailable({
 export function cdpParamsAreValid(
   { gemsToLock, daiToDraw },
   userGemBalance,
-  ilkData
+  ilkData,
+  daiAvailable
 ) {
   // must not open empty cdp or cdp with no dai value
   if (!gemsToLock || !daiToDraw) return false; // we technically can do this, but TODO figure out if we should
@@ -73,12 +74,6 @@ export function cdpParamsAreValid(
   // must have enough tokens
   if (greaterThan(gemsToLock, userGemBalance)) return false;
 
-  const daiAvailable = calcDaiAvailable({
-    deposited: parseFloat(gemsToLock),
-    price: getUsdPrice(ilkData),
-    liquidationRatio: parseFloat(ilkData.liquidationRatio),
-    debtCeiling: parseFloat(ilkData.debtCeiling)
-  });
   // must open a cdp above the liquidation threshold
   if (greaterThan(daiToDraw, daiAvailable)) return false;
   // must draw more dai than the dust limit

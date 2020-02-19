@@ -130,10 +130,16 @@ const watchMock = services => (key, ...args) =>
 
 const mockBatAmt = BAT(BAT_ACCOUNT_BALANCE);
 
-const tokenBalanceMock = (address, token) => {
-  if (token === 'BAT') return of(mockBatAmt);
-  else return of(createCurrency(token)(0));
+const tokenBalanceMock = (address, tokens) => {
+  return of(
+    tokens.map(token => {
+      if (token === 'BAT') return mockBatAmt;
+      else return createCurrency(token)(0);
+    })
+  );
 };
+
+const MOCK_DSR_AMT = '100';
 
 const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
 const proxyAddressMock = () => of(TEST_ADDRESS_PROXY);
@@ -156,9 +162,10 @@ test('input validation', async () => {
       const { maker } = useMaker();
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock,
+        tokenBalances: tokenBalanceMock,
         proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock
+        tokenAllowance: tokenAllowanceMock,
+        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
       });
 
       React.useEffect(() => {
@@ -195,9 +202,10 @@ test('verify info container values', async () => {
       const { maker } = useMaker();
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock,
+        tokenBalances: tokenBalanceMock,
         proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock
+        tokenAllowance: tokenAllowanceMock,
+        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
       });
 
       React.useEffect(() => {
@@ -245,9 +253,10 @@ test('calls the lock function as expected', async () => {
       maker = useMaker().maker;
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock,
+        tokenBalances: tokenBalanceMock,
         proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock
+        tokenAllowance: tokenAllowanceMock,
+        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
       });
 
       React.useEffect(() => {

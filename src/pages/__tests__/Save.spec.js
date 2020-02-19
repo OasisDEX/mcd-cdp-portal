@@ -156,9 +156,13 @@ test('cannot deposit more than token allowance', async () => {
   const watchMock = services => (key, ...args) =>
     services[key] && services[key](...args);
 
-  const tokenBalanceMock = (address, token) => {
-    if (token === 'MDAI') return of(MDAI(BigNumber(50)));
-    else return of(createCurrency(token)(0));
+  const tokenBalanceMock = (address, tokens) => {
+    return of(
+      tokens.map(token => {
+        if (token === 'MDAI') return MDAI(BigNumber(50));
+        else return createCurrency(token)(0);
+      })
+    );
   };
 
   const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
@@ -174,12 +178,14 @@ test('cannot deposit more than token allowance', async () => {
       const { maker } = useMaker();
 
       maker.service('multicall').watch = watchMock({
-        tokenBalance: tokenBalanceMock,
+        savings: savingsMock,
+        tokenBalances: tokenBalanceMock,
         proxyAddress: () => of(TEST_ADDRESS_PROXY),
         tokenAllowance: () => of(BigNumber('10')),
-        savings: savingsMock,
-        collateralTypesPrices: MOCK_OBS_RESPONSE,
+        daiLockedInDsr: () => of(MDAI('100')),
+        collateralTypesPrices: () => of([]),
         totalDaiSupply: MOCK_OBS_RESPONSE,
+        vaultsCreated: MOCK_OBS_RESPONSE,
         totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
         annualDaiSavingsRate: MOCK_OBS_RESPONSE
       });

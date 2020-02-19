@@ -12,8 +12,7 @@ import {
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { calcCDPParams } from 'utils/cdp';
-import { formatCollateralizationRatio } from 'utils/ui';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from '../ScreenFooter';
@@ -34,6 +33,7 @@ const StyledExternalLink = styled(ExternalLinkIcon)`
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
+  observables,
   capturedDispatch,
   enableSubmit,
   isFirstVault
@@ -46,14 +46,10 @@ const CDPCreateConfirmSummary = ({
   const {
     liquidationPenalty,
     liquidationRatio,
-    stabilityFee
-  } = selectedIlk.data;
-  const { gemsToLock, daiToDraw } = cdpParams;
-  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-    ilkData: selectedIlk.data,
-    gemsToLock,
-    daiToDraw
-  });
+    stabilityFee,
+    liquidationPrice,
+    collateralizationRatio
+  } = observables;
 
   const rows = [
     [
@@ -63,9 +59,12 @@ const CDPCreateConfirmSummary = ({
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization,
-      formatCollateralizationRatio(collateralizationRatio)
+      formatCollateralizationRatio(collateralizationRatio.times(100).toNumber())
     ],
-    [lang.liquidation_ratio, `${liquidationRatio}%`],
+    [
+      lang.liquidation_ratio,
+      `${formatter(liquidationRatio, { percentage: true })}%`
+    ],
     [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
@@ -242,6 +241,7 @@ const CDPCreateConfirmCDP = ({
   cdpParams,
   selectedIlk,
   isFirstVault,
+  observables,
   onClose
 }) => {
   const { lang } = useLanguage();
@@ -291,6 +291,7 @@ const CDPCreateConfirmCDP = ({
     <CDPCreateConfirmSummary
       cdpParams={cdpParams}
       selectedIlk={selectedIlk}
+      observables={observables}
       capturedDispatch={capturedDispatch}
       enableSubmit={enableSubmit}
       isFirstVault={isFirstVault}

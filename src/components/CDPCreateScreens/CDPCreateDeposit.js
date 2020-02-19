@@ -1,13 +1,9 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
-import { greaterThanOrEqual, greaterThan } from 'utils/bignumber';
+import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import { getUsdPrice, calcCDPParams } from 'utils/cdp';
-import {
-  formatCollateralizationRatio,
-  prettifyNumber,
-  safeToFixed
-} from 'utils/ui';
+import { getUsdPrice } from 'utils/cdp';
+import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
@@ -15,6 +11,8 @@ import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import { watch } from 'hooks/useObservable';
+import BigNumber from 'bignumber.js';
 
 function OpenCDPForm({
   selectedIlk,
@@ -23,6 +21,8 @@ function OpenCDPForm({
   daiAvailable,
   collateralizationRatio
 }) {
+  const debtFloor = watch.debtFloor('ETH-A');
+
   const { lang } = useLanguage();
   const { hasSufficientAllowance } = useTokenAllowance(
     selectedIlk.currency.symbol
@@ -31,15 +31,12 @@ function OpenCDPForm({
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
   );
-  const userCanDrawDaiAmount = greaterThanOrEqual(
-    daiAvailable,
-    cdpParams.daiToDraw
+
+  const userCanDrawDaiAmount = daiAvailable?.gte(
+    BigNumber(cdpParams.daiToDraw)
   );
 
-  const belowDustLimit = greaterThan(
-    selectedIlk.data.dust,
-    cdpParams.daiToDraw
-  );
+  const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
 
   const fields = [
     [
@@ -104,10 +101,7 @@ function OpenCDPForm({
         type="number"
         failureMessage={
           (belowDustLimit
-            ? lang.formatString(
-                lang.cdp_create.below_dust_limit,
-                selectedIlk.data.dust
-              )
+            ? lang.formatString(lang.cdp_create.below_dust_limit, debtFloor)
             : null) ||
           (userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai)
         }
@@ -223,18 +217,17 @@ const CDPCreateDeposit = ({
   selectedIlk,
   cdpParams,
   isFirstVault,
+  observables,
   dispatch
 }) => {
   const { gemsToLock, daiToDraw } = cdpParams;
   const {
-    liquidationPrice,
+    daiAvailable,
+    hasSufficientAllowance,
     collateralizationRatio,
-    daiAvailable: estDaiAvailable
-  } = calcCDPParams({ ilkData: selectedIlk.data, gemsToLock, daiToDraw });
-  const daiAvailable = safeToFixed(estDaiAvailable, 3);
-  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
-    selectedIlk.currency.symbol
-  );
+    liquidationPrice,
+    hasAllowance
+  } = observables;
   const { lang } = useLanguage();
   const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
 
@@ -250,7 +243,8 @@ const CDPCreateDeposit = ({
     cdpParamsAreValid(
       cdpParams,
       selectedIlk.userGemBalance,
-      selectedIlk.data
+      selectedIlk.data,
+      daiAvailable
     ) && hasSufficientAllowance(cdpParams.gemsToLock);
 
   return (
