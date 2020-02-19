@@ -9,6 +9,7 @@ export const wallets = {
   PARITY: 'parity',
   INFURA: 'infura',
   LOCALHOST: 'localhost',
+  MYKEY: 'mykey',
   OTHER: 'other'
 };
 
@@ -45,6 +46,10 @@ export function getWebClientProviderName() {
     window.web3.currentProvider.host.indexOf('localhost') !== -1
   )
     return wallets.LOCALHOST;
+
+  if (window.navigator && !!navigator.userAgent.match('MYKEY')) {
+    return wallets.MYKEY;
+  }
 
   return wallets.OTHER;
 }

@@ -430,6 +430,7 @@ export default {
     trezor: 'Trezor',
     other: 'Active Wallet',
     ledger: 'Ledger',
+    mykey: 'MYKEY',
     walletconnect: 'Wallet Connect'
   },
   notifications: {

@@ -7,6 +7,7 @@ import { ReactComponent as TrustLogo } from 'images/trust-logo.svg';
 import { ReactComponent as ImTokenLogo } from 'images/imtoken-logo.svg';
 import coinbaseWalletLogo from 'images/coinbase-wallet.png';
 import alphaWalletLogo from 'images/alpha-wallet-logo.png';
+import mykeyWalletLogo from 'images/mykey-logo.png';
 import { wallets } from 'utils/web3';
 import IconButton from 'components/IconButton';
 
@@ -38,6 +39,8 @@ export default function BrowserProviderButton({ provider, ...props }) {
       return <img src={coinbaseWalletLogo} width="20px" height="20px" alt="" />;
     } else if (provider === wallets.ALPHA) {
       return <img src={alphaWalletLogo} width="20px" height="20px" alt="" />;
+    } else if (provider === wallets.MYKEY) {
+      return <img src={mykeyWalletLogo} width="20px" height="20px" alt="" />;
     } else {
       return <div />;
     }

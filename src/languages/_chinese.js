@@ -392,6 +392,7 @@ export default {
     "trezor": "Trezor",
     "other": "当前钱包",
     'ledger': 'Ledger',
+    'mykey': 'MYKEY',
     'walletconnect': 'Wallet Connect'
   },
   notifications: {
