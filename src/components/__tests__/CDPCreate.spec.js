@@ -34,7 +34,6 @@ test('the whole flow', async () => {
   getByText('Select a collateral type');
   const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
   await findByText(/94.69 ETH/); // ETH Balance
-  await mineBlocks(maker.service('web3'), 5);
   click(ethRadioButton);
   click(getByText('Continue'));
 

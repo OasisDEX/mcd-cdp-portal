@@ -8,11 +8,7 @@ import {
   Card
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
-
-import { prettifyNumber } from 'utils/ui';
-import { getIlkData } from 'reducers/feeds';
-
-import useStore from 'hooks/useStore';
+import { prettifyNumber, formatter } from 'utils/ui';
 import useCdpTypes from 'hooks/useCdpTypes';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
@@ -47,11 +43,20 @@ const CDPCreateSelectCollateralSidebar = () => {
   );
 };
 
-function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
-  const [{ feeds }] = useStore();
+function IlkTableRow({
+  ilk,
+  checked,
+  gemBalance,
+  isFirstVault,
+  dispatch,
+  observables
+}) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
-
-  ilk.data = getIlkData(feeds, ilk.key);
+  const {
+    annualStabilityFee,
+    liquidationRatio,
+    liquidationPenalty
+  } = observables;
 
   async function selectIlk() {
     trackInputChange('CollateralType', {
@@ -62,9 +67,10 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
       type: 'set-ilk',
       payload: {
         key: ilk.key,
+        gem: ilk.gem,
+        symbol: ilk.symbol,
         gemBalance,
-        currency: ilk.currency,
-        data: ilk.data
+        currency: ilk.currency
       }
     });
   }
@@ -82,9 +88,9 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
         />
       </td>
       <td>{ilk.symbol}</td>
-      <td>{ilk.data.stabilityFee} %</td>
-      <td>{ilk.data.liquidationRatio} %</td>
-      <td>{ilk.data.liquidationPenalty} %</td>
+      <td>{formatter(annualStabilityFee, { percentage: true })} %</td>
+      <td>{formatter(liquidationRatio, { percentage: true })} %</td>
+      <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
       <td css="text-align: right">
         {prettifyNumber(gemBalance)} {ilk.gem}
       </td>
@@ -94,15 +100,15 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
 
 const CDPCreateSelectCollateral = ({
   selectedIlk,
-  proxyAddress,
-  balances,
   isFirstVault,
-  hasAllowance,
+  observables,
   dispatch
 }) => {
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
+  const { hasAllowance, proxyAddress, balances } = observables;
+
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -154,6 +160,7 @@ const CDPCreateSelectCollateral = ({
                           ilk={ilk}
                           gemBalance={balances[ilk.gem]}
                           isFirstVault={isFirstVault}
+                          observables={observables}
                         />
                       )
                   )}

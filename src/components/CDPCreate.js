@@ -3,6 +3,7 @@ import { MDAI, USD, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import BigNumber from 'bignumber.js';
+import { showWalletTokens } from 'references/config';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -18,6 +19,7 @@ import { TxLifecycle } from 'utils/constants';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import { watch } from 'hooks/useObservable';
+import useCdpTypes from '../hooks/useCdpTypes';
 
 const initialState = {
   step: 0,
@@ -25,8 +27,9 @@ const initialState = {
   selectedIlk: {
     userGemBalance: '',
     currency: null,
-    data: {},
-    key: ''
+    key: '',
+    gem: null,
+    symbol: undefined
   },
   gemsToLock: '',
   daiToDraw: '',
@@ -56,9 +59,10 @@ function reducer(state, action) {
       return {
         ...state,
         selectedIlk: {
+          gem: payload.gem,
+          symbol: payload.symbol,
           userGemBalance: payload.gemBalance,
           currency: payload.currency,
-          data: payload.data,
           key: payload.key
         }
       };
@@ -90,14 +94,14 @@ function CDPCreate({ onClose }) {
     reducer,
     initialState
   );
+  const { cdpTypesList } = useCdpTypes();
+  const prices = watch.collateralTypesPrices(cdpTypesList);
 
-  /////OBSERVABLES
   const collateralTypePrice =
-    watch.collateralTypePrice(selectedIlk.data.symbol) || BigNumber(0);
+    watch.collateralTypePrice(selectedIlk.symbol) || BigNumber(0);
 
-  const priceWithSafetyMargin = watch.priceWithSafetyMargin(
-    selectedIlk.data.symbol
-  );
+  const priceWithSafetyMargin = watch.priceWithSafetyMargin(selectedIlk.symbol);
+
   const daiAvailable =
     priceWithSafetyMargin?.times(BigNumber(cdpParams.gemsToLock)) ||
     BigNumber(0);
@@ -112,8 +116,14 @@ function CDPCreate({ onClose }) {
     debtValue
   );
 
+  const annualStabilityFee =
+    watch.annualStabilityFee(selectedIlk.symbol) || BigNumber(0);
+
+  const liquidationPenalty =
+    watch.liquidationPenalty(selectedIlk.symbol) || BigNumber(0);
+
   const liquidationRatio =
-    watch.liquidationRatio(selectedIlk.data.symbol) ||
+    watch.liquidationRatio(selectedIlk.symbol) ||
     createCurrencyRatio(USD, MDAI)('0');
 
   //TODO: WIP: use the currency function from the ilk
@@ -130,6 +140,8 @@ function CDPCreate({ onClose }) {
     proxyAddress
   } = useTokenAllowance(selectedIlk?.currency?.symbol);
 
+  const debtFloor = watch.debtFloor(selectedIlk?.currency?.symbol);
+
   const balances = useWalletBalances();
   delete balances.DSR;
 
@@ -143,11 +155,14 @@ function CDPCreate({ onClose }) {
     liquidationRatio,
     liquidationPrice,
     hasSufficientAllowance,
-    hasAllowance
+    hasAllowance,
+    proxyAddress,
+    debtFloor,
+    balances,
+    annualStabilityFee,
+    liquidationPenalty,
+    prices
   };
-
-  //TODO remove allowance/proxy:
-  cdpParams = { ...cdpParams, hasAllowance, proxyAddress };
 
   const { lang } = useLanguage();
   const [{ cdps }] = useStore();
@@ -177,11 +192,9 @@ function CDPCreate({ onClose }) {
 
   const screenProps = {
     selectedIlk,
-    proxyAddress,
     cdpParams,
     isFirstVault,
     dispatch,
-    balances,
     observables,
     onClose
   };

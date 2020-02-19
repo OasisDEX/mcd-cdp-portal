@@ -2,7 +2,6 @@ import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import { getUsdPrice } from 'utils/cdp';
 import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
@@ -11,18 +10,20 @@ import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
-import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
 function OpenCDPForm({
   selectedIlk,
   cdpParams,
   handleInputChange,
-  daiAvailable,
-  collateralizationRatio
+  observables
 }) {
-  const debtFloor = watch.debtFloor('ETH-A');
-
+  const {
+    daiAvailable,
+    collateralizationRatio,
+    liquidationRatio,
+    debtFloor
+  } = observables;
   const { lang } = useLanguage();
   const { hasSufficientAllowance } = useTokenAllowance(
     selectedIlk.currency.symbol
@@ -51,7 +52,7 @@ function OpenCDPForm({
       <Input
         key="collinput"
         name="gemsToLock"
-        after={selectedIlk.data.gem}
+        after={selectedIlk.gem}
         type="number"
         value={cdpParams.gemsToLock}
         onChange={handleInputChange}
@@ -86,7 +87,7 @@ function OpenCDPForm({
             });
           }}
         >
-          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.data.gem}
+          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.gem}
         </Text>
       </Box>
     ],
@@ -134,7 +135,7 @@ function OpenCDPForm({
           type={RatioDisplayTypes.TEXT}
           text={lang.cdp_create.collateralization_warning}
           ratio={collateralizationRatio}
-          ilkLiqRatio={selectedIlk.data.liquidationRatio}
+          ilkLiqRatio={liquidationRatio}
           onlyWarnings={true}
           t="caption"
         />
@@ -169,13 +170,16 @@ function OpenCDPForm({
   );
 }
 
-const CDPCreateDepositSidebar = ({
-  selectedIlk,
-  liquidationPrice,
-  collateralizationRatio
-}) => {
+const CDPCreateDepositSidebar = ({ selectedIlk, observables }) => {
   const { lang } = useLanguage();
-  const { liquidationRatio, stabilityFee } = selectedIlk.data;
+  const {
+    liquidationPrice,
+    collateralizationRatio,
+    liquidationRatio,
+    stabilityFee,
+    prices
+  } = observables;
+
   return (
     <Grid gridRowGap="m">
       {[
@@ -188,7 +192,7 @@ const CDPCreateDepositSidebar = ({
               collateralizationRatio
             )} (Min ${liquidationRatio}%)`}
             ratio={collateralizationRatio}
-            ilkLiqRatio={selectedIlk.data.liquidationRatio}
+            ilkLiqRatio={liquidationRatio}
             t="caption"
           />
         ],
@@ -198,7 +202,9 @@ const CDPCreateDepositSidebar = ({
             lang.current_ilk_price,
             selectedIlk.currency.symbol
           ),
-          `$${getUsdPrice(selectedIlk.data).toFixed(2)}`
+          `$${BigNumber(
+            prices.filter(price => price.symbol === `USD/${selectedIlk.gem}`)
+          )}`
         ],
         [lang.stability_fee, `${stabilityFee}%`]
       ].map(([title, value]) => (
@@ -224,9 +230,8 @@ const CDPCreateDeposit = ({
   const {
     daiAvailable,
     hasSufficientAllowance,
-    collateralizationRatio,
-    liquidationPrice,
-    hasAllowance
+    hasAllowance,
+    debtFloor
   } = observables;
   const { lang } = useLanguage();
   const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
@@ -243,7 +248,7 @@ const CDPCreateDeposit = ({
     cdpParamsAreValid(
       cdpParams,
       selectedIlk.userGemBalance,
-      selectedIlk.data,
+      debtFloor,
       daiAvailable
     ) && hasSufficientAllowance(cdpParams.gemsToLock);
 
@@ -271,15 +276,13 @@ const CDPCreateDeposit = ({
             cdpParams={cdpParams}
             handleInputChange={handleInputChange}
             selectedIlk={selectedIlk}
-            daiAvailable={daiAvailable}
-            collateralizationRatio={collateralizationRatio}
+            observables={observables}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <CDPCreateDepositSidebar
             selectedIlk={selectedIlk}
-            collateralizationRatio={collateralizationRatio}
-            liquidationPrice={liquidationPrice}
+            observables={observables}
           />
         </Card>
       </Grid>
