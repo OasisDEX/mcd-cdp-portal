@@ -15,6 +15,7 @@ const SidebarGlobalPanel = () => {
   const totalVaultsCreated = watch.vaultsCreated();
   const totalDaiLockedInDsr = watch.totalDaiLockedInDsr();
   const annualDaiSavingsRate = watch.annualDaiSavingsRate();
+  const systemCollateralization = watch.systemCollateralization(cdpTypesList);
 
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
@@ -26,7 +27,13 @@ const SidebarGlobalPanel = () => {
         <Grid gridRowGap="s">
           {routeIsBorrow && <SidebarFeeds feeds={prices} />}
           {routeIsBorrow && (
-            <SidebarSystem system={{ totalDaiSupply, totalVaultsCreated }} />
+            <SidebarSystem
+              system={{
+                totalDaiSupply,
+                totalVaultsCreated,
+                systemCollateralization
+              }}
+            />
           )}
           {routeIsSave && (
             <SidebarDetails
@@ -47,7 +54,8 @@ const SidebarGlobalPanel = () => {
     totalDaiSupply,
     totalVaultsCreated,
     totalDaiLockedInDsr,
-    annualDaiSavingsRate
+    annualDaiSavingsRate,
+    systemCollateralization
   ]);
 };
 
