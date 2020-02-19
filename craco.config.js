@@ -22,6 +22,15 @@ module.exports = {
       // See: https://github.com/ethereum/web3.js/issues/3018
       module: {
         exprContextCritical: false
+      },
+      optimization: {
+        runtimeChunk: 'single',
+        moduleIds: 'hashed',
+        splitChunks: {
+          chunks: 'all',
+          name: '00.runtime',
+          maxSize: 5000000
+        }
       }
     },
     devServer: {
