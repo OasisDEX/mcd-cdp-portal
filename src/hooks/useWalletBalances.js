@@ -1,22 +1,21 @@
-import BigNumber from 'bignumber.js';
 import useMaker from 'hooks/useMaker';
-import { tokensWithBalances } from 'reducers/accounts';
+import { showWalletTokens } from 'references/config';
 import { watch } from 'hooks/useObservable';
 
 const useWalletBalances = () => {
   const { account } = useMaker();
-
-  const balances = tokensWithBalances
-    .filter(token => token !== 'DSR')
-    .reduce((acc, token) => {
-      const balance =
-        watch.tokenBalance(account?.address, token)?.toBigNumber() ||
-        BigNumber(0);
-      acc[token] = balance;
-      return acc;
-    }, {});
-
-  return balances;
+  const symbols = showWalletTokens.filter(v => v !== 'DSR');
+  const dsrBalance = watch.daiLockedInDsr(account?.address);
+  const tokenBalances = watch.tokenBalances(account?.address, symbols);
+  return (
+    tokenBalances?.reduce(
+      (acc, tokenBalance) => {
+        acc[tokenBalance.symbol] = tokenBalance.toBigNumber();
+        return acc;
+      },
+      { DSR: dsrBalance?.toBigNumber() }
+    ) || {}
+  );
 };
 
 export default useWalletBalances;
