@@ -1,14 +1,6 @@
 import produce from 'immer';
 import BigNumber from 'bignumber.js';
 
-import ilks from 'references/ilkList';
-
-const uniqueIlkGems = [...new Set(ilks.map(ilk => ilk.gem))];
-
-export const tokensWithBalances = [
-  ...new Set(['MDAI', 'DSR', 'ETH', 'DAI', 'MWETH', ...uniqueIlkGems])
-];
-
 const defaultAccountState = {
   balances: {},
   allowances: {},
