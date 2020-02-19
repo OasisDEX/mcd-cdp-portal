@@ -187,7 +187,8 @@ test('cannot deposit more than token allowance', async () => {
         totalDaiSupply: MOCK_OBS_RESPONSE,
         vaultsCreated: MOCK_OBS_RESPONSE,
         totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
-        annualDaiSavingsRate: MOCK_OBS_RESPONSE
+        annualDaiSavingsRate: MOCK_OBS_RESPONSE,
+        systemCollateralization: MOCK_OBS_RESPONSE
       });
 
       return (
