@@ -37,11 +37,11 @@ For hardware wallet support:
    1. If using dai.js, run `yarn && yarn testchain`
    2. If using the testchain repo directly, run `scripts/launch`
 
-3) Navigate to `http://localhost:3000?network=test&simplePriceFeeds=1`
+3) Navigate to `http://localhost:3000?network=testnet&simplePriceFeeds=1`
 
 _see [this PR](https://github.com/makerdao/mcd-cdp-portal/pull/26) for more details_
 
-[build]: https://travis-ci.com/makerdao/mcd-cdp-portal.svg?token=3BTQxsyAmYGZyiaheNXp&branch=master
-[build-url]: https://travis-ci.com/makerdao/mcd-cdp-portal
+[build]: https://circleci.com/gh/makerdao/mcd-cdp-portal.svg?style=svg
+[build-url]: https://circleci.com/gh/makerdao/mcd-cdp-portal
 [cover]: https://codecov.io/gh/makerdao/mcd-cdp-portal/branch/master/graph/badge.svg
 [cover-url]: https://codecov.io/gh/makerdao/mcd-cdp-portal

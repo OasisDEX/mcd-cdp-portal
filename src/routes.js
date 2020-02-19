@@ -4,7 +4,6 @@ import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import BorrowLayout from 'layouts/BorrowLayout';
-import SaveLayout from 'layouts/SaveLayout';
 
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
@@ -62,40 +61,6 @@ const withBorrowLayout = route =>
     );
   }, route);
 
-const withSaveLayout = route =>
-  withView(async request => {
-    const {
-      network = networkNames[defaultNetwork],
-      testchainId,
-      backendEnv
-    } = request.query;
-    const { viewedAddress, cdpId } = request.params;
-
-    return (
-      <MakerProvider
-        network={network}
-        testchainId={testchainId}
-        backendEnv={backendEnv}
-      >
-        <RouteEffects network={network} />
-        <ToggleProvider>
-          <ModalProvider modals={modals} templates={templates}>
-            <SidebarProvider>
-              <SaveLayout
-                mobileNav={
-                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                }
-                navbar={<Navbar viewedAddress={viewedAddress} />}
-              >
-                <View />
-              </SaveLayout>
-            </SidebarProvider>
-          </ModalProvider>
-        </ToggleProvider>
-      </MakerProvider>
-    );
-  }, route);
-
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
@@ -124,7 +89,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.SAVE}`]: withSaveLayout(
+  [`/${Routes.SAVE}`]: withBorrowLayout(
     route(() => ({ title: 'Save', view: <Save /> }))
   ),
 
