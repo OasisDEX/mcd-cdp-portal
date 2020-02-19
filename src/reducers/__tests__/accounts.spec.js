@@ -1,17 +1,29 @@
-import accountsReducer, { tokensWithBalances } from '../accounts';
+import accountsReducer from '../accounts';
+import { showWalletTokens } from 'references/config';
 import BigNumber from 'bignumber.js';
 
 const mockAddress = '0xDEADBEEF';
 
 test('App is using the correct token set', () => {
-  expect(tokensWithBalances).toEqual(['MDAI', 'DSR', 'ETH', 'DAI', 'MWETH', 'BAT']);
+  expect(showWalletTokens).toEqual([
+    'MDAI',
+    'DSR',
+    'ETH',
+    'SAI',
+    'MWETH',
+    'BAT'
+  ]);
 });
 
 test('Instantiates correct default state', () => {
   const action = { type: `accounts.${mockAddress}` };
   const state = accountsReducer({}, action);
   expect(state).toHaveProperty(mockAddress);
-  expect(state[mockAddress]).toHaveProperty('balances', 'allowances', 'savings');
+  expect(state[mockAddress]).toHaveProperty(
+    'balances',
+    'allowances',
+    'savings'
+  );
   expect(state[mockAddress].balances).toEqual({});
   expect(state[mockAddress].allowances).toEqual({});
   expect(state[mockAddress].savings.toString()).toEqual('0');
