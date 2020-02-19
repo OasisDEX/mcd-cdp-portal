@@ -5,12 +5,6 @@ import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import useStore from '../hooks/useStore';
 import {
-  createWatcher,
-  startWatcher,
-  updateWatcherWithAccount
-} from '../watch';
-import { batchActions } from '../utils/redux';
-import {
   checkEthereumProvider,
   browserEthereumProviderAddress
 } from '../utils/ethereum';
@@ -104,14 +98,17 @@ function MakerProvider({
       });
 
       // Register multicall schemas and map useObservable hook to watch convenience helper
-      newMaker
-        .service('multicall')
-        .registerSchemas({ ...schemas, getVaults, getCdpIds });
-      newMaker.service('multicall').observableKeys.forEach(
+      const multicall = newMaker.service('multicall');
+      multicall.registerSchemas({ ...schemas, getVaults, getCdpIds });
+      multicall.observableKeys.forEach(
         key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
       );
-
+      // Create and start multicall watcher
+      const watcher = multicall.createWatcher({ interval: 'block' });
+      multicall.start();
+      setWatcher(watcher);
       setMaker(newMaker);
+
       log('Initialized maker instance');
     })();
     // leaving maker out of the deps because it would create an infinite loop
@@ -129,7 +126,7 @@ function MakerProvider({
         const proxy = await maker.service('proxy').getProxyAddress(address);
         if (proxy) log(`Found proxy address: ${proxy}`);
         else log('No proxy found');
-        updateWatcherWithAccount(maker, address, proxy);
+        // updateWatcherWithAccount(maker, address, proxy);
       })();
     } else {
       // Reconnect browser provider if active address matches last connected
@@ -169,17 +166,10 @@ function MakerProvider({
         } else {
           log('No proxy found');
         }
-        updateWatcherWithAccount(maker, account.address, proxy);
+        // updateWatcherWithAccount(maker, account.address, proxy);
       })();
     });
 
-    const watcher = createWatcher(maker);
-    setWatcher(watcher);
-    const batchSub = watcher.batch().subscribe(updates => {
-      dispatch(batchActions(updates));
-      // make entire list of updates available in a single reducer call
-      dispatch({ type: 'watcherUpdates', payload: updates });
-    });
     const txManagerSub = maker
       .service('transactionManager')
       .onTransactionUpdate((tx, state) => {
@@ -193,10 +183,7 @@ function MakerProvider({
         log('Tx ' + state, tx.metadata);
         setTxLastUpdate(Date.now());
       });
-    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    startWatcher(maker);
     return () => {
-      batchSub.unsub();
       txManagerSub.unsub();
     };
   }, [maker, dispatch, connectBrowserProvider]);
