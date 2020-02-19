@@ -28,7 +28,12 @@ function Save() {
   const { account, network } = useMaker();
   const [{ savings }] = useStore();
 
-  const { proxyAddress, hasProxy, proxyLoading } = useProxy();
+  const {
+    proxyAddress,
+    hasProxy,
+    proxyLoading,
+    savePageProxyCheckState
+  } = useProxy();
   const { trackBtnClick } = useAnalytics('DsrView');
 
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
@@ -59,7 +64,7 @@ function Save() {
     <PageContentLayout>
       {!account ? (
         <AccountSelection />
-      ) : proxyLoading && !hasProxy ? (
+      ) : (proxyLoading && !hasProxy) || !savePageProxyCheckState ? (
         <LoadingLayout />
       ) : !hasProxy && showOnboarding ? (
         <Flex

@@ -14,7 +14,8 @@ const initialState = {
   startingBlockHeight: 0,
   proxyAddress: undefined,
   startedWithoutProxy: false,
-  proxyDeployed: false
+  proxyDeployed: false,
+  savePageProxyCheckState: false
 };
 
 export default function useProxy() {
@@ -28,7 +29,8 @@ export default function useProxy() {
       startingBlockHeight,
       proxyAddress,
       startedWithoutProxy,
-      proxyDeployed
+      proxyDeployed,
+      savePageProxyCheckState
     },
     updateState
   ] = useReducer(
@@ -64,12 +66,18 @@ export default function useProxy() {
       (async () => {
         updateState({ initialProxyCheck: true });
         const proxyAddress = await maker.service('proxy').getProxyAddress();
-        if (isCancelled) return;
+        if (isCancelled) {
+          updateState({
+            savePageProxyCheckState: true
+          });
+          return;
+        }
         log(`got proxy address: ${proxyAddress}`);
         updateState({
           initialProxyCheck: false,
           proxyAddress,
-          startedWithoutProxy: !proxyAddress
+          startedWithoutProxy: !proxyAddress,
+          savePageProxyCheckState: true
         });
       })();
     }
@@ -86,6 +94,7 @@ export default function useProxy() {
     startedWithoutProxy,
     startingBlockHeight,
     proxyDeployed,
+    savePageProxyCheckState,
     hasProxy: startedWithoutProxy ? proxyDeployed : !!proxyAddress
   };
 }
