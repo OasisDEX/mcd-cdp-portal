@@ -46,7 +46,7 @@ export default function useTokenAllowance(tokenSymbol) {
   const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
 
-  const proxyAddress = watch.proxyAddress(account?.address, true);
+  const proxyAddress = watch.proxyAddress(account?.address);
   const allowance = watch.tokenAllowance(
     account?.address,
     proxyAddress || undefined,

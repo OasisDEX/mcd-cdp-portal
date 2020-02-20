@@ -38,6 +38,7 @@ const collateralValue = USD(74.852);
 const debtValue = MDAI(120);
 
 const mockVault = {
+  id: 9000,
   debtValue,
   vaultType: ILK,
   collateralAmount: LOL(10),
@@ -157,6 +158,7 @@ describe('on mobile', () => {
 
   test('render an action full-screen', async () => {
     const mockVault2 = {
+      id: 9000,
       debtValue,
       collateralAmount: ETH(10),
       collateralizationRatio: createCurrencyRatio(USD, MDAI)(180),
