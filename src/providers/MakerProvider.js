@@ -42,7 +42,7 @@ function MakerProvider({
 
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
-    setAccount({ ...account, cdps: [] });
+    setAccount({ ...account });
   };
 
   const connectBrowserProvider = useCallback(async () => {
@@ -155,19 +155,6 @@ function MakerProvider({
       );
       log(`Account changed to: ${account.address}`);
       initAccount(account);
-      (async () => {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(account.address);
-        if (proxy) {
-          log(`Found proxy address: ${proxy}`);
-          const cdpIds = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-          setAccount({ ...account, cdps: cdpIds });
-        } else {
-          log('No proxy found');
-        }
-        // updateWatcherWithAccount(maker, account.address, proxy);
-      })();
     });
 
     const txManagerSub = maker

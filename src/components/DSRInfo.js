@@ -54,10 +54,15 @@ const initialState = {
   tickerInterest: BigNumber(0),
   tickerStartTime: 0
 };
+let cancelled = false;
 
 function DSRInfo({ isMobile, savings }) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
+
+  useEffect(() => {
+    return () => (cancelled = true);
+  }, []);
 
   const {
     proxyAddress,
@@ -103,6 +108,7 @@ function DSRInfo({ isMobile, savings }) {
     const etd = await maker
       .service('mcd:savings')
       .getEarningsToDate(proxyAddress);
+    if (cancelled) return;
     dispatch({
       fetchingEarnings: false,
       fetchedEarnings: true,

@@ -3,7 +3,6 @@ import { MDAI, USD, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import BigNumber from 'bignumber.js';
-import { showWalletTokens } from 'references/config';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -14,12 +13,12 @@ import {
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
 import useLanguage from 'hooks/useLanguage';
-import useStore from 'hooks/useStore';
 import { TxLifecycle } from 'utils/constants';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import { watch } from 'hooks/useObservable';
 import useCdpTypes from '../hooks/useCdpTypes';
+import useMaker from 'hooks/useMaker';
 
 const initialState = {
   step: 0,
@@ -90,6 +89,7 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
+  const { account } = useMaker();
   let [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
     reducer,
     initialState
@@ -165,8 +165,8 @@ function CDPCreate({ onClose }) {
   };
 
   const { lang } = useLanguage();
-  const [{ cdps }] = useStore();
-  const isFirstVault = Object.entries(cdps).length === 0 ? true : false;
+  const rawUserVaultsList = watch.userVaultsList(account?.address);
+  const isFirstVault = rawUserVaultsList?.length === 0 ? true : false;
 
   const screens = useMemo(
     () => [
