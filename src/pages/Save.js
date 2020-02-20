@@ -22,6 +22,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import useSidebar from 'hooks/useSidebar';
 import useSavings from 'hooks/useSavings';
 import { FeatureFlags } from 'utils/constants';
+import { watch } from 'hooks/useObservable';
 
 function Save() {
   const { lang } = useLanguage();
@@ -54,7 +55,7 @@ function Save() {
       showSidebar(props);
     }
   };
-
+  const annualDaiSavingsRate = watch.annualDaiSavingsRate();
   return (
     <PageContentLayout>
       {!account ? (
@@ -71,7 +72,9 @@ function Save() {
           <Text.p t="h4" mb="26px">
             {lang.formatString(
               lang.save.get_started_title,
-              `${savings?.annualDaiSavingsRate.toFixed(2)}%`
+              `${
+                annualDaiSavingsRate ? annualDaiSavingsRate.toFixed(2) : '0.00'
+              }%`
             )}
           </Text.p>
           <Button
