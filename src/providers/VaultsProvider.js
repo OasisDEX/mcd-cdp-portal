@@ -61,16 +61,18 @@ function VaultsProvider({ children, viewedAddress }) {
   return (
     <VaultsContext.Provider
       value={{
-        userVaults: userVaultsList
-          ? userVaultIds && userVaultsData
-            ? userVaultsData
-            : []
-          : undefined,
-        viewedAddressVaults: viewedAddressVaultsList
-          ? viewedAddressVaultIds && viewedAddressVaultsData
-            ? viewedAddressVaultsData
-            : []
-          : undefined
+        userVaults:
+          rawUserVaultsList !== undefined
+            ? userVaultIds && userVaultsData
+              ? userVaultsData
+              : []
+            : undefined,
+        viewedAddressVaults:
+          rawViewedAddressVaultsList !== undefined
+            ? viewedAddressVaultIds && viewedAddressVaultsData
+              ? viewedAddressVaultsData
+              : []
+            : undefined
       }}
     >
       {children}

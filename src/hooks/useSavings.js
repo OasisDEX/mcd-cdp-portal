@@ -19,7 +19,7 @@ function useSavings(address) {
     : {
         fetchedSavings: true,
         ...savings,
-        daiLockedInDsr: savings.daiLockedInDsr.toBigNumber()
+        daiLockedInDsr: savings?.daiLockedInDsr?.toBigNumber()
       };
 }
 
