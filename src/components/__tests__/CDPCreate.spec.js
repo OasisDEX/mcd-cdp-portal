@@ -32,6 +32,9 @@ test('the whole flow', async () => {
   } = await renderWithAccount(<CDPCreate />);
 
   getByText('Select a collateral type');
+
+  await mineBlocks(maker.service('web3'));
+
   const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
   await findByText(/94.69 ETH/); // ETH Balance
   click(ethRadioButton);

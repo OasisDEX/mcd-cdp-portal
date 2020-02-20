@@ -1,7 +1,5 @@
 import React, { useReducer, useMemo } from 'react';
-import { MDAI, USD, ETH } from '@makerdao/dai-plugin-mcd';
-import { createCurrencyRatio } from '@makerdao/currency';
-import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
@@ -95,44 +93,14 @@ function CDPCreate({ onClose }) {
     initialState
   );
   const { cdpTypesList } = useCdpTypes();
-  const prices = watch.collateralTypesPrices(cdpTypesList);
-
-  const collateralTypePrice =
-    watch.collateralTypePrice(selectedIlk.symbol) || BigNumber(0);
+  let collateralTypesData = watch.collateralTypesData(cdpTypesList);
 
   const priceWithSafetyMargin = watch.priceWithSafetyMargin(selectedIlk.symbol);
-
   const daiAvailable =
     priceWithSafetyMargin?.times(BigNumber(cdpParams.gemsToLock)) ||
     BigNumber(0);
 
-  const collateralValue = collateralTypePrice.times(
-    BigNumber(cdpParams.gemsToLock || '0')
-  );
   const debtValue = MDAI(cdpParams.daiToDraw || '0');
-
-  const collateralizationRatio = math.collateralizationRatio(
-    collateralValue,
-    debtValue
-  );
-
-  const annualStabilityFee =
-    watch.annualStabilityFee(selectedIlk.symbol) || BigNumber(0);
-
-  const liquidationPenalty =
-    watch.liquidationPenalty(selectedIlk.symbol) || BigNumber(0);
-
-  const liquidationRatio =
-    watch.liquidationRatio(selectedIlk.symbol) ||
-    createCurrencyRatio(USD, MDAI)('0');
-
-  //TODO: WIP: use the currency function from the ilk
-  // eg selectedIlk.currency(gemsToLock),
-  const liquidationPrice = math.liquidationPrice(
-    ETH(cdpParams.gemsToLock || '0'),
-    debtValue,
-    liquidationRatio
-  );
 
   const {
     hasAllowance,
@@ -146,22 +114,14 @@ function CDPCreate({ onClose }) {
   delete balances.DSR;
 
   const observables = {
-    collateralTypePrice,
     priceWithSafetyMargin,
     daiAvailable,
-    collateralValue,
     debtValue,
-    collateralizationRatio,
-    liquidationRatio,
-    liquidationPrice,
     hasSufficientAllowance,
     hasAllowance,
     proxyAddress,
     debtFloor,
-    balances,
-    annualStabilityFee,
-    liquidationPenalty,
-    prices
+    balances
   };
 
   const { lang } = useLanguage();
@@ -196,6 +156,7 @@ function CDPCreate({ onClose }) {
     isFirstVault,
     dispatch,
     observables,
+    collateralTypesData,
     onClose
   };
 

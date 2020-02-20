@@ -1,8 +1,13 @@
 import React from 'react';
 import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  prettifyNumber,
+  formatter
+} from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
@@ -170,16 +175,24 @@ function OpenCDPForm({
   );
 }
 
-const CDPCreateDepositSidebar = ({ selectedIlk, observables }) => {
+const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
   const { lang } = useLanguage();
-  const {
-    liquidationPrice,
-    collateralizationRatio,
-    liquidationRatio,
-    stabilityFee,
-    prices
-  } = observables;
+  const { annualStabilityFee, collateralTypePrice } = ilkData;
 
+  const currency = selectedIlk.currency;
+  const collateralizationRatio = ilkData.calculateCollateralizationRatio(
+    BigNumber(cdpParams.gemsToLock || '0'),
+    MDAI(cdpParams.daiToDraw || '0')
+  );
+
+  let liquidationPriceDisplay = formatter(
+    ilkData.calculateliquidationPrice(
+      currency(cdpParams.gemsToLock || '0'),
+      MDAI(cdpParams.daiToDraw || '0')
+    )
+  );
+  if ([Infinity, 'Infinity'].includes(liquidationPriceDisplay))
+    liquidationPriceDisplay = '0.0000';
   return (
     <Grid gridRowGap="m">
       {[
@@ -190,23 +203,26 @@ const CDPCreateDepositSidebar = ({ selectedIlk, observables }) => {
             type={RatioDisplayTypes.TEXT}
             text={`${formatCollateralizationRatio(
               collateralizationRatio
-            )} (Min ${liquidationRatio}%)`}
+            )} (Min ${formatter(ilkData.liquidationRatio, {
+              percentage: true
+            })}%)`}
             ratio={collateralizationRatio}
-            ilkLiqRatio={liquidationRatio}
+            ilkLiqRatio={ilkData.liquidationRatio}
             t="caption"
           />
         ],
-        [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
+        [lang.liquidation_price, `$${liquidationPriceDisplay}`],
         [
           lang.formatString(
             lang.current_ilk_price,
             selectedIlk.currency.symbol
           ),
-          `$${BigNumber(
-            prices.filter(price => price.symbol === `USD/${selectedIlk.gem}`)
-          )}`
+          `$${formatter(collateralTypePrice)}`
         ],
-        [lang.stability_fee, `${stabilityFee}%`]
+        [
+          lang.stability_fee,
+          `${formatter(annualStabilityFee, { percentage: true })}%`
+        ]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
           <TextBlock t="h5" lineHeight="normal">
@@ -224,6 +240,7 @@ const CDPCreateDeposit = ({
   cdpParams,
   isFirstVault,
   observables,
+  collateralTypesData,
   dispatch
 }) => {
   const { gemsToLock, daiToDraw } = cdpParams;
@@ -282,7 +299,10 @@ const CDPCreateDeposit = ({
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <CDPCreateDepositSidebar
             selectedIlk={selectedIlk}
-            observables={observables}
+            cdpParams={cdpParams}
+            ilkData={collateralTypesData.find(
+              x => x.symbol === selectedIlk.symbol
+            )}
           />
         </Card>
       </Grid>

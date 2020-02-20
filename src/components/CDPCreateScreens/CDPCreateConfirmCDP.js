@@ -9,6 +9,7 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
@@ -22,6 +23,7 @@ import { TxLifecycle } from 'utils/constants';
 import styled from 'styled-components';
 import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import { BigNumber } from 'bignumber.js';
 
 const StyledExternalLink = styled(ExternalLinkIcon)`
   path {
@@ -33,23 +35,17 @@ const StyledExternalLink = styled(ExternalLinkIcon)`
 const CDPCreateConfirmSummary = ({
   cdpParams,
   selectedIlk,
-  observables,
   capturedDispatch,
   enableSubmit,
-  isFirstVault
+  isFirstVault,
+  ilkData
 }) => {
   const { trackBtnClick } = useAnalytics('ConfirmVault', 'VaultCreate');
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
   const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
 
-  const {
-    liquidationPenalty,
-    liquidationRatio,
-    stabilityFee,
-    liquidationPrice,
-    collateralizationRatio
-  } = observables;
+  const { liquidationPenalty, liquidationRatio, stabilityFee } = ilkData;
 
   const rows = [
     [
@@ -59,13 +55,24 @@ const CDPCreateConfirmSummary = ({
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization,
-      formatCollateralizationRatio(collateralizationRatio.times(100).toNumber())
+      formatCollateralizationRatio(
+        ilkData.calculateCollateralizationRatio(
+          BigNumber(cdpParams.gemsToLock),
+          MDAI(cdpParams.daiToDraw)
+        )
+      )
     ],
     [
       lang.liquidation_ratio,
       `${formatter(liquidationRatio, { percentage: true })}%`
     ],
-    [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
+    [
+      lang.liquidation_price,
+      `$${ilkData.calculateliquidationPrice(
+        BigNumber(cdpParams.gemsToLock),
+        MDAI(cdpParams.daiToDraw)
+      )}`
+    ],
     [lang.liquidation_penalty, `${liquidationPenalty}%`],
     [lang.stability_fee, `${stabilityFee}%`]
   ];
@@ -242,6 +249,7 @@ const CDPCreateConfirmCDP = ({
   selectedIlk,
   isFirstVault,
   observables,
+  collateralTypesData,
   onClose
 }) => {
   const { lang } = useLanguage();
@@ -295,6 +303,8 @@ const CDPCreateConfirmCDP = ({
       capturedDispatch={capturedDispatch}
       enableSubmit={enableSubmit}
       isFirstVault={isFirstVault}
+      collateralTypesData={collateralTypesData}
+      ilkData={collateralTypesData.find(x => x.symbol === selectedIlk.symbol)}
     />
   );
 };

@@ -49,14 +49,10 @@ function IlkTableRow({
   gemBalance,
   isFirstVault,
   dispatch,
-  observables
+  ilkData
 }) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
-  const {
-    annualStabilityFee,
-    liquidationRatio,
-    liquidationPenalty
-  } = observables;
+  const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
 
   async function selectIlk() {
     trackInputChange('CollateralType', {
@@ -102,6 +98,7 @@ const CDPCreateSelectCollateral = ({
   selectedIlk,
   isFirstVault,
   observables,
+  collateralTypesData,
   dispatch
 }) => {
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
@@ -152,6 +149,7 @@ const CDPCreateSelectCollateral = ({
                 <tbody>
                   {cdpTypes.map(
                     ilk =>
+                      collateralTypesData &&
                       balances[ilk.gem] && (
                         <IlkTableRow
                           key={ilk.key}
@@ -161,6 +159,9 @@ const CDPCreateSelectCollateral = ({
                           gemBalance={balances[ilk.gem]}
                           isFirstVault={isFirstVault}
                           observables={observables}
+                          ilkData={collateralTypesData.filter(
+                            x => x.symbol === ilk.symbol
+                          )}
                         />
                       )
                   )}
