@@ -1,40 +1,34 @@
-import { useReducer, useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 import useActionState from 'hooks/useActionState';
 import useBlockHeight from 'hooks/useBlockHeight';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-// import { updateWatcherWithProxy } from '../watch';
-
+import { watch } from 'hooks/useObservable';
+import usePrevious from 'hooks/usePrevious';
 import debug from 'debug';
 const log = debug('maker:useProxy');
-
-const initialState = {
-  initialProxyCheck: true,
-  startingBlockHeight: 0,
-  proxyAddress: undefined,
-  startedWithoutProxy: false,
-  proxyDeployed: false
-};
 
 export default function useProxy() {
   const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
   const blockHeight = useBlockHeight(0);
+  const [startedWithoutProxy, setStartedWithoutProxy] = useState(false);
+  const [startingBlockHeight, setStartingBlockHeight] = useState(0);
+  const [proxyDeployed, setProxyDeployed] = useState(false);
 
-  const [
-    {
-      initialProxyCheck,
-      startingBlockHeight,
-      proxyAddress,
-      startedWithoutProxy,
-      proxyDeployed
-    },
-    updateState
-  ] = useReducer(
-    (prevState, newState) => ({ ...prevState, ...newState }),
-    initialState
-  );
+  let proxyAddress = watch.proxyAddress(account?.address);
+  proxyAddress =
+    proxyAddress === '0x0000000000000000000000000000000000000000'
+      ? null
+      : proxyAddress;
+
+  const prevProxy = usePrevious(proxyAddress);
+
+  useEffect(() => {
+    if (prevProxy === undefined && proxyAddress === null) {
+      setStartedWithoutProxy(true);
+    }
+  }, [proxyAddress, prevProxy]);
 
   const [setupProxy, proxyLoading, , proxyErrors] = useActionState(async () => {
     log('proxy setup is running');
@@ -42,48 +36,18 @@ export default function useProxy() {
     if (proxyAddress) return proxyAddress;
 
     const txPromise = maker.service('proxy').ensureProxy();
-
     newTxListener(txPromise, lang.transactions.setting_up_proxy);
-    const address = await txPromise;
-
-    updateState({
-      startingBlockHeight: blockHeight,
-      proxyAddress: address
-    });
-
-    // await updateWatcherWithProxy(maker, account.address, address);
+    setStartingBlockHeight(blockHeight);
     await maker.service('transactionManager').confirm(txPromise, 7);
-
-    updateState({ proxyDeployed: true });
-    return address;
+    setProxyDeployed(true);
   });
-
-  let isCancelled = false;
-  useEffect(() => {
-    if (account) {
-      (async () => {
-        updateState({ initialProxyCheck: true });
-        const proxyAddress = await maker.service('proxy').getProxyAddress();
-        if (isCancelled) return;
-        log(`got proxy address: ${proxyAddress}`);
-        updateState({
-          initialProxyCheck: false,
-          proxyAddress,
-          startedWithoutProxy: !proxyAddress
-        });
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => (isCancelled = true);
-  }, [maker, account]);
-
   return {
     proxyAddress,
+    startedWithoutProxy,
     setupProxy,
     proxyLoading,
-    initialProxyCheck,
+    initialProxyCheck: proxyAddress === undefined,
     proxyErrors,
-    startedWithoutProxy,
     startingBlockHeight,
     proxyDeployed,
     hasProxy: startedWithoutProxy ? proxyDeployed : !!proxyAddress

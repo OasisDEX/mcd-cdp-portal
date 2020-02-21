@@ -26,6 +26,7 @@ const ProxyAllowanceCheck = ({
   proxyLoading,
   proxyDeployed,
   proxyErrors,
+  hasProxy,
   setAllowance,
   hasAllowance,
   labels,
@@ -45,7 +46,7 @@ const ProxyAllowanceCheck = ({
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {setup_text}
         </Text.p>
-        {proxyAddress ? (
+        {hasProxy ? (
           <SuccessButton />
         ) : (
           <Button

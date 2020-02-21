@@ -30,11 +30,12 @@ test('the whole DSR Deposit flow', async () => {
     state => state
   );
   getByText(lang.dsr_deposit.open_vault);
-
+  click(getByText('Setup'));
   // First checkmark is proxy, but need to set allowance for Dai
   await wait(() => getByText('checkmark.svg'));
-  click(getByText('Set'));
+  await mineBlocks(maker.service('web3'), 10);
 
+  click(getByText('Set'));
   // Allowance is now set, continue to DepositCreate step
   await wait(() => assert(getAllByText('checkmark.svg').length === 2));
   click(getByText(lang.actions.continue));

@@ -66,6 +66,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
         labels={labels}
         proxyLoading={proxyLoading}
         proxyDeployed={proxyDeployed}
+        hasProxy={hasProxy}
         proxyErrors={proxyErrors}
         setAllowance={setAllowance}
         hasAllowance={hasAllowance}
