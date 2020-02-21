@@ -50,7 +50,7 @@ const CDPCreateConfirmSummary = ({
   const rows = [
     [
       lang.verbs.depositing,
-      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.currency.symbol}`
+      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.gem}`
     ],
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
@@ -248,7 +248,6 @@ const CDPCreateConfirmCDP = ({
   cdpParams,
   selectedIlk,
   isFirstVault,
-  observables,
   collateralTypesData,
   onClose
 }) => {
@@ -267,7 +266,7 @@ const CDPCreateConfirmCDP = ({
     const txObject = maker
       .service('mcd:cdpManager')
       .openLockAndDraw(
-        selectedIlk.key,
+        selectedIlk.symbol,
         selectedIlk.currency(gemsToLock),
         daiToDraw
       );
@@ -299,7 +298,6 @@ const CDPCreateConfirmCDP = ({
     <CDPCreateConfirmSummary
       cdpParams={cdpParams}
       selectedIlk={selectedIlk}
-      observables={observables}
       capturedDispatch={capturedDispatch}
       enableSubmit={enableSubmit}
       isFirstVault={isFirstVault}

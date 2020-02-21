@@ -27,7 +27,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
     hasAllowance,
     setAllowance,
     allowanceLoading: isSettingAllowance
-  } = useTokenAllowance(selectedIlk.currency.symbol);
+  } = useTokenAllowance(selectedIlk.gem);
 
   async function deployProxy() {
     await setupProxy();
@@ -42,7 +42,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
     setup_header: lang.cdp_create.setup_vault,
     allowance_text: lang.formatString(
       lang.cdp_create.setup_proxy_allowance_text,
-      selectedIlk.currency.symbol
+      selectedIlk.gem
     ),
     confirmations_text: lang.formatString(
       lang.cdp_create.waiting_for_comfirmations,

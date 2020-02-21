@@ -56,13 +56,12 @@ function IlkTableRow({
 
   async function selectIlk() {
     trackInputChange('CollateralType', {
-      selectedCollateral: ilk.key,
+      selectedCollateral: ilk.symbol,
       isFirstVault
     });
     dispatch({
       type: 'set-ilk',
       payload: {
-        key: ilk.key,
         gem: ilk.gem,
         symbol: ilk.symbol,
         gemBalance,
@@ -97,14 +96,15 @@ function IlkTableRow({
 const CDPCreateSelectCollateral = ({
   selectedIlk,
   isFirstVault,
-  observables,
+  hasAllowance,
+  proxyAddress,
+  balances,
   collateralTypesData,
   dispatch
 }) => {
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
-  const { hasAllowance, proxyAddress, balances } = observables;
 
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
@@ -152,13 +152,12 @@ const CDPCreateSelectCollateral = ({
                       collateralTypesData &&
                       balances[ilk.gem] && (
                         <IlkTableRow
-                          key={ilk.key}
-                          checked={ilk.key === selectedIlk.key}
+                          key={ilk.symbol}
+                          checked={ilk.symbol === selectedIlk.symbol}
                           dispatch={dispatch}
                           ilk={ilk}
                           gemBalance={balances[ilk.gem]}
                           isFirstVault={isFirstVault}
-                          observables={observables}
                           ilkData={collateralTypesData.filter(
                             x => x.symbol === ilk.symbol
                           )}
@@ -177,7 +176,7 @@ const CDPCreateSelectCollateral = ({
       <ScreenFooter
         onNext={() => {
           trackBtnClick('Next', {
-            selectedCollateral: selectedIlk.key,
+            selectedCollateral: selectedIlk.symbol,
             isFirstVault
           });
           dispatch({
@@ -190,7 +189,7 @@ const CDPCreateSelectCollateral = ({
           dispatch({ type: 'decrement-step' });
         }}
         canGoBack={false}
-        canProgress={!!selectedIlk.key}
+        canProgress={!!selectedIlk.symbol}
       />
     </Box>
   );

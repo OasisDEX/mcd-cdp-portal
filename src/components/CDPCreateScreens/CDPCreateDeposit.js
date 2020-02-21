@@ -17,42 +17,36 @@ import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
 
-function OpenCDPForm({
-  selectedIlk,
-  cdpParams,
-  handleInputChange,
-  observables
-}) {
+function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
+  const { lang } = useLanguage();
   const {
-    daiAvailable,
+    calculateMaxDai,
     collateralizationRatio,
     liquidationRatio,
     debtFloor
-  } = observables;
-  const { lang } = useLanguage();
-  const { hasSufficientAllowance } = useTokenAllowance(
-    selectedIlk.currency.symbol
-  );
+  } = ilkData;
+
+  const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
+  const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
+
+  const { hasSufficientAllowance } = useTokenAllowance(selectedIlk.gem);
   const userHasSufficientGemBalance = greaterThanOrEqual(
     selectedIlk.userGemBalance,
     cdpParams.gemsToLock
   );
-
   const userCanDrawDaiAmount = daiAvailable?.gte(
     BigNumber(cdpParams.daiToDraw)
   );
-
-  const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
 
   const fields = [
     [
       lang.formatString(
         lang.cdp_create.deposit_form_field1_title,
-        selectedIlk.currency.symbol
+        selectedIlk.gem
       ),
       lang.formatString(
         lang.cdp_create.deposit_form_field1_text,
-        selectedIlk.currency.symbol
+        selectedIlk.gem
       ),
       <Input
         key="collinput"
@@ -68,11 +62,11 @@ function OpenCDPForm({
               ? null
               : lang.formatString(
                   lang.action_sidebar.invalid_allowance,
-                  selectedIlk.currency.symbol
+                  selectedIlk.gem
                 )
             : lang.formatString(
                 lang.cdp_create.insufficient_ilk_balance,
-                selectedIlk.currency.symbol
+                selectedIlk.gem
               )
         }
       />,
@@ -177,9 +171,8 @@ function OpenCDPForm({
 
 const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
   const { lang } = useLanguage();
-  const { annualStabilityFee, collateralTypePrice } = ilkData;
-
   const currency = selectedIlk.currency;
+  const { annualStabilityFee, collateralTypePrice } = ilkData;
   const collateralizationRatio = ilkData.calculateCollateralizationRatio(
     BigNumber(cdpParams.gemsToLock || '0'),
     MDAI(cdpParams.daiToDraw || '0')
@@ -213,10 +206,7 @@ const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
         ],
         [lang.liquidation_price, `$${liquidationPriceDisplay}`],
         [
-          lang.formatString(
-            lang.current_ilk_price,
-            selectedIlk.currency.symbol
-          ),
+          lang.formatString(lang.current_ilk_price, selectedIlk.gem),
           `$${formatter(collateralTypePrice)}`
         ],
         [
@@ -239,19 +229,21 @@ const CDPCreateDeposit = ({
   selectedIlk,
   cdpParams,
   isFirstVault,
-  observables,
+  hasSufficientAllowance,
+  hasAllowance,
   collateralTypesData,
   dispatch
 }) => {
-  const { gemsToLock, daiToDraw } = cdpParams;
-  const {
-    daiAvailable,
-    hasSufficientAllowance,
-    hasAllowance,
-    debtFloor
-  } = observables;
   const { lang } = useLanguage();
   const { trackBtnClick } = useAnalytics('DepositGenerate', 'VaultCreate');
+
+  const { gemsToLock, daiToDraw } = cdpParams;
+
+  const ilkData = collateralTypesData.find(
+    x => x.symbol === selectedIlk.symbol
+  );
+  const { calculateMaxDai, debtFloor } = ilkData;
+  const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -279,7 +271,7 @@ const CDPCreateDeposit = ({
       <ScreenHeader
         title={lang.formatString(
           lang.cdp_create.deposit_title,
-          selectedIlk.currency.symbol
+          selectedIlk.gem
         )}
         text={lang.cdp_create.deposit_text}
       />
@@ -293,16 +285,14 @@ const CDPCreateDeposit = ({
             cdpParams={cdpParams}
             handleInputChange={handleInputChange}
             selectedIlk={selectedIlk}
-            observables={observables}
+            ilkData={ilkData}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
           <CDPCreateDepositSidebar
             selectedIlk={selectedIlk}
             cdpParams={cdpParams}
-            ilkData={collateralTypesData.find(
-              x => x.symbol === selectedIlk.symbol
-            )}
+            ilkData={ilkData}
           />
         </Card>
       </Grid>

@@ -1,6 +1,4 @@
 import React, { useReducer, useMemo } from 'react';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
-import BigNumber from 'bignumber.js';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -24,7 +22,6 @@ const initialState = {
   selectedIlk: {
     userGemBalance: '',
     currency: null,
-    key: '',
     gem: null,
     symbol: undefined
   },
@@ -59,8 +56,7 @@ function reducer(state, action) {
           gem: payload.gem,
           symbol: payload.symbol,
           userGemBalance: payload.gemBalance,
-          currency: payload.currency,
-          key: payload.key
+          currency: payload.currency
         }
       };
     case 'reset-ilk':
@@ -87,20 +83,14 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
+  const { lang } = useLanguage();
   const { account } = useMaker();
   let [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
     reducer,
     initialState
   );
   const { cdpTypesList } = useCdpTypes();
-  let collateralTypesData = watch.collateralTypesData(cdpTypesList);
-
-  const priceWithSafetyMargin = watch.priceWithSafetyMargin(selectedIlk.symbol);
-  const daiAvailable =
-    priceWithSafetyMargin?.times(BigNumber(cdpParams.gemsToLock)) ||
-    BigNumber(0);
-
-  const debtValue = MDAI(cdpParams.daiToDraw || '0');
+  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
 
   const {
     hasAllowance,
@@ -108,23 +98,8 @@ function CDPCreate({ onClose }) {
     proxyAddress
   } = useTokenAllowance(selectedIlk?.currency?.symbol);
 
-  const debtFloor = watch.debtFloor(selectedIlk?.currency?.symbol);
-
   const balances = useWalletBalances();
-  delete balances.DSR;
 
-  const observables = {
-    priceWithSafetyMargin,
-    daiAvailable,
-    debtValue,
-    hasSufficientAllowance,
-    hasAllowance,
-    proxyAddress,
-    debtFloor,
-    balances
-  };
-
-  const { lang } = useLanguage();
   const rawUserVaultsList = watch.userVaultsList(account?.address);
   const isFirstVault = rawUserVaultsList?.length === 0 ? true : false;
 
@@ -155,7 +130,10 @@ function CDPCreate({ onClose }) {
     cdpParams,
     isFirstVault,
     dispatch,
-    observables,
+    hasSufficientAllowance,
+    hasAllowance,
+    proxyAddress,
+    balances,
     collateralTypesData,
     onClose
   };
