@@ -23,24 +23,6 @@ jest.mock('react-navi', () => ({
 
 afterEach(cleanup);
 
-const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      '1': {
-        ilk: 'ETH-A',
-        ink: '2',
-        art: '5',
-        currency: {
-          symbol: 'ETH'
-        }
-      }
-    }
-  };
-  newState.feeds.find(i => i.key === 'ETH-A').rate = '1.5';
-  return newState;
-};
-
 const ILK = 'ETH-A';
 const LIQUIDATION_RATIO = '200';
 const COL_AMT = 300.123456789012345678;
@@ -93,10 +75,7 @@ const SetupProxyAndAllowance = () => {
 };
 
 test('proxy toggle', async () => {
-  const { getByTestId, queryByTestId } = render(
-    <SetupProxyAndAllowance />,
-    setupMockState
-  );
+  const { getByTestId } = render(<SetupProxyAndAllowance />);
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))
@@ -128,10 +107,7 @@ test('proxy toggle', async () => {
 // commented out for now because this doesn't seem to work well with allowances
 // from multicall
 xtest('allowance toggle', async () => {
-  const { getByTestId, queryByTestId } = render(
-    <SetupProxyAndAllowance />,
-    setupMockState
-  );
+  const { getByTestId, queryByTestId } = render(<SetupProxyAndAllowance />);
 
   await waitForElement(() => getByTestId('toggle-container'));
   expect(queryByTestId('proxy-toggle')).toBeNull();
@@ -154,7 +130,7 @@ xtest('allowance toggle', async () => {
 });
 
 test('basic rendering', async () => {
-  const { getByText } = render(<Payback vault={mockVault} />, setupMockState);
+  const { getByText } = render(<Payback vault={mockVault} />);
 
   // this waits for the initial proxy & allowance check to finish
   await waitForElement(() => getByText(/Unlock DAI/));
