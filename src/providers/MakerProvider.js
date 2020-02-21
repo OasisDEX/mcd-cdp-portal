@@ -3,7 +3,6 @@ import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
-import useStore from '../hooks/useStore';
 import {
   checkEthereumProvider,
   browserEthereumProviderAddress
@@ -38,7 +37,6 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
-  const [, dispatch] = useStore();
 
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
@@ -119,15 +117,6 @@ function MakerProvider({
     if (!maker) return;
     if (maker.service('accounts').hasAccount()) {
       initAccount(maker.currentAccount());
-
-      (async () => {
-        const { address } = maker.currentAccount();
-        log(`Found initial account: ${address}`);
-        const proxy = await maker.service('proxy').getProxyAddress(address);
-        if (proxy) log(`Found proxy address: ${proxy}`);
-        else log('No proxy found');
-        // updateWatcherWithAccount(maker, address, proxy);
-      })();
     } else {
       // Reconnect browser provider if active address matches last connected
       const lastType = sessionStorage.getItem('lastConnectedWalletType');
@@ -173,72 +162,7 @@ function MakerProvider({
     return () => {
       txManagerSub.unsub();
     };
-  }, [maker, dispatch, connectBrowserProvider]);
-
-  // useEffect(() => {
-  //   if (maker && viewedAddress) {
-  //     (async () => {
-  //       if (
-  //         viewedAddressData &&
-  //         viewedAddress !== viewedAddressData.viewedAddress
-  //       ) {
-  //         setViewedAddressData(null);
-  //       }
-  //       const proxy = await maker
-  //         .service('proxy')
-  //         .getProxyAddress(viewedAddress);
-  //       if (!proxy) {
-  //         setViewedAddressData({
-  //           cdps: [],
-  //           viewedAddress
-  //         });
-  //         return;
-  //       }
-
-  //       const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-  //       const supportedCDPTypes = ilks.filter(ilk =>
-  //         ilk.networks.includes(network)
-  //       );
-
-  //       const supportedCdps = cdps.filter(cdp => {
-  //         return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
-  //       }, []);
-
-  //       supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-  //       setViewedAddressData({
-  //         cdps: supportedCdps,
-  //         viewedAddress
-  //       });
-  //     })();
-  //   }
-  // }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
-
-  // const checkForNewCdps = async (numTries = 5, timeout = 500) => {
-  //   const proxy = await maker.service('proxy').getProxyAddress(account.address);
-  //   if (proxy) {
-  //     maker.service('mcd:cdpManager').reset();
-
-  //     const _checkForNewCdps = async triesRemaining => {
-  //       const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-  //       if (isEqual(account.cdps, cdps)) {
-  //         if (triesRemaining === 0) return;
-  //         setTimeout(() => {
-  //           _checkForNewCdps(triesRemaining - 1, timeout);
-  //         }, timeout);
-  //       } else {
-  //         const newId = cdps
-  //           .map(cdp => cdp.id)
-  //           .filter(
-  //             cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
-  //           )[0];
-  //         setAccount({ ...account, cdps: cdps });
-  //         navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
-  //       }
-  //     };
-
-  //     _checkForNewCdps(numTries - 1);
-  //   }
-  // };
+  }, [maker, connectBrowserProvider]);
 
   const newTxListener = (transaction, txMessage) =>
     setTxReferences(current => [...current, [transaction, txMessage]]);

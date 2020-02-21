@@ -4,7 +4,7 @@ import Presentation from '../Presentation';
 import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
   renderWithMaker,
-  renderWithStore
+  renderWithProviders
 } from '../../../../test/helpers/render';
 import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import { ETH, USD, MDAI } from '@makerdao/dai-plugin-mcd';
@@ -63,7 +63,7 @@ const mockVault = {
 
 test('basic rendering', () => {
   const showSidebar = jest.fn(() => {});
-  const { getByText } = renderWithStore(
+  const { getByText } = renderWithProviders(
     <Presentation
       account={account}
       showSidebar={showSidebar}
@@ -90,7 +90,7 @@ test('render liquidation price correctly when no debt', () => {
     liquidationPrice: createCurrencyRatio(USD, LOL)(Infinity),
     collateralTypePrice: createCurrencyRatio(USD, LOL)('0')
   };
-  const { getByText } = renderWithStore(
+  const { getByText } = renderWithProviders(
     <Presentation
       account={account}
       showSidebar={showSidebar}
@@ -108,7 +108,7 @@ test('reclaim banner rounds correctly when value is > 1', async () => {
     ...mockVault,
     unlockedCollateral: new BigNumber('213.1234567890123456')
   };
-  const { findByText } = renderWithStore(
+  const { findByText } = renderWithProviders(
     <Presentation
       account={account}
       showSidebar={showSidebar}
@@ -126,7 +126,7 @@ test('reclaim banner rounds correctly when number is < 1', async () => {
     ...mockVault,
     unlockedCollateral: new BigNumber('0.1234567890123456')
   };
-  const { findByText } = renderWithStore(
+  const { findByText } = renderWithProviders(
     <Presentation
       account={account}
       showSidebar={showSidebar}

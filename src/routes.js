@@ -17,7 +17,7 @@ import { SidebarProvider } from 'providers/SidebarProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
 import VaultsProvider from 'providers/VaultsProvider';
-
+import NotificationProvider from 'providers/NotificationProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
@@ -42,22 +42,24 @@ const withBorrowLayout = route =>
         viewedAddress={viewedAddress}
       >
         <RouteEffects network={network} />
-        <VaultsProvider viewedAddress={viewedAddress}>
-          <ToggleProvider>
-            <ModalProvider modals={modals} templates={templates}>
-              <SidebarProvider>
-                <BorrowLayout
-                  mobileNav={
-                    <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                  }
-                  navbar={<Navbar viewedAddress={viewedAddress} />}
-                >
-                  <View />
-                </BorrowLayout>
-              </SidebarProvider>
-            </ModalProvider>
-          </ToggleProvider>
-        </VaultsProvider>
+        <NotificationProvider>
+          <VaultsProvider viewedAddress={viewedAddress}>
+            <ToggleProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <SidebarProvider>
+                  <BorrowLayout
+                    mobileNav={
+                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                    }
+                    navbar={<Navbar viewedAddress={viewedAddress} />}
+                  >
+                    <View />
+                  </BorrowLayout>
+                </SidebarProvider>
+              </ModalProvider>
+            </ToggleProvider>
+          </VaultsProvider>
+        </NotificationProvider>
       </MakerProvider>
     );
   }, route);
