@@ -244,7 +244,6 @@ const CDPCreateDeposit = ({
   const ilkData = collateralTypesData.find(
     x => x.symbol === selectedIlk.symbol
   );
-  console.log(ilkData);
   const { calculateMaxDai, debtFloor } = ilkData;
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
 
