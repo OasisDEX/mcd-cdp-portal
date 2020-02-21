@@ -35,7 +35,7 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
     cdpParams.gemsToLock
   );
   const userCanDrawDaiAmount = daiAvailable?.gte(
-    BigNumber(cdpParams.daiToDraw)
+    BigNumber(cdpParams.daiToDraw === '' ? '0' : cdpParams.daiToDraw)
   );
 
   const fields = [
@@ -58,7 +58,9 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
         width={300}
         failureMessage={
           userHasSufficientGemBalance || !cdpParams.gemsToLock
-            ? hasSufficientAllowance(cdpParams.gemsToLock)
+            ? hasSufficientAllowance(
+                cdpParams.gemsToLock === '' ? 0 : cdpParams.gemsToLock
+              )
               ? null
               : lang.formatString(
                   lang.action_sidebar.invalid_allowance,
@@ -242,6 +244,7 @@ const CDPCreateDeposit = ({
   const ilkData = collateralTypesData.find(
     x => x.symbol === selectedIlk.symbol
   );
+  console.log(ilkData);
   const { calculateMaxDai, debtFloor } = ilkData;
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
 
