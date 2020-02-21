@@ -53,7 +53,6 @@ function IlkTableRow({
 }) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
-
   async function selectIlk() {
     trackInputChange('CollateralType', {
       selectedCollateral: ilk.symbol,
@@ -105,7 +104,6 @@ const CDPCreateSelectCollateral = ({
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
-
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -158,7 +156,7 @@ const CDPCreateSelectCollateral = ({
                           ilk={ilk}
                           gemBalance={balances[ilk.gem]}
                           isFirstVault={isFirstVault}
-                          ilkData={collateralTypesData.filter(
+                          ilkData={collateralTypesData.find(
                             x => x.symbol === ilk.symbol
                           )}
                         />
