@@ -15,10 +15,10 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import { watch } from 'hooks/useObservable';
 import useCdpTypes from '../hooks/useCdpTypes';
 import useMaker from 'hooks/useMaker';
+import useProxy from 'hooks/useProxy';
 
 const initialState = {
   step: 0,
-  proxyAddress: null,
   selectedIlk: {
     userGemBalance: '',
     currency: null,
@@ -27,7 +27,6 @@ const initialState = {
   },
   gemsToLock: '',
   daiToDraw: '',
-  targetCollateralizationRatio: '',
   txState: ''
 };
 
@@ -43,11 +42,6 @@ function reducer(state, action) {
       return {
         ...state,
         step: state.step - ((payload && payload.by) || 1)
-      };
-    case 'set-proxy-address':
-      return {
-        ...state,
-        proxyAddress: payload.address
       };
     case 'set-ilk':
       return {
@@ -68,11 +62,6 @@ function reducer(state, action) {
       return { ...state, gemsToLock: payload.value };
     case 'form/set-daiToDraw':
       return { ...state, daiToDraw: payload.value };
-    case 'form/set-targetCollateralizationRatio':
-      return {
-        ...state,
-        targetCollateralizationRatio: payload.value
-      };
     case 'transaction-confirmed':
       return { ...state, txState: TxLifecycle.CONFIRMED };
     case 'reset':
@@ -85,6 +74,7 @@ function reducer(state, action) {
 function CDPCreate({ onClose }) {
   const { lang } = useLanguage();
   const { account } = useMaker();
+  const { proxyAddress } = useProxy();
   let [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
     reducer,
     initialState
@@ -92,11 +82,9 @@ function CDPCreate({ onClose }) {
   const { cdpTypesList } = useCdpTypes();
   const collateralTypesData = watch.collateralTypesData(cdpTypesList);
 
-  const {
-    hasAllowance,
-    hasSufficientAllowance,
-    proxyAddress
-  } = useTokenAllowance(selectedIlk?.currency?.symbol);
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk?.currency?.symbol
+  );
 
   const balances = useWalletBalances();
 

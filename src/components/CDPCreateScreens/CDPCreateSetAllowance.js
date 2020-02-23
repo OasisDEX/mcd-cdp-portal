@@ -29,14 +29,6 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
     allowanceLoading: isSettingAllowance
   } = useTokenAllowance(selectedIlk.gem);
 
-  async function deployProxy() {
-    await setupProxy();
-    dispatch({
-      type: 'set-proxy-address',
-      payload: { address: proxyAddress }
-    });
-  }
-
   const labels = {
     setup_text: lang.cdp_create.setup_proxy_proxy_text,
     setup_header: lang.cdp_create.setup_vault,
@@ -62,7 +54,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
       </Text.h2>
       <ProxyAllowanceCheck
         proxyAddress={proxyAddress}
-        deployProxy={deployProxy}
+        deployProxy={setupProxy}
         labels={labels}
         proxyLoading={proxyLoading}
         proxyDeployed={proxyDeployed}
