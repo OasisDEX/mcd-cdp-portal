@@ -96,6 +96,16 @@ export default mount({
     route(() => ({ title: 'Save', view: <Save /> }))
   ),
 
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: withBorrowLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
+      return {
+        title: 'Save',
+        view: <Save viewedAddress={viewedAddress} />
+      };
+    })
+  ),
+
   [`/${Routes.TRADE}`]: route(() => {
     window.location.href = 'https://oasis.app/trade';
   }),

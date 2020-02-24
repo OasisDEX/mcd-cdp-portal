@@ -1,5 +1,11 @@
-import React, { useCallback, useState } from 'react';
-import { Flex, Grid, Text, Button } from '@makerdao/ui-components-core';
+import React, { useCallback, useState, useEffect } from 'react';
+import {
+  Flex,
+  Grid,
+  Text,
+  Button,
+  Address
+} from '@makerdao/ui-components-core';
 
 import theme from '../styles/theme';
 import PageContentLayout from 'layouts/PageContentLayout';
@@ -11,28 +17,53 @@ import {
 } from 'components/CDPDisplay/subcomponents';
 import FullScreenAction from 'components/CDPDisplay/FullScreenAction';
 import History from 'components/CDPDisplay/History';
-import AccountSelection from 'components/AccountSelection';
 import DSRInfo from 'components/DSRInfo';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useDsrEventHistory from 'hooks/useDsrEventHistory';
 import useModal from 'hooks/useModal';
-import useProxy from 'hooks/useProxy';
 import useAnalytics from 'hooks/useAnalytics';
 import useSidebar from 'hooks/useSidebar';
 import useSavings from 'hooks/useSavings';
+import useNotification from 'hooks/useNotification';
+
 import { FeatureFlags } from 'utils/constants';
 import { watch } from 'hooks/useObservable';
+import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
 
-function Save() {
+function Save({ viewedAddress }) {
   const { lang } = useLanguage();
-  const { account, network } = useMaker();
-  const { proxyAddress, hasProxy, proxyLoading } = useProxy();
-  const savings = useSavings(account?.address);
+  const { account, network, navigation } = useMaker();
+  const { addNotification, deleteNotifications } = useNotification();
+
+  useEffect(() => {
+    if (account && !viewedAddress) {
+      navigation.navigate(
+        `/${Routes.SAVE}/owner/${account.address}?network=${network}`
+      );
+    }
+
+    if (account && viewedAddress && viewedAddress !== account.address) {
+      addNotification({
+        id: NotificationList.NON_OVERVIEW_OWNER,
+        content: lang.formatString(
+          lang.notifications.non_savings_owner,
+          <Address full={viewedAddress} shorten={true} expandable={false} />
+        ),
+        level: SAFETY_LEVELS.WARNING
+      });
+    }
+    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewedAddress, account]);
+
+  const viewedProxyAddress = watch.proxyAddress(viewedAddress);
+  const savings = useSavings(viewedAddress);
+
   const { trackBtnClick } = useAnalytics('DsrView');
 
   const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
-    ? useDsrEventHistory(proxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
+    ? useDsrEventHistory(viewedProxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
     : {};
 
   const [showOnboarding, setShowOnboarding] = useState(true);
@@ -56,42 +87,51 @@ function Save() {
     }
   };
   const annualDaiSavingsRate = watch.annualDaiSavingsRate();
+
   return (
     <PageContentLayout>
-      {!account ? (
-        <AccountSelection />
-      ) : proxyLoading && !hasProxy ? (
+      {viewedProxyAddress === undefined ? (
         <LoadingLayout />
-      ) : !hasProxy && showOnboarding ? (
+      ) : viewedProxyAddress === null && showOnboarding ? (
         <Flex
           height="70vh"
           justifyContent="center"
           alignItems="center"
           flexDirection="column"
         >
-          <Text.p t="h4" mb="26px">
-            {lang.formatString(
-              lang.save.get_started_title,
-              `${
-                annualDaiSavingsRate ? annualDaiSavingsRate.toFixed(2) : '0.00'
-              }%`
-            )}
-          </Text.p>
-          <Button
-            p="s"
-            css={{ cursor: 'pointer' }}
-            onClick={() =>
-              show({
-                modalType: 'dsrdeposit',
-                modalTemplate: 'fullscreen',
-                modalProps: { hideOnboarding }
-              })
-            }
-          >
-            {lang.actions.get_started}
-          </Button>
+          {viewedAddress === account?.address ? (
+            <>
+              <Text.p t="h4" mb="26px">
+                {lang.formatString(
+                  lang.save.get_started_title,
+                  `${
+                    annualDaiSavingsRate
+                      ? annualDaiSavingsRate.toFixed(2)
+                      : '0.00'
+                  }%`
+                )}
+              </Text.p>
+              <Button
+                p="s"
+                css={{ cursor: 'pointer' }}
+                onClick={() =>
+                  show({
+                    modalType: 'dsrdeposit',
+                    modalTemplate: 'fullscreen',
+                    modalProps: { hideOnboarding }
+                  })
+                }
+              >
+                {lang.actions.get_started}
+              </Button>
+            </>
+          ) : (
+            <Text.p t="h4" mb="s">
+              {lang.save.no_savings}
+            </Text.p>
+          )}
         </Flex>
-      ) : (
+      ) : savings && savings.fetchedSavings ? (
         <>
           <Text.h2>{lang.save.title}</Text.h2>
           <Grid
@@ -103,15 +143,11 @@ function Save() {
               xl: '1fr 1fr'
             }}
           >
-            {account ? (
-              <DSRInfo
-                key={account.address}
-                isMobile={isMobile}
-                savings={savings}
-              />
-            ) : (
-              <div />
-            )}
+            <DSRInfo
+              key={`${viewedAddress}.${savings.proxyAddress}`}
+              isMobile={isMobile}
+              savings={savings}
+            />
             <CdpViewCard title={lang.save.deposit_withdraw}>
               <ActionContainerRow
                 title={lang.save.deposit_btn_cta}
@@ -155,6 +191,8 @@ function Save() {
             />
           )}
         </>
+      ) : (
+        <LoadingLayout />
       )}
       {actionShown && (
         <FullScreenAction {...actionShown} reset={() => setActionShown(null)} />
