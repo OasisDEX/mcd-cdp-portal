@@ -12,21 +12,12 @@ import { createCurrencyRatio } from '@makerdao/currency';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 
 import Withdraw from '../Withdraw';
-import { renderWithMaker as render } from '../../../../test/helpers/render';
+import { renderWithMaker } from '../../../../test/helpers/render';
 import lang from '../../../languages';
 import useMaker from '../../../hooks/useMaker';
 
 const ILK = 'BAT-A';
-const COL_AMT = 300.123456789012345678;
-// TODO: BigNumber seems to truncate at 13 decimals,
-// setting the config override doesn't seem to have an effect.
-// const INITIAL_BAT = '300.123456789012345678';
-const INITIAL_BAT = '300.1234567890123';
-
-const INITIAL_ART = '0';
-
-const RATE = '1.000967514019988230';
-const PRICE = createCurrencyRatio(USD, BAT)('0.24');
+const INITIAL_BAT = '300.123456789012345678';
 const LIQUIDATION_RATIO = '200';
 
 const originalConsoleError = console.error;
@@ -49,34 +40,6 @@ afterAll(() => {
 
 afterEach(cleanup);
 
-const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      1: {
-        ilk: ILK,
-        ink: INITIAL_BAT,
-        art: INITIAL_ART
-      }
-    },
-    feeds: [
-      {
-        key: ILK,
-        currency: BAT,
-        rate: RATE,
-        feedValueUSD: PRICE,
-        liquidationRatio: LIQUIDATION_RATIO
-      }
-    ]
-  };
-  return newState;
-};
-
-// so that dispatched actions don't affect the mocked state
-const identityReducer = x => x;
-const renderWithMockedStore = component =>
-  render(component, setupMockState, identityReducer);
-
 const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(12004.938271560493);
 const debtValue = MDAI(0);
@@ -92,7 +55,7 @@ const mockVault = {
   encumberedCollateral: fromWei(1000000000000000000),
   liquidationRatio,
   collateralValue,
-  collateralAvailableAmount: BAT(COL_AMT),
+  collateralAvailableAmount: BAT(INITIAL_BAT),
   collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
   calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
     math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
@@ -104,7 +67,7 @@ const mockVault = {
 };
 
 test('basic rendering', async () => {
-  const { getByText } = render(<Withdraw vault={mockVault} />, setupMockState);
+  const { getByText } = renderWithMaker(<Withdraw vault={mockVault} />);
 
   await waitForElement(() => getByText(/40.00 USD\/BAT/));
 
@@ -112,9 +75,8 @@ test('basic rendering', async () => {
 });
 
 test('clicking SetMax adds max collateral available to input', async () => {
-  const { getByText, getByRole } = render(
-    <Withdraw vault={mockVault} />,
-    setupMockState
+  const { getByText, getByRole } = renderWithMaker(
+    <Withdraw vault={mockVault} />
   );
 
   // BAT amount is rounded correctly in UI
@@ -133,17 +95,15 @@ test('clicking SetMax adds max collateral available to input', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole } = render(
-    <Withdraw vault={mockVault} />,
-    setupMockState
+  const { getByText, getByRole } = renderWithMaker(
+    <Withdraw vault={mockVault} />
   );
   await waitForElement(() => getByText(/300.123456 BAT/));
   const input = getByRole('textbox');
 
-  //TODO fix 'amount cannot be negative' error in Withdraw
   // can't enter more collateral than available
-  // fireEvent.change(input, { target: { value: '500' } });
-  // await waitForElement(() => getByText(/Vault below liquidation threshold/));
+  fireEvent.change(input, { target: { value: '500' } });
+  await waitForElement(() => getByText(/Vault below liquidation threshold/));
 
   // must be greater than 0
   fireEvent.change(input, { target: { value: '0' } });
@@ -156,7 +116,7 @@ test('input validation', async () => {
 
 test('calls the wipeAndFree function as expected', async () => {
   let maker;
-  const { getByText, findByText, getByRole } = renderWithMockedStore(
+  const { getByText, findByText, getByRole } = renderWithMaker(
     React.createElement(() => {
       maker = useMaker().maker;
       return <Withdraw vault={mockVault} reset={() => {}} />;

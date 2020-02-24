@@ -17,12 +17,13 @@ import { mineBlocks } from '@makerdao/test-helpers';
 import Save from '../Save';
 import {
   renderWithAccount,
-  renderWithMaker
+  renderWithMaker,
+  mocks,
+  useMakerMock
 } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
-import useMaker from '../../hooks/useMaker';
 import { of } from 'rxjs';
 
 const { click, change } = fireEvent;
@@ -54,24 +55,11 @@ beforeAll(async () => {
 afterEach(cleanup);
 
 test('if allowance is 0, show toggle & disable input', async () => {
-  const setupMockState = state => {
-    const newState = {
-      ...state,
-      accounts: {
-        '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6': {
-          allowances: { MDAI: 0 },
-          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
-        }
-      }
-    };
-    return newState;
-  };
   const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
     <SidebarProvider>
       <Save />
       <SidebarBase />
-    </SidebarProvider>,
-    setupMockState
+    </SidebarProvider>
   );
 
   await findByText('Savings');
@@ -152,9 +140,9 @@ test('render save page and perform deposit and withdraw actions', async () => {
 }, 25000);
 
 test('cannot deposit more than token allowance', async () => {
+  // Setup mocks for multicall observables
   const MOCK_OBS_RESPONSE = () => of(BigNumber(Infinity));
-  const watchMock = services => (key, ...args) =>
-    services[key] && services[key](...args);
+  const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
 
   const tokenBalanceMock = (address, tokens) => {
     return of(
@@ -164,8 +152,6 @@ test('cannot deposit more than token allowance', async () => {
       })
     );
   };
-
-  const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
   const savingsMock = () =>
     of({
       daiLockedInDsr: MDAI('5000'),
@@ -173,24 +159,26 @@ test('cannot deposit more than token allowance', async () => {
       savingsDai: MDAI('100'),
       savingsRateAccumulator: BigNumber(1)
     });
+  const watch = () =>
+    mocks.watch({
+      savings: savingsMock,
+      tokenBalances: tokenBalanceMock,
+      tokenAllowance: () => of(BigNumber('10')),
+      proxyAddress: () => of(TEST_ADDRESS_PROXY),
+      daiLockedInDsr: () => of(MDAI('100')),
+      collateralTypesPrices: () => of([]),
+      totalDaiSupply: MOCK_OBS_RESPONSE,
+      vaultsCreated: MOCK_OBS_RESPONSE,
+      totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
+      annualDaiSavingsRate: MOCK_OBS_RESPONSE,
+      systemCollateralization: MOCK_OBS_RESPONSE
+    });
+
+  const multicall = { watch };
+
   const { getByText, findByText, getByRole, getByTestId } = renderWithMaker(
     React.createElement(() => {
-      const { maker } = useMaker();
-
-      maker.service('multicall').watch = watchMock({
-        savings: savingsMock,
-        tokenBalances: tokenBalanceMock,
-        proxyAddress: () => of(TEST_ADDRESS_PROXY),
-        tokenAllowance: () => of(BigNumber('10')),
-        daiLockedInDsr: () => of(MDAI('100')),
-        collateralTypesPrices: () => of([]),
-        totalDaiSupply: MOCK_OBS_RESPONSE,
-        vaultsCreated: MOCK_OBS_RESPONSE,
-        totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
-        annualDaiSavingsRate: MOCK_OBS_RESPONSE,
-        systemCollateralization: MOCK_OBS_RESPONSE
-      });
-
+      useMakerMock({ multicall });
       return (
         <SidebarProvider>
           <Save />
