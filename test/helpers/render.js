@@ -7,7 +7,27 @@ import TestMakerProvider from './TestMakerProvider';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import useMaker from '../../src/hooks/useMaker';
-export const mocks = { navigation: { navigate: jest.fn() } };
+
+export const mocks = {
+  navigation: { navigate: jest.fn() },
+  // Provide multicall schemas to mock. They must return an observable.
+  watch: schemas => (key, ...args) => schemas[key] && schemas[key](...args)
+};
+
+export const useMakerMock = mockServices => {
+  /** Provide an object of maker services & methods you want to mock, eg:
+    multicall: { 
+      watch: () => jest.fn()
+    }
+  */
+  const { maker } = useMaker();
+  Object.entries(mockServices).map(([name, methods]) =>
+    Object.entries(methods).map(
+      ([method, mockFn]) => (maker.service(name)[method] = mockFn())
+    )
+  );
+  return { maker };
+};
 
 export function renderWithMaker(children, providerProps) {
   return renderWithProviders(

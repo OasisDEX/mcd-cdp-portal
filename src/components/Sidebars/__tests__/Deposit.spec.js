@@ -13,28 +13,17 @@ import {
 import BigNumber from 'bignumber.js';
 
 import Deposit from '../Deposit';
-import { renderWithMaker as render } from '../../../../test/helpers/render';
+import {
+  renderWithMaker,
+  mocks,
+  useMakerMock
+} from '../../../../test/helpers/render';
 import lang from '../../../languages';
-import useMaker from '../../../hooks/useMaker';
 import { formatter } from 'utils/ui';
 import { of } from 'rxjs';
 
 let snapshotData;
 let account;
-
-const ILK = 'BAT-A';
-const INITIAL_BAT = '300.123456789012345678';
-const INITIAL_ART = '25';
-
-const PAR = new BigNumber('1000000000000000000000000000');
-
-const DEBT_CEILING = '1000';
-const RATE = '1.000967514019988230';
-const DUST = '20';
-const PRICE = createCurrencyRatio(USD, BAT)('0.2424');
-const LIQUIDATION_RATIO = '2';
-
-const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
 
 const originalConsoleError = console.error;
 jest.mock('mixpanel-browser', () => ({
@@ -60,53 +49,18 @@ afterAll(() => {
 
 afterEach(cleanup);
 
-const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      1: {
-        ilk: ILK,
-        ink: INITIAL_BAT,
-        art: INITIAL_ART
-      }
-    },
-    feeds: [
-      {
-        key: ILK,
-        currency: BAT,
-        dust: DUST,
-        rate: RATE,
-        feedValueUSD: PRICE,
-        debtCeiling: DEBT_CEILING,
-        liquidationRatio: LIQUIDATION_RATIO
-      }
-    ],
-    system: {
-      par: PAR
-    },
-    accounts: {
-      [account.address]: {
-        balances: {
-          [BAT.symbol]: BAT_ACCOUNT_BALANCE
-        },
-        allowances: {
-          [BAT.symbol]: 201
-        }
-      }
-    }
-  };
-  return newState;
-};
+const ILK = 'BAT-A';
+const INITIAL_BAT = '300.123456789012345678';
+const PRICE = createCurrencyRatio(USD, BAT)('0.2424');
+const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
+const DSR_AMT = '100';
+const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
 
-// so that dispatched actions don't affect the mocked state
-const identityReducer = x => x;
-const renderWithMockedStore = component =>
-  render(component, setupMockState, identityReducer);
-
-const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
+const liquidationRatio = createCurrencyRatio(USD, MDAI)('2');
 const collateralValue = USD(74.852);
 const debtValue = MDAI(26);
 
+// The vault observable gets passed in as a prop, so we have to mock it here
 const mockVault = {
   id: 1,
   debtValue,
@@ -125,28 +79,33 @@ const mockVault = {
       .toNumber()
 };
 
-const watchMock = services => (key, ...args) =>
-  services[key] && services[key](...args);
-
-const mockBatAmt = BAT(BAT_ACCOUNT_BALANCE);
-
-const tokenBalanceMock = (address, tokens) => {
+// Define mock observable schemas
+const proxyAddress = () => of(TEST_ADDRESS_PROXY);
+const tokenAllowance = () => of(BigNumber(Infinity));
+const daiLockedInDsr = () => of(MDAI(DSR_AMT));
+const tokenBalances = (address, tokens) => {
   return of(
     tokens.map(token => {
-      if (token === 'BAT') return mockBatAmt;
+      if (token === 'BAT') return BAT(BAT_ACCOUNT_BALANCE);
       else return createCurrency(token)(0);
     })
   );
 };
 
-const MOCK_DSR_AMT = '100';
+// Allows for override of mocked schemas for individual tests
+const watch = (overrides = {}) =>
+  mocks.watch({
+    tokenBalances,
+    proxyAddress,
+    tokenAllowance,
+    daiLockedInDsr,
+    ...overrides
+  });
 
-const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
-const proxyAddressMock = () => of(TEST_ADDRESS_PROXY);
-const tokenAllowanceMock = () => of(BigNumber(Infinity));
+const multicall = { watch };
 
 test('basic rendering', async () => {
-  const { findByText, findAllByText } = renderWithMockedStore(
+  const { findByText, findAllByText } = renderWithMaker(
     <Deposit vault={mockVault} />
   );
 
@@ -157,16 +116,9 @@ test('basic rendering', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole, findByText } = renderWithMockedStore(
+  const { getByText, getByRole, findByText } = renderWithMaker(
     React.createElement(() => {
-      const { maker } = useMaker();
-
-      maker.service('multicall').watch = watchMock({
-        tokenBalances: tokenBalanceMock,
-        proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock,
-        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
-      });
+      const { maker } = useMakerMock({ multicall });
 
       React.useEffect(() => {
         const accountService = maker.service('accounts');
@@ -197,17 +149,9 @@ test('input validation', async () => {
 });
 
 test('verify info container values', async () => {
-  const { getByText, findByText, getByRole } = renderWithMockedStore(
+  const { getByText, findByText, getByRole } = renderWithMaker(
     React.createElement(() => {
-      const { maker } = useMaker();
-
-      maker.service('multicall').watch = watchMock({
-        tokenBalances: tokenBalanceMock,
-        proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock,
-        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
-      });
-
+      const { maker } = useMakerMock({ multicall });
       React.useEffect(() => {
         const accountService = maker.service('accounts');
         accountService
@@ -248,16 +192,13 @@ test('verify info container values', async () => {
 
 test('calls the lock function as expected', async () => {
   let maker;
-  const { getByText, findByText, getByRole } = renderWithMockedStore(
+  const mockLock = jest.fn();
+  const { getByText, findByText, getByRole } = renderWithMaker(
     React.createElement(() => {
-      maker = useMaker().maker;
-
-      maker.service('multicall').watch = watchMock({
-        tokenBalances: tokenBalanceMock,
-        proxyAddress: proxyAddressMock,
-        tokenAllowance: tokenAllowanceMock,
-        daiLockedInDsr: () => of(MDAI(MOCK_DSR_AMT))
-      });
+      maker = useMakerMock({
+        multicall,
+        'mcd:cdpManager': { lock: () => mockLock }
+      }).maker;
 
       React.useEffect(() => {
         const accountService = maker.service('accounts');
@@ -267,8 +208,6 @@ test('calls the lock function as expected', async () => {
             key: account.key
           })
           .then(() => accountService.useAccount('noproxy'));
-        maker.service('proxy').getProxyAddress = () =>
-          '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E';
       }, []);
 
       return <Deposit vault={mockVault} reset={() => {}} />;
@@ -281,8 +220,6 @@ test('calls the lock function as expected', async () => {
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   const depositButton = getByText(lang.actions.deposit);
-  const mockLock = jest.fn();
-  maker.service('mcd:cdpManager').lock = mockLock;
   act(() => {
     fireEvent.click(depositButton);
   });
