@@ -29,7 +29,6 @@ export default function useTokenAllowance(tokenSymbol) {
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
     async () => {
       const token = maker.getToken(tokenSymbol);
-      const proxyAddress = await maker.service('proxy').getProxyAddress();
       const txPromise = token.approveUnlimited(proxyAddress);
       setStartedWithoutAllowance(true);
       newTxListener(

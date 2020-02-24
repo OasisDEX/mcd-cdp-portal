@@ -27,14 +27,6 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
     allowanceLoading: isSettingAllowance
   } = useTokenAllowance('MDAI');
 
-  async function deployProxy() {
-    const proxy = await setupProxy();
-    dispatch({
-      type: 'set-proxy-address',
-      payload: { address: proxy }
-    });
-  }
-
   const labels = {
     setup_text: lang.dsr_deposit.setup_proxy_text,
     setup_header: lang.dsr_deposit.setup_header,
@@ -60,7 +52,7 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
       </Text.h2>
       <ProxyAllowanceCheck
         proxyAddress={proxyAddress}
-        deployProxy={deployProxy}
+        deployProxy={setupProxy}
         labels={labels}
         proxyLoading={proxyLoading}
         proxyDeployed={proxyDeployed}

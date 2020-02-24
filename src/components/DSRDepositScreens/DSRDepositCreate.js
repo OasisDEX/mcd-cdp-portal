@@ -11,13 +11,10 @@ import useValidatedInput from '../../hooks/useValidatedInput';
 import SetMax from '../SetMax';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 
-const placeholder = 'test';
-
 function DepositDaiForm({
   depositAmount,
   daiBalance,
   onDepositAmountChange,
-  handleInputChange,
   setDepositMax,
   depositAmountErrors
 }) {
@@ -39,20 +36,7 @@ function DepositDaiForm({
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>
-        <Text
-          t="caption"
-          display="inline-block"
-          ml="s"
-          color="darkLavender"
-          onClick={() => {
-            handleInputChange({
-              target: {
-                name: 'gemsToLock',
-                value: placeholder
-              }
-            });
-          }}
-        >
+        <Text t="caption" display="inline-block" ml="s" color="darkLavender">
           {prettifyNumber(daiBalance)} {'DAI'}
         </Text>
       </Box>
