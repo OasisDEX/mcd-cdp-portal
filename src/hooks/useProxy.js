@@ -16,12 +16,7 @@ export default function useProxy() {
   const [startingBlockHeight, setStartingBlockHeight] = useState(0);
   const [proxyDeployed, setProxyDeployed] = useState(false);
 
-  let proxyAddress = watch.proxyAddress(account?.address);
-  proxyAddress =
-    proxyAddress === '0x0000000000000000000000000000000000000000'
-      ? null
-      : proxyAddress;
-
+  const proxyAddress = watch.proxyAddress(account?.address);
   const prevProxy = usePrevious(proxyAddress);
 
   useEffect(() => {
