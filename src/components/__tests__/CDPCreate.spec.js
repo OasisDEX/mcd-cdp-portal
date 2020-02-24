@@ -45,7 +45,8 @@ test('the whole flow', async () => {
     getAllByText,
     getByLabelText,
     getByText,
-    findByText
+    findByText,
+    unmount
   } = await renderWithAccount(<RenderNoProxyAccount />);
 
   getByText('Select a collateral type');
@@ -94,4 +95,6 @@ test('the whole flow', async () => {
   // expect to be redirected to the new cdp page
   // should be triggered in VaultsProvider
   // expect(mocks.navigation.navigate).toBeCalled();
+
+  unmount();
 }, 20000);
