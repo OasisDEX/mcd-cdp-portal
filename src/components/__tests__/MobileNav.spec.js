@@ -4,7 +4,6 @@ import { render, cleanup, waitForElement } from '@testing-library/react';
 import { NaviProvider } from 'react-navi';
 import { mount, route, createMemoryNavigation } from 'navi';
 
-import { ETH } from '@makerdao/dai';
 import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
 

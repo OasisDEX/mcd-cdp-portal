@@ -13,7 +13,7 @@ import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import waitForExpect from 'wait-for-expect';
 
 import Payback from '../Payback';
-import { renderWithMaker as render } from '../../../../test/helpers/render';
+import { renderWithMaker } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
@@ -75,7 +75,7 @@ const SetupProxyAndAllowance = () => {
 };
 
 test('proxy toggle', async () => {
-  const { getByTestId } = render(<SetupProxyAndAllowance />);
+  const { getByTestId } = renderWithMaker(<SetupProxyAndAllowance />);
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))
@@ -107,7 +107,9 @@ test('proxy toggle', async () => {
 // commented out for now because this doesn't seem to work well with allowances
 // from multicall
 xtest('allowance toggle', async () => {
-  const { getByTestId, queryByTestId } = render(<SetupProxyAndAllowance />);
+  const { getByTestId, queryByTestId } = renderWithMaker(
+    <SetupProxyAndAllowance />
+  );
 
   await waitForElement(() => getByTestId('toggle-container'));
   expect(queryByTestId('proxy-toggle')).toBeNull();
@@ -130,7 +132,7 @@ xtest('allowance toggle', async () => {
 });
 
 test('basic rendering', async () => {
-  const { getByText } = render(<Payback vault={mockVault} />);
+  const { getByText } = renderWithMaker(<Payback vault={mockVault} />);
 
   // this waits for the initial proxy & allowance check to finish
   await waitForElement(() => getByText(/Unlock DAI/));
