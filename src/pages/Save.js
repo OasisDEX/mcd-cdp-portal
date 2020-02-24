@@ -29,20 +29,14 @@ import useNotification from 'hooks/useNotification';
 
 import { FeatureFlags } from 'utils/constants';
 import { watch } from 'hooks/useObservable';
-import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 
 function Save({ viewedAddress }) {
   const { lang } = useLanguage();
-  const { account, network, navigation } = useMaker();
+  const { account, network } = useMaker();
   const { addNotification, deleteNotifications } = useNotification();
 
   useEffect(() => {
-    if (account && !viewedAddress) {
-      navigation.navigate(
-        `/${Routes.SAVE}/owner/${account.address}?network=${network}`
-      );
-    }
-
     if (account && viewedAddress && viewedAddress !== account.address) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,

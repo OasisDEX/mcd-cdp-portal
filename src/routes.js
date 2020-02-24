@@ -8,6 +8,7 @@ import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
+import SaveOverview from 'pages/SaveOverview';
 import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
 import CDPDisplay from 'components/CDPDisplay';
@@ -93,7 +94,7 @@ export default mount({
   ),
 
   [`/${Routes.SAVE}`]: withBorrowLayout(
-    route(() => ({ title: 'Save', view: <Save /> }))
+    route(() => ({ title: 'Save', view: <SaveOverview /> }))
   ),
 
   [`/${Routes.SAVE}/owner/:viewedAddress`]: withBorrowLayout(

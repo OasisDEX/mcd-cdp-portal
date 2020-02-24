@@ -31,7 +31,7 @@ export const useMakerMock = mockServices => {
 
 export function renderWithMaker(children, providerProps) {
   return renderWithProviders(
-    <TestMakerProvider {...providerProps} waitForAuth={true} mocks={mocks}>
+    <TestMakerProvider waitForAuth={true} {...providerProps} mocks={mocks}>
       {children}
     </TestMakerProvider>
   );

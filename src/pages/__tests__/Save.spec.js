@@ -57,7 +57,7 @@ afterEach(cleanup);
 test('if allowance is 0, show toggle & disable input', async () => {
   const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
     <SidebarProvider>
-      <Save />
+      <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
     </SidebarProvider>
   );
@@ -80,7 +80,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
     findByText
   } = await renderWithAccount(
     <SidebarProvider>
-      <Save />
+      <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
     </SidebarProvider>
   );
@@ -181,7 +181,7 @@ test('cannot deposit more than token allowance', async () => {
       useMakerMock({ multicall });
       return (
         <SidebarProvider>
-          <Save />
+          <Save viewedAddress={maker.currentAddress()} />
           <SidebarBase />
         </SidebarProvider>
       );
