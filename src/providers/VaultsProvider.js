@@ -12,6 +12,9 @@ function VaultsProvider({ children, viewedAddress }) {
   const { account, navigation, network } = useMaker();
   const { cdpTypesList } = useCdpTypes();
 
+  const userProxy = watch.proxyAddress(account?.address);
+  const viewedAddressProxy = watch.proxyAddress(viewedAddress);
+
   const rawUserVaultsList = watch.userVaultsList(account?.address);
   const rawViewedAddressVaultsList = watch.userVaultsList(viewedAddress);
 
@@ -66,13 +69,17 @@ function VaultsProvider({ children, viewedAddress }) {
             ? userVaultIds && userVaultsData
               ? userVaultsData
               : []
-            : undefined,
+            : userProxy
+            ? undefined
+            : [],
         viewedAddressVaults:
           rawViewedAddressVaultsList !== undefined
             ? viewedAddressVaultIds && viewedAddressVaultsData
               ? viewedAddressVaultsData
               : []
-            : undefined
+            : viewedAddressProxy
+            ? undefined
+            : []
       }}
     >
       {children}
