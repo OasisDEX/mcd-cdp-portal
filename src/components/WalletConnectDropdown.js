@@ -50,7 +50,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
       const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
       if (address !== urlAddress) {
-        navigation.navigate(`/${Routes.SAVE}/owner/${address}`);
+        navigation.navigate(`/${Routes.SAVE}/owner/${address}${url.search}`);
       }
     }
     maker.useAccountWithAddress(address);
