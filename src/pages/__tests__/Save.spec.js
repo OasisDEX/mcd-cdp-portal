@@ -12,8 +12,7 @@ import {
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrency } from '@makerdao/currency';
-import { mineBlocks } from '@makerdao/test-helpers';
-
+import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import Save from '../Save';
 import {
   renderWithAccount,
@@ -200,4 +199,60 @@ test('cannot deposit more than token allowance', async () => {
 
   change(depositInput, { target: { value: '10' } });
   expect(warningEl).not.toBeInTheDocument();
+});
+
+test('display onboarding path if connected address has no proxy', async () => {
+  const account = TestAccountProvider.nextAccount();
+  const { findByText } = await renderWithMaker(
+    React.createElement(() => {
+      const { maker } = useMakerMock();
+      const [flag, setFlag] = React.useState(false);
+      React.useEffect(() => {
+        const accountService = maker.service('accounts');
+        accountService
+          .addAccount('noproxy', {
+            type: 'privateKey',
+            key: account.key
+          })
+          .then(() => {
+            accountService.useAccount('noproxy');
+            setFlag(true);
+          });
+      }, []);
+
+      return flag ? <Save viewedAddress={maker.currentAddress()} /> : <div />;
+    })
+  );
+
+  await findByText(/Start earning/);
+});
+
+test('disable deposit/withdraw buttons if not connected wallet', async () => {
+  const defaultAddress = maker.currentAddress();
+  const account = TestAccountProvider.nextAccount();
+  const { getByText } = await renderWithMaker(
+    React.createElement(() => {
+      const { maker } = useMakerMock();
+      const [flag, setFlag] = React.useState(false);
+      React.useEffect(() => {
+        const accountService = maker.service('accounts');
+        accountService
+          .addAccount('noproxy', {
+            type: 'privateKey',
+            key: account.key
+          })
+          .then(() => {
+            accountService.useAccount('noproxy');
+            setFlag(true);
+          });
+      }, []);
+
+      return flag ? <Save viewedAddress={defaultAddress} /> : <div />;
+    })
+  );
+
+  const depositBtn = await waitForElement(() => getByText('Deposit'));
+  const withdrawBtn = await waitForElement(() => getByText('Withdraw'));
+  expect(depositBtn).toBeDisabled();
+  expect(withdrawBtn).toBeDisabled();
 });

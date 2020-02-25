@@ -14,7 +14,7 @@ export const mocks = {
   watch: schemas => (key, ...args) => schemas[key] && schemas[key](...args)
 };
 
-export const useMakerMock = mockServices => {
+export const useMakerMock = (mockServices = {}) => {
   /** Provide an object of maker services & methods you want to mock, eg:
     multicall: { 
       watch: () => jest.fn()
@@ -31,7 +31,7 @@ export const useMakerMock = mockServices => {
 
 export function renderWithMaker(children, providerProps) {
   return renderWithProviders(
-    <TestMakerProvider waitForAuth={true} {...providerProps} mocks={mocks}>
+    <TestMakerProvider {...providerProps} waitForAuth={true} mocks={mocks}>
       {children}
     </TestMakerProvider>
   );
