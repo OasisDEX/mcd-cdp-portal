@@ -81,7 +81,6 @@ function Save({ viewedAddress }) {
     }
   };
   const annualDaiSavingsRate = watch.annualDaiSavingsRate();
-
   return (
     <PageContentLayout>
       {viewedProxyAddress === undefined ? (
@@ -148,7 +147,7 @@ function Save({ viewedAddress }) {
                 button={
                   <ActionButton
                     data-testid={'sidebar-deposit-button'}
-                    disabled={!account}
+                    disabled={!account || viewedAddress !== account?.address}
                     onClick={() => {
                       trackBtnClick('Deposit');
                       showAction({ type: 'dsrdeposit', props: { savings } });
@@ -162,7 +161,7 @@ function Save({ viewedAddress }) {
                 title={lang.save.withdraw_btn_cta}
                 button={
                   <ActionButton
-                    disabled={!account}
+                    disabled={!account || viewedAddress !== account?.address}
                     data-testid={'sidebar-withdraw-button'}
                     onClick={() => {
                       trackBtnClick('Withdraw');

@@ -22,7 +22,6 @@ function useNavigation(network, mocks) {
   return useNavigationBase(); // eslint-disable-line react-hooks/rules-of-hooks
 }
 
-// FIXME the viewedAddress stuff should live elsewhere
 function MakerProvider({
   children,
   network,
