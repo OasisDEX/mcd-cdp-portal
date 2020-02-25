@@ -24,6 +24,7 @@ import { instantiateMaker } from '../../maker';
 import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
 import { of } from 'rxjs';
+import { ZERO_ADDRESS } from 'utils/constants';
 
 const { click, change } = fireEvent;
 
@@ -255,4 +256,12 @@ test('disable deposit/withdraw buttons if not connected wallet', async () => {
   const withdrawBtn = await waitForElement(() => getByText('Withdraw'));
   expect(depositBtn).toBeDisabled();
   expect(withdrawBtn).toBeDisabled();
+});
+
+test('should not display Save ui for addresses which have no proxy', async () => {
+  const { findByText } = renderWithMaker(<Save viewedAddress={ZERO_ADDRESS} />);
+
+  await findByText(
+    "This address either doesn't exist or has no DSR account history"
+  );
 });
