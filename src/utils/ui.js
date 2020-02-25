@@ -3,6 +3,8 @@ import round from 'lodash/round';
 import BigNumber from 'bignumber.js';
 import lang from 'languages';
 import { Currency } from '@makerdao/currency';
+import { decimalRules } from '../styles/constants';
+const { short, medium } = decimalRules;
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) return lang.cdp_page.not_applicable;
@@ -173,16 +175,20 @@ export function formatPrecision(amount, precision = 4) {
 
 export const formatCurrencyValue = ({
   value,
-  precision = 2,
-  percentage = false
+  precision = short,
+  percentage = false,
+  integer = false,
+  infinity = 'N/A'
 }) => {
   if (value instanceof Currency) value = value.toBigNumber();
   else if (!(value instanceof BigNumber))
     new Error('Value must be a Currency or BigNumber object');
 
   if (percentage) value = value.times(100);
-  if (value.lt(1)) precision = 4; //add to theme?
-
+  if (integer) value = value.integerValue(BigNumber.ROUND_HALF_UP);
+  if (value.lt(1)) precision = medium;
+  if (['Infinity', Infinity].includes(value.toFixed(precision)))
+    return infinity;
   return value.toFixed(precision);
 };
 

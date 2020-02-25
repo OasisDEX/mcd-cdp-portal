@@ -9,6 +9,7 @@ import useMaker from 'hooks/useMaker';
 
 import { InfoContainerRow, CdpViewCard } from './CDPDisplay/subcomponents';
 import { TextBlock } from 'components/Typography';
+import { formatter } from 'utils/ui';
 
 const FF_DYNAMIC_DECIMALS = false;
 function Ticker({ amount, increment, decimals, ...props }) {
@@ -263,7 +264,9 @@ function DSRInfo({ isMobile, savings }) {
         title={lang.save.dai_savings_rate}
         value={
           annualDaiSavingsRate ? (
-            <TextMono>{annualDaiSavingsRate.toFixed(2)}%</TextMono>
+            <TextMono>
+              {formatter(annualDaiSavingsRate, { integer: true })}%
+            </TextMono>
           ) : (
             '--'
           )

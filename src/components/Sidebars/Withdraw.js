@@ -1,20 +1,20 @@
 import React from 'react';
+import BigNumber from 'bignumber.js';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import useMaker from '../../hooks/useMaker';
-import { greaterThan } from '../../utils/bignumber';
-import useValidatedInput from 'hooks/useValidatedInput';
-import useLanguage from 'hooks/useLanguage';
-import { formatCollateralizationRatio } from '../../utils/ui';
 import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
-import BigNumber from 'bignumber.js';
+import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
+import useValidatedInput from 'hooks/useValidatedInput';
+import { greaterThan, multiply } from 'utils/bignumber';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
 import { getCurrency } from 'utils/cdp';
-import { formatter } from 'utils/ui';
-import { multiply } from 'utils/bignumber';
+import { decimalRules } from '../../styles/constants';
+const { long } = decimalRules;
 
 const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
@@ -50,12 +50,12 @@ const Withdraw = ({ vault, reset }) => {
   );
 
   const amountToWithdraw = amount || BigNumber(0);
-
-  const setMax = () => setAmount(collateralAvailableAmount);
   const undercollateralized =
     amount && greaterThan(amount, collateralAvailableAmount);
-  const currency = getCurrency({ ilk: vaultType });
 
+  const setMax = () => setAmount(collateralAvailableAmount);
+
+  const currency = getCurrency({ ilk: vaultType });
   const withdraw = () => {
     newTxListener(
       maker
@@ -147,7 +147,7 @@ const Withdraw = ({ vault, reset }) => {
         <Info
           title={lang.action_sidebar.maximum_available_to_withdraw}
           body={`${formatter(collateralAvailableAmount, {
-            precision: 6
+            precision: long
           })} ${symbol}`}
         />
         <Info

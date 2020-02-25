@@ -20,6 +20,8 @@ import InfoContainer from './shared/InfoContainer';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
 const log = debug('maker:Sidebars/Payback');
 
@@ -129,7 +131,7 @@ const Payback = ({ vault, reset }) => {
               onClick={() => {
                 setMax();
                 trackBtnClick('SetMax', {
-                  maxAmount: debtValue.toString(),
+                  maxAmount: maxPaybackAmount.toString(),
                   setMax: true
                 });
               }}
@@ -161,15 +163,18 @@ const Payback = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && formatter(daiBalance, { precision: 6 })} DAI`}
+          body={`${daiBalance &&
+            formatter(daiBalance, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}
-          body={`${formatter(debtValue, { precision: 6 })} DAI`}
+          body={`${formatter(debtValue, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice)} USD/${symbol}`}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

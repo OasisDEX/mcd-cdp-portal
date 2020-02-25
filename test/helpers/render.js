@@ -16,9 +16,9 @@ export const mocks = {
 
 export const useMakerMock = mockServices => {
   /** Provide an object of maker services & methods you want to mock, eg:
-    multicall: { 
-      watch: () => jest.fn()
-    }
+        multicall: { 
+          watch: () => jest.fn()
+        }
   */
   const { maker } = useMaker();
   Object.entries(mockServices).map(([name, methods]) =>

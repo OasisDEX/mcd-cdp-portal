@@ -75,7 +75,7 @@ test('the whole DSR Deposit flow', async () => {
   const [proxyBtn, allowanceBtn] = getAllByRole('button');
   click(proxyBtn);
   // Must wait for proxy to be confirmed
-  await mineBlocks(web3, 15);
+  await mineBlocks(web3, 20);
   await findByText('Confirmed with 10 confirmations');
 
   // First checkmark is proxy, but need to set allowance for Dai

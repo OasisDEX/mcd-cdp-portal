@@ -14,6 +14,8 @@ import { multiply } from 'utils/bignumber';
 import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import BigNumber from 'bignumber.js';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
 const Deposit = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
@@ -119,7 +121,7 @@ const Deposit = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.current_account_balance}
-          body={`${gemBalance} ${symbol}`}
+          body={`${formatter(gemBalance, { precision: long })} ${symbol}`}
         />
         <Info
           title={lang.formatString(
@@ -130,7 +132,9 @@ const Deposit = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice)} USD/${symbol}`}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

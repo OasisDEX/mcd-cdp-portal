@@ -1,16 +1,18 @@
 import React from 'react';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import useLanguage from 'hooks/useLanguage';
-import { formatCollateralizationRatio, formatter } from '../../utils/ui';
-import useMaker from '../../hooks/useMaker';
-import useAnalytics from 'hooks/useAnalytics';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
 import useValidatedInput from 'hooks/useValidatedInput';
-import { add, greaterThan } from '../../utils/bignumber';
+import { add, greaterThan } from 'utils/bignumber';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
 const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
@@ -119,11 +121,13 @@ const Generate = ({ vault, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${formatter(daiAvailable, { precision: 6 })} DAI`}
+          body={`${formatter(daiAvailable, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice)} USD/${symbol}`}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

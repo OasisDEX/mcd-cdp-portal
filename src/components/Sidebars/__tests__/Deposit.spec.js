@@ -134,7 +134,8 @@ test('input validation', async () => {
     })
   );
 
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
 
   const input = getByRole('textbox');
 
@@ -166,8 +167,8 @@ test('verify info container values', async () => {
     })
   );
 
-  // BAT account balance
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
   // BAT/USD price
   await findByText(`${formatter(PRICE)} USD/BAT`, {
     exact: true
@@ -185,7 +186,7 @@ test('verify info container values', async () => {
   // new simulated collat ratio
   getByText(/474.47%/);
   // BAT available remains the same
-  getByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  await findByText('200.123451 BAT');
   // BAT/USD price remains the same
   await findByText(`${formatter(PRICE)} USD/BAT`, { exact: true });
 });
@@ -214,7 +215,8 @@ test('calls the lock function as expected', async () => {
     })
   );
 
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
 
   const input = getByRole('textbox');
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
