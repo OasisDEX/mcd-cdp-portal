@@ -13,7 +13,7 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { formatter } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from '../ScreenFooter';
@@ -45,7 +45,7 @@ const CDPCreateConfirmSummary = ({
   const [hasReadTOS, setHasReadTOS] = useState(false);
   const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
 
-  const { liquidationPenalty, liquidationRatio, stabilityFee } = ilkData;
+  const { liquidationPenalty, liquidationRatio, annualStabilityFee } = ilkData;
 
   const rows = [
     [
@@ -55,12 +55,12 @@ const CDPCreateConfirmSummary = ({
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization,
-      formatCollateralizationRatio(
+      `${formatter(
         ilkData.calculateCollateralizationRatio(
           BigNumber(cdpParams.gemsToLock),
           MDAI(cdpParams.daiToDraw)
         )
-      )
+      )}%`
     ],
     [
       lang.liquidation_ratio,
@@ -68,13 +68,24 @@ const CDPCreateConfirmSummary = ({
     ],
     [
       lang.liquidation_price,
-      `$${ilkData.calculateliquidationPrice(
-        BigNumber(cdpParams.gemsToLock),
-        MDAI(cdpParams.daiToDraw)
+      `$${formatter(
+        ilkData.calculateliquidationPrice(
+          BigNumber(cdpParams.gemsToLock),
+          MDAI(cdpParams.daiToDraw)
+        )
       )}`
     ],
-    [lang.liquidation_penalty, `${liquidationPenalty}%`],
-    [lang.stability_fee, `${stabilityFee}%`]
+    [
+      lang.liquidation_penalty,
+      `${formatter(liquidationPenalty, { percentage: true })}%`
+    ],
+    [
+      lang.stability_fee,
+      `${formatter(annualStabilityFee, {
+        integer: true,
+        percentage: true
+      })}%`
+    ]
   ];
   return (
     <Box

@@ -82,7 +82,7 @@ test('the whole flow', async () => {
   getByText('Confirm Vault Details');
   getByText('2.128 ETH');
   getByText('31.119 DAI');
-  getByText('1025.96%'); // collateralization ratio
+  getByText('1025.95%'); // collateralization ratio
   getAllByRole('checkbox').forEach(click); // terms & privacy
   const openButton = getByText('Open Vault');
   await wait(() => assert(!openButton.disabled));

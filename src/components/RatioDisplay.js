@@ -42,7 +42,9 @@ export default function RatioDisplay({
   const { level, warningThreshold } = lookupCDPSafetyLevel(ratio, ilkLiqRatio);
   const showDisplay =
     show &&
-    (onlyWarnings ? ratio.lt(warningThreshold) && ratio.gt(ilkLiqRatio) : true);
+    (onlyWarnings
+      ? ratio.lt(warningThreshold) && ratio.gte(ilkLiqRatio)
+      : true);
 
   const overrides =
     level === SAFETY_LEVELS.WARNING && type === RatioDisplayTypes.CARD

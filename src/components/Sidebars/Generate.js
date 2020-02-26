@@ -136,8 +136,7 @@ const Generate = ({ vault, reset }) => {
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
               ratio={formatter(collateralizationRatio, {
-                infinity: currentCollateralizationRatio,
-                log: true
+                infinity: currentCollateralizationRatio
               })}
               ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}

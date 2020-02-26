@@ -17,14 +17,15 @@ import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
 
-function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
+function OpenCDPForm({
+  selectedIlk,
+  cdpParams,
+  collateralizationRatio,
+  handleInputChange,
+  ilkData
+}) {
   const { lang } = useLanguage();
-  const {
-    calculateMaxDai,
-    collateralizationRatio,
-    liquidationRatio,
-    debtFloor
-  } = ilkData;
+  const { calculateMaxDai, liquidationRatio, debtFloor } = ilkData;
 
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
   const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
@@ -124,19 +125,19 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
               handleInputChange({
                 target: {
                   name: 'daiToDraw',
-                  value: daiAvailable
+                  value: formatter(daiAvailable)
                 }
               });
             }}
           >
-            {prettifyNumber(daiAvailable)} DAI
+            {formatter(daiAvailable)} DAI
           </Text>
         </Box>
         <RatioDisplay
           type={RatioDisplayTypes.TEXT}
           text={lang.cdp_create.collateralization_warning}
-          ratio={collateralizationRatio}
-          ilkLiqRatio={liquidationRatio}
+          ratio={formatter(collateralizationRatio)}
+          ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
           onlyWarnings={true}
           t="caption"
         />
@@ -171,14 +172,15 @@ function OpenCDPForm({ selectedIlk, cdpParams, handleInputChange, ilkData }) {
   );
 }
 
-const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
+const CDPCreateDepositSidebar = ({
+  cdpParams,
+  selectedIlk,
+  ilkData,
+  collateralizationRatio
+}) => {
   const { lang } = useLanguage();
   const currency = selectedIlk.currency;
   const { annualStabilityFee, collateralTypePrice } = ilkData;
-  const collateralizationRatio = ilkData.calculateCollateralizationRatio(
-    BigNumber(cdpParams.gemsToLock || '0'),
-    MDAI(cdpParams.daiToDraw || '0')
-  );
 
   let liquidationPriceDisplay = formatter(
     ilkData.calculateliquidationPrice(
@@ -201,8 +203,10 @@ const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
             )} (Min ${formatter(ilkData.liquidationRatio, {
               percentage: true
             })}%)`}
-            ratio={collateralizationRatio}
-            ilkLiqRatio={ilkData.liquidationRatio}
+            ratio={formatter(collateralizationRatio)}
+            ilkLiqRatio={formatter(ilkData.liquidationRatio, {
+              percentage: true
+            })}
             t="caption"
           />
         ],
@@ -213,7 +217,10 @@ const CDPCreateDepositSidebar = ({ cdpParams, selectedIlk, ilkData }) => {
         ],
         [
           lang.stability_fee,
-          `${formatter(annualStabilityFee, { percentage: true })}%`
+          `${formatter(annualStabilityFee, {
+            integer: true,
+            percentage: true
+          })}%`
         ]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
@@ -246,6 +253,11 @@ const CDPCreateDeposit = ({
   );
   const { calculateMaxDai, debtFloor } = ilkData;
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
+
+  const collateralizationRatio = ilkData.calculateCollateralizationRatio(
+    BigNumber(cdpParams.gemsToLock || '0'),
+    MDAI(cdpParams.daiToDraw || '0')
+  );
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
@@ -288,6 +300,7 @@ const CDPCreateDeposit = ({
             handleInputChange={handleInputChange}
             selectedIlk={selectedIlk}
             ilkData={ilkData}
+            collateralizationRatio={collateralizationRatio}
           />
         </Card>
         <Card px={{ s: 'm', m: 'xl' }} py={{ s: 'm', m: 'l' }}>
@@ -295,6 +308,7 @@ const CDPCreateDeposit = ({
             selectedIlk={selectedIlk}
             cdpParams={cdpParams}
             ilkData={ilkData}
+            collateralizationRatio={collateralizationRatio}
           />
         </Card>
       </Grid>

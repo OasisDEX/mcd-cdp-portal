@@ -82,7 +82,9 @@ function IlkTableRow({
         />
       </td>
       <td>{ilk.symbol}</td>
-      <td>{formatter(annualStabilityFee, { percentage: true })} %</td>
+      <td>
+        {formatter(annualStabilityFee, { integer: true, percentage: true })} %
+      </td>
       <td>{formatter(liquidationRatio, { percentage: true })} %</td>
       <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
       <td css="text-align: right">
