@@ -1,15 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { map, route, mount, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import BorrowLayout from 'layouts/BorrowLayout';
-import Landing from 'pages/Landing';
-import Overview from 'pages/Overview';
-import Borrow from 'pages/Borrow';
-import Save from 'pages/Save';
-import Privacy from 'pages/Privacy';
-import Terms from 'pages/Terms';
+
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import { ModalProvider } from 'providers/ModalProvider';
@@ -21,6 +16,13 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
 import { Routes } from 'utils/constants';
+
+const Landing = lazy(() => import('pages/Landing'));
+const Overview = lazy(() => import('pages/Overview'));
+const Borrow = lazy(() => import('pages/Borrow'));
+const Save = lazy(() => import('pages/Save'));
+const Privacy = lazy(() => import('pages/Privacy'));
+const Terms = lazy(() => import('pages/Terms'));
 
 const { networkNames, defaultNetwork } = config;
 
