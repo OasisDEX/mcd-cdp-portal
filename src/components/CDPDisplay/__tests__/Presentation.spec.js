@@ -135,7 +135,7 @@ test('reclaim banner rounds correctly when number is < 1', async () => {
     />
   );
   // four decimal places for values < 1
-  await findByText(/0.1235 LOL/);
+  await findByText(/0.1234 LOL/);
 });
 
 describe('on mobile', () => {

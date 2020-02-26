@@ -77,11 +77,11 @@ const Withdraw = ({ vault, reset }) => {
           )
         });
 
-  const collateralizationRatio = undercollateralized
-    ? Infinity
-    : vault.calculateCollateralizationRatio({
-        collateralValue: collateralValue.minus(valueDiff)
-      });
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.minus(valueDiff).gte(0)
+      ? currency(collateralValue.minus(valueDiff))
+      : currency(0)
+  });
 
   return (
     <Grid gridRowGap="m">
@@ -115,7 +115,7 @@ const Withdraw = ({ vault, reset }) => {
         />
         <RatioDisplay
           type={RatioDisplayTypes.CARD}
-          ratio={collateralizationRatio}
+          ratio={formatter(collateralizationRatio)}
           ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
           text={lang.action_sidebar.withdraw_warning}
           onlyWarnings={true}
@@ -166,7 +166,7 @@ const Withdraw = ({ vault, reset }) => {
           body={
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
-              ratio={collateralizationRatio}
+              ratio={formatter(collateralizationRatio)}
               ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
             />

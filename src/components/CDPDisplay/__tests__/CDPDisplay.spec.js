@@ -115,7 +115,7 @@ test('Vault Display page and actions', async () => {
 
   // amount to generate before
   const generateLabel = getByText('Available to generate');
-  expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
+  expect(generateLabel.nextElementSibling.textContent).toBe('522.99 DAI');
 
   // submit generate
   change(getByRole('textbox'), { target: { value: '25' } });

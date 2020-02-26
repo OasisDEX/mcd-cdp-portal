@@ -8,13 +8,11 @@ import {
   browserEthereumProviderAddress
 } from '../utils/ethereum';
 import LoadingLayout from '../layouts/LoadingLayout';
-import localSchemas from '../references/schemas/index.js';
 import schemas from '@makerdao/dai-plugin-mcd/dist/schemas';
 import useObservable, { watch } from 'hooks/useObservable';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
-const { getVaults, getCdpIds } = localSchemas;
 export const MakerObjectContext = createContext();
 
 function useNavigation(network, mocks) {
@@ -97,7 +95,7 @@ function MakerProvider({
 
       // Register multicall schemas and map useObservable hook to watch convenience helper
       const multicall = newMaker.service('multicall');
-      multicall.registerSchemas({ ...schemas, getVaults, getCdpIds });
+      multicall.registerSchemas({ ...schemas });
       multicall.observableKeys.forEach(
         key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
       );

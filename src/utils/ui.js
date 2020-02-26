@@ -181,18 +181,15 @@ export const formatCurrencyValue = ({
   infinity = 'N/A'
 }) => {
   if (value instanceof Currency) value = value.toBigNumber();
-  else if (!(value instanceof BigNumber))
-    new Error('Value must be a Currency or BigNumber object');
-
+  else if (!BigNumber.isBigNumber(value)) value = BigNumber(value);
+  if (['Infinity', Infinity].includes(value.toFixed(precision)))
+    return infinity;
   if (percentage) value = value.times(100);
   if (integer) value = value.integerValue(BigNumber.ROUND_HALF_UP);
   if (value.lt(1)) precision = medium;
-  if (['Infinity', Infinity].includes(value.toFixed(precision)))
-    return infinity;
-  return value.toFixed(precision);
+  return value.toFixed(precision, BigNumber.ROUND_DOWN);
 };
 
 export function formatter(target, options = {}) {
-  if (!target) return;
   return formatCurrencyValue({ value: target, ...options });
 }

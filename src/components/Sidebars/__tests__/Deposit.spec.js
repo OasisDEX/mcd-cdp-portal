@@ -174,7 +174,7 @@ test('verify info container values', async () => {
     exact: true
   });
   // initial liquidation price
-  await findByText(/0.1733 USD\/BAT/);
+  await findByText(/0.1732 USD\/BAT/);
   // initial collat ratio
   await findByText(/287.89%/);
 

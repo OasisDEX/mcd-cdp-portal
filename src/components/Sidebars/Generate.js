@@ -25,7 +25,8 @@ const Generate = ({ vault, reset }) => {
     vaultType,
     debtFloor,
     collateralAmount,
-    liquidationRatio
+    liquidationRatio,
+    collateralizationRatio: currentCollateralizationRatio
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
@@ -134,10 +135,12 @@ const Generate = ({ vault, reset }) => {
           body={
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
-              ratio={collateralizationRatio}
+              ratio={formatter(collateralizationRatio, {
+                infinity: currentCollateralizationRatio,
+                log: true
+              })}
               ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
-              show={amount !== '' && amount > 0 && !undercollateralized}
             />
           }
         />
