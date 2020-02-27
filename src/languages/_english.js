@@ -216,7 +216,10 @@ export default {
       "Waiting for confirmations reduces the risk of your Vault address changing. We require users to wait 10 block confirmations to ensure it's been created successfully. This will often take around 2 minutes.",
     proxy_failure_not_mined: 'This transaction is taking longer than usual...',
     proxy_failure_not_mined_info:
-      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later'
+      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later',
+    proxy_failure_contract_data: 'There was an error with your Ledger wallet...',
+    proxy_failure_contract_data_info:
+      'If you see this message and are using a Ledger hardware wallet, it often means that you need to enable "Contract Data." To do this, go to your Ethereum app on Ledger, choose Settings and then Contract Data'
   },
   cdp_migrate: {
     select_title: 'Select Vault to Migrate',

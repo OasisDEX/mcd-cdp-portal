@@ -45,4 +45,9 @@ export const NotificationList = {
   NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 }
 };
 
+export const VendorErrors = {
+  ENABLE_CONTRACT_DATA: 'EthAppPleaseEnableContractData',
+  USER_REJECTED: 'TransportStatusError'
+};
+
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

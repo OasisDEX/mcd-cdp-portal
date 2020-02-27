@@ -11,6 +11,7 @@ import lang from 'languages';
 
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
+import { VendorErrors } from 'utils/constants';
 
 const SuccessButton = () => {
   return (
@@ -39,6 +40,18 @@ const ProxyAllowanceCheck = ({
     confirmations_text
   } = labels;
 
+  const parseError = proxyErrors => {
+    return proxyErrors.name === VendorErrors.ENABLE_CONTRACT_DATA
+      ? {
+          message: lang.cdp_create.proxy_failure_contract_data,
+          information: lang.cdp_create.proxy_failure_contract_data_info
+        }
+      : {
+          message: lang.cdp_create.proxy_failure_not_mined,
+          information: lang.cdp_create.proxy_failure_not_mined_info
+        };
+  };
+
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
       <Grid gridRowGap="xs">
@@ -62,13 +75,13 @@ const ProxyAllowanceCheck = ({
         <Text.p t="subheading" lineHeight="normal">
           {proxyErrors && (
             <>
-              {lang.cdp_create.proxy_failure_not_mined}
+              {parseError(proxyErrors).message}
               <Tooltip
                 fontSize="m"
                 ml="2xs"
                 content={
                   <TooltipContents>
-                    {lang.cdp_create.proxy_failure_not_mined_info}
+                    {parseError(proxyErrors).information}
                   </TooltipContents>
                 }
               />
