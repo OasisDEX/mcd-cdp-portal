@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import useActionState from 'hooks/useActionState';
-import useBlockHeight from 'hooks/useBlockHeight';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { watch } from 'hooks/useObservable';
@@ -11,7 +10,6 @@ const log = debug('maker:useProxy');
 export default function useProxy() {
   const { lang } = useLanguage();
   const { maker, account, newTxListener } = useMaker();
-  const blockHeight = useBlockHeight(0);
   const [startedWithoutProxy, setStartedWithoutProxy] = useState(false);
   const [startingBlockHeight, setStartingBlockHeight] = useState(0);
   const [proxyDeployed, setProxyDeployed] = useState(false);
@@ -32,10 +30,24 @@ export default function useProxy() {
 
     const txPromise = maker.service('proxy').ensureProxy();
     newTxListener(txPromise, lang.transactions.setting_up_proxy);
-    setStartingBlockHeight(blockHeight);
-    await maker.service('transactionManager').confirm(txPromise, 7);
-    setProxyDeployed(true);
+
+    const txMgr = maker.service('transactionManager');
+
+    txMgr.listen(txPromise, {
+      mined: tx => {
+        setStartingBlockHeight(tx._blockNumberWhenMined);
+      },
+      confirmed: () => {
+        setProxyDeployed(true);
+      },
+      error: () => {
+        setStartingBlockHeight(0);
+      }
+    });
+
+    await txMgr.confirm(txPromise, 10);
   });
+
   return {
     proxyAddress,
     startedWithoutProxy,

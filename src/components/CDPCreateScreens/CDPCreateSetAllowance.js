@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text } from '@makerdao/ui-components-core';
 import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
-import useBlockHeight from 'hooks/useBlockHeight';
+import { useWeb3BlockHeight } from 'hooks/useBlockHeight';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
@@ -11,7 +11,7 @@ import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
   const { trackBtnClick } = useAnalytics('ProxyDeploy', 'VaultCreate');
   const { lang } = useLanguage();
-  const blockHeight = useBlockHeight(0);
+  const blockHeight = useWeb3BlockHeight(0);
 
   const {
     proxyAddress,
