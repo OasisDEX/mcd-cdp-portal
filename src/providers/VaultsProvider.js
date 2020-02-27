@@ -40,13 +40,13 @@ function VaultsProvider({ children, viewedAddress }) {
   const viewedAddressVaultIds =
     viewedAddressVaultsList !== undefined && viewedAddressVaultsList.length
       ? viewedAddressVaultsList.map(({ vaultId }) => vaultId)
-      : undefined;
+      : [];
 
   const userVaultsData = watch.userVaultsData(
     userVaultIds.length ? userVaultIds : undefined
   );
   const viewedAddressVaultsData = watch.userVaultsData(
-    viewedAddressVaultIds ? viewedAddressVaultIds : undefined
+    viewedAddressVaultIds.length ? viewedAddressVaultIds : undefined
   );
 
   const newVaultCreated =
@@ -73,13 +73,15 @@ function VaultsProvider({ children, viewedAddress }) {
             ? undefined
             : [],
         viewedAddressVaults:
-          rawViewedAddressVaultsList !== undefined
-            ? viewedAddressVaultIds && viewedAddressVaultsData
-              ? viewedAddressVaultsData
-              : []
-            : viewedAddressProxy
+          viewedAddressProxy === undefined
             ? undefined
-            : []
+            : viewedAddressProxy === null
+            ? []
+            : viewedAddressVaultsList === undefined
+            ? undefined
+            : !viewedAddressVaultIds.length
+            ? []
+            : viewedAddressVaultsData
       }}
     >
       {children}
