@@ -20,7 +20,8 @@ export default function useTokenAllowance(tokenSymbol) {
 
   const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
   const hasAllowance =
-    allowance !== undefined && allowance !== null && !allowance.eq(0);
+    tokenSymbol === 'ETH' ||
+    (allowance !== undefined && allowance !== null && !allowance.eq(0));
 
   const hasSufficientAllowance = value =>
     BigNumber(value).isLessThanOrEqualTo(allowance);
