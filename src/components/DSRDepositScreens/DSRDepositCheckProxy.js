@@ -4,12 +4,12 @@ import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useTokenAllowance from 'hooks/useTokenAllowance';
-import useBlockHeight from 'hooks/useBlockHeight';
+import { useWeb3BlockHeight } from 'hooks/useBlockHeight';
 import useLanguage from 'hooks/useLanguage';
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
   const { lang } = useLanguage();
-  const blockHeight = useBlockHeight(0);
+  const blockHeight = useWeb3BlockHeight(0);
 
   const {
     proxyLoading,
