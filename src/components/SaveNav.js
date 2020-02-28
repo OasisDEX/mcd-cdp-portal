@@ -18,6 +18,7 @@ const SaveNav = ({ account, ...props }) => {
   const { lang } = useLanguage();
   const { url } = useCurrentRoute();
   const selected = url.pathname.startsWith(`/${Routes.SAVE}`);
+
   const textColor =
     selected && account
       ? 'white'
@@ -26,8 +27,12 @@ const SaveNav = ({ account, ...props }) => {
       : selected && !account
       ? 'black'
       : 'gray';
+
+  const saveUrl = account?.address
+    ? `/${Routes.SAVE}/owner/${account?.address}${url.search}`
+    : `/${Routes.SAVE}${url.search}`;
   return (
-    <Link href={`/${Routes.SAVE}${url.search}`}>
+    <Link href={saveUrl}>
       <Flex
         bg={!account && selected && 'grey.200'}
         flexDirection="column"

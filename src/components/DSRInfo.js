@@ -53,16 +53,17 @@ const initialState = {
   earningsDispatched: false,
   totalDaiLockedAmountDelta: BigNumber(0),
   tickerInterest: BigNumber(0),
-  tickerStartTime: 0
+  tickerStartTime: 0,
+  cleanedState: false
 };
-let cancelled = false;
 
 function DSRInfo({ isMobile, savings }) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
+  const cancelled = useRef(false);
 
   useEffect(() => {
-    return () => (cancelled = true);
+    return () => (cancelled.current = true);
   }, []);
 
   const {
@@ -71,7 +72,6 @@ function DSRInfo({ isMobile, savings }) {
     daiSavingsRate,
     dateEarningsLastAccrued,
     daiLockedInDsr,
-    fetchedSavings,
     savingsRateAccumulator,
     savingsDai
   } = savings;
@@ -89,7 +89,8 @@ function DSRInfo({ isMobile, savings }) {
       totalDaiLockedAmountDelta,
       tickerInterest,
       tickerStartTime,
-      initialised
+      initialised,
+      cleanedState
     },
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
@@ -109,7 +110,7 @@ function DSRInfo({ isMobile, savings }) {
     const etd = await maker
       .service('mcd:savings')
       .getEarningsToDate(proxyAddress);
-    if (cancelled) return;
+    if (cancelled.current) return;
     dispatch({
       fetchingEarnings: false,
       fetchedEarnings: true,
@@ -132,9 +133,9 @@ function DSRInfo({ isMobile, savings }) {
     prevSavingsRateAccumulator.toString() !== savingsRateAccumulator.toString();
 
   useEffect(() => {
-    if (fetchedSavings) {
+    if (cleanedState) {
       if (proxyAddress && !fetchedEarnings && !fetchingEarnings) {
-        fetchEarnings();
+        fetchEarnings(proxyAddress);
         dispatch({
           fetchingEarnings: true
         });
@@ -211,16 +212,23 @@ function DSRInfo({ isMobile, savings }) {
           });
         }
       }
+    } else {
+      // state must be reset on account switch
+      cancelled.current = false;
+      dispatch({
+        ...initialState,
+        cleanedState: true
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    fetchedSavings,
     savingsRateAccChanged,
     savingsDaiChanged,
     rawEarningsString,
     fetchedEarnings,
-    initialised
+    initialised,
+    cleanedState
   ]);
 
   return (

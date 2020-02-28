@@ -353,7 +353,9 @@ export default {
     dai_locked_dsr: 'DAI locked in DSR',
     deposit_withdraw: 'Deposit and withdraw',
     deposit_btn_cta: 'Receive savings on your Dai. Deposit at any time',
-    withdraw_btn_cta: 'Safely withdraw your Dai at any time'
+    withdraw_btn_cta: 'Safely withdraw your Dai at any time',
+    no_savings:
+      "This address either doesn't exist or has no DSR account history"
   },
   verbs: {
     depositing: 'Depositing',
@@ -451,6 +453,8 @@ export default {
     non_vault_owner:
       'The owner of this position ({0}) does not match the connected walleted address',
     non_overview_owner:
-      'You are currently viewing the Overview of another address ({0})'
+      'You are currently viewing the Overview of another address ({0})',
+    non_savings_owner:
+      'You are currently viewing the savings of another address ({0})'
   }
 };

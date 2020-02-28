@@ -41,7 +41,7 @@ For hardware wallet support:
 
 _see [this PR](https://github.com/makerdao/mcd-cdp-portal/pull/26) for more details_
 
-[build]: https://travis-ci.com/makerdao/mcd-cdp-portal.svg?token=3BTQxsyAmYGZyiaheNXp&branch=master
-[build-url]: https://travis-ci.com/makerdao/mcd-cdp-portal
+[build]: https://circleci.com/gh/makerdao/mcd-cdp-portal.svg?style=svg
+[build-url]: https://circleci.com/gh/makerdao/mcd-cdp-portal
 [cover]: https://codecov.io/gh/makerdao/mcd-cdp-portal/branch/master/graph/badge.svg
 [cover-url]: https://codecov.io/gh/makerdao/mcd-cdp-portal
