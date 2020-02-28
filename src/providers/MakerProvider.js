@@ -34,7 +34,6 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
-
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
