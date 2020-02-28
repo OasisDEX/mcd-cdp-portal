@@ -14,10 +14,10 @@
     "@craco/craco": "^5.4.0",
     "@hot-loader/react-dom": "^16.8.4",
     "@makerdao/currency": "^0.9.5",
-    "@makerdao/dai": "0.23.0-rc.5",
+    "@makerdao/dai": "^0.26.0",
     "@makerdao/dai-plugin-config": "^0.2.7-rc.4",
     "@makerdao/dai-plugin-ledger-web": "^0.9.7",
-    "@makerdao/dai-plugin-mcd": "^1.0.6",
+    "@makerdao/dai-plugin-mcd": "^1.2.1",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.2",
@@ -98,7 +98,9 @@
     "lighthouse": "^4.0.0",
     "lint-staged": "^9.2.5",
     "prettier": "^1.15.3",
+    "rxjs": "^6.5.4",
     "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
-  }
+  },
+  "types": "./typings/main.d.ts"
 }

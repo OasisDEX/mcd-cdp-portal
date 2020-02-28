@@ -1,5 +1,5 @@
 import round from 'lodash/round';
-import { MKR, ETH } from '../maker';
+import { ETH, MDAI, BAT } from '../maker';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 
@@ -33,15 +33,19 @@ export const toNum = async promise => {
   return val.toBigNumber().toFixed();
 };
 
-export const addMkrAndEthBalance = async account => {
+export const addTokenBalances = async account => {
   return {
     ...account,
     ethBalance: round(
       await toNum(window.maker.getToken(ETH).balanceOf(account.address)),
       3
     ),
-    mkrBalance: round(
-      await toNum(window.maker.getToken(MKR).balanceOf(account.address)),
+    daiBalance: round(
+      await toNum(window.maker.getToken(MDAI).balanceOf(account.address)),
+      3
+    ),
+    batBalance: round(
+      await toNum(window.maker.getToken(BAT).balanceOf(account.address)),
       3
     )
   };

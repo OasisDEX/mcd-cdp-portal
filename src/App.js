@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { StateInspector } from 'reinspect';
 import LanguageProvider from 'providers/LanguageProvider';
-import StoreProvider from 'providers/StoreProvider';
 import styled, { ThemeProvider } from 'styled-components';
 import { Router, NotFoundBoundary } from 'react-navi';
 import { createBrowserNavigation } from 'navi';
@@ -12,7 +11,6 @@ import routes from './routes';
 import { gaInit, mixpanelInit } from './utils/analytics';
 import LoadingLayout from 'layouts/LoadingLayout';
 import ErrorBoundary from './ErrorBoundary';
-import rootReducer from 'reducers';
 import debug from 'debug';
 const log = debug('maker:App');
 
@@ -58,9 +56,7 @@ function AppWithContext() {
     <LanguageProvider>
       <ThemeProvider theme={theme}>
         <StateInspector name="App">
-          <StoreProvider reducer={rootReducer}>
-            <App />
-          </StoreProvider>
+          <App />
         </StateInspector>
       </ThemeProvider>
     </LanguageProvider>

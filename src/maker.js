@@ -1,5 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, { ETH, MKR, BAT } from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, BAT, MDAI } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
@@ -85,4 +85,4 @@ export async function instantiateMaker({
   return maker;
 }
 
-export { USD, DAI, MKR, ETH };
+export { USD, DAI, ETH, BAT, MDAI };

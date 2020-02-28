@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import { useCurrentRoute } from 'react-navi';
 
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
@@ -9,7 +10,7 @@ import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
-import { AccountTypes } from '../utils/constants';
+import { AccountTypes, Routes } from '../utils/constants';
 import { BrowserView } from 'react-device-detect';
 
 const Option = ({ children, ...props }) => {
@@ -36,14 +37,22 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     maker,
     account,
     connectBrowserProvider,
-    connectToProviderOfType
+    connectToProviderOfType,
+    navigation
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
+  const { url } = useCurrentRoute();
 
   function onAccountChosen({ address }) {
+    if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
+      const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
+      if (address !== urlAddress) {
+        navigation.navigate(`/${Routes.SAVE}/owner/${address}${url.search}`);
+      }
+    }
     maker.useAccountWithAddress(address);
   }
 
@@ -68,7 +77,8 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
 
   async function connectBrowserWallet() {
     try {
-      await connectBrowserProvider();
+      const connectedAddress = await connectBrowserProvider();
+      onAccountChosen({ address: connectedAddress });
     } catch (err) {
       window.alert(err);
     }

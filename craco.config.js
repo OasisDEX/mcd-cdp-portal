@@ -32,7 +32,8 @@ module.exports = {
     plugins: [
       'styled-components',
       'react-hot-loader/babel',
-      '@babel/plugin-proposal-optional-chaining'
+      '@babel/plugin-proposal-optional-chaining',
+      ['@babel/plugin-proposal-decorators', { legacy: true }]
     ]
   },
   jest: {

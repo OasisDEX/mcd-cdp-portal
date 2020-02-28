@@ -28,6 +28,8 @@
   },
   "defaultNetwork": "1",
   "exTestchainApiUrl": "http://localhost:4000/chain",
+  "showFeeds": ["ETH", "BAT"],
+  "showWalletTokens": ["MDAI", "DSR", "ETH", "SAI", "MWETH", "BAT"],
   "trackingPages": {
     "Overview": "Overview",
     "CDP": "Dashboard",

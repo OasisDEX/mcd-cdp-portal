@@ -1,42 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import assert from 'assert';
 import { wait, fireEvent, waitForElement } from '@testing-library/react';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
-import { mineBlocks } from '@makerdao/test-helpers';
+import { mineBlocks, TestAccountProvider } from '@makerdao/test-helpers';
 
 import DSRDeposit from '../DSRDeposit';
 import lang from '../../languages';
 import { renderWithAccount } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import { prettifyNumber } from '../../utils/ui';
+import useMaker from 'hooks/useMaker';
 
 const { click, change } = fireEvent;
 
 const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';
 let maker;
+let web3;
+let noProxyAcct;
 
 beforeAll(async () => {
+  // Generate Dai & send to an account with no proxy
   maker = await instantiateMaker({ network: 'testnet' });
   await await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
+
+  TestAccountProvider.setIndex(345);
+  noProxyAcct = TestAccountProvider.nextAccount();
+  const token = maker.getToken(MDAI.symbol);
+  await token.transfer(noProxyAcct.address, AMOUNT);
 });
 
-test('the whole DSR Deposit flow', async () => {
+const RenderNoProxyAccount = () => {
   const hideOnboarding = jest.fn();
-  const { getAllByText, getByRole, getByText } = await renderWithAccount(
-    <DSRDeposit hideOnboarding={hideOnboarding} />,
-    state => state
+  const [changedAccount, setAccountChanged] = useState(false);
+  const { maker } = useMaker();
+  web3 = maker.service('web3');
+
+  const changeAccount = async () => {
+    const accountService = maker.service('accounts');
+    await accountService.addAccount('noproxy', {
+      type: 'privateKey',
+      key: noProxyAcct.key
+    });
+    accountService.useAccount('noproxy');
+    setAccountChanged(true);
+  };
+
+  useEffect(() => {
+    changeAccount();
+  }, []);
+
+  return changedAccount ? (
+    <DSRDeposit hideOnboarding={hideOnboarding} />
+  ) : (
+    <div />
   );
+};
+
+test('the whole DSR Deposit flow', async () => {
+  const {
+    getAllByText,
+    getByRole,
+    getByText,
+    findByText,
+    getAllByRole
+  } = await renderWithAccount(<RenderNoProxyAccount />);
   getByText(lang.dsr_deposit.open_vault);
+  // Open onboarding
+  click(getByText('Setup'));
+
+  // Click setup proxy
+  const [proxyBtn, allowanceBtn] = getAllByRole('button');
+  click(proxyBtn);
+  // Must wait for proxy to be confirmed
+  await mineBlocks(web3, 20);
+  await findByText('Confirmed with 10 confirmations');
 
   // First checkmark is proxy, but need to set allowance for Dai
   await wait(() => getByText('checkmark.svg'));
-  click(getByText('Set'));
+  click(allowanceBtn);
+  await wait(() => assert(getAllByText('checkmark.svg').length === 2));
 
   // Allowance is now set, continue to DepositCreate step
-  await wait(() => assert(getAllByText('checkmark.svg').length === 2));
   click(getByText(lang.actions.continue));
 
   // UI Formats the amount
@@ -76,7 +123,7 @@ test('the whole DSR Deposit flow', async () => {
       /The estimated time is [0-9]+ seconds. You can safely leave this page./
     )
   );
-  await mineBlocks(maker.service('web3'), 5);
+  await mineBlocks(web3);
   // The message changes after confirmation
   await wait(() => getByText('You can safely leave this page.'));
 }, 15000);

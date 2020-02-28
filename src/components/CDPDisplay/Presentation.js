@@ -3,21 +3,9 @@ import { Address } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import useEventHistory from 'hooks/useEventHistory';
 import useMaker from 'hooks/useMaker';
+
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
-import {
-  getDebtAmount,
-  getLiquidationPrice,
-  getCollateralPrice,
-  getCollateralAmount,
-  getCollateralValueUSD,
-  getCollateralizationRatio,
-  getCollateralAvailableAmount,
-  getCollateralAvailableValue,
-  getDaiAvailable,
-  getUnlockedCollateralAmount,
-  withPrecision
-} from 'reducers/cdps';
 import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
 import {
@@ -35,45 +23,50 @@ import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
+import { formatter } from 'utils/ui';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
-export default function({ cdp, showSidebar, account, network, cdpOwner }) {
+export default function({ vault, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
   const { trackBtnClick } = useAnalytics('CollateralView');
+  let {
+    collateralAmount,
+    collateralizationRatio,
+    liquidationPrice,
+    vaultType,
+    unlockedCollateral
+  } = vault;
 
-  const cdpId = parseInt(cdp.id);
+  log(`Rendering vault #${vault.id}`);
+
+  const gem = collateralAmount?.symbol;
+
+  liquidationPrice = formatter(liquidationPrice);
+  collateralizationRatio = formatter(collateralizationRatio, {
+    percentage: true
+  });
+
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(cdpId) : null;
+  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(vault.id) : null;
 
-  log(`Rendering vault #${cdpId}`);
-  const gem = cdp.currency.symbol;
-  const debtAmount = getDebtAmount(cdp);
-  let liquidationPrice = getLiquidationPrice(cdp);
-  if (['Infinity', Infinity].includes(liquidationPrice))
+  if (['Infinity', Infinity, 'NaN', NaN].includes(liquidationPrice))
     liquidationPrice = lang.cdp_page.not_applicable;
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp);
-  const collateralUSDValue = getCollateralValueUSD(cdp);
-  let collateralizationRatio = getCollateralizationRatio(cdp);
-  if (collateralizationRatio === Infinity)
+  if (['Infinity', Infinity, 'NaN', NaN].includes(collateralizationRatio))
     collateralizationRatio = lang.cdp_page.not_applicable;
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp);
-  const collateralAvailableValue = getCollateralAvailableValue(cdp);
-  const daiAvailable = getDaiAvailable(cdp);
-  const isOwner = account && account.address === cdpOwner;
+  const isOwner =
+    account && account.address.toLowerCase() === cdpOwner.toLowerCase();
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
 
-  const unlockedCollateral = getUnlockedCollateralAmount(cdp, false);
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
         .service('mcd:cdpManager')
-        .reclaimCollateral(cdpId, unlockedCollateral.toFixed());
+        .reclaimCollateral(vault.id, unlockedCollateral.toFixed());
       newTxListener(txObject, lang.transactions.claiming_collateral);
       await txObject;
       deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
@@ -82,9 +75,9 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     if (isOwner && unlockedCollateral > 0) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
-        cdp.gem,
-        cdp.unlockedCollateral && withPrecision(cdp.unlockedCollateral, 2),
-        cdp.gem
+        gem,
+        unlockedCollateral && formatter(unlockedCollateral),
+        gem
       );
 
       addNotification({
@@ -114,7 +107,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         NotificationList.NON_VAULT_OWNER
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, account, cdpId, unlockedCollateral]);
+  }, [isOwner, account, vault, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -131,7 +124,7 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
     <PageContentLayout>
       <Box>
         <Text.h2>
-          {cdp.ilk} {lang.cdp} #{cdpId}
+          {vaultType} {lang.cdp} #{vault.id}
         </Text.h2>
       </Box>
       <Grid
@@ -155,11 +148,15 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
                 <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo>
               </TextBlock>
             }
-            value={`${collateralPrice} USD`}
+            value={`${formatter(vault.collateralTypePrice)} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
-            value={cdp.liquidationPenalty + '%'}
+            value={
+              formatter(vault.liquidationPenalty, {
+                percentage: true
+              }) + '%'
+            }
           />
         </CdpViewCard>
 
@@ -169,25 +166,37 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}
-            value={cdp.liquidationRatio + '.00%'}
+            value={
+              formatter(vault.liquidationRatio, {
+                percentage: true
+              }) + '%'
+            }
           />
           <InfoContainerRow
             title={lang.cdp_page.stability_fee}
-            value={cdp.stabilityFee + '%'}
+            value={
+              formatter(vault.annualStabilityFee, {
+                percentage: true,
+                integer: true
+              }) + '%'
+            }
           />
         </CdpViewCard>
 
         <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
-            value={`${collateralAmount} ${gem}`}
-            conversion={`${collateralUSDValue} USD`}
+            value={`${formatter(vault.collateralAmount)} ${gem}`}
+            conversion={`${formatter(vault.collateralValue)} USD`}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() => {
                   trackBtnClick('Deposit');
-                  showAction({ type: 'deposit', props: { cdpId } });
+                  showAction({
+                    type: 'deposit',
+                    props: { vault }
+                  });
                 }}
               >
                 {lang.actions.deposit}
@@ -196,14 +205,17 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${collateralAvailableAmount} ${gem}`}
-            conversion={`${collateralAvailableValue} USD`}
+            value={`${formatter(vault.collateralAvailableAmount)} ${gem}`}
+            conversion={`${formatter(vault.collateralAvailableValue)} USD`}
             button={
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() => {
                   trackBtnClick('Withdraw');
-                  showAction({ type: 'withdraw', props: { cdpId } });
+                  showAction({
+                    type: 'withdraw',
+                    props: { vault }
+                  });
                 }}
               >
                 {lang.actions.withdraw}
@@ -215,13 +227,16 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
         <CdpViewCard title={lang.cdp_page.outstanding_dai_debt}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={debtAmount + ' DAI'}
+            value={formatter(vault.debtValue) + ' DAI'}
             button={
               <ActionButton
                 disabled={!account}
                 onClick={() => {
                   trackBtnClick('Payback');
-                  showAction({ type: 'payback', props: { cdpId } });
+                  showAction({
+                    type: 'payback',
+                    props: { vault }
+                  });
                 }}
               >
                 {lang.actions.pay_back}
@@ -230,13 +245,16 @@ export default function({ cdp, showSidebar, account, network, cdpOwner }) {
           />
           <ActionContainerRow
             title={lang.cdp_page.available_generate}
-            value={`${daiAvailable} DAI`}
+            value={`${formatter(vault.daiAvailable)} DAI`}
             button={
               <ActionButton
                 disabled={!account || !isOwner}
                 onClick={() => {
                   trackBtnClick('Generate');
-                  showAction({ type: 'generate', props: { cdpId } });
+                  showAction({
+                    type: 'generate',
+                    props: { vault }
+                  });
                 }}
               >
                 {lang.actions.generate}

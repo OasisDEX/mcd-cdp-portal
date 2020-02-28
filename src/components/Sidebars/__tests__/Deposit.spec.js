@@ -1,36 +1,29 @@
 import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { createCurrencyRatio } from '@makerdao/currency';
+import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import {
   TestAccountProvider,
   takeSnapshot,
   restoreSnapshot
 } from '@makerdao/test-helpers';
-import { BAT, USD } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Deposit from '../Deposit';
-import { renderWithMaker as render } from '../../../../test/helpers/render';
+import {
+  renderWithMaker,
+  mocks,
+  useMakerMock
+} from '../../../../test/helpers/render';
 import lang from '../../../languages';
-import useMaker from '../../../hooks/useMaker';
+import { formatter } from 'utils/ui';
+import { of } from 'rxjs';
 
 let snapshotData;
 let account;
-
-const ILK = 'BAT-A';
-const INITIAL_BAT = '300.123456789012345678';
-const INITIAL_ART = '25';
-
-const PAR = new BigNumber('1000000000000000000000000000');
-
-const DEBT_CEILING = '1000';
-const RATE = '1.000967514019988230';
-const DUST = '20';
-const PRICE = createCurrencyRatio(USD, BAT)('0.24');
-const LIQUIDATION_RATIO = '200';
-
-const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
 
 const originalConsoleError = console.error;
 jest.mock('mixpanel-browser', () => ({
@@ -56,52 +49,64 @@ afterAll(() => {
 
 afterEach(cleanup);
 
-const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      1: {
-        ilk: ILK,
-        ink: INITIAL_BAT,
-        art: INITIAL_ART
-      }
-    },
-    feeds: [
-      {
-        key: ILK,
-        currency: BAT,
-        dust: DUST,
-        rate: RATE,
-        feedValueUSD: PRICE,
-        debtCeiling: DEBT_CEILING,
-        liquidationRatio: LIQUIDATION_RATIO
-      }
-    ],
-    system: {
-      par: PAR
-    },
-    accounts: {
-      [account.address]: {
-        balances: {
-          [BAT.symbol]: BAT_ACCOUNT_BALANCE
-        },
-        allowances: {
-          [BAT.symbol]: 201
-        }
-      }
-    }
-  };
-  return newState;
+const ILK = 'BAT-A';
+const INITIAL_BAT = '300.123456789012345678';
+const PRICE = createCurrencyRatio(USD, BAT)('0.2424');
+const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
+const DSR_AMT = '100';
+const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
+
+const liquidationRatio = createCurrencyRatio(USD, MDAI)('2');
+const collateralValue = USD(74.852);
+const debtValue = MDAI(26);
+
+// The vault observable gets passed in as a prop, so we have to mock it here
+const mockVault = {
+  id: 1,
+  debtValue,
+  vaultType: ILK,
+  collateralAmount: BAT(INITIAL_BAT),
+  encumberedCollateral: fromWei(300123456789012345678),
+  liquidationRatio,
+  collateralValue,
+  collateralTypePrice: PRICE,
+  calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
+  calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
+    math
+      .collateralizationRatio(_collateralValue, debtValue)
+      .times(100)
+      .toNumber()
 };
 
-// so that dispatched actions don't affect the mocked state
-const identityReducer = x => x;
-const renderWithMockedStore = component =>
-  render(component, setupMockState, identityReducer);
+// Define mock observable schemas
+const proxyAddress = () => of(TEST_ADDRESS_PROXY);
+const tokenAllowance = () => of(BigNumber(Infinity));
+const daiLockedInDsr = () => of(MDAI(DSR_AMT));
+const tokenBalances = (address, tokens) => {
+  return of(
+    tokens.map(token => {
+      if (token === 'BAT') return BAT(BAT_ACCOUNT_BALANCE);
+      else return createCurrency(token)(0);
+    })
+  );
+};
+
+// Allows for override of mocked schemas for individual tests
+const watch = (overrides = {}) =>
+  mocks.watch({
+    tokenBalances,
+    proxyAddress,
+    tokenAllowance,
+    daiLockedInDsr,
+    ...overrides
+  });
+
+const multicall = { watch };
 
 test('basic rendering', async () => {
-  const { findByText, findAllByText } = renderWithMockedStore(
-    <Deposit cdpId={1} />
+  const { findByText, findAllByText } = renderWithMaker(
+    <Deposit vault={mockVault} />
   );
 
   await findByText(
@@ -111,9 +116,9 @@ test('basic rendering', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole, findByText } = renderWithMockedStore(
+  const { getByText, getByRole, findByText } = renderWithMaker(
     React.createElement(() => {
-      const { maker } = useMaker();
+      const { maker } = useMakerMock({ multicall });
 
       React.useEffect(() => {
         const accountService = maker.service('accounts');
@@ -125,11 +130,12 @@ test('input validation', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} />;
+      return <Deposit vault={mockVault} />;
     })
   );
 
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
 
   const input = getByRole('textbox');
 
@@ -144,10 +150,9 @@ test('input validation', async () => {
 });
 
 test('verify info container values', async () => {
-  const { getByText, findByText, getByRole } = renderWithMockedStore(
+  const { getByText, findByText, getByRole } = renderWithMaker(
     React.createElement(() => {
-      const { maker } = useMaker();
-
+      const { maker } = useMakerMock({ multicall });
       React.useEffect(() => {
         const accountService = maker.service('accounts');
         accountService
@@ -158,16 +163,18 @@ test('verify info container values', async () => {
           .then(() => accountService.useAccount('noproxy'));
       }, []);
 
-      return <Deposit cdpId={1} />;
+      return <Deposit vault={mockVault} />;
     })
   );
 
-  // BAT account balance
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
   // BAT/USD price
-  await findByText(PRICE.toNumber().toString(), { exact: false });
+  await findByText(`${formatter(PRICE)} USD/BAT`, {
+    exact: true
+  });
   // initial liquidation price
-  await findByText(/0.17 BAT\/USD/);
+  await findByText(/0.1732 USD\/BAT/);
   // initial collat ratio
   await findByText(/287.89%/);
 
@@ -175,20 +182,25 @@ test('verify info container values', async () => {
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   // new liquidation price
-  getByText(/0.1 BAT\/USD/);
+  getByText(/0.1039 USD\/BAT/);
   // new simulated collat ratio
-  getByText(/479.85%/);
+  getByText(/474.47%/);
   // BAT available remains the same
-  getByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  await findByText('200.123451 BAT');
   // BAT/USD price remains the same
-  await findByText(PRICE.toNumber().toString(), { exact: false });
+  await findByText(`${formatter(PRICE)} USD/BAT`, { exact: true });
 });
 
 test('calls the lock function as expected', async () => {
   let maker;
-  const { getByText, findByText, getByRole } = renderWithMockedStore(
+  const mockLock = jest.fn();
+  const { getByText, findByText, getByRole } = renderWithMaker(
     React.createElement(() => {
-      maker = useMaker().maker;
+      maker = useMakerMock({
+        multicall,
+        'mcd:cdpManager': { lock: () => mockLock }
+      }).maker;
+
       React.useEffect(() => {
         const accountService = maker.service('accounts');
         accountService
@@ -197,22 +209,19 @@ test('calls the lock function as expected', async () => {
             key: account.key
           })
           .then(() => accountService.useAccount('noproxy'));
-        maker.service('proxy').getProxyAddress = () =>
-          '0x999999cf1046e68e36E1aA2E0E07105eDDD1f08E';
       }, []);
 
-      return <Deposit cdpId={1} reset={() => {}} />;
+      return <Deposit vault={mockVault} reset={() => {}} />;
     })
   );
 
-  await findByText(`${BAT_ACCOUNT_BALANCE} BAT`);
+  // Balance rounded correctly
+  await findByText('200.123451 BAT');
 
   const input = getByRole('textbox');
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   const depositButton = getByText(lang.actions.deposit);
-  const mockLock = jest.fn();
-  maker.service('mcd:cdpManager').lock = mockLock;
   act(() => {
     fireEvent.click(depositButton);
   });
