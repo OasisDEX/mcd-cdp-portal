@@ -107,7 +107,7 @@ const CDPList = memo(function({
   const active = currentPath === overviewPath;
 
   useMemo(() => {
-    const onSavePage = url.pathname === `/${Routes.SAVE}`;
+    const onSavePage = url.pathname.startsWith(`/${Routes.SAVE}`);
     if (onSavePage) {
       setListOpen(false);
     } else if (!onSavePage && (account || viewedAddress)) {
