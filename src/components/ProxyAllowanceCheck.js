@@ -28,6 +28,13 @@ const errorStates = {
   }
 };
 
+const parseError = proxyErrors =>
+  errorStates[(proxyErrors?.name)] || {
+    message: lang.cdp_create.proxy_failure_not_mined,
+    information: lang.cdp_create.proxy_failure_not_mined_info,
+    retry: false
+  };
+
 const SuccessButton = () => {
   return (
     <Button variant="primary-outline" width="13.0rem" mt="xs" disabled>
@@ -54,13 +61,6 @@ const ProxyAllowanceCheck = ({
     allowance_text,
     confirmations_text
   } = labels;
-
-  const parseError = proxyErrors =>
-    errorStates[(proxyErrors?.name)] || {
-      message: lang.cdp_create.proxy_failure_not_mined,
-      information: lang.cdp_create.proxy_failure_not_mined_info,
-      retry: false
-    };
 
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
@@ -96,14 +96,18 @@ const ProxyAllowanceCheck = ({
               {parseError(proxyErrors).message}
               {parseError(proxyErrors).information && (
                 <Tooltip
-                  fontSize="m"
-                  ml="2xs"
+                  fontSize="xs"
+                  ml="s"
+                  color="blue"
+                  noDecoration
                   content={
                     <TooltipContents>
                       {parseError(proxyErrors).information}
                     </TooltipContents>
                   }
-                />
+                >
+                  {lang.why_is_this}
+                </Tooltip>
               )}
             </>
           )}

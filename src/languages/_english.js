@@ -428,6 +428,7 @@ export default {
   collateralization_ratio: 'Collateralization ratio',
   current_ilk_price: 'Current {0} Price',
   your_balance: 'Your balance',
+  why_is_this: 'Why is this?',
   // "risk_parameters": "Risk Parameters",
   terms_of_service_text: 'I have read and accept the {0}',
   terms_of_service: 'Terms of Service',
