@@ -6,12 +6,27 @@ import {
   Grid,
   Tooltip
 } from '@makerdao/ui-components-core';
-
 import lang from 'languages';
-
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
 import { VendorErrors } from 'utils/constants';
+
+const errorStates = {
+  [VendorErrors.ENABLE_CONTRACT_DATA]: {
+    message: lang.cdp_create.proxy_failure_contract_data,
+    information: lang.cdp_create.proxy_failure_contract_data_info,
+    retry: true
+  },
+  [VendorErrors.USER_REJECTED]: {
+    message: lang.cdp_create.proxy_failure_rejected,
+    retry: true
+  },
+  [VendorErrors.TIMEOUT]: {
+    message: lang.cdp_create.proxy_failure_timeout,
+    information: lang.cdp_create.proxy_failure_timeout_info,
+    retry: true
+  }
+};
 
 const SuccessButton = () => {
   return (
@@ -40,17 +55,12 @@ const ProxyAllowanceCheck = ({
     confirmations_text
   } = labels;
 
-  const parseError = proxyErrors => {
-    return proxyErrors.name === VendorErrors.ENABLE_CONTRACT_DATA
-      ? {
-          message: lang.cdp_create.proxy_failure_contract_data,
-          information: lang.cdp_create.proxy_failure_contract_data_info
-        }
-      : {
-          message: lang.cdp_create.proxy_failure_not_mined,
-          information: lang.cdp_create.proxy_failure_not_mined_info
-        };
-  };
+  const parseError = proxyErrors =>
+    errorStates[(proxyErrors?.name)] || {
+      message: lang.cdp_create.proxy_failure_not_mined,
+      information: lang.cdp_create.proxy_failure_not_mined_info,
+      retry: false
+    };
 
   return (
     <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
@@ -66,25 +76,35 @@ const ProxyAllowanceCheck = ({
             width="13.0rem"
             mt="xs"
             onClick={deployProxy}
-            disabled={proxyLoading || isSettingAllowance || !!proxyErrors}
-            loading={proxyLoading || !!proxyErrors}
+            disabled={
+              proxyLoading ||
+              isSettingAllowance ||
+              !!(proxyErrors && !parseError(proxyErrors).retry)
+            }
+            loading={
+              proxyLoading || !!(proxyErrors && !parseError(proxyErrors).retry)
+            }
           >
-            {lang.cdp_create.setup_proxy_proxy_button}
+            {parseError(proxyErrors).retry
+              ? lang.actions.try_again
+              : lang.cdp_create.setup_proxy_proxy_button}
           </Button>
         )}
         <Text.p t="subheading" lineHeight="normal">
           {proxyErrors && (
             <>
               {parseError(proxyErrors).message}
-              <Tooltip
-                fontSize="m"
-                ml="2xs"
-                content={
-                  <TooltipContents>
-                    {parseError(proxyErrors).information}
-                  </TooltipContents>
-                }
-              />
+              {parseError(proxyErrors).information && (
+                <Tooltip
+                  fontSize="m"
+                  ml="2xs"
+                  content={
+                    <TooltipContents>
+                      {parseError(proxyErrors).information}
+                    </TooltipContents>
+                  }
+                />
+              )}
             </>
           )}
           {proxyLoading && confirmations_text}

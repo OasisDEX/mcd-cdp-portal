@@ -47,7 +47,8 @@ export const NotificationList = {
 
 export const VendorErrors = {
   ENABLE_CONTRACT_DATA: 'EthAppPleaseEnableContractData',
-  USER_REJECTED: 'TransportStatusError'
+  USER_REJECTED: 'TransportStatusError',
+  TIMEOUT: 'TransportError'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
