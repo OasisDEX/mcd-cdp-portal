@@ -2,15 +2,13 @@ import React from 'react';
 import { getSafetyLevels } from 'styles/theme';
 import { SAFETY_LEVELS } from 'utils/constants';
 import { Text, Card } from '@makerdao/ui-components-core';
-import { BN } from 'utils/bignumber';
+import BigNumber from 'bignumber.js';
 
 function lookupCDPSafetyLevel(ratio, ilkLiqRatio) {
-  ratio = BN(ratio);
-  ilkLiqRatio = BN(ilkLiqRatio);
-  const dangerThreshold = BN(0.1)
+  const dangerThreshold = BigNumber(0.1)
     .times(ilkLiqRatio)
     .plus(ilkLiqRatio);
-  const warningThreshold = BN(0.5)
+  const warningThreshold = BigNumber(0.5)
     .times(ilkLiqRatio)
     .plus(ilkLiqRatio);
   let level;
@@ -37,11 +35,15 @@ export default function RatioDisplay({
   ...props
 }) {
   if (!ratio || ratio === Infinity) return null;
+  if (!BigNumber.isBigNumber(ratio)) ratio = BigNumber(ratio);
+
+  if (!BigNumber.isBigNumber(ilkLiqRatio)) ilkLiqRatio = BigNumber(ilkLiqRatio);
+
   const { level, warningThreshold } = lookupCDPSafetyLevel(ratio, ilkLiqRatio);
   const showDisplay =
     show &&
     (onlyWarnings
-      ? BN(ratio).lt(warningThreshold) && BN(ratio).gt(BN(ilkLiqRatio))
+      ? ratio.lt(warningThreshold) && ratio.gte(ilkLiqRatio)
       : true);
 
   const overrides =
@@ -68,9 +70,9 @@ export default function RatioDisplay({
       ) : null;
     case RatioDisplayTypes.PERCENTAGE:
     default:
-      return showDisplay ? (
+      return showDisplay && isFinite(ratio) ? (
         <Text color={active ? 'white' : textColor} {...props}>
-          {ratio}%
+          {ratio.toString()}%
         </Text>
       ) : null;
   }

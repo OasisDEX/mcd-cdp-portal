@@ -4,9 +4,11 @@ import Presentation from '../Presentation';
 import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import {
   renderWithMaker,
-  renderWithStore
+  renderWithProviders
 } from '../../../../test/helpers/render';
-import { createCurrency } from '@makerdao/currency';
+import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
+import { ETH, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components';
 
@@ -22,30 +24,52 @@ navi.useCurrentRoute.mockReturnValue({
 navi.Link = styled.a``;
 
 const LOL = createCurrency('LOL');
+const ILK = 'LOL-A';
 
 afterEach(cleanup);
 
-const cdp = {
-  id: 1,
-  ilk: 'LOL-A',
-  ink: '10',
-  art: '80',
-  rate: '1.5',
-  liquidationRatio: 150,
-  price: LOL(200),
-  currency: {
-    symbol: 'LOL'
-  }
-};
-
 const account = {
-  cdps: [{ id: 1 }]
+  address: '0xtest'
+};
+const mockOwnerAddress = '0xtest';
+
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(1.5);
+const collateralValue = USD(74.852);
+const debtValue = MDAI(120);
+
+const mockVault = {
+  id: 9000,
+  debtValue,
+  vaultType: ILK,
+  collateralAmount: LOL(10),
+  collateralizationRatio: createCurrencyRatio(USD, MDAI)(180),
+  liquidationPrice: createCurrencyRatio(USD, LOL)(1.5),
+  collateralAvailableAmount: LOL(9.1),
+  collateralAvailableValue: USD(1820),
+  daiAvailable: MDAI(1213.33),
+  liquidationRatio,
+  liquidationPenalty: BigNumber('0.05'),
+  annualStabilityFee: BigNumber('0.04999999999989363'),
+  collateralValue,
+  collateralTypePrice: createCurrencyRatio(USD, LOL)('200'),
+  calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
+    math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
+  calculateCollateralizationRatio: ({ collateralValue: _collateralValue }) =>
+    math
+      .collateralizationRatio(_collateralValue, debtValue)
+      .times(100)
+      .toNumber()
 };
 
 test('basic rendering', () => {
   const showSidebar = jest.fn(() => {});
-  const { getByText } = renderWithStore(
-    <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
+  const { getByText } = renderWithProviders(
+    <Presentation
+      account={account}
+      showSidebar={showSidebar}
+      vault={mockVault}
+      cdpOwner={mockOwnerAddress}
+    />
   );
   getByText('9.10 LOL');
   getByText('1820.00 USD');
@@ -53,28 +77,44 @@ test('basic rendering', () => {
   getByText('1213.33 DAI');
 
   fireEvent.click(getByText('Deposit'));
-  expect(showSidebar).toBeCalledWith({ type: 'deposit', props: { cdpId: 1 } });
+  expect(showSidebar).toBeCalledWith({
+    type: 'deposit',
+    props: { vault: mockVault }
+  });
 });
 
 test('render liquidation price correctly when no debt', () => {
   const showSidebar = jest.fn(() => {});
-  const newCdp = { ...cdp, price: LOL(0), art: '0', ink: '0' };
-  const { getByText } = renderWithStore(
-    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  const newMockVault = {
+    ...mockVault,
+    liquidationPrice: createCurrencyRatio(USD, LOL)(Infinity),
+    collateralTypePrice: createCurrencyRatio(USD, LOL)('0')
+  };
+  const { getByText } = renderWithProviders(
+    <Presentation
+      account={account}
+      showSidebar={showSidebar}
+      vault={newMockVault}
+      cdpOwner={mockOwnerAddress}
+    />
   );
-  getByText('N/A');
+  getByText('N/A'); //liquidation price
   getByText('0.0000 USD');
 });
 
 test('reclaim banner rounds correctly when value is > 1', async () => {
   const showSidebar = jest.fn(() => {});
-  const newCdp = {
-    ...cdp,
-    gem: 'LOL',
+  const newMockVault = {
+    ...mockVault,
     unlockedCollateral: new BigNumber('213.1234567890123456')
   };
-  const { findByText } = renderWithStore(
-    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  const { findByText } = renderWithProviders(
+    <Presentation
+      account={account}
+      showSidebar={showSidebar}
+      vault={newMockVault}
+      cdpOwner={mockOwnerAddress}
+    />
   );
   // two decimal places for values > 1
   await findByText(/213.12 LOL/);
@@ -82,16 +122,20 @@ test('reclaim banner rounds correctly when value is > 1', async () => {
 
 test('reclaim banner rounds correctly when number is < 1', async () => {
   const showSidebar = jest.fn(() => {});
-  const newCdp = {
-    ...cdp,
-    gem: 'LOL',
+  const newMockVault = {
+    ...mockVault,
     unlockedCollateral: new BigNumber('0.1234567890123456')
   };
-  const { findByText } = renderWithStore(
-    <Presentation cdp={newCdp} account={account} showSidebar={showSidebar} />
+  const { findByText } = renderWithProviders(
+    <Presentation
+      account={account}
+      showSidebar={showSidebar}
+      vault={newMockVault}
+      cdpOwner={mockOwnerAddress}
+    />
   );
   // four decimal places for values < 1
-  await findByText(/0.1235 LOL/);
+  await findByText(/0.1234 LOL/);
 });
 
 describe('on mobile', () => {
@@ -113,6 +157,30 @@ describe('on mobile', () => {
   });
 
   test('render an action full-screen', async () => {
+    const mockVault2 = {
+      id: 9000,
+      debtValue,
+      collateralAmount: ETH(10),
+      collateralizationRatio: createCurrencyRatio(USD, MDAI)(180),
+      liquidationPrice: createCurrencyRatio(USD, ETH)(1.5),
+      collateralAvailableAmount: ETH(9.1),
+      collateralAvailableValue: USD(1820),
+      daiAvailable: MDAI(1213.33),
+      liquidationRatio,
+      liquidationPenalty: BigNumber('0.05'),
+      annualStabilityFee: BigNumber('0.04999999999989363'),
+      collateralValue,
+      collateralTypePrice: createCurrencyRatio(USD, ETH)('200'),
+      calculateLiquidationPrice: ({ collateralAmount: _collateralAmount }) =>
+        math.liquidationPrice(_collateralAmount, debtValue, liquidationRatio),
+      calculateCollateralizationRatio: ({
+        collateralValue: _collateralValue
+      }) =>
+        math
+          .collateralizationRatio(_collateralValue, debtValue)
+          .times(100)
+          .toNumber()
+    };
     const showSidebar = jest.fn();
     const {
       findByText,
@@ -121,26 +189,14 @@ describe('on mobile', () => {
       getByTestId
     } = renderWithMaker(
       <Fragment>
-        <Presentation cdp={cdp} account={account} showSidebar={showSidebar} />
+        <Presentation
+          account={account}
+          showSidebar={showSidebar}
+          vault={mockVault2}
+          cdpOwner={mockOwnerAddress}
+        />
         <div id="portal1" />
-      </Fragment>,
-      state => {
-        const newState = {
-          ...state,
-          cdps: {
-            '1': {
-              ilk: 'ETH-A',
-              ink: '2',
-              art: '5',
-              currency: {
-                symbol: 'ETH'
-              }
-            }
-          }
-        };
-        newState.feeds.find(i => i.key === 'ETH-A').rate = '1.5';
-        return newState;
-      }
+      </Fragment>
     );
     await waitForElement(() => getAllByText('Outstanding Dai debt'));
     fireEvent.click(getByText('Deposit'));

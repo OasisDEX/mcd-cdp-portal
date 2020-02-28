@@ -15,3 +15,9 @@ const mediaQueries = mqBreakpoints.reduce((acc, current) => {
 }, {});
 
 export { mediaQueries };
+
+export const decimalRules = {
+  long: 6,
+  medium: 4,
+  short: 2
+};

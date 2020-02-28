@@ -1,45 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
 import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import {
-  getCdp,
-  getDebtAmount,
-  getCollateralPrice,
-  getCollateralAmount
-} from 'reducers/cdps';
-import { calcCDPParams } from 'utils/cdp';
-import { add } from 'utils/bignumber';
-import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { multiply } from 'utils/bignumber';
+import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
+import BigNumber from 'bignumber.js';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
-const Deposit = ({ cdpId, reset }) => {
+const Deposit = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const { symbol } = cdp.currency;
-
-  const gemBalances = useWalletBalances();
-  const gemBalance = gemBalances[symbol] || 0;
-  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const { hasProxy } = useProxy();
 
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+  let {
+    vaultType,
+    collateralTypePrice,
+    collateralValue,
+    collateralAmount
+  } = vault;
 
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp, false);
-  const debtAmount = getDebtAmount(cdp);
+  const symbol = collateralAmount?.symbol;
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
+  const gemBalances = useWalletBalances();
+  const gemBalance = gemBalances[symbol] || 0;
 
   const [amount, , onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -59,28 +53,28 @@ const Deposit = ({ cdpId, reset }) => {
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
-
-  useEffect(() => {
-    let val = parseFloat(amount);
-    val = isNaN(val) ? 0 : val;
-    const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: add(collateralAmount, val),
-      daiToDraw: debtAmount
-    });
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp, collateralAmount, debtAmount]);
+  const amountToDeposit = amount || BigNumber(0);
 
   const deposit = () => {
+    const currency = getCurrency({ ilk: vaultType });
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .lock(cdpId, cdp.ilk, cdp.currency(amount)),
+        .lock(vault.id, vaultType, currency(amountToDeposit)),
       lang.formatString(lang.transactions.depositing_gem, symbol)
     );
     reset();
   };
+
+  const valueDiff = multiply(amountToDeposit, collateralTypePrice.toNumber());
+
+  const liquidationPrice = vault.calculateLiquidationPrice({
+    collateralAmount: collateralAmount.plus(amountToDeposit)
+  });
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.plus(valueDiff)
+  });
 
   return (
     <Grid gridRowGap="m">
@@ -127,18 +121,20 @@ const Deposit = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.current_account_balance}
-          body={`${gemBalance} ${symbol}`}
+          body={`${formatter(gemBalance, { precision: long })} ${symbol}`}
         />
         <Info
           title={lang.formatString(
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralPrice} ${symbol}/USD`}
+          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, symbol)}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

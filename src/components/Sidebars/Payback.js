@@ -1,34 +1,31 @@
 import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
-import round from 'lodash/round';
 import debug from 'debug';
 
-import { formatCollateralizationRatio, formatLiquidationPrice } from 'utils/ui';
-import { calcCDPParams } from 'utils/cdp';
-import { minimum } from 'utils/bignumber';
+import { formatCollateralizationRatio } from 'utils/ui';
 
 import useMaker from 'hooks/useMaker';
 import useProxy from 'hooks/useProxy';
-import useStore from 'hooks/useStore';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { safeToFixed } from '../../utils/ui';
-import { subtract, greaterThan, equalTo } from '../../utils/bignumber';
-
-import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
+import { formatter } from '../../utils/ui';
+import { subtract, greaterThan, equalTo, minimum } from '../../utils/bignumber';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
+import { BigNumber } from 'bignumber.js';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
 const log = debug('maker:Sidebars/Payback');
 
-const Payback = ({ cdpId, reset }) => {
+const Payback = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Payback', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
@@ -38,24 +35,20 @@ const Payback = ({ cdpId, reset }) => {
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const collateralAmount = getCollateralAmount(cdp, true, 9);
-  const debtAmount = getDebtAmount(cdp, true, 18);
-
-  const dustLimit = cdp.dust ? cdp.dust : 0;
-  const maxAmount = debtAmount && daiBalance && minimum(debtAmount, daiBalance);
+  let { debtValue, debtFloor, collateralAmount } = vault;
+  debtValue = debtValue.toBigNumber().decimalPlaces(18);
+  const symbol = collateralAmount?.symbol;
 
   // Amount being repaid can't result in a remaining debt lower than the dust
   // minimum unless the full amount is being repaid
   const dustLimitValidation = input =>
-    greaterThan(dustLimit, subtract(debtAmount, input)) &&
-    equalTo(input, debtAmount) !== true;
+    greaterThan(debtFloor, subtract(debtValue, input)) &&
+    equalTo(input, debtValue) !== true;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
     {
-      maxFloat: Math.min(daiBalance, debtAmount),
+      maxFloat: Math.min(daiBalance, debtValue),
       minFloat: 0,
       isFloat: true,
       custom: {
@@ -72,7 +65,7 @@ const Payback = ({ cdpId, reset }) => {
       dustLimit: () =>
         lang.formatString(
           lang.cdp_create.dust_max_payback,
-          subtract(debtAmount, dustLimit)
+          subtract(debtValue, debtFloor)
         ),
       allowanceInvalid: () =>
         lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
@@ -80,33 +73,44 @@ const Payback = ({ cdpId, reset }) => {
   );
 
   const amountToPayback = amount || 0;
-  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-    ilkData: cdp,
-    gemsToLock: collateralAmount,
-    daiToDraw: Math.max(subtract(debtAmount, amountToPayback), 0)
-  });
-  const setMax = () => setAmount(maxAmount);
+
+  // Don't enter more than the user's balance if there isn't enough to cover the debt.
+  const maxPaybackAmount =
+    debtValue && daiBalance && minimum(debtValue, daiBalance);
+  const setMax = () => setAmount(maxPaybackAmount.toString());
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
-    const owner = await cdpManager.getOwner(cdpId);
+    const owner = await cdpManager.getOwner(vault.id);
     if (!owner) {
-      log(`Unable to find owner of CDP #${cdpId}`);
+      log(`Unable to find owner of CDP #${vault.id}`);
       return;
     }
-    const wipeAll = debtAmount.toString() === amount;
+    const wipeAll = debtValue.toString() === amount;
     if (wipeAll) log('Calling wipeAll()');
     else log('Calling wipe()');
     newTxListener(
       wipeAll
-        ? cdpManager.wipeAll(cdpId, owner)
-        : cdpManager.wipe(cdpId, MDAI(amount), owner),
+        ? cdpManager.wipeAll(vault.id, owner)
+        : cdpManager.wipe(vault.id, MDAI(amount), owner),
       lang.transactions.pay_back_dai
     );
     reset();
   };
 
   const valid = amount && !amountErrors && hasProxy && hasAllowance;
+  const undercollateralized = debtValue.minus(amountToPayback).lt(0);
+
+  const liquidationPrice = undercollateralized
+    ? BigNumber(0)
+    : vault.calculateLiquidationPrice({
+        debtValue: MDAI(debtValue.minus(amountToPayback))
+      });
+  const collateralizationRatio = undercollateralized
+    ? Infinity
+    : vault.calculateCollateralizationRatio({
+        debtValue: MDAI(debtValue.minus(amountToPayback))
+      });
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -126,7 +130,10 @@ const Payback = ({ cdpId, reset }) => {
             <SetMax
               onClick={() => {
                 setMax();
-                trackBtnClick('SetMax', { maxAmount, setMax: true });
+                trackBtnClick('SetMax', {
+                  maxAmount: maxPaybackAmount.toString(),
+                  setMax: true
+                });
               }}
             />
           }
@@ -156,15 +163,18 @@ const Payback = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance && safeToFixed(daiBalance, 7)} DAI`}
+          body={`${daiBalance &&
+            formatter(daiBalance, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.dai_debt}
-          body={`${round(debtAmount, 6)} DAI`}
+          body={`${formatter(debtValue, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

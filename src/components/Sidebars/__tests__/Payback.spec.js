@@ -6,10 +6,14 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { createCurrencyRatio } from '@makerdao/currency';
+import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
+import * as math from '@makerdao/dai-plugin-mcd/dist/math';
+import waitForExpect from 'wait-for-expect';
 
 import Payback from '../Payback';
-import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
-import { renderWithMaker as render } from '../../../../test/helpers/render';
+import { renderWithMaker } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
@@ -19,34 +23,33 @@ jest.mock('react-navi', () => ({
 
 afterEach(cleanup);
 
-const setupMockState = state => {
-  const newState = {
-    ...state,
-    cdps: {
-      '1': {
-        ilk: 'ETH-A',
-        ink: '2',
-        art: '5',
-        currency: {
-          symbol: 'ETH'
-        }
-      }
-    }
-  };
-  newState.feeds.find(i => i.key === 'ETH-A').rate = '1.5';
-  return newState;
+const ILK = 'ETH-A';
+const LIQUIDATION_RATIO = '200';
+const COL_AMT = 300.123456789012345678;
+
+const collateralAmount = BAT(0); //only used to retrieve gem symbol
+const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
+const collateralValue = USD(12004.938271560493);
+
+const mockVault = {
+  id: 1,
+  collateralType: ILK,
+  debtValue: MDAI(0),
+  daiAvailable: MDAI(36.014814),
+  vaultType: ILK,
+  collateralAmount,
+  liquidationRatio,
+  collateralValue,
+  collateralAvailableAmount: BAT(COL_AMT),
+  collateralTypePrice: createCurrencyRatio(USD, BAT)(40.0),
+  calculateLiquidationPrice: ({ debtValue: _debtValue }) =>
+    math.liquidationPrice(collateralAmount, _debtValue, liquidationRatio),
+  calculateCollateralizationRatio: ({ debtValue: _debtValue }) =>
+    math
+      .collateralizationRatio(collateralValue, _debtValue)
+      .times(100)
+      .toNumber()
 };
-
-test('basic rendering', async () => {
-  const { getByText } = render(<Payback cdpId="1" />, setupMockState);
-
-  // this waits for the initial proxy & allowance check to finish
-  await waitForElement(() => getByText(/Unlock DAI/));
-
-  // these throw errors if they don't match anything
-  getByText('Pay Back DAI');
-  // getByText('7.5 DAI'); // art * rate from mock state
-});
 
 let web3;
 
@@ -68,11 +71,11 @@ const SetupProxyAndAllowance = () => {
     changeAccount();
   }, []);
 
-  return changedAccount ? <Payback cdpId="1" /> : <div />;
+  return changedAccount ? <Payback vault={mockVault} /> : <div />;
 };
 
 test('proxy toggle', async () => {
-  const { getByTestId } = render(<SetupProxyAndAllowance />, setupMockState);
+  const { getByTestId } = renderWithMaker(<SetupProxyAndAllowance />);
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))
@@ -93,18 +96,19 @@ test('proxy toggle', async () => {
   });
 
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.creating_proxy);
-  await mineBlocks(web3, 11);
-  expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
+  await waitForExpect(async () => {
+    await mineBlocks(web3, 3);
+    expect(proxyToggle).toHaveTextContent(lang.action_sidebar.proxy_created);
+  }, 20000);
 
-  expect(allowanceButton).toBeEnabled();
-}, 20000);
+  expect(allowanceToggle).toBeEnabled();
+}, 25000);
 
 // commented out for now because this doesn't seem to work well with allowances
 // from multicall
 xtest('allowance toggle', async () => {
-  const { getByTestId, queryByTestId } = render(
-    <SetupProxyAndAllowance />,
-    setupMockState
+  const { getByTestId, queryByTestId } = renderWithMaker(
+    <SetupProxyAndAllowance />
   );
 
   await waitForElement(() => getByTestId('toggle-container'));
@@ -125,4 +129,15 @@ xtest('allowance toggle', async () => {
   expect(allowanceToggle).toHaveTextContent(
     lang.formatString(lang.action_sidebar.token_unlocked, 'DAI')
   );
+});
+
+test('basic rendering', async () => {
+  const { getByText } = renderWithMaker(<Payback vault={mockVault} />);
+
+  // this waits for the initial proxy & allowance check to finish
+  await waitForElement(() => getByText(/Unlock DAI/));
+
+  // these throw errors if they don't match anything
+  getByText('Pay Back DAI');
+  // getByText('7.5 DAI'); // art * rate from mock state
 });

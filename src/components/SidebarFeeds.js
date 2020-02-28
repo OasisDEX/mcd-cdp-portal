@@ -28,29 +28,37 @@ const SidebarFeeds = ({ feeds }) => {
       </Flex>
 
       <CardBody mt="s2">
-        {feeds.map(
-          ({ pair, value }, index) =>
-            (!collapsed || index < 3) && (
-              <Flex
-                key={`feed_${pair}`}
-                justifyContent="space-between"
-                alignItems="baseline"
-                width="100%"
-                py="xs"
-                px="s"
-                bg={index % 2 ? 'coolGrey.100' : 'white'}
-              >
-                <Text color="darkLavender" fontWeight="semibold" t="smallCaps">
-                  {pair}
-                </Text>
-                <Text fontSize="1.4rem" color="darkPurple">
-                  {prettifyNumber(value)}
-                </Text>
-              </Flex>
-            )
-        )}
+        {feeds &&
+          feeds.map(
+            (value, index) =>
+              (!collapsed || index < 3) && (
+                <Flex
+                  key={`feed_${index}`}
+                  justifyContent="space-between"
+                  alignItems="baseline"
+                  width="100%"
+                  py="xs"
+                  px="s"
+                  bg={index % 2 ? 'coolGrey.100' : 'white'}
+                >
+                  <Text
+                    color="darkLavender"
+                    fontWeight="semibold"
+                    t="smallCaps"
+                  >
+                    {value.symbol
+                      .split('/')
+                      .reverse()
+                      .join('/')}
+                  </Text>
+                  <Text fontSize="1.4rem" color="darkPurple">
+                    {prettifyNumber(value)}
+                  </Text>
+                </Flex>
+              )
+          )}
       </CardBody>
-      {feeds.length > 3 && (
+      {feeds && feeds.length > 3 && (
         <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
           <Flex justifyContent="center" alignItems="center">
             {collapsed ? (

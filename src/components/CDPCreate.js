@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useMemo } from 'react';
+import React, { useReducer, useMemo } from 'react';
 import { hot } from 'react-hot-loader/root';
 import StepperUI from 'components/StepperUI';
 import StepperHeader from 'components/StepperHeader';
@@ -8,23 +8,25 @@ import {
   CDPCreateConfirmCDP,
   CDPCreateDeposit
 } from 'components/CDPCreateScreens';
-import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import useStore from 'hooks/useStore';
 import { TxLifecycle } from 'utils/constants';
+import useTokenAllowance from 'hooks/useTokenAllowance';
+import useWalletBalances from 'hooks/useWalletBalances';
+import { watch } from 'hooks/useObservable';
+import useCdpTypes from '../hooks/useCdpTypes';
+import useMaker from 'hooks/useMaker';
+import useProxy from 'hooks/useProxy';
 
 const initialState = {
   step: 0,
-  proxyAddress: null,
   selectedIlk: {
     userGemBalance: '',
     currency: null,
-    data: {},
-    key: ''
+    gem: null,
+    symbol: undefined
   },
   gemsToLock: '',
   daiToDraw: '',
-  targetCollateralizationRatio: '',
   txState: ''
 };
 
@@ -41,19 +43,14 @@ function reducer(state, action) {
         ...state,
         step: state.step - ((payload && payload.by) || 1)
       };
-    case 'set-proxy-address':
-      return {
-        ...state,
-        proxyAddress: payload.address
-      };
     case 'set-ilk':
       return {
         ...state,
         selectedIlk: {
+          gem: payload.gem,
+          symbol: payload.symbol,
           userGemBalance: payload.gemBalance,
-          currency: payload.currency,
-          data: payload.data,
-          key: payload.key
+          currency: payload.currency
         }
       };
     case 'reset-ilk':
@@ -65,11 +62,6 @@ function reducer(state, action) {
       return { ...state, gemsToLock: payload.value };
     case 'form/set-daiToDraw':
       return { ...state, daiToDraw: payload.value };
-    case 'form/set-targetCollateralizationRatio':
-      return {
-        ...state,
-        targetCollateralizationRatio: payload.value
-      };
     case 'transaction-confirmed':
       return { ...state, txState: TxLifecycle.CONFIRMED };
     case 'reset':
@@ -80,14 +72,24 @@ function reducer(state, action) {
 }
 
 function CDPCreate({ onClose }) {
-  const { maker, account } = useMaker();
   const { lang } = useLanguage();
-  const [
-    { step, selectedIlk, proxyAddress, ...cdpParams },
-    dispatch
-  ] = useReducer(reducer, initialState);
-  const [{ cdps }] = useStore();
-  const isFirstVault = Object.entries(cdps).length === 0 ? true : false;
+  const { account } = useMaker();
+  const { proxyAddress } = useProxy();
+  let [{ step, selectedIlk, ...cdpParams }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const { cdpTypesList } = useCdpTypes();
+  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
+
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
+    selectedIlk?.currency?.symbol
+  );
+
+  const balances = useWalletBalances();
+
+  const rawUserVaultsList = watch.userVaultsList(account?.address);
+  const isFirstVault = rawUserVaultsList?.length === 0 ? true : false;
 
   const screens = useMemo(
     () => [
@@ -111,23 +113,16 @@ function CDPCreate({ onClose }) {
     [lang]
   );
 
-  useEffect(() => {
-    const checkProxy = async () => {
-      try {
-        const address = await maker.service('proxy').currentProxy();
-        dispatch({ type: 'set-proxy-address', payload: { address } });
-      } catch (err) {}
-    };
-
-    checkProxy();
-  }, [maker, account]);
-
   const screenProps = {
     selectedIlk,
-    proxyAddress,
     cdpParams,
     isFirstVault,
     dispatch,
+    hasSufficientAllowance,
+    hasAllowance,
+    proxyAddress,
+    balances,
+    collateralTypesData,
     onClose
   };
 

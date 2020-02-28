@@ -1,12 +1,14 @@
-import useStore from 'hooks/useStore';
+import { useContext } from 'react';
+import { NotificationContext } from 'providers/NotificationProvider';
+
 import {
   RESET_NOTIFICATIONS,
   ADD_NOTIFICATION,
   DELETE_NOTIFICATION
-} from 'reducers/notifications';
+} from 'providers/NotificationProvider';
 
 function useNotification() {
-  const [{ notifications }, dispatch] = useStore();
+  const { notifications, dispatch } = useContext(NotificationContext);
 
   const dispatchNotification = ({ action, payload }) =>
     dispatch({

@@ -2,14 +2,14 @@ import { useReducer, useCallback } from 'react';
 import useMaker from 'hooks/useMaker';
 import useModal from 'hooks/useModal';
 import { AccountTypes } from 'utils/constants';
-import { addMkrAndEthBalance } from 'utils/ethereum';
+import { addTokenBalances } from 'utils/ethereum';
 
 const TREZOR_PATH = "44'/60'/0'/0/0";
 
 const computeAddressBalances = addresses =>
   Promise.all(
     addresses.map(address =>
-      addMkrAndEthBalance({
+      addTokenBalances({
         address
       })
     )

@@ -8,14 +8,8 @@ import {
   Card
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
-
-import { prettifyNumber } from 'utils/ui';
-import { getIlkData } from 'reducers/feeds';
-
-import useStore from 'hooks/useStore';
-import useWalletBalances from 'hooks/useWalletBalances';
+import { prettifyNumber, formatter } from 'utils/ui';
 import useCdpTypes from 'hooks/useCdpTypes';
-import { useTokenAllowances } from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
@@ -49,24 +43,28 @@ const CDPCreateSelectCollateralSidebar = () => {
   );
 };
 
-function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
-  const [{ feeds }] = useStore();
+function IlkTableRow({
+  ilk,
+  checked,
+  gemBalance,
+  isFirstVault,
+  dispatch,
+  ilkData
+}) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
-
-  ilk.data = getIlkData(feeds, ilk.key);
-
+  const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
   async function selectIlk() {
     trackInputChange('CollateralType', {
-      selectedCollateral: ilk.key,
+      selectedCollateral: ilk.symbol,
       isFirstVault
     });
     dispatch({
       type: 'set-ilk',
       payload: {
-        key: ilk.key,
+        gem: ilk.gem,
+        symbol: ilk.symbol,
         gemBalance,
-        currency: ilk.currency,
-        data: ilk.data
+        currency: ilk.currency
       }
     });
   }
@@ -84,9 +82,11 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
         />
       </td>
       <td>{ilk.symbol}</td>
-      <td>{ilk.data.stabilityFee} %</td>
-      <td>{ilk.data.liquidationRatio} %</td>
-      <td>{ilk.data.liquidationPenalty} %</td>
+      <td>
+        {formatter(annualStabilityFee, { integer: true, percentage: true })} %
+      </td>
+      <td>{formatter(liquidationRatio, { percentage: true })} %</td>
+      <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
       <td css="text-align: right">
         {prettifyNumber(gemBalance)} {ilk.gem}
       </td>
@@ -96,20 +96,17 @@ function IlkTableRow({ ilk, checked, gemBalance, isFirstVault, dispatch }) {
 
 const CDPCreateSelectCollateral = ({
   selectedIlk,
-  proxyAddress,
   isFirstVault,
+  hasAllowance,
+  proxyAddress,
+  balances,
+  collateralTypesData,
   dispatch
 }) => {
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
-  const balances = useWalletBalances();
-  const allowances = useTokenAllowances();
-  const hasAllowance =
-    selectedIlk.currency && allowances[selectedIlk.currency.symbol];
-  const ilkIsEth =
-    selectedIlk.currency && selectedIlk.currency.symbol === 'ETH';
-  const hasAllowanceAndProxy = (hasAllowance || ilkIsEth) && !!proxyAddress;
+  const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
     <Box
@@ -152,14 +149,18 @@ const CDPCreateSelectCollateral = ({
                 <tbody>
                   {cdpTypes.map(
                     ilk =>
+                      collateralTypesData &&
                       balances[ilk.gem] && (
                         <IlkTableRow
-                          key={ilk.key}
-                          checked={ilk.key === selectedIlk.key}
+                          key={ilk.symbol}
+                          checked={ilk.symbol === selectedIlk.symbol}
                           dispatch={dispatch}
                           ilk={ilk}
                           gemBalance={balances[ilk.gem]}
                           isFirstVault={isFirstVault}
+                          ilkData={collateralTypesData.find(
+                            x => x.symbol === ilk.symbol
+                          )}
                         />
                       )
                   )}
@@ -175,7 +176,7 @@ const CDPCreateSelectCollateral = ({
       <ScreenFooter
         onNext={() => {
           trackBtnClick('Next', {
-            selectedCollateral: selectedIlk.key,
+            selectedCollateral: selectedIlk.symbol,
             isFirstVault
           });
           dispatch({
@@ -188,7 +189,7 @@ const CDPCreateSelectCollateral = ({
           dispatch({ type: 'decrement-step' });
         }}
         canGoBack={false}
-        canProgress={!!selectedIlk.key}
+        canProgress={!!selectedIlk.symbol}
       />
     </Box>
   );
