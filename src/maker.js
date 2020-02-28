@@ -28,10 +28,6 @@ export async function instantiateMaker({
   backendEnv
 }) {
   const mcdPluginConfig = { cdpTypes, prefetch: false };
-  if (network === 'rinkeby') {
-    console.log('Overriding with Rinkeby Contracts');
-    mcdPluginConfig.addressOverrides = require('./references/rinkeby-contracts.json');
-  }
   const walletLinkPluginConfig = {
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
   };
