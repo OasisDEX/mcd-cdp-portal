@@ -204,7 +204,9 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    (symbol === 'DSR' ? (
+                    (symbol === 'DSR' &&
+                    url.pathname === `/${Routes.SAVE}` ? null : symbol ===
+                      'DSR' ? (
                       <Link href={`/${Routes.SAVE}${url.search}`}>
                         <ActionButton onClick={() => trackBtnClick('Withdraw')}>
                           {lang.actions.withdraw}
