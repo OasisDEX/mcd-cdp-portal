@@ -9,6 +9,8 @@ import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
 import { getQueryParamByName } from './utils/dev';
 
+import rinkebyAddresses from './references/contracts/rinkeby';
+
 let _maker;
 
 export function getMaker() {
@@ -42,7 +44,8 @@ export async function instantiateMaker({
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
-      addContracts: {}
+      addContracts: {},
+      addressOverrides: network === 'rinkeby' ? rinkebyAddresses : {}
     },
     provider: {
       url: rpcUrl,

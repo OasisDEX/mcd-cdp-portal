@@ -3,22 +3,26 @@
   "rpcUrls": {
     "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "https://rinkeby.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "999": "http://localhost:2000",
     "1337": "http://localhost:2000"
   },
   "wsRpcUrls": {
     "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
+    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "wss://rinkeby.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
   },
   "networkNames": {
     "1": "mainnet",
     "42": "kovan",
+    "4": "rinkeby",
     "999": "testnet",
     "1337": "testnet"
   },
   "networkDisplayNames": {
     "1": "Mainnet",
     "42": "Kovan Testnet",
+    "4": "Rinkeby Testnet",
     "999": "Testchain",
     "1337": "Ex_Testchain"
   },

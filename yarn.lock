@@ -1639,10 +1639,10 @@
     babel-runtime "^6.26.0"
     walletlink "^1.0.0"
 
-"@makerdao/dai@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.26.0.tgz#63215d35445c40c37f2c40e6d07acb2b8b9ab740"
-  integrity sha512-949O2KWHJZttEHaStGgsFXZgIr6oS3plVWooQuBxqlXoBEkM/AquE94hg2pMDNsXmj6r4ma9BxVdvruTBIf8iw==
+"@makerdao/dai@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.27.0.tgz#e5d991041a932f08e28a7907534601d6517bf35e"
+  integrity sha512-uPljw9pJndWw1xy/yNFeREWOWO9RUhewuaFnBd0/++hGEvnQFSBgaNEu5ZRtRUQKtEuYb4PVZfdPgBvt+Ux1yA==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
@@ -14820,7 +14820,7 @@ web3-net@1.2.1:
     web3-core-method "1.2.1"
     web3-utils "1.2.1"
 
-web3-provider-engine@14.0.4, web3-provider-engine@makerdao/provider-engine#kovan-fix-dist:
+web3-provider-engine@14.0.4, "web3-provider-engine@github:makerdao/provider-engine#kovan-fix-dist":
   version "14.0.4"
   resolved "https://codeload.github.com/makerdao/provider-engine/tar.gz/7c4b187809f156409473246de15dc595e1fe3356"
   dependencies:
