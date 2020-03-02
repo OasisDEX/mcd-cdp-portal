@@ -58,7 +58,6 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
         proxyDeployed={proxyDeployed}
         proxyErrors={proxyErrors}
         hasProxy={hasProxy}
-        startingBlockHeight={startingBlockHeight}
         setAllowance={setAllowance}
         hasAllowance={hasAllowance}
         isSettingAllowance={isSettingAllowance}

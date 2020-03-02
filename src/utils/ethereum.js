@@ -38,15 +38,11 @@ export const addTokenBalances = async account => {
     ...account,
     ethBalance: round(
       await toNum(window.maker.getToken(ETH).balanceOf(account.address)),
-      3
-    ),
-    daiBalance: round(
-      await toNum(window.maker.getToken(MDAI).balanceOf(account.address)),
-      3
+      2
     ),
     batBalance: round(
       await toNum(window.maker.getToken(BAT).balanceOf(account.address)),
-      3
+      2
     )
   };
 };

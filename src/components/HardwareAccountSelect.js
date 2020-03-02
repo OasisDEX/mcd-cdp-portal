@@ -105,12 +105,11 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
               <th>Address</th>
               <th>ETH</th>
               <th>BAT</th>
-              <th>DAI</th>
             </tr>
           </thead>
           <tbody>
             {renderedAccounts.map(
-              ({ address, ethBalance, batBalance, daiBalance }, index) => (
+              ({ address, ethBalance, batBalance }, index) => (
                 <tr key={address}>
                   <td>
                     <Flex justifyContent="center">
@@ -138,7 +137,6 @@ function HardwareAccountSelect({ type, path, onClose, confirmAddress }) {
                   </td>
                   <td>{ethBalance} ETH</td>
                   <td>{batBalance} BAT</td>
-                  <td>{daiBalance} DAI</td>
                 </tr>
               )
             )}
