@@ -1,5 +1,5 @@
 import round from 'lodash/round';
-import { ETH, MDAI, BAT } from '../maker';
+import { ETH, BAT } from '../maker';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 

@@ -10,8 +10,25 @@ import { networkNameToId } from './utils/network';
 import { getQueryParamByName } from './utils/dev';
 
 import rinkebyAddresses from './references/contracts/rinkeby';
+import goerliAddresses from './references/contracts/goerli';
+import ropstenAddresses from './references/contracts/ropsten';
 
 let _maker;
+
+const otherNetworksOverrides = [
+  {
+    network: 'rinkeby',
+    contracts: rinkebyAddresses
+  },
+  { network: 'goerli', contracts: goerliAddresses },
+  { network: 'ropsten', contracts: ropstenAddresses }
+].reduce((acc, { network, contracts }) => {
+  for (const [contractName, contractAddress] of Object.entries(contracts)) {
+    if (!acc[contractName]) acc[contractName] = {};
+    acc[contractName][network] = contractAddress;
+  }
+  return acc;
+}, {});
 
 export function getMaker() {
   if (_maker === undefined) throw new Error('Maker has not been instatiated');
@@ -29,7 +46,11 @@ export async function instantiateMaker({
   testchainId,
   backendEnv
 }) {
-  const mcdPluginConfig = { cdpTypes, prefetch: false };
+  const mcdPluginConfig = {
+    cdpTypes,
+    prefetch: false,
+    addressOverrides: otherNetworksOverrides
+  };
   const walletLinkPluginConfig = {
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
   };
@@ -44,8 +65,7 @@ export async function instantiateMaker({
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
-      addContracts: {},
-      addressOverrides: network === 'rinkeby' ? rinkebyAddresses : {}
+      addressOverrides: otherNetworksOverrides
     },
     provider: {
       url: rpcUrl,
