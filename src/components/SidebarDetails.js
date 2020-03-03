@@ -18,7 +18,9 @@ const SidebarDetails = ({ system, savings }) => {
 
   const DAI_SAVINGS_RATE = ({ system }) => [
     lang.sidebar.save_details.dai_savings_rate,
-    formatter(system.annualDaiSavingsRate) + '%'
+    system.annualDaiSavingsRate
+      ? formatter(system.annualDaiSavingsRate) + '%'
+      : ''
   ];
 
   const params = [TOTAL_DAI_SUPPLY, TOTAL_SAVINGS_DAI, DAI_SAVINGS_RATE].map(
