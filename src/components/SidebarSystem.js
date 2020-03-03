@@ -23,10 +23,12 @@ const SidebarSystem = ({ system }) => {
     ],
     [
       lang.sidebar.active_cdps,
-      lang.formatString(
-        lang.sidebar.active_cdps_figure,
-        prettifyNumber(parseInt(totalVaultsCreated))
-      )
+      totalVaultsCreated
+        ? lang.formatString(
+            lang.sidebar.active_cdps_figure,
+            prettifyNumber(parseInt(totalVaultsCreated))
+          )
+        : ''
     ]
   ];
 
