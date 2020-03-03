@@ -49,7 +49,7 @@ export async function instantiateMaker({
   const mcdPluginConfig = {
     cdpTypes,
     prefetch: false,
-    addressOverrides: otherNetworksOverrides
+    addressOverrides: network !== 'testnet' ? otherNetworksOverrides : {}
   };
   const walletLinkPluginConfig = {
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
@@ -65,7 +65,7 @@ export async function instantiateMaker({
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
-      addressOverrides: otherNetworksOverrides
+      addressOverrides: network !== 'testnet' ? otherNetworksOverrides : {}
     },
     provider: {
       url: rpcUrl,

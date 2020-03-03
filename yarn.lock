@@ -1602,9 +1602,9 @@
     web3-provider-engine "14.0.4"
 
 "@makerdao/dai-plugin-mcd@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.2.1.tgz#3b23ee78eff6765f0ffc6437f870dc98c0fb4da6"
-  integrity sha512-wnZte0M4BFibzQo2owePQ7HmXyHeSGy1rfBDciyYswI7/8N95QMGT+DWnJo1YPZcgSAKzvb5k0BncitqmvhuYg==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.3.0.tgz#ca26a394ef6d2fab777f7bf44dca6110986edd96"
+  integrity sha512-NFw4Lf8JJPhh8dHFzngDaPC7NE9nEh2oYioEqb+fOQV/dSny8X3ds1wqI97btTEqDqLaJUjN8r5618lb0TfUmQ==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/services-core" "^0.9.9"
