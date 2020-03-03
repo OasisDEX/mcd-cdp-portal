@@ -46,10 +46,16 @@ export async function instantiateMaker({
   testchainId,
   backendEnv
 }) {
+  const addressOverrides = ['rinkeby', 'ropsten', 'goerli'].some(
+    networkName => networkName === network
+  )
+    ? otherNetworksOverrides
+    : {};
+
   const mcdPluginConfig = {
     cdpTypes,
     prefetch: false,
-    addressOverrides: network !== 'testnet' ? otherNetworksOverrides : {}
+    addressOverrides
   };
   const walletLinkPluginConfig = {
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
@@ -65,7 +71,7 @@ export async function instantiateMaker({
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
-      addressOverrides: network !== 'testnet' ? otherNetworksOverrides : {}
+      addressOverrides
     },
     provider: {
       url: rpcUrl,
