@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { MakerObjectContext } from '../providers/MakerProvider';
 
@@ -19,13 +19,7 @@ function useMaker() {
     navigation
   } = useContext(MakerObjectContext) || {};
 
-  function isConnectedToProvider(provider) {
-    return (
-      maker.service('accounts').hasAccount() &&
-      !!provider.address &&
-      provider.address === maker.currentAddress()
-    );
-  }
+  const [walletSubprovider, setWalletSubrovider] = useState(null);
 
   const connectToProviderOfType = async type => {
     const account = await maker.addAccount({
@@ -33,6 +27,8 @@ function useMaker() {
     });
     maker.useAccountWithAddress(account.address);
     const connectedAddress = maker.currentAddress();
+    const walletSubprovider = maker.service('accounts').currentWallet();
+    setWalletSubrovider(walletSubprovider);
     return connectedAddress;
   };
 
@@ -40,7 +36,6 @@ function useMaker() {
     maker,
     watcher,
     authenticated: true,
-    isConnectedToProvider,
     connectBrowserProvider,
     connectToProviderOfType,
     account,
@@ -52,7 +47,8 @@ function useMaker() {
     selectors,
     network,
     txLastUpdate,
-    navigation
+    navigation,
+    walletSubprovider
   };
 }
 

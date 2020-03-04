@@ -396,6 +396,7 @@ export default {
     default: 'Please enter a valid input'
   },
   connect: 'Connect',
+  disconnect: 'Disconnect',
   view: 'View',
   exit: 'Exit',
   close: 'Close',
@@ -445,7 +446,8 @@ export default {
     trezor: 'Trezor',
     other: 'Active Wallet',
     ledger: 'Ledger',
-    walletconnect: 'Wallet Connect'
+    walletconnect: 'Wallet Connect',
+    walletlink: 'Coinbase Wallet'
   },
   notifications: {
     claim: 'Claim',

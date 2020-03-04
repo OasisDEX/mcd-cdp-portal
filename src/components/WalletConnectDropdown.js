@@ -38,7 +38,8 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     account,
     connectBrowserProvider,
     connectToProviderOfType,
-    navigation
+    navigation,
+    walletSubprovider
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
@@ -176,6 +177,18 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             {lang.landing_page.wallet_link}
           </Option>
         </BrowserView>
+        {walletSubprovider && (
+          <BrowserView>
+            <Option
+              onClick={() => {
+                walletSubprovider.close();
+                close();
+              }}
+            >
+              {lang.disconnect}
+            </Option>
+          </BrowserView>
+        )}
       </Card>
     </Dropdown>
   );
