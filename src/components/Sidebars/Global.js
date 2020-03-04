@@ -3,30 +3,60 @@ import SidebarFeeds from 'components/SidebarFeeds';
 import SidebarSystem from 'components/SidebarSystem';
 import SidebarDetails from 'components/SidebarDetails';
 import { Box, Grid } from '@makerdao/ui-components-core';
-import { getAllFeeds } from 'reducers/feeds';
-import useStore from 'hooks/useStore';
 import { useCurrentRoute } from 'react-navi';
-import { Routes } from '../../utils/constants';
+import { Routes } from 'utils/constants';
+import useCdpTypes from 'hooks/useCdpTypes';
+import { watch } from 'hooks/useObservable';
 
 const SidebarGlobalPanel = () => {
-  const [{ system, feeds, savings }] = useStore();
+  const { cdpTypesList } = useCdpTypes();
+  const prices = watch.collateralTypesPrices(cdpTypesList);
+  const totalDaiSupply = watch.totalDaiSupply();
+  const totalVaultsCreated = watch.vaultsCreated();
+  const totalDaiLockedInDsr = watch.totalDaiLockedInDsr();
+  const annualDaiSavingsRate = watch.annualDaiSavingsRate();
+  const systemCollateralization = watch.systemCollateralization(cdpTypesList);
+
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
   const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);
 
   return useMemo(() => {
-    const uniqueFeeds = getAllFeeds(feeds, [feeds]);
-
     return (
       <Box>
         <Grid gridRowGap="s">
-          {routeIsBorrow && <SidebarFeeds feeds={uniqueFeeds} />}
-          {routeIsBorrow && <SidebarSystem system={system} />}
-          {routeIsSave && <SidebarDetails system={system} savings={savings} />}
+          {routeIsBorrow && <SidebarFeeds feeds={prices} />}
+          {routeIsBorrow && (
+            <SidebarSystem
+              system={{
+                totalDaiSupply,
+                totalVaultsCreated,
+                systemCollateralization
+              }}
+            />
+          )}
+          {routeIsSave && (
+            <SidebarDetails
+              system={{
+                totalDaiSupply,
+                totalDaiLockedInDsr,
+                annualDaiSavingsRate
+              }}
+            />
+          )}
         </Grid>
       </Box>
     );
-  }, [feeds, routeIsBorrow, system, savings, routeIsSave]);
+  }, [
+    routeIsBorrow,
+    routeIsSave,
+    prices,
+    totalDaiSupply,
+    totalVaultsCreated,
+    totalDaiLockedInDsr,
+    annualDaiSavingsRate,
+    systemCollateralization
+  ]);
 };
 
 export default SidebarGlobalPanel;

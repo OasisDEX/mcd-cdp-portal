@@ -8,6 +8,7 @@ import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
+import SaveOverview from 'pages/SaveOverview';
 import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
 import CDPDisplay from 'components/CDPDisplay';
@@ -16,7 +17,8 @@ import { ModalProvider } from 'providers/ModalProvider';
 import { SidebarProvider } from 'providers/SidebarProvider';
 import { ToggleProvider } from 'providers/ToggleProvider';
 import MakerProvider from 'providers/MakerProvider';
-
+import VaultsProvider from 'providers/VaultsProvider';
+import NotificationProvider from 'providers/NotificationProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
@@ -41,20 +43,24 @@ const withBorrowLayout = route =>
         viewedAddress={viewedAddress}
       >
         <RouteEffects network={network} />
-        <ToggleProvider>
-          <ModalProvider modals={modals} templates={templates}>
-            <SidebarProvider>
-              <BorrowLayout
-                mobileNav={
-                  <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
-                }
-                navbar={<Navbar viewedAddress={viewedAddress} />}
-              >
-                <View />
-              </BorrowLayout>
-            </SidebarProvider>
-          </ModalProvider>
-        </ToggleProvider>
+        <NotificationProvider>
+          <VaultsProvider viewedAddress={viewedAddress}>
+            <ToggleProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <SidebarProvider>
+                  <BorrowLayout
+                    mobileNav={
+                      <MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />
+                    }
+                    navbar={<Navbar viewedAddress={viewedAddress} />}
+                  >
+                    <View />
+                  </BorrowLayout>
+                </SidebarProvider>
+              </ModalProvider>
+            </ToggleProvider>
+          </VaultsProvider>
+        </NotificationProvider>
       </MakerProvider>
     );
   }, route);
@@ -88,7 +94,17 @@ export default mount({
   ),
 
   [`/${Routes.SAVE}`]: withBorrowLayout(
-    route(() => ({ title: 'Save', view: <Save /> }))
+    route(() => ({ title: 'Save', view: <SaveOverview /> }))
+  ),
+
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: withBorrowLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
+      return {
+        title: 'Save',
+        view: <Save viewedAddress={viewedAddress} />
+      };
+    })
   ),
 
   [`/${Routes.TRADE}`]: route(() => {

@@ -7,16 +7,16 @@ function useMaker() {
     maker,
     watcher,
     account,
-    viewedAddressData,
+    viewedAddress,
     transactions,
     newTxListener,
     resetTx,
     hideTx,
     selectors,
     network,
-    checkForNewCdps,
     txLastUpdate,
-    connectBrowserProvider
+    connectBrowserProvider,
+    navigation
   } = useContext(MakerObjectContext) || {};
 
   function isConnectedToProvider(provider) {
@@ -43,16 +43,16 @@ function useMaker() {
     isConnectedToProvider,
     connectBrowserProvider,
     connectToProviderOfType,
-    checkForNewCdps,
     account,
-    viewedAddressData,
+    viewedAddress,
     transactions,
     newTxListener,
     resetTx,
     hideTx,
     selectors,
     network,
-    txLastUpdate
+    txLastUpdate,
+    navigation
   };
 }
 

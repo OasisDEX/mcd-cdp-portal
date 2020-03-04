@@ -4,7 +4,7 @@ import { waitForElement, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
 import Overview from '../Overview';
-import { renderWithAccount } from '../../../test/helpers/render';
+import { renderWithVaults } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import styled from 'styled-components';
 
@@ -34,32 +34,12 @@ beforeAll(async () => {
     .openLockAndDraw(ILK, ETH(VAULT2_ETH), MDAI(VAULT2_ART));
 });
 
-function prepState(state) {
-  return {
-    ...state,
-    cdps: {
-      1: {
-        ilk: ILK,
-        ink: VAULT1_ETH,
-        art: VAULT1_ART
-      },
-      2: {
-        ilk: ILK,
-        ink: VAULT2_ETH,
-        art: VAULT2_ART
-      }
-    }
-  };
-}
-
 afterEach(cleanup);
 
 test('render overview page and display calculated vault values', async () => {
-  const { getByText, getAllByText } = await renderWithAccount(
+  const { getByText, getAllByText } = await renderWithVaults(
     <Overview viewedAddress={VIEWED_ADDRESS} />,
-    prepState,
-    null,
-    { viewedAddress: VIEWED_ADDRESS }
+    VIEWED_ADDRESS
   );
 
   await waitForElement(() => getByText('Overview'));

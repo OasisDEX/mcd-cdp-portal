@@ -216,7 +216,13 @@ export default {
       "Waiting for confirmations reduces the risk of your Vault address changing. We require users to wait 10 block confirmations to ensure it's been created successfully. This will often take around 2 minutes.",
     proxy_failure_not_mined: 'This transaction is taking longer than usual...',
     proxy_failure_not_mined_info:
-      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later'
+      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later.',
+    proxy_failure_contract_data: 'There was an error with your Ledger wallet...',
+    proxy_failure_contract_data_info:
+      'If you see this message and are using a Ledger hardware wallet, it often means that you need to enable "Contract Data." To do this, go to your Ethereum app on Ledger, choose Settings and then Contract Data.',
+    proxy_failure_rejected: 'The transaction has been rejected on the wallet',
+    proxy_failure_timeout: 'Your transaction timed out and was automatically rejected',
+    proxy_failure_timeout_info: 'This error is often caused because you did not sign the transaction in a reasonable time, and it has been automatically rejected by the wallet. Where this has happened, you often still need to reject the transaction yourself on the wallet to allow you to sign another.',
   },
   cdp_migrate: {
     select_title: 'Select Vault to Migrate',
@@ -264,7 +270,8 @@ export default {
     generate: 'Generate',
     send: 'Send',
     skip: 'Skip',
-    get_started: 'Get Started'
+    get_started: 'Get Started',
+    try_again: 'Try Again'
   },
   actions_past_tense: {
     deposit: 'Deposited',
@@ -346,7 +353,9 @@ export default {
     dai_locked_dsr: 'DAI locked in DSR',
     deposit_withdraw: 'Deposit and withdraw',
     deposit_btn_cta: 'Receive savings on your Dai. Deposit at any time',
-    withdraw_btn_cta: 'Safely withdraw your Dai at any time'
+    withdraw_btn_cta: 'Safely withdraw your Dai at any time',
+    no_savings:
+      "This address either doesn't exist or has no DSR account history"
   },
   verbs: {
     depositing: 'Depositing',
@@ -444,6 +453,8 @@ export default {
     non_vault_owner:
       'The owner of this position ({0}) does not match the connected walleted address',
     non_overview_owner:
-      'You are currently viewing the Overview of another address ({0})'
+      'You are currently viewing the Overview of another address ({0})',
+    non_savings_owner:
+      'You are currently viewing the savings of another address ({0})'
   }
 };

@@ -1,46 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import BigNumber from 'bignumber.js';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import useMaker from '../../hooks/useMaker';
-import { calcCDPParams } from '../../utils/cdp';
-import { subtract, greaterThan } from '../../utils/bignumber';
-import useStore from 'hooks/useStore';
-import useValidatedInput from 'hooks/useValidatedInput';
-import useLanguage from 'hooks/useLanguage';
-import useAnalytics from 'hooks/useAnalytics';
-import {
-  getCdp,
-  getDebtAmount,
-  getCollateralAmount,
-  getCollateralPrice,
-  getCollateralAvailableAmount
-} from 'reducers/cdps';
-import {
-  formatCollateralizationRatio,
-  formatLiquidationPrice,
-  safeToFixed
-} from '../../utils/ui';
 import SetMax from 'components/SetMax';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import useMaker from 'hooks/useMaker';
+import useLanguage from 'hooks/useLanguage';
+import useAnalytics from 'hooks/useAnalytics';
+import useValidatedInput from 'hooks/useValidatedInput';
+import { greaterThan, multiply } from 'utils/bignumber';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { getCurrency } from 'utils/cdp';
+import { decimalRules } from '../../styles/constants';
+const { long } = decimalRules;
 
-const Withdraw = ({ cdpId, reset }) => {
+const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
   const { maker, newTxListener } = useMaker();
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
 
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const { liquidationRatio } = cdp;
-  const collateralAvailableAmount = getCollateralAvailableAmount(cdp, false);
-  const collateralPrice = getCollateralPrice(cdp);
-  const collateralAmount = getCollateralAmount(cdp, false);
-  const debtAmount = getDebtAmount(cdp);
+  let {
+    vaultType,
+    liquidationRatio,
+    collateralAvailableAmount,
+    collateralTypePrice,
+    collateralAmount,
+    collateralValue,
+    encumberedCollateral,
+    encumberedDebt: debtAmount
+  } = vault;
+  BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+  collateralAvailableAmount = collateralAvailableAmount.toBigNumber();
+  collateralValue = collateralValue.toBigNumber();
 
-  const { symbol } = cdp.currency;
+  const symbol = collateralAmount?.symbol;
 
   const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
     '',
@@ -54,31 +49,40 @@ const Withdraw = ({ cdpId, reset }) => {
     }
   );
 
-  const setMax = () => setAmount(collateralAvailableAmount);
+  const amountToWithdraw = amount || BigNumber(0);
   const undercollateralized =
     amount && greaterThan(amount, collateralAvailableAmount);
 
-  useEffect(() => {
-    let val = parseFloat(amount);
-    val = isNaN(val) ? 0 : val;
-    const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: subtract(collateralAmount, val),
-      daiToDraw: debtAmount
-    });
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp, collateralAmount, debtAmount]);
+  const setMax = () => setAmount(collateralAvailableAmount);
 
+  const currency = getCurrency({ ilk: vaultType });
   const withdraw = () => {
     newTxListener(
       maker
         .service('mcd:cdpManager')
-        .wipeAndFree(cdpId, cdp.ilk, MDAI(0), cdp.currency(amount)),
+        .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amountToWithdraw)),
       lang.formatString(lang.transactions.withdrawing_gem, symbol)
     );
     reset();
   };
+
+  const valueDiff = multiply(amountToWithdraw, collateralTypePrice.toNumber());
+
+  const liquidationPrice =
+    undercollateralized || debtAmount.eq(0)
+      ? BigNumber(0)
+      : vault.calculateLiquidationPrice({
+          collateralAmount: currency(
+            encumberedCollateral.minus(amountToWithdraw)
+          )
+        });
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    collateralValue: collateralValue.minus(valueDiff).gte(0)
+      ? currency(collateralValue.minus(valueDiff))
+      : currency(0)
+  });
+
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -100,7 +104,7 @@ const Withdraw = ({ cdpId, reset }) => {
                 onClick={() => {
                   setMax();
                   trackBtnClick('SetMax', {
-                    collateralAvailableAmount,
+                    collateralAvailableAmount: collateralAvailableAmount.toString(),
                     setMax: true
                   });
                 }}
@@ -111,8 +115,8 @@ const Withdraw = ({ cdpId, reset }) => {
         />
         <RatioDisplay
           type={RatioDisplayTypes.CARD}
-          ratio={collateralizationRatio}
-          ilkLiqRatio={liquidationRatio}
+          ratio={formatter(collateralizationRatio)}
+          ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
           text={lang.action_sidebar.withdraw_warning}
           onlyWarnings={true}
           show={amount !== '' && amount > 0 && !undercollateralized}
@@ -142,28 +146,29 @@ const Withdraw = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_withdraw}
-          body={`${safeToFixed(collateralAvailableAmount, 7)} ${symbol}`}
+          body={`${formatter(collateralAvailableAmount, {
+            precision: long
+          })} ${symbol}`}
         />
         <Info
           title={lang.formatString(
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${collateralPrice} ${symbol}/USD`}
+          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+          body={`${formatter(liquidationPrice)} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
-              ratio={collateralizationRatio}
-              ilkLiqRatio={liquidationRatio}
+              ratio={formatter(collateralizationRatio)}
+              ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
-              show={amount !== '' && amount > 0 && !undercollateralized}
             />
           }
         />
