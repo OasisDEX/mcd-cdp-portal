@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Card, Table, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
@@ -39,6 +39,42 @@ export default function({
   const pxBreakpoint = parseInt(theme.breakpoints.m) * emSize;
   const overflowX =
     document.documentElement.clientWidth > pxBreakpoint ? 'hidden' : 'scroll';
+  const fadeInRows = useMemo(
+    () =>
+      rows?.length > 0
+        ? rows.map(([actionMsg, dateOfAction, txHash], i) => (
+            <RowFadeIn key={i}>
+              <td
+                css={`
+                  white-space: nowrap;
+                  max-width: 205px;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                `}
+              >
+                <Text color="darkLavender" t="caption">
+                  {actionMsg}
+                </Text>
+              </td>
+              <td
+                css={`
+                  white-space: nowrap;
+                `}
+              >
+                <Text color="darkLavender" t="caption">
+                  {dateOfAction}
+                </Text>
+              </td>
+              <td>
+                <Text t="caption" color="blue">
+                  {txHash}
+                </Text>
+              </td>
+            </RowFadeIn>
+          ))
+        : null,
+    [rows]
+  );
 
   return (
     <Box>
@@ -77,37 +113,8 @@ export default function({
                   </Text>
                 </td>
               </tr>
-            ) : rows && rows.length > 0 ? (
-              rows.map(([actionMsg, dateOfAction, txHash], i) => (
-                <RowFadeIn key={i}>
-                  <td
-                    css={`
-                      white-space: nowrap;
-                      max-width: 205px;
-                      text-overflow: ellipsis;
-                      overflow: hidden;
-                    `}
-                  >
-                    <Text color="darkLavender" t="caption">
-                      {actionMsg}
-                    </Text>
-                  </td>
-                  <td
-                    css={`
-                      white-space: nowrap;
-                    `}
-                  >
-                    <Text color="darkLavender" t="caption">
-                      {dateOfAction}
-                    </Text>
-                  </td>
-                  <td>
-                    <Text t="caption" color="blue">
-                      {txHash}
-                    </Text>
-                  </td>
-                </RowFadeIn>
-              ))
+            ) : fadeInRows ? (
+              fadeInRows
             ) : (
               <tr key={0}>
                 <td colSpan="3">
