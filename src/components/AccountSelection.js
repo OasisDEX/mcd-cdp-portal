@@ -25,12 +25,12 @@ const StyledLedgerLogo = styled(LedgerLogo)`
   margin-bottom: -5px;
 `;
 
-const StyledTrezorLogo = styled(TrezorLogo)`
+export const StyledTrezorLogo = styled(TrezorLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
 `;
 
-const StyledWalletConnectLogo = styled(WalletConnectLogo)`
+export const StyledWalletConnectLogo = styled(WalletConnectLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
 `;
