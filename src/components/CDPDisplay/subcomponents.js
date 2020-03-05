@@ -8,6 +8,7 @@ import {
   Text
 } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
+import TextMono from 'components/TextMono';
 
 const WithSeparators = styled(Box).attrs(() => ({
   borderBottom: '1px solid',
@@ -28,7 +29,7 @@ export const InfoContainerRow = ({ title, value }) => {
         alignItems="center"
       >
         <Text t="body">{title}</Text>
-        <Text t="body">{value}</Text>
+        <TextMono t="body">{value}</TextMono>
       </Grid>
     </WithSeparators>
   );
@@ -54,7 +55,7 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
         >
           {title}
         </Text>
-        <Text
+        <TextMono
           css={`
             grid-column: 2;
             grid-row: ${conversion ? '1' : 'span 2'};
@@ -64,7 +65,7 @@ export const ActionContainerRow = ({ title, value, conversion, button }) => {
           justifySelf="end"
         >
           {value}
-        </Text>
+        </TextMono>
         {conversion ? (
           <ExtraInfo
             css={`
@@ -111,18 +112,18 @@ export const CdpViewCard = ({ title, children }) => {
 export const AmountDisplay = ({ amount, denomination }) => {
   return (
     <>
-      <Text t="h3" lineHeight="1">
+      <TextMono t="h3" lineHeight="1">
         {amount}&nbsp;
-      </Text>
-      <Text t="h5">{denomination} &nbsp;</Text>
+      </TextMono>
+      <TextMono t="h5">{denomination} &nbsp;</TextMono>
     </>
   );
 };
 
 export const ExtraInfo = ({ children, ...props }) => {
   return (
-    <Text t="caption" lineHeight="none" color="steel" {...props}>
+    <TextMono t="caption" lineHeight="none" color="steel" {...props}>
       {children}
-    </Text>
+    </TextMono>
   );
 };

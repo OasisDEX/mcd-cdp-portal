@@ -18,7 +18,7 @@ import ScreenHeader from '../ScreenHeader';
 import { prettifyNumber } from 'utils/ui';
 import { TxLifecycle } from 'utils/constants';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-
+import TextMono from 'components/TextMono';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { ReactComponent as SpaceshipIllustration } from 'images/spaceship.svg';
 
@@ -58,13 +58,13 @@ const DSRDepositConfirmSummary = ({
                 color="grey.200"
               >
                 <Text>{title}</Text>
-                <Text
+                <TextMono
                   fontWeight="bold"
                   css="white-space: nowrap"
                   textAlign={{ s: 'right', m: 'left' }}
                 >
                   {value}
-                </Text>
+                </TextMono>
               </Grid>
             );
           })}

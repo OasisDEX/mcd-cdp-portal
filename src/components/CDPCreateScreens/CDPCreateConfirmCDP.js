@@ -24,6 +24,7 @@ import styled from 'styled-components';
 import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import { BigNumber } from 'bignumber.js';
+import TextMono from 'components/TextMono';
 
 const StyledExternalLink = styled(ExternalLinkIcon)`
   path {
@@ -109,13 +110,13 @@ const CDPCreateConfirmSummary = ({
                 color="grey.200"
               >
                 <Text>{title}</Text>
-                <Text
+                <TextMono
                   fontWeight="bold"
                   css="white-space: nowrap"
                   textAlign={'right'}
                 >
                   {value}
-                </Text>
+                </TextMono>
               </Grid>
             );
           })}

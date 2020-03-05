@@ -10,6 +10,7 @@ import useLanguage from 'hooks/useLanguage';
 import BigNumber from 'bignumber.js';
 import SetMax from '../SetMax';
 import { isValidAddressString, calculateGasCost } from '../../utils/ethereum';
+import TextMono from 'components/TextMono';
 
 const PasteLink = styled(Link)``;
 
@@ -179,9 +180,9 @@ const Send = ({ token, trackBtnClick, reset }) => {
           <Text color="steel" fontWeight="semibold" t="smallCaps">
             {lang.action_sidebar.your_balance}
           </Text>
-          <Text color="text">
+          <TextMono color="text">
             {(balance && balance.toFixed(3)) || '--'} {displayToken}
-          </Text>
+          </TextMono>
         </Grid>
 
         <p>

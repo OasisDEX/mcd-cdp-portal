@@ -5,6 +5,7 @@ import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import useLanguage from 'hooks/useLanguage';
+import TextMono from 'components/TextMono';
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -51,9 +52,9 @@ const SidebarFeeds = ({ feeds }) => {
                       .reverse()
                       .join('/')}
                   </Text>
-                  <Text fontSize="1.4rem" color="darkPurple">
+                  <TextMono fontSize="1.4rem" color="darkPurple">
                     {prettifyNumber(value)}
-                  </Text>
+                  </TextMono>
                 </Flex>
               )
           )}

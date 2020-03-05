@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js';
 import lang from 'languages';
 import { Currency } from '@makerdao/currency';
 import { decimalRules } from '../styles/constants';
+import TextMono from 'components/TextMono';
+
 const { short, medium } = decimalRules;
 
 export function formatCollateralizationRatio(ratio) {
@@ -102,46 +104,49 @@ export function formatEventDescription(lang, e) {
   const interfaceLocale = lang.getInterfaceLanguage();
   switch (e.type) {
     case 'OPEN':
-      return lang.formatString(lang.event_history.open, <b>{e.id}</b>);
+      return lang.formatString(
+        lang.event_history.open,
+        <TextMono>{e.id}</TextMono>
+      );
     case 'DEPOSIT':
       return lang.formatString(
         lang.event_history.deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>,
         e.gem
       );
     case 'DSR_DEPOSIT':
       return lang.formatString(
         lang.event_history.dsr_deposit,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>,
         e.gem
       );
     case 'DSR_WITHDRAW':
       return lang.formatString(
         lang.event_history.dsr_withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>,
         e.gem
       );
     case 'WITHDRAW':
       return lang.formatString(
         lang.event_history.withdraw,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>,
         e.gem
       );
     case 'GENERATE':
       return lang.formatString(
         lang.event_history.generate,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>
       );
     case 'PAY_BACK':
       return lang.formatString(
         lang.event_history.pay_back,
-        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>
+        <TextMono>{prettifyCurrency(interfaceLocale, e.amount, 2)}</TextMono>
       );
     case 'GIVE':
       return lang.formatString(
         lang.event_history.give,
-        <b>{shortenAddress(e.newOwner)}</b>,
-        <b>{shortenAddress(e.prevOwner)}</b>
+        <TextMono>{shortenAddress(e.newOwner)}</TextMono>,
+        <TextMono>{shortenAddress(e.prevOwner)}</TextMono>
       );
     case 'MIGRATE':
       return lang.formatString(lang.event_history.migrate);

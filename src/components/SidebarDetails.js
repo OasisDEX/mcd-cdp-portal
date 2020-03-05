@@ -2,6 +2,7 @@ import React from 'react';
 import useLanguage from 'hooks/useLanguage';
 import { Text, Box, Card, CardBody, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber, formatter } from 'utils/ui';
+import TextMono from 'components/TextMono';
 
 const SidebarDetails = ({ system, savings }) => {
   const { lang } = useLanguage();
@@ -46,9 +47,9 @@ const SidebarDetails = ({ system, savings }) => {
             <Text color="steel" fontWeight="semibold" t="smallCaps">
               {param}
             </Text>
-            <Text fontSize="1.4rem" color="darkPurple">
+            <TextMono fontSize="1.4rem" color="darkPurple">
               {value}
-            </Text>
+            </TextMono>
           </Flex>
         ))}
       </CardBody>

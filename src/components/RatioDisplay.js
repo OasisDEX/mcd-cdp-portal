@@ -2,6 +2,7 @@ import React from 'react';
 import { getSafetyLevels } from 'styles/theme';
 import { SAFETY_LEVELS } from 'utils/constants';
 import { Text, Card } from '@makerdao/ui-components-core';
+import TextMono from 'components/TextMono';
 import BigNumber from 'bignumber.js';
 
 function lookupCDPSafetyLevel(ratio, ilkLiqRatio) {
@@ -21,6 +22,7 @@ function lookupCDPSafetyLevel(ratio, ilkLiqRatio) {
 export const RatioDisplayTypes = {
   CARD: 'card',
   TEXT: 'text',
+  MONO: 'mono',
   PERCENTAGE: 'percentage'
 };
 
@@ -62,6 +64,12 @@ export default function RatioDisplay({
           {text}
         </Text>
       ) : null;
+    case RatioDisplayTypes.MONO:
+      return showDisplay ? (
+        <TextMono color={textColor} {...props}>
+          {text}
+        </TextMono>
+      ) : null;
     case RatioDisplayTypes.CARD:
       return showDisplay ? (
         <Card p="m" bg={backgroundColor} borderColor={borderColor} {...props}>
@@ -71,9 +79,9 @@ export default function RatioDisplay({
     case RatioDisplayTypes.PERCENTAGE:
     default:
       return showDisplay && isFinite(ratio) ? (
-        <Text color={active ? 'white' : textColor} {...props}>
+        <TextMono color={active ? 'white' : textColor} {...props}>
           {ratio.toString()}%
-        </Text>
+        </TextMono>
       ) : null;
   }
 }

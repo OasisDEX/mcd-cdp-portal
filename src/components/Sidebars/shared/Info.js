@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, Grid } from '@makerdao/ui-components-core';
+import TextMono from 'components/TextMono';
 
 const Info = ({ title, body, ...rest }) => {
   return (
@@ -10,7 +11,7 @@ const Info = ({ title, body, ...rest }) => {
         </Text>
       </div>
       <div>
-        <Text color="text">{body}</Text>
+        <TextMono color="text">{body}</TextMono>
       </div>
     </Grid>
   );

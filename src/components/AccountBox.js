@@ -28,6 +28,7 @@ import theme from '../styles/theme';
 import FullScreenAction from './CDPDisplay/FullScreenAction';
 import useCdpTypes from '../hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+import TextMono from 'components/TextMono';
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -57,36 +58,18 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
       py="xs"
       {...props}
     >
-      <Text
-        color="darkLavender"
-        fontWeight="semibold"
-        t="p5"
-        textAlign="left"
-        width="20%"
-      >
+      <TextMono color="darkLavender" t="p5" textAlign="left" width="20%">
         {symbol}
-      </Text>
-      <Text
-        color="darkLavender"
-        fontWeight="semibold"
-        t="p5"
-        textAlign="left"
-        width="30%"
-      >
+      </TextMono>
+      <TextMono color="darkLavender" t="p5" textAlign="left" width="25%">
         {(amount && prettifyNumber(amount, true)) || '--'}
-      </Text>
-      <Text
-        color="darkLavender"
-        fontWeight="semibold"
-        t="p5"
-        textAlign="left"
-        width="30%"
-      >
+      </TextMono>
+      <TextMono color="darkLavender" t="p5" textAlign="left" width="35%">
         {(amount &&
           usdRatio &&
           `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 2)}`) ||
           '--'}
-      </Text>
+      </TextMono>
       <Flex width="20%" justifyContent="flex-end">
         {button}
       </Flex>

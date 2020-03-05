@@ -22,6 +22,7 @@ import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import TextMono from 'components/TextMono';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -38,12 +39,13 @@ const InfoCard = ({ title, amount, denom }) => (
       <Box justifySelf={{ s: 'left', xl: 'center' }}>
         <Box display={{ s: 'none', xl: 'unset' }}>
           <Flex alignSelf="end" alignItems="flex-end">
-            <Text.h3>{amount}</Text.h3>&nbsp;<Text.h4>{denom}</Text.h4>
+            <TextMono t="h3">{amount}</TextMono>&nbsp;
+            <TextMono t="h4">{denom}</TextMono>
           </Flex>
         </Box>
-        <Text.h4 display={{ s: 'unset', xl: 'none' }}>
+        <TextMono t="h4" display={{ s: 'unset', xl: 'none' }}>
           {amount} {denom}
-        </Text.h4>
+        </TextMono>
       </Box>
     </Grid>
   </Card>
@@ -213,23 +215,23 @@ function Overview({ viewedAddress }) {
                     }) => (
                       <Table.tr key={id}>
                         <Table.td>
-                          <Text
+                          <TextMono
                             t="body"
                             fontSize={{ s: '1.7rem', xl: 'm' }}
                             fontWeight={{ s: 'medium', xl: 'normal' }}
                             color="darkPurple"
                           >
                             {collateralAmount.symbol}
-                          </Text>
+                          </TextMono>
                         </Table.td>
                         <Table.td>
-                          <Text
+                          <TextMono
                             t="body"
                             fontSize={{ s: '1.7rem', xl: 'm' }}
                             color={{ s: 'darkLavender', xl: 'darkPurple' }}
                           >
                             {id}
-                          </Text>
+                          </TextMono>
                         </Table.td>
                         <Table.td>
                           {isFinite(collateralizationRatio.toNumber()) ? (
@@ -245,25 +247,25 @@ function Overview({ viewedAddress }) {
                                 .times(100)}
                             />
                           ) : (
-                            <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
+                            <TextMono fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
                               N/A
-                            </Text>
+                            </TextMono>
                           )}
                         </Table.td>
                         <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
+                          <TextMono t="caption" color="darkLavender">
                             {collateralAmount.toString()}
-                          </Text>
+                          </TextMono>
                         </Table.td>
                         <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
+                          <TextMono t="caption" color="darkLavender">
                             {collateralAvailableAmount.toString()}
-                          </Text>
+                          </TextMono>
                         </Table.td>
                         <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
+                          <TextMono t="caption" color="darkLavender">
                             {debtValue.toBigNumber().toFixed(2)} DAI
-                          </Text>
+                          </TextMono>
                         </Table.td>
                         <Table.td>
                           <Flex justifyContent="flex-end">

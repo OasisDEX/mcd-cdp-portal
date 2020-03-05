@@ -4,6 +4,7 @@ import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
 import { formatEventDescription, formatDate } from 'utils/ui';
 import theme from 'styles/theme';
+import TextMono from 'components/TextMono';
 
 export default function({
   title,
@@ -77,14 +78,14 @@ export default function({
                       white-space: nowrap;
                     `}
                   >
-                    <Text color="darkLavender" t="caption">
+                    <TextMono color="darkLavender" t="caption">
                       {dateOfAction}
-                    </Text>
+                    </TextMono>
                   </td>
                   <td>
-                    <Text t="caption" color="blue">
+                    <TextMono t="caption" color="blue">
                       {txHash}
-                    </Text>
+                    </TextMono>
                   </td>
                 </tr>
               ))

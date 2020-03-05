@@ -14,6 +14,7 @@ import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
+import TextMono from 'components/TextMono';
 
 const CDPCreateSelectCollateralSidebar = () => {
   const { lang } = useLanguage();
@@ -81,14 +82,28 @@ function IlkTableRow({
           }}
         />
       </td>
-      <td>{ilk.symbol}</td>
       <td>
-        {formatter(annualStabilityFee, { integer: true, percentage: true })} %
+        <TextMono>{ilk.symbol}</TextMono>
       </td>
-      <td>{formatter(liquidationRatio, { percentage: true })} %</td>
-      <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
+      <td>
+        <TextMono>
+          {formatter(annualStabilityFee, { integer: true, percentage: true })} %
+        </TextMono>
+      </td>
+      <td>
+        <TextMono>
+          {formatter(liquidationRatio, { percentage: true })} %
+        </TextMono>
+      </td>
+      <td>
+        <TextMono>
+          {formatter(liquidationPenalty, { percentage: true })} %
+        </TextMono>
+      </td>
       <td css="text-align: right">
-        {prettifyNumber(gemBalance)} {ilk.gem}
+        <TextMono>
+          {prettifyNumber(gemBalance)} {ilk.gem}
+        </TextMono>
       </td>
     </tr>
   );

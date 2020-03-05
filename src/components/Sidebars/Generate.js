@@ -134,7 +134,7 @@ const Generate = ({ vault, reset }) => {
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <RatioDisplay
-              type={RatioDisplayTypes.TEXT}
+              type={RatioDisplayTypes.PERCENTAGE}
               ratio={formatter(collateralizationRatio, {
                 infinity: currentCollateralizationRatio
               })}

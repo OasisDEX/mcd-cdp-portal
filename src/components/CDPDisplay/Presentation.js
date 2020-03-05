@@ -24,7 +24,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { formatter } from 'utils/ui';
-
+import TextMono from 'components/TextMono';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
@@ -76,7 +76,9 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         gem,
-        unlockedCollateral && formatter(unlockedCollateral),
+        unlockedCollateral && (
+          <TextMono color="#826318">{formatter(unlockedCollateral)}</TextMono>
+        ),
         gem
       );
 
@@ -162,7 +164,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
 
         <CdpViewCard title={lang.cdp_page.collateralization_ratio}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
-            <AmountDisplay amount={collateralizationRatio} denomination="%" />
+            <AmountDisplay amount={`${collateralizationRatio}%`} />
           </Flex>
           <InfoContainerRow
             title={lang.cdp_page.minimum_ratio}

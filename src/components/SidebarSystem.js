@@ -3,6 +3,7 @@ import { Text, Box, Card, Flex } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import { formatCollateralizationRatio, prettifyNumber } from 'utils/ui';
 import SiteVersion from 'components/SiteVersion';
+import TextMono from 'components/TextMono';
 
 const SidebarSystem = ({ system }) => {
   const { lang } = useLanguage();
@@ -57,9 +58,9 @@ const SidebarSystem = ({ system }) => {
               {param}
             </Text>
             <Box>
-              <Text fontSize="s" color="darkPurple">
+              <TextMono fontSize="s" color="darkPurple">
                 {value}
-              </Text>
+              </TextMono>
             </Box>
           </Flex>
         ))}

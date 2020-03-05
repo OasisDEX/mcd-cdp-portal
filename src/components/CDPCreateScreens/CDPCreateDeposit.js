@@ -3,11 +3,7 @@ import { Box, Grid, Text, Input, Card } from '@makerdao/ui-components-core';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { greaterThanOrEqual } from 'utils/bignumber';
 import { TextBlock } from 'components/Typography';
-import {
-  formatCollateralizationRatio,
-  prettifyNumber,
-  formatter
-} from 'utils/ui';
+import { prettifyNumber, formatter } from 'utils/ui';
 import { cdpParamsAreValid } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
@@ -16,6 +12,7 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 import BigNumber from 'bignumber.js';
+import TextMono from 'components/TextMono';
 
 function OpenCDPForm({
   selectedIlk,
@@ -75,7 +72,7 @@ function OpenCDPForm({
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>
-        <Text
+        <TextMono
           t="caption"
           display="inline-block"
           ml="s"
@@ -90,7 +87,7 @@ function OpenCDPForm({
           }}
         >
           {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.gem}
-        </Text>
+        </TextMono>
       </Box>
     ],
     [
@@ -116,7 +113,7 @@ function OpenCDPForm({
           <Text t="subheading">
             {lang.cdp_create.deposit_form_field3_after2}{' '}
           </Text>
-          <Text
+          <TextMono
             display="inline-block"
             ml="s"
             t="caption"
@@ -131,7 +128,7 @@ function OpenCDPForm({
             }}
           >
             {formatter(daiAvailable)} DAI
-          </Text>
+          </TextMono>
         </Box>
         <RatioDisplay
           type={RatioDisplayTypes.TEXT}
@@ -190,37 +187,96 @@ const CDPCreateDepositSidebar = ({
   );
   if ([Infinity, 'Infinity'].includes(liquidationPriceDisplay))
     liquidationPriceDisplay = '0.0000';
+
+  if ([Infinity, 'Infinity'].includes(collateralizationRatio))
+    collateralizationRatio = 0;
+
+  const MinCollateralizationRatio = () => (
+    <>
+      <RatioDisplay
+        key="ba2"
+        type={RatioDisplayTypes.TEXT}
+        text="(Min"
+        ratio={formatter(collateralizationRatio)}
+        ilkLiqRatio={formatter(ilkData.liquidationRatio, {
+          percentage: true
+        })}
+        t="caption"
+      />{' '}
+      <RatioDisplay
+        key="ba3"
+        type={RatioDisplayTypes.MONO}
+        text={`${formatter(ilkData.liquidationRatio, {
+          percentage: true
+        })} %`}
+        ratio={formatter(collateralizationRatio)}
+        ilkLiqRatio={formatter(ilkData.liquidationRatio, {
+          percentage: true
+        })}
+        t="caption"
+      />
+      <RatioDisplay
+        key="ba4"
+        type={RatioDisplayTypes.TEXT}
+        text=")"
+        ratio={formatter(collateralizationRatio)}
+        ilkLiqRatio={formatter(ilkData.liquidationRatio, {
+          percentage: true
+        })}
+        t="caption"
+      />
+    </>
+  );
+
+  console.log(liquidationPriceDisplay);
+
   return (
     <Grid gridRowGap="m">
       {[
         [
           lang.collateralization,
-          <RatioDisplay
-            key="ba"
-            type={RatioDisplayTypes.TEXT}
-            text={`${formatCollateralizationRatio(
-              collateralizationRatio
-            )} (Min ${formatter(ilkData.liquidationRatio, {
-              percentage: true
-            })}%)`}
-            ratio={formatter(collateralizationRatio)}
-            ilkLiqRatio={formatter(ilkData.liquidationRatio, {
-              percentage: true
-            })}
-            t="caption"
-          />
+          <>
+            {collateralizationRatio ? (
+              <>
+                <RatioDisplay
+                  key="ba1"
+                  type={RatioDisplayTypes.PERCENTAGE}
+                  ratio={formatter(collateralizationRatio)}
+                  ilkLiqRatio={formatter(ilkData.liquidationRatio, {
+                    percentage: true
+                  })}
+                  t="caption"
+                />{' '}
+              </>
+            ) : (
+              ''
+            )}
+            <MinCollateralizationRatio />
+          </>
         ],
-        [lang.liquidation_price, `$${liquidationPriceDisplay}`],
+        [
+          lang.liquidation_price,
+          <TextMono key="lp1">
+            {`$${
+              liquidationPriceDisplay !== 'N/A'
+                ? liquidationPriceDisplay
+                : '0.0000'
+            }
+            `}
+          </TextMono>
+        ],
         [
           lang.formatString(lang.current_ilk_price, selectedIlk.gem),
-          `$${formatter(collateralTypePrice)}`
+          <TextMono key="cp1">{`$${formatter(collateralTypePrice)}`}</TextMono>
         ],
         [
           lang.stability_fee,
-          `${formatter(annualStabilityFee, {
-            integer: true,
-            percentage: true
-          })}%`
+          <TextMono key="asf1">
+            {`${formatter(annualStabilityFee, {
+              integer: true,
+              percentage: true
+            })}%`}
+          </TextMono>
         ]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>

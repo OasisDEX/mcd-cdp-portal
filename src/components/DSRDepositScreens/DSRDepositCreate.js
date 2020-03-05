@@ -10,6 +10,7 @@ import useWalletBalances from '../../hooks/useWalletBalances';
 import useValidatedInput from '../../hooks/useValidatedInput';
 import SetMax from '../SetMax';
 import useTokenAllowance from 'hooks/useTokenAllowance';
+import TextMono from 'components/TextMono';
 
 function DepositDaiForm({
   depositAmount,
@@ -36,9 +37,14 @@ function DepositDaiForm({
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>
-        <Text t="caption" display="inline-block" ml="s" color="darkLavender">
+        <TextMono
+          t="caption"
+          display="inline-block"
+          ml="s"
+          color="darkLavender"
+        >
           {prettifyNumber(daiBalance)} {'DAI'}
-        </Text>
+        </TextMono>
       </Box>
     ]
   ];
