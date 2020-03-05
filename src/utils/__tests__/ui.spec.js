@@ -134,11 +134,12 @@ function convert(valueType, value) {
 }
 
 test('formatEventDescription', () => {
-  expect(
-    ReactDOMServer.renderToStaticMarkup(
-      formatEventDescription(lang, mockEventDataFromSDK[8])
-    )
-  ).toBe('Deposited <b>10,000.00</b> ETH into Vault');
+  const element = ReactDOMServer.renderToStaticMarkup(
+    formatEventDescription(lang, mockEventDataFromSDK[8])
+  );
+  expect(element.replace(/<\/?[^>]+(>|$)/g, '')).toMatch(
+    'Deposited 10,000.00 ETH into Vault'
+  );
 });
 
 test('firstLetterLowercase', () => {

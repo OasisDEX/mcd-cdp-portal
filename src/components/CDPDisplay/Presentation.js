@@ -77,9 +77,10 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
         lang.notifications.claim_collateral,
         gem,
         unlockedCollateral && (
-          <TextMono color="#826318">{formatter(unlockedCollateral)}</TextMono>
-        ),
-        gem
+          <TextMono color="#826318">{`${formatter(
+            unlockedCollateral
+          )} ${gem}`}</TextMono>
+        )
       );
 
       addNotification({

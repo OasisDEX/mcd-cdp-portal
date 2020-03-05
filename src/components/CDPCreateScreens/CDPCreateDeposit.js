@@ -228,8 +228,6 @@ const CDPCreateDepositSidebar = ({
     </>
   );
 
-  console.log(liquidationPriceDisplay);
-
   return (
     <Grid gridRowGap="m">
       {[
