@@ -273,7 +273,10 @@ function DSRInfo({ isMobile, savings }) {
         value={
           annualDaiSavingsRate ? (
             <TextMono>
-              {formatter(annualDaiSavingsRate, { integer: true })}%
+              {formatter(annualDaiSavingsRate, {
+                rounding: BigNumber.ROUND_HALF_UP
+              })}
+              %
             </TextMono>
           ) : (
             '--'

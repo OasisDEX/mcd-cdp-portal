@@ -2,6 +2,7 @@ import React from 'react';
 import useLanguage from 'hooks/useLanguage';
 import { Text, Box, Card, CardBody, Flex } from '@makerdao/ui-components-core';
 import { prettifyNumber, formatter } from 'utils/ui';
+import BigNumber from 'bignumber.js';
 
 const SidebarDetails = ({ system, savings }) => {
   const { lang } = useLanguage();
@@ -19,7 +20,9 @@ const SidebarDetails = ({ system, savings }) => {
   const DAI_SAVINGS_RATE = ({ system }) => [
     lang.sidebar.save_details.dai_savings_rate,
     system.annualDaiSavingsRate
-      ? formatter(system.annualDaiSavingsRate) + '%'
+      ? formatter(system.annualDaiSavingsRate, {
+          rounding: BigNumber.ROUND_HALF_UP
+        }) + '%'
       : ''
   ];
 
