@@ -7,8 +7,9 @@ import { uniqueId } from 'utils/dev';
 import findIndex from 'lodash/findIndex';
 import { txManager } from 'references/config';
 import styled from 'styled-components';
-const { autoDismissTime, autoDismissFadeoutTime } = txManager;
+import TextMono from 'components/TextMono';
 
+const { autoDismissTime, autoDismissFadeoutTime } = txManager;
 const ValueText = styled.b`
   font-weight: 600;
 `;
@@ -31,7 +32,9 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
     case 'safeWipe':
       return lang.formatString(
         `${lang[langKey].pay_back_dai}${suffix}`,
-        <ValueText>{formatAmount(metadata.wipeAmount)}</ValueText>
+        <TextMono fontWeight="600">
+          {formatAmount(metadata.wipeAmount)}
+        </TextMono>
       );
     case 'safeWipeAll':
       return lang.formatString(
@@ -41,23 +44,27 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
     case 'draw':
       return lang.formatString(
         `${lang[langKey].generate_dai}${suffix}`,
-        <ValueText>{formatAmount(metadata.drawAmount)}</ValueText>
+        <TextMono fontWeight="600">
+          {formatAmount(metadata.drawAmount)}
+        </TextMono>
       );
     case 'safeLockETH':
       return lang.formatString(
         `${lang[langKey].depositing_gem}${suffix}`,
-        <>
-          <ValueText>{formatAmount(metadata.lockAmount)}</ValueText>{' '}
-          {formatSymbol(metadata.lockAmount.symbol)}
-        </>
+        <TextMono fontWeight="600">
+          {`${formatAmount(metadata.lockAmount)} ${formatSymbol(
+            metadata.lockAmount.symbol
+          )}`}
+        </TextMono>
       );
     case 'wipeAndFreeETH':
       return lang.formatString(
         `${lang[langKey].withdrawing_gem}${suffix}`,
-        <>
-          <ValueText>{formatAmount(metadata.freeAmount)}</ValueText>{' '}
-          {formatSymbol(metadata.freeAmount.symbol)}
-        </>
+        <TextMono>
+          {`${formatAmount(metadata.freeAmount)} ${formatSymbol(
+            metadata.freeAmount.symbol
+          )}`}
+        </TextMono>
       );
     case 'openLockETHAndDraw':
       return lang.formatString(
@@ -72,10 +79,11 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
     case 'transfer':
       return lang.formatString(
         `${lang[langKey].send}${suffix}`,
-        <>
-          <ValueText>{formatAmount(metadata.action.amount)}</ValueText>{' '}
-          {formatSymbol(metadata.action.amount.symbol)}
-        </>,
+        <TextMono>
+          {`${formatAmount(metadata.action.amount)} ${formatSymbol(
+            metadata.action.amount.symbol
+          )}`}
+        </TextMono>,
         <>
           <ValueText>{metadata.action.to.toLowerCase().substr(0, 5)}</ValueText>
           ...
