@@ -79,3 +79,23 @@ export const gaInit = () => {
   ReactGA.initialize(config.gaTrackingId);
   return ReactGA;
 };
+
+export const fathomInit = () => {
+  if (typeof window.fathom === 'undefined') {
+    window['fathom'] =
+      window['fathom'] ||
+      function() {
+        (window['fathom'].q = window['fathom'].q || []).push(arguments);
+      };
+    const scriptUrl = 'https://cdn.usefathom.com/tracker.js';
+    const script = document.createElement('script');
+    script.async = 1;
+    script.src = scriptUrl;
+    script.id = 'fathom-script';
+
+    const elements = document.getElementsByTagName('script')[0];
+    elements.parentNode.insertBefore(script, elements);
+
+    window.fathom('set', 'siteId', 'XELBLZRK');
+  }
+};
