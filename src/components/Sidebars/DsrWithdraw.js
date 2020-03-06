@@ -17,7 +17,7 @@ import { safeToFixed } from '../../utils/ui';
 const DsrWithdraw = ({ savings, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   const { symbol } = MDAI;
   const displaySymbol = 'DAI';
@@ -63,16 +63,11 @@ const DsrWithdraw = ({ savings, reset }) => {
   }, [daiLockedInDsr, setWithdrawAmount]);
 
   const withdraw = () => {
-    let txObject;
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(daiLockedInDsr)) {
-      txObject = maker.service('mcd:savings').exitAll();
+      maker.service('mcd:savings').exitAll();
     } else {
-      txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-    newTxListener(
-      txObject,
-      lang.formatString(lang.transactions.withdrawing_gem, displaySymbol)
-    );
     reset();
   };
 

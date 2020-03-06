@@ -23,7 +23,7 @@ const Bg = styled(animated.div)`
   top: 0;
   left: 0;
   z-index: 2001;
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const SimpleBg = styled(Bg)`

@@ -43,5 +43,9 @@
     "CDP": "Dashboard",
     "Save": "Dashboard",
     "Landing": "Landing"
+  },
+  "txManager": {
+    "autoDismissFadeoutTime": 500,
+    "autoDismissTime": 10000
   }
 }

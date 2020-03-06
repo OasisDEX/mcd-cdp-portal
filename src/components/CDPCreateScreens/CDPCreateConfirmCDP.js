@@ -262,8 +262,7 @@ const CDPCreateConfirmCDP = ({
   collateralTypesData,
   onClose
 }) => {
-  const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
   const [enableSubmit, setEnableSubmit] = useState(true);
 
   const { gemsToLock, daiToDraw, txState } = cdpParams;
@@ -283,7 +282,6 @@ const CDPCreateConfirmCDP = ({
       );
 
     setEnableSubmit(false);
-    newTxListener(txObject, lang.transactions.creating_cdp);
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
