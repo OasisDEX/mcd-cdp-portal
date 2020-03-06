@@ -26,7 +26,7 @@ export default function useDsrEventHistory(address) {
     getHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => (isCancelled = true);
-  }, [maker, address, txLastUpdate]);
+  }, [maker, address, txLastUpdate?.save]);
 
   return { events, isLoading };
 }

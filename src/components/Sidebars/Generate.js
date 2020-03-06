@@ -17,7 +17,7 @@ const { long, medium } = decimalRules;
 const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   let {
     debtValue,
@@ -59,10 +59,7 @@ const Generate = ({ vault, reset }) => {
   const undercollateralized = daiAvailable.lt(amount);
 
   const generate = () => {
-    newTxListener(
-      maker.service('mcd:cdpManager').draw(vault.id, vaultType, MDAI(amount)),
-      lang.transactions.generate_dai
-    );
+    maker.service('mcd:cdpManager').draw(vault.id, vaultType, MDAI(amount));
     reset();
   };
 

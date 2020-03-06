@@ -13,6 +13,7 @@ import SidebarActionLayout from 'layouts/SidebarActionLayout';
 import TransactionManager from 'components/TransactionManager';
 import AccountBox from 'components/AccountBox';
 import { getMeasurement } from 'styles/theme';
+import useTransactions from 'hooks/useTransactions';
 const springConfig = { mass: 1, tension: 500, friction: 50 };
 
 const animations = {
@@ -40,7 +41,13 @@ const AnimatedWrap = styled(animated.div)`
 `;
 
 function SidebarBase() {
-  const { account, resetTx, selectors, network } = useMaker();
+  const { account, network } = useMaker();
+  const {
+    transactions,
+    hideTransaction,
+    drawExpanded,
+    setDrawExpanded
+  } = useTransactions();
   const { current } = useSidebar();
   const { component: SidebarComponent, props } = current;
   const [slideStart, slideEnd] = animations.slide;
@@ -102,11 +109,13 @@ function SidebarBase() {
   return (
     <Box minWidth={getMeasurement('sidebarWidth')} pt="s">
       <TransactionManager
-        transactions={selectors.transactions()}
+        transactions={transactions}
+        hideTransaction={hideTransaction}
+        drawExpanded={drawExpanded}
+        setDrawExpanded={setDrawExpanded}
         network={network}
-        resetTx={resetTx}
       />
-      <Grid gridRowGap="s" mt="s">
+      <Grid gridRowGap="s" mt="0">
         <AccountBox currentAccount={account} />
         <Flex css={'overflow:hidden;'}>
           <AnimatedWrap style={{ ...p1Animation, zIndex: 1 }} key="panel1">

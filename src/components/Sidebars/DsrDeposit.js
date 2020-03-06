@@ -16,7 +16,7 @@ import { safeToFixed } from '../../utils/ui';
 const DsrDeposit = ({ savings, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   const { symbol } = MDAI;
   const displaySymbol = 'DAI';
@@ -57,10 +57,7 @@ const DsrDeposit = ({ savings, reset }) => {
   }, [daiBalance, setDepositAmount]);
 
   const deposit = () => {
-    newTxListener(
-      maker.service('mcd:savings').join(MDAI(depositAmount)),
-      lang.formatString(lang.transactions.depositing_gem, displaySymbol)
-    );
+    maker.service('mcd:savings').join(MDAI(depositAmount));
     reset();
   };
 

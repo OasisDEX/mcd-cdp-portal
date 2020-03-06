@@ -3,6 +3,7 @@ import { render, waitForElement } from '@testing-library/react';
 import LanguageProvider from '../../src/providers/LanguageProvider';
 import VaultsProvider from '../../src/providers/VaultsProvider';
 import NotificationProvider from '../../src/providers/NotificationProvider';
+import TransactionManagerProvider from '../../src/providers/TransactionManagerProvider';
 import TestMakerProvider from './TestMakerProvider';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
@@ -16,7 +17,7 @@ export const mocks = {
 
 export const useMakerMock = (mockServices = {}) => {
   /** Provide an object of maker services & methods you want to mock, eg:
-        multicall: { 
+        multicall: {
           watch: () => jest.fn()
         }
   */
@@ -41,7 +42,9 @@ export function renderWithProviders(children) {
   return render(
     <NotificationProvider>
       <LanguageProvider>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <TransactionManagerProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </TransactionManagerProvider>
       </LanguageProvider>
     </NotificationProvider>
   );

@@ -30,7 +30,7 @@ const { FF_VAULT_HISTORY } = FeatureFlags;
 
 export default function({ vault, showSidebar, account, network, cdpOwner }) {
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
     collateralAmount,
@@ -67,7 +67,6 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
       const txObject = maker
         .service('mcd:cdpManager')
         .reclaimCollateral(vault.id, unlockedCollateral.toFixed());
-      newTxListener(txObject, lang.transactions.claiming_collateral);
       await txObject;
       deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
     };

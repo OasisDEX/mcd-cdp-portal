@@ -198,3 +198,13 @@ export const formatCurrencyValue = ({
 export function formatter(target, options = {}) {
   return formatCurrencyValue({ value: target, ...options });
 }
+
+export const formatSymbol = token => {
+  return token === 'MDAI'
+    ? 'DAI'
+    : token === 'DAI'
+    ? 'SAI'
+    : token === 'MWETH'
+    ? 'WETH'
+    : token;
+};

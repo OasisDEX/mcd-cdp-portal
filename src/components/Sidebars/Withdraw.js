@@ -19,7 +19,7 @@ const { long } = decimalRules;
 const Withdraw = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   let {
     vaultType,
@@ -57,12 +57,9 @@ const Withdraw = ({ vault, reset }) => {
 
   const currency = getCurrency({ ilk: vaultType });
   const withdraw = () => {
-    newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amountToWithdraw)),
-      lang.formatString(lang.transactions.withdrawing_gem, symbol)
-    );
+    maker
+      .service('mcd:cdpManager')
+      .wipeAndFree(vault.id, vaultType, MDAI(0), currency(amountToWithdraw));
     reset();
   };
 

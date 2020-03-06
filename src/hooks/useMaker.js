@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
 import { MakerObjectContext } from '../providers/MakerProvider';
+import { AccountTypes } from '../utils/constants';
 
 function useMaker() {
   const {
@@ -9,8 +10,9 @@ function useMaker() {
     account,
     viewedAddress,
     transactions,
-    newTxListener,
-    resetTx,
+    setTransactions,
+    txDrawExpanded,
+    setTxDrawExpanded,
     hideTx,
     selectors,
     network,
@@ -19,13 +21,25 @@ function useMaker() {
     navigation
   } = useContext(MakerObjectContext) || {};
 
-  function isConnectedToProvider(provider) {
-    return (
-      maker.service('accounts').hasAccount() &&
-      !!provider.address &&
-      provider.address === maker.currentAddress()
+  const disconnectWalletLink = subprovider => subprovider.close();
+  const disconnectWalletConnect = async subprovider =>
+    (await subprovider.getWalletConnector()).killSession();
+  const disconnectBrowserWallet = () =>
+    ['lastConnectedWalletType', 'lastConnectedWalletAddress'].forEach(x =>
+      sessionStorage.removeItem(x)
     );
-  }
+
+  const disconnect = () => {
+    const subprovider = maker.service('accounts').currentWallet();
+    if (subprovider.isWalletLink) return disconnectWalletLink(subprovider);
+    else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
+    else if (
+      sessionStorage.getItem('lastConnectedWalletType') ===
+      AccountTypes.METAMASK
+    )
+      disconnectBrowserWallet();
+    document.location.reload();
+  };
 
   const connectToProviderOfType = async type => {
     const account = await maker.addAccount({
@@ -40,19 +54,20 @@ function useMaker() {
     maker,
     watcher,
     authenticated: true,
-    isConnectedToProvider,
     connectBrowserProvider,
     connectToProviderOfType,
     account,
     viewedAddress,
     transactions,
-    newTxListener,
-    resetTx,
+    setTransactions,
+    txDrawExpanded,
+    setTxDrawExpanded,
     hideTx,
     selectors,
     network,
     txLastUpdate,
-    navigation
+    navigation,
+    disconnect
   };
 }
 

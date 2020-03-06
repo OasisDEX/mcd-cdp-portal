@@ -25,7 +25,7 @@ export default function useEventHistory(id) {
     getHistory();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => (isCancelled = true);
-  }, [maker, id, txLastUpdate]);
+  }, [maker, id, txLastUpdate?.[id]]);
 
   return events;
 }

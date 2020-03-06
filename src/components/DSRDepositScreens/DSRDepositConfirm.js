@@ -179,8 +179,7 @@ const DSRDepositWait = ({ hash, onClose, txState }) => {
 };
 
 const DSRDepositConfirm = ({ dispatch, onClose, depositAmount, txState }) => {
-  const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   const [depositDaiTxHash, setDepositDaiTxHash] = useState(null);
 
@@ -189,8 +188,6 @@ const DSRDepositConfirm = ({ dispatch, onClose, depositAmount, txState }) => {
     if (type !== 'increment-step') return dispatch(payload);
 
     const txObject = maker.service('mcd:savings').join(MDAI(depositAmount));
-
-    newTxListener(txObject, lang.formatString(lang.depositing_gem, 'DAI'));
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {

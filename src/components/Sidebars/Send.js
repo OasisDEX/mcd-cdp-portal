@@ -30,7 +30,7 @@ const ZERO = BigNumber(0);
 
 const Send = ({ token, trackBtnClick, reset }) => {
   const { lang } = useLanguage();
-  const { maker, account, newTxListener } = useMaker();
+  const { maker, account } = useMaker();
 
   const balances = useWalletBalances();
   const balance = balances[token] ? balances[token] : ZERO;
@@ -128,11 +128,7 @@ const Send = ({ token, trackBtnClick, reset }) => {
   const showSetMax = token !== 'ETH' || balance.gte(gasCost);
 
   const transfer = async () => {
-    const _token = maker.getToken(token);
-    newTxListener(
-      _token.transfer(destAddress, amount),
-      lang.formatString(lang.action_sidebar.send_token_desc, displayToken)
-    );
+    maker.getToken(token).transfer(destAddress, amount);
     reset();
   };
 

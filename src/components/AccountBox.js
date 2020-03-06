@@ -16,7 +16,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useSidebar from 'hooks/useSidebar';
 import useLanguage from 'hooks/useLanguage';
 import { showWalletTokens } from 'references/config';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatSymbol } from 'utils/ui';
 import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
 import useAnalytics from 'hooks/useAnalytics';
@@ -117,16 +117,6 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     }
   };
 
-  const formatSymbol = token => {
-    return token === 'MDAI'
-      ? 'DAI'
-      : token === 'DAI'
-      ? 'SAI'
-      : token === 'MWETH'
-      ? 'WETH'
-      : token;
-  };
-
   const tokenBalances = useMemo(
     () =>
       showWalletTokens.reduceRight((acc, token) => {
@@ -187,11 +177,15 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                   usdRatio={usdRatio}
                   button={
                     hasActiveAccount &&
-                    (symbol === 'DSR' &&
-                    url.pathname.startsWith(
-                      `/${Routes.SAVE}`
-                    ) ? null : symbol === 'DSR' ? (
-                      <Link href={`/${Routes.SAVE}${url.search}`}>
+                    (symbol === 'DSR' ? (
+                      <Link
+                        href={`/${Routes.SAVE}${url.search}`}
+                        style={{
+                          visibility: url.pathname.startsWith(`/${Routes.SAVE}`)
+                            ? 'hidden'
+                            : 'visible'
+                        }}
+                      >
                         <ActionButton onClick={() => trackBtnClick('Withdraw')}>
                           {lang.actions.withdraw}
                         </ActionButton>

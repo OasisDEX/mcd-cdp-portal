@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
+import {
+  Card,
+  Dropdown,
+  Box,
+  Text,
+  Grid,
+  Flex
+} from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { useCurrentRoute } from 'react-navi';
+import styled from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
@@ -12,8 +20,23 @@ import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
 import { AccountTypes, Routes } from '../utils/constants';
 import { BrowserView } from 'react-device-detect';
+import { ReactComponent as LedgerLogo } from 'images/ledger2.svg';
+import { ReactComponent as WalletLinkLogo } from '../images/wallet-link2.svg';
+import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
 
-const Option = ({ children, ...props }) => {
+const StyledLedgerLogo = styled(LedgerLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
+
+const StyledWalletLinkLogo = styled(WalletLinkLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+  height: 21px;
+  width: 21px;
+`;
+
+const Option = ({ icon, children, ...props }) => {
   return (
     <Box
       py="xs"
@@ -26,7 +49,12 @@ const Option = ({ children, ...props }) => {
       `}
       {...props}
     >
-      <Text p="body">{children}</Text>
+      <Flex alignItems="center">
+        {icon}
+        <span style={{ margin: 'auto' }}>
+          <Text p="body">{children}</Text>
+        </span>
+      </Flex>
     </Box>
   );
 };
@@ -38,7 +66,8 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     account,
     connectBrowserProvider,
     connectToProviderOfType,
-    navigation
+    navigation,
+    disconnect
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
@@ -142,6 +171,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectLedgerWallet();
               close();
             }}
+            icon={<StyledLedgerLogo />}
           >
             {lang.formatString(lang.connect_to, 'Ledger Nano')}
           </Option>
@@ -152,6 +182,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectTrezorWallet();
               close();
             }}
+            icon={<StyledTrezorLogo />}
           >
             {lang.formatString(lang.connect_to, 'Trezor')}
           </Option>
@@ -162,6 +193,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETCONNECT);
               close();
             }}
+            icon={<StyledWalletConnectLogo />}
           >
             {lang.landing_page.wallet_connect}
           </Option>
@@ -172,10 +204,23 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETLINK);
               close();
             }}
+            icon={<StyledWalletLinkLogo />}
           >
             {lang.landing_page.wallet_link}
           </Option>
         </BrowserView>
+        {account && (
+          <BrowserView>
+            <Option
+              onClick={() => {
+                disconnect();
+                close();
+              }}
+            >
+              {lang.disconnect}
+            </Option>
+          </BrowserView>
+        )}
       </Card>
     </Dropdown>
   );

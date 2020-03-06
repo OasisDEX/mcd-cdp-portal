@@ -328,7 +328,6 @@ export default {
     send_description: 'How much {0} would you like to send?',
     your_balance: 'Your Balance',
     dest_address: 'Destination Address',
-    send_token_desc: 'Sent {0}',
     invalid_input: 'This input is invalid',
     invalid_min_amount: 'Can only send a positive amount of {0}',
     invalid_max_amount: 'Amount is greater than your balance',
@@ -363,7 +362,8 @@ export default {
   verbs: {
     depositing: 'Depositing',
     generating: 'Generating',
-    withdrawing: 'Withdrawing'
+    withdrawing: 'Withdrawing',
+    paying_back: 'Paying back'
   },
   table: {
     type: 'Type',
@@ -378,11 +378,23 @@ export default {
     unlocking_token: 'Unlocking {0}',
     setting_up_proxy: 'Setting up proxy',
     creating_cdp: 'Creating Vault',
-    generate_dai: 'Generating DAI',
-    pay_back_dai: 'Paying back DAI',
+    generate_dai: 'Generating {0} DAI',
+    pay_back_dai: 'Paying back {0} DAI',
     withdrawing_gem: 'Withdrawing {0}',
     depositing_gem: 'Depositing {0}',
-    claiming_collateral: 'Claiming collateral'
+    claiming_collateral: 'Claiming collateral',
+    send: 'Sending {0} to {1}'
+  },
+  transactions_past_tense: {
+    unlocking_token: 'Unlocked {0}',
+    setting_up_proxy: 'Set up proxy',
+    creating_cdp: 'Created Vault',
+    generate_dai: 'Generated {0} DAI',
+    pay_back_dai: 'Paid back {0} DAI',
+    withdrawing_gem: 'Withdrew {0}',
+    depositing_gem: 'Deposited {0}',
+    claiming_collateral: 'Claimed collateral',
+    send: 'Sent {0} to {1}'
   },
   transaction_manager: {
     transaction_singular_capitalised: 'Transaction',
@@ -399,7 +411,9 @@ export default {
     default: 'Please enter a valid input'
   },
   connect: 'Connect',
+  disconnect: 'Disconnect',
   view: 'View',
+  dismiss: 'Dismiss',
   exit: 'Exit',
   close: 'Close',
   connect_to: 'Connect to {0}',
@@ -448,7 +462,8 @@ export default {
     trezor: 'Trezor',
     other: 'Active Wallet',
     ledger: 'Ledger',
-    walletconnect: 'Wallet Connect'
+    walletconnect: 'Wallet Connect',
+    walletlink: 'Coinbase Wallet'
   },
   notifications: {
     claim: 'Claim',

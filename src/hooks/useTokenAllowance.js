@@ -1,15 +1,11 @@
 import { useState } from 'react';
-
 import useMaker from 'hooks/useMaker';
 import useActionState from 'hooks/useActionState';
-import useLanguage from 'hooks/useLanguage';
-import { cleanSymbol } from '../utils/ui';
 import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
 export default function useTokenAllowance(tokenSymbol) {
-  const { lang } = useLanguage();
-  const { maker, account, newTxListener } = useMaker();
+  const { maker, account } = useMaker();
 
   const proxyAddress = watch.proxyAddress(account?.address);
   const allowance = watch.tokenAllowance(
@@ -32,13 +28,6 @@ export default function useTokenAllowance(tokenSymbol) {
       const token = maker.getToken(tokenSymbol);
       const txPromise = token.approveUnlimited(proxyAddress);
       setStartedWithoutAllowance(true);
-      newTxListener(
-        txPromise,
-        lang.formatString(
-          lang.transactions.unlocking_token,
-          cleanSymbol(tokenSymbol)
-        )
-      );
       return await txPromise;
     }
   );
