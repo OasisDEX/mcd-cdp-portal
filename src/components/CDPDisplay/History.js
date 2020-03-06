@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Card, Table, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
 import ExternalLink from 'components/ExternalLink';
 import { formatEventDescription, formatDate } from 'utils/ui';
 import theme from 'styles/theme';
+import styled, { keyframes } from 'styled-components';
+
+const FADE_IN_ROWS = 20;
+const FADE_IN_DELAY = 30;
+
+const fadeinKeyframes = keyframes`from { opacity: 0; } to { opacity: 1; }`;
+
+const generateDelays = (first, delay) =>
+  Array(first)
+    .fill()
+    .map((_, i) => `&:nth-child(${i + 1}) { animation-delay: ${i * delay}ms; }`)
+    .join(' ');
+
+const RowFadeIn = styled.tr`
+  opacity: 0;
+  animation: ${fadeinKeyframes} 0.4s ease-in;
+  animation-fill-mode: forwards;
+  animation-delay: ${FADE_IN_ROWS * FADE_IN_DELAY}ms;
+  ${generateDelays(20, 30)}
+`;
 
 export default function({
   title,
@@ -19,6 +39,42 @@ export default function({
   const pxBreakpoint = parseInt(theme.breakpoints.m) * emSize;
   const overflowX =
     document.documentElement.clientWidth > pxBreakpoint ? 'hidden' : 'scroll';
+  const fadeInRows = useMemo(
+    () =>
+      rows?.length > 0
+        ? rows.map(([actionMsg, dateOfAction, txHash], i) => (
+            <RowFadeIn key={i}>
+              <td
+                css={`
+                  white-space: nowrap;
+                  max-width: 205px;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                `}
+              >
+                <Text color="darkLavender" t="caption">
+                  {actionMsg}
+                </Text>
+              </td>
+              <td
+                css={`
+                  white-space: nowrap;
+                `}
+              >
+                <Text color="darkLavender" t="caption">
+                  {dateOfAction}
+                </Text>
+              </td>
+              <td>
+                <Text t="caption" color="blue">
+                  {txHash}
+                </Text>
+              </td>
+            </RowFadeIn>
+          ))
+        : null,
+    [rows]
+  );
 
   return (
     <Box>
@@ -57,37 +113,8 @@ export default function({
                   </Text>
                 </td>
               </tr>
-            ) : rows && rows.length > 0 ? (
-              rows.map(([actionMsg, dateOfAction, txHash], i) => (
-                <tr key={i}>
-                  <td
-                    css={`
-                      white-space: nowrap;
-                      max-width: 205px;
-                      text-overflow: ellipsis;
-                      overflow: hidden;
-                    `}
-                  >
-                    <Text color="darkLavender" t="caption">
-                      {actionMsg}
-                    </Text>
-                  </td>
-                  <td
-                    css={`
-                      white-space: nowrap;
-                    `}
-                  >
-                    <Text color="darkLavender" t="caption">
-                      {dateOfAction}
-                    </Text>
-                  </td>
-                  <td>
-                    <Text t="caption" color="blue">
-                      {txHash}
-                    </Text>
-                  </td>
-                </tr>
-              ))
+            ) : fadeInRows ? (
+              fadeInRows
             ) : (
               <tr key={0}>
                 <td colSpan="3">

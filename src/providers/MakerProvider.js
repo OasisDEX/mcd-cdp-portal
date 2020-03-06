@@ -30,7 +30,7 @@ function MakerProvider({
 }) {
   const [account, setAccount] = useState(null);
   const [txReferences, setTxReferences] = useState([]);
-  const [txLastUpdate, setTxLastUpdate] = useState(0);
+  const [txLastUpdate, setTxLastUpdate] = useState({});
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
@@ -146,14 +146,18 @@ function MakerProvider({
       .service('transactionManager')
       .onTransactionUpdate((tx, state) => {
         if (state === 'mined') {
-          const id = tx?.metadata?.id;
-          if (id) log(`Resetting event history cache for Vault #${id}`);
-          else log('Resetting event history cache');
-          maker.service('mcd:cdpManager').resetEventHistoryCache(id);
-          maker.service('mcd:savings').resetEventHistoryCache();
+          const id = tx.metadata?.id;
+          if (id) {
+            log(`Resetting event history cache for Vault #${id}`);
+            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            setTxLastUpdate(current => ({ ...current, [id]: Date.now() }));
+          } else if (tx.metadata?.contract === 'PROXY_ACTIONS_DSR') {
+            log('Resetting savings event history cache');
+            maker.service('mcd:savings').resetEventHistoryCache();
+            setTxLastUpdate(current => ({ ...current, save: Date.now() }));
+          }
         }
         log('Tx ' + state, tx.metadata);
-        setTxLastUpdate(Date.now());
       });
     return () => {
       txManagerSub.unsub();
