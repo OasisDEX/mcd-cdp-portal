@@ -28,7 +28,7 @@ const log = debug('maker:Sidebars/Payback');
 const Payback = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Payback', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
   const balances = useWalletBalances();
   const daiBalance = balances.MDAI;
 
@@ -89,12 +89,9 @@ const Payback = ({ vault, reset }) => {
     const wipeAll = debtValue.toString() === amount;
     if (wipeAll) log('Calling wipeAll()');
     else log('Calling wipe()');
-    newTxListener(
-      wipeAll
-        ? cdpManager.wipeAll(vault.id, owner)
-        : cdpManager.wipe(vault.id, MDAI(amount), owner),
-      lang.transactions.pay_back_dai
-    );
+    wipeAll
+      ? cdpManager.wipeAll(vault.id, owner)
+      : cdpManager.wipe(vault.id, MDAI(amount), owner);
     reset();
   };
 

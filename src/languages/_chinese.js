@@ -318,7 +318,6 @@ export default {
     send_description: '你希望发送多少 {0}?',
     your_balance: '你的余额',
     dest_address: '收款地址',
-    send_token_desc: '已发送 {0}',
     invalid_input: '输入值无效',
     invalid_min_amount: '只能发送大于零的 {0} 金额',
     invalid_max_amount: '余额不足',
@@ -370,7 +369,19 @@ export default {
     pay_back_dai: '偿还 DAI',
     withdrawing_gem: '取出 {0}',
     depositing_gem: '存入 {0}',
-    claiming_collateral: '赎回抵押品'
+    claiming_collateral: '赎回抵押品',
+    send: 'Sending {0} to {1}'
+  },
+  transactions_past_tense: {
+    unlocking_token: 'Unlocked {0}',
+    setting_up_proxy: 'Set up proxy',
+    creating_cdp: 'Created Vault',
+    generate_dai: 'Generated {0} DAI',
+    pay_back_dai: 'Paid back {0} DAI',
+    withdrawing_gem: 'Withdrew {0}',
+    depositing_gem: 'Deposited {0}',
+    claiming_collateral: 'Claimed collateral',
+    send: 'Sent {0} to {1}'
   },
   transaction_manager: {
     transaction_singular_capitalised: '交易',
@@ -388,6 +399,7 @@ export default {
   },
   connect: '连接',
   view: '查看',
+  dismiss: 'Dismiss',
   exit: '退出',
   close: '关闭',
   connect_to: '连接 {0}',

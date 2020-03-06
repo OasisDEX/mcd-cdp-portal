@@ -16,7 +16,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useSidebar from 'hooks/useSidebar';
 import useLanguage from 'hooks/useLanguage';
 import { showWalletTokens } from 'references/config';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatSymbol } from 'utils/ui';
 import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
 import useAnalytics from 'hooks/useAnalytics';
@@ -132,16 +132,6 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     } else {
       showSidebar(props);
     }
-  };
-
-  const formatSymbol = token => {
-    return token === 'MDAI'
-      ? 'DAI'
-      : token === 'DAI'
-      ? 'SAI'
-      : token === 'MWETH'
-      ? 'WETH'
-      : token;
   };
 
   const tokenBalances = useMemo(

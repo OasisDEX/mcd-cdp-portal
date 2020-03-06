@@ -29,7 +29,6 @@ function MakerProvider({
   mocks
 }) {
   const [account, setAccount] = useState(null);
-  const [txReferences, setTxReferences] = useState([]);
   const [txLastUpdate, setTxLastUpdate] = useState({});
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
@@ -164,25 +163,6 @@ function MakerProvider({
     };
   }, [maker, connectBrowserProvider]);
 
-  const newTxListener = (transaction, txMessage) =>
-    setTxReferences(current => [...current, [transaction, txMessage]]);
-
-  const resetTx = () => setTxReferences([]);
-
-  const selectors = {
-    transactions: () =>
-      txReferences
-        .map(([promise, message]) => {
-          const txManager = maker.service('transactionManager');
-          try {
-            return { tx: txManager.getTransaction(promise), message };
-          } catch {
-            return null;
-          }
-        })
-        .filter(Boolean)
-  };
-
   return (
     <MakerObjectContext.Provider
       value={{
@@ -191,11 +171,6 @@ function MakerProvider({
         account,
         network,
         txLastUpdate,
-        resetTx,
-        transactions: txReferences,
-        newTxListener,
-        /* checkForNewCdps, */
-        selectors,
         connectBrowserProvider,
         viewedAddress,
         navigation

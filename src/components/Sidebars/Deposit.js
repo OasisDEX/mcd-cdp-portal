@@ -20,7 +20,7 @@ const { long, medium } = decimalRules;
 const Deposit = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
   const { hasProxy } = useProxy();
 
   let {
@@ -57,12 +57,9 @@ const Deposit = ({ vault, reset }) => {
 
   const deposit = () => {
     const currency = getCurrency({ ilk: vaultType });
-    newTxListener(
-      maker
-        .service('mcd:cdpManager')
-        .lock(vault.id, vaultType, currency(amountToDeposit)),
-      lang.formatString(lang.transactions.depositing_gem, symbol)
-    );
+    maker
+      .service('mcd:cdpManager')
+      .lock(vault.id, vaultType, currency(amountToDeposit));
     reset();
   };
 
