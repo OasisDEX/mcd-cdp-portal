@@ -121,10 +121,10 @@ const MobileNav = ({ viewedAddress }) => {
         >
           <Box mr="s">
             <Box my="s">
-              <AccountBox
+              {/* <AccountBox
                 currentAccount={account}
                 closeSidebarDrawer={() => setSidebarDrawerOpen(false)}
-              />
+              /> */}
             </Box>
             <SidebarGlobal />
           </Box>
