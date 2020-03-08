@@ -17,9 +17,8 @@ const MMLogo = styled(MetaMaskLogo)`
   margin-left: -5px;
 `;
 
-export default function BrowserProviderButton({ provider, ...props }) {
-  const { lang } = useLanguage();
-  const icon = useMemo(() => {
+export const useBrowserIcon = provider =>
+  useMemo(() => {
     if (provider === wallets.METAMASK) {
       return <MMLogo />;
     } else if (provider === wallets.TRUST) {
@@ -43,6 +42,9 @@ export default function BrowserProviderButton({ provider, ...props }) {
     }
   }, [provider]);
 
+export default function BrowserProviderButton({ provider, ...props }) {
+  const { lang } = useLanguage();
+  const icon = useBrowserIcon(provider);
   return (
     <IconButton icon={icon} {...props}>
       {lang.providers[provider] || 'Active Wallet'}

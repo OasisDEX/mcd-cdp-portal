@@ -23,6 +23,7 @@ import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger2.svg';
 import { ReactComponent as WalletLinkLogo } from '../images/wallet-link2.svg';
 import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
+import { useBrowserIcon } from './BrowserProviderButton';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   margin-top: -5px;
@@ -75,6 +76,9 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const [otherAccounts, setOtherAccounts] = useState([]);
   const { url } = useCurrentRoute();
 
+  const providerName = getWebClientProviderName();
+  const browserIcon = useBrowserIcon(providerName);
+
   function onAccountChosen({ address }) {
     if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
       const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
@@ -101,8 +105,6 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     account &&
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
-
-  const providerName = getWebClientProviderName();
 
   async function connectBrowserWallet() {
     try {
@@ -158,6 +160,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectBrowserWallet();
               close();
             }}
+            icon={browserIcon}
           >
             {lang.formatString(
               lang.connect_to,

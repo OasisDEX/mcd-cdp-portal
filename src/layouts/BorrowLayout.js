@@ -4,6 +4,7 @@ import { Grid, Box } from '@makerdao/ui-components-core';
 import { hot } from 'react-hot-loader/root';
 import SidebarBase from 'components/SidebarBase';
 import theme, { getSpace } from '../styles/theme';
+import { ReactComponent as MetaMaskGlobal } from '../images/metamask-global.svg';
 
 const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   return (
@@ -27,6 +28,7 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
       <Box display={{ s: 'none', l: 'block' }}>
         <SidebarBase />
       </Box>
+      <MetaMaskGlobal height="0px" width="0px" />
     </Grid>
   );
 };
