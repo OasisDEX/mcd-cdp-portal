@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import useLanguage from 'hooks/useLanguage';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { ReactComponent as TrustLogo } from 'images/trust-logo.svg';
-import { ReactComponent as ImTokenLogo } from 'images/imtoken-logo.svg';
 import coinbaseWalletLogo from 'images/coinbase-wallet.png';
 import alphaWalletLogo from 'images/alpha-wallet-logo.png';
 import { wallets } from 'utils/web3';
+import ImTokenLogo from 'components/ImTokenLogo';
 import IconButton from 'components/IconButton';
 
 const MMLogo = styled(MetaMaskLogo)`
