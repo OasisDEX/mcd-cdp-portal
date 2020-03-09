@@ -10,11 +10,8 @@ import alphaWalletLogo from 'images/alpha-wallet-logo.png';
 import { wallets } from 'utils/web3';
 import IconButton from 'components/IconButton';
 
-// hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-left: -5px;
+  margin: -5px 0;
 `;
 
 export const useBrowserIcon = provider =>

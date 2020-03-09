@@ -11,8 +11,8 @@ import lang from 'languages';
 
 // hack to get around button padding for now
 const StyledLedgerLogo = styled(LedgerLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  max-width: 16px;
+  max-height: 16px;
 `;
 
 export const LEDGER_LIVE_PATH = "44'/60'/0'";
