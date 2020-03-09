@@ -8,7 +8,6 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
@@ -110,11 +109,6 @@ const DsrWithdraw = ({ savings, reset }) => {
           }
         />
       </Grid>
-      <ProxyAllowanceToggle
-        token="MDAI"
-        onlyShowAllowance={true}
-        trackBtnClick={trackBtnClick}
-      />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
           disabled={!valid}

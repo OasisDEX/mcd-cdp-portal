@@ -17,7 +17,6 @@ import { subtract, greaterThan, equalTo, minimum } from '../../utils/bignumber';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';
@@ -108,6 +107,7 @@ const Payback = ({ vault, reset }) => {
     : vault.calculateCollateralizationRatio({
         debtValue: MDAI(debtValue.minus(amountToPayback))
       });
+
   return (
     <Grid gridRowGap="m">
       <Grid gridRowGap="s">
@@ -136,7 +136,6 @@ const Payback = ({ vault, reset }) => {
           }
         />
       </Grid>
-      <ProxyAllowanceToggle token="MDAI" trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
           disabled={!valid}
@@ -181,4 +180,5 @@ const Payback = ({ vault, reset }) => {
     </Grid>
   );
 };
+
 export default Payback;

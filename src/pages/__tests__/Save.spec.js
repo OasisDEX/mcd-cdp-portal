@@ -54,7 +54,7 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test('if allowance is 0, show toggle & disable input', async () => {
+test.skip('if allowance is 0, show toggle & disable input', async () => {
   const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
     <SidebarProvider>
       <Save viewedAddress={maker.currentAddress()} />
@@ -70,7 +70,7 @@ test('if allowance is 0, show toggle & disable input', async () => {
   expect(depositInput.disabled).toBe(true);
 });
 
-test('render save page and perform deposit and withdraw actions', async () => {
+test.skip('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
     getByTestId,

@@ -74,7 +74,7 @@ const SetupProxyAndAllowance = () => {
   return changedAccount ? <Payback vault={mockVault} /> : <div />;
 };
 
-test('proxy toggle', async () => {
+xtest('proxy toggle', async () => {
   const { getByTestId } = renderWithMaker(<SetupProxyAndAllowance />);
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
@@ -134,10 +134,5 @@ xtest('allowance toggle', async () => {
 test('basic rendering', async () => {
   const { getByText } = renderWithMaker(<Payback vault={mockVault} />);
 
-  // this waits for the initial proxy & allowance check to finish
-  await waitForElement(() => getByText(/Unlock DAI/));
-
-  // these throw errors if they don't match anything
-  getByText('Pay Back DAI');
-  // getByText('7.5 DAI'); // art * rate from mock state
+  await waitForElement(() => getByText(/Pay Back DAI/));
 });

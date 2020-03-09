@@ -12,7 +12,6 @@ import useAnalytics from 'hooks/useAnalytics';
 import { formatCollateralizationRatio, formatter } from 'utils/ui';
 import { multiply } from 'utils/bignumber';
 import { getCurrency } from 'utils/cdp';
-import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
 import BigNumber from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';
 const { long, medium } = decimalRules;
@@ -94,7 +93,6 @@ const Deposit = ({ vault, reset }) => {
           data-testid="deposit-input"
         />
       </Grid>
-      <ProxyAllowanceToggle token={symbol} trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
           disabled={!valid}
