@@ -47,7 +47,14 @@ const ActionButton = ({ children, ...rest }) => (
   </Button>
 );
 
-const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
+const TokenBalance = ({
+  symbol,
+  amount,
+  usdRatio,
+  button,
+  hasActiveAccount,
+  ...props
+}) => {
   return (
     <Flex
       key={`wb_${symbol}`}
@@ -73,7 +80,7 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount && prettifyNumber(amount, true)) || '--'}
+        {(hasActiveAccount && amount && prettifyNumber(amount, true)) || '--'}
       </Text>
       <Text
         color="darkLavender"
@@ -82,7 +89,8 @@ const TokenBalance = ({ symbol, amount, usdRatio, button, ...props }) => {
         textAlign="left"
         width="30%"
       >
-        {(amount &&
+        {(hasActiveAccount &&
+          amount &&
           usdRatio &&
           `$${prettifyNumber(amount.times(usdRatio.toNumber()), true, 2)}`) ||
           '--'}
@@ -192,6 +200,7 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                   symbol={symbol}
                   amount={amount}
                   usdRatio={usdRatio}
+                  hasActiveAccount={hasActiveAccount}
                   button={
                     hasActiveAccount &&
                     (symbol === 'DSR' ? (
