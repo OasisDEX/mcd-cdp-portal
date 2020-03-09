@@ -18,15 +18,17 @@ import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
-import { AccountTypes, Routes } from '../utils/constants';
+import { AccountTypes, Routes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
-import { ReactComponent as LedgerLogo } from 'images/ledger2.svg';
-import { ReactComponent as WalletLinkLogo } from '../images/wallet-link2.svg';
+import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
+import { useBrowserIcon } from './BrowserProviderButton';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  max-width: 14px;
+  margin-top: 4px;
 `;
 
 const StyledWalletLinkLogo = styled(WalletLinkLogo)`
@@ -34,6 +36,14 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
   margin-bottom: -5px;
   height: 21px;
   width: 21px;
+`;
+
+const IconBox = styled(Box)`
+  & > svg {
+    display: inline-block;
+  }
+  width: 26px;
+  text-align: center;
 `;
 
 const Option = ({ icon, children, ...props }) => {
@@ -50,8 +60,8 @@ const Option = ({ icon, children, ...props }) => {
       {...props}
     >
       <Flex alignItems="center">
-        {icon}
-        <span style={{ margin: 'auto' }}>
+        <IconBox>{icon}</IconBox>
+        <span style={{ marginLeft: '14px' }}>
           <Text p="body">{children}</Text>
         </span>
       </Flex>
@@ -74,6 +84,9 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
   const { url } = useCurrentRoute();
+
+  const providerName = getWebClientProviderName();
+  const browserIcon = useBrowserIcon(providerName);
 
   function onAccountChosen({ address }) {
     if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
@@ -101,8 +114,6 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     account &&
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
-
-  const providerName = getWebClientProviderName();
 
   async function connectBrowserWallet() {
     try {
@@ -158,6 +169,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectBrowserWallet();
               close();
             }}
+            icon={browserIcon}
           >
             {lang.formatString(
               lang.connect_to,
@@ -216,6 +228,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
                 disconnect();
                 close();
               }}
+              icon={<DisconnectIcon />}
             >
               {lang.disconnect}
             </Option>
