@@ -1,7 +1,9 @@
 import React from 'react';
 
 const ImTokenLogo = () => {
-  const unique = Date.now().toString();
+  const unique = Math.random()
+    .toString(36)
+    .substring(2, 7);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
