@@ -119,7 +119,10 @@ const DsrWithdraw = ({ savings, reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Confirm', { amount: withdrawAmount });
+            trackBtnClick('Confirm', {
+              amount: withdrawAmount,
+              fathom: { id: 'saveWithdraw', amount: withdrawAmount }
+            });
             withdraw();
           }}
           data-testid={'withdraw-button'}

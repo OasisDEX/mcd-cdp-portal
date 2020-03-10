@@ -154,7 +154,10 @@ const CDPCreateConfirmSummary = ({
       <ScreenFooter
         canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
         onNext={() => {
-          trackBtnClick('Next', { isFirstVault });
+          trackBtnClick('Next', {
+            isFirstVault,
+            fathom: { id: 'openVault', amount: cdpParams.daiToDraw }
+          });
           capturedDispatch({ type: 'increment-step' });
         }}
         onBack={() => {

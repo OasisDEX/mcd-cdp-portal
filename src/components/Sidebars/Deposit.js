@@ -99,7 +99,10 @@ const Deposit = ({ vault, reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Confirm', { amount });
+            trackBtnClick('Confirm', {
+              amount,
+              fathom: { id: 'vaultDeposit', amount }
+            });
             deposit();
           }}
         >

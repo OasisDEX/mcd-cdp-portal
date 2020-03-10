@@ -5,7 +5,7 @@ let snapshotData;
 const originalError = console.error;
 beforeAll(async () => {
   snapshotData = await takeSnapshot();
-
+  window.fathom = jest.fn();
   jest.setTimeout(10000);
 
   // this is just a little hack to silence a warning that we'll get until react
@@ -22,5 +22,6 @@ beforeAll(async () => {
 
 afterAll(() => {
   console.error = originalError;
+  window.fathom = undefined;
   restoreSnapshot(snapshotData);
 });

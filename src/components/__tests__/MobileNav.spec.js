@@ -6,7 +6,7 @@ import { mount, route, createMemoryNavigation } from 'navi';
 
 import { ThemeProvider } from 'styled-components';
 import theme from 'styles/theme';
-
+import { mocks } from '../../../test/helpers/render';
 import LanguageProvider from '../../providers/LanguageProvider';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import MobileNav from '../MobileNav';
@@ -24,7 +24,7 @@ test('MobileNav menu displays Save, Borrow, and Trade buttons', async () => {
     <LanguageProvider>
       <ThemeProvider theme={theme}>
         <NaviProvider navigation={navigation}>
-          <TestMakerProvider waitForAuth={true}>
+          <TestMakerProvider waitForAuth={true} mocks={mocks}>
             <MobileNav cdpId={cdpId} />
           </TestMakerProvider>
         </NaviProvider>

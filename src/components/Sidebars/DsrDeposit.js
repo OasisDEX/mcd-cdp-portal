@@ -109,7 +109,10 @@ const DsrDeposit = ({ savings, reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Confirm', { amount: depositAmount });
+            trackBtnClick('Confirm', {
+              amount: depositAmount,
+              fathom: { id: 'saveDeposit', amount: depositAmount }
+            });
             deposit();
           }}
           data-testid={'deposit-button'}

@@ -10,6 +10,7 @@ import {
 import LoadingLayout from '../layouts/LoadingLayout';
 import schemas from '@makerdao/dai-plugin-mcd/dist/schemas';
 import useObservable, { watch } from 'hooks/useObservable';
+import useAnalytics from 'hooks/useAnalytics';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -33,6 +34,8 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
+  const { trackBtnClick } = useAnalytics();
+
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
@@ -132,6 +135,8 @@ function MakerProvider({
 
     maker.on('accounts/CHANGE', eventObj => {
       const { account } = eventObj.payload;
+      if (eventObj.sequence === 1)
+        trackBtnClick(undefined, { fathom: { id: 'connectWallet' } });
       sessionStorage.setItem('lastConnectedWalletType', account.type);
       sessionStorage.setItem(
         'lastConnectedWalletAddress',
