@@ -102,7 +102,7 @@ const Generate = ({ vault, reset }) => {
           onClick={() => {
             trackBtnClick('Confirm', {
               amount,
-              fathom: { id: 'vaultGenerate', amount }
+              fathom: { id: `${symbol}VaultGenerate`, amount }
             });
             generate();
           }}

@@ -7,10 +7,14 @@ const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
 const fathomGoals = {
   test: {
     connectWallet: 'HDM3M0GY',
-    vaultDeposit: 'L7FMVIJF',
-    vaultWithdraw: 'JXEAHVCQ',
-    vaultPayback: 'BN3W47XO',
-    vaultGenerate: 'PA1BAWGN',
+    ETHVaultDeposit: 'TEZECNXD',
+    ETHVaultWithdraw: 'NLXKLFB0',
+    ETHVaultPayback: 'MUOTJQBT',
+    ETHVaultGenerate: 'RNETPMAI',
+    BATVaultDeposit: '79HIQJYY',
+    BATVaultWithdraw: 'EWFRWHQF',
+    BATVaultPayback: 'J7LCT5MR',
+    BATVaultGenerate: 'NKEQFMM9',
     saveDeposit: 'PYNWBWXG',
     saveWithdraw: 'E33XOIJF',
     openETHVaultDraw: 'QGVJSAAV',

@@ -101,7 +101,7 @@ const Deposit = ({ vault, reset }) => {
           onClick={() => {
             trackBtnClick('Confirm', {
               amount,
-              fathom: { id: 'vaultDeposit', amount }
+              fathom: { id: `${symbol}VaultDeposit`, amount }
             });
             deposit();
           }}

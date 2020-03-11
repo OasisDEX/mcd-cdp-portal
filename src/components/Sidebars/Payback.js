@@ -143,7 +143,7 @@ const Payback = ({ vault, reset }) => {
           onClick={() => {
             trackBtnClick('Confirm', {
               amount,
-              fathom: { id: 'vaultPayback', amount }
+              fathom: { id: `${symbol}VaultPayback`, amount }
             });
             payback();
           }}
