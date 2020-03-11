@@ -167,7 +167,7 @@ export default {
     setup_proxy_proxy_text:
       'Configure your Vault for easy management. This only has to be done once.',
     setup_proxy_allowance_text:
-      'This permission allows Oasis to interact with your {0}. This has to be done once for each new collateral type.',
+      'This permission allows Oasis to interact with your {0}. This must be done once for each collateral type.',
     setup_proxy_proxy_button: 'Setup',
     setup_proxy_allowance_button: 'Set',
     setup_vault: 'Setup Vault',
@@ -217,12 +217,15 @@ export default {
     proxy_failure_not_mined: 'This transaction is taking longer than usual...',
     proxy_failure_not_mined_info:
       'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later.',
-    proxy_failure_contract_data: 'There was an error with your Ledger wallet...',
+    proxy_failure_contract_data:
+      'There was an error with your Ledger wallet...',
     proxy_failure_contract_data_info:
       'If you see this message and are using a Ledger hardware wallet, it often means that you need to enable "Contract Data." To do this, go to your Ethereum app on Ledger, choose Settings and then Contract Data.',
     proxy_failure_rejected: 'The transaction has been rejected on the wallet',
-    proxy_failure_timeout: 'Your transaction timed out and was automatically rejected',
-    proxy_failure_timeout_info: 'This error is often caused because you did not sign the transaction in a reasonable time, and it has been automatically rejected by the wallet. Where this has happened, you often still need to reject the transaction yourself on the wallet to allow you to sign another.',
+    proxy_failure_timeout:
+      'Your transaction timed out and was automatically rejected',
+    proxy_failure_timeout_info:
+      'This error is often caused because you did not sign the transaction in a reasonable time, and it has been automatically rejected by the wallet. Where this has happened, you often still need to reject the transaction yourself on the wallet to allow you to sign another.'
   },
   cdp_migrate: {
     select_title: 'Select Vault to Migrate',
@@ -331,7 +334,8 @@ export default {
     invalid_min_gas: 'Balance is below the required tx fee: {0}',
     invalid_max_gas: 'Balance is below the Amount + tx fee: {0}',
     invalid_address: 'This is not a valid address',
-    invalid_allowance: 'Amount is higher than your allowance for {0}'
+    invalid_allowance: 'Amount is higher than your allowance for {0}',
+    proxy_allowance_permission: 'Giving permissions'
   },
   save: {
     title: 'Savings',
@@ -444,6 +448,7 @@ export default {
   your_balance: 'Your balance',
   why_is_this: 'Why is this?',
   // "risk_parameters": "Risk Parameters",
+  step_n_of_m: 'Step {0} of {1}. {2}',
   terms_of_service_text: 'I have read and accept the {0}',
   terms_of_service: 'Terms of Service',
   cookie_notice: 'By using this website you agree to our {0}',

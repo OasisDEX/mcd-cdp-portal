@@ -39,7 +39,7 @@ export default function useTokenAllowance(tokenSymbol) {
     allowanceLoading,
     allowanceErrors,
     startedWithoutAllowance,
-    allowance,
+    allowance: tokenSymbol === 'ETH' || !proxyAddress ? null : allowance,
     hasSufficientAllowance
   };
 }

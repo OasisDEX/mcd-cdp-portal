@@ -17,6 +17,8 @@ import { subtract, greaterThan, equalTo, minimum } from '../../utils/bignumber';
 
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
+import ProxyAllowanceStepper from './shared/ProxyAllowanceStepper';
+
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';
@@ -110,11 +112,11 @@ const Payback = ({ vault, reset }) => {
 
   return (
     <Grid gridRowGap="m">
-      <Grid gridRowGap="s">
-        <Text.h4 color="darkLavender">
-          {lang.action_sidebar.payback_title}
-        </Text.h4>
-        <Text.p t="body">{lang.action_sidebar.payback_description}</Text.p>
+      <ProxyAllowanceStepper
+        token={symbol}
+        title={lang.action_sidebar.payback_title}
+        description={lang.action_sidebar.payback_description}
+      >
         <Input
           type="number"
           value={amount}
@@ -135,48 +137,48 @@ const Payback = ({ vault, reset }) => {
             />
           }
         />
-      </Grid>
-      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button
-          disabled={!valid}
-          onClick={() => {
-            trackBtnClick('Confirm', { amount });
-            payback();
-          }}
-        >
-          {lang.actions.pay_back}
-        </Button>
-        <Button
-          variant="secondary-outline"
-          onClick={() => {
-            trackBtnClick('Cancel');
-            reset();
-          }}
-        >
-          {lang.cancel}
-        </Button>
-      </Grid>
-      <InfoContainer>
-        <Info
-          title={lang.action_sidebar.dai_balance}
-          body={`${daiBalance &&
-            formatter(daiBalance, { precision: long })} DAI`}
-        />
-        <Info
-          title={lang.action_sidebar.dai_debt}
-          body={`${formatter(debtValue, { precision: long })} DAI`}
-        />
-        <Info
-          title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice, {
-            infinity: BigNumber(0).toFixed(medium)
-          })} USD/${symbol}`}
-        />
-        <Info
-          title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
-        />
-      </InfoContainer>
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+          <Button
+            disabled={!valid}
+            onClick={() => {
+              trackBtnClick('Confirm', { amount });
+              payback();
+            }}
+          >
+            {lang.actions.pay_back}
+          </Button>
+          <Button
+            variant="secondary-outline"
+            onClick={() => {
+              trackBtnClick('Cancel');
+              reset();
+            }}
+          >
+            {lang.cancel}
+          </Button>
+        </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.dai_balance}
+            body={`${daiBalance &&
+              formatter(daiBalance, { precision: long })} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.dai_debt}
+            body={`${formatter(debtValue, { precision: long })} DAI`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={`${formatter(liquidationPrice, {
+              infinity: BigNumber(0).toFixed(medium)
+            })} USD/${symbol}`}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={formatCollateralizationRatio(collateralizationRatio)}
+          />
+        </InfoContainer>
+      </ProxyAllowanceStepper>
     </Grid>
   );
 };

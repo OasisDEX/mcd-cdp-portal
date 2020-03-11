@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  Card,
-  Button,
-  Grid,
-  Tooltip
-} from '@makerdao/ui-components-core';
+import { Text, Button, Grid, Tooltip } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
@@ -44,6 +38,7 @@ const SuccessButton = () => {
 };
 
 const ProxyAllowanceCheck = ({
+  isSidebar = false,
   proxyAddress,
   deployProxy,
   proxyLoading,
@@ -63,9 +58,9 @@ const ProxyAllowanceCheck = ({
   } = labels;
 
   return (
-    <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
+    <>
       <Grid gridRowGap="xs">
-        <Text.h4>{setup_header}</Text.h4>
+        <Text t={isSidebar ? 'h5' : 'h4'}>{setup_header}</Text>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {setup_text}
         </Text.p>
@@ -127,8 +122,8 @@ const ProxyAllowanceCheck = ({
           )}
         </Text.p>
       </Grid>
-      <Grid gridRowGap="xs" mt="l">
-        <Text.h4>{lang.cdp_create.set_allowance}</Text.h4>
+      <Grid gridRowGap="xs" mt={isSidebar ? 's' : 'l'}>
+        <Text t={isSidebar ? 'h5' : 'h4'}>{lang.cdp_create.set_allowance}</Text>
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {allowance_text}
         </Text.p>
@@ -146,7 +141,7 @@ const ProxyAllowanceCheck = ({
           </Button>
         )}
       </Grid>
-    </Card>
+    </>
   );
 };
 

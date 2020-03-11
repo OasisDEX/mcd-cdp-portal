@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box, Card, Text } from '@makerdao/ui-components-core';
 import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import { useWeb3BlockHeight } from 'hooks/useBlockHeight';
@@ -52,18 +52,20 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
       <Text.h2 textAlign="center" mb="xl">
         {lang.cdp_create.setup_proxy_title}
       </Text.h2>
-      <ProxyAllowanceCheck
-        proxyAddress={proxyAddress}
-        deployProxy={setupProxy}
-        labels={labels}
-        proxyLoading={proxyLoading}
-        proxyDeployed={proxyDeployed}
-        hasProxy={hasProxy}
-        proxyErrors={proxyErrors}
-        setAllowance={setAllowance}
-        hasAllowance={hasAllowance}
-        isSettingAllowance={isSettingAllowance}
-      />
+      <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
+        <ProxyAllowanceCheck
+          proxyAddress={proxyAddress}
+          deployProxy={setupProxy}
+          labels={labels}
+          proxyLoading={proxyLoading}
+          proxyDeployed={proxyDeployed}
+          hasProxy={hasProxy}
+          proxyErrors={proxyErrors}
+          setAllowance={setAllowance}
+          hasAllowance={hasAllowance}
+          isSettingAllowance={isSettingAllowance}
+        />
+      </Card>
       <ScreenFooter
         onNext={() => {
           trackBtnClick('Next', { isFirstVault });

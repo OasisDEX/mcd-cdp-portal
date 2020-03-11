@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box, Card, Text } from '@makerdao/ui-components-core';
 import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
@@ -50,18 +50,20 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
       <Text.h2 textAlign="center" mb="xl">
         {lang.dsr_deposit.open_vault}
       </Text.h2>
-      <ProxyAllowanceCheck
-        proxyAddress={proxyAddress}
-        deployProxy={setupProxy}
-        labels={labels}
-        proxyLoading={proxyLoading}
-        proxyDeployed={proxyDeployed}
-        proxyErrors={proxyErrors}
-        hasProxy={hasProxy}
-        setAllowance={setAllowance}
-        hasAllowance={hasAllowance}
-        isSettingAllowance={isSettingAllowance}
-      />
+      <Card px={{ s: 'l', m: '2xl' }} py="l" mb="xl">
+        <ProxyAllowanceCheck
+          proxyAddress={proxyAddress}
+          deployProxy={setupProxy}
+          labels={labels}
+          proxyLoading={proxyLoading}
+          proxyDeployed={proxyDeployed}
+          proxyErrors={proxyErrors}
+          hasProxy={hasProxy}
+          setAllowance={setAllowance}
+          hasAllowance={hasAllowance}
+          isSettingAllowance={isSettingAllowance}
+        />
+      </Card>
       <ScreenFooter
         onNext={() => dispatch({ type: 'increment-step' })}
         onBack={onClose}
