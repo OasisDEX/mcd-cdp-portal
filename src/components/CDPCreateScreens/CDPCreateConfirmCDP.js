@@ -156,7 +156,16 @@ const CDPCreateConfirmSummary = ({
         onNext={() => {
           trackBtnClick('Next', {
             isFirstVault,
-            fathom: { id: 'openVault', amount: cdpParams.daiToDraw }
+            fathom: [
+              {
+                id: `open${selectedIlk.gem}VaultDraw`,
+                amount: cdpParams.daiToDraw
+              },
+              {
+                id: `open${selectedIlk.gem}VaultLock`,
+                amount: cdpParams.gemsToLock
+              }
+            ]
           });
           capturedDispatch({ type: 'increment-step' });
         }}
