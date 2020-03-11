@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
+import { AccountTypes } from '../utils/constants';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import {
@@ -39,6 +40,12 @@ function MakerProvider({
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
+  };
+
+  const removeAccounts = () => {
+    maker.service('accounts')._accounts = {};
+    maker.service('accounts')._currentAccount = '';
+    setAccount(null);
   };
 
   const connectBrowserProvider = useCallback(async () => {
@@ -168,6 +175,40 @@ function MakerProvider({
     };
   }, [maker, connectBrowserProvider]);
 
+  const connectToProviderOfType = async type => {
+    if (!maker) return;
+    if (maker.service('accounts').hasAccount()) {
+      initAccount(maker.currentAccount());
+    } else {
+      const account = await maker.addAccount({
+        type
+      });
+      maker.useAccountWithAddress(account.address);
+    }
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
+  };
+
+  const disconnectWalletLink = subprovider => subprovider.resetWallet();
+  const disconnectWalletConnect = async subprovider =>
+    (await subprovider.getWalletConnector()).killSession();
+  const disconnectBrowserWallet = () =>
+    ['lastConnectedWalletType', 'lastConnectedWalletAddress'].forEach(x =>
+      sessionStorage.removeItem(x)
+    );
+
+  const disconnect = () => {
+    const subprovider = maker.service('accounts').currentWallet();
+    if (subprovider.isWalletLink) disconnectWalletLink(subprovider);
+    else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
+    else if (
+      sessionStorage.getItem('lastConnectedWalletType') ===
+      AccountTypes.METAMASK
+    )
+      disconnectBrowserWallet();
+    removeAccounts();
+  };
+
   return (
     <MakerObjectContext.Provider
       value={{
@@ -177,6 +218,8 @@ function MakerProvider({
         network,
         txLastUpdate,
         connectBrowserProvider,
+        connectToProviderOfType,
+        disconnect,
         viewedAddress,
         navigation
       }}
