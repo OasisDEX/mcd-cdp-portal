@@ -1639,14 +1639,14 @@
     babel-runtime "^6.26.0"
     walletlink "^2.0.1"
 
-"@makerdao/dai@^0.27.0":
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.27.0.tgz#e5d991041a932f08e28a7907534601d6517bf35e"
-  integrity sha512-uPljw9pJndWw1xy/yNFeREWOWO9RUhewuaFnBd0/++hGEvnQFSBgaNEu5ZRtRUQKtEuYb4PVZfdPgBvt+Ux1yA==
+"@makerdao/dai@^0.28.0":
+  version "0.28.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.28.0.tgz#c15d6b093ae21f2022f5e3d5963ec03fcccb5650"
+  integrity sha512-JZJ/jh8f7tRb88qgZ/J6qBwb7w/4FVbrllk1PR2HUs8ewW4VLEcvaX4PjgMB/FbBGzVERVI/MI/WDxTyxawyGg==
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@makerdao/currency" "^0.9.5"
-    "@makerdao/multicall" "^0.10.0-rc.4"
+    "@makerdao/multicall" "^0.11.0"
     "@makerdao/services-core" "^0.9.9"
     assert "^1.4.1"
     bignumber.js "^7.2.1"
@@ -1675,10 +1675,10 @@
   resolved "https://registry.yarnpkg.com/@makerdao/i18n-helper/-/i18n-helper-0.1.7.tgz#e0e06bf8bc0ee60b2ccd9a35d91253ab7275be4a"
   integrity sha512-z3bdSoJr3bEazKmEtjPYtfhmLaWVaA3EyEfu3thPrdTRjIjrAwAbh4mu0/aW6/nV/pbCA7ZxobI3r2WTpVPJlg==
 
-"@makerdao/multicall@^0.10.0-rc.4":
-  version "0.10.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.10.0-rc.4.tgz#05cd24b3db34ba46f9173ede1c34347a2001e560"
-  integrity sha512-TTHXf78SPnBkNUGMhDKs42TnLCa8aoNBy4cMO/QzqWB+a0+/H8wI1SlFxD7mHLMjTdxVdncZ/99/p0Mk375kVg==
+"@makerdao/multicall@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@makerdao/multicall/-/multicall-0.11.0.tgz#690f0fc85f0ca0d430263034df6956b3ad71cbf7"
+  integrity sha512-qr5Isrw42z3MAxqn3vcb2z56/RmecZ+cC59hTbTrBrPwCOVpTRC8bD9trh6Q0HD2P9sXnbMa8PAJDaUyjaGiPg==
   dependencies:
     "@babel/runtime" "^7.7.4"
     cross-fetch "^3.0.4"
