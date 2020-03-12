@@ -1,52 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import BigNumber from 'bignumber.js';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
-import useStore from 'hooks/useStore';
-import useValidatedInput from 'hooks/useValidatedInput';
+import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { getCdp, getDebtAmount, getCollateralAmount } from 'reducers/cdps';
-import { calcCDPParams } from '../../utils/cdp';
-import { add, subtract, greaterThan } from '../../utils/bignumber';
-import {
-  formatCollateralizationRatio,
-  formatLiquidationPrice,
-  safeToFixed
-} from '../../utils/ui';
-import useMaker from '../../hooks/useMaker';
-import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
+import useValidatedInput from 'hooks/useValidatedInput';
+import { add, greaterThan } from 'utils/bignumber';
+import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { decimalRules } from '../../styles/constants';
+const { long, medium } = decimalRules;
 
-const Generate = ({ cdpId, reset }) => {
+const Generate = ({ vault, reset }) => {
   const { trackBtnClick } = useAnalytics('Generate', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
-  const [daiAvailable, setDaiAvailable] = useState(0);
-  const [liquidationPrice, setLiquidationPrice] = useState(0);
-  const [collateralizationRatio, setCollateralizationRatio] = useState(0);
+  const { maker } = useMaker();
 
-  const [storeState] = useStore();
-  const cdp = getCdp(cdpId, storeState);
-  const { liquidationRatio } = cdp;
-
-  const collateralAmount = getCollateralAmount(cdp, false);
-  const debtAmount = getDebtAmount(cdp, false);
-  const undercollateralized = greaterThan(
+  let {
+    debtValue,
+    daiAvailable,
+    vaultType,
+    debtFloor,
+    collateralAmount,
     liquidationRatio,
-    collateralizationRatio
-  );
+    collateralizationRatio: currentCollateralizationRatio
+  } = vault;
+  BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
+  debtValue = debtValue.toBigNumber().decimalPlaces(18);
+  const symbol = collateralAmount?.symbol;
 
-  const dustLimit = cdp.dust ? cdp.dust : 0;
-
-  // minFloat uses <= so it won't work for dustLimit
   const dustLimitValidation = value =>
-    greaterThan(dustLimit, add(value, debtAmount));
+    greaterThan(debtFloor, add(value, debtValue));
 
-  const [amount, , onAmountChange, amountErrors] = useValidatedInput(
+  const [amount, , onAmountChange, failureMessage] = useValidatedInput(
     '',
     {
-      maxFloat: daiAvailable,
+      maxFloat: formatter(daiAvailable),
+      minFloat: 0,
       isFloat: true,
       custom: {
         dustLimit: dustLimitValidation
@@ -55,40 +48,28 @@ const Generate = ({ cdpId, reset }) => {
     {
       maxFloat: () => lang.action_sidebar.cdp_below_threshold,
       dustLimit: () =>
-        lang.formatString(lang.cdp_create.below_dust_limit, dustLimit)
+        lang.formatString(
+          lang.cdp_create.below_dust_limit,
+          formatter(debtFloor)
+        )
     }
   );
 
-  useEffect(() => {
-    const amountToGenerate = amount || 0;
-    const {
-      liquidationPrice,
-      collateralizationRatio,
-      daiAvailable
-    } = calcCDPParams({
-      ilkData: cdp,
-      gemsToLock: collateralAmount,
-      daiToDraw: add(debtAmount, amountToGenerate)
-    });
-
-    // fractional diffs between daiAvailable & debtAmount can result in a negative amount
-    const daiAvailablePositive = Math.max(
-      0,
-      subtract(daiAvailable, debtAmount)
-    );
-
-    setDaiAvailable(daiAvailablePositive);
-    setLiquidationPrice(liquidationPrice);
-    setCollateralizationRatio(collateralizationRatio);
-  }, [amount, cdp, collateralAmount, debtAmount]);
+  const amountToGenerate = amount || 0;
+  const undercollateralized = daiAvailable.lt(amount);
 
   const generate = () => {
-    newTxListener(
-      maker.service('mcd:cdpManager').draw(cdpId, cdp.ilk, MDAI(amount)),
-      lang.transactions.generate_dai
-    );
+    maker.service('mcd:cdpManager').draw(vault.id, vaultType, MDAI(amount));
     reset();
   };
+
+  const liquidationPrice = vault.calculateLiquidationPrice({
+    debtValue: vault?.debtValue.plus(amountToGenerate)
+  });
+
+  const collateralizationRatio = vault.calculateCollateralizationRatio({
+    debtValue: vault?.debtValue.plus(amountToGenerate)
+  });
 
   return (
     <Grid gridRowGap="m">
@@ -103,12 +84,12 @@ const Generate = ({ cdpId, reset }) => {
           min="0"
           onChange={onAmountChange}
           placeholder="0.00 DAI"
-          failureMessage={amountErrors}
+          failureMessage={failureMessage}
         />
         <RatioDisplay
           type={RatioDisplayTypes.CARD}
           ratio={collateralizationRatio}
-          ilkLiqRatio={liquidationRatio}
+          ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
           text={lang.action_sidebar.generate_warning}
           onlyWarnings={true}
           show={amount !== '' && amount > 0 && !undercollateralized}
@@ -117,9 +98,12 @@ const Generate = ({ cdpId, reset }) => {
       </Grid>
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
-          disabled={!amount || amountErrors}
+          disabled={!amount || failureMessage}
           onClick={() => {
-            trackBtnClick('Confirm', { amount });
+            trackBtnClick('Confirm', {
+              amount,
+              fathom: { id: `${symbol}VaultGenerate`, amount }
+            });
             generate();
           }}
         >
@@ -138,21 +122,24 @@ const Generate = ({ cdpId, reset }) => {
       <InfoContainer>
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
-          body={`${safeToFixed(daiAvailable, 7)} DAI`}
+          body={`${formatter(daiAvailable, { precision: long })} DAI`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={formatLiquidationPrice(liquidationPrice, cdp.currency.symbol)}
+          body={`${formatter(liquidationPrice, {
+            infinity: BigNumber(0).toFixed(medium)
+          })} USD/${symbol}`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
           body={
             <RatioDisplay
               type={RatioDisplayTypes.TEXT}
-              ratio={collateralizationRatio}
-              ilkLiqRatio={liquidationRatio}
+              ratio={formatter(collateralizationRatio, {
+                infinity: currentCollateralizationRatio
+              })}
+              ilkLiqRatio={formatter(liquidationRatio, { percentage: true })}
               text={formatCollateralizationRatio(collateralizationRatio)}
-              show={amount !== '' && amount > 0 && !undercollateralized}
             />
           }
         />

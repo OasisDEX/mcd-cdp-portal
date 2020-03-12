@@ -6,11 +6,34 @@ import {
   Grid,
   Tooltip
 } from '@makerdao/ui-components-core';
-
 import lang from 'languages';
-
 import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import TooltipContents from 'components/TooltipContents';
+import { VendorErrors } from 'utils/constants';
+
+const errorStates = {
+  [VendorErrors.ENABLE_CONTRACT_DATA]: {
+    message: lang.cdp_create.proxy_failure_contract_data,
+    information: lang.cdp_create.proxy_failure_contract_data_info,
+    retry: true
+  },
+  [VendorErrors.USER_REJECTED]: {
+    message: lang.cdp_create.proxy_failure_rejected,
+    retry: true
+  },
+  [VendorErrors.TIMEOUT]: {
+    message: lang.cdp_create.proxy_failure_timeout,
+    information: lang.cdp_create.proxy_failure_timeout_info,
+    retry: true
+  }
+};
+
+const parseError = proxyErrors =>
+  errorStates[(proxyErrors?.name)] || {
+    message: lang.cdp_create.proxy_failure_not_mined,
+    information: lang.cdp_create.proxy_failure_not_mined_info,
+    retry: false
+  };
 
 const SuccessButton = () => {
   return (
@@ -26,6 +49,7 @@ const ProxyAllowanceCheck = ({
   proxyLoading,
   proxyDeployed,
   proxyErrors,
+  hasProxy,
   setAllowance,
   hasAllowance,
   labels,
@@ -45,32 +69,46 @@ const ProxyAllowanceCheck = ({
         <Text.p color="darkLavender" fontSize="l" lineHeight="normal">
           {setup_text}
         </Text.p>
-        {proxyAddress ? (
+        {hasProxy ? (
           <SuccessButton />
         ) : (
           <Button
             width="13.0rem"
             mt="xs"
             onClick={deployProxy}
-            disabled={proxyLoading || isSettingAllowance || !!proxyErrors}
-            loading={proxyLoading || !!proxyErrors}
+            disabled={
+              proxyLoading ||
+              isSettingAllowance ||
+              !!(proxyErrors && !parseError(proxyErrors).retry)
+            }
+            loading={
+              proxyLoading || !!(proxyErrors && !parseError(proxyErrors).retry)
+            }
           >
-            {lang.cdp_create.setup_proxy_proxy_button}
+            {parseError(proxyErrors).retry
+              ? lang.actions.try_again
+              : lang.cdp_create.setup_proxy_proxy_button}
           </Button>
         )}
         <Text.p t="subheading" lineHeight="normal">
           {proxyErrors && (
             <>
-              {lang.cdp_create.proxy_failure_not_mined}
-              <Tooltip
-                fontSize="m"
-                ml="2xs"
-                content={
-                  <TooltipContents>
-                    {lang.cdp_create.proxy_failure_not_mined_info}
-                  </TooltipContents>
-                }
-              />
+              {parseError(proxyErrors).message}
+              {parseError(proxyErrors).information && (
+                <Tooltip
+                  fontSize="xs"
+                  ml="s"
+                  color="blue"
+                  noDecoration
+                  content={
+                    <TooltipContents>
+                      {parseError(proxyErrors).information}
+                    </TooltipContents>
+                  }
+                >
+                  {lang.why_is_this}
+                </Tooltip>
+              )}
             </>
           )}
           {proxyLoading && confirmations_text}

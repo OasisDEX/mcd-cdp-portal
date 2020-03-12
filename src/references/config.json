@@ -1,33 +1,51 @@
 {
-  "supportedNetworkIds": ["1337", "999", "42", "1"],
+  "supportedNetworkIds": ["1337", "999", "5", "4", "3", "42", "1"],
   "rpcUrls": {
     "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "3": "https://ropsten.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "https://rinkeby.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "5": "https://goerli.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "999": "http://localhost:2000",
     "1337": "http://localhost:2000"
   },
   "wsRpcUrls": {
     "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
+    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "3": "wss://ropsten.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "wss://rinkeby.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "5": "wss://goerli.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
   },
   "networkNames": {
     "1": "mainnet",
     "42": "kovan",
+    "3": "ropsten",
+    "4": "rinkeby",
+    "5": "goerli",
     "999": "testnet",
     "1337": "testnet"
   },
   "networkDisplayNames": {
     "1": "Mainnet",
     "42": "Kovan Testnet",
+    "3": "Ropsten Testnet",
+    "4": "Rinkeby Testnet",
+    "5": "Goerli Testnet",
     "999": "Testchain",
     "1337": "Ex_Testchain"
   },
   "defaultNetwork": "1",
   "exTestchainApiUrl": "http://localhost:4000/chain",
+  "showFeeds": ["ETH", "BAT"],
+  "showWalletTokens": ["MDAI", "DSR", "ETH", "SAI", "MWETH", "BAT"],
   "trackingPages": {
     "Overview": "Overview",
     "CDP": "Dashboard",
     "Save": "Dashboard",
     "Landing": "Landing"
+  },
+  "txManager": {
+    "autoDismissFadeoutTime": 500,
+    "autoDismissTime": 10000
   }
 }

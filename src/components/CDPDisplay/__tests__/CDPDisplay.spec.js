@@ -1,7 +1,14 @@
 import React from 'react';
-import { cleanup, fireEvent, within, wait } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  within,
+  wait,
+  waitForElement
+} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { mineBlocks } from '@makerdao/test-helpers';
 
 import CDPDisplay from '../';
 import { renderWithAccount } from '../../../../test/helpers/render';
@@ -22,9 +29,11 @@ const VAULT1_ETH = '5';
 const AMOUNT = 210;
 
 let maker;
+let web3;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+  web3 = maker.service('web3');
   await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(AMOUNT));
@@ -66,13 +75,16 @@ test('Vault Display page and actions', async () => {
       .nextElementSibling.textContent;
 
   expect(getEthBal()).toContain('89.');
-  expect(getEthUsdValue()).toBe('$13.5K');
+  expect(getEthUsdValue()).toBe('$13.4K');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
   /**Deposit */
   click(getByText('Deposit'));
   await findByText(/would you like to deposit/);
+
+  // wait for proxy check to complete
+  await mineBlocks(web3, 5);
 
   // ETH locked before
   const [, depositLabel] = getAllByText('ETH locked');
@@ -82,7 +94,6 @@ test('Vault Display page and actions', async () => {
   change(getByRole('textbox'), { target: { value: '2.33' } });
   const [, depSidebarBtn] = getAllByText('Deposit');
 
-  // wait for hasProxy check to complete
   await wait(() => {
     expect(depSidebarBtn).not.toHaveAttribute('disabled');
   });
@@ -104,7 +115,7 @@ test('Vault Display page and actions', async () => {
 
   // amount to generate before
   const generateLabel = getByText('Available to generate');
-  expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
+  expect(generateLabel.nextElementSibling.textContent).toBe('522.99 DAI');
 
   // submit generate
   change(getByRole('textbox'), { target: { value: '25' } });
@@ -130,6 +141,7 @@ test('Vault Display page and actions', async () => {
   expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 
   // must unlock Dai first
+  await waitForElement(() => getByTestId('allowance-toggle'));
   const allowanceBtn = getByTestId('allowance-toggle').children[1];
   await wait(() => {
     expect(allowanceBtn).not.toHaveAttribute('disabled');

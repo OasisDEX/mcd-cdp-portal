@@ -1,5 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, { ETH, MKR, BAT } from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, BAT, MDAI } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
@@ -9,7 +9,26 @@ import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
 import { getQueryParamByName } from './utils/dev';
 
+import rinkebyAddresses from './references/contracts/rinkeby';
+import goerliAddresses from './references/contracts/goerli';
+import ropstenAddresses from './references/contracts/ropsten';
+
 let _maker;
+
+const otherNetworksOverrides = [
+  {
+    network: 'rinkeby',
+    contracts: rinkebyAddresses
+  },
+  { network: 'goerli', contracts: goerliAddresses },
+  { network: 'ropsten', contracts: ropstenAddresses }
+].reduce((acc, { network, contracts }) => {
+  for (const [contractName, contractAddress] of Object.entries(contracts)) {
+    if (!acc[contractName]) acc[contractName] = {};
+    acc[contractName][network] = contractAddress;
+  }
+  return acc;
+}, {});
 
 export function getMaker() {
   if (_maker === undefined) throw new Error('Maker has not been instatiated');
@@ -27,7 +46,17 @@ export async function instantiateMaker({
   testchainId,
   backendEnv
 }) {
-  const mcdPluginConfig = { cdpTypes, prefetch: false };
+  const addressOverrides = ['rinkeby', 'ropsten', 'goerli'].some(
+    networkName => networkName === network
+  )
+    ? otherNetworksOverrides
+    : {};
+
+  const mcdPluginConfig = {
+    cdpTypes,
+    prefetch: false,
+    addressOverrides
+  };
   const walletLinkPluginConfig = {
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
   };
@@ -42,7 +71,7 @@ export async function instantiateMaker({
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
-      addContracts: {}
+      addressOverrides
     },
     provider: {
       url: rpcUrl,
@@ -81,4 +110,4 @@ export async function instantiateMaker({
   return maker;
 }
 
-export { USD, DAI, MKR, ETH };
+export { USD, DAI, ETH, BAT, MDAI };

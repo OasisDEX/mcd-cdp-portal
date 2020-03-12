@@ -1,48 +1,52 @@
 import React from 'react';
 import { render, waitForElement } from '@testing-library/react';
 import LanguageProvider from '../../src/providers/LanguageProvider';
-import StoreProvider from '../../src/providers/StoreProvider';
+import VaultsProvider from '../../src/providers/VaultsProvider';
+import NotificationProvider from '../../src/providers/NotificationProvider';
+import TransactionManagerProvider from '../../src/providers/TransactionManagerProvider';
 import TestMakerProvider from './TestMakerProvider';
 import theme from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
-import rootReducer from '../../src/reducers';
 import useMaker from '../../src/hooks/useMaker';
 
-const defaultInitialState = rootReducer({}, {});
+export const mocks = {
+  navigation: { navigate: jest.fn() },
+  // Provide multicall schemas to mock. They must return an observable.
+  watch: schemas => (key, ...args) => schemas[key] && schemas[key](...args)
+};
 
-export const mocks = { navigation: { navigate: jest.fn() } };
+export const useMakerMock = (mockServices = {}) => {
+  /** Provide an object of maker services & methods you want to mock, eg:
+        multicall: {
+          watch: () => jest.fn()
+        }
+  */
+  const { maker } = useMaker();
+  Object.entries(mockServices).map(([name, methods]) =>
+    Object.entries(methods).map(
+      ([method, mockFn]) => (maker.service(name)[method] = mockFn())
+    )
+  );
+  return { maker };
+};
 
-export function renderWithMaker(
-  children,
-  updateInitialState,
-  reducer,
-  providerProps
-) {
-  const state = updateInitialState
-    ? updateInitialState(defaultInitialState)
-    : defaultInitialState;
-
-  return renderWithStore(
+export function renderWithMaker(children, providerProps) {
+  return renderWithProviders(
     <TestMakerProvider {...providerProps} waitForAuth={true} mocks={mocks}>
       {children}
-    </TestMakerProvider>,
-    state,
-    reducer
+    </TestMakerProvider>
   );
 }
 
-export function renderWithStore(children, initialState = {}, reducer = null) {
+export function renderWithProviders(children) {
   return render(
-    <LanguageProvider>
-      <ThemeProvider theme={theme}>
-        <StoreProvider
-          reducer={reducer ? reducer : rootReducer}
-          initialState={initialState}
-        >
-          {children}
-        </StoreProvider>
-      </ThemeProvider>
-    </LanguageProvider>
+    <NotificationProvider>
+      <LanguageProvider>
+        <TransactionManagerProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </TransactionManagerProvider>
+      </LanguageProvider>
+    </NotificationProvider>
   );
 }
 
@@ -66,4 +70,11 @@ export async function renderWithAccount(children, ...args) {
   );
   await waitForElement(() => account);
   return { ...output, account };
+}
+
+export function renderWithVaults(children, viewedAddress) {
+  return renderWithMaker(
+    <VaultsProvider viewedAddress={viewedAddress}>{children}</VaultsProvider>,
+    {}
+  );
 }

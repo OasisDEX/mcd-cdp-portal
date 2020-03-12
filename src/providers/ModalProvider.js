@@ -66,7 +66,7 @@ function ModalProvider({ children, modals, templates }) {
   );
 
   return (
-    <ModalStateContext.Provider value={{ show, reset }}>
+    <ModalStateContext.Provider value={{ show, reset, showing: shouldShow }}>
       <ModalTemplateComponent
         ref={ref}
         show={shouldShow}

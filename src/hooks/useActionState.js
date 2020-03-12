@@ -1,11 +1,8 @@
 import { useState, useCallback } from 'react';
 
-export default function useActionState(
-  action,
-  errorMessage = 'An error occurred. Please try again.'
-) {
+export default function useActionState(action) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const onAction = useCallback(async () => {
     setError('');
@@ -15,16 +12,16 @@ export default function useActionState(
       const res = await action();
       setIsLoading(false);
       setSuccess(true);
-      setError('');
+      setError(null);
       return res;
     } catch (err) {
       setIsLoading(false);
-      setError(err.toString());
+      setError(err);
     }
   }, [action, setIsLoading, setError]);
 
   const reset = useCallback(() => {
-    setError('');
+    setError(null);
     setSuccess(false);
   }, [setError, setSuccess]);
   return [onAction, isLoading, success, error, reset];

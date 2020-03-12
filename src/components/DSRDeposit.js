@@ -7,13 +7,12 @@ import {
   DSRDepositCreate,
   DSRDepositConfirm
 } from 'components/DSRDepositScreens';
-import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { TxLifecycle } from 'utils/constants';
+import useProxy from 'hooks/useProxy';
 
 const initialState = {
   step: 0,
-  proxyAddress: null,
   daiToJoin: '',
   depositAmount: '',
   txState: ''
@@ -32,11 +31,6 @@ function reducer(state, action) {
         ...state,
         step: state.step - ((payload && payload.by) || 1)
       };
-    case 'set-proxy-address':
-      return {
-        ...state,
-        proxyAddress: payload.address
-      };
     case 'form/set-deposit-amount':
       return { ...state, depositAmount: payload.depositAmount };
     case 'transaction-confirmed':
@@ -49,9 +43,8 @@ function reducer(state, action) {
 }
 
 function DSRDeposit({ onClose, hideOnboarding }) {
-  const { maker, account } = useMaker();
   const { lang } = useLanguage();
-  const [{ step, proxyAddress, depositAmount, txState }, dispatch] = useReducer(
+  const [{ step, depositAmount, txState }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -73,17 +66,7 @@ function DSRDeposit({ onClose, hideOnboarding }) {
     ],
     [lang]
   );
-
-  useEffect(() => {
-    const checkProxy = async () => {
-      try {
-        const address = await maker.service('proxy').currentProxy();
-        dispatch({ type: 'set-proxy-address', payload: { address } });
-      } catch (err) {}
-    };
-
-    checkProxy();
-  }, [maker, account]);
+  const { proxyAddress } = useProxy();
 
   useEffect(() => {
     if (proxyAddress) {

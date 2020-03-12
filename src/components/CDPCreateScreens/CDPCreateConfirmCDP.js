@@ -9,11 +9,11 @@ import {
   Button,
   Link
 } from '@makerdao/ui-components-core';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { calcCDPParams } from 'utils/cdp';
-import { formatCollateralizationRatio } from 'utils/ui';
+import { formatter } from 'utils/ui';
 import { etherscanLink } from 'utils/ethereum';
 import { networkIdToName } from 'utils/network';
 import ScreenFooter from '../ScreenFooter';
@@ -23,6 +23,7 @@ import { TxLifecycle } from 'utils/constants';
 import styled from 'styled-components';
 import { getColor } from '../../styles/theme';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
+import { BigNumber } from 'bignumber.js';
 
 const StyledExternalLink = styled(ExternalLinkIcon)`
   path {
@@ -36,39 +37,55 @@ const CDPCreateConfirmSummary = ({
   selectedIlk,
   capturedDispatch,
   enableSubmit,
-  isFirstVault
+  isFirstVault,
+  ilkData
 }) => {
   const { trackBtnClick } = useAnalytics('ConfirmVault', 'VaultCreate');
   const { lang } = useLanguage();
   const [hasReadTOS, setHasReadTOS] = useState(false);
   const [hasUnderstoodSF, setHasUnderstoodSF] = useState(false);
 
-  const {
-    liquidationPenalty,
-    liquidationRatio,
-    stabilityFee
-  } = selectedIlk.data;
-  const { gemsToLock, daiToDraw } = cdpParams;
-  const { liquidationPrice, collateralizationRatio } = calcCDPParams({
-    ilkData: selectedIlk.data,
-    gemsToLock,
-    daiToDraw
-  });
+  const { liquidationPenalty, liquidationRatio, annualStabilityFee } = ilkData;
 
   const rows = [
     [
       lang.verbs.depositing,
-      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.currency.symbol}`
+      `${prettifyNumber(cdpParams.gemsToLock)} ${selectedIlk.gem}`
     ],
     [lang.verbs.generating, `${prettifyNumber(cdpParams.daiToDraw)} DAI`],
     [
       lang.collateralization,
-      formatCollateralizationRatio(collateralizationRatio)
+      `${formatter(
+        ilkData.calculateCollateralizationRatio(
+          BigNumber(cdpParams.gemsToLock),
+          MDAI(cdpParams.daiToDraw)
+        )
+      )}%`
     ],
-    [lang.liquidation_ratio, `${liquidationRatio}%`],
-    [lang.liquidation_price, `$${liquidationPrice.toFixed(2)}`],
-    [lang.liquidation_penalty, `${liquidationPenalty}%`],
-    [lang.stability_fee, `${stabilityFee}%`]
+    [
+      lang.liquidation_ratio,
+      `${formatter(liquidationRatio, { percentage: true })}%`
+    ],
+    [
+      lang.liquidation_price,
+      `$${formatter(
+        ilkData.calculateliquidationPrice(
+          BigNumber(cdpParams.gemsToLock),
+          MDAI(cdpParams.daiToDraw)
+        )
+      )}`
+    ],
+    [
+      lang.liquidation_penalty,
+      `${formatter(liquidationPenalty, { percentage: true })}%`
+    ],
+    [
+      lang.stability_fee,
+      `${formatter(annualStabilityFee, {
+        integer: true,
+        percentage: true
+      })}%`
+    ]
   ];
   return (
     <Box
@@ -137,7 +154,19 @@ const CDPCreateConfirmSummary = ({
       <ScreenFooter
         canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
         onNext={() => {
-          trackBtnClick('Next', { isFirstVault });
+          trackBtnClick('Next', {
+            isFirstVault,
+            fathom: [
+              {
+                id: `open${selectedIlk.gem}VaultDraw`,
+                amount: cdpParams.daiToDraw
+              },
+              {
+                id: `open${selectedIlk.gem}VaultLock`,
+                amount: cdpParams.gemsToLock
+              }
+            ]
+          });
           capturedDispatch({ type: 'increment-step' });
         }}
         onBack={() => {
@@ -242,10 +271,10 @@ const CDPCreateConfirmCDP = ({
   cdpParams,
   selectedIlk,
   isFirstVault,
+  collateralTypesData,
   onClose
 }) => {
-  const { lang } = useLanguage();
-  const { maker, checkForNewCdps, newTxListener } = useMaker();
+  const { maker } = useMaker();
   const [enableSubmit, setEnableSubmit] = useState(true);
 
   const { gemsToLock, daiToDraw, txState } = cdpParams;
@@ -259,19 +288,17 @@ const CDPCreateConfirmCDP = ({
     const txObject = maker
       .service('mcd:cdpManager')
       .openLockAndDraw(
-        selectedIlk.key,
+        selectedIlk.symbol,
         selectedIlk.currency(gemsToLock),
         daiToDraw
       );
 
     setEnableSubmit(false);
-    newTxListener(txObject, lang.transactions.creating_cdp);
 
     const txMgr = maker.service('transactionManager');
     txMgr.listen(txObject, {
       pending: tx => setOpenCDPTxHash(tx.hash),
       confirmed: () => {
-        checkForNewCdps();
         dispatch({ type: 'transaction-confirmed' });
       },
       error: () => setEnableSubmit(true)
@@ -295,6 +322,8 @@ const CDPCreateConfirmCDP = ({
       capturedDispatch={capturedDispatch}
       enableSubmit={enableSubmit}
       isFirstVault={isFirstVault}
+      collateralTypesData={collateralTypesData}
+      ilkData={collateralTypesData.find(x => x.symbol === selectedIlk.symbol)}
     />
   );
 };

@@ -13,15 +13,16 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { safeToFixed } from '../../utils/ui';
 
-const Deposit = ({ reset }) => {
+const DsrDeposit = ({ savings, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   const { symbol } = MDAI;
   const displaySymbol = 'DAI';
 
-  const { MDAI: daiBalance, DSR: dsrBalance } = useWalletBalances();
+  const { daiLockedInDsr } = savings;
+  const { MDAI: daiBalance } = useWalletBalances();
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
 
   const [
@@ -56,10 +57,7 @@ const Deposit = ({ reset }) => {
   }, [daiBalance, setDepositAmount]);
 
   const deposit = () => {
-    newTxListener(
-      maker.service('mcd:savings').join(MDAI(depositAmount)),
-      lang.formatString(lang.transactions.depositing_gem, displaySymbol)
-    );
+    maker.service('mcd:savings').join(MDAI(depositAmount));
     reset();
   };
 
@@ -111,7 +109,10 @@ const Deposit = ({ reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Confirm', { amount: depositAmount });
+            trackBtnClick('Confirm', {
+              amount: depositAmount,
+              fathom: { id: 'saveDeposit', amount: depositAmount }
+            });
             deposit();
           }}
           data-testid={'deposit-button'}
@@ -135,10 +136,10 @@ const Deposit = ({ reset }) => {
         />
         <Info
           title={lang.action_sidebar.locked_dsr}
-          body={`${safeToFixed(dsrBalance.toNumber(), 7)} ${displaySymbol}`}
+          body={`${safeToFixed(daiLockedInDsr.toNumber(), 7)} ${displaySymbol}`}
         />
       </InfoContainer>
     </Grid>
   );
 };
-export default Deposit;
+export default DsrDeposit;

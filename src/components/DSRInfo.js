@@ -3,37 +3,36 @@ import BigNumber from 'bignumber.js';
 
 import TextMono from 'components/TextMono';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
-import useStore from 'hooks/useStore';
-import useWalletBalances from 'hooks/useWalletBalances';
 import useLanguage from 'hooks/useLanguage';
 import usePrevious from 'hooks/usePrevious';
-import useProxy from 'hooks/useProxy';
 import useMaker from 'hooks/useMaker';
-import theme from '../styles/theme';
+
 import { InfoContainerRow, CdpViewCard } from './CDPDisplay/subcomponents';
 import { TextBlock } from 'components/Typography';
+import { formatter } from 'utils/ui';
 
+const FF_DYNAMIC_DECIMALS = false;
 function Ticker({ amount, increment, decimals, ...props }) {
   const [counter, setCounter] = useState(amount);
-
   const requestRef = useRef();
-  const previousTimeRef = useRef(0);
+  const previousTimeRef = useRef();
 
   const animate = time => {
-    const deltaTime = time - previousTimeRef.current;
-    if (deltaTime > 0) {
-      setCounter(prevCount => deltaTime * increment + prevCount);
+    if (previousTimeRef.current !== undefined) {
+      const deltaTime = time - previousTimeRef.current;
+      if (deltaTime > 0) {
+        setCounter(prevCount => deltaTime * increment + prevCount);
+      }
     }
     previousTimeRef.current = time;
     requestRef.current = requestAnimationFrame(animate);
   };
 
   useEffect(() => {
-    requestAnimationFrame(animate);
+    requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <TextMono {...props}>
       {counter ? counter.toFixed(decimals) : (0).toFixed(decimals)}
@@ -46,42 +45,36 @@ const initialState = {
   earnings: BigNumber(0),
   amountChange: BigNumber(0),
   decimalsToShow: 4,
-  interestAccrued: 0,
-  rawEarnings: 0,
+  rawEarnings: BigNumber(0),
   amountChangeMillisecond: BigNumber(0.000001),
   fetchedEarnings: false,
   fetchingEarnings: false,
   initialised: false,
-  renderUpdates: false,
-  earningsDispatched: false
+  earningsDispatched: false,
+  totalDaiLockedAmountDelta: BigNumber(0),
+  tickerInterest: BigNumber(0),
+  tickerStartTime: 0,
+  cleanedState: false
 };
 
-function DSRInfo() {
+function DSRInfo({ isMobile, savings }) {
   const { lang } = useLanguage();
-  const [
-    {
-      savings: { dsr: daiSavingsRate, rho, yearlyRate }
-    }
-  ] = useStore();
-  const { DSR } = useWalletBalances();
-  const { proxyAddress } = useProxy();
-  const { maker, account } = useMaker();
+  const { maker } = useMaker();
+  const cancelled = useRef(false);
 
-  const emSize = parseInt(getComputedStyle(document.body).fontSize);
-  const pxBreakpoint = parseInt(theme.breakpoints.l) * emSize;
-  const isMobile = document.documentElement.clientWidth < pxBreakpoint;
+  useEffect(() => {
+    return () => (cancelled.current = true);
+  }, []);
 
-  const address = account?.address;
-  const prevAddress = usePrevious(address);
-  const prevDsr = usePrevious(DSR.toNumber());
-  const prevProxy = usePrevious(proxyAddress);
-  const mobileViewChange = usePrevious(isMobile);
-  const dsrChanged = prevDsr !== DSR.toNumber();
-
-  const addressChanged =
-    address !== undefined &&
-    prevAddress !== undefined &&
-    prevAddress !== address;
+  const {
+    proxyAddress,
+    annualDaiSavingsRate,
+    daiSavingsRate,
+    dateEarningsLastAccrued,
+    daiLockedInDsr,
+    savingsRateAccumulator,
+    savingsDai
+  } = savings;
 
   const [
     {
@@ -90,97 +83,153 @@ function DSRInfo() {
       amountChange,
       decimalsToShow,
       rawEarnings,
-      interestAccrued,
-      amountChangeMillisecond,
       fetchedEarnings,
       fetchingEarnings,
+      earningsDispatched,
+      totalDaiLockedAmountDelta,
+      tickerInterest,
+      tickerStartTime,
       initialised,
-      renderUpdates,
-      earningsDispatched
+      cleanedState
     },
     dispatch
   ] = useReducer((state, data) => ({ ...state, ...data }), initialState);
+
+  const decimals =
+    !isMobile && FF_DYNAMIC_DECIMALS
+      ? amountChange.times(100).e * -1
+      : daiLockedInDsr.eq(0)
+      ? 4
+      : daiLockedInDsr.lt(1000)
+      ? 8
+      : daiLockedInDsr.lt(100000)
+      ? 6
+      : 4;
 
   const fetchEarnings = async () => {
     const etd = await maker
       .service('mcd:savings')
       .getEarningsToDate(proxyAddress);
+    if (cancelled.current) return;
     dispatch({
       fetchingEarnings: false,
       fetchedEarnings: true,
-      rawEarnings: etd
+      rawEarnings: etd.toBigNumber()
     });
   };
 
+  const daiBalance = savingsDai.times(savingsRateAccumulator);
+  const prevDaiLocked = usePrevious(daiBalance);
+  const rawEarningsString = rawEarnings.toString();
+
+  const prevSavingsDai = usePrevious(savingsDai);
+  const savingsDaiChanged =
+    prevSavingsDai !== undefined &&
+    prevSavingsDai.toString() !== savingsDai.toString();
+
+  const prevSavingsRateAccumulator = usePrevious(savingsRateAccumulator);
+  const savingsRateAccChanged =
+    prevSavingsRateAccumulator !== undefined &&
+    prevSavingsRateAccumulator.toString() !== savingsRateAccumulator.toString();
+
   useEffect(() => {
-    if (
-      proxyAddress !== undefined &&
-      prevProxy !== proxyAddress &&
-      !fetchedEarnings &&
-      !fetchingEarnings
-    ) {
-      dispatch({ fetchingEarnings: true });
-      fetchEarnings();
-    }
-
-    if (addressChanged) {
-      dispatch(initialState);
-    }
-
-    if (dsrChanged) {
-      dispatch({ initialised: false });
-      if (DSR.gt(0)) {
-        const amountChangePerSecond = daiSavingsRate.minus(1).times(DSR);
-        const accruedInterestSinceDrip = amountChangePerSecond.times(
-          Math.floor(Date.now() / 1000) - rho
-        );
-        const amountChangePerMillisecond = amountChangePerSecond.div(1000);
+    if (cleanedState) {
+      if (proxyAddress && !fetchedEarnings && !fetchingEarnings) {
+        fetchEarnings(proxyAddress);
         dispatch({
-          balance: DSR.plus(accruedInterestSinceDrip),
-          amountChange: amountChangePerMillisecond,
-          interestAccrued: accruedInterestSinceDrip,
-          decimalsToShow: amountChangePerMillisecond.times(100).e * -1,
-          amountChangeMillisecond: amountChangePerMillisecond,
-          initialised: true,
-          renderUpdates: true
-        });
-      } else {
-        dispatch({
-          balance: BigNumber(0),
-          amountChange: BigNumber(0),
-          initialised: true,
-          decimalsToShow: 4
+          fetchingEarnings: true
         });
       }
-    }
 
-    if (fetchedEarnings && initialised && !earningsDispatched) {
+      if (
+        savingsRateAccChanged ||
+        savingsDaiChanged ||
+        (fetchedEarnings && !earningsDispatched)
+      ) {
+        const amountChangePerSecond = daiSavingsRate
+          .minus(1)
+          .times(daiLockedInDsr);
+
+        const secondsSinceDrip =
+          Math.floor(Date.now() / 1000) -
+          dateEarningsLastAccrued.getTime() / 1000;
+
+        const accruedInterestSinceDrip = daiLockedInDsr.gt(0)
+          ? amountChangePerSecond.times(secondsSinceDrip)
+          : BigNumber(0);
+
+        const amountChangePerMillisecond = amountChangePerSecond.div(1000);
+        const daiLockedAmountDelta =
+          !savingsDaiChanged && savingsRateAccChanged
+            ? daiBalance.minus(prevDaiLocked)
+            : BigNumber(0);
+
+        if (fetchedEarnings && initialised) {
+          if (!earningsDispatched) {
+            const timeSinceTickerStart = Date.now() - tickerStartTime;
+            const interestSinceTickerStart =
+              timeSinceTickerStart > 2500
+                ? amountChangePerSecond.times(timeSinceTickerStart / 1000)
+                : BigNumber(0);
+
+            dispatch({
+              balance: daiBalance.plus(accruedInterestSinceDrip),
+              amountChange: amountChangePerMillisecond,
+              decimalsToShow: decimals,
+              earningsDispatched: true,
+              totalDaiLockedAmountDelta: totalDaiLockedAmountDelta.plus(
+                daiLockedAmountDelta
+              ),
+              tickerInterest: interestSinceTickerStart,
+              earnings: rawEarnings
+                .plus(accruedInterestSinceDrip)
+                .plus(daiLockedAmountDelta)
+                .plus(totalDaiLockedAmountDelta)
+                .plus(interestSinceTickerStart)
+            });
+          } else {
+            dispatch({
+              balance: daiBalance.plus(accruedInterestSinceDrip),
+              amountChange: amountChangePerMillisecond,
+              decimalsToShow: decimals,
+              totalDaiLockedAmountDelta: totalDaiLockedAmountDelta.plus(
+                daiLockedAmountDelta
+              ),
+              earnings: rawEarnings
+                .plus(accruedInterestSinceDrip)
+                .plus(daiLockedAmountDelta)
+                .plus(totalDaiLockedAmountDelta)
+                .plus(tickerInterest)
+            });
+          }
+        } else {
+          dispatch({
+            balance: daiBalance.plus(accruedInterestSinceDrip),
+            amountChange: amountChangePerMillisecond,
+            decimalsToShow: decimals,
+            tickerStartTime: Date.now(),
+            initialised: true
+          });
+        }
+      }
+    } else {
+      // state must be reset on account switch
+      cancelled.current = false;
       dispatch({
-        earningsDispatched: true,
-        earnings: rawEarnings.toBigNumber().plus(interestAccrued)
+        ...initialState,
+        cleanedState: true
       });
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    addressChanged,
-    dsrChanged,
+    savingsRateAccChanged,
+    savingsDaiChanged,
+    rawEarningsString,
     fetchedEarnings,
-    fetchingEarnings,
-    renderUpdates,
-    proxyAddress
+    initialised,
+    cleanedState
   ]);
-
-  useEffect(() => {
-    dispatch({
-      decimalsToShow: !isMobile
-        ? amountChangeMillisecond.times(100).e * -1
-        : DSR.lt(1000)
-        ? 8
-        : DSR.lt(100000)
-        ? 6
-        : 4
-    });
-  }, [mobileViewChange]); // eslint-disable-line
 
   return (
     <CdpViewCard title={lang.save.dai_locked_dsr}>
@@ -222,7 +271,16 @@ function DSRInfo() {
       <InfoContainerRow
         title={lang.save.dai_savings_rate}
         value={
-          yearlyRate ? <TextMono>{yearlyRate.toFixed(2)}%</TextMono> : '--'
+          annualDaiSavingsRate ? (
+            <TextMono>
+              {formatter(annualDaiSavingsRate, {
+                rounding: BigNumber.ROUND_HALF_UP
+              })}
+              %
+            </TextMono>
+          ) : (
+            '--'
+          )
         }
       />
     </CdpViewCard>

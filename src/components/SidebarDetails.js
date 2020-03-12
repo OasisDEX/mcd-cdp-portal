@@ -1,24 +1,29 @@
 import React from 'react';
 import useLanguage from 'hooks/useLanguage';
 import { Text, Box, Card, CardBody, Flex } from '@makerdao/ui-components-core';
-import { prettifyNumber } from 'utils/ui';
+import { prettifyNumber, formatter } from 'utils/ui';
+import BigNumber from 'bignumber.js';
 
 const SidebarDetails = ({ system, savings }) => {
   const { lang } = useLanguage();
 
   const TOTAL_DAI_SUPPLY = ({ system }) => [
     lang.sidebar.save_details.total_dai_supply,
-    prettifyNumber(system.totalDebt)
+    prettifyNumber(system.totalDaiSupply)
   ];
 
   const TOTAL_SAVINGS_DAI = ({ system }) => [
     lang.sidebar.save_details.total_savings_dai,
-    prettifyNumber(system.totalSavingsDai)
+    prettifyNumber(system.totalDaiLockedInDsr)
   ];
 
-  const DAI_SAVINGS_RATE = ({ savings }) => [
+  const DAI_SAVINGS_RATE = ({ system }) => [
     lang.sidebar.save_details.dai_savings_rate,
-    savings?.yearlyRate.toFixed(2) + '%'
+    system.annualDaiSavingsRate
+      ? formatter(system.annualDaiSavingsRate, {
+          rounding: BigNumber.ROUND_HALF_UP
+        }) + '%'
+      : ''
   ];
 
   const params = [TOTAL_DAI_SUPPLY, TOTAL_SAVINGS_DAI, DAI_SAVINGS_RATE].map(

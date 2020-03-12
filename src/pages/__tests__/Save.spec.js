@@ -11,15 +11,20 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
-
+import { createCurrency } from '@makerdao/currency';
+import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import Save from '../Save';
 import {
   renderWithAccount,
-  renderWithMaker
+  renderWithMaker,
+  mocks,
+  useMakerMock
 } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
 import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
+import { of } from 'rxjs';
+import { ZERO_ADDRESS } from 'utils/constants';
 
 const { click, change } = fireEvent;
 
@@ -37,15 +42,33 @@ navi.Link = styled.a``;
 const AMOUNT = 80.1234567;
 const ILK = 'ETH-A';
 let maker;
+let web3;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+  web3 = maker.service('web3');
   await await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
 });
 
 afterEach(cleanup);
+
+test('if allowance is 0, show toggle & disable input', async () => {
+  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
+    <SidebarProvider>
+      <Save viewedAddress={maker.currentAddress()} />
+      <SidebarBase />
+    </SidebarProvider>
+  );
+
+  await findByText('Savings');
+  click(getByTestId('sidebar-deposit-button'));
+  await waitForElement(() => getAllByText('Unlock DAI to continue'));
+
+  const depositInput = getByRole('textbox');
+  expect(depositInput.disabled).toBe(true);
+});
 
 test('render save page and perform deposit and withdraw actions', async () => {
   const {
@@ -57,7 +80,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
     findByText
   } = await renderWithAccount(
     <SidebarProvider>
-      <Save />
+      <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
     </SidebarProvider>
   );
@@ -82,6 +105,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await findByText(/would you like to deposit/);
 
   // Unlock dai to continue
+  await waitForElement(() => getByTestId('allowance-toggle'));
   const [allowanceToggle] = getAllByTestId('allowance-toggle');
   click(allowanceToggle.children[1]);
   await waitForElement(() => getByText('DAI unlocked'));
@@ -99,6 +123,9 @@ test('render save page and perform deposit and withdraw actions', async () => {
   click(getByTestId('sidebar-withdraw-button'));
   await findByText(/would you like to withdraw/);
 
+  // wait for proxy and allowance check
+  await mineBlocks(web3, 5);
+
   // Input amount to withdraw and click
   const withdrawInput = getByRole('textbox');
   change(withdrawInput, { target: { value: '7' } });
@@ -110,27 +137,55 @@ test('render save page and perform deposit and withdraw actions', async () => {
 
   // Two entries in the history table
   await wait(() => assert(getAllByText('external-link.svg').length === 2));
-}, 15000);
+}, 25000);
 
 test('cannot deposit more than token allowance', async () => {
-  const setupMockState = state => {
-    const newState = {
-      ...state,
-      accounts: {
-        [maker.currentAddress()]: {
-          allowances: { MDAI: 10 },
-          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
-        }
-      }
-    };
-    return newState;
+  // Setup mocks for multicall observables
+  const MOCK_OBS_RESPONSE = () => of(BigNumber(Infinity));
+  const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
+
+  const tokenBalanceMock = (address, tokens) => {
+    return of(
+      tokens.map(token => {
+        if (token === 'MDAI') return MDAI(BigNumber(50));
+        else return createCurrency(token)(0);
+      })
+    );
   };
+  const savingsMock = () =>
+    of({
+      daiLockedInDsr: MDAI('5000'),
+      annualDaiSavingsRate: BigNumber(1),
+      savingsDai: MDAI('100'),
+      savingsRateAccumulator: BigNumber(1)
+    });
+  const watch = () =>
+    mocks.watch({
+      savings: savingsMock,
+      tokenBalances: tokenBalanceMock,
+      tokenAllowance: () => of(BigNumber('10')),
+      proxyAddress: () => of(TEST_ADDRESS_PROXY),
+      daiLockedInDsr: () => of(MDAI('100')),
+      collateralTypesPrices: () => of([]),
+      totalDaiSupply: MOCK_OBS_RESPONSE,
+      vaultsCreated: MOCK_OBS_RESPONSE,
+      totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
+      annualDaiSavingsRate: MOCK_OBS_RESPONSE,
+      systemCollateralization: MOCK_OBS_RESPONSE
+    });
+
+  const multicall = { watch };
+
   const { getByText, findByText, getByRole, getByTestId } = renderWithMaker(
-    <SidebarProvider>
-      <Save />
-      <SidebarBase />
-    </SidebarProvider>,
-    setupMockState
+    React.createElement(() => {
+      useMakerMock({ multicall });
+      return (
+        <SidebarProvider>
+          <Save viewedAddress={maker.currentAddress()} />
+          <SidebarBase />
+        </SidebarProvider>
+      );
+    })
   );
 
   await findByText('Savings');
@@ -147,31 +202,66 @@ test('cannot deposit more than token allowance', async () => {
   expect(warningEl).not.toBeInTheDocument();
 });
 
-test('if allowance is 0, show toggle & disable input', async () => {
-  const setupMockState = state => {
-    const newState = {
-      ...state,
-      accounts: {
-        [maker.currentAddress()]: {
-          allowances: { MDAI: 0 },
-          balances: { MDAI: BigNumber(50), DSR: BigNumber(0) }
-        }
-      }
-    };
-    return newState;
-  };
-  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
-    <SidebarProvider>
-      <Save />
-      <SidebarBase />
-    </SidebarProvider>,
-    setupMockState
+test('display onboarding path if connected address has no proxy', async () => {
+  const account = TestAccountProvider.nextAccount();
+  const { findByText } = await renderWithMaker(
+    React.createElement(() => {
+      const { maker } = useMakerMock();
+      const [flag, setFlag] = React.useState(false);
+      React.useEffect(() => {
+        const accountService = maker.service('accounts');
+        accountService
+          .addAccount('noproxy', {
+            type: 'privateKey',
+            key: account.key
+          })
+          .then(() => {
+            accountService.useAccount('noproxy');
+            setFlag(true);
+          });
+      }, []);
+
+      return flag ? <Save viewedAddress={maker.currentAddress()} /> : <div />;
+    })
   );
 
-  await findByText('Savings');
-  click(getByTestId('sidebar-deposit-button'));
-  await waitForElement(() => getAllByText('Unlock DAI to continue'));
+  await findByText(/Start earning/);
+});
 
-  const depositInput = getByRole('textbox');
-  expect(depositInput.disabled).toBe(true);
+test('disable deposit/withdraw buttons if not connected wallet', async () => {
+  const defaultAddress = maker.currentAddress();
+  const account = TestAccountProvider.nextAccount();
+  const { getByText } = await renderWithMaker(
+    React.createElement(() => {
+      const { maker } = useMakerMock();
+      const [flag, setFlag] = React.useState(false);
+      React.useEffect(() => {
+        const accountService = maker.service('accounts');
+        accountService
+          .addAccount('noproxy', {
+            type: 'privateKey',
+            key: account.key
+          })
+          .then(() => {
+            accountService.useAccount('noproxy');
+            setFlag(true);
+          });
+      }, []);
+
+      return flag ? <Save viewedAddress={defaultAddress} /> : <div />;
+    })
+  );
+
+  const depositBtn = await waitForElement(() => getByText('Deposit'));
+  const withdrawBtn = await waitForElement(() => getByText('Withdraw'));
+  expect(depositBtn).toBeDisabled();
+  expect(withdrawBtn).toBeDisabled();
+});
+
+test('should not display Save ui for addresses which have no proxy', async () => {
+  const { findByText } = renderWithMaker(<Save viewedAddress={ZERO_ADDRESS} />);
+
+  await findByText(
+    "This address either doesn't exist or has no DSR account history"
+  );
 });

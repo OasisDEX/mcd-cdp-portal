@@ -216,7 +216,13 @@ export default {
       "Waiting for confirmations reduces the risk of your Vault address changing. We require users to wait 10 block confirmations to ensure it's been created successfully. This will often take around 2 minutes.",
     proxy_failure_not_mined: 'This transaction is taking longer than usual...',
     proxy_failure_not_mined_info:
-      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later'
+      'Transactions to the network may sometimes take longer than expected. This can be for a variety of reasons but may be due to a congested network or a transaction sent with a low gas price. Some wallets enable users to resend a transaction with a higher gas price, otherwise check for your transaction on etherscan and come back again later.',
+    proxy_failure_contract_data: 'There was an error with your Ledger wallet...',
+    proxy_failure_contract_data_info:
+      'If you see this message and are using a Ledger hardware wallet, it often means that you need to enable "Contract Data." To do this, go to your Ethereum app on Ledger, choose Settings and then Contract Data.',
+    proxy_failure_rejected: 'The transaction has been rejected on the wallet',
+    proxy_failure_timeout: 'Your transaction timed out and was automatically rejected',
+    proxy_failure_timeout_info: 'This error is often caused because you did not sign the transaction in a reasonable time, and it has been automatically rejected by the wallet. Where this has happened, you often still need to reject the transaction yourself on the wallet to allow you to sign another.',
   },
   cdp_migrate: {
     select_title: 'Select Vault to Migrate',
@@ -264,7 +270,8 @@ export default {
     generate: 'Generate',
     send: 'Send',
     skip: 'Skip',
-    get_started: 'Get Started'
+    get_started: 'Get Started',
+    try_again: 'Try Again'
   },
   actions_past_tense: {
     deposit: 'Deposited',
@@ -318,7 +325,6 @@ export default {
     send_description: 'How much {0} would you like to send?',
     your_balance: 'Your Balance',
     dest_address: 'Destination Address',
-    send_token_desc: 'Sent {0}',
     invalid_input: 'This input is invalid',
     invalid_min_amount: 'Can only send a positive amount of {0}',
     invalid_max_amount: 'Amount is greater than your balance',
@@ -346,12 +352,15 @@ export default {
     dai_locked_dsr: 'DAI locked in DSR',
     deposit_withdraw: 'Deposit and withdraw',
     deposit_btn_cta: 'Receive savings on your Dai. Deposit at any time',
-    withdraw_btn_cta: 'Safely withdraw your Dai at any time'
+    withdraw_btn_cta: 'Safely withdraw your Dai at any time',
+    no_savings:
+      "This address either doesn't exist or has no DSR account history"
   },
   verbs: {
     depositing: 'Depositing',
     generating: 'Generating',
-    withdrawing: 'Withdrawing'
+    withdrawing: 'Withdrawing',
+    paying_back: 'Paying back'
   },
   table: {
     type: 'Type',
@@ -366,11 +375,23 @@ export default {
     unlocking_token: 'Unlocking {0}',
     setting_up_proxy: 'Setting up proxy',
     creating_cdp: 'Creating Vault',
-    generate_dai: 'Generating DAI',
-    pay_back_dai: 'Paying back DAI',
+    generate_dai: 'Generating {0} DAI',
+    pay_back_dai: 'Paying back {0} DAI',
     withdrawing_gem: 'Withdrawing {0}',
     depositing_gem: 'Depositing {0}',
-    claiming_collateral: 'Claiming collateral'
+    claiming_collateral: 'Claiming collateral',
+    send: 'Sending {0} to {1}'
+  },
+  transactions_past_tense: {
+    unlocking_token: 'Unlocked {0}',
+    setting_up_proxy: 'Set up proxy',
+    creating_cdp: 'Created Vault',
+    generate_dai: 'Generated {0} DAI',
+    pay_back_dai: 'Paid back {0} DAI',
+    withdrawing_gem: 'Withdrew {0}',
+    depositing_gem: 'Deposited {0}',
+    claiming_collateral: 'Claimed collateral',
+    send: 'Sent {0} to {1}'
   },
   transaction_manager: {
     transaction_singular_capitalised: 'Transaction',
@@ -387,7 +408,9 @@ export default {
     default: 'Please enter a valid input'
   },
   connect: 'Connect',
+  disconnect: 'Disconnect',
   view: 'View',
+  dismiss: 'Dismiss',
   exit: 'Exit',
   close: 'Close',
   connect_to: 'Connect to {0}',
@@ -419,6 +442,7 @@ export default {
   collateralization_ratio: 'Collateralization ratio',
   current_ilk_price: 'Current {0} Price',
   your_balance: 'Your balance',
+  why_is_this: 'Why is this?',
   // "risk_parameters": "Risk Parameters",
   terms_of_service_text: 'I have read and accept the {0}',
   terms_of_service: 'Terms of Service',
@@ -435,7 +459,8 @@ export default {
     trezor: 'Trezor',
     other: 'Active Wallet',
     ledger: 'Ledger',
-    walletconnect: 'Wallet Connect'
+    walletconnect: 'Wallet Connect',
+    walletlink: 'Coinbase Wallet'
   },
   notifications: {
     claim: 'Claim',
@@ -444,6 +469,8 @@ export default {
     non_vault_owner:
       'The owner of this position ({0}) does not match the connected walleted address',
     non_overview_owner:
-      'You are currently viewing the Overview of another address ({0})'
+      'You are currently viewing the Overview of another address ({0})',
+    non_savings_owner:
+      'You are currently viewing the savings of another address ({0})'
   }
 };

@@ -1,70 +1,33 @@
-import { useMemo, useState } from 'react';
-
+import { useState } from 'react';
 import useMaker from 'hooks/useMaker';
-import useStore from 'hooks/useStore';
 import useActionState from 'hooks/useActionState';
-import useLanguage from 'hooks/useLanguage';
-import { cleanSymbol } from '../utils/ui';
-
-export function useTokenAllowances() {
-  const { account } = useMaker();
-  const [{ accounts }] = useStore();
-  const allowances = useMemo(() => {
-    return account
-      ? {
-          ...((accounts &&
-            accounts[account.address] &&
-            accounts[account.address].allowances) ||
-            {}),
-          ETH: true
-        }
-      : {
-          ETH: true
-        };
-  }, [account, accounts]);
-  return allowances;
-}
-
-export function useFetchedTokenAllowances() {
-  const { account } = useMaker();
-  const [{ accounts }] = useStore();
-
-  const allowancesFetched = useMemo(() => {
-    if (!account) return false;
-    return !!(
-      accounts &&
-      accounts[account.address] &&
-      accounts[account.address].allowances
-    );
-  }, [account, accounts]);
-  return allowancesFetched;
-}
+import { watch } from 'hooks/useObservable';
+import BigNumber from 'bignumber.js';
 
 export default function useTokenAllowance(tokenSymbol) {
-  const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
-  const token = maker.getToken(tokenSymbol);
+  const { maker, account } = useMaker();
 
-  const allowances = useTokenAllowances();
-  const allowance = allowances[tokenSymbol];
-  const hasAllowance = !!allowances[tokenSymbol];
+  const proxyAddress = watch.proxyAddress(account?.address);
+  const allowance = watch.tokenAllowance(
+    account?.address,
+    proxyAddress || undefined,
+    tokenSymbol
+  );
+
+  const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
+  const hasAllowance =
+    tokenSymbol === 'ETH' ||
+    (allowance !== undefined && allowance !== null && !allowance.eq(0));
+
   const hasSufficientAllowance = value =>
-    tokenSymbol === 'ETH' || value <= allowance;
+    BigNumber(value).isLessThanOrEqualTo(allowance);
 
-  const hasFetchedAllowance = useFetchedTokenAllowances();
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(
     async () => {
-      const proxyAddress = await maker.service('proxy').getProxyAddress();
+      const token = maker.getToken(tokenSymbol);
       const txPromise = token.approveUnlimited(proxyAddress);
       setStartedWithoutAllowance(true);
-      newTxListener(
-        txPromise,
-        lang.formatString(
-          lang.transactions.unlocking_token,
-          cleanSymbol(tokenSymbol)
-        )
-      );
       return await txPromise;
     }
   );

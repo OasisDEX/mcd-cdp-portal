@@ -14,15 +14,16 @@ import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
 import { safeToFixed } from '../../utils/ui';
 
-const Withdraw = ({ reset }) => {
+const DsrWithdraw = ({ savings, reset }) => {
   const { trackBtnClick } = useAnalytics('Withdraw', 'Sidebar');
   const { lang } = useLanguage();
-  const { maker, newTxListener } = useMaker();
+  const { maker } = useMaker();
 
   const { symbol } = MDAI;
   const displaySymbol = 'DAI';
 
-  const { MDAI: daiBalance, DSR: dsrBalance } = useWalletBalances();
+  const { daiLockedInDsr } = savings;
+  const { MDAI: daiBalance } = useWalletBalances();
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
 
@@ -36,7 +37,7 @@ const Withdraw = ({ reset }) => {
     {
       isFloat: true,
       minFloat: 0.0,
-      maxFloat: dsrBalance && dsrBalance.toNumber(),
+      maxFloat: daiLockedInDsr && daiLockedInDsr.toNumber(),
       custom: {
         allowanceInvalid: value => !hasSufficientAllowance(value)
       }
@@ -53,25 +54,20 @@ const Withdraw = ({ reset }) => {
   );
 
   const setWithdrawMax = useCallback(() => {
-    if (dsrBalance && !dsrBalance.eq(0)) {
-      setWithdrawAmount(dsrBalance.toFixed(18).replace(/\.?0+$/, ''));
+    if (daiLockedInDsr && !daiLockedInDsr.eq(0)) {
+      setWithdrawAmount(daiLockedInDsr.toFixed(18).replace(/\.?0+$/, ''));
       setWithdrawMaxFlag(true);
     } else {
       setWithdrawAmount('');
     }
-  }, [dsrBalance, setWithdrawAmount]);
+  }, [daiLockedInDsr, setWithdrawAmount]);
 
   const withdraw = () => {
-    let txObject;
-    if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(dsrBalance)) {
-      txObject = maker.service('mcd:savings').exitAll();
+    if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(daiLockedInDsr)) {
+      maker.service('mcd:savings').exitAll();
     } else {
-      txObject = maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      maker.service('mcd:savings').exit(MDAI(withdrawAmount));
     }
-    newTxListener(
-      txObject,
-      lang.formatString(lang.transactions.withdrawing_gem, displaySymbol)
-    );
     reset();
   };
 
@@ -123,7 +119,10 @@ const Withdraw = ({ reset }) => {
         <Button
           disabled={!valid}
           onClick={() => {
-            trackBtnClick('Confirm', { amount: withdrawAmount });
+            trackBtnClick('Confirm', {
+              amount: withdrawAmount,
+              fathom: { id: 'saveWithdraw', amount: withdrawAmount }
+            });
             withdraw();
           }}
           data-testid={'withdraw-button'}
@@ -147,10 +146,10 @@ const Withdraw = ({ reset }) => {
         />
         <Info
           title={lang.action_sidebar.locked_dsr}
-          body={`${safeToFixed(dsrBalance.toNumber(), 7)} ${displaySymbol}`}
+          body={`${safeToFixed(daiLockedInDsr.toNumber(), 7)} ${displaySymbol}`}
         />
       </InfoContainer>
     </Grid>
   );
 };
-export default Withdraw;
+export default DsrWithdraw;

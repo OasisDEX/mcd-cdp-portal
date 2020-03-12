@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Dropdown, Box, Text, Grid } from '@makerdao/ui-components-core';
+import {
+  Card,
+  Dropdown,
+  Box,
+  Text,
+  Grid,
+  Flex
+} from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
+import { useCurrentRoute } from 'react-navi';
+import styled from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
@@ -9,10 +18,35 @@ import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
-import { AccountTypes } from '../utils/constants';
+import { AccountTypes, Routes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
+import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
+import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
+import { useBrowserIcon } from './BrowserProviderButton';
 
-const Option = ({ children, ...props }) => {
+const StyledLedgerLogo = styled(LedgerLogo)`
+  max-width: 14px;
+  margin-top: 4px;
+`;
+
+const StyledWalletLinkLogo = styled(WalletLinkLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+  height: 21px;
+  width: 21px;
+`;
+
+const IconBox = styled(Box)`
+  & > svg {
+    display: inline-block;
+  }
+  width: 26px;
+  text-align: center;
+`;
+
+const Option = ({ icon, children, ...props }) => {
   return (
     <Box
       py="xs"
@@ -25,7 +59,12 @@ const Option = ({ children, ...props }) => {
       `}
       {...props}
     >
-      <Text p="body">{children}</Text>
+      <Flex alignItems="center">
+        <IconBox>{icon}</IconBox>
+        <span style={{ marginLeft: '14px' }}>
+          <Text p="body">{children}</Text>
+        </span>
+      </Flex>
     </Box>
   );
 };
@@ -36,14 +75,26 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     maker,
     account,
     connectBrowserProvider,
-    connectToProviderOfType
+    connectToProviderOfType,
+    navigation,
+    disconnect
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
+  const { url } = useCurrentRoute();
+
+  const providerName = getWebClientProviderName();
+  const browserIcon = useBrowserIcon(providerName);
 
   function onAccountChosen({ address }) {
+    if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
+      const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
+      if (address !== urlAddress) {
+        navigation.navigate(`/${Routes.SAVE}/owner/${address}${url.search}`);
+      }
+    }
     maker.useAccountWithAddress(address);
   }
 
@@ -64,11 +115,10 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
     (account.type === 'browser' ||
       otherAccounts.some(a => a.type === 'browser'));
 
-  const providerName = getWebClientProviderName();
-
   async function connectBrowserWallet() {
     try {
-      await connectBrowserProvider();
+      const connectedAddress = await connectBrowserProvider();
+      onAccountChosen({ address: connectedAddress });
     } catch (err) {
       window.alert(err);
     }
@@ -119,6 +169,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectBrowserWallet();
               close();
             }}
+            icon={browserIcon}
           >
             {lang.formatString(
               lang.connect_to,
@@ -132,6 +183,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectLedgerWallet();
               close();
             }}
+            icon={<StyledLedgerLogo />}
           >
             {lang.formatString(lang.connect_to, 'Ledger Nano')}
           </Option>
@@ -142,6 +194,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectTrezorWallet();
               close();
             }}
+            icon={<StyledTrezorLogo />}
           >
             {lang.formatString(lang.connect_to, 'Trezor')}
           </Option>
@@ -152,6 +205,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETCONNECT);
               close();
             }}
+            icon={<StyledWalletConnectLogo />}
           >
             {lang.landing_page.wallet_connect}
           </Option>
@@ -162,10 +216,24 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETLINK);
               close();
             }}
+            icon={<StyledWalletLinkLogo />}
           >
             {lang.landing_page.wallet_link}
           </Option>
         </BrowserView>
+        {account && (
+          <BrowserView>
+            <Option
+              onClick={() => {
+                disconnect();
+                close();
+              }}
+              icon={<DisconnectIcon />}
+            >
+              {lang.disconnect}
+            </Option>
+          </BrowserView>
+        )}
       </Card>
     </Dropdown>
   );

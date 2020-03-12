@@ -18,7 +18,10 @@ const config = {
       token: '4ff3f85397ffc3c6b6f0d4120a4ea40a',
       config: { debug: true, ip: false }
     },
-    gaTrackingId: 'UA-128164213-4'
+    gaTrackingId: 'UA-128164213-4',
+    fathom: {
+      pageView: 'QODYHBGU'
+    }
   },
   prod: {
     mixpanel: {
@@ -33,6 +36,9 @@ const config = {
           email: null
         }
       }
+    },
+    fathom: {
+      pageView: 'XELBLZRK'
     }
   }
 }[env];
@@ -78,4 +84,22 @@ export const gaInit = () => {
   log(`[GA] Tracking initialized for ${env} env using ${config.gaTrackingId}`);
   ReactGA.initialize(config.gaTrackingId);
   return ReactGA;
+};
+
+export const fathomInit = () => {
+  window['fathom'] =
+    window['fathom'] ||
+    function() {
+      (window['fathom'].q = window['fathom'].q || []).push(arguments);
+    };
+  const scriptUrl = 'https://cdn.usefathom.com/tracker.js';
+  const script = document.createElement('script');
+  script.async = 1;
+  script.src = scriptUrl;
+  script.id = 'fathom-script';
+
+  const elements = document.getElementsByTagName('script')[0];
+  elements.parentNode.insertBefore(script, elements);
+
+  window.fathom('set', 'siteId', config.fathom.pageView);
 };

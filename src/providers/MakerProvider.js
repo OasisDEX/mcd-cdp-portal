@@ -1,24 +1,17 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import isEqual from 'lodash/isEqual';
 import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
+import { AccountTypes } from '../utils/constants';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
-import { Routes } from 'utils/constants';
-import useStore from '../hooks/useStore';
-import ilks from 'references/ilkList';
-import { trackCdpById } from 'reducers/multicall/cdps';
-import {
-  createWatcher,
-  startWatcher,
-  updateWatcherWithAccount
-} from '../watch';
-import { batchActions } from '../utils/redux';
 import {
   checkEthereumProvider,
   browserEthereumProviderAddress
 } from '../utils/ethereum';
 import LoadingLayout from '../layouts/LoadingLayout';
+import schemas from '@makerdao/dai-plugin-mcd/dist/schemas';
+import useObservable, { watch } from 'hooks/useObservable';
+import useAnalytics from 'hooks/useAnalytics';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -29,7 +22,6 @@ function useNavigation(network, mocks) {
   return useNavigationBase(); // eslint-disable-line react-hooks/rules-of-hooks
 }
 
-// FIXME the viewedAddress stuff should live elsewhere
 function MakerProvider({
   children,
   network,
@@ -39,17 +31,21 @@ function MakerProvider({
   mocks
 }) {
   const [account, setAccount] = useState(null);
-  const [viewedAddressData, setViewedAddressData] = useState(null);
-  const [txReferences, setTxReferences] = useState([]);
-  const [txLastUpdate, setTxLastUpdate] = useState(0);
+  const [txLastUpdate, setTxLastUpdate] = useState({});
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
-  const [, dispatch] = useStore();
+  const { trackBtnClick } = useAnalytics();
 
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
-    setAccount({ ...account, cdps: [] });
+    setAccount({ ...account });
+  };
+
+  const removeAccounts = () => {
+    maker.service('accounts')._accounts = {};
+    maker.service('accounts')._currentAccount = '';
+    setAccount(null);
   };
 
   const connectBrowserProvider = useCallback(async () => {
@@ -103,7 +99,19 @@ function MakerProvider({
         backendEnv,
         navigation
       });
+
+      // Register multicall schemas and map useObservable hook to watch convenience helper
+      const multicall = newMaker.service('multicall');
+      multicall.registerSchemas({ ...schemas });
+      multicall.observableKeys.forEach(
+        key => (watch[key] = (...args) => useObservable(key, ...args)) // eslint-disable-line react-hooks/rules-of-hooks
+      );
+      // Create and start multicall watcher
+      const watcher = multicall.createWatcher({ interval: 'block' });
+      multicall.start();
+      setWatcher(watcher);
       setMaker(newMaker);
+
       log('Initialized maker instance');
     })();
     // leaving maker out of the deps because it would create an infinite loop
@@ -114,14 +122,6 @@ function MakerProvider({
     if (!maker) return;
     if (maker.service('accounts').hasAccount()) {
       initAccount(maker.currentAccount());
-      (async () => {
-        const { address } = maker.currentAccount();
-        log(`Found initial account: ${address}`);
-        const proxy = await maker.service('proxy').getProxyAddress(address);
-        if (proxy) log(`Found proxy address: ${proxy}`);
-        else log('No proxy found');
-        updateWatcherWithAccount(maker, address, proxy);
-      })();
     } else {
       // Reconnect browser provider if active address matches last connected
       const lastType = sessionStorage.getItem('lastConnectedWalletType');
@@ -142,6 +142,8 @@ function MakerProvider({
 
     maker.on('accounts/CHANGE', eventObj => {
       const { account } = eventObj.payload;
+      if (eventObj.sequence === 1)
+        trackBtnClick(undefined, { fathom: { id: 'connectWallet' } });
       sessionStorage.setItem('lastConnectedWalletType', account.type);
       sessionStorage.setItem(
         'lastConnectedWalletAddress',
@@ -149,131 +151,62 @@ function MakerProvider({
       );
       log(`Account changed to: ${account.address}`);
       initAccount(account);
-      (async () => {
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(account.address);
-        if (proxy) {
-          log(`Found proxy address: ${proxy}`);
-          const cdpIds = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-          setAccount({ ...account, cdps: cdpIds });
-        } else {
-          log('No proxy found');
-        }
-        updateWatcherWithAccount(maker, account.address, proxy);
-      })();
     });
 
-    const watcher = createWatcher(maker);
-    setWatcher(watcher);
-    const batchSub = watcher.batch().subscribe(updates => {
-      dispatch(batchActions(updates));
-      // make entire list of updates available in a single reducer call
-      dispatch({ type: 'watcherUpdates', payload: updates });
-    });
     const txManagerSub = maker
       .service('transactionManager')
       .onTransactionUpdate((tx, state) => {
         if (state === 'mined') {
-          const id = tx?.metadata?.id;
-          if (id) log(`Resetting event history cache for Vault #${id}`);
-          else log('Resetting event history cache');
-          maker.service('mcd:cdpManager').resetEventHistoryCache(id);
-          maker.service('mcd:savings').resetEventHistoryCache();
+          const id = tx.metadata?.id;
+          if (id) {
+            log(`Resetting event history cache for Vault #${id}`);
+            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            setTxLastUpdate(current => ({ ...current, [id]: Date.now() }));
+          } else if (tx.metadata?.contract === 'PROXY_ACTIONS_DSR') {
+            log('Resetting savings event history cache');
+            maker.service('mcd:savings').resetEventHistoryCache();
+            setTxLastUpdate(current => ({ ...current, save: Date.now() }));
+          }
         }
         log('Tx ' + state, tx.metadata);
-        setTxLastUpdate(Date.now());
       });
-    dispatch({ type: 'CLEAR_CONTRACT_STATE' });
-    startWatcher(maker);
     return () => {
-      batchSub.unsub();
       txManagerSub.unsub();
     };
-  }, [maker, dispatch, connectBrowserProvider]);
+  }, [maker, connectBrowserProvider]);
 
-  useEffect(() => {
-    if (maker && viewedAddress) {
-      (async () => {
-        if (
-          viewedAddressData &&
-          viewedAddress !== viewedAddressData.viewedAddress
-        ) {
-          setViewedAddressData(null);
-        }
-        const proxy = await maker
-          .service('proxy')
-          .getProxyAddress(viewedAddress);
-        if (!proxy) {
-          setViewedAddressData({
-            cdps: [],
-            viewedAddress
-          });
-          return;
-        }
-
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        const supportedCDPTypes = ilks.filter(ilk =>
-          ilk.networks.includes(network)
-        );
-
-        const supportedCdps = cdps.filter(cdp => {
-          return supportedCDPTypes.map(t => t.key).includes(cdp.ilk);
-        }, []);
-
-        supportedCdps.forEach(cdp => trackCdpById(maker, cdp.id, dispatch));
-        setViewedAddressData({
-          cdps: supportedCdps,
-          viewedAddress
-        });
-      })();
+  const connectToProviderOfType = async type => {
+    if (!maker) return;
+    if (maker.service('accounts').hasAccount()) {
+      initAccount(maker.currentAccount());
+    } else {
+      const account = await maker.addAccount({
+        type
+      });
+      maker.useAccountWithAddress(account.address);
     }
-  }, [maker, viewedAddress, dispatch, network]); // eslint-disable-line
-
-  const checkForNewCdps = async (numTries = 5, timeout = 500) => {
-    const proxy = await maker.service('proxy').getProxyAddress(account.address);
-    if (proxy) {
-      maker.service('mcd:cdpManager').reset();
-
-      const _checkForNewCdps = async triesRemaining => {
-        const cdps = await maker.service('mcd:cdpManager').getCdpIds(proxy);
-        if (isEqual(account.cdps, cdps)) {
-          if (triesRemaining === 0) return;
-          setTimeout(() => {
-            _checkForNewCdps(triesRemaining - 1, timeout);
-          }, timeout);
-        } else {
-          const newId = cdps
-            .map(cdp => cdp.id)
-            .filter(
-              cdpId => account.cdps.map(cdp => cdp.id).indexOf(cdpId) < 0
-            )[0];
-          setAccount({ ...account, cdps: cdps });
-          navigation.navigate(`/${Routes.BORROW}/${newId}?network=${network}`);
-        }
-      };
-
-      _checkForNewCdps(numTries - 1);
-    }
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
   };
 
-  const newTxListener = (transaction, txMessage) =>
-    setTxReferences(current => [...current, [transaction, txMessage]]);
+  const disconnectWalletLink = subprovider => subprovider.resetWallet();
+  const disconnectWalletConnect = async subprovider =>
+    (await subprovider.getWalletConnector()).killSession();
+  const disconnectBrowserWallet = () =>
+    ['lastConnectedWalletType', 'lastConnectedWalletAddress'].forEach(x =>
+      sessionStorage.removeItem(x)
+    );
 
-  const resetTx = () => setTxReferences([]);
-
-  const selectors = {
-    transactions: () =>
-      txReferences
-        .map(([promise, message]) => {
-          const txManager = maker.service('transactionManager');
-          try {
-            return { tx: txManager.getTransaction(promise), message };
-          } catch {
-            return null;
-          }
-        })
-        .filter(Boolean)
+  const disconnect = () => {
+    const subprovider = maker.service('accounts').currentWallet();
+    if (subprovider.isWalletLink) disconnectWalletLink(subprovider);
+    else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
+    else if (
+      sessionStorage.getItem('lastConnectedWalletType') ===
+      AccountTypes.METAMASK
+    )
+      disconnectBrowserWallet();
+    removeAccounts();
   };
 
   return (
@@ -284,13 +217,11 @@ function MakerProvider({
         account,
         network,
         txLastUpdate,
-        resetTx,
-        transactions: txReferences,
-        newTxListener,
-        checkForNewCdps,
-        selectors,
-        viewedAddressData,
-        connectBrowserProvider
+        connectBrowserProvider,
+        connectToProviderOfType,
+        disconnect,
+        viewedAddress,
+        navigation
       }}
     >
       {maker ? children : <LoadingLayout />}

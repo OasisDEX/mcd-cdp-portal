@@ -4,12 +4,12 @@ import ScreenFooter from '../ScreenFooter';
 import useProxy from 'hooks/useProxy';
 import ProxyAllowanceCheck from '../ProxyAllowanceCheck';
 import useTokenAllowance from 'hooks/useTokenAllowance';
-import useBlockHeight from 'hooks/useBlockHeight';
+import { useWeb3BlockHeight } from 'hooks/useBlockHeight';
 import useLanguage from 'hooks/useLanguage';
 
 const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
   const { lang } = useLanguage();
-  const blockHeight = useBlockHeight(0);
+  const blockHeight = useWeb3BlockHeight(0);
 
   const {
     proxyLoading,
@@ -26,14 +26,6 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
     setAllowance,
     allowanceLoading: isSettingAllowance
   } = useTokenAllowance('MDAI');
-
-  async function deployProxy() {
-    const proxy = await setupProxy();
-    dispatch({
-      type: 'set-proxy-address',
-      payload: { address: proxy }
-    });
-  }
 
   const labels = {
     setup_text: lang.dsr_deposit.setup_proxy_text,
@@ -60,12 +52,12 @@ const DSRDepositCheckProxy = ({ dispatch, onClose }) => {
       </Text.h2>
       <ProxyAllowanceCheck
         proxyAddress={proxyAddress}
-        deployProxy={deployProxy}
+        deployProxy={setupProxy}
         labels={labels}
         proxyLoading={proxyLoading}
         proxyDeployed={proxyDeployed}
         proxyErrors={proxyErrors}
-        startingBlockHeight={startingBlockHeight}
+        hasProxy={hasProxy}
         setAllowance={setAllowance}
         hasAllowance={hasAllowance}
         isSettingAllowance={isSettingAllowance}

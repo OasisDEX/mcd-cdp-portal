@@ -2,6 +2,9 @@ import React from 'react';
 import round from 'lodash/round';
 import BigNumber from 'bignumber.js';
 import lang from 'languages';
+import { Currency } from '@makerdao/currency';
+import { decimalRules } from '../styles/constants';
+const { short, medium } = decimalRules;
 
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) return lang.cdp_page.not_applicable;
@@ -88,6 +91,7 @@ export function firstLetterLowercase(str) {
 
 export function cleanSymbol(s) {
   if (s === 'MDAI') return 'DAI';
+  if (s === 'DSR-DAI') return 'DAI';
   return s;
 }
 
@@ -168,3 +172,35 @@ export function safeToFixed(amount, digits) {
 export function formatPrecision(amount, precision = 4) {
   return amount < 1 ? 4 : precision;
 }
+
+export const formatCurrencyValue = ({
+  value,
+  precision = short,
+  percentage = false,
+  integer = false,
+  infinity = 'N/A',
+  rounding = BigNumber.ROUND_DOWN
+}) => {
+  if (value instanceof Currency) value = value.toBigNumber();
+  else if (!BigNumber.isBigNumber(value)) value = BigNumber(value);
+  if (['Infinity', Infinity].includes(value.toFixed(precision)))
+    return infinity;
+  if (percentage) value = value.times(100);
+  if (integer) value = value.integerValue(BigNumber.ROUND_HALF_UP);
+  if (value.lt(1) && rounding === BigNumber.ROUND_DOWN) precision = medium;
+  return value.toFixed(precision, rounding);
+};
+
+export function formatter(target, options = {}) {
+  return formatCurrencyValue({ value: target, ...options });
+}
+
+export const formatSymbol = token => {
+  return token === 'MDAI'
+    ? 'DAI'
+    : token === 'DAI'
+    ? 'SAI'
+    : token === 'MWETH'
+    ? 'WETH'
+    : token;
+};

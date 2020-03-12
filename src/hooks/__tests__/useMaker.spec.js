@@ -1,9 +1,13 @@
 import React from 'react';
 import { cleanup } from '@testing-library/react';
 import waitForExpect from 'wait-for-expect';
-import { renderWithStore } from '../../../test/helpers/render';
+import { renderWithProviders, mocks } from '../../../test/helpers/render';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import useMaker from '../useMaker';
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 // This helper component allows us to call the hook in a component context.
 function TestHook({ callback }) {
@@ -12,8 +16,8 @@ function TestHook({ callback }) {
 }
 
 function testHookWithMakerProvider(callback) {
-  renderWithStore(
-    <TestMakerProvider>
+  renderWithProviders(
+    <TestMakerProvider mocks={mocks}>
       <TestHook callback={callback} />
     </TestMakerProvider>
   );
