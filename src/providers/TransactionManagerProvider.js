@@ -36,7 +36,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
     case 'safeWipeAll':
       return lang.formatString(
         `${lang[langKey].pay_back_dai}${suffix}`,
-        <>outstanding</>
+        'outstanding'
       );
     case 'draw':
       return lang.formatString(
@@ -99,6 +99,13 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         return lang.formatString(
           `${lang[langKey].withdrawing_gem}${suffix}`,
           'DAI'
+        );
+      else return '?';
+    case 'exitAll':
+      if (metadata.contract === 'PROXY_ACTIONS_DSR')
+        return lang.formatString(
+          `${lang[langKey].withdrawing_gem}${suffix}`,
+          'all DAI'
         );
       else return '?';
     case 'frob':
