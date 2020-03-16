@@ -1,4 +1,4 @@
-import { ETH, BAT, zBTC } from '@makerdao/dai-plugin-mcd';
+import { ETH, BAT, USDC } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -45,13 +45,22 @@ export default [
     currency: BAT,
     networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
   },
+  // {
+  //   slug: 'zbtc-a',
+  //   symbol: 'zBTC-A',
+  //   key: 'zBTC-A',
+  //   gem: 'zBTC',
+  //   currency: zBTC,
+  //   networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
+  // },
   {
-    slug: 'zbtc-a',
-    symbol: 'zBTC-A',
-    key: 'zBTC-A',
-    gem: 'zBTC',
-    currency: zBTC,
-    networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
+    slug: 'usdc-a',
+    symbol: 'USDC-A',
+    key: 'USDC-A',
+    gem: 'USDC',
+    currency: USDC,
+    networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli'],
+    decimals: 6
   }
   // {
   //   slug: 'dgd-a',

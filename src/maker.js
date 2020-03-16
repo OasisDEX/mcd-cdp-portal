@@ -1,5 +1,5 @@
 import Maker, { USD, DAI } from '@makerdao/dai';
-import McdPlugin, { ETH, BAT, MDAI, zBTC } from '@makerdao/dai-plugin-mcd';
+import McdPlugin, { ETH, BAT, MDAI, USDC } from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
@@ -38,7 +38,7 @@ export function getMaker() {
 const cdpTypes = [
   { currency: ETH, ilk: 'ETH-A' },
   { currency: BAT, ilk: 'BAT-A' },
-  { currency: zBTC, ilk: 'zBTC-A' }
+  { currency: USDC, ilk: 'USDC-A', decimals: 6 }
 ];
 
 export async function instantiateMaker({
@@ -111,4 +111,4 @@ export async function instantiateMaker({
   return maker;
 }
 
-export { USD, DAI, ETH, BAT, MDAI, zBTC };
+export { USD, DAI, ETH, BAT, MDAI, USDC };

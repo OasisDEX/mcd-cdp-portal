@@ -36,8 +36,8 @@
   },
   "defaultNetwork": "1",
   "exTestchainApiUrl": "http://localhost:4000/chain",
-  "showFeeds": ["ETH", "BAT", "zBTC"],
-  "showWalletTokens": ["MDAI", "DSR", "ETH", "SAI", "MWETH", "BAT", "zBTC"],
+  "showFeeds": ["ETH", "BAT", "USDC"],
+  "showWalletTokens": ["MDAI", "DSR", "ETH", "SAI", "MWETH", "BAT", "USDC"],
   "trackingPages": {
     "Overview": "Overview",
     "CDP": "Dashboard",
