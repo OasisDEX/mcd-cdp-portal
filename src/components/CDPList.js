@@ -21,6 +21,7 @@ import { Routes } from '../utils/constants';
 import { getMeasurement } from '../styles/theme';
 import lang from 'languages';
 import useVaults from 'hooks/useVaults';
+import { watch } from 'hooks/useObservable';
 
 const NavbarItemContent = ({ children, ...props }) => (
   <Flex
@@ -105,6 +106,7 @@ const CDPList = memo(function({
   const [overviewPath, setOverviewPath] = useState(currentPath);
   const { trackBtnClick } = useAnalytics('NavBar');
   const active = currentPath === overviewPath;
+  const emergencyShutdownActive = watch.emergencyShutdownActive();
 
   useMemo(() => {
     const onSavePage = url.pathname.startsWith(`/${Routes.SAVE}`);
@@ -267,7 +269,7 @@ const CDPList = memo(function({
               );
             }
           )}
-          {account && (
+          {account && !emergencyShutdownActive && (
             <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
         </CdpContainer>

@@ -6,7 +6,7 @@ import useMaker from 'hooks/useMaker';
 
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
-import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
+import { Box, Grid, Flex, Text, Link } from '@makerdao/ui-components-core';
 import History from './History';
 import {
   ActionButton,
@@ -24,6 +24,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { formatter } from 'utils/ui';
+import { watch } from 'hooks/useObservable';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
@@ -62,6 +63,9 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
 
+  const emergencyShutdownActive = watch.emergencyShutdownActive();
+  const emergencyShutdownTime = watch.emergencyShutdownTime();
+
   useEffect(() => {
     const reclaimCollateral = async () => {
       const txObject = maker
@@ -70,6 +74,33 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
       await txObject;
       deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
     };
+
+    if (emergencyShutdownActive) {
+      addNotification({
+        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
+        content: lang.formatString(
+          lang.notifications.emergency_shutdown_active,
+          emergencyShutdownTime
+            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
+            : '--',
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'http://migrate.makerdao.com/'}
+            target="_blank"
+          >
+            {'http://migrate.makerdao.com/'}
+          </Link>,
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'https://forum.makerdao.com/'}
+            target="_blank"
+          >
+            {'here'}
+          </Link>
+        ),
+        level: SAFETY_LEVELS.DANGER
+      });
+    }
 
     if (isOwner && unlockedCollateral > 0) {
       const claimCollateralNotification = lang.formatString(
@@ -103,10 +134,18 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
     return () =>
       deleteNotifications([
         NotificationList.CLAIM_COLLATERAL,
-        NotificationList.NON_VAULT_OWNER
+        NotificationList.NON_VAULT_OWNER,
+        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, account, vault, unlockedCollateral]);
+  }, [
+    isOwner,
+    account,
+    vault,
+    unlockedCollateral,
+    emergencyShutdownTime,
+    emergencyShutdownActive
+  ]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -189,7 +228,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             conversion={`${formatter(vault.collateralValue)} USD`}
             button={
               <ActionButton
-                disabled={!account}
+                disabled={!account || emergencyShutdownActive}
                 onClick={() => {
                   trackBtnClick('Deposit');
                   showAction({
@@ -208,7 +247,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             conversion={`${formatter(vault.collateralAvailableValue)} USD`}
             button={
               <ActionButton
-                disabled={!account || !isOwner}
+                disabled={!account || !isOwner || emergencyShutdownActive}
                 onClick={() => {
                   trackBtnClick('Withdraw');
                   showAction({
@@ -229,7 +268,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             value={formatter(vault.debtValue) + ' DAI'}
             button={
               <ActionButton
-                disabled={!account}
+                disabled={!account || emergencyShutdownActive}
                 onClick={() => {
                   trackBtnClick('Payback');
                   showAction({
@@ -247,7 +286,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             value={`${formatter(vault.daiAvailable)} DAI`}
             button={
               <ActionButton
-                disabled={!account || !isOwner}
+                disabled={!account || !isOwner || emergencyShutdownActive}
                 onClick={() => {
                   trackBtnClick('Generate');
                   showAction({

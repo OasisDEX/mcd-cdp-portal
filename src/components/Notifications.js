@@ -70,7 +70,11 @@ function Notifications() {
                       gridTemplateColumns={hasButton ? '1fr auto' : '1fr'}
                       gridColumnGap="m"
                     >
-                      <Text color={textColor} justifySelf="center">
+                      <Text
+                        color={textColor}
+                        justifySelf="center"
+                        textAlign="center"
+                      >
                         {content}
                       </Text>
                       <Box justifySelf="start" alignSelf="center">
