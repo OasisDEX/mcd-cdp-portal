@@ -53,6 +53,7 @@ function IlkTableRow({
 }) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
+
   async function selectIlk() {
     trackInputChange('CollateralType', {
       selectedCollateral: ilk.symbol,
@@ -83,7 +84,7 @@ function IlkTableRow({
       </td>
       <td>{ilk.symbol}</td>
       <td>
-        {formatter(annualStabilityFee, { integer: true, percentage: true })} %
+        {formatter(annualStabilityFee, { percentage: true })} %
       </td>
       <td>{formatter(liquidationRatio, { percentage: true })} %</td>
       <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
