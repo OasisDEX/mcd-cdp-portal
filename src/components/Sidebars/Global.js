@@ -10,7 +10,6 @@ import { watch } from 'hooks/useObservable';
 
 const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
-  console.log('cdp types to watch', cdpTypesList);
   const prices = watch.collateralTypesPrices(cdpTypesList);
   const totalDaiSupply = watch.totalDaiSupply();
   const totalVaultsCreated = watch.vaultsCreated();
