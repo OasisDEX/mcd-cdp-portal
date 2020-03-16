@@ -214,8 +214,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             title={lang.cdp_page.stability_fee}
             value={
               formatter(vault.annualStabilityFee, {
-                percentage: true,
-                integer: true
+                percentage: true
               }) + '%'
             }
           />
