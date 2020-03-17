@@ -130,7 +130,7 @@ const tokens = [
     icon: BatIcon
   },
   {
-    name: 'USDC*',
+    name: 'USDC',
     icon: UsdcIcon
   }
 ];

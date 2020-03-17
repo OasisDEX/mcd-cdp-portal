@@ -82,7 +82,8 @@ const CDPCreateConfirmSummary = ({
     [
       lang.stability_fee,
       `${formatter(annualStabilityFee, {
-        percentage: true
+        percentage: true,
+        rounding: BigNumber.ROUND_HALF_UP
       })}%`
     ]
   ];

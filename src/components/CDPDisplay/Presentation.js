@@ -25,6 +25,7 @@ import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { formatter } from 'utils/ui';
 import { watch } from 'hooks/useObservable';
+import BigNumber from 'bignumber.js';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
@@ -40,7 +41,6 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
     vaultType,
     unlockedCollateral
   } = vault;
-
   log(`Rendering vault #${vault.id}`);
 
   const gem = collateralAmount?.symbol;
@@ -214,7 +214,8 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
             title={lang.cdp_page.stability_fee}
             value={
               formatter(vault.annualStabilityFee, {
-                percentage: true
+                percentage: true,
+                rounding: BigNumber.ROUND_HALF_UP
               }) + '%'
             }
           />
