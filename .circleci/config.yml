@@ -122,7 +122,7 @@ workflows:
               only: develop
       - deploy_prod:
           requires:
-            - test
+            - install
           filters:
             branches:
               only: master
