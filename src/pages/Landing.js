@@ -312,7 +312,9 @@ function Landing() {
       </TextSection>
       <TextSection>
         <h3>{lang.landing_page.questions_title}</h3>
-        <Questions questions={buildQuestionsFromLangObj(lang.landing_page, lang)} />
+        <Questions
+          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+        />
       </TextSection>
     </OasisLayout>
   );

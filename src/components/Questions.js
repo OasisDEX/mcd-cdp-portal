@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const answerPaddingBottom = 21;
@@ -141,7 +141,12 @@ function buildQuestionsFromLangObj(questionsObj, lang) {
     const links = [];
     let linkNum = 1;
     while (questionsObj[`answer${questionNum}_link${linkNum}_url`]) {
-      links.push(link(questionsObj[`answer${questionNum}_link${linkNum}_url`], questionsObj[`answer${questionNum}_link${linkNum}_text`]));
+      links.push(
+        link(
+          questionsObj[`answer${questionNum}_link${linkNum}_url`],
+          questionsObj[`answer${questionNum}_link${linkNum}_text`]
+        )
+      );
       linkNum++;
     }
     questions.push({
@@ -153,7 +158,7 @@ function buildQuestionsFromLangObj(questionsObj, lang) {
   return questions;
 }
 
-const Questions = ({questions}) => {
+const Questions = ({ questions }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
@@ -192,9 +197,9 @@ Questions.propTypes = {
   questions: PropTypes.arrayOf(
     PropTypes.shape({
       q: PropTypes.string,
-      a: PropTypes.element,
+      a: PropTypes.element
     })
-  ),
+  )
 };
 
 export { buildQuestionsFromLangObj };
