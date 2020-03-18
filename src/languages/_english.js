@@ -67,21 +67,21 @@ export default {
     answer3_link1_text: 'Metamask',
     answer3_link2_url: 'https://wallet.coinbase.com/',
     answer3_link2_text: 'Coinbase Wallet',
-    question5: 'Is Oasis secure?',
-    answer5:
+    question4: 'Is Oasis secure?',
+    answer4:
       'Security is our top priority. The Oasis team regularly conducts audits on our smart contracts. In addition, the Oasis code is {0}, giving the community the ability to pressure test and audit the core technology.',
-    answer5_link1_url: 'https://github.com/OasisDEX',
-    answer5_link1_text: 'open-source',
-    question6: 'Will I be charged a fee to use Oasis?',
-    answer6:
+    answer4_link1_url: 'https://github.com/OasisDEX',
+    answer4_link1_text: 'open-source',
+    question5: 'Will I be charged a fee to use Oasis?',
+    answer5:
       'Oasis is free to use. However, you will have to pay gas and other fees associated with the Maker Protocol, such as Stability Fees.',
-    question7: 'How can I contact the Oasis team?',
-    answer7: 'You can reach the Oasis team by contacting us on {0}.',
-    answer7_link1_url: 'https://chat.makerdao.com',
-    answer7_link1_text: 'chat',
-    question8:
+    question6: 'How can I contact the Oasis team?',
+    answer6: 'You can reach the Oasis team by contacting us on {0}.',
+    answer6_link1_url: 'https://chat.makerdao.com',
+    answer6_link1_text: 'chat',
+    question7:
       'Can I buy Bitcoin or Ethereum on Oasis using a credit card or via my bank account?',
-    answer8:
+    answer7:
       'You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.',
     read_only: 'Read-Only',
     wallet_connect: 'Wallet Connect',
