@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import React, { useRef, useState } from 'react';
-import useLanguage from 'hooks/useLanguage';
+import React, {useRef, useState} from 'react';
+import PropTypes from 'prop-types';
 
 const answerPaddingBottom = 21;
 const answerAnimationTime = '350ms';
@@ -129,72 +129,32 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
   );
 };
 
-const Questions = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const { lang } = useLanguage();
+function buildQuestionsFromLangObj(questionsObj, lang) {
+  const questions = [];
   const link = (url, text) => (
     <a href={url} target="_blank" rel="noopener noreferrer">
       {text}
     </a>
   );
-  const questions = [
-    {
-      q: lang.landing_page.question1,
-      a: lang.landing_page.answer1
-    },
-    {
-      q: lang.landing_page.question2,
-      a: lang.formatString(
-        lang.landing_page.answer2,
-        link(
-          lang.landing_page.answer2_link1_url,
-          lang.landing_page.answer2_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question3,
-      a: lang.formatString(
-        lang.landing_page.answer3,
-        link(
-          lang.landing_page.answer3_link1_url,
-          lang.landing_page.answer3_link1_text
-        ),
-        link(
-          lang.landing_page.answer3_link2_url,
-          lang.landing_page.answer3_link2_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question5,
-      a: lang.formatString(
-        lang.landing_page.answer5,
-        link(
-          lang.landing_page.answer5_link1_url,
-          lang.landing_page.answer5_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question6,
-      a: lang.landing_page.answer6
-    },
-    {
-      q: lang.landing_page.question7,
-      a: lang.formatString(
-        lang.landing_page.answer7,
-        link(
-          lang.landing_page.answer7_link1_url,
-          lang.landing_page.answer7_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question8,
-      a: lang.landing_page.answer8
+  let questionNum = 1;
+  while (questionsObj[`question${questionNum}`]) {
+    const links = [];
+    let linkNum = 1;
+    while (questionsObj[`answer${questionNum}_link${linkNum}_url`]) {
+      links.push(link(questionsObj[`answer${questionNum}_link${linkNum}_url`], questionsObj[`answer${questionNum}_link${linkNum}_text`]));
+      linkNum++;
     }
-  ];
+    questions.push({
+      q: questionsObj[`question${questionNum}`],
+      a: lang.formatString(questionsObj[`answer${questionNum}`], ...links)
+    });
+    questionNum++;
+  }
+  return questions;
+}
+
+const Questions = ({questions}) => {
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
     <div
@@ -227,5 +187,16 @@ const Questions = () => {
     </div>
   );
 };
+
+Questions.propTypes = {
+  questions: PropTypes.arrayOf(
+    PropTypes.shape({
+      q: PropTypes.string,
+      a: PropTypes.element,
+    })
+  ),
+};
+
+export { buildQuestionsFromLangObj };
 
 export default Questions;

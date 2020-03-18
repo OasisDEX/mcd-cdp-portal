@@ -5,7 +5,7 @@ import { Link, useCurrentRoute } from 'react-navi';
 
 import OasisLayout from 'layouts/OasisLayout';
 import SEO from 'components/SEO';
-import Questions from 'components/Questions';
+import Questions, { buildQuestionsFromLangObj } from 'components/Questions';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
@@ -312,7 +312,7 @@ function Landing() {
       </TextSection>
       <TextSection>
         <h3>{lang.landing_page.questions_title}</h3>
-        <Questions />
+        <Questions questions={buildQuestionsFromLangObj(lang.landing_page, lang)} />
       </TextSection>
     </OasisLayout>
   );
