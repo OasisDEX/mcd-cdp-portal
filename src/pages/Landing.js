@@ -3,7 +3,7 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { Link, useCurrentRoute } from 'react-navi';
 
-import OasisLayout from 'layouts/OasisLayout';
+import MarketingLayout from 'layouts/MarketingLayout';
 import SEO from 'components/SEO';
 import Questions, { buildQuestionsFromLangObj } from 'components/Questions';
 import mixpanel from 'mixpanel-browser';
@@ -180,7 +180,7 @@ function Landing() {
   const { lang } = useLanguage();
 
   return (
-    <OasisLayout>
+    <MarketingLayout>
       <SEO title="Oasis" />
       <Hero>{lang.landing_page.headline}</Hero>
       <Cards>
@@ -316,7 +316,7 @@ function Landing() {
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
         />
       </TextSection>
-    </OasisLayout>
+    </MarketingLayout>
   );
 }
 

@@ -6,7 +6,7 @@ import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 
-const OasisLayoutStyle = styled.div`
+const MarketingLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
   p,
   ol,
@@ -172,10 +172,11 @@ const Footer = styled.footer`
   }
 `;
 
-const OasisLayout = ({ children }) => {
+// It has the Oasis logo, the top nav links, and the copyright notice.
+const MarketingLayout = ({ children }) => {
   const { lang } = useLanguage();
   return (
-    <OasisLayoutStyle>
+    <MarketingLayoutStyle>
       <div
         style={{
           margin: '0 auto',
@@ -231,8 +232,8 @@ const OasisLayout = ({ children }) => {
           </div>
         </Footer>
       </div>
-    </OasisLayoutStyle>
+    </MarketingLayoutStyle>
   );
 };
 
-export default OasisLayout;
+export default MarketingLayout;
