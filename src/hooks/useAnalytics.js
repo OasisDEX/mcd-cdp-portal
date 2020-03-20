@@ -15,12 +15,18 @@ const fathomGoals = {
     BATVaultWithdraw: 'EWFRWHQF',
     BATVaultPayback: 'J7LCT5MR',
     BATVaultGenerate: 'NKEQFMM9',
+    USDCVaultDeposit: 'UVIG1MBQ',
+    USDCVaultWithdraw: '2MBIXK34',
+    USDCVaultPayback: 'MOSFNWOM',
+    USDCVaultGenerate: '5NXLJ2ZN',
     saveDeposit: 'PYNWBWXG',
     saveWithdraw: 'E33XOIJF',
     openETHVaultDraw: 'QGVJSAAV',
     openETHVaultLock: 'Q6UC3LYV',
     openBATVaultDraw: 'X5RCGZXR',
-    openBATVaultLock: 'VJLUZIYC'
+    openBATVaultLock: 'VJLUZIYC',
+    openUSDCVaultDraw: 'Q8AWKLIZ',
+    openUSDCVaultLock: 'VKR8JNQ4'
   },
   prod: {
     connectWallet: 'HSZ7AZRX',
@@ -32,12 +38,18 @@ const fathomGoals = {
     BATVaultWithdraw: '9RRSG9IN',
     BATVaultPayback: '9DA6DXTL',
     BATVaultGenerate: 'DWIZTBPQ',
+    USDCVaultDeposit: 'YQREX5ZA',
+    USDCVaultWithdraw: '5QTQNT62',
+    USDCVaultPayback: 'RCUL7HVD',
+    USDCVaultGenerate: 'XW8MTQ2H',
     saveDeposit: 'HZP70W8E',
     saveWithdraw: 'QOFRJW54',
     openETHVaultDraw: 'H1VSU5CI',
     openETHVaultLock: 'D4ZV2V4Y',
     openBATVaultDraw: 'GDPZ3L0Z',
-    openBATVaultLock: '3GOF3WFX'
+    openBATVaultLock: '3GOF3WFX',
+    openUSDCVaultDraw: '6IPC7OMM',
+    openUSDCVaultLock: 'ZDFJQEFO'
   }
 }[env];
 
