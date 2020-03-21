@@ -4,6 +4,7 @@ import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import BorrowLayout from 'layouts/BorrowLayout';
+import MarketingLayout from './layouts/MarketingLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
@@ -27,7 +28,7 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const dappProviders = async request => {
+const dappProvidersView = async request => {
   const {
     network = networkNames[defaultNetwork],
     testchainId,
@@ -62,7 +63,7 @@ const dappProviders = async request => {
 
 const withBorrowLayout = childMatcher =>
   compose(
-    withView(dappProviders),
+    withView(dappProvidersView),
     withView(request => {
       const { viewedAddress, cdpId } = request.params;
       return (
@@ -77,10 +78,18 @@ const withBorrowLayout = childMatcher =>
     childMatcher
   );
 
+const marketingLayoutView = () => (
+  <MarketingLayout>
+    <View />
+  </MarketingLayout>
+);
+
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
-  [`/${Routes.BORROW}`]: withBorrowLayout(
+  [`/${Routes.BORROW}`]: compose(
+    withView(dappProvidersView),
+    withView(marketingLayoutView),
     route(() => ({ title: 'Borrow', view: <Borrow /> }))
   ),
 
@@ -105,7 +114,9 @@ export default mount({
     })
   ),
 
-  [`/${Routes.SAVE}`]: withBorrowLayout(
+  [`/${Routes.SAVE}`]: compose(
+    withView(dappProvidersView),
+    withView(marketingLayoutView),
     route(() => ({ title: 'Save', view: <SaveOverview /> }))
   ),
 
