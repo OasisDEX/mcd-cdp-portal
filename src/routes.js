@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, withView } from 'navi';
+import { map, route, mount, withView, compose } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -27,49 +27,55 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const withBorrowLayout = route =>
-  withView(async request => {
-    const {
-      network = networkNames[defaultNetwork],
-      testchainId,
-      backendEnv
-    } = request.query;
-    const { viewedAddress, cdpId } = request.params;
+const dappProviders = async request => {
+  const {
+    network = networkNames[defaultNetwork],
+    testchainId,
+    backendEnv
+  } = request.query;
+  const { viewedAddress } = request.params;
 
-    return (
-      <MakerProvider
-        network={network}
-        testchainId={testchainId}
-        backendEnv={backendEnv}
-        viewedAddress={viewedAddress}
-      >
-        <RouteEffects network={network} />
-        <TransactionManagerProvider>
-          <NotificationProvider>
-            <VaultsProvider viewedAddress={viewedAddress}>
-              <ToggleProvider>
-                <ModalProvider modals={modals} templates={templates}>
-                  <SidebarProvider>
-                    <BorrowLayout
-                      mobileNav={
-                        <MobileNav
-                          viewedAddress={viewedAddress}
-                          cdpId={cdpId}
-                        />
-                      }
-                      navbar={<Navbar viewedAddress={viewedAddress} />}
-                    >
-                      <View />
-                    </BorrowLayout>
-                  </SidebarProvider>
-                </ModalProvider>
-              </ToggleProvider>
-            </VaultsProvider>
-          </NotificationProvider>
-        </TransactionManagerProvider>
-      </MakerProvider>
-    );
-  }, route);
+  return (
+    <MakerProvider
+      network={network}
+      testchainId={testchainId}
+      backendEnv={backendEnv}
+      viewedAddress={viewedAddress}
+    >
+      <RouteEffects network={network} />
+      <TransactionManagerProvider>
+        <NotificationProvider>
+          <VaultsProvider viewedAddress={viewedAddress}>
+            <ToggleProvider>
+              <ModalProvider modals={modals} templates={templates}>
+                <SidebarProvider>
+                  <View />
+                </SidebarProvider>
+              </ModalProvider>
+            </ToggleProvider>
+          </VaultsProvider>
+        </NotificationProvider>
+      </TransactionManagerProvider>
+    </MakerProvider>
+  );
+};
+
+const withBorrowLayout = childMatcher =>
+  compose(
+    withView(dappProviders),
+    withView(request => {
+      const { viewedAddress, cdpId } = request.params;
+      return (
+        <BorrowLayout
+          mobileNav={<MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />}
+          navbar={<Navbar viewedAddress={viewedAddress} />}
+        >
+          <View />
+        </BorrowLayout>
+      );
+    }),
+    childMatcher
+  );
 
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
