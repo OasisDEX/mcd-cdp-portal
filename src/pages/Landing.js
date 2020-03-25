@@ -9,6 +9,7 @@ import Questions, { buildQuestionsFromLangObj } from 'components/Questions';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
+import { getColor } from 'styles/theme';
 
 import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
 import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
@@ -18,8 +19,9 @@ import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
 
 const Hero = styled.div`
-  color: #1e2e3a;
-  font-size: 38px;
+  color: ${getColor('darkPurple')};
+  font-weight: bold;
+  font-size: 58px;
   margin-top: 97px;
 `;
 

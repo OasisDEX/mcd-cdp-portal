@@ -21,7 +21,7 @@ export default {
     not_applicable: 'N/A'
   },
   landing_page: {
-    headline: 'Trade, Borrow, and Save using Dai.',
+    headline: 'Trade, borrow, and save using Dai',
     trade_card: {
       title: 'Trade',
       description:
