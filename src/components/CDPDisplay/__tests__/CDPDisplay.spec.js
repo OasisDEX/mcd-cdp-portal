@@ -41,7 +41,7 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test('Vault Display page and actions', async () => {
+test.only('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
     getByText,
@@ -75,7 +75,7 @@ test('Vault Display page and actions', async () => {
       .nextElementSibling.textContent;
 
   expect(getEthBal()).toContain('89.');
-  expect(getEthUsdValue()).toBe('$13.5K');
+  expect(getEthUsdValue()).toBe('$13.4K');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
