@@ -152,11 +152,11 @@ const Nav = styled.nav`
   }
 `;
 
-const MainNav = () => {
+const MainNav = props => {
   const { lang } = useLanguage();
 
   return (
-    <Nav style={{ fontSize: '19px' }}>
+    <Nav {...props}>
       <Link href={`${Routes.TRADE}`}>{lang.navbar.trade}</Link>
       <Link href={`${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
       <Link href={`${Routes.SAVE}`}>{lang.navbar.save}</Link>
@@ -203,63 +203,61 @@ const Footer = styled.footer`
 const MarketingLayout = ({ children }) => {
   const { lang } = useLanguage();
   return (
-    <MarketingLayoutStyle>
-      <div
-        style={{
-          margin: '0 auto',
-          maxWidth: 1203,
-          paddingTop: '41px',
-          width: '100%'
-        }}
-      >
-        <Helmet>
-          <link
-            rel="preload"
-            as="font"
-            href="/fonts/FTBase-Regular.woff2"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="font"
-            href="/fonts/FTBase-Regular.woff"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="font"
-            href="/fonts/FTBase-Bold.woff2"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="font"
-            href="/fonts/FTBase-Bold.woff"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-        </Helmet>
-        <Header>
-          <Link className="logo" href="/">
-            Oasis
-          </Link>
-          <MainNav />
-        </Header>
-        {children}
-        <CookieNotice />
-        <Footer>
-          <Nav>
-            <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
-            <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
-          </Nav>
-          <div className="copyright">
-            © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
-          </div>
-        </Footer>
-      </div>
+    <MarketingLayoutStyle
+      style={{
+        margin: '0 auto',
+        maxWidth: 1280,
+        paddingTop: '32px',
+        width: '100%'
+      }}
+    >
+      <Helmet>
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTBase-Regular.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTBase-Regular.woff"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTBase-Bold.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/FTBase-Bold.woff"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+      </Helmet>
+      <Header>
+        <Link className="logo" href="/">
+          Oasis
+        </Link>
+        <MainNav style={{ fontSize: '19px', marginTop: '4px' }} />
+      </Header>
+      {children}
+      <CookieNotice />
+      <Footer>
+        <Nav>
+          <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
+          <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+        </Nav>
+        <div className="copyright">
+          © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
+        </div>
+      </Footer>
     </MarketingLayoutStyle>
   );
 };
