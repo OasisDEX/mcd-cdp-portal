@@ -90,7 +90,7 @@ const MarketingLayoutStyle = styled.div`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
   padding: 0 40px;
-  font-family: 'FT Switch', Arial, Helvetica, sans-serif;
+  font-family: 'FT Base', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
   letter-spacing: normal;
@@ -189,28 +189,28 @@ const MarketingLayout = ({ children }) => {
           <link
             rel="preload"
             as="font"
-            href="/fonts/FTSwitch-Regular.woff2"
+            href="/fonts/FTBase-Regular.woff2"
             type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
-            href="/fonts/FTSwitch-Regular.woff"
+            href="/fonts/FTBase-Regular.woff"
             type="font/woff"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
-            href="/fonts/FTSwitch-Medium.woff2"
+            href="/fonts/FTBase-Bold.woff2"
             type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
-            href="/fonts/FTSwitch-Medium.woff"
+            href="/fonts/FTBase-Bold.woff"
             type="font/woff"
             crossOrigin="anonymous"
           />
