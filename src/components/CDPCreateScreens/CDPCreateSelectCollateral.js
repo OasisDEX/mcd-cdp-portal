@@ -85,7 +85,11 @@ function IlkTableRow({
       </td>
       <td>{ilk.symbol}</td>
       <td>
-        {formatter(annualStabilityFee, { percentage: true, rounding: BigNumber.ROUND_HALF_UP })} %
+        {formatter(annualStabilityFee, {
+          percentage: true,
+          rounding: BigNumber.ROUND_HALF_UP
+        })}{' '}
+        %
       </td>
       <td>{formatter(liquidationRatio, { percentage: true })} %</td>
       <td>{formatter(liquidationPenalty, { percentage: true })} %</td>

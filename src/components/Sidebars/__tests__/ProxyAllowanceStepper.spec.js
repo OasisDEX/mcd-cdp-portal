@@ -13,6 +13,14 @@ import { wait, waitForElement, fireEvent } from '@testing-library/react';
 import assert from 'assert';
 
 let snapshotData, web3;
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 beforeAll(async () => {
   snapshotData = await takeSnapshot();

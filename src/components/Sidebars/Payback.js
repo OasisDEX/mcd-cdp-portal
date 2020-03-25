@@ -36,7 +36,7 @@ const Payback = ({ vault, reset }) => {
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
   const { hasProxy } = useProxy();
 
-  let { debtValue, debtFloor, collateralAmount } = vault;
+  let { debtValue, debtFloor, collateralAmount, ownerAddress } = vault;
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
   const symbol = collateralAmount?.symbol;
 
@@ -82,8 +82,7 @@ const Payback = ({ vault, reset }) => {
 
   const payback = async () => {
     const cdpManager = maker.service('mcd:cdpManager');
-    const owner = await cdpManager.getOwner(vault.id);
-    if (!owner) {
+    if (!ownerAddress) {
       log(`Unable to find owner of CDP #${vault.id}`);
       return;
     }
@@ -91,8 +90,8 @@ const Payback = ({ vault, reset }) => {
     if (wipeAll) log('Calling wipeAll()');
     else log('Calling wipe()');
     wipeAll
-      ? cdpManager.wipeAll(vault.id, owner)
-      : cdpManager.wipe(vault.id, MDAI(amount), owner);
+      ? cdpManager.wipeAll(vault.id, ownerAddress)
+      : cdpManager.wipe(vault.id, MDAI(amount), ownerAddress);
     reset();
   };
 
@@ -113,7 +112,7 @@ const Payback = ({ vault, reset }) => {
   return (
     <Grid gridRowGap="m">
       <ProxyAllowanceStepper
-        token={symbol}
+        token={'DAI'}
         title={lang.action_sidebar.payback_title}
         description={lang.action_sidebar.payback_description}
       >

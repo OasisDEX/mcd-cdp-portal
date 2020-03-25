@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import { Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
@@ -14,6 +14,7 @@ import { multiply } from 'utils/bignumber';
 import { getCurrency } from 'utils/cdp';
 import BigNumber from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';
+import ProxyAllowanceStepper from './shared/ProxyAllowanceStepper';
 const { long, medium } = decimalRules;
 
 const Deposit = ({ vault, reset }) => {
@@ -74,15 +75,14 @@ const Deposit = ({ vault, reset }) => {
 
   return (
     <Grid gridRowGap="m">
-      <Grid gridRowGap="s">
-        <Text color="darkLavender" t="h4">
-          {lang.formatString(lang.action_sidebar.deposit_title, symbol)}
-        </Text>
-        <p>
-          <Text t="body">
-            {lang.formatString(lang.action_sidebar.deposit_description, symbol)}
-          </Text>
-        </p>
+      <ProxyAllowanceStepper
+        token={symbol}
+        title={lang.formatString(lang.action_sidebar.deposit_title, symbol)}
+        description={lang.formatString(
+          lang.action_sidebar.deposit_description,
+          symbol
+        )}
+      >
         <Input
           type="number"
           min="0"
@@ -92,53 +92,53 @@ const Deposit = ({ vault, reset }) => {
           failureMessage={amountErrors}
           data-testid="deposit-input"
         />
-      </Grid>
-      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button
-          disabled={!valid}
-          onClick={() => {
-            trackBtnClick('Confirm', {
-              amount,
-              fathom: { id: `${symbol}VaultDeposit`, amount }
-            });
-            deposit();
-          }}
-        >
-          {lang.actions.deposit}
-        </Button>
-        <Button
-          variant="secondary-outline"
-          onClick={() => {
-            trackBtnClick('Cancel');
-            reset();
-          }}
-        >
-          {lang.cancel}
-        </Button>
-      </Grid>
-      <InfoContainer>
-        <Info
-          title={lang.action_sidebar.current_account_balance}
-          body={`${formatter(gemBalance, { precision: long })} ${symbol}`}
-        />
-        <Info
-          title={lang.formatString(
-            lang.action_sidebar.gem_usd_price_feed,
-            symbol
-          )}
-          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
-        />
-        <Info
-          title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice, {
-            infinity: BigNumber(0).toFixed(medium)
-          })} USD/${symbol}`}
-        />
-        <Info
-          title={lang.action_sidebar.new_collateralization_ratio}
-          body={formatCollateralizationRatio(collateralizationRatio)}
-        />
-      </InfoContainer>
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+          <Button
+            disabled={!valid}
+            onClick={() => {
+              trackBtnClick('Confirm', {
+                amount,
+                fathom: { id: `${symbol}VaultDeposit`, amount }
+              });
+              deposit();
+            }}
+          >
+            {lang.actions.deposit}
+          </Button>
+          <Button
+            variant="secondary-outline"
+            onClick={() => {
+              trackBtnClick('Cancel');
+              reset();
+            }}
+          >
+            {lang.cancel}
+          </Button>
+        </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.current_account_balance}
+            body={`${formatter(gemBalance, { precision: long })} ${symbol}`}
+          />
+          <Info
+            title={lang.formatString(
+              lang.action_sidebar.gem_usd_price_feed,
+              symbol
+            )}
+            body={`${formatter(collateralTypePrice)} USD/${symbol}`}
+          />
+          <Info
+            title={lang.action_sidebar.new_liquidation_price}
+            body={`${formatter(liquidationPrice, {
+              infinity: BigNumber(0).toFixed(medium)
+            })} USD/${symbol}`}
+          />
+          <Info
+            title={lang.action_sidebar.new_collateralization_ratio}
+            body={formatCollateralizationRatio(collateralizationRatio)}
+          />
+        </InfoContainer>
+      </ProxyAllowanceStepper>
     </Grid>
   );
 };

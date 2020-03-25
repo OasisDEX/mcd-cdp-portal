@@ -51,6 +51,8 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
   const { lang } = useLanguage();
   const blockHeight = useWeb3BlockHeight(0);
 
+  const displayToken = token === 'MDAI' ? 'DAI' : token;
+
   const {
     proxyAddress,
     setupProxy,
@@ -67,7 +69,7 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
     setup_header: lang.cdp_create.setup_vault,
     allowance_text: lang.formatString(
       lang.cdp_create.setup_proxy_allowance_text,
-      token
+      displayToken
     ),
     confirmations_text: lang.formatString(
       lang.cdp_create.waiting_for_comfirmations,
@@ -93,16 +95,21 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
 
   const [transitionFlow, setTransitionFlow] = useState(null);
   useEffect(() => {
+    let timer;
     if (
       (startedWithoutAllowance || startedWithoutProxy) &&
       hasProxy &&
       hasAllowance
     ) {
       setTransitionFlow(true);
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setTransitionFlow(false);
       }, 1000);
     }
+    return () => {
+      setTransitionFlow(false);
+      clearTimeout(timer);
+    };
   }, [startedWithoutAllowance, startedWithoutProxy, hasProxy, hasAllowance]);
 
   const ProxyAllowanceSection = () => (

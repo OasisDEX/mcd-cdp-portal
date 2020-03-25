@@ -133,6 +133,7 @@ const ProxyAllowanceCheck = ({
           <Button
             width="13.0rem"
             mt="xs"
+            data-testid={'allowance-button'}
             onClick={setAllowance}
             disabled={!proxyAddress || proxyLoading || isSettingAllowance}
             loading={isSettingAllowance}
