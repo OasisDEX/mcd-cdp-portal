@@ -82,8 +82,8 @@ const CDPCreateConfirmSummary = ({
     [
       lang.stability_fee,
       `${formatter(annualStabilityFee, {
-        integer: true,
-        percentage: true
+        percentage: true,
+        rounding: BigNumber.ROUND_HALF_UP
       })}%`
     ]
   ];
@@ -154,7 +154,19 @@ const CDPCreateConfirmSummary = ({
       <ScreenFooter
         canProgress={hasReadTOS && hasUnderstoodSF && enableSubmit}
         onNext={() => {
-          trackBtnClick('Next', { isFirstVault });
+          trackBtnClick('Next', {
+            isFirstVault,
+            fathom: [
+              {
+                id: `open${selectedIlk.gem}VaultDraw`,
+                amount: cdpParams.daiToDraw
+              },
+              {
+                id: `open${selectedIlk.gem}VaultLock`,
+                amount: cdpParams.gemsToLock
+              }
+            ]
+          });
           capturedDispatch({ type: 'increment-step' });
         }}
         onBack={() => {

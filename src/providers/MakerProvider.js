@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useNavigation as useNavigationBase } from 'react-navi';
 import { mixpanelIdentify } from '../utils/analytics';
+import { AccountTypes } from '../utils/constants';
 import { instantiateMaker } from '../maker';
 import PropTypes from 'prop-types';
 import {
@@ -10,6 +11,7 @@ import {
 import LoadingLayout from '../layouts/LoadingLayout';
 import schemas from '@makerdao/dai-plugin-mcd/dist/schemas';
 import useObservable, { watch } from 'hooks/useObservable';
+import useAnalytics from 'hooks/useAnalytics';
 import debug from 'debug';
 const log = debug('maker:MakerProvider');
 
@@ -33,9 +35,17 @@ function MakerProvider({
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
   const navigation = useNavigation(network, mocks);
+  const { trackBtnClick } = useAnalytics();
+
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
+  };
+
+  const removeAccounts = () => {
+    maker.service('accounts')._accounts = {};
+    maker.service('accounts')._currentAccount = '';
+    setAccount(null);
   };
 
   const connectBrowserProvider = useCallback(async () => {
@@ -132,6 +142,8 @@ function MakerProvider({
 
     maker.on('accounts/CHANGE', eventObj => {
       const { account } = eventObj.payload;
+      if (eventObj.sequence === 1)
+        trackBtnClick(undefined, { fathom: { id: 'connectWallet' } });
       sessionStorage.setItem('lastConnectedWalletType', account.type);
       sessionStorage.setItem(
         'lastConnectedWalletAddress',
@@ -163,6 +175,40 @@ function MakerProvider({
     };
   }, [maker, connectBrowserProvider]);
 
+  const connectToProviderOfType = async type => {
+    if (!maker) return;
+    if (maker.service('accounts').hasAccount()) {
+      initAccount(maker.currentAccount());
+    } else {
+      const account = await maker.addAccount({
+        type
+      });
+      maker.useAccountWithAddress(account.address);
+    }
+    const connectedAddress = maker.currentAddress();
+    return connectedAddress;
+  };
+
+  const disconnectWalletLink = subprovider => subprovider.resetWallet();
+  const disconnectWalletConnect = async subprovider =>
+    (await subprovider.getWalletConnector()).killSession();
+  const disconnectBrowserWallet = () =>
+    ['lastConnectedWalletType', 'lastConnectedWalletAddress'].forEach(x =>
+      sessionStorage.removeItem(x)
+    );
+
+  const disconnect = () => {
+    const subprovider = maker.service('accounts').currentWallet();
+    if (subprovider.isWalletLink) disconnectWalletLink(subprovider);
+    else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
+    else if (
+      sessionStorage.getItem('lastConnectedWalletType') ===
+      AccountTypes.METAMASK
+    )
+      disconnectBrowserWallet();
+    removeAccounts();
+  };
+
   return (
     <MakerObjectContext.Provider
       value={{
@@ -172,6 +218,8 @@ function MakerProvider({
         network,
         txLastUpdate,
         connectBrowserProvider,
+        connectToProviderOfType,
+        disconnect,
         viewedAddress,
         navigation
       }}

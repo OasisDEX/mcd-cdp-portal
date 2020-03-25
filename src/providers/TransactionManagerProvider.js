@@ -36,7 +36,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
     case 'safeWipeAll':
       return lang.formatString(
         `${lang[langKey].pay_back_dai}${suffix}`,
-        <>outstanding</>
+        'outstanding'
       );
     case 'draw':
       return lang.formatString(
@@ -44,6 +44,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         <ValueText>{formatAmount(metadata.drawAmount)}</ValueText>
       );
     case 'safeLockETH':
+    case 'safeLockGem':
       return lang.formatString(
         `${lang[langKey].depositing_gem}${suffix}`,
         <>
@@ -52,6 +53,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         </>
       );
     case 'wipeAndFreeETH':
+    case 'wipeAndFreeGem':
       return lang.formatString(
         `${lang[langKey].withdrawing_gem}${suffix}`,
         <>
@@ -60,10 +62,6 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         </>
       );
     case 'openLockETHAndDraw':
-      return lang.formatString(
-        `${lang[langKey].creating_cdp}${suffix}`
-        // <><ValueText>{formatAmount(metadata.lockAmount)}</ValueText> {formatSymbol(lockAmount.symbol)}</>
-      );
     case 'openLockGemAndDraw':
       return lang.formatString(
         `${lang[langKey].creating_cdp}${suffix}`
@@ -101,6 +99,13 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         return lang.formatString(
           `${lang[langKey].withdrawing_gem}${suffix}`,
           'DAI'
+        );
+      else return '?';
+    case 'exitAll':
+      if (metadata.contract === 'PROXY_ACTIONS_DSR')
+        return lang.formatString(
+          `${lang[langKey].withdrawing_gem}${suffix}`,
+          'all DAI'
         );
       else return '?';
     case 'frob':

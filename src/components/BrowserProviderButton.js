@@ -4,22 +4,18 @@ import styled from 'styled-components';
 import useLanguage from 'hooks/useLanguage';
 import { ReactComponent as MetaMaskLogo } from 'images/metamask.svg';
 import { ReactComponent as TrustLogo } from 'images/trust-logo.svg';
-import { ReactComponent as ImTokenLogo } from 'images/imtoken-logo.svg';
 import coinbaseWalletLogo from 'images/coinbase-wallet.png';
 import alphaWalletLogo from 'images/alpha-wallet-logo.png';
 import { wallets } from 'utils/web3';
+import ImTokenLogo from 'components/ImTokenLogo';
 import IconButton from 'components/IconButton';
 
-// hack to get around button padding for now
 const MMLogo = styled(MetaMaskLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-  margin-left: -5px;
+  margin: -5px 0;
 `;
 
-export default function BrowserProviderButton({ provider, ...props }) {
-  const { lang } = useLanguage();
-  const icon = useMemo(() => {
+export const useBrowserIcon = provider =>
+  useMemo(() => {
     if (provider === wallets.METAMASK) {
       return <MMLogo />;
     } else if (provider === wallets.TRUST) {
@@ -43,6 +39,9 @@ export default function BrowserProviderButton({ provider, ...props }) {
     }
   }, [provider]);
 
+export default function BrowserProviderButton({ provider, ...props }) {
+  const { lang } = useLanguage();
+  const icon = useBrowserIcon(provider);
   return (
     <IconButton icon={icon} {...props}>
       {lang.providers[provider] || 'Active Wallet'}

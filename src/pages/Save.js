@@ -4,7 +4,8 @@ import {
   Grid,
   Text,
   Button,
-  Address
+  Address,
+  Link
 } from '@makerdao/ui-components-core';
 
 import theme from '../styles/theme';
@@ -26,17 +27,49 @@ import useAnalytics from 'hooks/useAnalytics';
 import useSidebar from 'hooks/useSidebar';
 import useSavings from 'hooks/useSavings';
 import useNotification from 'hooks/useNotification';
+import { watch } from 'hooks/useObservable';
+import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 
 import { FeatureFlags } from 'utils/constants';
-import { watch } from 'hooks/useObservable';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 
 function Save({ viewedAddress }) {
   const { lang } = useLanguage();
   const { account, network } = useMaker();
   const { addNotification, deleteNotifications } = useNotification();
+  const {
+    emergencyShutdownActive,
+    emergencyShutdownTime
+  } = useEmergencyShutdown();
 
   useEffect(() => {
+    if (emergencyShutdownActive) {
+      addNotification({
+        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
+        content: lang.formatString(
+          lang.notifications.emergency_shutdown_active,
+          emergencyShutdownTime
+            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
+            : '--',
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'http://migrate.makerdao.com/'}
+            target="_blank"
+          >
+            {'http://migrate.makerdao.com/'}
+          </Link>,
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'https://forum.makerdao.com/'}
+            target="_blank"
+          >
+            {'here'}
+          </Link>
+        ),
+        level: SAFETY_LEVELS.DANGER
+      });
+    }
+
     if (account && viewedAddress && viewedAddress !== account.address) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,
@@ -47,9 +80,13 @@ function Save({ viewedAddress }) {
         level: SAFETY_LEVELS.WARNING
       });
     }
-    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
+    return () =>
+      deleteNotifications([
+        NotificationList.NON_OVERVIEW_OWNER,
+        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
+      ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewedAddress, account]);
+  }, [viewedAddress, account, emergencyShutdownActive, emergencyShutdownTime]);
 
   const viewedProxyAddress = watch.proxyAddress(viewedAddress);
   const savings = useSavings(viewedAddress);
@@ -105,6 +142,7 @@ function Save({ viewedAddress }) {
                 )}
               </Text.p>
               <Button
+                disabled={emergencyShutdownActive}
                 p="s"
                 css={{ cursor: 'pointer' }}
                 onClick={() =>
@@ -147,7 +185,11 @@ function Save({ viewedAddress }) {
                 button={
                   <ActionButton
                     data-testid={'sidebar-deposit-button'}
-                    disabled={!account || viewedAddress !== account?.address}
+                    disabled={
+                      !account ||
+                      viewedAddress !== account?.address ||
+                      emergencyShutdownActive
+                    }
                     onClick={() => {
                       trackBtnClick('Deposit');
                       showAction({ type: 'dsrdeposit', props: { savings } });

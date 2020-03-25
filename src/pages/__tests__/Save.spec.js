@@ -171,7 +171,9 @@ test('cannot deposit more than token allowance', async () => {
       vaultsCreated: MOCK_OBS_RESPONSE,
       totalDaiLockedInDsr: MOCK_OBS_RESPONSE,
       annualDaiSavingsRate: MOCK_OBS_RESPONSE,
-      systemCollateralization: MOCK_OBS_RESPONSE
+      systemCollateralization: MOCK_OBS_RESPONSE,
+      emergencyShutdownActive: () => of(false),
+      emergencyShutdownTime: () => of(new Date(0))
     });
 
   const multicall = { watch };

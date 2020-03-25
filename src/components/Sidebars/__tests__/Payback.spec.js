@@ -17,6 +17,11 @@ import { renderWithMaker } from '../../../../test/helpers/render';
 import useMaker from '../../../hooks/useMaker';
 import lang from '../../../languages';
 
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
 jest.mock('react-navi', () => ({
   useCurrentRoute: () => ({ url: { pathname: '/test' } })
 }));

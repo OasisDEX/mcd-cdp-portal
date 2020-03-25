@@ -1,6 +1,6 @@
 import React from 'react';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
-import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import { Input, Grid, Button } from '@makerdao/ui-components-core';
 import debug from 'debug';
 
 import { formatCollateralizationRatio } from 'utils/ui';
@@ -141,7 +141,10 @@ const Payback = ({ vault, reset }) => {
           <Button
             disabled={!valid}
             onClick={() => {
-              trackBtnClick('Confirm', { amount });
+              trackBtnClick('Confirm', {
+                amount,
+                fathom: { id: `${symbol}VaultPayback`, amount }
+              });
               payback();
             }}
           >

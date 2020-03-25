@@ -33,6 +33,7 @@ export const toNum = async promise => {
   return val.toBigNumber().toFixed();
 };
 
+//TODO add new token here (its for hardware wallet)
 export const addTokenBalances = async account => {
   return {
     ...account,

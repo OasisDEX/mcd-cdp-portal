@@ -124,7 +124,10 @@ const Withdraw = ({ vault, reset }) => {
         <Button
           disabled={!amount || amountErrors}
           onClick={() => {
-            trackBtnClick('Confirm', { amount });
+            trackBtnClick('Confirm', {
+              amount,
+              fathom: { id: `${symbol}VaultWithdraw`, amount }
+            });
             withdraw();
           }}
         >

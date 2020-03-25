@@ -22,6 +22,7 @@ import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import { watch } from 'hooks/useObservable';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -56,9 +57,39 @@ function Overview({ viewedAddress }) {
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
 
+  const emergencyShutdownActive = watch.emergencyShutdownActive();
+  const emergencyShutdownTime = watch.emergencyShutdownTime();
+
   const { addNotification, deleteNotifications } = useNotification();
 
   useEffect(() => {
+    if (emergencyShutdownActive) {
+      addNotification({
+        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
+        content: lang.formatString(
+          lang.notifications.emergency_shutdown_active,
+          emergencyShutdownTime
+            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
+            : '--',
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'http://migrate.makerdao.com/'}
+            target="_blank"
+          >
+            {'http://migrate.makerdao.com/'}
+          </Link>,
+          <Link
+            css={{ textDecoration: 'underline' }}
+            href={'https://forum.makerdao.com/'}
+            target="_blank"
+          >
+            {'here'}
+          </Link>
+        ),
+        level: SAFETY_LEVELS.DANGER
+      });
+    }
+
     if (account && viewedAddress !== account.address) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,
@@ -69,9 +100,13 @@ function Overview({ viewedAddress }) {
         level: SAFETY_LEVELS.WARNING
       });
     }
-    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
+    return () =>
+      deleteNotifications([
+        NotificationList.NON_OVERVIEW_OWNER,
+        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
+      ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewedAddress, account]);
+  }, [viewedAddress, account, emergencyShutdownTime, emergencyShutdownActive]);
 
   const { show } = useModal();
   if (!viewedAddressVaults) {
@@ -93,6 +128,7 @@ function Overview({ viewedAddress }) {
                 {lang.overview_page.get_started_title}
               </Text.p>
               <Button
+                disabled={emergencyShutdownActive}
                 p="s"
                 css={{ cursor: 'pointer' }}
                 onClick={() => {
@@ -122,6 +158,7 @@ function Overview({ viewedAddress }) {
       </PageContentLayout>
     );
   }
+
   return (
     <PageContentLayout>
       <Text.h2 pr="m" mb="m" color="darkPurple">

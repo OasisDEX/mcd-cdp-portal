@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   cleanup,
   waitForElement,
@@ -12,6 +12,10 @@ import lang from 'languages';
 import testAccounts from '../../../../node_modules/@makerdao/test-helpers/dist/testAccounts.json';
 import useMaker from '../../../hooks/useMaker';
 import waitForExpect from 'wait-for-expect';
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
 
 afterEach(cleanup);
 

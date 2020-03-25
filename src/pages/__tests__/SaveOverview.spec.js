@@ -3,6 +3,10 @@ import SaveOverview from '../SaveOverview';
 import { renderWithMaker, mocks } from '../../../test/helpers/render';
 import { waitForElement, fireEvent } from '@testing-library/react';
 import { Routes } from 'utils/constants';
+import useAnalytics from 'hooks/useAnalytics';
+
+jest.mock('hooks/useAnalytics');
+useAnalytics.mockReturnValue(jest.fn());
 
 test('Save overview flow and re-route', async () => {
   const { getByText } = await renderWithMaker(<SaveOverview />, {

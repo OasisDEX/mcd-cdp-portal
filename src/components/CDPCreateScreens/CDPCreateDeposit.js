@@ -218,8 +218,8 @@ const CDPCreateDepositSidebar = ({
         [
           lang.stability_fee,
           `${formatter(annualStabilityFee, {
-            integer: true,
-            percentage: true
+            percentage: true,
+            rounding: BigNumber.ROUND_HALF_UP
           })}%`
         ]
       ].map(([title, value]) => (

@@ -61,17 +61,18 @@ const mockVault = {
       .toNumber()
 };
 
-test('basic rendering', () => {
+test('basic rendering', async () => {
   const showSidebar = jest.fn(() => {});
-  const { getByText } = renderWithProviders(
+  const { getByText } = renderWithMaker(
     <Presentation
       account={account}
       showSidebar={showSidebar}
       vault={mockVault}
       cdpOwner={mockOwnerAddress}
+      showVaultHistory={false}
     />
   );
-  getByText('9.10 LOL');
+  await waitForElement(() => getByText('9.10 LOL'));
   getByText('1820.00 USD');
   getByText('120.00 DAI');
   getByText('1213.33 DAI');
@@ -83,22 +84,23 @@ test('basic rendering', () => {
   });
 });
 
-test('render liquidation price correctly when no debt', () => {
+test('render liquidation price correctly when no debt', async () => {
   const showSidebar = jest.fn(() => {});
   const newMockVault = {
     ...mockVault,
     liquidationPrice: createCurrencyRatio(USD, LOL)(Infinity),
     collateralTypePrice: createCurrencyRatio(USD, LOL)('0')
   };
-  const { getByText } = renderWithProviders(
+  const { getByText } = renderWithMaker(
     <Presentation
       account={account}
       showSidebar={showSidebar}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
+      showVaultHistory={false}
     />
   );
-  getByText('N/A'); //liquidation price
+  await waitForElement(() => getByText('N/A')); //liquidation price
   getByText('0.0000 USD');
 });
 
@@ -108,12 +110,13 @@ test('reclaim banner rounds correctly when value is > 1', async () => {
     ...mockVault,
     unlockedCollateral: new BigNumber('213.1234567890123456')
   };
-  const { findByText } = renderWithProviders(
+  const { findByText } = renderWithMaker(
     <Presentation
       account={account}
       showSidebar={showSidebar}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
+      showVaultHistory={false}
     />
   );
   // two decimal places for values > 1
@@ -126,12 +129,13 @@ test('reclaim banner rounds correctly when number is < 1', async () => {
     ...mockVault,
     unlockedCollateral: new BigNumber('0.1234567890123456')
   };
-  const { findByText } = renderWithProviders(
+  const { findByText } = renderWithMaker(
     <Presentation
       account={account}
       showSidebar={showSidebar}
       vault={newMockVault}
       cdpOwner={mockOwnerAddress}
+      showVaultHistory={false}
     />
   );
   // four decimal places for values < 1

@@ -100,7 +100,10 @@ const Generate = ({ vault, reset }) => {
         <Button
           disabled={!amount || failureMessage}
           onClick={() => {
-            trackBtnClick('Confirm', { amount });
+            trackBtnClick('Confirm', {
+              amount,
+              fathom: { id: `${symbol}VaultGenerate`, amount }
+            });
             generate();
           }}
         >

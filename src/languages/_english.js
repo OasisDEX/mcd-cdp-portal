@@ -472,10 +472,12 @@ export default {
     claim_collateral:
       'Your {0} Vault auction(s) have completed. You have {1} {2} to claim',
     non_vault_owner:
-      'The owner of this position ({0}) does not match the connected walleted address',
+      'The owner of this position ({0}) does not match the connected wallet address',
     non_overview_owner:
       'You are currently viewing the Overview of another address ({0})',
     non_savings_owner:
-      'You are currently viewing the savings of another address ({0})'
+      'You are currently viewing the savings of another address ({0})',
+    emergency_shutdown_active:
+      'Emergency shutdown has been initiated on {0}. This dashboard is currently read-only. If you have any vaults or DAI, please go to {1}. For more information you can read more {2}'
   }
 };

@@ -11,6 +11,15 @@ import { instantiateMaker } from '../../maker';
 import { prettifyNumber } from '../../utils/ui';
 import useMaker from 'hooks/useMaker';
 
+jest.mock('mixpanel-browser', () => ({
+  init: jest.fn(),
+  track: jest.fn()
+}));
+
+jest.mock('react-navi', () => ({
+  useCurrentRoute: () => ({ url: { pathname: '/test' } })
+}));
+
 const { click, change } = fireEvent;
 
 const AMOUNT = 80.1234567;
