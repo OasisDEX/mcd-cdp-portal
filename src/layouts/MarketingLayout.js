@@ -6,6 +6,7 @@ import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
+import { getColor } from 'styles/theme';
 
 const MarketingLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
@@ -96,7 +97,7 @@ const MarketingLayoutStyle = styled.div`
   font-style: normal;
   letter-spacing: normal;
   text-align: center;
-  color: black;
+  color: ${getColor('purpleGray')};
   width: 100%;
 
   @media only screen and (max-width: 425px) {
@@ -104,8 +105,16 @@ const MarketingLayoutStyle = styled.div`
   }
 
   a {
-    color: black;
+    color: ${getColor('darkPurple')};
     text-decoration: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    color: ${getColor('darkPurple')};
   }
 `;
 
@@ -118,6 +127,10 @@ const Header = styled.header`
     line-height: 26px;
     font-weight: bold;
   }
+
+  a {
+    color: ${getColor('purpleGray')};
+  }
 `;
 
 const Nav = styled.nav`
@@ -128,7 +141,6 @@ const Nav = styled.nav`
 
   a {
     text-decoration: none;
-    color: black;
   }
 
   a:hover {

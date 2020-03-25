@@ -15,6 +15,8 @@ const theme = {
     blueGray: '#1E2C37',
     blueGrayDarker: '#18232C',
     blueGrayLighter: '#31424E',
+    purpleGray: '#2F3044',
+    violetGray: '#443854',
     red: '#F75524',
     ...colors
   },
