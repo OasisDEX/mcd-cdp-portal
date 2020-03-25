@@ -5,6 +5,7 @@ import { Link } from 'react-navi';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
+import { hot } from 'react-hot-loader/root';
 
 const MarketingLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
@@ -110,20 +111,53 @@ const MarketingLayoutStyle = styled.div`
 
 const Header = styled.header`
   text-align: left;
+  letter-spacing: 0.3px;
 
   .logo {
     font-size: 22px;
     line-height: 26px;
-    letter-spacing: 0.3px;
     font-weight: bold;
   }
 `;
+
+const Nav = styled.nav`
+  float: right;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  a:hover {
+    color: #6d6d6d;
+  }
+
+  a:not(:first-child) {
+    margin-left: ${props => props.separation || '56px'};
+  }
+`;
+
+const MainNav = () => {
+  const { lang } = useLanguage();
+
+  return (
+    <Nav style={{ fontSize: '19px' }}>
+      <Link href={`${Routes.TRADE}`}>{lang.navbar.trade}</Link>
+      <Link href={`${Routes.SAVE}`}>{lang.navbar.save}</Link>
+      <Link href={`${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
+    </Nav>
+  );
+};
 
 const centerFooterMaxWidth = '640px';
 
 const Footer = styled.footer`
   margin-top: 90px;
   margin-bottom: 70px;
+  letter-spacing: 0.3px;
 
   *,
   *:before,
@@ -131,34 +165,15 @@ const Footer = styled.footer`
     position: static;
   }
 
-  nav {
-    float: right;
-    display: flex;
-    justify-content: center;
-
+  ${Nav} {
     @media (max-width: ${centerFooterMaxWidth}) {
       float: none;
-    }
-
-    a {
-      font-size: 17px;
-      text-decoration: none;
-      color: black;
-    }
-
-    a:hover {
-      color: #6d6d6d;
-    }
-
-    a:not(:first-child) {
-      margin-left: 64px;
     }
   }
 
   .copyright {
     text-align: left;
     font-size: 16px;
-    letter-spacing: 0.3px;
     white-space: nowrap;
 
     @media (max-width: ${centerFooterMaxWidth}) {
@@ -219,14 +234,15 @@ const MarketingLayout = ({ children }) => {
           <Link className="logo" href="/">
             Oasis
           </Link>
+          <MainNav />
         </Header>
         {children}
         <CookieNotice />
         <Footer>
-          <nav>
+          <Nav>
             <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
             <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
-          </nav>
+          </Nav>
           <div className="copyright">
             © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
           </div>
@@ -236,4 +252,4 @@ const MarketingLayout = ({ children }) => {
   );
 };
 
-export default MarketingLayout;
+export default hot(MarketingLayout);
