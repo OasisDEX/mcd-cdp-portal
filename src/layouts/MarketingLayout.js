@@ -112,10 +112,10 @@ const Header = styled.header`
   text-align: left;
 
   .logo {
-    font-size: 21px;
-    line-height: 25px;
+    font-size: 22px;
+    line-height: 26px;
     letter-spacing: 0.3px;
-    font-weight: 500;
+    font-weight: bold;
   }
 `;
 
