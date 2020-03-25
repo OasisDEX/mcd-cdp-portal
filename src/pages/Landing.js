@@ -22,29 +22,29 @@ const Hero = styled.div`
   color: ${getColor('darkPurple')};
   font-weight: bold;
   font-size: 58px;
-  margin-top: 97px;
+  margin-top: 149px;
 `;
 
 const Cards = styled.div`
-  max-width: 1000px;
+  max-width: 1200px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   margin: 80px auto;
 
-  @media (max-width: 1020px) {
-    max-width: 300px;
+  @media (max-width: 1238px) {
+    max-width: 368px;
   }
 `;
 
 const Card = styled.div`
   overflow: hidden;
-  border-radius: 15px;
-  width: 300px;
-  height: 355px;
-  color: #ffffff;
+  width: 368px;
+  height: 430px;
   position: relative;
   flex-shrink: 1;
+  text-align: left;
+  padding: 57px 40px 60px;
 
   @media (max-width: 1020px) {
     margin-bottom: 35px;
@@ -53,13 +53,12 @@ const Card = styled.div`
   .title {
     font-size: 29px;
     margin-top: 56px;
+    font-weight: bold;
   }
 
   .description {
     font-size: 17px;
     margin-top: 25px;
-    margin-right: 23px;
-    margin-left: 23px;
     line-height: 26px;
   }
 
@@ -79,15 +78,10 @@ const Card = styled.div`
     height: 39px;
     line-height: 38px;
     text-decoration: none;
-  }
-
-  .button.enabled {
-    box-shadow: 0 2px 2px ${props => props.btnShadowColor};
     transition: all 0.15s ease;
   }
 
-  .button.enabled:hover {
-    box-shadow: 0 5px 5px ${props => props.btnShadowColor};
+  .button:hover {
     transform: translateY(-1px);
   }
 `;
@@ -189,24 +183,17 @@ function Landing() {
         <Card
           style={{
             background:
-              'linear-gradient(180deg, #C2D7E4 0%, #DBF1EC 100%), #7AAAC5'
+              'radial-gradient(111.67% 100% at 0% 0%, #F2FFE6 0%, #C6FFF9 100%)'
           }}
-          btnShadowColor="#c8e4e6"
         >
-          <div className="title" style={{ color: '#253A44' }}>
-            {lang.landing_page.trade_card.title}
-          </div>
-          <div className="description" style={{ color: '#14303A' }}>
+          <div className="title">{lang.landing_page.trade_card.title}</div>
+          <div className="description">
             {lang.landing_page.trade_card.description}
           </div>
           <div className="buttonContainer">
-            <a
-              href="/trade"
+            <Link
+              href={`/${Routes.TRADE}`}
               className="button enabled"
-              style={{
-                color: '#5894B5',
-                backgroundColor: 'white'
-              }}
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'StartTrading',
@@ -215,77 +202,60 @@ function Landing() {
               }}
             >
               {lang.landing_page.trade_card.button}
-            </a>
+            </Link>
           </div>
         </Card>
         <Card
           style={{
             background:
-              'linear-gradient(180deg, #F0DED8 0%, #FDF2E1 100%), linear-gradient(0deg, #EFBF98, #EFBF98)'
+              'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)'
           }}
-          btnShadowColor="#F1E3DB"
         >
-          <div className="title" style={{ color: '#5B2E1B' }}>
-            {lang.landing_page.borrow_card.title}
-          </div>
-          <div className="description" style={{ color: '#5B2E1B' }}>
+          <div className="title">{lang.landing_page.borrow_card.title}</div>
+          <div className="description">
             {lang.landing_page.borrow_card.description}
           </div>
           <div className="buttonContainer">
-            <div className="button">
-              <Link
-                href={`/${Routes.BORROW}${url.search}`}
-                prefetch={true}
-                className="button enabled"
-                style={{
-                  color: '#945F47',
-                  backgroundColor: 'white'
-                }}
-                onClick={() => {
-                  mixpanel.track('btn-click', {
-                    id: 'BorrowDai',
-                    product: 'oasis-landing'
-                  });
-                }}
-              >
-                {lang.landing_page.borrow_card.button}
-              </Link>
-            </div>
+            <Link
+              href={`/${Routes.BORROW}${url.search}`}
+              prefetch={true}
+              className="button"
+              onClick={() => {
+                mixpanel.track('btn-click', {
+                  id: 'BorrowDai',
+                  product: 'oasis-landing'
+                });
+              }}
+            >
+              {lang.landing_page.borrow_card.button}
+            </Link>
           </div>
         </Card>
         <Card
           style={{
-            background: 'linear-gradient(180deg, #D5E8E3 0%, #EEF0E4 100%)',
+            background:
+              'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)',
             marginBottom: 0
           }}
-          btnShadowColor="#D7E9E3"
         >
-          <div className="title" style={{ color: '#002F28' }}>
-            {lang.landing_page.save_card.title}
-          </div>
-          <div className="description" style={{ color: '#002F28' }}>
+          <div className="title">{lang.landing_page.save_card.title}</div>
+          <div className="description">
             {lang.landing_page.save_card.description}
           </div>
           <div className="buttonContainer">
-            <div className="button">
-              <Link
-                href={`/${Routes.SAVE}${url.search}`}
-                prefetch={true}
-                className="button enabled"
-                style={{
-                  color: '#699C90',
-                  backgroundColor: 'white'
-                }}
-                onClick={() => {
-                  mixpanel.track('btn-click', {
-                    id: 'SaveDai',
-                    product: 'oasis-landing'
-                  });
-                }}
-              >
-                {lang.landing_page.save_card.button}
-              </Link>
-            </div>
+            <Link
+              href={`/${Routes.SAVE}${url.search}`}
+              prefetch={true}
+              className="button"
+              onClick={() => {
+                mixpanel.track('btn-click', {
+                  id: 'SaveDai',
+                  product: 'oasis-landing'
+                });
+              }}
+            >
+              {lang.landing_page.save_card.button}
+            </Link>
           </div>
         </Card>
       </Cards>
