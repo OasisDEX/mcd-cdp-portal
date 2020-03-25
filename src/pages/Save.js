@@ -28,6 +28,7 @@ import useSidebar from 'hooks/useSidebar';
 import useSavings from 'hooks/useSavings';
 import useNotification from 'hooks/useNotification';
 import { watch } from 'hooks/useObservable';
+import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
@@ -36,9 +37,10 @@ function Save({ viewedAddress }) {
   const { lang } = useLanguage();
   const { account, network } = useMaker();
   const { addNotification, deleteNotifications } = useNotification();
-
-  const emergencyShutdownActive = watch.emergencyShutdownActive();
-  const emergencyShutdownTime = watch.emergencyShutdownTime();
+  const {
+    emergencyShutdownActive,
+    emergencyShutdownTime
+  } = useEmergencyShutdown();
 
   useEffect(() => {
     if (emergencyShutdownActive) {
