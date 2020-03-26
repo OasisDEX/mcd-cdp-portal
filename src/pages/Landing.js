@@ -34,9 +34,29 @@ const Cards = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
   margin: 80px auto;
+  padding-bottom: 66px;
+
+  :after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    width: 93%;
+    left: 3.5%;
+    height: 95%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 249, 237, 0) 0%,
+      #fff9ed 100%
+    );
+  }
 
   @media (max-width: 1238px) {
     max-width: 368px;
+    :after {
+      content: none;
+    }
   }
 `;
 
@@ -49,7 +69,7 @@ const Card = styled.div`
   text-align: left;
   padding: 57px 40px 60px;
 
-  @media (max-width: 1020px) {
+  @media (max-width: 1238px) {
     margin-bottom: 35px;
   }
 
@@ -105,11 +125,10 @@ const TextSection = styled.div`
   margin-top: 81px;
 
   h3 {
-    font-size: 30px;
-    font-weight: normal;
+    font-weight: bold;
+    font-size: 46px;
+    line-height: 55px;
     margin-bottom: 20px;
-    line-height: 40px;
-    color: #000;
   }
 
   p {
@@ -170,7 +189,7 @@ const Token = ({ name, icon }) => {
         margin: '38px 35px 22px'
       }}
     >
-      <Icon style={{ flexGrow: 0, flexShrink: 0 }} />
+      <Icon style={{ width: 70, flexGrow: 0, flexShrink: 0 }} />
       <span
         style={{
           fontSize: '17px',
