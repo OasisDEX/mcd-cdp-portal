@@ -11,12 +11,15 @@ import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import { getColor } from 'styles/theme';
 
-import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
-import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
-import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
-import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
-import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
-import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
+import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
+import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
+import { ReactComponent as SaveIcon } from 'images/landing/save-icon.svg';
+import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
+import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
+import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
+import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
+import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
+import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 
 const Hero = styled.div`
   color: ${getColor('darkPurple')};
@@ -186,6 +189,7 @@ function Landing() {
               'radial-gradient(111.67% 100% at 0% 0%, #F2FFE6 0%, #C6FFF9 100%)'
           }}
         >
+          <TradeIcon />
           <div className="title">{lang.landing_page.trade_card.title}</div>
           <div className="description">
             {lang.landing_page.trade_card.description}
@@ -211,6 +215,7 @@ function Landing() {
               'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)'
           }}
         >
+          <BorrowIcon />
           <div className="title">{lang.landing_page.borrow_card.title}</div>
           <div className="description">
             {lang.landing_page.borrow_card.description}
@@ -238,6 +243,7 @@ function Landing() {
             marginBottom: 0
           }}
         >
+          <SaveIcon />
           <div className="title">{lang.landing_page.save_card.title}</div>
           <div className="description">
             {lang.landing_page.save_card.description}
