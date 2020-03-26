@@ -170,7 +170,7 @@ const Token = ({ name, icon }) => {
         margin: '38px 35px 22px'
       }}
     >
-      <Icon width="22" height="22" style={{ flexGrow: 0, flexShrink: 0 }} />
+      <Icon style={{ flexGrow: 0, flexShrink: 0 }} />
       <span
         style={{
           fontSize: '17px',
