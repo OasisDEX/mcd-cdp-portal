@@ -54,34 +54,46 @@ const Card = styled.div`
   }
 
   .title {
-    font-size: 29px;
-    margin-top: 56px;
+    font-size: 28px;
+    line-height: 28px;
+    margin-top: 21px;
+    margin-bottom: 13px;
     font-weight: bold;
   }
 
   .description {
-    font-size: 17px;
-    margin-top: 25px;
-    line-height: 26px;
+    font-size: 22px;
+    line-height: 34px;
+    letter-spacing: 0.5px;
+    color: {getColor('violetGray')};
   }
 
   .buttonContainer {
     position: absolute;
-    bottom: 32px;
+    bottom: 59px;
     width: 100%;
   }
 
   .button {
-    padding-right: 22px;
-    padding-left: 22px;
-    border-radius: 6px;
-    display: inline-block;
-    font-size: 15px;
-    font-weight: 500;
-    height: 39px;
-    line-height: 38px;
-    text-decoration: none;
+    display: inline-flex;
+    padding: 12px 24px;
+    border-radius: 40px;
+    background-color: ${getColor('darkPurple')};
+    
     transition: all 0.15s ease;
+    
+    span {
+      align-self: center;
+      
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 22px;
+      letter-spacing: 0.5px;
+  
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+    
   }
 
   .button:hover {
@@ -190,14 +202,14 @@ function Landing() {
           }}
         >
           <TradeIcon />
-          <div className="title">{lang.landing_page.trade_card.title}</div>
+          <h1 className="title">{lang.landing_page.trade_card.title}</h1>
           <div className="description">
             {lang.landing_page.trade_card.description}
           </div>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.TRADE}`}
-              className="button enabled"
+              className="button"
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'StartTrading',
@@ -205,7 +217,7 @@ function Landing() {
                 });
               }}
             >
-              {lang.landing_page.trade_card.button}
+              <span>{lang.landing_page.trade_card.button}</span>
             </Link>
           </div>
         </Card>
@@ -216,7 +228,7 @@ function Landing() {
           }}
         >
           <BorrowIcon />
-          <div className="title">{lang.landing_page.borrow_card.title}</div>
+          <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
           <div className="description">
             {lang.landing_page.borrow_card.description}
           </div>
@@ -232,7 +244,7 @@ function Landing() {
                 });
               }}
             >
-              {lang.landing_page.borrow_card.button}
+              <span>{lang.landing_page.borrow_card.button}</span>
             </Link>
           </div>
         </Card>
@@ -244,7 +256,7 @@ function Landing() {
           }}
         >
           <SaveIcon />
-          <div className="title">{lang.landing_page.save_card.title}</div>
+          <h1 className="title">{lang.landing_page.save_card.title}</h1>
           <div className="description">
             {lang.landing_page.save_card.description}
           </div>
@@ -260,7 +272,7 @@ function Landing() {
                 });
               }}
             >
-              {lang.landing_page.save_card.button}
+              <span>{lang.landing_page.save_card.button}</span>
             </Link>
           </div>
         </Card>
