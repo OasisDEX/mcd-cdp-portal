@@ -152,15 +152,21 @@ const Nav = styled.nav`
   }
 `;
 
+const MainNavStyle = styled(Nav)`
+  a {
+    color: ${getColor('violetGray')};
+  }
+`;
+
 const MainNav = props => {
   const { lang } = useLanguage();
 
   return (
-    <Nav {...props}>
+    <MainNavStyle {...props}>
       <Link href={`${Routes.TRADE}`}>{lang.navbar.trade}</Link>
       <Link href={`${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
       <Link href={`${Routes.SAVE}`}>{lang.navbar.save}</Link>
-    </Nav>
+    </MainNavStyle>
   );
 };
 
