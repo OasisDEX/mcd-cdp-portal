@@ -40,7 +40,7 @@ export default {
         'Earn savings on your Dai by locking it into Oasis Save. Automatic and non-custodial.',
       button: 'Save Dai'
     },
-    token_section_title: 'Currently supported on Oasis',
+    token_section_title: 'Supported Tokens',
     token_section_only_on_trade: '* Only available on Oasis Trade',
     section1_title: 'What is Oasis?',
     section1_p:

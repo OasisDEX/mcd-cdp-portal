@@ -149,59 +149,62 @@ const tokens = [
     icon: EthIcon
   },
   {
+    name: 'BAT',
+    icon: BatIcon
+  },
+  {
     name: 'Augur*',
     icon: RepIcon
+  },
+  {
+    name: 'USDC',
+    icon: UsdcIcon
   },
   {
     name: '0x*',
     icon: ZrxIcon
   },
-  {
-    name: 'Basic Attention Token',
-    icon: BatIcon
-  },
-  {
-    name: 'USDC',
-    icon: UsdcIcon
-  }
 ];
 
 const TokenList = styled.div`
-  max-width: 700px;
+  max-width: 1170px;
   display: flex;
-  justify-content: center;
-  align-content: space-between;
+  justify-content: space-between;
   flex-wrap: wrap;
-  margin: 22px auto 0;
+  margin: 74px auto 0;
+`;
 
-  @media (max-width: 1000px) {
-    max-width: 560px;
+const TokenStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+
+  svg {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+  
+  svg {
+    width: 70px;
+  }
+  
+  span {
+    margin-top: 28px;
+    font-size: 22px;
+    letter-spacing: 0.5px;
   }
 `;
 
 const Token = ({ name, icon }) => {
   const Icon = icon;
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        margin: '38px 35px 22px'
-      }}
-    >
-      <Icon style={{ width: 70, flexGrow: 0, flexShrink: 0 }} />
-      <span
-        style={{
-          fontSize: '17px',
-          lineHeight: '22px',
-          marginLeft: '13px',
-          flexGrow: 0,
-          flexShrink: 0
-        }}
-      >
+    <TokenStyle>
+      <Icon />
+      <span>
         {name}
       </span>
-    </div>
+    </TokenStyle>
   );
 };
 
@@ -303,7 +306,7 @@ function Landing() {
             <Token name={name} icon={icon} key={name} />
           ))}
         </TokenList>
-        <span style={{ fontSize: '10px' }}>
+        <span style={{ fontSize: '18px', letterSpacing: '0.5px', color: '#4F445E' }}>
           {lang.landing_page.token_section_only_on_trade}
         </span>
       </TextSection>
