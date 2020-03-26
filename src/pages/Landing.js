@@ -153,17 +153,19 @@ const tokens = [
     icon: BatIcon
   },
   {
-    name: 'Augur*',
-    icon: RepIcon
+    name: 'Augur',
+    icon: RepIcon,
+    onlyOnTrade: true
   },
   {
     name: 'USDC',
     icon: UsdcIcon
   },
   {
-    name: '0x*',
-    icon: ZrxIcon
-  },
+    name: '0x',
+    icon: ZrxIcon,
+    onlyOnTrade: true
+  }
 ];
 
 const TokenList = styled.div`
@@ -171,7 +173,7 @@ const TokenList = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin: 74px auto 0;
+  margin: 74px auto 69px;
 `;
 
 const TokenStyle = styled.div`
@@ -184,26 +186,35 @@ const TokenStyle = styled.div`
     flex-grow: 0;
     flex-shrink: 0;
   }
-  
+
   svg {
     width: 70px;
   }
-  
-  span {
+
+  .name {
     margin-top: 28px;
     font-size: 22px;
     letter-spacing: 0.5px;
+    color: ${getColor('darkPurple')};
+    position: relative;
   }
+  
+  .asterisk {
+    font-size: 30px;
+    position: absolute;
+    top: 5px;
+    line-height: 20px;
+  }
+  
+  
 `;
 
-const Token = ({ name, icon }) => {
+const Token = ({config: { name, icon, onlyOnTrade }}) => {
   const Icon = icon;
   return (
     <TokenStyle>
       <Icon />
-      <span>
-        {name}
-      </span>
+      <span className="name">{name}{onlyOnTrade && <span className="asterisk">*</span>}</span>
     </TokenStyle>
   );
 };
@@ -302,11 +313,13 @@ function Landing() {
       <TextSection style={{ marginTop: '103px' }}>
         <h3>{lang.landing_page.token_section_title}</h3>
         <TokenList>
-          {tokens.map(({ name, icon }) => (
-            <Token name={name} icon={icon} key={name} />
+          {tokens.map(config => (
+            <Token config={config} key={config.name} />
           ))}
         </TokenList>
-        <span style={{ fontSize: '18px', letterSpacing: '0.5px', color: '#4F445E' }}>
+        <span
+          style={{ fontSize: '18px', letterSpacing: '0.5px', color: '#4F445E' }}
+        >
           {lang.landing_page.token_section_only_on_trade}
         </span>
       </TextSection>
