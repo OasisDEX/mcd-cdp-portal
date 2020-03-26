@@ -13,14 +13,14 @@ export default function useTokenAllowance(tokenSymbol) {
     proxyAddress || undefined,
     tokenSymbol
   );
-
   const hasFetchedAllowance = proxyAddress === null || allowance !== undefined;
   const hasAllowance =
     tokenSymbol === 'ETH' ||
     (allowance !== undefined && allowance !== null && !allowance.eq(0));
 
-  const hasSufficientAllowance = value =>
-    BigNumber(value).isLessThanOrEqualTo(allowance);
+  const hasSufficientAllowance = value => {
+    return BigNumber(value).isLessThanOrEqualTo(allowance);
+  };
 
   const [startedWithoutAllowance, setStartedWithoutAllowance] = useState(false);
   const [setAllowance, allowanceLoading, , allowanceErrors] = useActionState(

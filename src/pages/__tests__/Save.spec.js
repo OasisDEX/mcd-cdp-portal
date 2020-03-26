@@ -54,8 +54,8 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test('if allowance is 0, show toggle & disable input', async () => {
-  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
+test('if no allowance, show proxy allowance step, proxy should be ticked', async () => {
+  const { getByText, findByText, getByTestId } = renderWithMaker(
     <SidebarProvider>
       <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
@@ -64,21 +64,23 @@ test('if allowance is 0, show toggle & disable input', async () => {
 
   await findByText('Savings');
   click(getByTestId('sidebar-deposit-button'));
-  await waitForElement(() => getAllByText('Unlock DAI to continue'));
 
-  const depositInput = getByRole('textbox');
-  expect(depositInput.disabled).toBe(true);
+  await wait(() => getByTestId('proxyAllowanceCheck-allowanceBtn'));
+  getByText('checkmark.svg');
+  const allowanceBtn = getByText('Set');
+  click(allowanceBtn);
+
+  await wait(() => getByText(/would you like to deposit/));
 });
 
 test('render save page and perform deposit and withdraw actions', async () => {
   const {
     getAllByText,
     getByTestId,
-    getAllByTestId,
     getByText,
     getByRole,
     findByText
-  } = await renderWithAccount(
+  } = await renderWithMaker(
     <SidebarProvider>
       <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
@@ -102,40 +104,30 @@ test('render save page and perform deposit and withdraw actions', async () => {
 
   /**Deposit */
   click(getByTestId('sidebar-deposit-button'));
-  await findByText(/would you like to deposit/);
 
-  // Unlock dai to continue
-  await waitForElement(() => getByTestId('allowance-toggle'));
-  const [allowanceToggle] = getAllByTestId('allowance-toggle');
-  click(allowanceToggle.children[1]);
-  await waitForElement(() => getByText('DAI unlocked'));
-
-  // Input amount to deposit and click
+  await wait(() => getByText(/would you like to deposit/));
   const depositInput = getByRole('textbox');
+
   change(depositInput, { target: { value: '21.123456789' } });
   click(getByTestId('deposit-button'));
 
-  // Balance and history table update after deposit
   await wait(() => getByText('21.12345', { exact: false }));
   await wait(() => getByText(/Deposited/));
 
-  /**Withdraw */
   click(getByTestId('sidebar-withdraw-button'));
   await findByText(/would you like to withdraw/);
-
-  // wait for proxy and allowance check
-  await mineBlocks(web3, 5);
-
-  // Input amount to withdraw and click
   const withdrawInput = getByRole('textbox');
+
+  await wait(() => {
+    expect(getByRole('textbox')).toBeEnabled();
+  });
   change(withdrawInput, { target: { value: '7' } });
   click(getByTestId('withdraw-button'));
 
-  // Balance and history table update after withdraw
+  await mineBlocks(web3, 5);
   await wait(() => getByText('14.12345', { exact: false }));
   await wait(() => getByText(/Withdrew/));
 
-  // Two entries in the history table
   await wait(() => assert(getAllByText('external-link.svg').length === 2));
 }, 25000);
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
+import { Input, Grid, Button } from '@makerdao/ui-components-core';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import useMaker from 'hooks/useMaker';
@@ -11,6 +11,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { safeToFixed } from '../../utils/ui';
+import ProxyAllowanceStepper from './shared/ProxyAllowanceStepper';
 
 const DsrDeposit = ({ savings, reset }) => {
   const { trackBtnClick } = useAnalytics('Deposit', 'Sidebar');
@@ -64,20 +65,18 @@ const DsrDeposit = ({ savings, reset }) => {
 
   return (
     <Grid gridRowGap="m">
-      <Grid gridRowGap="s">
-        <Text color="darkLavender" t="h4">
-          {lang.formatString(lang.action_sidebar.deposit_title, displaySymbol)}
-        </Text>
-        <p>
-          <Text t="body">
-            {lang.formatString(
-              lang.action_sidebar.deposit_description,
-              displaySymbol
-            )}
-          </Text>
-        </p>
+      <ProxyAllowanceStepper
+        token={MDAI.symbol}
+        title={lang.formatString(
+          lang.action_sidebar.deposit_title,
+          displaySymbol
+        )}
+        description={lang.formatString(
+          lang.action_sidebar.deposit_description,
+          displaySymbol
+        )}
+      >
         <Input
-          disabled={!hasAllowance}
           type="number"
           min="0"
           placeholder="0 DAI"
@@ -98,41 +97,44 @@ const DsrDeposit = ({ savings, reset }) => {
           }
           data-testid="dsrdeposit-input"
         />
-      </Grid>
-      <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
-        <Button
-          disabled={!valid}
-          onClick={() => {
-            trackBtnClick('Confirm', {
-              amount: depositAmount,
-              fathom: { id: 'saveDeposit', amount: depositAmount }
-            });
-            deposit();
-          }}
-          data-testid={'deposit-button'}
-        >
-          {lang.actions.deposit}
-        </Button>
-        <Button
-          variant="secondary-outline"
-          onClick={() => {
-            trackBtnClick('Cancel');
-            reset();
-          }}
-        >
-          {lang.cancel}
-        </Button>
-      </Grid>
-      <InfoContainer>
-        <Info
-          title={lang.action_sidebar.dai_balance}
-          body={`${safeToFixed(daiBalance, 7)} ${displaySymbol}`}
-        />
-        <Info
-          title={lang.action_sidebar.locked_dsr}
-          body={`${safeToFixed(daiLockedInDsr.toNumber(), 7)} ${displaySymbol}`}
-        />
-      </InfoContainer>
+        <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
+          <Button
+            disabled={!valid}
+            onClick={() => {
+              trackBtnClick('Confirm', {
+                amount: depositAmount,
+                fathom: { id: 'saveDeposit', amount: depositAmount }
+              });
+              deposit();
+            }}
+            data-testid={'deposit-button'}
+          >
+            {lang.actions.deposit}
+          </Button>
+          <Button
+            variant="secondary-outline"
+            onClick={() => {
+              trackBtnClick('Cancel');
+              reset();
+            }}
+          >
+            {lang.cancel}
+          </Button>
+        </Grid>
+        <InfoContainer>
+          <Info
+            title={lang.action_sidebar.dai_balance}
+            body={`${safeToFixed(daiBalance, 7)} ${displaySymbol}`}
+          />
+          <Info
+            title={lang.action_sidebar.locked_dsr}
+            body={`${safeToFixed(
+              daiLockedInDsr.toNumber(),
+              7
+            )} ${displaySymbol}`}
+          />
+        </InfoContainer>
+      </ProxyAllowanceStepper>
     </Grid>
   );
 };

@@ -94,6 +94,7 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
     proxyAddress === undefined || (token !== 'ETH' && allowance === undefined);
 
   const [transitionFlow, setTransitionFlow] = useState(null);
+  let isCancelled = false;
   useEffect(() => {
     let timer;
     if (
@@ -103,14 +104,24 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
     ) {
       setTransitionFlow(true);
       timer = setTimeout(() => {
-        setTransitionFlow(false);
+        if (!isCancelled) {
+          setTransitionFlow(false);
+        }
       }, 1000);
     }
     return () => {
-      setTransitionFlow(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      isCancelled = true;
+      setTransitionFlow(true);
       clearTimeout(timer);
     };
-  }, [startedWithoutAllowance, startedWithoutProxy, hasProxy, hasAllowance]);
+  }, [
+    startedWithoutAllowance,
+    startedWithoutProxy,
+    hasProxy,
+    hasAllowance,
+    isCancelled
+  ]);
 
   const ProxyAllowanceSection = () => (
     <div data-testid="proxy-allowance-form">

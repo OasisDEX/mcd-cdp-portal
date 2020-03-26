@@ -112,7 +112,7 @@ const Payback = ({ vault, reset }) => {
   return (
     <Grid gridRowGap="m">
       <ProxyAllowanceStepper
-        token={'DAI'}
+        token={MDAI.symbol}
         title={lang.action_sidebar.payback_title}
         description={lang.action_sidebar.payback_description}
       >

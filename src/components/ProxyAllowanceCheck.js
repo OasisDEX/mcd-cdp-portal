@@ -79,6 +79,7 @@ const ProxyAllowanceCheck = ({
             loading={
               proxyLoading || !!(proxyErrors && !parseError(proxyErrors).retry)
             }
+            data-testid="proxyAllowanceCheck-proxyBtn"
           >
             {parseError(proxyErrors).retry
               ? lang.actions.try_again
@@ -133,10 +134,10 @@ const ProxyAllowanceCheck = ({
           <Button
             width="13.0rem"
             mt="xs"
-            data-testid={'allowance-button'}
             onClick={setAllowance}
             disabled={!proxyAddress || proxyLoading || isSettingAllowance}
             loading={isSettingAllowance}
+            data-testid="proxyAllowanceCheck-allowanceBtn"
           >
             {lang.cdp_create.setup_proxy_allowance_button}
           </Button>

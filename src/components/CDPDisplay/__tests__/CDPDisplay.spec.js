@@ -45,13 +45,14 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test.skip('Vault Display page and actions', async () => {
+test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
     getByText,
     getAllByText,
     getByRole,
     findByText,
+    getByTestId,
     debug // eslint-disable-line no-unused-vars
   } = await renderWithAccount(
     <SidebarProvider>
@@ -84,6 +85,7 @@ test.skip('Vault Display page and actions', async () => {
 
   /**Deposit */
   click(getByText('Deposit'));
+
   await findByText(/would you like to deposit/);
 
   // wait for proxy check to complete
@@ -137,6 +139,10 @@ test.skip('Vault Display page and actions', async () => {
 
   /**Pay back */
   click(getByText('Pay back'));
+  await wait(() => getByTestId('proxyAllowanceCheck-allowanceBtn'));
+  const allowanceBtn = getByText('Set');
+  click(allowanceBtn);
+
   await findByText(/would you like to pay back/);
   // Outstanding Dai debt before
   const [, debtLabel] = getAllByText('Outstanding Dai debt');
