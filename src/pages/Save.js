@@ -33,7 +33,7 @@ import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 
-function Save({ viewedAddress }) {
+function Save({ viewedAddress, showSavingsHistory = true }) {
   const { lang } = useLanguage();
   const { account, network } = useMaker();
   const { addNotification, deleteNotifications } = useNotification();
@@ -93,9 +93,10 @@ function Save({ viewedAddress }) {
 
   const { trackBtnClick } = useAnalytics('DsrView');
 
-  const { events, isLoading } = FeatureFlags.FF_DSR_HISTORY
-    ? useDsrEventHistory(viewedProxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
-    : {};
+  const { events, isLoading } =
+    FeatureFlags.FF_DSR_HISTORY && showSavingsHistory
+      ? useDsrEventHistory(viewedProxyAddress) // eslint-disable-line react-hooks/rules-of-hooks
+      : {};
 
   const [showOnboarding, setShowOnboarding] = useState(true);
   const hideOnboarding = useCallback(() => {
@@ -216,7 +217,7 @@ function Save({ viewedAddress }) {
               />
             </CdpViewCard>
           </Grid>
-          {FeatureFlags.FF_DSR_HISTORY && (
+          {FeatureFlags.FF_DSR_HISTORY && showSavingsHistory && (
             <History
               title={lang.save.tx_history}
               rows={events}

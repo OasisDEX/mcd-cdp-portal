@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ProxyAllowanceCheck from 'components/ProxyAllowanceCheck';
 import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
@@ -94,7 +94,7 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
     proxyAddress === undefined || (token !== 'ETH' && allowance === undefined);
 
   const [transitionFlow, setTransitionFlow] = useState(null);
-  let isCancelled = false;
+  const isCancelled = useRef(false);
   useEffect(() => {
     let timer;
     if (
@@ -103,18 +103,9 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
       hasAllowance
     ) {
       setTransitionFlow(true);
-      timer = setTimeout(() => {
-        if (!isCancelled) {
-          setTransitionFlow(false);
-        }
-      }, 1000);
+      timer = setTimeout(() => setTransitionFlow(false), 1000);
     }
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      isCancelled = true;
-      setTransitionFlow(true);
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [
     startedWithoutAllowance,
     startedWithoutProxy,
@@ -149,7 +140,6 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
       />
     </div>
   );
-
   return loadingState ? (
     <Loading />
   ) : !hasProxy || !hasAllowance ? (

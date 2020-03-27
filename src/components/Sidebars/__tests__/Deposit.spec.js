@@ -105,11 +105,17 @@ const watch = (overrides = {}) =>
 const multicall = { watch };
 
 test('basic rendering', async () => {
-  const { findByText } = renderWithMaker(<Deposit vault={mockVault} />);
+  const { findByText, findAllByText } = renderWithMaker(
+    React.createElement(() => {
+      useMakerMock({ multicall });
+      return <Deposit vault={mockVault} />;
+    })
+  );
 
   await findByText(
     lang.formatString(lang.action_sidebar.deposit_title, BAT.symbol)
   );
+  await findAllByText(/BAT\/USD/);
 });
 
 test('input validation', async () => {
