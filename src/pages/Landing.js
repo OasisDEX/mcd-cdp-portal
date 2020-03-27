@@ -152,7 +152,7 @@ const tokens = [
   {
     name: 'WBTC*',
     icon: WbtcIcon
-  },
+  }
 ];
 
 const TokenList = styled.div`
