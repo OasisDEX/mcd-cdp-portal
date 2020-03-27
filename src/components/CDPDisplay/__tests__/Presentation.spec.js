@@ -198,6 +198,7 @@ describe('on mobile', () => {
           showSidebar={showSidebar}
           vault={mockVault2}
           cdpOwner={mockOwnerAddress}
+          showVaultHistory={false}
         />
         <div id="portal1" />
       </Fragment>

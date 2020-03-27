@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProxyAllowanceCheck from 'components/ProxyAllowanceCheck';
 import useProxy from 'hooks/useProxy';
 import useTokenAllowance from 'hooks/useTokenAllowance';
@@ -94,7 +94,6 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
     proxyAddress === undefined || (token !== 'ETH' && allowance === undefined);
 
   const [transitionFlow, setTransitionFlow] = useState(null);
-  const isCancelled = useRef(false);
   useEffect(() => {
     let timer;
     if (
@@ -106,13 +105,7 @@ function ProxyAllowanceStepper({ children, token, title, description }) {
       timer = setTimeout(() => setTransitionFlow(false), 1000);
     }
     return () => clearTimeout(timer);
-  }, [
-    startedWithoutAllowance,
-    startedWithoutProxy,
-    hasProxy,
-    hasAllowance,
-    isCancelled
-  ]);
+  }, [startedWithoutAllowance, startedWithoutProxy, hasProxy, hasAllowance]);
 
   const ProxyAllowanceSection = () => (
     <div data-testid="proxy-allowance-form">

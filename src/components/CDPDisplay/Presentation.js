@@ -62,7 +62,6 @@ export default function({
     percentage: true
   });
   // eslint-disable-next-line react-hooks/rules-of-hooks
-
   const eventHistory =
     FF_VAULT_HISTORY && showVaultHistory ? useEventHistory(vault.id) : null;
 
