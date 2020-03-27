@@ -41,7 +41,7 @@ export default {
       button: 'Save Dai'
     },
     token_section_title: 'Supported Tokens',
-    token_section_only_on_trade: '* Only available on Oasis Trade',
+    token_section_only_on_trade: 'Only available on Oasis Trade',
     section1_title: 'What is Oasis?',
     section1_p:
       'Oasis is a platform for decentralized finance. Use it to trade tokens, borrow Dai, and earn savings — all in one place.',

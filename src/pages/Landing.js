@@ -191,30 +191,30 @@ const TokenStyle = styled.div`
     width: 70px;
   }
 
-  .name {
+  span {
     margin-top: 28px;
     font-size: 22px;
     letter-spacing: 0.5px;
     color: ${getColor('darkPurple')};
     position: relative;
   }
-  
-  .asterisk {
-    font-size: 30px;
+
+  span.onlyOnTrade:after {
+    font-family: 'Arial Hebrew', Arial, sans-serif;
+    content: '*';
+    font-size: 34px;
     position: absolute;
-    top: 5px;
+    top: 1rem;
     line-height: 20px;
   }
-  
-  
 `;
 
-const Token = ({config: { name, icon, onlyOnTrade }}) => {
+const Token = ({ config: { name, icon, onlyOnTrade } }) => {
   const Icon = icon;
   return (
     <TokenStyle>
       <Icon />
-      <span className="name">{name}{onlyOnTrade && <span className="asterisk">*</span>}</span>
+      <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
     </TokenStyle>
   );
 };
@@ -318,8 +318,18 @@ function Landing() {
           ))}
         </TokenList>
         <span
-          style={{ fontSize: '18px', letterSpacing: '0.5px', color: '#4F445E' }}
+          style={{
+            fontSize: '18px',
+            letterSpacing: '0.5px',
+            color: '#4F445E',
+            position: 'relative'
+          }}
         >
+          <span
+            style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+          >
+            *
+          </span>{' '}
           {lang.landing_page.token_section_only_on_trade}
         </span>
       </TextSection>

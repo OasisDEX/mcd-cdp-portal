@@ -41,7 +41,7 @@ export default {
       button: '存 Dai'
     },
     token_section_title: 'Oasis Trade 支持的交易对',
-    token_section_only_on_trade: '* 只在 Oasis Trade 支持',
+    token_section_only_on_trade: '只在 Oasis Trade 支持',
     section1_title: 'Oasis 是什么?',
     section1_p:
       'Oasis 是去中心化金融 (DeFi) 的一站式平台。你可以交易数字资产、借 Dai 和存 Dai 赚利息。',
