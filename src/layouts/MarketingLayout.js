@@ -1,12 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
-import { getColor } from 'styles/theme';
+import { getColor, marketingTheme } from 'styles/theme';
 
 const MarketingLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
@@ -108,14 +108,6 @@ const MarketingLayoutStyle = styled.div`
     color: ${getColor('darkPurple')};
     text-decoration: none;
   }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    color: ${getColor('darkPurple')};
-  }
 `;
 
 const Header = styled.header`
@@ -209,62 +201,64 @@ const Footer = styled.footer`
 const MarketingLayout = ({ children }) => {
   const { lang } = useLanguage();
   return (
-    <MarketingLayoutStyle
-      style={{
-        margin: '0 auto',
-        maxWidth: 1280,
-        paddingTop: '32px',
-        width: '100%'
-      }}
-    >
-      <Helmet>
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTBase-Regular.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTBase-Regular.woff"
-          type="font/woff"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTBase-Bold.woff2"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="font"
-          href="/fonts/FTBase-Bold.woff"
-          type="font/woff"
-          crossOrigin="anonymous"
-        />
-      </Helmet>
-      <Header>
-        <Link className="logo" href="/">
-          Oasis
-        </Link>
-        <MainNav style={{ fontSize: '19px', marginTop: '4px' }} />
-      </Header>
-      {children}
-      <CookieNotice />
-      <Footer>
-        <Nav>
-          <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
-          <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
-        </Nav>
-        <div className="copyright">
-          © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
-        </div>
-      </Footer>
-    </MarketingLayoutStyle>
+    <ThemeProvider theme={marketingTheme}>
+      <MarketingLayoutStyle
+        style={{
+          margin: '0 auto',
+          maxWidth: 1280,
+          paddingTop: '32px',
+          width: '100%'
+        }}
+      >
+        <Helmet>
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTBase-Regular.woff2"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTBase-Regular.woff"
+            type="font/woff"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTBase-Bold.woff2"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            href="/fonts/FTBase-Bold.woff"
+            type="font/woff"
+            crossOrigin="anonymous"
+          />
+        </Helmet>
+        <Header>
+          <Link className="logo" href="/">
+            Oasis
+          </Link>
+          <MainNav style={{ fontSize: '19px', marginTop: '4px' }} />
+        </Header>
+        {children}
+        <CookieNotice />
+        <Footer>
+          <Nav>
+            <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
+            <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+          </Nav>
+          <div className="copyright">
+            © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
+          </div>
+        </Footer>
+      </MarketingLayoutStyle>
+    </ThemeProvider>
   );
 };
 

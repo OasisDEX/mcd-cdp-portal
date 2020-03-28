@@ -20,13 +20,7 @@ import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
-
-const Hero = styled.div`
-  color: ${getColor('darkPurple')};
-  font-weight: bold;
-  font-size: 58px;
-  margin-top: 149px;
-`;
+import { Box, Text } from '@makerdao/ui-components-core';
 
 const Cards = styled.div`
   max-width: 1200px;
@@ -226,7 +220,9 @@ function Landing() {
   return (
     <MarketingLayout>
       <SEO title="Oasis" />
-      <Hero>{lang.landing_page.headline}</Hero>
+      <Box mt="149px">
+        <Text t="h1">{lang.landing_page.headline}</Text>
+      </Box>
       <Cards>
         <Card
           style={{

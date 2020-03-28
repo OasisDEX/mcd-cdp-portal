@@ -15,8 +15,6 @@ const theme = {
     blueGray: '#1E2C37',
     blueGrayDarker: '#18232C',
     blueGrayLighter: '#31424E',
-    purpleGray: '#2F3044',
-    violetGray: '#443854',
     red: '#F75524',
     ...colors
   },
@@ -61,6 +59,26 @@ const theme = {
 };
 
 export default theme;
+
+export const marketingTheme = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    purpleGray: '#2F3044',
+    violetGray: '#443854'
+  },
+  typography: {
+    ...theme.typography,
+    h1: {
+      ...theme.typography.h1,
+      fontSize: '5.8rem',
+      lineHeight: '70px',
+      fontWeight: 'bold',
+      color: theme.colors.darkPurple,
+      fontFamily: 'inherit'
+    }
+  }
+};
 
 // the following two functions are taken directly from styled-system
 // for a more flexible theme getter
