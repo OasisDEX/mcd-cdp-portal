@@ -60,25 +60,56 @@ const theme = {
 
 export default theme;
 
-export const marketingTheme = {
-  ...theme,
-  colors: {
-    ...theme.colors,
+export const marketingTheme = (() => {
+  const mColors = {
     purpleGray: '#2F3044',
     violetGray: '#443854'
-  },
-  typography: {
-    ...theme.typography,
-    h1: {
-      ...theme.typography.h1,
-      fontSize: '5.8rem',
-      lineHeight: '70px',
-      fontWeight: 'bold',
-      color: theme.colors.darkPurple,
-      fontFamily: 'inherit'
+  };
+  const mFont = "'FT Base', Arial, Helvetica, sans-serif";
+  const mHeading = {
+    fontFamily: mFont,
+    fontWeight: 'bold',
+    color: theme.colors.darkPurple
+  };
+
+  return {
+    ...theme,
+    colors: {
+      ...theme.colors,
+      ...mColors
+    },
+    typography: {
+      ...theme.typography,
+      h1: {
+        ...mHeading,
+        fontSize: '5.8rem',
+        lineHeight: '70px'
+      },
+      h2: {
+        ...mHeading,
+        fontSize: '4.6rem',
+        lineHeight: '55px'
+      },
+      h3: {
+        ...mHeading,
+        fontSize: '3.6rem',
+        lineHeight: '43px'
+      },
+      h4: {
+        ...mHeading,
+        fontSize: '2.6rem',
+        lineHeight: '31px'
+      },
+      body: {
+        fontFamily: mFont,
+        fontSize: '2.2rem',
+        lineHeight: '34px',
+        letterSpacing: '0.5px',
+        color: mColors.violetGray
+      }
     }
-  }
-};
+  };
+})();
 
 // the following two functions are taken directly from styled-system
 // for a more flexible theme getter
