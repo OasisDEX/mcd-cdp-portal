@@ -13,6 +13,7 @@ import { watch } from 'hooks/useObservable';
 function CDPView({ cdpId }) {
   cdpId = parseInt(cdpId, 10);
   const { account, network } = useMaker();
+
   const { show: showSidebar } = useSidebar();
   const navigation = useNavigation();
 

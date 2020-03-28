@@ -21,18 +21,30 @@ import FullScreenAction from './FullScreenAction';
 import debug from 'debug';
 import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
+import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { formatter } from 'utils/ui';
-import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
-export default function({ vault, showSidebar, account, network, cdpOwner }) {
+export default function({
+  vault,
+  showSidebar,
+  account,
+  network,
+  cdpOwner,
+  showVaultHistory = true
+}) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
+
+  const {
+    emergencyShutdownActive,
+    emergencyShutdownTime
+  } = useEmergencyShutdown();
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
     collateralAmount,
@@ -49,9 +61,10 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
   collateralizationRatio = formatter(collateralizationRatio, {
     percentage: true
   });
-
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const eventHistory = FF_VAULT_HISTORY ? useEventHistory(vault.id) : null;
+
+  const eventHistory =
+    FF_VAULT_HISTORY && showVaultHistory ? useEventHistory(vault.id) : null;
 
   if (['Infinity', Infinity, 'NaN', NaN].includes(liquidationPrice))
     liquidationPrice = lang.cdp_page.not_applicable;
@@ -62,9 +75,6 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
 
   const [actionShown, setActionShown] = useState(null);
   const { addNotification, deleteNotifications } = useNotification();
-
-  const emergencyShutdownActive = watch.emergencyShutdownActive();
-  const emergencyShutdownTime = watch.emergencyShutdownTime();
 
   useEffect(() => {
     const reclaimCollateral = async () => {
@@ -302,7 +312,7 @@ export default function({ vault, showSidebar, account, network, cdpOwner }) {
         </CdpViewCard>
       </Grid>
 
-      {FF_VAULT_HISTORY && (
+      {FF_VAULT_HISTORY && showVaultHistory && (
         <History
           title={lang.cdp_page.tx_history}
           rows={eventHistory}
