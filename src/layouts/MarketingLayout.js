@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
 import { Routes } from 'utils/constants';
@@ -91,7 +91,8 @@ const MarketingLayoutStyle = styled.div`
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
-  padding: 0 40px;
+
+  padding-top: 32px;
   font-family: 'FT Base', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -110,7 +111,13 @@ const MarketingLayoutStyle = styled.div`
   }
 `;
 
+const centerContent = css`
+  margin: 0 auto;
+  max-width: 1280px;
+`;
+
 const Header = styled.header`
+  ${centerContent};
   text-align: left;
   letter-spacing: 0.3px;
 
@@ -165,6 +172,7 @@ const MainNav = props => {
 const centerFooterMaxWidth = '640px';
 
 const Footer = styled.footer`
+  ${centerContent};
   margin-top: 90px;
   margin-bottom: 70px;
   letter-spacing: 0.3px;
@@ -202,14 +210,7 @@ const MarketingLayout = ({ children }) => {
   const { lang } = useLanguage();
   return (
     <ThemeProvider theme={marketingTheme}>
-      <MarketingLayoutStyle
-        style={{
-          margin: '0 auto',
-          maxWidth: 1280,
-          paddingTop: '32px',
-          width: '100%'
-        }}
-      >
+      <MarketingLayoutStyle>
         <Helmet>
           <link
             rel="preload"

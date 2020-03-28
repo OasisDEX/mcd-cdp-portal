@@ -21,7 +21,6 @@ import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { Box, Text } from '@makerdao/ui-components-core';
-import { TextBlock } from '../components/Typography';
 
 const Cards = styled.div`
   max-width: 1200px;
@@ -189,9 +188,79 @@ const Token = ({ config: { name, icon, onlyOnTrade } }) => {
   );
 };
 
+const BlurryBackground = (() => {
+  const BallTop = styled.div`
+    position: absolute;
+    width: 206px;
+    height: 206px;
+    top: -45px;
+    left: 130px;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #eaffcf 0%,
+      #fedb88 100%
+    );
+    filter: blur(60px);
+  `;
+
+  const BallRight = styled.div`
+    position: absolute;
+    width: 83px;
+    height: 83px;
+    top: 619px;
+    left: 1209px;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    filter: blur(30px);
+  `;
+
+  const BlurryBackgroundStyle = styled.div`
+    position: absolute;
+    top: -25px;
+    width: 100%;
+    height: 90%;
+    background: radial-gradient(
+      99.92% 100% at 40.9% 100%,
+      #f7fce7 0%,
+      #fff9ed 54.69%,
+      rgba(255, 249, 237, 0) 100%
+    );
+    z-index: -1;
+
+    & > div {
+      position: relative;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+  `;
+
+  return props => (
+    <BlurryBackgroundStyle {...props}>
+      <div>
+        <BallTop />
+        <BallRight />
+      </div>
+    </BlurryBackgroundStyle>
+  );
+})();
+
 const JumboBlock = styled(Box)`
   max-width: 966px;
   background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
+  text-align: left;
+  margin: 0 auto;
+  padding: 10px 130px 120px 120px;
+
+  & > div {
+    margin-top: 120px;
+  }
+
+  .title {
+    margin-bottom: 28px;
+  }
 `;
 
 function Landing() {
@@ -304,20 +373,29 @@ function Landing() {
           {lang.landing_page.token_section_only_on_trade}
         </span>
       </Box>
-      <JumboBlock style={{ marginTop: '95px' }}>
-        <div>
-          <Text t="h3">{lang.landing_page.section1_title}</Text>
-          <Text t="body">{lang.landing_page.section1_p}</Text>
-        </div>
-        <div>
-          <Text t="h3">{lang.landing_page.section2_title}</Text>
-          <Text t="body">{lang.landing_page.section2_p}</Text>
-        </div>
-        <div>
-          <Text t="h3">{lang.landing_page.section3_title}</Text>
-          <Text t="body">{lang.landing_page.section3_p}</Text>
-        </div>
-      </JumboBlock>
+      <Box style={{ position: 'relative', width: '100%', marginTop: '95px' }}>
+        <BlurryBackground />
+        <JumboBlock>
+          <div>
+            <Text t="h3" className="title">
+              {lang.landing_page.section1_title}
+            </Text>
+            <Text t="body">{lang.landing_page.section1_p}</Text>
+          </div>
+          <div>
+            <Text t="h3" className="title">
+              {lang.landing_page.section2_title}
+            </Text>
+            <Text t="body">{lang.landing_page.section2_p}</Text>
+          </div>
+          <div>
+            <Text t="h3" className="title">
+              {lang.landing_page.section3_title}
+            </Text>
+            <Text t="body">{lang.landing_page.section3_p}</Text>
+          </div>
+        </JumboBlock>
+      </Box>
       <Box>
         <Text t="h2">{lang.landing_page.questions_title}</Text>
         <Questions
