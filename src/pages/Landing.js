@@ -21,6 +21,7 @@ import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { Box, Text } from '@makerdao/ui-components-core';
+import { TextBlock } from '../components/Typography';
 
 const Cards = styled.div`
   max-width: 1200px;
@@ -73,13 +74,7 @@ const Card = styled.div`
     margin-top: 21px;
     margin-bottom: 13px;
     font-weight: bold;
-  }
-
-  .description {
-    font-size: 22px;
-    line-height: 34px;
-    letter-spacing: 0.5px;
-    color: {getColor('violetGray')};
+    color: ${getColor('darkPurple')};
   }
 
   .buttonContainer {
@@ -93,43 +88,24 @@ const Card = styled.div`
     padding: 12px 24px;
     border-radius: 40px;
     background-color: ${getColor('darkPurple')};
-    
+
     transition: all 0.15s ease;
-    
+
     span {
       align-self: center;
-      
+
       font-weight: bold;
       font-size: 18px;
       line-height: 22px;
       letter-spacing: 0.5px;
-  
-      color: #FFFFFF;
+
+      color: #ffffff;
       text-decoration: none;
     }
-    
   }
 
   .button:hover {
     transform: translateY(-1px);
-  }
-`;
-
-const TextSection = styled.div`
-  margin-top: 81px;
-
-  h3 {
-    font-weight: bold;
-    font-size: 46px;
-    line-height: 55px;
-    margin-bottom: 20px;
-  }
-
-  p {
-    max-width: 580px;
-    margin: 0 auto;
-    font-size: 20px;
-    line-height: 30px;
   }
 `;
 
@@ -213,6 +189,11 @@ const Token = ({ config: { name, icon, onlyOnTrade } }) => {
   );
 };
 
+const JumboBlock = styled(Box)`
+  max-width: 966px;
+  background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
+`;
+
 function Landing() {
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
@@ -232,9 +213,7 @@ function Landing() {
         >
           <TradeIcon />
           <h1 className="title">{lang.landing_page.trade_card.title}</h1>
-          <div className="description">
-            {lang.landing_page.trade_card.description}
-          </div>
+          <Text t="body">{lang.landing_page.trade_card.description}</Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.TRADE}`}
@@ -258,9 +237,7 @@ function Landing() {
         >
           <BorrowIcon />
           <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
-          <div className="description">
-            {lang.landing_page.borrow_card.description}
-          </div>
+          <Text t="body">{lang.landing_page.borrow_card.description}</Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.BORROW}${url.search}`}
@@ -286,9 +263,7 @@ function Landing() {
         >
           <SaveIcon />
           <h1 className="title">{lang.landing_page.save_card.title}</h1>
-          <div className="description">
-            {lang.landing_page.save_card.description}
-          </div>
+          <Text t="body">{lang.landing_page.save_card.description}</Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.SAVE}${url.search}`}
@@ -306,8 +281,8 @@ function Landing() {
           </div>
         </Card>
       </Cards>
-      <TextSection style={{ marginTop: '103px' }}>
-        <h3>{lang.landing_page.token_section_title}</h3>
+      <Box style={{ marginTop: '103px' }}>
+        <Text t="h2">{lang.landing_page.token_section_title}</Text>
         <TokenList>
           {tokens.map(config => (
             <Token config={config} key={config.name} />
@@ -328,25 +303,27 @@ function Landing() {
           </span>{' '}
           {lang.landing_page.token_section_only_on_trade}
         </span>
-      </TextSection>
-      <TextSection style={{ marginTop: '95px' }}>
-        <h3>{lang.landing_page.section1_title}</h3>
-        <p>{lang.landing_page.section1_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.section2_title}</h3>
-        <p>{lang.landing_page.section2_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.section3_title}</h3>
-        <p>{lang.landing_page.section3_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.questions_title}</h3>
+      </Box>
+      <JumboBlock style={{ marginTop: '95px' }}>
+        <div>
+          <Text t="h3">{lang.landing_page.section1_title}</Text>
+          <Text t="body">{lang.landing_page.section1_p}</Text>
+        </div>
+        <div>
+          <Text t="h3">{lang.landing_page.section2_title}</Text>
+          <Text t="body">{lang.landing_page.section2_p}</Text>
+        </div>
+        <div>
+          <Text t="h3">{lang.landing_page.section3_title}</Text>
+          <Text t="body">{lang.landing_page.section3_p}</Text>
+        </div>
+      </JumboBlock>
+      <Box>
+        <Text t="h2">{lang.landing_page.questions_title}</Text>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
         />
-      </TextSection>
+      </Box>
     </MarketingLayout>
   );
 }

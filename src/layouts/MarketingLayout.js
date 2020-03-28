@@ -92,6 +92,7 @@ const MarketingLayoutStyle = styled.div`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
   padding: 0 40px;
+  font-family: 'FT Base', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
   letter-spacing: normal;

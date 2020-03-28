@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Text } from '@makerdao/ui-components-core';
 
 const answerPaddingBottom = 21;
 const answerAnimationTime = '350ms';
@@ -115,7 +116,9 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     >
       <div className="question-row">
         <div style={{ cursor: 'pointer' }} onClick={onClick}>
-          <div className="question">{question}</div>
+          <Text t="h4" className="question">
+            {question}
+          </Text>
           <div className="plus-minus-toggle" />
         </div>
       </div>
@@ -123,7 +126,9 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
         className="answer"
         style={{ maxHeight: isSelected ? height + answerPaddingBottom : 0 }}
       >
-        <div ref={answerElement}>{answer}</div>
+        <Text t="body" as="div" ref={answerElement}>
+          {answer}
+        </Text>
       </div>
     </QuestionAndAnswerStyle>
   );

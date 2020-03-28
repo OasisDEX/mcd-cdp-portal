@@ -67,6 +67,7 @@ export const marketingTheme = (() => {
   };
   const mFont = "'FT Base', Arial, Helvetica, sans-serif";
   const mHeading = {
+    display: 'block',
     fontFamily: mFont,
     fontWeight: 'bold',
     color: theme.colors.darkPurple
