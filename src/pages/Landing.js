@@ -15,6 +15,10 @@ import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
 import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
+import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
+import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
+import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
+import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
 
 const Hero = styled.div`
   color: #1e2e3a;
@@ -132,6 +136,22 @@ const tokens = [
   {
     name: 'USDC',
     icon: UsdcIcon
+  },
+  {
+    name: 'LINK*',
+    icon: LinkIcon
+  },
+  {
+    name: 'PAX*',
+    icon: PaxIcon
+  },
+  {
+    name: 'TUSD*',
+    icon: TusdIcon
+  },
+  {
+    name: 'WBTC*',
+    icon: WbtcIcon
   }
 ];
 
