@@ -3,7 +3,7 @@ import { map, route, mount, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import BorrowLayout from 'layouts/BorrowLayout';
+import DashboardLayout from 'layouts/DashboardLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
@@ -27,7 +27,7 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const withBorrowLayout = route =>
+const withDashboardLayout = route =>
   withView(async request => {
     const {
       network = networkNames[defaultNetwork],
@@ -50,7 +50,7 @@ const withBorrowLayout = route =>
               <ToggleProvider>
                 <ModalProvider modals={modals} templates={templates}>
                   <SidebarProvider>
-                    <BorrowLayout
+                    <DashboardLayout
                       mobileNav={
                         <MobileNav
                           viewedAddress={viewedAddress}
@@ -60,7 +60,7 @@ const withBorrowLayout = route =>
                       navbar={<Navbar viewedAddress={viewedAddress} />}
                     >
                       <View />
-                    </BorrowLayout>
+                    </DashboardLayout>
                   </SidebarProvider>
                 </ModalProvider>
               </ToggleProvider>
@@ -74,11 +74,11 @@ const withBorrowLayout = route =>
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
-  [`/${Routes.BORROW}`]: withBorrowLayout(
+  [`/${Routes.BORROW}`]: withDashboardLayout(
     route(() => ({ title: 'Borrow', view: <Borrow /> }))
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -88,7 +88,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withBorrowLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withDashboardLayout(
     map(request => {
       const { cdpId } = request.params;
 
@@ -99,11 +99,11 @@ export default mount({
     })
   ),
 
-  [`/${Routes.SAVE}`]: withBorrowLayout(
+  [`/${Routes.SAVE}`]: withDashboardLayout(
     route(() => ({ title: 'Save', view: <SaveOverview /> }))
   ),
 
-  [`/${Routes.SAVE}/owner/:viewedAddress`]: withBorrowLayout(
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
