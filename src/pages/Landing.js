@@ -118,19 +118,19 @@ const tokens = [
     icon: DaiIcon
   },
   {
-    name: 'Ethereum',
+    name: 'ETH',
     icon: EthIcon
   },
   {
-    name: 'Augur*',
+    name: 'REP*',
     icon: RepIcon
   },
   {
-    name: '0x*',
+    name: 'ZRX*',
     icon: ZrxIcon
   },
   {
-    name: 'Basic Attention Token',
+    name: 'BAT',
     icon: BatIcon
   },
   {
@@ -156,7 +156,7 @@ const tokens = [
 ];
 
 const TokenList = styled.div`
-  max-width: 700px;
+  max-width: 900px;
   display: flex;
   justify-content: center;
   align-content: space-between;
