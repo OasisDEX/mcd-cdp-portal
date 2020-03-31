@@ -6,7 +6,7 @@ import useMaker from 'hooks/useMaker';
 
 import { TextBlock } from 'components/Typography';
 import PageContentLayout from 'layouts/PageContentLayout';
-import { Box, Grid, Flex, Text, Link } from '@makerdao/ui-components-core';
+import { Box, Grid, Flex, Text } from '@makerdao/ui-components-core';
 import History from './History';
 import {
   ActionButton,
@@ -41,10 +41,7 @@ export default function({
   const { lang } = useLanguage();
   const { maker } = useMaker();
 
-  const {
-    emergencyShutdownActive,
-    emergencyShutdownTime
-  } = useEmergencyShutdown();
+  const { emergencyShutdownActive } = useEmergencyShutdown();
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
     collateralAmount,
@@ -61,8 +58,8 @@ export default function({
   collateralizationRatio = formatter(collateralizationRatio, {
     percentage: true
   });
-  // eslint-disable-next-line react-hooks/rules-of-hooks
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const eventHistory =
     FF_VAULT_HISTORY && showVaultHistory ? useEventHistory(vault.id) : null;
 
@@ -84,33 +81,6 @@ export default function({
       await txObject;
       deleteNotifications([NotificationList.CLAIM_COLLATERAL]);
     };
-
-    if (emergencyShutdownActive) {
-      addNotification({
-        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
-        content: lang.formatString(
-          lang.notifications.emergency_shutdown_active,
-          emergencyShutdownTime
-            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
-            : '--',
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'http://migrate.makerdao.com/'}
-            target="_blank"
-          >
-            {'http://migrate.makerdao.com/'}
-          </Link>,
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'https://forum.makerdao.com/'}
-            target="_blank"
-          >
-            {'here'}
-          </Link>
-        ),
-        level: SAFETY_LEVELS.DANGER
-      });
-    }
 
     if (isOwner && unlockedCollateral > 0) {
       const claimCollateralNotification = lang.formatString(
@@ -144,18 +114,10 @@ export default function({
     return () =>
       deleteNotifications([
         NotificationList.CLAIM_COLLATERAL,
-        NotificationList.NON_VAULT_OWNER,
-        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
+        NotificationList.NON_VAULT_OWNER
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isOwner,
-    account,
-    vault,
-    unlockedCollateral,
-    emergencyShutdownTime,
-    emergencyShutdownActive
-  ]);
+  }, [isOwner, account, vault, unlockedCollateral]);
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
