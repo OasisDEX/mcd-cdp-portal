@@ -273,9 +273,14 @@ const JumboBlock = styled(Box)`
   max-width: 966px;
   background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
   text-align: left;
-  padding: 10px 130px 122px 120px;
+  padding: 131px 13% 122px 12%;
 
-  & > div {
+  @media (max-width: ${props => props.theme.breakpoints.m}) {
+    padding-top: 104px;
+    padding-bottom: 97px;
+  }
+
+  & > div:not(:first-child) {
     margin-top: 121px;
   }
 
