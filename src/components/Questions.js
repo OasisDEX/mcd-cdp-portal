@@ -5,6 +5,7 @@ import { Text } from '@makerdao/ui-components-core';
 
 const answerPaddingBottom = 21;
 const answerAnimationTime = '350ms';
+const separatorColor = '#a8a8a8';
 
 const QuestionAndAnswerStyle = styled.div`
   position: relative;
@@ -14,6 +15,7 @@ const QuestionAndAnswerStyle = styled.div`
     padding-bottom: 18px;
     letter-spacing: 0.007em;
     position: relative;
+    border-bottom: 1px solid ${separatorColor};
   }
 
   .question {
@@ -163,6 +165,13 @@ function buildQuestionsFromLangObj(questionsObj, lang) {
   return questions;
 }
 
+const SeparatorLine = styled.div`
+  position: relative;
+  height: 1px;
+  top: -1px;
+  background-color: ${separatorColor};
+`;
+
 const Questions = ({ questions }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
@@ -186,11 +195,7 @@ const Questions = ({ questions }) => {
               onClick={() => setSelectedIndex(isSelected ? null : index)}
               isSelected={isSelected}
             />
-            {index < questions.length - 1 ? (
-              <div
-                style={{ borderBottom: '1px solid #9E9E9E', opacity: 0.9 }}
-              />
-            ) : null}
+            {index < questions.length - 1 ? <SeparatorLine /> : null}
           </div>
         );
       })}
