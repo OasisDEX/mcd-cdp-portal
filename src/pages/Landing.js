@@ -200,7 +200,8 @@ const BlurryBackground = (() => {
       #eaffcf 0%,
       #fedb88 100%
     );
-    filter: blur(60px);
+    border-radius: 50%;
+    filter: blur(33px);
   `;
 
   const BallRight = styled.div`
@@ -214,7 +215,8 @@ const BlurryBackground = (() => {
       #d2ff72 0%,
       #fdc134 100%
     );
-    filter: blur(30px);
+    border-radius: 50%;
+    filter: blur(15px);
   `;
 
   const BlurryBackgroundStyle = styled.div`
