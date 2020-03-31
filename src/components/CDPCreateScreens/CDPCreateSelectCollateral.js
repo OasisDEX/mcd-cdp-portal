@@ -85,12 +85,19 @@ function IlkTableRow({
       </td>
       <td>{ilk.symbol}</td>
       <td>
-        {formatter(annualStabilityFee, { percentage: true, rounding: BigNumber.ROUND_HALF_UP })} %
+        {formatter(annualStabilityFee, {
+          percentage: true,
+          rounding: BigNumber.ROUND_HALF_UP
+        })}{' '}
+        %
       </td>
       <td>{formatter(liquidationRatio, { percentage: true })} %</td>
       <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
       <td css="text-align: right">
-        {prettifyNumber(gemBalance)} {ilk.gem}
+        {ilk.gem === 'USDC'
+          ? prettifyNumber(gemBalance, { truncate: true })
+          : prettifyNumber(gemBalance)}{' '}
+        {ilk.gem}
       </td>
     </tr>
   );
