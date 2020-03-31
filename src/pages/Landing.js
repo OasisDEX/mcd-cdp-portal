@@ -221,7 +221,7 @@ const BlurryBackground = (() => {
     position: absolute;
     top: -25px;
     width: 100%;
-    height: 90%;
+    height: 91%;
     background: radial-gradient(
       99.92% 100% at 40.9% 100%,
       #f7fce7 0%,
@@ -252,14 +252,14 @@ const JumboBlock = styled(Box)`
   background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
   text-align: left;
   margin: 0 auto;
-  padding: 10px 130px 120px 120px;
+  padding: 10px 130px 122px 120px;
 
   & > div {
-    margin-top: 120px;
+    margin-top: 121px;
   }
 
   .title {
-    margin-bottom: 28px;
+    margin-bottom: 23px;
   }
 `;
 
