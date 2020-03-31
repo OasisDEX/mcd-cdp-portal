@@ -387,7 +387,7 @@ function Landing() {
           {lang.landing_page.token_section_only_on_trade}
         </span>
       </Box>
-      <Box style={{ position: 'relative', width: '100%', marginTop: '95px' }}>
+      <Box style={{ position: 'relative', width: '100%', marginTop: '207px' }}>
         <BlurryBackground />
         <Box m="0 auto" display="inline-block">
           <JumboBlock mr={{ s: 0, xl: '35px' }}>
@@ -412,7 +412,7 @@ function Landing() {
           </JumboBlock>
         </Box>
       </Box>
-      <Box>
+      <Box mt="153px">
         <Text t="h2">{lang.landing_page.questions_title}</Text>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
