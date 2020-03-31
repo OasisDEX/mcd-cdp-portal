@@ -11,8 +11,8 @@ const QuestionAndAnswerStyle = styled.div`
   position: relative;
 
   .question-row {
-    padding-top: 14px;
-    padding-bottom: 18px;
+    padding-top: 32px;
+    padding-bottom: 34px;
     letter-spacing: 0.007em;
     position: relative;
     border-bottom: 1px solid ${separatorColor};
@@ -45,7 +45,7 @@ const QuestionAndAnswerStyle = styled.div`
     position: absolute;
     width: 24px;
     right: 2px;
-    top: 50%;
+    top: calc(50% - 1px);
     z-index: 2;
 
     &:before,
