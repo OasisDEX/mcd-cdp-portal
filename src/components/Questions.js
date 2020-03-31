@@ -5,7 +5,7 @@ import { Text } from '@makerdao/ui-components-core';
 
 const answerPaddingBottom = 21;
 const answerAnimationTime = '350ms';
-const separatorColor = '#a8a8a8';
+const separatorColor = '#EBEBEB';
 
 const QuestionAndAnswerStyle = styled.div`
   position: relative;
@@ -41,10 +41,10 @@ const QuestionAndAnswerStyle = styled.div`
   }
   .plus-minus-toggle {
     cursor: pointer;
-    height: 21px;
+    height: 24px;
     position: absolute;
-    width: 21px;
-    right: 4px;
+    width: 24px;
+    right: 2px;
     top: 50%;
     z-index: 2;
 
@@ -52,11 +52,12 @@ const QuestionAndAnswerStyle = styled.div`
     &:after {
       background: #000;
       content: '';
-      height: 1px;
+      height: 2px;
       left: 0;
       position: absolute;
       top: 0;
-      width: 21px;
+      width: 24px;
+      border-radius: 1px;
       transition: transform ${answerAnimationTime} ease,
         opacity ${answerAnimationTime} ease;
     }
@@ -178,7 +179,7 @@ const Questions = ({ questions }) => {
   return (
     <div
       style={{
-        maxWidth: '700px',
+        maxWidth: '800px',
         margin: '0 auto',
         textAlign: 'left',
         fontSize: '18px',
