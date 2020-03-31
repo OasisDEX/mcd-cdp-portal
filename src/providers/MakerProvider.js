@@ -173,6 +173,7 @@ function MakerProvider({
     return () => {
       txManagerSub.unsub();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maker, connectBrowserProvider]);
 
   const connectToProviderOfType = async type => {
