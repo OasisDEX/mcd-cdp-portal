@@ -412,7 +412,7 @@ function Landing() {
           </JumboBlock>
         </Box>
       </Box>
-      <Box mt="153px">
+      <Box mt="153px" mb="126px">
         <Text t="h2">{lang.landing_page.questions_title}</Text>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}

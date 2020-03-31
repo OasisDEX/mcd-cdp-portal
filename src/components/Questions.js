@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Text } from '@makerdao/ui-components-core';
 
-const answerPaddingBottom = 21;
 const answerAnimationTime = '350ms';
 const separatorColor = '#EBEBEB';
 
@@ -24,21 +23,19 @@ const QuestionAndAnswerStyle = styled.div`
 
   .answer {
     overflow: hidden;
-    transition: max-height ${answerAnimationTime} ease,
-      padding-bottom ${answerAnimationTime} ease;
+    transition: max-height ${answerAnimationTime} ease;
     font-size: 18px;
     line-height: 29px;
 
     a {
       text-decoration: underline;
     }
-  }
 
-  &.active {
-    .answer {
-      padding-bottom: ${answerPaddingBottom}px;
+    .answer-text {
+      padding: 32px 10px 32px 32px;
     }
   }
+
   .plus-minus-toggle {
     cursor: pointer;
     height: 24px;
@@ -125,13 +122,12 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
           <div className="plus-minus-toggle" />
         </div>
       </div>
-      <div
-        className="answer"
-        style={{ maxHeight: isSelected ? height + answerPaddingBottom : 0 }}
-      >
-        <Text t="body" as="div" ref={answerElement}>
-          {answer}
-        </Text>
+      <div className="answer" style={{ maxHeight: isSelected ? height : 0 }}>
+        <div ref={answerElement}>
+          <Text t="body" as="div" className="answer-text">
+            {answer}
+          </Text>
+        </div>
       </div>
     </QuestionAndAnswerStyle>
   );
@@ -196,7 +192,7 @@ const Questions = ({ questions }) => {
               onClick={() => setSelectedIndex(isSelected ? null : index)}
               isSelected={isSelected}
             />
-            {index < questions.length - 1 ? <SeparatorLine /> : null}
+            <SeparatorLine />
           </div>
         );
       })}
