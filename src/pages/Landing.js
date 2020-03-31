@@ -189,12 +189,25 @@ const Token = ({ config: { name, icon, onlyOnTrade } }) => {
 };
 
 const BlurryBackground = (() => {
+  const ballsContainerOriginalWidth = 1440;
+
+  // adjust this based on how much do we want the balls to move when reducing window size
+  const ballsContainerMaxWidth = 1180;
+
+  // converts absolute positioning to percentage based.
+  const perc = absolutePx =>
+    ((absolutePx / ballsContainerMaxWidth) * 100).toFixed(1);
+  // changes the distance from original container width, to the new width.
+  const adjustDistance = originalDistance =>
+    originalDistance -
+    (ballsContainerOriginalWidth - ballsContainerMaxWidth) / 2;
+
   const BallTop = styled.div`
     position: absolute;
     width: 206px;
     height: 206px;
     top: -45px;
-    left: 130px;
+    left: ${perc(adjustDistance(130))}%;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
       #eaffcf 0%,
@@ -209,7 +222,7 @@ const BlurryBackground = (() => {
     width: 83px;
     height: 83px;
     top: 619px;
-    left: 1209px;
+    right: ${perc(adjustDistance(140))}%;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
       #d2ff72 0%,
@@ -234,7 +247,7 @@ const BlurryBackground = (() => {
 
     & > div {
       position: relative;
-      max-width: 1440px;
+      max-width: ${ballsContainerMaxWidth}px;
       margin: 0 auto;
     }
   `;
