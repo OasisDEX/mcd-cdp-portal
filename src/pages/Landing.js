@@ -22,8 +22,15 @@ import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { Box, Text } from '@makerdao/ui-components-core';
 
+const Content = ({ children }) => (
+  <Box p={{ s: '0 12px', l: '0 32px' }}>
+    <Box maxWidth="1200px" mx="auto">
+      {children}
+    </Box>
+  </Box>
+);
+
 const Cards = styled.div`
-  max-width: 1200px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -284,140 +291,146 @@ function Landing() {
   return (
     <MarketingLayout>
       <SEO title="Oasis" />
-      <Box mt="149px">
-        <Text t="h1">{lang.landing_page.headline}</Text>
-      </Box>
-      <Cards>
-        <Card
-          style={{
-            background:
-              'radial-gradient(111.67% 100% at 0% 0%, #F2FFE6 0%, #C6FFF9 100%)'
-          }}
-        >
-          <TradeIcon />
-          <h1 className="title">{lang.landing_page.trade_card.title}</h1>
-          <Text t="body">{lang.landing_page.trade_card.description}</Text>
-          <div className="buttonContainer">
-            <Link
-              href={`/${Routes.TRADE}`}
-              className="button"
-              onClick={() => {
-                mixpanel.track('btn-click', {
-                  id: 'StartTrading',
-                  product: 'oasis-landing'
-                });
-              }}
-            >
-              <span>{lang.landing_page.trade_card.button}</span>
-            </Link>
-          </div>
-        </Card>
-        <Card
-          style={{
-            background:
-              'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)'
-          }}
-        >
-          <BorrowIcon />
-          <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
-          <Text t="body">{lang.landing_page.borrow_card.description}</Text>
-          <div className="buttonContainer">
-            <Link
-              href={`/${Routes.BORROW}${url.search}`}
-              prefetch={true}
-              className="button"
-              onClick={() => {
-                mixpanel.track('btn-click', {
-                  id: 'BorrowDai',
-                  product: 'oasis-landing'
-                });
-              }}
-            >
-              <span>{lang.landing_page.borrow_card.button}</span>
-            </Link>
-          </div>
-        </Card>
-        <Card
-          style={{
-            background:
-              'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)',
-            marginBottom: 0
-          }}
-        >
-          <SaveIcon />
-          <h1 className="title">{lang.landing_page.save_card.title}</h1>
-          <Text t="body">{lang.landing_page.save_card.description}</Text>
-          <div className="buttonContainer">
-            <Link
-              href={`/${Routes.SAVE}${url.search}`}
-              prefetch={true}
-              className="button"
-              onClick={() => {
-                mixpanel.track('btn-click', {
-                  id: 'SaveDai',
-                  product: 'oasis-landing'
-                });
-              }}
-            >
-              <span>{lang.landing_page.save_card.button}</span>
-            </Link>
-          </div>
-        </Card>
-      </Cards>
-      <Box style={{ marginTop: '103px' }}>
-        <Text t="h2">{lang.landing_page.token_section_title}</Text>
-        <TokenList>
-          {tokens.map(config => (
-            <Token config={config} key={config.name} />
-          ))}
-        </TokenList>
-        <span
-          style={{
-            fontSize: '18px',
-            letterSpacing: '0.5px',
-            color: '#4F445E',
-            position: 'relative'
-          }}
-        >
-          <span
-            style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+      <Content>
+        <Box mt="149px">
+          <Text t="h1">{lang.landing_page.headline}</Text>
+        </Box>
+        <Cards>
+          <Card
+            style={{
+              background:
+                'radial-gradient(111.67% 100% at 0% 0%, #F2FFE6 0%, #C6FFF9 100%)'
+            }}
           >
-            *
-          </span>{' '}
-          {lang.landing_page.token_section_only_on_trade}
-        </span>
-      </Box>
+            <TradeIcon />
+            <h1 className="title">{lang.landing_page.trade_card.title}</h1>
+            <Text t="body">{lang.landing_page.trade_card.description}</Text>
+            <div className="buttonContainer">
+              <Link
+                href={`/${Routes.TRADE}`}
+                className="button"
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'StartTrading',
+                    product: 'oasis-landing'
+                  });
+                }}
+              >
+                <span>{lang.landing_page.trade_card.button}</span>
+              </Link>
+            </div>
+          </Card>
+          <Card
+            style={{
+              background:
+                'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)'
+            }}
+          >
+            <BorrowIcon />
+            <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
+            <Text t="body">{lang.landing_page.borrow_card.description}</Text>
+            <div className="buttonContainer">
+              <Link
+                href={`/${Routes.BORROW}${url.search}`}
+                prefetch={true}
+                className="button"
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'BorrowDai',
+                    product: 'oasis-landing'
+                  });
+                }}
+              >
+                <span>{lang.landing_page.borrow_card.button}</span>
+              </Link>
+            </div>
+          </Card>
+          <Card
+            style={{
+              background:
+                'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)',
+              marginBottom: 0
+            }}
+          >
+            <SaveIcon />
+            <h1 className="title">{lang.landing_page.save_card.title}</h1>
+            <Text t="body">{lang.landing_page.save_card.description}</Text>
+            <div className="buttonContainer">
+              <Link
+                href={`/${Routes.SAVE}${url.search}`}
+                prefetch={true}
+                className="button"
+                onClick={() => {
+                  mixpanel.track('btn-click', {
+                    id: 'SaveDai',
+                    product: 'oasis-landing'
+                  });
+                }}
+              >
+                <span>{lang.landing_page.save_card.button}</span>
+              </Link>
+            </div>
+          </Card>
+        </Cards>
+        <Box style={{ marginTop: '103px' }}>
+          <Text t="h2">{lang.landing_page.token_section_title}</Text>
+          <TokenList>
+            {tokens.map(config => (
+              <Token config={config} key={config.name} />
+            ))}
+          </TokenList>
+          <span
+            style={{
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              color: '#4F445E',
+              position: 'relative'
+            }}
+          >
+            <span
+              style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+            >
+              *
+            </span>{' '}
+            {lang.landing_page.token_section_only_on_trade}
+          </span>
+        </Box>
+      </Content>
       <Box style={{ position: 'relative', width: '100%', marginTop: '207px' }}>
         <BlurryBackground />
-        <Box m="0 auto" display="inline-block">
-          <JumboBlock mr={{ s: 0, xl: '35px' }}>
-            <div>
-              <Text t="h3" className="title">
-                {lang.landing_page.section1_title}
-              </Text>
-              <Text t="body">{lang.landing_page.section1_p}</Text>
-            </div>
-            <div>
-              <Text t="h3" className="title">
-                {lang.landing_page.section2_title}
-              </Text>
-              <Text t="body">{lang.landing_page.section2_p}</Text>
-            </div>
-            <div>
-              <Text t="h3" className="title">
-                {lang.landing_page.section3_title}
-              </Text>
-              <Text t="body">{lang.landing_page.section3_p}</Text>
-            </div>
-          </JumboBlock>
+        <Content>
+          <Box m="0 auto" display="inline-block">
+            <JumboBlock mr={{ s: 0, xl: '35px' }}>
+              <div>
+                <Text t="h3" className="title">
+                  {lang.landing_page.section1_title}
+                </Text>
+                <Text t="body">{lang.landing_page.section1_p}</Text>
+              </div>
+              <div>
+                <Text t="h3" className="title">
+                  {lang.landing_page.section2_title}
+                </Text>
+                <Text t="body">{lang.landing_page.section2_p}</Text>
+              </div>
+              <div>
+                <Text t="h3" className="title">
+                  {lang.landing_page.section3_title}
+                </Text>
+                <Text t="body">{lang.landing_page.section3_p}</Text>
+              </div>
+            </JumboBlock>
+          </Box>
+        </Content>
+      </Box>
+      <Content>
+        <Box mt="153px" mb="126px">
+          <Text t="h2">{lang.landing_page.questions_title}</Text>
+          <Questions
+            questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          />
         </Box>
-      </Box>
-      <Box mt="153px" mb="126px">
-        <Text t="h2">{lang.landing_page.questions_title}</Text>
-        <Questions
-          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
-        />
-      </Box>
+      </Content>
     </MarketingLayout>
   );
 }

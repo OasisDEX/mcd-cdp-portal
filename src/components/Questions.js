@@ -97,6 +97,7 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
       setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
     }, 300);
 
+    // todo: move subscribing to resize to Questions component
     window.addEventListener('resize', debouncedHandleResize);
     setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
     // set the height after fonts have probably loaded, or system font is used

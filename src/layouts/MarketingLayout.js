@@ -101,10 +101,6 @@ const MarketingLayoutStyle = styled.div`
   color: ${getColor('purpleGray')};
   width: 100%;
 
-  @media only screen and (max-width: 425px) {
-    padding: 0 10px;
-  }
-
   a {
     color: ${getColor('darkPurple')};
     text-decoration: none;
@@ -114,6 +110,11 @@ const MarketingLayoutStyle = styled.div`
 const centerContent = css`
   margin: 0 auto;
   max-width: 1280px;
+  padding: 0 40px;
+
+  @media only screen and (max-width: 425px) {
+    padding: 0 10px;
+  }
 `;
 
 const Header = styled.header`
