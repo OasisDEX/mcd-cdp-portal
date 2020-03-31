@@ -251,7 +251,6 @@ const JumboBlock = styled(Box)`
   max-width: 966px;
   background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
   text-align: left;
-  margin: 0 auto;
   padding: 10px 130px 122px 120px;
 
   & > div {
@@ -375,26 +374,28 @@ function Landing() {
       </Box>
       <Box style={{ position: 'relative', width: '100%', marginTop: '95px' }}>
         <BlurryBackground />
-        <JumboBlock>
-          <div>
-            <Text t="h3" className="title">
-              {lang.landing_page.section1_title}
-            </Text>
-            <Text t="body">{lang.landing_page.section1_p}</Text>
-          </div>
-          <div>
-            <Text t="h3" className="title">
-              {lang.landing_page.section2_title}
-            </Text>
-            <Text t="body">{lang.landing_page.section2_p}</Text>
-          </div>
-          <div>
-            <Text t="h3" className="title">
-              {lang.landing_page.section3_title}
-            </Text>
-            <Text t="body">{lang.landing_page.section3_p}</Text>
-          </div>
-        </JumboBlock>
+        <Box m="0 auto" display="inline-block">
+          <JumboBlock mr={{ s: 0, xl: '35px' }}>
+            <div>
+              <Text t="h3" className="title">
+                {lang.landing_page.section1_title}
+              </Text>
+              <Text t="body">{lang.landing_page.section1_p}</Text>
+            </div>
+            <div>
+              <Text t="h3" className="title">
+                {lang.landing_page.section2_title}
+              </Text>
+              <Text t="body">{lang.landing_page.section2_p}</Text>
+            </div>
+            <div>
+              <Text t="h3" className="title">
+                {lang.landing_page.section3_title}
+              </Text>
+              <Text t="body">{lang.landing_page.section3_p}</Text>
+            </div>
+          </JumboBlock>
+        </Box>
       </Box>
       <Box>
         <Text t="h2">{lang.landing_page.questions_title}</Text>
