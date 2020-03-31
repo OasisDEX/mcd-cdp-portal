@@ -44,7 +44,7 @@ export default {
     token_section_only_on_trade: 'Only available on Oasis Trade',
     section1_title: 'What is Oasis?',
     section1_p:
-      'Oasis is a platform for decentralized finance. Use it to trade tokens, borrow Dai, and earn savings — all in one place.',
+      'Oasis is a platform for decentralized finance. Use it to trade tokens, borrow Dai and earn savings — all in one place.',
     section2_title: 'Secure protocol built on Ethereum',
     section2_p:
       'Oasis is built on top of audited and formally verified smart contracts created by Maker, the industry leader in secure decentralized finance.',
