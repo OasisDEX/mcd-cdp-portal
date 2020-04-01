@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, withView, compose } from 'navi';
+import { map, route, mount, withView } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
-import BorrowLayout from 'layouts/BorrowLayout';
-import MarketingLayout from './layouts/MarketingLayout';
+import DashboardLayout from 'layouts/DashboardLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
@@ -28,72 +27,58 @@ import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
-const dappProvidersView = async request => {
-  const {
-    network = networkNames[defaultNetwork],
-    testchainId,
-    backendEnv
-  } = request.query;
-  const { viewedAddress } = request.params;
+const withDashboardLayout = route =>
+  withView(async request => {
+    const {
+      network = networkNames[defaultNetwork],
+      testchainId,
+      backendEnv
+    } = request.query;
+    const { viewedAddress, cdpId } = request.params;
 
-  return (
-    <MakerProvider
-      network={network}
-      testchainId={testchainId}
-      backendEnv={backendEnv}
-      viewedAddress={viewedAddress}
-    >
-      <RouteEffects network={network} />
-      <TransactionManagerProvider>
-        <NotificationProvider>
-          <VaultsProvider viewedAddress={viewedAddress}>
-            <ToggleProvider>
-              <ModalProvider modals={modals} templates={templates}>
-                <SidebarProvider>
-                  <View />
-                </SidebarProvider>
-              </ModalProvider>
-            </ToggleProvider>
-          </VaultsProvider>
-        </NotificationProvider>
-      </TransactionManagerProvider>
-    </MakerProvider>
-  );
-};
-
-const withBorrowLayout = childMatcher =>
-  compose(
-    withView(dappProvidersView),
-    withView(request => {
-      const { viewedAddress, cdpId } = request.params;
-      return (
-        <BorrowLayout
-          mobileNav={<MobileNav viewedAddress={viewedAddress} cdpId={cdpId} />}
-          navbar={<Navbar viewedAddress={viewedAddress} />}
-        >
-          <View />
-        </BorrowLayout>
-      );
-    }),
-    childMatcher
-  );
-
-const marketingLayoutView = () => (
-  <MarketingLayout>
-    <View />
-  </MarketingLayout>
-);
+    return (
+      <MakerProvider
+        network={network}
+        testchainId={testchainId}
+        backendEnv={backendEnv}
+        viewedAddress={viewedAddress}
+      >
+        <RouteEffects network={network} />
+        <TransactionManagerProvider>
+          <NotificationProvider>
+            <VaultsProvider viewedAddress={viewedAddress}>
+              <ToggleProvider>
+                <ModalProvider modals={modals} templates={templates}>
+                  <SidebarProvider>
+                    <DashboardLayout
+                      mobileNav={
+                        <MobileNav
+                          viewedAddress={viewedAddress}
+                          cdpId={cdpId}
+                        />
+                      }
+                      navbar={<Navbar viewedAddress={viewedAddress} />}
+                    >
+                      <View />
+                    </DashboardLayout>
+                  </SidebarProvider>
+                </ModalProvider>
+              </ToggleProvider>
+            </VaultsProvider>
+          </NotificationProvider>
+        </TransactionManagerProvider>
+      </MakerProvider>
+    );
+  }, route);
 
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
-  [`/${Routes.BORROW}`]: compose(
-    withView(dappProvidersView),
-    withView(marketingLayoutView),
+  [`/${Routes.BORROW}`]: withDashboardLayout(
     route(() => ({ title: 'Borrow', view: <Borrow /> }))
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withBorrowLayout(
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -103,7 +88,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withBorrowLayout(
+  [`/${Routes.BORROW}/:cdpId`]: withDashboardLayout(
     map(request => {
       const { cdpId } = request.params;
 
@@ -114,13 +99,11 @@ export default mount({
     })
   ),
 
-  [`/${Routes.SAVE}`]: compose(
-    withView(dappProvidersView),
-    withView(marketingLayoutView),
+  [`/${Routes.SAVE}`]: withDashboardLayout(
     route(() => ({ title: 'Save', view: <SaveOverview /> }))
   ),
 
-  [`/${Routes.SAVE}/owner/:viewedAddress`]: withBorrowLayout(
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {

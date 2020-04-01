@@ -89,7 +89,10 @@ function OpenCDPForm({
             });
           }}
         >
-          {prettifyNumber(selectedIlk.userGemBalance)} {selectedIlk.gem}
+          {selectedIlk.gem === 'USDC'
+            ? prettifyNumber(selectedIlk.userGemBalance, { truncate: true })
+            : prettifyNumber(selectedIlk.userGemBalance)}{' '}
+          {selectedIlk.gem}
         </Text>
       </Box>
     ],

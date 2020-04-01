@@ -14,13 +14,17 @@ import { getColor } from 'styles/theme';
 import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
 import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
 import { ReactComponent as SaveIcon } from 'images/landing/save-icon.svg';
-import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
-import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
-import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
-import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
-import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
-import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { Box, Grid, Text } from '@makerdao/ui-components-core';
+import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
+import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
+import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
+import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
+import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
+import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
+import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
+import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
+import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
+import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
 
 const Content = ({ children }) => (
   <Box p={{ s: '0 12px', l: '0 32px' }}>
@@ -235,6 +239,22 @@ const SupportedTokens = (() => {
       name: '0x',
       icon: ZrxIcon,
       onlyOnTrade: true
+    },
+    {
+      name: 'LINK*',
+      icon: LinkIcon
+    },
+    {
+      name: 'PAX*',
+      icon: PaxIcon
+    },
+    {
+      name: 'TUSD*',
+      icon: TusdIcon
+    },
+    {
+      name: 'WBTC*',
+      icon: WbtcIcon
     }
   ];
 
