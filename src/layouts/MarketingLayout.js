@@ -7,6 +7,7 @@ import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
 import { getColor, marketingTheme } from 'styles/theme';
+import { Box } from '@makerdao/ui-components-core';
 
 const MarketingLayoutStyle = styled.div`
   /*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */
@@ -133,7 +134,7 @@ const Header = styled.header`
   }
 `;
 
-const Nav = styled.nav`
+const Nav = styled(Box)`
   float: right;
   display: flex;
   justify-content: center;
@@ -153,8 +154,22 @@ const Nav = styled.nav`
 `;
 
 const MainNavStyle = styled(Nav)`
+  font-size: 19px;
+  margin-top: 4px;
   a {
     color: ${getColor('violetGray')};
+  }
+
+  @media (max-width: 550px) {
+    a:not(:first-child) {
+      margin-left: 38px;
+    }
+  }
+
+  @media (max-width: 425px) {
+    a:not(:first-child) {
+      margin-left: 20px;
+    }
   }
 `;
 
@@ -162,7 +177,7 @@ const MainNav = props => {
   const { lang } = useLanguage();
 
   return (
-    <MainNavStyle {...props}>
+    <MainNavStyle display={{ s: 'none', l: 'flex' }} {...props}>
       <Link href={`${Routes.TRADE}`}>{lang.navbar.trade}</Link>
       <Link href={`${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
       <Link href={`${Routes.SAVE}`}>{lang.navbar.save}</Link>
@@ -246,7 +261,7 @@ const MarketingLayout = ({ children }) => {
           <Link className="logo" href="/">
             Oasis
           </Link>
-          <MainNav style={{ fontSize: '19px', marginTop: '4px' }} />
+          <MainNav />
         </Header>
         {children}
         <CookieNotice />
