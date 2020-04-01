@@ -20,7 +20,7 @@ import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
 import { ReactComponent as RepIcon } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box, Grid, Text } from '@makerdao/ui-components-core';
 
 const Content = ({ children }) => (
   <Box p={{ s: '0 12px', l: '0 32px' }}>
@@ -238,12 +238,11 @@ const SupportedTokens = (() => {
     }
   ];
 
-  const TokenList = styled.div`
-    max-width: 1170px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  const TokenList = styled(Grid)`
     margin: 74px auto 69px;
+    justify-content: center;
+    justify-items: center;
+    grid-row-gap: 30px;
   `;
 
   const TokenStyle = styled.div`
@@ -295,7 +294,14 @@ const SupportedTokens = (() => {
     return (
       <Box {...props}>
         <Text t="h2">{lang.landing_page.token_section_title}</Text>
-        <TokenList>
+        <TokenList
+          gridTemplateColumns={[
+            'repeat(2, 1fr)',
+            'repeat(3, 1fr)',
+            'repeat(6, 1fr)'
+          ]}
+          maxWidth={['396px', '656px', '1170px']}
+        >
           {tokens.map(config => (
             <Token config={config} key={config.name} />
           ))}
