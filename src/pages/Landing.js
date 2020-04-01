@@ -66,7 +66,6 @@ const Cards = (() => {
   const Card = styled.div`
     overflow: hidden;
     width: 368px;
-    height: 430px;
     position: relative;
     flex-shrink: 1;
     text-align: left;
@@ -86,8 +85,7 @@ const Cards = (() => {
     }
 
     .buttonContainer {
-      position: absolute;
-      bottom: 59px;
+      margin-top: 18px;
       width: 100%;
     }
 
