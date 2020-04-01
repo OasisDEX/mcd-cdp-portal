@@ -66,7 +66,6 @@ const Cards = (() => {
   const Card = styled.div`
     overflow: hidden;
     width: 368px;
-    height: 430px;
     position: relative;
     flex-shrink: 1;
     text-align: left;
@@ -85,9 +84,13 @@ const Cards = (() => {
       color: ${getColor('darkPurple')};
     }
 
+    .text {
+      min-height: 136px;
+      display: block;
+    }
+
     .buttonContainer {
-      position: absolute;
-      bottom: 59px;
+      margin-top: 18px;
       width: 100%;
     }
 
@@ -131,7 +134,9 @@ const Cards = (() => {
         >
           <TradeIcon />
           <h1 className="title">{lang.landing_page.trade_card.title}</h1>
-          <Text t="body">{lang.landing_page.trade_card.description}</Text>
+          <Text t="body" className="text">
+            {lang.landing_page.trade_card.description}
+          </Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.TRADE}`}
