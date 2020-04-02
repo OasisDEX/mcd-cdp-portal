@@ -19,21 +19,19 @@ export const useBrowserIcon = provider =>
     if (provider === wallets.METAMASK) {
       return <MMLogo />;
     } else if (provider === wallets.TRUST) {
-      return <TrustLogo width="20px" height="20px" />;
+      return <TrustLogo />;
     } else if (provider === wallets.IMTOKEN) {
       return (
         <ImTokenLogo
           css={`
             pointer-events: none;
           `}
-          width="20px"
-          height="20px"
         />
       );
     } else if (provider === wallets.COINBASE) {
-      return <img src={coinbaseWalletLogo} width="20px" height="20px" alt="" />;
+      return <img src={coinbaseWalletLogo} alt="" />;
     } else if (provider === wallets.ALPHA) {
-      return <img src={alphaWalletLogo} width="20px" height="20px" alt="" />;
+      return <img src={alphaWalletLogo} alt="" />;
     } else {
       return <div />;
     }

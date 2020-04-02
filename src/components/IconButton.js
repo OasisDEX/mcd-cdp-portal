@@ -1,23 +1,39 @@
 import React from 'react';
-import { Button, Flex, Box } from '@makerdao/ui-components-core';
+import { Flex, Box, Text } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
 
 const IconBox = styled(Box)`
   & > svg {
     display: inline-block;
+    width: 26.6px;
+    height: 26.6px;
   }
-  width: 26px;
+  width: 26.6px;
   text-align: center;
+`;
+
+const IconButtonStyle = styled(Box)`
+  width: 255px;
+  padding: 16px 26px;
+  cursor: pointer;
+
+  .text {
+    margin-left: 22px;
+  }
+
+  :hover .text {
+    opacity: 0.6;
+  }
 `;
 
 const IconButton = ({ icon, children, ...props }) => {
   return (
-    <Button variant="secondary-outline" width="225px" {...props}>
-      <Flex alignItems="center">
+    <IconButtonStyle {...props}>
+      <Flex alignItems="center" justifyContent="flex-start" height="27px">
         <IconBox>{icon}</IconBox>
-        <span style={{ margin: 'auto' }}>{children}</span>
+        <Text className="text">{children}</Text>
       </Flex>
-    </Button>
+    </IconButtonStyle>
   );
 };
 

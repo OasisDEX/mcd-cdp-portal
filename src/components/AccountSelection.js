@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
-import { Text, Grid, Flex } from '@makerdao/ui-components-core';
+import { Box, Dropdown, DefaultDropdown } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
@@ -20,9 +20,11 @@ import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
+const AccountSelectionStyle = styled(Box)``;
+
 const StyledLedgerLogo = styled(LedgerLogo)`
-  max-width: 16px;
-  max-height: 16px;
+  position: relative;
+  top: 3px;
 `;
 
 export const StyledTrezorLogo = styled(TrezorLogo)`
@@ -72,14 +74,8 @@ function AccountSelection() {
 
   return (
     <PageContentLayout>
-      <Flex
-        height="70vh"
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
-      >
-        <Text.h4>{lang.providers.connect_wallet}</Text.h4>
-        <Grid py="l" gridRowGap="s">
+      <Dropdown trigger={<Box>{lang.providers.connect_wallet}</Box>}>
+        <DefaultDropdown>
           <BrowserProviderButton
             onClick={connectBrowserWallet}
             disabled={!makerAuthenticated}
@@ -138,8 +134,8 @@ function AccountSelection() {
             </IconButton>
           </BrowserView>
           {/* <ReadOnlyConnect /> */}
-        </Grid>
-      </Flex>
+        </DefaultDropdown>
+      </Dropdown>
     </PageContentLayout>
   );
 }

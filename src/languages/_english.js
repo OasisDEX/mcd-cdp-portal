@@ -457,7 +457,7 @@ export default {
   cookie_notice: 'By using this website you agree to our {0}',
   privacy_policy: 'privacy policy',
   providers: {
-    connect_wallet: 'Connect a wallet to get started',
+    connect_wallet: 'Connect a wallet',
     metamask: 'MetaMask',
     trust: 'Trust',
     coinbase: 'Coinbase Wallet',
