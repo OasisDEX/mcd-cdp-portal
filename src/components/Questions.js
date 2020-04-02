@@ -205,7 +205,7 @@ Questions.propTypes = {
   questions: PropTypes.arrayOf(
     PropTypes.shape({
       q: PropTypes.string,
-      a: PropTypes.element
+      a: PropTypes.any
     })
   )
 };
