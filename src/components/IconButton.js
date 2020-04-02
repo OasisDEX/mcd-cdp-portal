@@ -3,26 +3,23 @@ import { Flex, Box, Text } from '@makerdao/ui-components-core';
 import styled from 'styled-components';
 
 const IconBox = styled(Box)`
-  & > svg {
-    display: inline-block;
+  display: flex;
+  align-items: center;
+  &,
+  svg,
+  img {
     width: ${props => props.size};
     height: ${props => props.size};
   }
-
-  & > img {
-    width: ${props => props.size};
-  }
-  width: 27px;
-  text-align: center;
 `;
 
 const IconButtonStyle = styled(Box)`
   width: 255px;
-  padding: 16px 26px;
+  padding: 12px 26px 12px;
   cursor: pointer;
 
   .text {
-    margin-left: 22px;
+    margin-left: 23px;
   }
 
   :hover .text {
@@ -30,10 +27,10 @@ const IconButtonStyle = styled(Box)`
   }
 `;
 
-const IconButton = ({ icon, iconSize = '32px', children, ...props }) => {
+const IconButton = ({ icon, iconSize = '26.67px', children, ...props }) => {
   return (
     <IconButtonStyle {...props}>
-      <Flex alignItems="center" justifyContent="flex-start" height="27px">
+      <Flex alignItems="center" justifyContent="flex-start" height="32px">
         <IconBox size={iconSize}>{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>

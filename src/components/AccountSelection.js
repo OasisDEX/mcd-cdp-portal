@@ -19,11 +19,6 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
-const StyledLedgerLogo = styled(LedgerLogo)`
-  position: relative;
-  top: 3px;
-`;
-
 export const StyledTrezorLogo = styled(TrezorLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
@@ -37,8 +32,6 @@ export const StyledWalletConnectLogo = styled(WalletConnectLogo)`
 const StyledWalletLinkLogo = styled(WalletLinkLogo)`
   margin-top: -5px;
   margin-bottom: -5px;
-  height: 21px;
-  width: 21px;
 `;
 
 const buttonWidth = '248px';
@@ -59,12 +52,12 @@ const Button = styled(Box)`
   justify-content: center;
   text-align: center;
   letter-spacing: 0.5px;
-  margin-bottom: 14px;
+  margin-bottom: 6px;
 
   color: #ffffff;
 
   span {
-    margin-right: 15.8px;
+    margin-right: 15px;
   }
 `;
 
@@ -77,12 +70,13 @@ const DropdownWrapper = styled(Box)`
 `;
 
 const DropdownItems = styled(DefaultDropdown)`
+  min-width: 320px;
   background: #ffffff;
   border: 1px solid #ecf1f3;
   box-sizing: border-box;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
-  padding-left: 8px;
+  padding: 10px 7px 12px;
 `;
 
 function AccountSelection(props) {
@@ -164,7 +158,7 @@ function AccountSelection(props) {
               <IconButton
                 onClick={connectLedgerWallet}
                 disabled={!makerAuthenticated}
-                icon={<StyledLedgerLogo />}
+                icon={<LedgerLogo />}
                 css={{
                   backgroundColor: 'white'
                 }}
