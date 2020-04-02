@@ -5,10 +5,10 @@ import styled from 'styled-components';
 const IconBox = styled(Box)`
   & > svg {
     display: inline-block;
-    width: 26.6px;
-    height: 26.6px;
+    width: ${props => props.size};
+    height: ${props => props.size};
   }
-  width: 26.6px;
+  width: ${props => props.size};
   text-align: center;
 `;
 
@@ -30,7 +30,7 @@ const IconButton = ({ icon, children, ...props }) => {
   return (
     <IconButtonStyle {...props}>
       <Flex alignItems="center" justifyContent="flex-start" height="27px">
-        <IconBox>{icon}</IconBox>
+        <IconBox size="32px">{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>
     </IconButtonStyle>
