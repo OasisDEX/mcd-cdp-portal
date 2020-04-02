@@ -164,7 +164,9 @@ const Cards = (() => {
         >
           <BorrowIcon />
           <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
-          <Text className="description">{lang.landing_page.borrow_card.description}</Text>
+          <Text className="description">
+            {lang.landing_page.borrow_card.description}
+          </Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.BORROW}${url.search}`}
@@ -190,7 +192,9 @@ const Cards = (() => {
         >
           <SaveIcon />
           <h1 className="title">{lang.landing_page.save_card.title}</h1>
-          <Text className="description">{lang.landing_page.save_card.description}</Text>
+          <Text className="description">
+            {lang.landing_page.save_card.description}
+          </Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.SAVE}${url.search}`}

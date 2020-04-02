@@ -117,9 +117,7 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     >
       <div className="question-row">
         <div style={{ cursor: 'pointer' }} onClick={onClick}>
-          <Text.h4 className="question">
-            {question}
-          </Text.h4>
+          <Text.h4 className="question">{question}</Text.h4>
           <div className="plus-minus-toggle" />
         </div>
       </div>
