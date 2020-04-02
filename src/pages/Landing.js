@@ -241,20 +241,24 @@ const SupportedTokens = (() => {
       onlyOnTrade: true
     },
     {
-      name: 'LINK*',
-      icon: LinkIcon
+      name: 'LINK',
+      icon: LinkIcon,
+      onlyOnTrade: true
     },
     {
-      name: 'PAX*',
-      icon: PaxIcon
+      name: 'PAX',
+      icon: PaxIcon,
+      onlyOnTrade: true
     },
     {
-      name: 'TUSD*',
-      icon: TusdIcon
+      name: 'TUSD',
+      icon: TusdIcon,
+      onlyOnTrade: true
     },
     {
-      name: 'WBTC*',
-      icon: WbtcIcon
+      name: 'WBTC',
+      icon: WbtcIcon,
+      onlyOnTrade: true
     }
   ];
 
@@ -262,7 +266,7 @@ const SupportedTokens = (() => {
     margin: 74px auto 69px;
     justify-content: center;
     justify-items: center;
-    grid-row-gap: 30px;
+    grid-row-gap: 60px;
   `;
 
   const TokenStyle = styled.div`
@@ -278,6 +282,7 @@ const SupportedTokens = (() => {
 
     svg {
       width: 70px;
+      height: 70px;
     }
 
     span {
@@ -315,12 +320,18 @@ const SupportedTokens = (() => {
       <Box {...props}>
         <Text t="h2">{lang.landing_page.token_section_title}</Text>
         <TokenList
-          gridTemplateColumns={[
-            'repeat(2, 1fr)',
-            'repeat(3, 1fr)',
-            'repeat(6, 1fr)'
-          ]}
-          maxWidth={['396px', '656px', '1170px']}
+          gridTemplateColumns={{
+            s: 'repeat(2, 1fr)',
+            m: 'repeat(3, 1fr)',
+            l: 'repeat(4, 1fr)',
+            xl: 'repeat(5, 1fr)'
+          }}
+          maxWidth={{
+            s: '396px',
+            m: '656px',
+            l: '850px',
+            xl: '1080px'
+          }}
         >
           {tokens.map(config => (
             <Token config={config} key={config.name} />
