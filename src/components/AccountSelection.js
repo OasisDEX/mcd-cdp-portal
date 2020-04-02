@@ -128,27 +128,14 @@ function AccountSelection(props) {
           />
           <BrowserView>
             <IconButton
-              onClick={connectTrezorWallet}
+              onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
               disabled={!makerAuthenticated}
-              icon={<StyledTrezorLogo />}
+              icon={<StyledWalletLinkLogo />}
               css={{
                 backgroundColor: 'white'
               }}
             >
-              {lang.providers.trezor}
-            </IconButton>
-          </BrowserView>
-          <BrowserView>
-            <IconButton
-              onClick={connectLedgerWallet}
-              disabled={!makerAuthenticated}
-              icon={<StyledLedgerLogo />}
-              css={{
-                backgroundColor: 'white'
-              }}
-              iconSize="27px"
-            >
-              {lang.providers.ledger_nano}
+              {lang.landing_page.wallet_link}
             </IconButton>
           </BrowserView>
           <BrowserView>
@@ -166,14 +153,27 @@ function AccountSelection(props) {
           </BrowserView>
           <BrowserView>
             <IconButton
-              onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+              onClick={connectLedgerWallet}
               disabled={!makerAuthenticated}
-              icon={<StyledWalletLinkLogo />}
+              icon={<StyledLedgerLogo />}
+              css={{
+                backgroundColor: 'white'
+              }}
+              iconSize="27px"
+            >
+              {lang.providers.ledger_nano}
+            </IconButton>
+          </BrowserView>
+          <BrowserView>
+            <IconButton
+              onClick={connectTrezorWallet}
+              disabled={!makerAuthenticated}
+              icon={<StyledTrezorLogo />}
               css={{
                 backgroundColor: 'white'
               }}
             >
-              {lang.landing_page.wallet_link}
+              {lang.providers.trezor}
             </IconButton>
           </BrowserView>
           {/* <ReadOnlyConnect /> */}
