@@ -68,6 +68,15 @@ const Button = styled(Box)`
   }
 `;
 
+const DropdownItems = styled(DefaultDropdown)`
+  background: #ffffff;
+  border: 1px solid #ecf1f3;
+  box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding-left: 8px;
+`;
+
 function AccountSelection(props) {
   const providerName = getWebClientProviderName();
   const {
@@ -100,6 +109,7 @@ function AccountSelection(props) {
     <Box width={buttonWidth} {...props}>
       <Dropdown
         hitBoxMargin="8px 0"
+        placement="center"
         trigger={
           <Button>
             <span>{lang.providers.connect_wallet}</span>
@@ -107,7 +117,7 @@ function AccountSelection(props) {
           </Button>
         }
       >
-        <DefaultDropdown>
+        <DropdownItems>
           <BrowserProviderButton
             onClick={connectBrowserWallet}
             disabled={!makerAuthenticated}
@@ -136,6 +146,7 @@ function AccountSelection(props) {
               css={{
                 backgroundColor: 'white'
               }}
+              iconSize="27px"
             >
               {lang.providers.ledger_nano}
             </IconButton>
@@ -166,7 +177,7 @@ function AccountSelection(props) {
             </IconButton>
           </BrowserView>
           {/* <ReadOnlyConnect /> */}
-        </DefaultDropdown>
+        </DropdownItems>
       </Dropdown>
     </Box>
   );

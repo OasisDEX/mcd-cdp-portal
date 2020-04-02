@@ -8,7 +8,11 @@ const IconBox = styled(Box)`
     width: ${props => props.size};
     height: ${props => props.size};
   }
-  width: ${props => props.size};
+
+  & > img {
+    width: ${props => props.size};
+  }
+  width: 27px;
   text-align: center;
 `;
 
@@ -26,11 +30,11 @@ const IconButtonStyle = styled(Box)`
   }
 `;
 
-const IconButton = ({ icon, children, ...props }) => {
+const IconButton = ({ icon, iconSize = '32px', children, ...props }) => {
   return (
     <IconButtonStyle {...props}>
       <Flex alignItems="center" justifyContent="flex-start" height="27px">
-        <IconBox size="32px">{icon}</IconBox>
+        <IconBox size={iconSize}>{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>
     </IconButtonStyle>
