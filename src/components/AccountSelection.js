@@ -45,7 +45,6 @@ const buttonWidth = '248px';
 
 const Button = styled(Box)`
   background-color: ${props => props.theme.colors.darkPurple};
-  opacity: 0.8;
   border-radius: 40px;
   font-family: FT Base;
   font-style: normal;
@@ -60,11 +59,20 @@ const Button = styled(Box)`
   justify-content: center;
   text-align: center;
   letter-spacing: 0.5px;
+  margin-bottom: 14px;
 
   color: #ffffff;
 
   span {
     margin-right: 15.8px;
+  }
+`;
+
+const DropdownWrapper = styled(Box)`
+  :hover {
+    ${Button} {
+      opacity: 0.8;
+    }
   }
 `;
 
@@ -107,78 +115,80 @@ function AccountSelection(props) {
 
   return (
     <Box width={buttonWidth} {...props}>
-      <Dropdown
-        hitBoxMargin="8px 0"
-        placement="center"
-        trigger={
-          <Button>
-            <span>{lang.providers.connect_wallet}</span>
-            <CaratDown />
-          </Button>
-        }
-      >
-        <DropdownItems>
-          <BrowserProviderButton
-            onClick={connectBrowserWallet}
-            disabled={!makerAuthenticated}
-            provider={providerName}
-            css={{
-              backgroundColor: 'white'
-            }}
-          />
-          <BrowserView>
-            <IconButton
-              onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+      <DropdownWrapper>
+        <Dropdown
+          hitBoxMargin="8px 0"
+          placement="center"
+          trigger={
+            <Button>
+              <span>{lang.providers.connect_wallet}</span>
+              <CaratDown />
+            </Button>
+          }
+        >
+          <DropdownItems>
+            <BrowserProviderButton
+              onClick={connectBrowserWallet}
               disabled={!makerAuthenticated}
-              icon={<StyledWalletLinkLogo />}
+              provider={providerName}
               css={{
                 backgroundColor: 'white'
               }}
-            >
-              {lang.landing_page.wallet_link}
-            </IconButton>
-          </BrowserView>
-          <BrowserView>
-            <IconButton
-              onClick={() =>
-                connectToProviderOfType(AccountTypes.WALLETCONNECT)
-              }
-              icon={<StyledWalletConnectLogo />}
-              css={{
-                backgroundColor: 'white'
-              }}
-            >
-              {lang.landing_page.wallet_connect}
-            </IconButton>
-          </BrowserView>
-          <BrowserView>
-            <IconButton
-              onClick={connectLedgerWallet}
-              disabled={!makerAuthenticated}
-              icon={<StyledLedgerLogo />}
-              css={{
-                backgroundColor: 'white'
-              }}
-              iconSize="27px"
-            >
-              {lang.providers.ledger_nano}
-            </IconButton>
-          </BrowserView>
-          <BrowserView>
-            <IconButton
-              onClick={connectTrezorWallet}
-              disabled={!makerAuthenticated}
-              icon={<StyledTrezorLogo />}
-              css={{
-                backgroundColor: 'white'
-              }}
-            >
-              {lang.providers.trezor}
-            </IconButton>
-          </BrowserView>
-          {/* <ReadOnlyConnect /> */}
-        </DropdownItems>
-      </Dropdown>
+            />
+            <BrowserView>
+              <IconButton
+                onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+                disabled={!makerAuthenticated}
+                icon={<StyledWalletLinkLogo />}
+                css={{
+                  backgroundColor: 'white'
+                }}
+              >
+                {lang.landing_page.wallet_link}
+              </IconButton>
+            </BrowserView>
+            <BrowserView>
+              <IconButton
+                onClick={() =>
+                  connectToProviderOfType(AccountTypes.WALLETCONNECT)
+                }
+                icon={<StyledWalletConnectLogo />}
+                css={{
+                  backgroundColor: 'white'
+                }}
+              >
+                {lang.landing_page.wallet_connect}
+              </IconButton>
+            </BrowserView>
+            <BrowserView>
+              <IconButton
+                onClick={connectLedgerWallet}
+                disabled={!makerAuthenticated}
+                icon={<StyledLedgerLogo />}
+                css={{
+                  backgroundColor: 'white'
+                }}
+                iconSize="27px"
+              >
+                {lang.providers.ledger_nano}
+              </IconButton>
+            </BrowserView>
+            <BrowserView>
+              <IconButton
+                onClick={connectTrezorWallet}
+                disabled={!makerAuthenticated}
+                icon={<StyledTrezorLogo />}
+                css={{
+                  backgroundColor: 'white'
+                }}
+              >
+                {lang.providers.trezor}
+              </IconButton>
+            </BrowserView>
+            {/* <ReadOnlyConnect /> */}
+          </DropdownItems>
+        </Dropdown>
+      </DropdownWrapper>
     </Box>
   );
 }
