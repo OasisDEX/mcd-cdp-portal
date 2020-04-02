@@ -87,6 +87,11 @@ export default {
     wallet_connect: 'Wallet Connect',
     wallet_link: 'Coinbase Wallet'
   },
+  borrow_landing: {
+    headline: 'Take advantage of the assets you own, today.',
+    subheadline: 'Access liquidity, while making sure you don\'t lose exposure. Vaults make it easy to borrow against your assets by generating DAI.',
+    connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
+  },
   overview_page: {
     title: 'Overview',
     your_cdps: 'Your Vaults',
