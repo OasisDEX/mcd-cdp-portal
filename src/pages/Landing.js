@@ -88,7 +88,7 @@ const Cards = (() => {
       color: ${getColor('darkPurple')};
     }
 
-    .text {
+    .description {
       min-height: 136px;
       display: block;
     }
@@ -138,7 +138,7 @@ const Cards = (() => {
         >
           <TradeIcon />
           <h1 className="title">{lang.landing_page.trade_card.title}</h1>
-          <Text t="body" className="text">
+          <Text className="description">
             {lang.landing_page.trade_card.description}
           </Text>
           <div className="buttonContainer">
@@ -164,7 +164,7 @@ const Cards = (() => {
         >
           <BorrowIcon />
           <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
-          <Text t="body">{lang.landing_page.borrow_card.description}</Text>
+          <Text className="description">{lang.landing_page.borrow_card.description}</Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.BORROW}${url.search}`}
@@ -190,7 +190,7 @@ const Cards = (() => {
         >
           <SaveIcon />
           <h1 className="title">{lang.landing_page.save_card.title}</h1>
-          <Text t="body">{lang.landing_page.save_card.description}</Text>
+          <Text className="description">{lang.landing_page.save_card.description}</Text>
           <div className="buttonContainer">
             <Link
               href={`/${Routes.SAVE}${url.search}`}
@@ -318,7 +318,7 @@ const SupportedTokens = (() => {
 
     return (
       <Box {...props}>
-        <Text t="h2">{lang.landing_page.token_section_title}</Text>
+        <Text.h2>{lang.landing_page.token_section_title}</Text.h2>
         <TokenList
           gridTemplateColumns={{
             s: 'repeat(2, 1fr)',
@@ -458,22 +458,22 @@ const BulletPoints = (() => {
     return (
       <JumboBlock mr={{ s: 0, xl: '35px' }} {...props}>
         <div>
-          <Text t="h3" className="title">
+          <Text.h3 className="title">
             {lang.landing_page.section1_title}
-          </Text>
-          <Text t="body">{lang.landing_page.section1_p}</Text>
+          </Text.h3>
+          <Text>{lang.landing_page.section1_p}</Text>
         </div>
         <div>
-          <Text t="h3" className="title">
+          <Text.h3 className="title">
             {lang.landing_page.section2_title}
-          </Text>
-          <Text t="body">{lang.landing_page.section2_p}</Text>
+          </Text.h3>
+          <Text>{lang.landing_page.section2_p}</Text>
         </div>
         <div>
-          <Text t="h3" className="title">
+          <Text.h3 className="title">
             {lang.landing_page.section3_title}
-          </Text>
-          <Text t="body">{lang.landing_page.section3_p}</Text>
+          </Text.h3>
+          <Text>{lang.landing_page.section3_p}</Text>
         </div>
       </JumboBlock>
     );
@@ -488,7 +488,7 @@ function Landing() {
       <SEO title="Oasis" />
       <Content>
         <Box mt="149px">
-          <Text t="h1">{lang.landing_page.headline}</Text>
+          <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
         <Cards mt="80px" />
         <SupportedTokens mt="103px" />
@@ -503,7 +503,7 @@ function Landing() {
       </Box>
       <Content>
         <Box mt="153px" mb="126px">
-          <Text t="h2">{lang.landing_page.questions_title}</Text>
+          <Text.h2>{lang.landing_page.questions_title}</Text.h2>
           <Questions
             questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
           />

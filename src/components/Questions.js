@@ -117,15 +117,15 @@ const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
     >
       <div className="question-row">
         <div style={{ cursor: 'pointer' }} onClick={onClick}>
-          <Text t="h4" className="question">
+          <Text.h4 className="question">
             {question}
-          </Text>
+          </Text.h4>
           <div className="plus-minus-toggle" />
         </div>
       </div>
       <div className="answer" style={{ maxHeight: isSelected ? height : 0 }}>
         <div ref={answerElement}>
-          <Text t="body" as="div" className="answer-text">
+          <Text as="div" className="answer-text">
             {answer}
           </Text>
         </div>
