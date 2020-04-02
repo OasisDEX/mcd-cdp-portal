@@ -31,7 +31,7 @@ function Borrow() {
       <Box maxWidth="866px" m="0 auto">
         <Text.h1>{lang.borrow_landing.headline}</Text.h1>
         <Text>{lang.borrow_landing.subheadline}</Text>
-        <AccountSelection />
+        <AccountSelection m="0 auto" />
       </Box>
     </PageContentLayout>
   );

@@ -5,8 +5,6 @@ import { Box, Dropdown, DefaultDropdown } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
-import PageContentLayout from 'layouts/PageContentLayout';
-
 import BrowserProviderButton from 'components/BrowserProviderButton';
 import IconButton from 'components/IconButton';
 import { getWebClientProviderName } from 'utils/web3';
@@ -17,10 +15,9 @@ import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
-
-const AccountSelectionStyle = styled(Box)``;
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   position: relative;
@@ -44,7 +41,34 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
   width: 21px;
 `;
 
-function AccountSelection() {
+const buttonWidth = '248px';
+
+const Button = styled(Box)`
+  background-color: ${props => props.theme.colors.darkPurple};
+  opacity: 0.8;
+  border-radius: 40px;
+  font-family: FT Base;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 18px;
+  /* identical to box height, or 100% */
+  width: ${buttonWidth};
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  letter-spacing: 0.5px;
+
+  color: #ffffff;
+
+  span {
+    margin-right: 15.8px;
+  }
+`;
+
+function AccountSelection(props) {
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -73,8 +97,16 @@ function AccountSelection() {
   }
 
   return (
-    <PageContentLayout>
-      <Dropdown trigger={<Box>{lang.providers.connect_wallet}</Box>}>
+    <Box width={buttonWidth} {...props}>
+      <Dropdown
+        hitBoxMargin="8px 0"
+        trigger={
+          <Button>
+            <span>{lang.providers.connect_wallet}</span>
+            <CaratDown />
+          </Button>
+        }
+      >
         <DefaultDropdown>
           <BrowserProviderButton
             onClick={connectBrowserWallet}
@@ -136,7 +168,7 @@ function AccountSelection() {
           {/* <ReadOnlyConnect /> */}
         </DefaultDropdown>
       </Dropdown>
-    </PageContentLayout>
+    </Box>
   );
 }
 
