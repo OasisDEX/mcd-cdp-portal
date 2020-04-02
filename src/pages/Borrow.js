@@ -6,7 +6,7 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import {Box, Text} from '@makerdao/ui-components-core';
+import { Box, Text } from '@makerdao/ui-components-core';
 
 function Borrow() {
   const { account } = useMaker();
@@ -27,13 +27,13 @@ function Borrow() {
   }, [account, navigation]);
 
   return (
-      <PageContentLayout>
-        <Box maxWidth="866px" m="0 auto">
-          <Text.h1>{lang.borrow_landing.headline}</Text.h1>
-          <Text>{lang.borrow_landing.subheadline}</Text>
-          <AccountSelection />
-        </Box>
-      </PageContentLayout>
+    <PageContentLayout>
+      <Box maxWidth="866px" m="0 auto">
+        <Text.h1>{lang.borrow_landing.headline}</Text.h1>
+        <Text>{lang.borrow_landing.subheadline}</Text>
+        <AccountSelection />
+      </Box>
+    </PageContentLayout>
   );
 }
 

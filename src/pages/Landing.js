@@ -5,9 +5,11 @@ import { Link, useCurrentRoute } from 'react-navi';
 
 import MarketingLayout from 'layouts/MarketingLayout';
 import SEO from 'components/SEO';
-import Questions, {
-  buildQuestionsFromLangObj
-} from 'components/Marketing/Questions';
+import {
+  Questions,
+  buildQuestionsFromLangObj,
+  FullWidth
+} from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
@@ -408,10 +410,8 @@ const BlurryBackground = (() => {
   `;
 
   const BlurryBackgroundStyle = styled.div`
-    position: absolute;
-    top: -25px;
     width: 100%;
-    height: 91%;
+    height: 100%;
     background: radial-gradient(
       99.92% 100% at 40.9% 100%,
       #f7fce7 0%,
@@ -498,16 +498,16 @@ function Landing() {
         </Box>
         <Cards mt="80px" />
         <SupportedTokens mt="103px" />
-      </Content>
-      <Box style={{ position: 'relative', width: '100%', marginTop: '207px' }}>
-        <BlurryBackground />
-        <Content>
+        <Box mt="207px" height="100%">
+          <FullWidth
+            style={{ height: '91%', position: 'absolute', top: '-25px' }}
+          >
+            <BlurryBackground />
+          </FullWidth>
           <Box m="0 auto" display="inline-block">
             <BulletPoints />
           </Box>
-        </Content>
-      </Box>
-      <Content>
+        </Box>
         <Box mt="153px" mb="126px">
           <Text.h2>{lang.landing_page.questions_title}</Text.h2>
           <Questions

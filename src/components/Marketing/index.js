@@ -1,3 +1,4 @@
+import FullWidth from './FullWidth';
 import Questions, { buildQuestionsFromLangObj } from './Questions';
 
-export { Questions, buildQuestionsFromLangObj };
+export { FullWidth, Questions, buildQuestionsFromLangObj };
