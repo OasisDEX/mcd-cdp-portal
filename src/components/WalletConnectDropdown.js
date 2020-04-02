@@ -41,8 +41,10 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
 const IconBox = styled(Box)`
   & > svg {
     display: inline-block;
+    width: 20px;
+    height: 20px;
   }
-  width: 26px;
+  width: 20px;
   text-align: center;
 `;
 
