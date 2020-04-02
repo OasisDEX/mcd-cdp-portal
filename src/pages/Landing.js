@@ -5,7 +5,9 @@ import { Link, useCurrentRoute } from 'react-navi';
 
 import MarketingLayout from 'layouts/MarketingLayout';
 import SEO from 'components/SEO';
-import Questions, { buildQuestionsFromLangObj } from 'components/Questions';
+import Questions, {
+  buildQuestionsFromLangObj
+} from 'components/Marketing/Questions';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
