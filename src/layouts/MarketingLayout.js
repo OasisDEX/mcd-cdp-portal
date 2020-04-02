@@ -99,9 +99,9 @@ const MainNav = props => {
 
   return (
     <MainNavStyle display={{ s: 'none', l: 'flex' }} {...props}>
-      <Link href={`${Routes.TRADE}`}>{lang.navbar.trade}</Link>
-      <Link href={`${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
-      <Link href={`${Routes.SAVE}`}>{lang.navbar.save}</Link>
+      <Link href={`/${Routes.TRADE}`}>{lang.navbar.trade}</Link>
+      <Link href={`/${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
+      <Link href={`/${Routes.SAVE}`}>{lang.navbar.save}</Link>
     </MainNavStyle>
   );
 };
