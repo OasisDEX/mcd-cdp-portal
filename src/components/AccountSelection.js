@@ -97,7 +97,7 @@ function AccountSelection(props) {
       <DropdownWrapper>
         <Dropdown
           hitBoxMargin="8px 0"
-          placement="center"
+          placement="bottom"
           trigger={
             <Button>
               <span>{lang.providers.connect_wallet}</span>
