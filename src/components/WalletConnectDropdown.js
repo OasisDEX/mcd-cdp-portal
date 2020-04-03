@@ -9,7 +9,7 @@ import {
 } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { useCurrentRoute } from 'react-navi';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
@@ -27,6 +27,11 @@ import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { useBrowserIcon } from './BrowserProviderButton';
 
+const negativeMarginY = css`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
+
 const StyledLedgerLogo = styled(LedgerLogo)`
   max-width: 14px;
   position: relative;
@@ -34,20 +39,17 @@ const StyledLedgerLogo = styled(LedgerLogo)`
 `;
 
 const StyledWalletLinkLogo = styled(WalletLinkLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  ${negativeMarginY};
   height: 21px;
   width: 21px;
 `;
 
 const StyledTrezorLogo = styled(TrezorLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  ${negativeMarginY};
 `;
 
 const StyledWalletConnectLogo = styled(WalletConnectLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  ${negativeMarginY};
 `;
 
 const IconBox = styled(Box)`
