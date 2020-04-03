@@ -19,21 +19,6 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
-export const StyledTrezorLogo = styled(TrezorLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-`;
-
-export const StyledWalletConnectLogo = styled(WalletConnectLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-`;
-
-const StyledWalletLinkLogo = styled(WalletLinkLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
-`;
-
 const buttonWidth = '248px';
 
 const Button = styled(Box)`
@@ -133,7 +118,7 @@ function AccountSelection(props) {
               <IconButton
                 onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
                 disabled={!makerAuthenticated}
-                icon={<StyledWalletLinkLogo />}
+                icon={<WalletLinkLogo />}
                 css={{
                   backgroundColor: 'white'
                 }}
@@ -146,7 +131,7 @@ function AccountSelection(props) {
                 onClick={() =>
                   connectToProviderOfType(AccountTypes.WALLETCONNECT)
                 }
-                icon={<StyledWalletConnectLogo />}
+                icon={<WalletConnectLogo style={{ width: '28px' }} />}
                 css={{
                   backgroundColor: 'white'
                 }}
@@ -171,7 +156,7 @@ function AccountSelection(props) {
               <IconButton
                 onClick={connectTrezorWallet}
                 disabled={!makerAuthenticated}
-                icon={<StyledTrezorLogo />}
+                icon={<TrezorLogo />}
                 css={{
                   backgroundColor: 'white'
                 }}

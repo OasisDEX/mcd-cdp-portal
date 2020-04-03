@@ -23,7 +23,8 @@ import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
-import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
+import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
+import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { useBrowserIcon } from './BrowserProviderButton';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
@@ -37,6 +38,16 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
   margin-bottom: -5px;
   height: 21px;
   width: 21px;
+`;
+
+const StyledTrezorLogo = styled(TrezorLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
+
+const StyledWalletConnectLogo = styled(WalletConnectLogo)`
+  margin-top: -5px;
+  margin-bottom: -5px;
 `;
 
 const IconBox = styled(Box)`
