@@ -28,7 +28,8 @@ import { useBrowserIcon } from './BrowserProviderButton';
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   max-width: 14px;
-  margin-top: 4px;
+  position: relative;
+  top: 4px;
 `;
 
 const StyledWalletLinkLogo = styled(WalletLinkLogo)`
@@ -44,7 +45,7 @@ const IconBox = styled(Box)`
     width: 20px;
     height: 20px;
   }
-  width: 20px;
+  width: 26px;
   text-align: center;
 `;
 
@@ -207,7 +208,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETCONNECT);
               close();
             }}
-            icon={<StyledWalletConnectLogo />}
+            icon={<StyledWalletConnectLogo style={{ width: '26.67px' }} />}
           >
             {lang.landing_page.wallet_connect}
           </Option>
