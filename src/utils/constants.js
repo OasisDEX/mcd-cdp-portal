@@ -43,7 +43,9 @@ export const NotificationList = {
   CLAIM_COLLATERAL: { name: 'claimCollateral', priority: 2 },
   NON_VAULT_OWNER: { name: 'nonVaultOwner', priority: 1 },
   NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 },
-  EMERGENCY_SHUTDOWN_ACTIVE: { name: 'emergencyShutdownActive', priority: 1 }
+  EMERGENCY_SHUTDOWN_ACTIVE: { name: 'emergencyShutdownActive', priority: 1 },
+  VAULT_BELOW_NEXT_PRICE: { name: 'vaultBelowNextPrice', priority: 2 },
+  VAULT_BELOW_CURRENT_PRICE: { name: 'vaultBelowCurrentPrice', priority: 1 }
 };
 
 export const VendorErrors = {

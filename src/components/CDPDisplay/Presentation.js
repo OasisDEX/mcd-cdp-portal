@@ -22,11 +22,12 @@ import debug from 'debug';
 import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
+import useInterval from 'hooks/useInterval';
 import { FeatureFlags } from 'utils/constants';
+import { pollTokenPrices } from 'utils/ethereum';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 import { formatter } from 'utils/ui';
 import BigNumber from 'bignumber.js';
-
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
@@ -36,7 +37,8 @@ export default function({
   account,
   network,
   cdpOwner,
-  showVaultHistory = true
+  showVaultHistory = true,
+  nextPriceUpdate
 }) {
   const { lang } = useLanguage();
   const { maker } = useMaker();
@@ -45,17 +47,20 @@ export default function({
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
     collateralAmount,
-    collateralizationRatio,
-    liquidationPrice,
+    collateralValue,
+    collateralizationRatio: rawCollateralizationRatio,
+    liquidationPrice: rawLiquidationPrice,
     vaultType,
-    unlockedCollateral
+    unlockedCollateral,
+    liquidationRatio,
+    minSafeCollateralAmount,
+    debtValue
   } = vault;
   log(`Rendering vault #${vault.id}`);
 
   const gem = collateralAmount?.symbol;
-
-  liquidationPrice = formatter(liquidationPrice);
-  collateralizationRatio = formatter(collateralizationRatio, {
+  let liquidationPrice = formatter(rawLiquidationPrice);
+  let collateralizationRatio = formatter(rawCollateralizationRatio, {
     percentage: true
   });
 
@@ -71,7 +76,91 @@ export default function({
     account && account.address.toLowerCase() === cdpOwner.toLowerCase();
 
   const [actionShown, setActionShown] = useState(null);
-  const { addNotification, deleteNotifications } = useNotification();
+  const {
+    addNotification,
+    deleteNotifications,
+    notificationExists
+  } = useNotification();
+
+  const {
+    VAULT_BELOW_NEXT_PRICE,
+    VAULT_BELOW_CURRENT_PRICE
+  } = NotificationList;
+
+  useInterval(() => {
+    (async () => {
+      if (
+        // isOwner &&
+        ['mainnet', 'kovan'].some(
+          network => network === maker.service('web3').networkName
+        )
+      ) {
+        const { currentPrice, nextPrice } = await pollTokenPrices(maker, gem);
+
+        if (
+          currentPrice.lt(rawLiquidationPrice.toBigNumber()) &&
+          !notificationExists(VAULT_BELOW_CURRENT_PRICE)
+        ) {
+          const currentCollateralNeeded = minSafeCollateralAmount
+            .toBigNumber()
+            .minus(collateralAmount.toBigNumber());
+
+          const currentDebtNeeded = debtValue
+            .toBigNumber()
+            .minus(
+              collateralValue.toBigNumber().div(liquidationRatio.toBigNumber())
+            );
+
+          if (notificationExists(VAULT_BELOW_NEXT_PRICE)) {
+            deleteNotifications([VAULT_BELOW_NEXT_PRICE]);
+          }
+          addNotification({
+            id: NotificationList.VAULT_BELOW_CURRENT_PRICE,
+            content: lang.formatString(
+              lang.notifications.vault_below_current_price,
+              vaultType,
+              `${formatter(currentCollateralNeeded)} ${gem}`,
+              `${formatter(currentDebtNeeded)} DAI`
+            ),
+            level: SAFETY_LEVELS.DANGER
+          });
+        } else if (
+          currentPrice.gte(rawLiquidationPrice.toBigNumber()) &&
+          nextPrice.lt(rawLiquidationPrice.toBigNumber()) &&
+          !notificationExists(NotificationList.VAULT_BELOW_NEXT_PRICE) &&
+          !!nextPriceUpdate
+        ) {
+          const nextCollateralNeeded = debtValue
+            .times(liquidationRatio)
+            .div(nextPrice)
+            .toBigNumber()
+            .minus(collateralAmount.toBigNumber());
+
+          const nextDebtNeeded = debtValue.toBigNumber().minus(
+            collateralAmount
+              .times(nextPrice)
+              .toBigNumber()
+              .div(liquidationRatio.toBigNumber())
+          );
+
+          if (notificationExists(VAULT_BELOW_CURRENT_PRICE)) {
+            deleteNotifications([VAULT_BELOW_CURRENT_PRICE]);
+          }
+          addNotification({
+            id: NotificationList.VAULT_BELOW_NEXT_PRICE,
+            content: lang.formatString(
+              lang.notifications.vault_below_next_price,
+              vaultType,
+              nextPriceUpdate.toTimeString().split(' ')[0],
+              `${formatter(nextCollateralNeeded)} ${gem}`,
+              `${formatter(nextDebtNeeded)} DAI`
+            ),
+            level: SAFETY_LEVELS.DANGER
+          });
+        }
+      }
+    })();
+  }, 5 * 1000);
 
   useEffect(() => {
     const reclaimCollateral = async () => {
@@ -114,7 +203,9 @@ export default function({
     return () =>
       deleteNotifications([
         NotificationList.CLAIM_COLLATERAL,
-        NotificationList.NON_VAULT_OWNER
+        NotificationList.NON_VAULT_OWNER,
+        NotificationList.VAULT_BELOW_CURRENT_PRICE,
+        NotificationList.VAULT_BELOW_NEXT_PRICE
       ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, account, vault, unlockedCollateral]);

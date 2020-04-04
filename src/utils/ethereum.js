@@ -110,6 +110,29 @@ export async function isEthereumProviderApproved() {
   return addresses.length > 0 ? true : false;
 }
 
+export function pollTokenPrices(maker, token) {
+  const CURRENT_PRICE_OSM_IDX = 3;
+  const NEXT_PRICE_OSM_IDX = 4;
+
+  const tokenOsmAddress = maker
+    .service('smartContract')
+    .getContract(`PIP_${token}`).address;
+
+  return Promise.all(
+    [CURRENT_PRICE_OSM_IDX, NEXT_PRICE_OSM_IDX].map(storageIdx =>
+      maker
+        .service('web3')
+        .getStorageAt(tokenOsmAddress, storageIdx)
+        .then(res =>
+          new BigNumber(res.substring(34, res.length), 16).shiftedBy(-18)
+        )
+    )
+  ).then(([currentPrice, nextPrice]) => ({
+    currentPrice,
+    nextPrice
+  }));
+}
+
 export const calculateGasCost = async (maker, gasLimit = 21000) => {
   const _gasLimit = BigNumber(gasLimit);
   const gasPrice = await maker.service('gas').getGasPrice('fast');
