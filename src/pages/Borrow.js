@@ -9,9 +9,10 @@ import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { Box, Text } from '@makerdao/ui-components-core';
 import { ConnectHero, HollowButton, FullWidth } from '../components/Marketing';
+import Parallaxed from '../components/Marketing/Parallaxed';
 
 const HeroBackground = (() => {
-  const GradientThingy = styled(Box)`
+  const GradientThingy = styled.div`
     position: absolute;
     width: 242px;
     height: 325px;
@@ -26,7 +27,7 @@ const HeroBackground = (() => {
     transform: rotate(-180deg);
   `;
 
-  const BigBlurryBall = styled.div`
+  const BlurryBall = styled.div`
     position: absolute;
     width: 194px;
     height: 194px;
@@ -58,12 +59,47 @@ const HeroBackground = (() => {
   
   `;
 
+  const Ball = styled.div`
+    position: absolute;
+    top: -38px;
+    left: -159px;
+    width: 212px;
+    height: 212px;
+
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+  `;
+
+  const SmallBall = styled.div`
+    position: absolute;
+    top: 492px;
+    right: 120px;
+    width: 86px;
+    height: 86px;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+  `;
+
   return () => (
     <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
       <Box maxWidth="866px" m="0 auto">
         <GradientThingy />
-        <BigBlurryBall />
+        <BlurryBall />
         <SmallBlurryBall />
+        <Parallaxed style={{ position: 'static' }}>
+          <Ball />
+          <SmallBall />
+        </Parallaxed>
       </Box>
     </FullWidth>
   );
