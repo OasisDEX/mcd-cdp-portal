@@ -5,7 +5,7 @@ const ConnectHero = styled(Flex)`
   flex-direction: column;
   align-items: center;
   max-width: 866px;
-  margin: 0 auto;
+  margin: 118px auto 0;
   padding-right: 20px;
 `;
 
