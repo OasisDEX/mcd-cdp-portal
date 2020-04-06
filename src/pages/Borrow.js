@@ -31,12 +31,14 @@ function Borrow() {
     <PageContentLayout>
       <ConnectHero>
         <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
-        <Text.h1>{lang.borrow_landing.headline}</Text.h1>
-        <Box height="172px" maxWidth="720px">
+        <Text.h1 mt="16px" mb="21px">
+          {lang.borrow_landing.headline}
+        </Text.h1>
+        <Box height="166px" maxWidth="720px">
           <Text>{lang.borrow_landing.subheadline}</Text>
         </Box>
         <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
-        <AccountSelection buttonWidth="248px" mb="8px" />
+        <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
     </PageContentLayout>

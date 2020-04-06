@@ -6,6 +6,7 @@ const ConnectHero = styled(Flex)`
   align-items: center;
   max-width: 866px;
   margin: 0 auto;
+  padding-right: 20px;
 `;
 
 export default ConnectHero;
