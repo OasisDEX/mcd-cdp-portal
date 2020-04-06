@@ -69,6 +69,20 @@ const HeroBackground = (() => {
   );
 })();
 
+const GradientUnderline = styled.div`
+  :after {
+    content: '';
+    display: block;
+    height: 7px;
+    background: linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+`;
+
 function Borrow() {
   const { account } = useMaker();
   const navigation = useNavigation();
@@ -91,7 +105,9 @@ function Borrow() {
     <PageContentLayout>
       <ConnectHero>
         <HeroBackground />
-        <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
+        <GradientUnderline>
+          <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
+        </GradientUnderline>
         <Text.h1 mt="16px" mb="21px">
           {lang.borrow_landing.headline}
         </Text.h1>
