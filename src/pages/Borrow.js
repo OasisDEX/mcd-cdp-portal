@@ -7,6 +7,7 @@ import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { Box, Text } from '@makerdao/ui-components-core';
+import { ConnectHero, HollowButton } from '../components/Marketing';
 
 function Borrow() {
   const { account } = useMaker();
@@ -28,11 +29,16 @@ function Borrow() {
 
   return (
     <PageContentLayout>
-      <Box maxWidth="866px" m="0 auto">
+      <ConnectHero>
+        <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
         <Text.h1>{lang.borrow_landing.headline}</Text.h1>
-        <Text>{lang.borrow_landing.subheadline}</Text>
-        <AccountSelection m="0 auto" />
-      </Box>
+        <Box height="172px" maxWidth="720px">
+          <Text>{lang.borrow_landing.subheadline}</Text>
+        </Box>
+        <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
+        <AccountSelection buttonWidth="248px" />
+        <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
+      </ConnectHero>
     </PageContentLayout>
   );
 }

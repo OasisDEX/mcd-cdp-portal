@@ -7,6 +7,8 @@ import { mixpanelIdentify } from 'utils/analytics';
 
 import BrowserProviderButton from 'components/BrowserProviderButton';
 import IconButton from 'components/IconButton';
+import { FilledButton } from 'components/Marketing';
+
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
@@ -19,27 +21,8 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
-const buttonWidth = '248px';
-
-const Button = styled(Box)`
-  background-color: ${props => props.theme.colors.darkPurple};
-  border-radius: 40px;
-  font-family: FT Base;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 18px;
-  /* identical to box height, or 100% */
-  width: ${buttonWidth};
-  height: 52px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  letter-spacing: 0.5px;
+const Button = styled(FilledButton)`
   margin-bottom: 6px;
-
-  color: #ffffff;
 
   span {
     margin-right: 15px;
@@ -64,7 +47,7 @@ const DropdownItems = styled(DefaultDropdown)`
   padding: 10px 7px 12px;
 `;
 
-function AccountSelection(props) {
+function AccountSelection({ buttonWidth, ...props }) {
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -99,7 +82,7 @@ function AccountSelection(props) {
           hitBoxMargin="8px 0"
           placement="bottom"
           trigger={
-            <Button>
+            <Button width={buttonWidth}>
               <span>{lang.providers.connect_wallet}</span>
               <CaratDown />
             </Button>
