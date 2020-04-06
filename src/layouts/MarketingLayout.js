@@ -22,6 +22,7 @@ const MarketingLayoutStyle = styled.div`
   text-align: center;
   color: ${getColor('purpleGray')};
   width: 100%;
+  overflow-x: hidden;
 
   a {
     color: ${getColor('darkPurple')};
