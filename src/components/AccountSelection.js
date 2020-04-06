@@ -21,17 +21,9 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
-const Button = styled(FilledButton)`
-  margin-bottom: 6px;
-
-  span {
-    margin-right: 15px;
-  }
-`;
-
 const DropdownWrapper = styled(Box)`
   :hover {
-    ${Button} {
+    ${FilledButton} {
       opacity: 0.8;
     }
   }
@@ -82,10 +74,12 @@ function AccountSelection({ buttonWidth, ...props }) {
           hitBoxMargin="8px 0"
           placement="bottom"
           trigger={
-            <Button width={buttonWidth}>
-              <span>{lang.providers.connect_wallet}</span>
+            <FilledButton width={buttonWidth}>
+              <span style={{ marginRight: '15px' }}>
+                {lang.providers.connect_wallet}
+              </span>
               <CaratDown />
-            </Button>
+            </FilledButton>
           }
         >
           <DropdownItems>

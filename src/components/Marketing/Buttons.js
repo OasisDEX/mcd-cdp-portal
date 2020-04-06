@@ -11,8 +11,8 @@ const Button = styled(Box)`
 
   font-family: FT Base;
   font-style: normal;
-
   font-size: 18px;
+  line-height: 18px;
   text-align: center;
   letter-spacing: 0.5px;
 

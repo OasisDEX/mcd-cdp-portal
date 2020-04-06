@@ -36,7 +36,7 @@ function Borrow() {
           <Text>{lang.borrow_landing.subheadline}</Text>
         </Box>
         <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
-        <AccountSelection buttonWidth="248px" />
+        <AccountSelection buttonWidth="248px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
     </PageContentLayout>
