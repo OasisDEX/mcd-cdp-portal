@@ -15,6 +15,21 @@ import {
   ThickUnderline
 } from '../components/Marketing';
 import Parallaxed from '../components/Marketing/Parallaxed';
+import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
+import { TextBlock } from '../components/Typography';
+
+const FrontBall = styled.div`
+  position: absolute;
+  width: ${props => props.size};
+  height: ${props => props.size};
+  border-radius: 50%;
+  background: radial-gradient(
+    51.51% 110.6% at 32.77% 50%,
+    #d2ff72 0%,
+    #fdc134 100%
+  );
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.15);
+`;
 
 const HeroBackground = (() => {
   const GradientThingy = styled.div`
@@ -64,35 +79,18 @@ const HeroBackground = (() => {
   
   `;
 
-  const Ball = styled.div`
-    position: absolute;
+  const Ball = styled(FrontBall).attrs(() => ({
+    size: '212px'
+  }))`
     top: -38px;
     left: -159px;
-    width: 212px;
-    height: 212px;
-
-    background: radial-gradient(
-      51.51% 110.6% at 32.77% 50%,
-      #d2ff72 0%,
-      #fdc134 100%
-    );
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
-    border-radius: 50%;
   `;
 
-  const SmallBall = styled.div`
-    position: absolute;
+  const SmallBall = styled(FrontBall).attrs(() => ({
+    size: '86px'
+  }))`
     top: 492px;
     right: 120px;
-    width: 86px;
-    height: 86px;
-    background: radial-gradient(
-      51.51% 110.6% at 32.77% 50%,
-      #d2ff72 0%,
-      #fdc134 100%
-    );
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
-    border-radius: 50%;
   `;
 
   return () => (
@@ -108,6 +106,91 @@ const HeroBackground = (() => {
       </Box>
     </FullWidth>
   );
+})();
+
+const QuotesBox = (() => {
+  const QuotesBoxStyle = styled(Box)`
+    background: radial-gradient(
+      100% 181.73% at 0% 0%,
+      #fef1d1 0%,
+      #f9fb9e 100%
+    );
+    max-width: 980px;
+    padding: 100px 100px 148px;
+    margin: 0 auto;
+
+    :after {
+      content: '';
+      display: block;
+      background: #ffeec5;
+      height: 98%;
+      width: 58%;
+    }
+  `;
+
+  const BlurryBall = styled.div`
+    position: absolute;
+    width: 83px;
+    height: 83px;
+    top: 200px;
+    right: 100px;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    border-radius: 50%;
+    filter: blur(15px);
+  `;
+
+  const Ball = styled(FrontBall).attrs(() => ({
+    size: '180px'
+  }))`
+    bottom: -76px;
+    right: -110px;
+  `;
+
+  const Quote = styled(TextBlock)`
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 30px;
+    max-width: 660px;
+    margin: 0 auto;
+  `;
+
+  const Author = styled(Text)`
+    text-decoration: underline;
+    :before {
+      content: ' ';
+    }
+  `;
+
+  const StyledQuotesImg = styled(QuotesImg)`
+    position: absolute;
+    left: 0;
+  `;
+
+  return () => {
+    const { lang } = useLanguage();
+    const { quotes_block } = lang.borrow_landing;
+
+    return (
+      <FullWidth>
+        <BlurryBall />
+        <QuotesBoxStyle>
+          <Text.h1 mb="16px">{quotes_block.title}</Text.h1>
+          <Text>{quotes_block.body}</Text>
+          <Box mt="16px">
+            <StyledQuotesImg />
+            <Quote>{quotes_block.quote1}</Quote>
+            <Text>— </Text>
+            <Author>{quotes_block.author1}</Author>
+          </Box>
+          <Ball />
+        </QuotesBoxStyle>
+      </FullWidth>
+    );
+  };
 })();
 
 function Borrow() {
@@ -145,7 +228,8 @@ function Borrow() {
         <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
-      <Box height="300px" />
+      <Box height="50px" />
+      <QuotesBox />
     </PageContentLayout>
   );
 }

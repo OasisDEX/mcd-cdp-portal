@@ -92,6 +92,12 @@ export default {
     headline: 'Take advantage of the assets you own, today.',
     subheadline: 'Access liquidity, while making sure you don\'t lose exposure. Vaults make it easy to borrow against your assets by generating DAI.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
+    quotes_block: {
+      title: 'Maximize your profits',
+      body: 'Seize opportunity and capitalize on future crypto asset prices. Use your borrowed DAI to create a leverage position on any asset, increasing your exposure.',
+      quote1: '“Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions”',
+      author1: 'Vault 2434'
+    }
   },
   save_landing: {
     page_name: 'Oasis Save',
