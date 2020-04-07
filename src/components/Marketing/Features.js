@@ -6,7 +6,8 @@ import styled from 'styled-components';
 const StyledGrid = styled(Grid)`
   text-align: left;
   max-width: 1120px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 
   ${Flex} {
     flex-direction: column;
@@ -19,12 +20,13 @@ const StyledGrid = styled(Grid)`
   }
 `;
 
-const Features = ({ features }) => {
+const Features = ({ features, ...props }) => {
   return (
     <StyledGrid
       gridTemplateColumns="1fr 1fr"
       gridRowGap="118px"
       gridColumnGap="120px"
+      {...props}
     >
       {features.map(point => (
         <Flex key={point.title}>

@@ -4,10 +4,12 @@ import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import {
+  buildQuestionsFromLangObj,
   ConnectHero,
   Features,
   FullWidth,
   HollowButton,
+  Questions,
   QuotesBox,
   ThickUnderline
 } from '../components/Marketing';
@@ -169,6 +171,7 @@ function SaveOverview() {
         />
       </GradientBox>
       <Features
+        mt="200px"
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
@@ -177,6 +180,12 @@ function SaveOverview() {
           })
         )}
       />
+      <Box mt="153px" mb="126px">
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
+        <Questions
+          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+        />
+      </Box>
     </PageContentLayout>
   );
 }
