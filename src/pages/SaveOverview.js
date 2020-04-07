@@ -71,7 +71,7 @@ const HeroBackground = (() => {
         <BigBallContainer>
           <BigBall />
         </BigBallContainer>
-        <Parallaxed style={{ position: 'static' }}>
+        <Parallaxed style={{ zIndex: 10 }}>
           <SmallBall />
         </Parallaxed>
       </Box>
