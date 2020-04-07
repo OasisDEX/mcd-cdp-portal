@@ -177,13 +177,8 @@ const QuotesBox = (() => {
       right: -40px;
       z-index: -1;
     }
-  `;
 
-  const Ball = styled(FrontBall).attrs(() => ({
-    size: '180px'
-  }))`
-    bottom: -76px;
-    right: -110px;
+    position: relative;
   `;
 
   const Quote = styled(TextBlock)`
@@ -220,7 +215,12 @@ const QuotesBox = (() => {
           <Text>— </Text>
           <Author>{quotes_block.author1}</Author>
         </Box>
-        <Ball />
+        <Parallaxed
+          initialOffset="1388"
+          style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+        >
+          <FrontBall size="180px" />
+        </Parallaxed>
       </QuotesBoxStyle>
     );
   };
