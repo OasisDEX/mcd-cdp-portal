@@ -145,6 +145,12 @@ export function formatEventDescription(lang, e) {
       );
     case 'MIGRATE':
       return lang.formatString(lang.event_history.migrate);
+    case 'BITE':
+      return lang.formatString(
+        lang.event_history.bite,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        e.gem
+      );
     default:
       return '?';
   }

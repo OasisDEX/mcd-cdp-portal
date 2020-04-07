@@ -90,7 +90,7 @@ export default function({
   useInterval(() => {
     (async () => {
       if (
-        // isOwner &&
+        isOwner &&
         ['mainnet', 'kovan'].some(
           network => network === maker.service('web3').networkName
         )
