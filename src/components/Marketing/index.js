@@ -3,6 +3,7 @@ import Questions, { buildQuestionsFromLangObj } from './Questions';
 import { FilledButton, HollowButton } from './Buttons';
 import ConnectHero from './ConnectHero';
 import QuotesBox from './QuotesBox';
+import Features from './Features';
 import styled from 'styled-components';
 
 const ThickUnderline = styled.div`
@@ -28,5 +29,6 @@ export {
   HollowButton,
   ConnectHero,
   ThickUnderline,
-  QuotesBox
+  QuotesBox,
+  Features
 };

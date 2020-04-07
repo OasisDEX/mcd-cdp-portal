@@ -154,7 +154,7 @@ function SaveOverview() {
         <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
-      <GradientBox mt="226px">
+      <GradientBox mt="227px">
         <StyledQuotesBox
           title={lang.save_landing.quotes_block.title}
           body={lang.save_landing.quotes_block.body}

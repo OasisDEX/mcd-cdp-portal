@@ -13,10 +13,15 @@ import {
   HollowButton,
   FullWidth,
   ThickUnderline,
-  QuotesBox
+  QuotesBox,
+  Features
 } from '../components/Marketing';
 import Parallaxed from '../components/Marketing/Parallaxed';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
+import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
+import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
+import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
+import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 
 const FrontBall = styled.div`
   position: absolute;
@@ -220,6 +225,15 @@ function Borrow() {
           </Parallaxed>
         </StyledQuotesBox>
       </GradientBox>
+      <Features
+        features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
+          (img, index) => ({
+            img: img,
+            title: lang.borrow_landing[`point${index + 1}_heading`],
+            content: lang.borrow_landing[`point${index + 1}_content`]
+          })
+        )}
+      />
     </PageContentLayout>
   );
 }
