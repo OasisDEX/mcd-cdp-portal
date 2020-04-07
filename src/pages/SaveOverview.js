@@ -7,6 +7,7 @@ import {
   ConnectHero,
   FullWidth,
   HollowButton,
+  QuotesBox,
   ThickUnderline
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
@@ -14,6 +15,8 @@ import useLanguage from 'hooks/useLanguage';
 import styled from 'styled-components';
 import Parallaxed from '../components/Marketing/Parallaxed';
 import { ReactComponent as BigBall } from 'images/landing/save/big-green-ball.svg';
+import { ReactComponent as QuotesImg } from 'images/landing/save/quotes.svg';
+
 const HeroBackground = (() => {
   const BlurryBall = styled.div`
     position: absolute;
@@ -79,6 +82,50 @@ const HeroBackground = (() => {
   );
 })();
 
+const GradientBox = (() => {
+  const Gradient = styled(FullWidth)`
+    background: linear-gradient(
+      170.64deg,
+      #f5ffda 7.17%,
+      rgba(255, 245, 222, 0.490208) 59.55%,
+      #f5ffda 108.77%
+    );
+    filter: blur(38px);
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  `;
+
+  const GradientBoxStyle = styled(Box)`
+    position: relative;
+    padding: 116px 0 121px;
+  `;
+
+  return ({ children, ...props }) => (
+    <GradientBoxStyle {...props}>
+      <Gradient />
+      {children}
+    </GradientBoxStyle>
+  );
+})();
+
+const StyledQuotesBox = styled(QuotesBox)`
+  background: radial-gradient(100% 181.73% at 0% 0%, #feffc6 0%, #d5ffe3 100%);
+
+  :after {
+    content: '';
+    display: block;
+    background: #c9ffe1;
+    height: 80%;
+    width: 110%;
+    position: absolute;
+    top: 13%;
+    left: -5%;
+    z-index: -1;
+  }
+`;
+
 function SaveOverview() {
   const { account, network, navigation } = useMaker();
   const { lang } = useLanguage();
@@ -107,7 +154,15 @@ function SaveOverview() {
         <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
-      <Box height="300px" />
+      <GradientBox mt="226px">
+        <StyledQuotesBox
+          title={lang.save_landing.quotes_block.title}
+          body={lang.save_landing.quotes_block.body}
+          quote={lang.save_landing.quotes_block.quote1}
+          author={lang.save_landing.quotes_block.author1}
+          quotesImg={<QuotesImg />}
+        />
+      </GradientBox>
     </PageContentLayout>
   );
 }

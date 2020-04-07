@@ -30,15 +30,13 @@ const QuotesBox = (() => {
     left: 0;
   `;
 
-  return ({ title, body, quote, author, children, quotesColor, ...props }) => {
+  return ({ title, body, quote, author, children, quotesImg, ...props }) => {
     return (
       <QuotesBoxStyle {...props}>
         <Text.h1 mb="16px">{title}</Text.h1>
         <Text>{body}</Text>
         <Box mt="16px">
-          <QuotesImgPos>
-            <QuotesImg style={{ fill: quotesColor }} />
-          </QuotesImgPos>
+          <QuotesImgPos>{quotesImg}</QuotesImgPos>
           <Quote>{quote}</Quote>
           <Text>— </Text>
           <Author>{author}</Author>

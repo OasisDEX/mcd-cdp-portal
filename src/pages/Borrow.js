@@ -17,7 +17,6 @@ import {
 } from '../components/Marketing';
 import Parallaxed from '../components/Marketing/Parallaxed';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
-import { TextBlock } from '../components/Typography';
 
 const FrontBall = styled.div`
   position: absolute;
@@ -211,7 +210,7 @@ function Borrow() {
           body={lang.borrow_landing.quotes_block.body}
           quote={lang.borrow_landing.quotes_block.quote1}
           author={lang.borrow_landing.quotes_block.author1}
-          quoteImg={<QuotesImg />}
+          quotesImg={<QuotesImg />}
         >
           <Parallaxed
             initialOffset="1388"
