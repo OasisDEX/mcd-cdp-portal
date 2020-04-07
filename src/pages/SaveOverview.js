@@ -5,6 +5,7 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import {
   ConnectHero,
+  Features,
   FullWidth,
   HollowButton,
   QuotesBox,
@@ -16,6 +17,10 @@ import styled from 'styled-components';
 import Parallaxed from '../components/Marketing/Parallaxed';
 import { ReactComponent as BigBall } from 'images/landing/save/big-green-ball.svg';
 import { ReactComponent as QuotesImg } from 'images/landing/save/quotes.svg';
+import { ReactComponent as Feat1 } from 'images/landing/save/feature-1.svg';
+import { ReactComponent as Feat2 } from 'images/landing/save/feature-2.svg';
+import { ReactComponent as Feat3 } from 'images/landing/save/feature-3.svg';
+import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
 
 const HeroBackground = (() => {
   const BlurryBall = styled.div`
@@ -163,6 +168,15 @@ function SaveOverview() {
           quotesImg={<QuotesImg />}
         />
       </GradientBox>
+      <Features
+        features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
+          (img, index) => ({
+            img: img,
+            title: lang.save_landing[`point${index + 1}_heading`],
+            content: lang.save_landing[`point${index + 1}_content`]
+          })
+        )}
+      />
     </PageContentLayout>
   );
 }
