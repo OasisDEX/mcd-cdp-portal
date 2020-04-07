@@ -12,7 +12,8 @@ import {
   ConnectHero,
   HollowButton,
   FullWidth,
-  ThickUnderline
+  ThickUnderline,
+  QuotesBox
 } from '../components/Marketing';
 import Parallaxed from '../components/Marketing/Parallaxed';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -154,76 +155,20 @@ const GradientBox = (() => {
   );
 })();
 
-const QuotesBox = (() => {
-  const QuotesBoxStyle = styled(Box)`
-    background: radial-gradient(
-      100% 181.73% at 0% 0%,
-      #fef1d1 0%,
-      #f9fb9e 100%
-    );
-    max-width: 980px;
-    padding: 100px 100px 148px;
-    margin: 0 auto;
-
-    :after {
-      content: '';
-      display: block;
-      background: #ffeec5;
-      height: 98%;
-      width: 58%;
-      position: absolute;
-      top: 49px;
-      right: -40px;
-      z-index: -1;
-    }
-
-    position: relative;
-  `;
-
-  const Quote = styled(TextBlock)`
-    font-weight: 500;
-    font-size: 19px;
-    line-height: 30px;
-    max-width: 660px;
-    margin: 0 auto;
-  `;
-
-  const Author = styled(Text)`
-    text-decoration: underline;
-    :before {
-      content: ' ';
-    }
-  `;
-
-  const StyledQuotesImg = styled(QuotesImg)`
+const StyledQuotesBox = styled(QuotesBox)`
+  background: radial-gradient(100% 181.73% at 0% 0%, #fef1d1 0%, #f9fb9e 100%);
+  :after {
+    content: '';
+    display: block;
+    background: #ffeec5;
+    height: 98%;
+    width: 58%;
     position: absolute;
-    left: 0;
-  `;
-
-  return () => {
-    const { lang } = useLanguage();
-    const { quotes_block } = lang.borrow_landing;
-
-    return (
-      <QuotesBoxStyle>
-        <Text.h1 mb="16px">{quotes_block.title}</Text.h1>
-        <Text>{quotes_block.body}</Text>
-        <Box mt="16px">
-          <StyledQuotesImg />
-          <Quote>{quotes_block.quote1}</Quote>
-          <Text>— </Text>
-          <Author>{quotes_block.author1}</Author>
-        </Box>
-        <Parallaxed
-          initialOffset="1388"
-          style={{ position: 'absolute', bottom: '78px', right: '70px' }}
-        >
-          <FrontBall size="180px" />
-        </Parallaxed>
-      </QuotesBoxStyle>
-    );
-  };
-})();
+    top: 49px;
+    right: -40px;
+    z-index: -1;
+  }
+`;
 
 function Borrow() {
   const { account } = useMaker();
@@ -261,7 +206,20 @@ function Borrow() {
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
       <GradientBox mt="226px">
-        <QuotesBox />
+        <StyledQuotesBox
+          title={lang.borrow_landing.quotes_block.title}
+          body={lang.borrow_landing.quotes_block.body}
+          quote={lang.borrow_landing.quotes_block.quote1}
+          author={lang.borrow_landing.quotes_block.author1}
+          quoteImg={<QuotesImg />}
+        >
+          <Parallaxed
+            initialOffset="1388"
+            style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+          >
+            <FrontBall size="180px" />
+          </Parallaxed>
+        </StyledQuotesBox>
       </GradientBox>
     </PageContentLayout>
   );

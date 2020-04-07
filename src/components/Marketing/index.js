@@ -2,6 +2,7 @@ import FullWidth from './FullWidth';
 import Questions, { buildQuestionsFromLangObj } from './Questions';
 import { FilledButton, HollowButton } from './Buttons';
 import ConnectHero from './ConnectHero';
+import QuotesBox from './QuotesBox';
 import styled from 'styled-components';
 
 const ThickUnderline = styled.div`
@@ -26,5 +27,6 @@ export {
   FilledButton,
   HollowButton,
   ConnectHero,
-  ThickUnderline
+  ThickUnderline,
+  QuotesBox
 };
