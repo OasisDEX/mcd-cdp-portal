@@ -108,6 +108,53 @@ const HeroBackground = (() => {
   );
 })();
 
+const GradientBox = (() => {
+  const Gradient = styled.div`
+    background: linear-gradient(
+      170.64deg,
+      #f5ffda 7.17%,
+      rgba(255, 245, 222, 0.490208) 59.55%,
+      #f5ffda 108.77%
+    );
+    filter: blur(38px);
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+  `;
+
+  const BlurryBall = styled.div`
+    position: absolute;
+    width: 83px;
+    height: 83px;
+    top: 111px;
+    left: -111px;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    border-radius: 50%;
+    filter: blur(15px);
+  `;
+
+  const GradientBoxStyle = styled(Box)`
+    position: relative;
+    padding: 116px 0 121px;
+  `;
+
+  return ({ children, ...props }) => (
+    <GradientBoxStyle {...props}>
+      <FullWidth style={{ position: 'absolute', top: 0, bottom: 0 }}>
+        <Gradient />
+      </FullWidth>
+      <Box style={{ display: 'inline-block' }}>
+        <BlurryBall />
+        {children}
+      </Box>
+    </GradientBoxStyle>
+  );
+})();
+
 const QuotesBox = (() => {
   const QuotesBoxStyle = styled(Box)`
     background: radial-gradient(
@@ -126,21 +173,6 @@ const QuotesBox = (() => {
       height: 98%;
       width: 58%;
     }
-  `;
-
-  const BlurryBall = styled.div`
-    position: absolute;
-    width: 83px;
-    height: 83px;
-    top: 200px;
-    right: 100px;
-    background: radial-gradient(
-      51.51% 110.6% at 32.77% 50%,
-      #d2ff72 0%,
-      #fdc134 100%
-    );
-    border-radius: 50%;
-    filter: blur(15px);
   `;
 
   const Ball = styled(FrontBall).attrs(() => ({
@@ -175,20 +207,17 @@ const QuotesBox = (() => {
     const { quotes_block } = lang.borrow_landing;
 
     return (
-      <FullWidth>
-        <BlurryBall />
-        <QuotesBoxStyle>
-          <Text.h1 mb="16px">{quotes_block.title}</Text.h1>
-          <Text>{quotes_block.body}</Text>
-          <Box mt="16px">
-            <StyledQuotesImg />
-            <Quote>{quotes_block.quote1}</Quote>
-            <Text>— </Text>
-            <Author>{quotes_block.author1}</Author>
-          </Box>
-          <Ball />
-        </QuotesBoxStyle>
-      </FullWidth>
+      <QuotesBoxStyle>
+        <Text.h1 mb="16px">{quotes_block.title}</Text.h1>
+        <Text>{quotes_block.body}</Text>
+        <Box mt="16px">
+          <StyledQuotesImg />
+          <Quote>{quotes_block.quote1}</Quote>
+          <Text>— </Text>
+          <Author>{quotes_block.author1}</Author>
+        </Box>
+        <Ball />
+      </QuotesBoxStyle>
     );
   };
 })();
@@ -228,8 +257,9 @@ function Borrow() {
         <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
       </ConnectHero>
-      <Box height="50px" />
-      <QuotesBox />
+      <GradientBox mt="226px">
+        <QuotesBox />
+      </GradientBox>
     </PageContentLayout>
   );
 }
