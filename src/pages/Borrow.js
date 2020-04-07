@@ -172,6 +172,10 @@ const QuotesBox = (() => {
       background: #ffeec5;
       height: 98%;
       width: 58%;
+      position: absolute;
+      top: 49px;
+      right: -40px;
+      z-index: -1;
     }
   `;
 
