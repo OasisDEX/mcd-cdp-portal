@@ -109,7 +109,7 @@ const HeroBackground = (() => {
 })();
 
 const GradientBox = (() => {
-  const Gradient = styled.div`
+  const Gradient = styled(FullWidth)`
     background: linear-gradient(
       170.64deg,
       #f5ffda 7.17%,
@@ -118,8 +118,9 @@ const GradientBox = (() => {
     );
     filter: blur(38px);
     z-index: -1;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
   `;
 
   const BlurryBall = styled.div`
@@ -144,9 +145,7 @@ const GradientBox = (() => {
 
   return ({ children, ...props }) => (
     <GradientBoxStyle {...props}>
-      <FullWidth style={{ position: 'absolute', top: 0, bottom: 0 }}>
-        <Gradient />
-      </FullWidth>
+      <Gradient />
       <Box style={{ display: 'inline-block' }}>
         <BlurryBall />
         {children}
