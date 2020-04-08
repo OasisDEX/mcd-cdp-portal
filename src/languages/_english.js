@@ -95,7 +95,7 @@ export default {
     quotes_block: {
       title: 'Maximize your profits',
       body: 'Seize opportunity and capitalize on future crypto asset prices. Use your borrowed DAI to create a leverage position on any asset, increasing your exposure.',
-      quote1: '“Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions”',
+      quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
     point1_heading: 'Flexible repayment and terms',
@@ -115,7 +115,7 @@ export default {
     quotes_block: {
       title: 'Earn predictable profits.',
       body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable gains.',
-      quote1: '“When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes”',
+      quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save Account 2434'
     },
     point1_heading: 'A smarter, better money',
