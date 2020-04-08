@@ -79,7 +79,7 @@ const withDashboardLayout = childMatcher =>
   );
 
 const marketingLayoutView = () => (
-  <MarketingLayout>
+  <MarketingLayout showNavInFooter={true}>
     <View />
   </MarketingLayout>
 );

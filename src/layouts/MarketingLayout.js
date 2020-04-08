@@ -7,7 +7,7 @@ import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
 import { getColor, marketingTheme } from 'styles/theme';
-import { Box } from '@makerdao/ui-components-core';
+import { Box, Flex } from '@makerdao/ui-components-core';
 import { OasisLogoLink } from 'components/Marketing';
 
 const MarketingLayoutStyle = styled.div`
@@ -59,7 +59,7 @@ const Header = styled.header`
 
 const Nav = styled(Box)`
   float: right;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   font-size: 16px;
 
@@ -77,8 +77,8 @@ const Nav = styled(Box)`
 `;
 
 const MainNavStyle = styled(Nav)`
-  font-size: 19px;
-  margin-top: 4px;
+  font-size: ${props => props.fontSize || '19px'};
+
   a {
     color: ${getColor('violetGray')};
   }
@@ -100,7 +100,7 @@ const MainNav = props => {
   const { lang } = useLanguage();
 
   return (
-    <MainNavStyle display={{ s: 'none', l: 'flex' }} {...props}>
+    <MainNavStyle display={{ s: 'none', l: 'inline-flex' }} {...props}>
       <Link href={`/${Routes.TRADE}`} activeStyle={{ fontWeight: 'bold' }}>
         {lang.navbar.trade}
       </Link>
@@ -113,6 +113,16 @@ const MainNav = props => {
     </MainNavStyle>
   );
 };
+
+const SeparatorDot = styled.div`
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: ${props => props.theme.colors.darkPurple};
+  opacity: 0.2;
+  margin: 0 38px;
+`;
 
 const centerFooterMaxWidth = '640px';
 
@@ -128,7 +138,17 @@ const Footer = styled.footer`
     position: static;
   }
 
+  .navs {
+    display: inline-flex;
+    align-items: center;
+    float: right;
+  }
+
   ${Nav} {
+    float: none;
+  }
+
+  ${Nav}, .navs {
     @media (max-width: ${centerFooterMaxWidth}) {
       float: none;
     }
@@ -151,7 +171,7 @@ const Footer = styled.footer`
 `;
 
 // It has the Oasis logo, the top nav links, and the copyright notice.
-const MarketingLayout = ({ children }) => {
+const MarketingLayout = ({ showNavInFooter, children }) => {
   const { lang } = useLanguage();
   return (
     <ThemeProvider theme={marketingTheme}>
@@ -188,15 +208,26 @@ const MarketingLayout = ({ children }) => {
         </Helmet>
         <Header>
           <OasisLogoLink />
-          <MainNav />
+          <MainNav mt="4px" />
         </Header>
         {children}
         <CookieNotice />
         <Footer>
-          <Nav>
-            <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
-            <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
-          </Nav>
+          <div className="navs">
+            {showNavInFooter && (
+              <Flex
+                display={{ s: 'none', xl: 'inline-flex' }}
+                alignItems="center"
+              >
+                <MainNav fontSize="16px" separation="52px" />
+                <SeparatorDot />
+              </Flex>
+            )}
+            <Nav>
+              <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
+              <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+            </Nav>
+          </div>
           <div className="copyright">
             © {new Date().getFullYear()} Maker Ecosystem Growth Holdings, Inc.
           </div>
