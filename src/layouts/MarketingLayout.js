@@ -101,9 +101,15 @@ const MainNav = props => {
 
   return (
     <MainNavStyle display={{ s: 'none', l: 'flex' }} {...props}>
-      <Link href={`/${Routes.TRADE}`}>{lang.navbar.trade}</Link>
-      <Link href={`/${Routes.BORROW}`}>{lang.navbar.borrow}</Link>
-      <Link href={`/${Routes.SAVE}`}>{lang.navbar.save}</Link>
+      <Link href={`/${Routes.TRADE}`} activeStyle={{ fontWeight: 'bold' }}>
+        {lang.navbar.trade}
+      </Link>
+      <Link href={`/${Routes.BORROW}`} activeStyle={{ fontWeight: 'bold' }}>
+        {lang.navbar.borrow}
+      </Link>
+      <Link href={`/${Routes.SAVE}`} activeStyle={{ fontWeight: 'bold' }}>
+        {lang.navbar.save}
+      </Link>
     </MainNavStyle>
   );
 };
