@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 const StyledGrid = styled(Grid)`
   text-align: left;
-  max-width: 1120px;
   margin-left: auto;
   margin-right: auto;
 
@@ -23,7 +22,8 @@ const StyledGrid = styled(Grid)`
 const Features = ({ features, ...props }) => {
   return (
     <StyledGrid
-      gridTemplateColumns="1fr 1fr"
+      gridTemplateColumns={{ s: '1fr', l: '1fr 1fr' }}
+      maxWidth={{ s: '500px', l: '1120px' }}
       gridRowGap="118px"
       gridColumnGap="120px"
       {...props}
