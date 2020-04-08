@@ -15,7 +15,14 @@ const HeaderStyle = styled(Box)`
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.12);
   background-color: #fff;
 
-  z-index: 1000;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &.visible {
+    z-index: 1000;
+    opacity: 1;
+  }
 `;
 
 const HeaderContent = styled(Box)`
@@ -33,11 +40,11 @@ const HeaderContent = styled(Box)`
   justify-content: space-between;
 `;
 
-const Header = () => {
+const Header = props => {
   const { lang } = useLanguage();
 
   return (
-    <HeaderStyle>
+    <HeaderStyle {...props}>
       <HeaderContent>
         <OasisLogoLink />
         <Flex alignItems="center">
@@ -53,16 +60,16 @@ const Header = () => {
 
 // Shows a fixed header when children are not in viewport
 const FixedHeaderTrigger = ({ children, ...props }) => {
-  const [showHeader, setShowHeader] = useState(false);
+  const [show, setShow] = useState(false);
 
   return (
     <VisibilitySensor
-      onChange={isVisible => setShowHeader(!isVisible)}
+      onChange={isVisible => setShow(!isVisible)}
       partialVisibility={true}
       {...props}
     >
       <div>
-        {showHeader && <Header />}
+        <Header className={show ? 'visible' : ''} />
         {children}
       </div>
     </VisibilitySensor>
