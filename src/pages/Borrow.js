@@ -16,9 +16,11 @@ import {
   QuotesBox,
   Features,
   Questions,
-  buildQuestionsFromLangObj
+  buildQuestionsFromLangObj,
+  FixedHeaderTrigger,
+  Parallaxed
 } from '../components/Marketing';
-import Parallaxed from '../components/Marketing/Parallaxed';
+
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
@@ -196,21 +198,23 @@ function Borrow() {
 
   return (
     <PageContentLayout>
-      <ConnectHero>
-        <HeroBackground />
-        <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
-          <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
-        </ThickUnderline>
-        <Text.h1 mt="16px" mb="21px">
-          {lang.borrow_landing.headline}
-        </Text.h1>
-        <Box height="166px" maxWidth="720px">
-          <Text>{lang.borrow_landing.subheadline}</Text>
-        </Box>
-        <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
-        <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
-        <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
-      </ConnectHero>
+      <FixedHeaderTrigger offset={{ bottom: 60 }}>
+        <ConnectHero>
+          <HeroBackground />
+          <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
+            <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
+          </ThickUnderline>
+          <Text.h1 mt="16px" mb="21px">
+            {lang.borrow_landing.headline}
+          </Text.h1>
+          <Box height="166px" maxWidth="720px">
+            <Text>{lang.borrow_landing.subheadline}</Text>
+          </Box>
+          <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
+          <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
+          <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
+        </ConnectHero>
+      </FixedHeaderTrigger>
       <GradientBox mt="226px">
         <StyledQuotesBox
           title={lang.borrow_landing.quotes_block.title}

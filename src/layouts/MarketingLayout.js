@@ -8,6 +8,7 @@ import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
 import { getColor, marketingTheme } from 'styles/theme';
 import { Box } from '@makerdao/ui-components-core';
+import { OasisLogoLink } from 'components/Marketing';
 
 const MarketingLayoutStyle = styled.div`
   text-rendering: optimizeLegibility;
@@ -180,9 +181,7 @@ const MarketingLayout = ({ children }) => {
           />
         </Helmet>
         <Header>
-          <Link className="logo" href="/">
-            Oasis
-          </Link>
+          <OasisLogoLink />
           <MainNav />
         </Header>
         {children}

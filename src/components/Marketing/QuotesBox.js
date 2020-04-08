@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Box, Text } from '@makerdao/ui-components-core';
 import { TextBlock } from '../Typography';
-import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 
 const QuotesBox = (() => {
   const QuotesBoxStyle = styled(Box)`

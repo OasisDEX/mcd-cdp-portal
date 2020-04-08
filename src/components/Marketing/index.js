@@ -5,6 +5,9 @@ import ConnectHero from './ConnectHero';
 import QuotesBox from './QuotesBox';
 import Features from './Features';
 import styled from 'styled-components';
+import OasisLogoLink from './OasisLogoLink';
+import FixedHeaderTrigger from './FixedHeaderTrigger';
+import Parallaxed from './Parallaxed';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -30,5 +33,8 @@ export {
   ConnectHero,
   ThickUnderline,
   QuotesBox,
-  Features
+  Features,
+  OasisLogoLink,
+  FixedHeaderTrigger,
+  Parallaxed
 };

@@ -494,6 +494,7 @@ export default {
   see_how_it_works: 'See how it works',
   providers: {
     connect_wallet: 'Connect a wallet',
+    connect_wallet_long: 'Connect wallet to get started',
     metamask: 'MetaMask',
     trust: 'Trust',
     coinbase: 'Coinbase Wallet',
