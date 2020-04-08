@@ -17,11 +17,20 @@ const HeaderStyle = styled(Box)`
 
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.2s ease;
+
+  transition: opacity 0.15s ease;
+
+  .selector-container {
+    transition: transform 0.15s ease-out;
+    transform: translateX(-30px);
+  }
 
   &.visible {
     z-index: 1000;
     opacity: 1;
+    .selector-container {
+      transform: translateX(0);
+    }
   }
 `;
 
@@ -47,7 +56,7 @@ const Header = props => {
     <HeaderStyle {...props}>
       <HeaderContent>
         <OasisLogoLink />
-        <Flex alignItems="center">
+        <Flex alignItems="center" className="selector-container">
           <Text display={{ s: 'none', xl: 'inline' }} fontSize="19px">
             {lang.providers.connect_wallet_long}
           </Text>
