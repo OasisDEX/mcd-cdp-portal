@@ -198,7 +198,7 @@ function Borrow() {
 
   return (
     <PageContentLayout>
-      <FixedHeaderTrigger offset={{ bottom: 60 }}>
+      <FixedHeaderTrigger offset={{ top: 60 }}>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
