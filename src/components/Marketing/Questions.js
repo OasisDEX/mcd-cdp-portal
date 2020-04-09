@@ -165,8 +165,8 @@ function buildQuestionsFromLangObj(questionsObj, lang) {
 const SeparatorLine = styled.div`
   position: relative;
   height: 1px;
-  top: -1px;
-  background-color: ${separatorColor};
+  border-top: 1px solid ${separatorColor};
+  top: ${props => (props.isSelected ? 0 : '-1px')};
 `;
 
 const Questions = ({ questions }) => {
@@ -192,7 +192,7 @@ const Questions = ({ questions }) => {
               onClick={() => setSelectedIndex(isSelected ? null : index)}
               isSelected={isSelected}
             />
-            <SeparatorLine />
+            <SeparatorLine isSelected={isSelected} />
           </div>
         );
       })}
