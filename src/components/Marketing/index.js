@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import OasisLogoLink from './OasisLogoLink';
 import FixedHeaderTrigger from './FixedHeaderTrigger';
 import Parallaxed from './Parallaxed';
+import FadeIn from './FadeIn';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -35,5 +36,6 @@ export {
   Features,
   OasisLogoLink,
   FixedHeaderTrigger,
-  Parallaxed
+  Parallaxed,
+  FadeIn
 };

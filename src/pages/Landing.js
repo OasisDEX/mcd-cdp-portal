@@ -8,7 +8,8 @@ import SEO from 'components/SEO';
 import {
   Questions,
   buildQuestionsFromLangObj,
-  FullWidth
+  FullWidth,
+  FadeIn
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -314,10 +315,12 @@ const SupportedTokens = (() => {
   const Token = ({ config: { name, icon, onlyOnTrade } }) => {
     const Icon = icon;
     return (
-      <TokenStyle>
-        <Icon />
-        <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
-      </TokenStyle>
+      <FadeIn>
+        <TokenStyle>
+          <Icon />
+          <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
+        </TokenStyle>
+      </FadeIn>
     );
   };
 
@@ -496,7 +499,9 @@ function Landing() {
         <Box mt="149px">
           <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
-        <Cards mt="80px" />
+        <FadeIn>
+          <Cards mt="80px" />
+        </FadeIn>
         <SupportedTokens mt="103px" />
         <Box mt="207px" height="100%">
           <FullWidth
@@ -505,7 +510,9 @@ function Landing() {
             <BlurryBackground />
           </FullWidth>
           <Box m="0 auto" display="inline-block">
-            <BulletPoints />
+            <FadeIn minVisibleToAppear={140} moveDistance="150px">
+              <BulletPoints />
+            </FadeIn>
           </Box>
         </Box>
         <Box mt="153px" mb="126px">
