@@ -1,13 +1,15 @@
 import React from 'react';
+import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { Box, Text } from '@makerdao/ui-components-core';
 import { TextBlock } from '../Typography';
+import { Link } from 'react-navi';
 
 const QuotesBox = (() => {
   const QuotesBoxStyle = styled(Box)`
     background: gray;
     max-width: 980px;
-    padding: 100px 10.2% 138px;
+    padding: 100px 9.1% 76px;
     margin: 0 auto;
     position: relative;
   `;
@@ -17,7 +19,7 @@ const QuotesBox = (() => {
     grid-template-columns: 50px auto 50px;
     grid-column-gap: 7px;
     max-width: 760px;
-    margin: 14px auto;
+    margin: 48px auto;
   `;
 
   const QuotesImgWrapper = styled.div`
@@ -32,14 +34,23 @@ const QuotesBox = (() => {
   `;
 
   const Author = styled(Text)`
-    line-height: 10px;
+    margin-top: 16px;
     font-size: 19px;
     .name {
       text-decoration: underline;
     }
   `;
 
-  return ({ title, body, quote, author, children, quotesImg, ...props }) => {
+  return ({
+    title,
+    body,
+    quote,
+    author,
+    url,
+    children,
+    quotesImg,
+    ...props
+  }) => {
     return (
       <QuotesBoxStyle {...props}>
         <Text.h2 mb="16px">{title}</Text.h2>
@@ -48,9 +59,11 @@ const QuotesBox = (() => {
           <QuotesImgWrapper>{quotesImg}</QuotesImgWrapper>
           <div>
             <Quote>“{quote}”</Quote>
-            <Author>
+            <Author as="div">
               <span>— </span>
-              <span className="name">{author}</span>
+              <Link className="name" href={url}>
+                {author}
+              </Link>
             </Author>
           </div>
           <div />
@@ -61,4 +74,4 @@ const QuotesBox = (() => {
   };
 })();
 
-export default QuotesBox;
+export default hot(QuotesBox);

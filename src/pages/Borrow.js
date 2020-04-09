@@ -218,6 +218,7 @@ function Borrow() {
           body={lang.borrow_landing.quotes_block.body}
           quote={lang.borrow_landing.quotes_block.quote1}
           author={lang.borrow_landing.quotes_block.author1}
+          url={`/${Routes.BORROW}/2434`}
           quotesImg={<QuotesImg />}
         >
           <Parallaxed

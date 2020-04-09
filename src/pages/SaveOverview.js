@@ -130,6 +130,7 @@ function SaveOverview() {
           body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
           quote={lang.save_landing.quotes_block.quote1}
           author={lang.save_landing.quotes_block.author1}
+          url="https://dsr.fyi/0xb277d98b101af4f1a1c7fe6d443f6993f1904237"
           quotesImg={<QuotesImg />}
         />
       </GradientBox>
