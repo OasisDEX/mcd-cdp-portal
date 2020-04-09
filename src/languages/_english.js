@@ -120,7 +120,7 @@ export default {
     },
     feature1_heading: 'A smarter, better money',
     feature1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
-    feature2_heading: 'Less volatility, no uncertainty',
+    feature2_heading: 'More stability, less volatility',
     feature2_content: 'Dai is designed to be stable at all times, just like cash. Stay in the crypto ecosystem without any of the volatility.',
     feature3_heading: 'Honest and transparent rate',
     feature3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
