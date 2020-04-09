@@ -89,8 +89,8 @@ export default {
   },
   borrow_landing: {
     page_name: 'Oasis Borrow',
-    headline: 'Take advantage of the assets you own, today.',
-    subheadline: 'Access liquidity, while making sure you don\'t lose exposure. Vaults make it easy to borrow against your assets by generating DAI.',
+    headline: 'Give yourself some credit',
+    subheadline: 'Borrow against your assets by generating DAI and access liquidity without losing exposure. With DeFi, you\'re always in control of your funds.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
       title: 'Maximize your profits',

@@ -40,20 +40,6 @@ const FrontBall = styled.div`
 `;
 
 const HeroBackground = (() => {
-  const GradientThingy = styled.div`
-    position: absolute;
-    width: 242px;
-    height: 325px;
-    top: -22px;
-    right: -45px;
-
-    background: linear-gradient(
-      89.4deg,
-      #faf9a6 0.85%,
-      rgba(254, 241, 208, 0) 99.47%
-    );
-    transform: rotate(-180deg);
-  `;
 
   const BlurryBall = styled.div`
     position: absolute;
@@ -104,7 +90,6 @@ const HeroBackground = (() => {
   return () => (
     <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
       <Box maxWidth="866px" m="0 auto">
-        <GradientThingy />
         <BlurryBall />
         <SmallBlurryBall />
         <Parallaxed style={{ position: 'static' }}>
@@ -203,10 +188,10 @@ function Borrow() {
           <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 mt="16px" mb="21px">
+          <Text.h1 mt="16px" mb="15px">
             {lang.borrow_landing.headline}
           </Text.h1>
-          <Box height="166px" maxWidth="720px">
+          <Box height="150px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
           <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
