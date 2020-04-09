@@ -110,8 +110,8 @@ export default {
   save_landing: {
     page_name: 'Oasis Save',
     headline: 'The most trusted way to earn on your Dai.',
-    subheadline: 'Anyone with an internet connection can deposit DAI, and earn interest instantly. No fees. No minimums. No speculation.',
-    connect_to_start: 'To open or manage an account, connect a crypto wallet',
+    subheadline: 'Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No Lockups.',
+    connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
       title: 'Earn predictable profits.',
       body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable gains.',
