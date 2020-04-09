@@ -10,7 +10,6 @@ import useLanguage from 'hooks/useLanguage';
 import { Box, Text } from '@makerdao/ui-components-core';
 import {
   ConnectHero,
-  HollowButton,
   FullWidth,
   ThickUnderline,
   QuotesBox,
@@ -198,7 +197,7 @@ function Borrow() {
 
   return (
     <PageContentLayout>
-      <FixedHeaderTrigger offset={{ top: 60 }}>
+      <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
@@ -212,7 +211,6 @@ function Borrow() {
           </Box>
           <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
-          <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="226px">

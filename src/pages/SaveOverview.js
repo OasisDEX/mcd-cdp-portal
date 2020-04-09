@@ -9,7 +9,6 @@ import {
   Features,
   FixedHeaderTrigger,
   FullWidth,
-  HollowButton,
   Questions,
   QuotesBox,
   ThickUnderline
@@ -147,7 +146,7 @@ function SaveOverview() {
   }, [account, navigation, network]);
   return (
     <PageContentLayout>
-      <FixedHeaderTrigger offset={{ top: 60 }}>
+      <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(173.93deg, #F7FFD8 14.25%, #42FF99 80.99%)">
@@ -161,7 +160,6 @@ function SaveOverview() {
           </Box>
           <Text fontSize="19px">{lang.save_landing.connect_to_start}</Text>
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
-          <HollowButton width="248px">{lang.see_how_it_works}</HollowButton>
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="227px">

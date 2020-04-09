@@ -1,6 +1,6 @@
 import FullWidth from './FullWidth';
 import Questions, { buildQuestionsFromLangObj } from './Questions';
-import { FilledButton, HollowButton } from './Buttons';
+import { FilledButton } from './Buttons';
 import ConnectHero from './ConnectHero';
 import QuotesBox from './QuotesBox';
 import Features from './Features';
@@ -29,7 +29,6 @@ export {
   Questions,
   buildQuestionsFromLangObj,
   FilledButton,
-  HollowButton,
   ConnectHero,
   ThickUnderline,
   QuotesBox,

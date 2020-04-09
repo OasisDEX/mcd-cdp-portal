@@ -23,16 +23,10 @@ const Button = styled(Box)`
   }
 `;
 
-const HollowButton = styled(Button)`
-  border: 1px solid ${props => props.theme.colors.darkPurple};
-  color: ${props => props.theme.colors.darkPurple};
-  font-weight: normal;
-`;
-
 const FilledButton = styled(Button)`
   background-color: ${props => props.theme.colors.darkPurple};
   color: #ffffff;
   font-weight: bold;
 `;
 
-export { HollowButton, FilledButton };
+export { FilledButton };
