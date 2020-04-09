@@ -32,9 +32,6 @@ function CDPView({ cdpId }) {
   );
 
   const vault = watch.vault(cdpId);
-  const nextPriceUpdate = watch.tokenPriceNextUpdate(
-    vault?.collateralAmount.symbol
-  );
   return useMemo(
     () =>
       vault && vault.externalOwnerAddress ? (
@@ -44,14 +41,13 @@ function CDPView({ cdpId }) {
           account={account}
           network={network}
           cdpOwner={vault.externalOwnerAddress}
-          nextPriceUpdate={nextPriceUpdate}
         />
       ) : vault === null ? (
         <Unavailable />
       ) : (
         <LoadingLayout background={getColor('lightGrey')} />
       ),
-    [vault, showSidebar, account, network, nextPriceUpdate]
+    [vault, showSidebar, account, network]
   );
 }
 

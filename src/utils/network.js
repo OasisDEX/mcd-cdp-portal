@@ -4,7 +4,12 @@ export function networkNameToId(networkName) {
   const entry = Object.entries(config.networkNames).find(
     ([, name]) => name === networkName
   );
-  return entry ? entry[0] : null;
+
+  return entry
+    ? entry[0]
+    : config.otherDeployments[networkName]
+    ? config.otherDeployments[networkName]
+    : null;
 }
 
 export function networkIdToName(networkId) {

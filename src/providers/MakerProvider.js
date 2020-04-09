@@ -34,9 +34,11 @@ function MakerProvider({
   const [txLastUpdate, setTxLastUpdate] = useState({});
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
-  const navigation = useNavigation(network, mocks);
-  const { trackBtnClick } = useAnalytics();
 
+  const navNetwork = network === 'kovan-osm' ? 'kovan' : network;
+  const navigation = useNavigation(navNetwork, mocks);
+
+  const { trackBtnClick } = useAnalytics();
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
@@ -62,7 +64,6 @@ function MakerProvider({
       throw new Error(
         'browser ethereum provider and URL network param do not match.'
       );
-
     if (
       !browserProvider.address ||
       !browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/)
@@ -159,8 +160,8 @@ function MakerProvider({
         if (state === 'mined') {
           const id = tx.metadata?.id;
           if (id) {
-            log(`Resetting event history cache for Vault #${id}`);
-            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            // log(`Resetting event history cache for Vault #${id}`);
+            // maker.service('mcd:cdpManager').resetEventHistoryCache(id);
             setTxLastUpdate(current => ({ ...current, [id]: Date.now() }));
           } else if (tx.metadata?.contract === 'PROXY_ACTIONS_DSR') {
             log('Resetting savings event history cache');

@@ -481,6 +481,8 @@ export default {
     vault_below_next_price:
       'Your {0} Vault has entered the liquidation phase and your collateral will be auctioned at {1}. You can still avoid auction by depositing at least {2} or repaying {3}',
     vault_below_current_price:
-      'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}'
+      'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}',
+    vault_is_liquidated:
+      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.'
   }
 };

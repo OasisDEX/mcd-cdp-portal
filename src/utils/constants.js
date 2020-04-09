@@ -45,7 +45,8 @@ export const NotificationList = {
   NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 },
   EMERGENCY_SHUTDOWN_ACTIVE: { name: 'emergencyShutdownActive', priority: 1 },
   VAULT_BELOW_NEXT_PRICE: { name: 'vaultBelowNextPrice', priority: 2 },
-  VAULT_BELOW_CURRENT_PRICE: { name: 'vaultBelowCurrentPrice', priority: 1 }
+  VAULT_BELOW_CURRENT_PRICE: { name: 'vaultBelowCurrentPrice', priority: 1 },
+  VAULT_IS_LIQUIDATED: { name: 'vaultIsLiquidated', priority: 1 }
 };
 
 export const VendorErrors = {
