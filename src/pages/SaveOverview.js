@@ -13,7 +13,8 @@ import {
   Questions,
   QuotesBox,
   ThickUnderline,
-  Parallaxed
+  Parallaxed,
+  FadeIn
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -125,14 +126,16 @@ function SaveOverview() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="227px">
-        <StyledQuotesBox
-          title={lang.save_landing.quotes_block.title}
-          body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
-          quote={lang.save_landing.quotes_block.quote1}
-          author={lang.save_landing.quotes_block.author1}
-          url="https://dsr.fyi/0xb277d98b101af4f1a1c7fe6d443f6993f1904237"
-          quotesImg={<QuotesImg />}
-        />
+        <FadeIn minVisibleToAppear={100} moveDistance="120px">
+          <StyledQuotesBox
+            title={lang.save_landing.quotes_block.title}
+            body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
+            quote={lang.save_landing.quotes_block.quote1}
+            author={lang.save_landing.quotes_block.author1}
+            url="https://dsr.fyi/0xb277d98b101af4f1a1c7fe6d443f6993f1904237"
+            quotesImg={<QuotesImg />}
+          />
+        </FadeIn>
       </GradientBox>
       <Features
         mt="200px"

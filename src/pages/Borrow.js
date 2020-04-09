@@ -17,7 +17,8 @@ import {
   Questions,
   buildQuestionsFromLangObj,
   FixedHeaderTrigger,
-  Parallaxed
+  Parallaxed,
+  FadeIn
 } from '../components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -213,21 +214,23 @@ function Borrow() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="226px">
-        <StyledQuotesBox
-          title={lang.borrow_landing.quotes_block.title}
-          body={lang.borrow_landing.quotes_block.body}
-          quote={lang.borrow_landing.quotes_block.quote1}
-          author={lang.borrow_landing.quotes_block.author1}
-          url={`/${Routes.BORROW}/2434`}
-          quotesImg={<QuotesImg />}
-        >
-          <Parallaxed
-            initialOffset="1388"
-            style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+        <FadeIn minVisibleToAppear={100} moveDistance="120px">
+          <StyledQuotesBox
+            title={lang.borrow_landing.quotes_block.title}
+            body={lang.borrow_landing.quotes_block.body}
+            quote={lang.borrow_landing.quotes_block.quote1}
+            author={lang.borrow_landing.quotes_block.author1}
+            url={`/${Routes.BORROW}/2434`}
+            quotesImg={<QuotesImg />}
           >
-            <FrontBall size="180px" />
-          </Parallaxed>
-        </StyledQuotesBox>
+            <Parallaxed
+              initialOffset="1388"
+              style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+            >
+              <FrontBall size="180px" />
+            </Parallaxed>
+          </StyledQuotesBox>
+        </FadeIn>
       </GradientBox>
       <Features
         mt="200px"

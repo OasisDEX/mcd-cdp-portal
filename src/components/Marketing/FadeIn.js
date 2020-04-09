@@ -17,7 +17,8 @@ const FadeInStyle = styled.div`
 const FadeIn = ({
   minVisibleToAppear = 70,
   moveDistance = '15%',
-  children
+  children,
+  ...props
 }) => {
   const [animate, setAnimate] = useState(false);
 
@@ -31,6 +32,7 @@ const FadeIn = ({
       }}
       partialVisibility={true}
       offset={{ bottom: minVisibleToAppear }}
+      {...props}
     >
       <FadeInStyle
         className={animate ? 'animating' : ''}

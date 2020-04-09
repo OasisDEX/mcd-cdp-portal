@@ -2,6 +2,7 @@ import React from 'react';
 import { Flex, Grid, Text } from '@makerdao/ui-components-core';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import FadeIn from './FadeIn';
 
 const StyledGrid = styled(Grid)`
   text-align: left;
@@ -29,11 +30,13 @@ const Features = ({ features, ...props }) => {
       {...props}
     >
       {features.map(point => (
-        <Flex key={point.title}>
-          {point.img}
-          <Text.h4>{point.title}</Text.h4>
-          <Text fontSize="19px">{point.content}</Text>
-        </Flex>
+        <FadeIn key={point.title} minVisibleToAppear={100} moveDistance="30%">
+          <Flex>
+            {point.img}
+            <Text.h4>{point.title}</Text.h4>
+            <Text fontSize="19px">{point.content}</Text>
+          </Flex>
+        </FadeIn>
       ))}
     </StyledGrid>
   );
