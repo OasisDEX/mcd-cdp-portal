@@ -16,17 +16,18 @@ const Button = styled(Box)`
   text-align: center;
   letter-spacing: 0.5px;
 
-  transition: opacity 0.1s ease 0s;
+  transition: background-color 0.1s ease 0s;
   cursor: pointer;
-  :hover {
-    opacity: 0.8;
-  }
 `;
 
 const FilledButton = styled(Button)`
   background-color: ${props => props.theme.colors.darkPurple};
   color: #ffffff;
   font-weight: bold;
+
+  :hover {
+    background-color: #50445e;
+  }
 `;
 
 export { FilledButton };

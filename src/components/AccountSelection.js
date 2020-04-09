@@ -24,7 +24,7 @@ import { BrowserView } from 'react-device-detect';
 const DropdownWrapper = styled(Box)`
   :hover {
     ${FilledButton} {
-      opacity: 0.8;
+      background-color: #50445e;
     }
   }
 `;

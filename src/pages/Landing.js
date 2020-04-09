@@ -9,7 +9,8 @@ import {
   Questions,
   buildQuestionsFromLangObj,
   FullWidth,
-  FadeIn
+  FadeIn,
+  FilledButton
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -103,29 +104,20 @@ const Cards = (() => {
       width: 100%;
     }
 
-    .button {
+    ${FilledButton} {
       display: inline-flex;
       padding: 12px 24px;
-      border-radius: 40px;
-      background-color: ${getColor('darkPurple')};
+      height: unset;
 
       transition: all 0.15s ease;
 
-      span {
-        align-self: center;
-
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 22px;
-        letter-spacing: 0.5px;
-
-        color: #ffffff;
-        text-decoration: none;
-      }
+      font-size: 18px;
+      line-height: 22px;
+      text-decoration: none;
     }
 
-    .button:hover {
-      transform: translateY(-1px);
+    ${FilledButton}:hover {
+      transform: translateY(-3px);
     }
   `;
 
@@ -149,7 +141,6 @@ const Cards = (() => {
           <div className="buttonContainer">
             <Link
               href={`/${Routes.TRADE}`}
-              className="button"
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'StartTrading',
@@ -157,7 +148,7 @@ const Cards = (() => {
                 });
               }}
             >
-              <span>{lang.landing_page.trade_card.button}</span>
+              <FilledButton>{lang.landing_page.trade_card.button}</FilledButton>
             </Link>
           </div>
         </Card>
@@ -176,7 +167,6 @@ const Cards = (() => {
             <Link
               href={`/${Routes.BORROW}${url.search}`}
               prefetch={true}
-              className="button"
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'BorrowDai',
@@ -184,7 +174,9 @@ const Cards = (() => {
                 });
               }}
             >
-              <span>{lang.landing_page.borrow_card.button}</span>
+              <FilledButton>
+                {lang.landing_page.borrow_card.button}
+              </FilledButton>
             </Link>
           </div>
         </Card>
@@ -204,7 +196,6 @@ const Cards = (() => {
             <Link
               href={`/${Routes.SAVE}${url.search}`}
               prefetch={true}
-              className="button"
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'SaveDai',
@@ -212,7 +203,7 @@ const Cards = (() => {
                 });
               }}
             >
-              <span>{lang.landing_page.save_card.button}</span>
+              <FilledButton>{lang.landing_page.save_card.button}</FilledButton>
             </Link>
           </div>
         </Card>
