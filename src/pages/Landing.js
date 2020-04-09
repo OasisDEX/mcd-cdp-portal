@@ -315,7 +315,7 @@ const SupportedTokens = (() => {
   const Token = ({ config: { name, icon, onlyOnTrade } }) => {
     const Icon = icon;
     return (
-      <FadeIn>
+      <FadeIn minVisibleToAppear={20} moveDistance="40%">
         <TokenStyle>
           <Icon />
           <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
