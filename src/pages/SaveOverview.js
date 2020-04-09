@@ -42,10 +42,10 @@ const HeroBackground = (() => {
   return () => (
     <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
       <Box maxWidth="866px" m="0 auto">
-          <BackTriangles />
-          <Parallaxed style={{ zIndex: 10 }}>
-            <FrontTriangles/>
-          </Parallaxed>
+        <BackTriangles />
+        <Parallaxed style={{ zIndex: 10 }}>
+          <FrontTriangles />
+        </Parallaxed>
       </Box>
     </FullWidth>
   );
@@ -138,8 +138,8 @@ function SaveOverview() {
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
-            title: lang.save_landing[`point${index + 1}_heading`],
-            content: lang.save_landing[`point${index + 1}_content`]
+            title: lang.save_landing[`feature${index + 1}_heading`],
+            content: lang.save_landing[`feature${index + 1}_content`]
           })
         )}
       />

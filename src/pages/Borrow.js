@@ -233,8 +233,8 @@ function Borrow() {
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
-            title: lang.borrow_landing[`point${index + 1}_heading`],
-            content: lang.borrow_landing[`point${index + 1}_content`]
+            title: lang.borrow_landing[`feature${index + 1}_heading`],
+            content: lang.borrow_landing[`feature${index + 1}_content`]
           })
         )}
       />

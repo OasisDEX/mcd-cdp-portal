@@ -98,14 +98,14 @@ export default {
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
-    point1_heading: 'Flexible repayment and terms',
-    point1_content: 'Vaults use open-ended credit. Meaning no fixed repayment schedules, pay back or borrow when it suits you.',
-    point2_heading: 'Secure and easy to use',
-    point2_content: 'A simple interface that allows you to manage your Vault. No middleman or third party controls your funds.',
-    point3_heading: 'Many possibilities',
-    point3_content: 'Manage a diverse range of Vaults from a single page. Easily track the important information you need to know.',
-    point4_heading: 'No more limits',
-    point4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.'
+    feature1_heading: 'Flexible repayment and terms',
+    feature1_content: 'Vaults use open-ended credit. Meaning no fixed repayment schedules, pay back or borrow when it suits you.',
+    feature2_heading: 'Secure and easy to use',
+    feature2_content: 'A simple interface that allows you to manage your Vault. No middleman or third party controls your funds.',
+    feature3_heading: 'Many possibilities',
+    feature3_content: 'Manage a diverse range of Vaults from a single page. Easily track the important information you need to know.',
+    feature4_heading: 'No more limits',
+    feature4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.'
   },
   save_landing: {
     page_name: 'Oasis Save',
@@ -118,14 +118,14 @@ export default {
       quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save Account 2434'
     },
-    point1_heading: 'A smarter, better money',
-    point1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
-    point2_heading: 'Less volatility, no uncertainty',
-    point2_content: 'Dai is designed to be stable at all times, just like cash. Stay in the crypto ecosystem without any of the volatility.',
-    point3_heading: 'Honest and transparent rate',
-    point3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
-    point4_heading: 'Secure from the ground up',
-    point4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.'
+    feature1_heading: 'A smarter, better money',
+    feature1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
+    feature2_heading: 'Less volatility, no uncertainty',
+    feature2_content: 'Dai is designed to be stable at all times, just like cash. Stay in the crypto ecosystem without any of the volatility.',
+    feature3_heading: 'Honest and transparent rate',
+    feature3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
+    feature4_heading: 'Secure from the ground up',
+    feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.'
   },
   overview_page: {
     title: 'Overview',
