@@ -26,11 +26,14 @@ import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 
-const FrontBall = styled.div`
+const Ball = styled.div`
   position: absolute;
   width: ${props => props.size};
   height: ${props => props.size};
   border-radius: 50%;
+`;
+
+const FrontBall = styled(Ball)`
   background: radial-gradient(
     51.51% 110.6% at 32.77% 50%,
     #d2ff72 0%,
@@ -40,51 +43,60 @@ const FrontBall = styled.div`
 `;
 
 const HeroBackground = (() => {
-
-  const BlurryBall = styled.div`
-    position: absolute;
-    width: 194px;
-    height: 194px;
-    top: 231px;
-    right: -139px;
+  const BlurryBall = styled(Ball).attrs(() => ({
+    size: '154px'
+  }))`
+    top: 56px;
+    right: -110px;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
-      #d2ff72 0%,
-      #fdc134 100%
+      #e8ffb7 0%,
+      #ffe29d 100%
     );
-    border-radius: 50%;
-    filter: blur(15px);
+    filter: blur(20px);
   `;
 
-  const SmallBlurryBall = styled.div`
-    position: absolute;
-    top: 404px;
+  const SmallBlurryBall = styled(Ball).attrs(() => ({
+    size: '72px'
+  }))`
+    top: 434px;
     left: 48px;
-    width: 72px;
-    height: 72px;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
       #eaffcf 0%,
       #fedb88 100%
     );
-    radial-gradient(51.51% 110.6% at 32.77% 50%, #D2FF72 0%, #FDC134 100%);
-    border-radius: 50%;
     filter: blur(13px);
-  
   `;
 
-  const Ball = styled(FrontBall).attrs(() => ({
+  const TopBall = styled(FrontBall).attrs(() => ({
     size: '212px'
   }))`
-    top: -38px;
+    top: -23px;
     left: -159px;
   `;
 
   const SmallBall = styled(FrontBall).attrs(() => ({
     size: '86px'
   }))`
-    top: 492px;
-    right: 120px;
+    top: 327px;
+    right: 89px;
+  `;
+
+  const DimGiantBall = styled(Ball).attrs(() => ({
+    size: '352px'
+  }))`
+    top: 24px;
+    left: -85px;
+    background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
+  `;
+
+  const DimBall = styled(Ball).attrs(() => ({
+    size: '182px'
+  }))`
+    top: 243px;
+    right: -39px;
+    background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
   `;
 
   return () => (
@@ -92,8 +104,10 @@ const HeroBackground = (() => {
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
         <SmallBlurryBall />
+        <DimGiantBall />
+        <DimBall />
         <Parallaxed style={{ position: 'static' }}>
-          <Ball />
+          <TopBall />
           <SmallBall />
         </Parallaxed>
       </Box>
