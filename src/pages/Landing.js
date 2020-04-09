@@ -101,23 +101,27 @@ const Cards = (() => {
 
     .buttonContainer {
       margin-top: 18px;
-      width: 100%;
+      display: inline-block;
+      transition: all 0.15s ease;
+      padding-bottom: 0;
+      cursor: pointer;
+      :hover {
+        margin-top: 15px;
+        padding-bottom: 3px;
+
+        ${FilledButton} {
+          background-color: #50445e;
+        }
+      }
     }
 
     ${FilledButton} {
       display: inline-flex;
       padding: 12px 24px;
       height: unset;
-
-      transition: all 0.15s ease;
-
       font-size: 18px;
       line-height: 22px;
       text-decoration: none;
-    }
-
-    ${FilledButton}:hover {
-      transform: translateY(-3px);
     }
   `;
 
@@ -147,6 +151,7 @@ const Cards = (() => {
                   product: 'oasis-landing'
                 });
               }}
+              className="button-link"
             >
               <FilledButton>{lang.landing_page.trade_card.button}</FilledButton>
             </Link>
@@ -173,6 +178,7 @@ const Cards = (() => {
                   product: 'oasis-landing'
                 });
               }}
+              className="button-link"
             >
               <FilledButton>
                 {lang.landing_page.borrow_card.button}
@@ -202,6 +208,7 @@ const Cards = (() => {
                   product: 'oasis-landing'
                 });
               }}
+              className="button-link"
             >
               <FilledButton>{lang.landing_page.save_card.button}</FilledButton>
             </Link>
