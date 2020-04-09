@@ -30,7 +30,7 @@ const Features = ({ features, ...props }) => {
       {...props}
     >
       {features.map(point => (
-        <FadeIn key={point.title} minVisibleToAppear={100} moveDistance="30%">
+        <FadeIn key={point.title} minVisibleToAppear={140} moveDistance="40%">
           <Flex>
             {point.img}
             <Text.h4>{point.title}</Text.h4>
