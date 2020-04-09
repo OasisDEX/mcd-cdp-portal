@@ -10,7 +10,7 @@ const QuestionAndAnswerStyle = styled.div`
   position: relative;
 
   .question-row {
-    padding-top: 32px;
+    padding-top: 27px;
     padding-bottom: 34px;
     letter-spacing: 0.007em;
     position: relative;
@@ -18,7 +18,8 @@ const QuestionAndAnswerStyle = styled.div`
   }
 
   .question {
-    margin-right: 25px;
+    margin-right: 58px;
+    line-height: 36px;
   }
 
   .answer {
