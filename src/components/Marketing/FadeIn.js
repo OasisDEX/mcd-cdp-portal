@@ -8,7 +8,6 @@ const FadeInStyle = styled.div`
   transform: translateY(${props => props.moveDistance});
 
   &.animating {
-    animation-name: fadeInBottom;
     opacity: 1;
     transform: translateY(0);
   }
