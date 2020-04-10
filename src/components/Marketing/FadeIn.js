@@ -14,7 +14,7 @@ const FadeInStyle = styled.div`
 `;
 
 const FadeIn = ({
-  minVisibleToAppear = 70,
+  triggerOffset = -20,
   moveDistance = '40%',
   duration = '0.7s',
   children,
@@ -31,7 +31,7 @@ const FadeIn = ({
         }
       }}
       partialVisibility={true}
-      offset={{ bottom: minVisibleToAppear }}
+      offset={{ bottom: triggerOffset }}
       {...props}
     >
       <FadeInStyle
