@@ -5,11 +5,7 @@ export function networkNameToId(networkName) {
     ([, name]) => name === networkName
   );
 
-  return entry
-    ? entry[0]
-    : config.otherDeployments[networkName]
-    ? config.otherDeployments[networkName]
-    : null;
+  return entry ? entry[0] : null;
 }
 
 export function networkIdToName(networkId) {

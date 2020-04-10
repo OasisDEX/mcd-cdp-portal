@@ -25,9 +25,6 @@
     "999": "testnet",
     "1337": "testnet"
   },
-  "otherDeployments": {
-    "kovan-osm": "42"
-  },
   "networkDisplayNames": {
     "1": "Mainnet",
     "42": "Kovan Testnet",

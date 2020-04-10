@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { pollTokenPrices } from 'utils/ethereum';
 import useInterval from 'hooks/useInterval';
 import useMaker from 'hooks/useMaker';
+import BigNumber from 'bignumber.js';
 
 function useOraclePrices({ gem, interval = 5 * 1000 }) {
   const [prices, setPrices] = useState({
@@ -10,13 +11,15 @@ function useOraclePrices({ gem, interval = 5 * 1000 }) {
   });
   const { maker } = useMaker();
 
-  const isValidNetwork = ['mainnet', 'kovan', 'kovan-osm'].some(
+  const isValidNetwork = ['mainnet', 'kovan'].some(
     network => network === maker.service('web3').networkName
   );
 
+  const isValidGem = ['ETH', 'BAT'].some(g => g === gem);
+
   const isCancelled = useRef(false);
   useInterval(async () => {
-    if (!isValidNetwork) return;
+    if (!isValidNetwork || !isValidGem) return;
     if (isCancelled.current) return;
     const { currentPrice, nextPrice } = await pollTokenPrices(maker, gem);
     if (isCancelled.current) return;
@@ -28,7 +31,7 @@ function useOraclePrices({ gem, interval = 5 * 1000 }) {
 
   // useEffect necessary as useInterval hooks does not perform fetch immediately
   useEffect(() => {
-    if (!isValidNetwork) return;
+    if (!isValidNetwork || !isValidGem) return;
     (async () => {
       if (isCancelled.current) return;
       const { currentPrice, nextPrice } = await pollTokenPrices(maker, gem);
@@ -41,6 +44,12 @@ function useOraclePrices({ gem, interval = 5 * 1000 }) {
     return () => (isCancelled.current = true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (gem === 'USDC')
+    return {
+      currentPrice: BigNumber(1),
+      nextPrice: BigNumber(1)
+    };
   return prices;
 }
 

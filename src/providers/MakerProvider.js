@@ -160,8 +160,8 @@ function MakerProvider({
         if (state === 'mined') {
           const id = tx.metadata?.id;
           if (id) {
-            // log(`Resetting event history cache for Vault #${id}`);
-            // maker.service('mcd:cdpManager').resetEventHistoryCache(id);
+            log(`Resetting event history cache for Vault #${id}`);
+            maker.service('mcd:cdpManager').resetEventHistoryCache(id);
             setTxLastUpdate(current => ({ ...current, [id]: Date.now() }));
           } else if (tx.metadata?.contract === 'PROXY_ACTIONS_DSR') {
             log('Resetting savings event history cache');

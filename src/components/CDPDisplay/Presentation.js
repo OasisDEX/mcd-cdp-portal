@@ -82,10 +82,9 @@ export default function({
 
   const { currentPrice, nextPrice } = useOraclePrices({ gem });
 
-  console.log(eventHistory);
-
   useEffect(() => {
     if (
+      isOwner &&
       eventHistory?.length &&
       eventHistory.some(({ type }) => type === 'BITE')
     ) {
@@ -93,19 +92,24 @@ export default function({
       const sevenDays = 7 * 24 * 60 * 60 * 1000;
       const cutOff = Math.floor((now - sevenDays) / 1000);
 
-      const sumCollateralLiquidated = eventHistory
+      const recentEvents = eventHistory
         .filter(({ type }) => type === 'BITE')
-        .filter(({ timestamp }) => timestamp >= cutOff)
-        .reduce((acc, { amount }) => acc.plus(amount), BigNumber(0));
+        .filter(({ timestamp }) => timestamp >= cutOff);
 
-      addNotification({
-        id: NotificationList.VAULT_IS_LIQUIDATED,
-        content: lang.formatString(
-          lang.notifications.vault_is_liquidated,
-          `${formatter(sumCollateralLiquidated)} ${gem}`
-        ),
-        level: SAFETY_LEVELS.WARNING
-      });
+      const sumCollateralLiquidated = recentEvents.reduce(
+        (acc, { amount }) => acc.plus(amount),
+        BigNumber(0)
+      );
+      if (recentEvents?.length) {
+        addNotification({
+          id: NotificationList.VAULT_IS_LIQUIDATED,
+          content: lang.formatString(
+            lang.notifications.vault_is_liquidated,
+            `${formatter(sumCollateralLiquidated)} ${gem}`
+          ),
+          level: SAFETY_LEVELS.WARNING
+        });
+      }
     }
   }, [eventHistory?.length]);
 
