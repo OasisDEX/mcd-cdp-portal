@@ -15,7 +15,7 @@ const FadeInStyle = styled.div`
 
 const FadeIn = ({
   minVisibleToAppear = 70,
-  moveDistance = '15%',
+  moveDistance = '40%',
   duration = '0.7s',
   children,
   ...props
