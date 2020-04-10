@@ -111,6 +111,7 @@ export default function({
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventHistory?.length]);
 
   useEffect(() => {

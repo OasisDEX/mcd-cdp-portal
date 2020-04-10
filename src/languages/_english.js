@@ -285,7 +285,6 @@ export default {
   event_history: {
     open: 'Opened a new Vault with id #{0}',
     deposit: 'Deposited {0} {1} into Vault',
-    reclaim: 'Reclaimed {0} {1} into Vault',
     dsr_deposit: 'Deposited {0} Dai',
     withdraw: 'Withdrew {0} {1} from Vault',
     dsr_withdraw: 'Withdrew {0} Dai',

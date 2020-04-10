@@ -12,7 +12,6 @@ import { getQueryParamByName } from './utils/dev';
 import rinkebyAddresses from './references/contracts/rinkeby';
 import goerliAddresses from './references/contracts/goerli';
 import ropstenAddresses from './references/contracts/ropsten';
-import kovanOsmAddresses from './references/contracts/kovan-osm';
 
 let _maker;
 
