@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link } from 'react-navi';
 import PageContentLayout from 'layouts/PageContentLayout';
-import { Routes } from 'utils/constants';
+
 import {
   buildQuestionsFromLangObj,
   ConnectHero,
@@ -70,10 +70,17 @@ const StyledQuotesBox = styled(QuotesBox)`
 
 function TradeLanding() {
   const { lang } = useLanguage();
+  const ctaButton = (
+    <Link href="https://oasis.app/trade/market/">
+      <FilledButton width="248px" mt="17px" mb="8px">
+        {lang.trade_landing.cta_button}
+      </FilledButton>
+    </Link>
+  );
 
   return (
     <PageContentLayout enableNotifications={false}>
-      <FixedHeaderTrigger button={0}>
+      <FixedHeaderTrigger cta={ctaButton}>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
@@ -86,11 +93,7 @@ function TradeLanding() {
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           <Text fontSize="19px">{lang.trade_landing.connect_to_start}</Text>
-          <Link href="https://oasis.app/trade/market/">
-            <FilledButton width="248px" mt="17px" mb="8px">
-              {lang.trade_landing.cta_button}
-            </FilledButton>
-          </Link>
+          {ctaButton}
         </ConnectHero>
       </FixedHeaderTrigger>
       <Box height="200px" />

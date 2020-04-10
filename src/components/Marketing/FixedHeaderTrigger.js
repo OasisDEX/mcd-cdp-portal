@@ -20,7 +20,7 @@ const HeaderStyle = styled(Box)`
 
   transition: opacity 0.15s ease;
 
-  .selector-container {
+  .cta-container {
     transition: transform 0.15s ease-out;
     transform: translateX(-30px);
   }
@@ -28,7 +28,7 @@ const HeaderStyle = styled(Box)`
   &.visible {
     z-index: 1000;
     opacity: 1;
-    .selector-container {
+    .cta-container {
       transform: translateX(0);
     }
   }
@@ -49,29 +49,30 @@ const HeaderContent = styled(Box)`
   justify-content: space-between;
 `;
 
-const Header = ({
-  button = <AccountSelection ml="24px" buttonWidth="248px" display="inline" />,
-  ...props
-}) => {
+const Header = ({ cta, ...props }) => {
   const { lang } = useLanguage();
+
+  const defaultCTA = (
+    <Flex alignItems="center" className="selector-container">
+      <Text display={{ s: 'none', xl: 'inline' }} fontSize="19px">
+        {lang.providers.connect_wallet_long}
+      </Text>
+      <AccountSelection ml="24px" buttonWidth="248px" display="inline" />
+    </Flex>
+  );
 
   return (
     <HeaderStyle {...props}>
       <HeaderContent>
         <OasisLogoLink />
-        <Flex alignItems="center" className="selector-container">
-          <Text display={{ s: 'none', xl: 'inline' }} fontSize="19px">
-            {lang.providers.connect_wallet_long}
-          </Text>
-          {button}
-        </Flex>
+        <div className="cta-container">{cta || defaultCTA}</div>
       </HeaderContent>
     </HeaderStyle>
   );
 };
 
 // Shows a fixed header when children are not in viewport
-const FixedHeaderTrigger = ({ children, ...props }) => {
+const FixedHeaderTrigger = ({ cta, children, ...props }) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -81,7 +82,7 @@ const FixedHeaderTrigger = ({ children, ...props }) => {
       {...props}
     >
       <div>
-        <Header className={show ? 'visible' : ''} />
+        <Header cta={cta} className={show ? 'visible' : ''} />
         {children}
       </div>
     </VisibilitySensor>
