@@ -109,6 +109,12 @@ export function formatEventDescription(lang, e) {
         <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
         e.gem
       );
+    case 'RECLAIM':
+      return lang.formatString(
+        lang.event_history.reclaim,
+        <b>{prettifyCurrency(interfaceLocale, e.amount, 2)}</b>,
+        e.gem
+      );
     case 'DSR_DEPOSIT':
       return lang.formatString(
         lang.event_history.dsr_deposit,
