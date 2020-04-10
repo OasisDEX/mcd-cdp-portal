@@ -313,7 +313,7 @@ const SupportedTokens = (() => {
   const Token = ({ config: { name, icon, onlyOnTrade } }) => {
     const Icon = icon;
     return (
-      <FadeIn triggerOffset={20} moveDistance="40%">
+      <FadeIn triggerOffset={70}>
         <TokenStyle>
           <Icon />
           <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
@@ -497,7 +497,7 @@ function Landing() {
         <Box mt="149px">
           <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
-        <FadeIn moveDistance="107px" triggerOffset={-200} duration="0.8s">
+        <FadeIn moveDistance="107px" duration="0.8s">
           <Cards mt="80px" />
         </FadeIn>
         <SupportedTokens mt="103px" />
@@ -508,7 +508,7 @@ function Landing() {
             <BlurryBackground />
           </FullWidth>
           <Box m="0 auto" display="inline-block">
-            <FadeIn minVisibleToAppear={140} moveDistance="150px">
+            <FadeIn triggerOffset={150} moveDistance="150px">
               <BulletPoints />
             </FadeIn>
           </Box>

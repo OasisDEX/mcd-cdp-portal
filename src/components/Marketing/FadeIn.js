@@ -34,7 +34,8 @@ const FadeIn = ({
       offset={{ bottom: triggerOffset }}
       {...props}
     >
-      <div>{/*
+      <div>
+        {/*
         This div wrapper is for triggering the visibility sensor,
         ignoring moveDistance.
        */}
