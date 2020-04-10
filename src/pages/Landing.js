@@ -106,8 +106,8 @@ const Cards = (() => {
       padding-bottom: 0;
       cursor: pointer;
       :hover {
-        margin-top: 15px;
-        padding-bottom: 3px;
+        margin-top: 16px;
+        padding-bottom: 2px;
 
         ${FilledButton} {
           background-color: #50445e;
