@@ -27,17 +27,21 @@ import { ReactComponent as Feat2 } from 'images/landing/trade/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/trade/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/trade/feature-4.svg';
 
+const StyledConnectHero = styled(ConnectHero) `
+  margin: 127px auto 0;
+`;
+
 const HeroBackground = (() => {
   const BackParallelograms = styled(BackParallelogramsBase)`
     position: absolute;
-    left: -184px;
-    top: -196px;
+    left: -98px;
+    top: -129px;
   `;
 
   const FrontParallelograms = styled(FrontParallelogramsBase)`
     position: absolute;
-    left: -174px;
-    top: -108px;
+    left: -179px;
+    top: -84px;
   `;
 
   return () => (
@@ -72,7 +76,7 @@ function TradeLanding() {
   const { lang } = useLanguage();
   const ctaButton = (
     <Link href="https://oasis.app/trade/market/">
-      <FilledButton width="248px" mt="17px" mb="8px">
+      <FilledButton width="237px" mt="17px" mb="8px">
         {lang.trade_landing.cta_button}
       </FilledButton>
     </Link>
@@ -81,20 +85,20 @@ function TradeLanding() {
   return (
     <PageContentLayout enableNotifications={false}>
       <FixedHeaderTrigger cta={ctaButton}>
-        <ConnectHero>
+        <StyledConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 mt="16px" mb="18px" maxWidth="700px">
+          <Text.h1 mt="16px" mb="23px">
             {lang.trade_landing.headline}
           </Text.h1>
-          <Box height="150px" maxWidth="690px">
+          <Box height="83px">
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           <Text fontSize="19px">{lang.trade_landing.connect_to_start}</Text>
           {ctaButton}
-        </ConnectHero>
+        </StyledConnectHero>
       </FixedHeaderTrigger>
       <Box height="200px" />
       <FadeIn triggerOffset={100} moveDistance="120px">
