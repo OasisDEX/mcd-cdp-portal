@@ -4,6 +4,7 @@ export function networkNameToId(networkName) {
   const entry = Object.entries(config.networkNames).find(
     ([, name]) => name === networkName
   );
+
   return entry ? entry[0] : null;
 }
 
