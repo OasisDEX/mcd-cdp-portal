@@ -27,7 +27,7 @@ import { ReactComponent as Feat2 } from 'images/landing/trade/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/trade/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/trade/feature-4.svg';
 
-const StyledConnectHero = styled(ConnectHero) `
+const StyledConnectHero = styled(ConnectHero)`
   margin: 127px auto 0;
 `;
 
@@ -100,7 +100,7 @@ function TradeLanding() {
           {ctaButton}
         </StyledConnectHero>
       </FixedHeaderTrigger>
-      <Box height="200px" />
+      <Box height="300px" />
       <FadeIn triggerOffset={100} moveDistance="120px">
         <StyledQuotesBox
           title={lang.trade_landing.quotes_block.title}
@@ -112,7 +112,7 @@ function TradeLanding() {
         />
       </FadeIn>
       <Features
-        mt="200px"
+        mt="249px"
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
@@ -121,7 +121,7 @@ function TradeLanding() {
           })
         )}
       />
-      <Box mt="153px" mb="126px">
+      <Box mt="200px" mb="126px">
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}

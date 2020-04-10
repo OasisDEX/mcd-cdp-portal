@@ -176,7 +176,7 @@ const Questions = ({ questions }) => {
     <div
       style={{
         maxWidth: '800px',
-        margin: '0 auto',
+        margin: '29px auto',
         textAlign: 'left',
         fontSize: '18px',
         lineHeight: '25px'
