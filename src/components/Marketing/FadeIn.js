@@ -14,7 +14,7 @@ const FadeInStyle = styled.div`
 `;
 
 const FadeIn = ({
-  triggerOffset = -20,
+  triggerOffset = 0,
   moveDistance = '40%',
   duration = '0.7s',
   children,
@@ -34,13 +34,18 @@ const FadeIn = ({
       offset={{ bottom: triggerOffset }}
       {...props}
     >
-      <FadeInStyle
-        className={animate ? 'animating' : ''}
-        moveDistance={moveDistance}
-        duration={duration}
-      >
-        {children}
-      </FadeInStyle>
+      <div>{/*
+        This div wrapper is for triggering the visibility sensor,
+        ignoring moveDistance.
+       */}
+        <FadeInStyle
+          className={animate ? 'animating' : ''}
+          moveDistance={moveDistance}
+          duration={duration}
+        >
+          {children}
+        </FadeInStyle>
+      </div>
     </VisibilitySensor>
   );
 };
