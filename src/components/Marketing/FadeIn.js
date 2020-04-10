@@ -3,7 +3,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import styled from 'styled-components';
 
 const FadeInStyle = styled.div`
-  transition: all 0.7s ease-out;
+  transition: all ${props => props.duration} ease-out;
   opacity: 0;
   transform: translateY(${props => props.moveDistance});
 
@@ -16,6 +16,7 @@ const FadeInStyle = styled.div`
 const FadeIn = ({
   minVisibleToAppear = 70,
   moveDistance = '15%',
+  duration = '0.7s',
   children,
   ...props
 }) => {
@@ -36,6 +37,7 @@ const FadeIn = ({
       <FadeInStyle
         className={animate ? 'animating' : ''}
         moveDistance={moveDistance}
+        duration={duration}
       >
         {children}
       </FadeInStyle>
