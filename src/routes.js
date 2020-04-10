@@ -10,6 +10,7 @@ import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import Save from 'pages/Save';
 import SaveOverview from 'pages/SaveOverview';
+import TradeLanding from 'pages/TradeLanding';
 import Privacy from 'pages/Privacy';
 import Terms from 'pages/Terms';
 import CDPDisplay from 'components/CDPDisplay';
@@ -130,9 +131,10 @@ export default mount({
     })
   ),
 
-  [`/${Routes.TRADE}`]: route(() => {
-    window.location.href = 'https://oasis.app/trade';
-  }),
+  [`/${Routes.TRADE}`]: compose(
+    withView(marketingLayoutView),
+    route(() => ({ title: 'Trade', view: <TradeLanding /> }))
+  ),
 
   [`/${Routes.PRIVACY}`]: route(() => ({
     title: 'Oasis - Privacy Policy',

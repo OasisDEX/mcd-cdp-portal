@@ -49,7 +49,10 @@ const HeaderContent = styled(Box)`
   justify-content: space-between;
 `;
 
-const Header = props => {
+const Header = ({
+  button = <AccountSelection ml="24px" buttonWidth="248px" display="inline" />,
+  ...props
+}) => {
   const { lang } = useLanguage();
 
   return (
@@ -60,7 +63,7 @@ const Header = props => {
           <Text display={{ s: 'none', xl: 'inline' }} fontSize="19px">
             {lang.providers.connect_wallet_long}
           </Text>
-          <AccountSelection ml="24px" buttonWidth="248px" display="inline" />
+          {button}
         </Flex>
       </HeaderContent>
     </HeaderStyle>

@@ -109,7 +109,7 @@ export default {
   },
   save_landing: {
     page_name: 'Oasis Save',
-    headline: 'The most trusted way to earn on your Dai.',
+    headline: 'The most trusted way to earn on your Dai',
     subheadline: 'Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No Lockups.',
     connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
@@ -126,6 +126,26 @@ export default {
     feature3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
     feature4_heading: 'Secure from the ground up',
     feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.'
+  },
+  trade_landing: {
+    page_name: 'Oasis Trade',
+    headline: 'Peer to peer crypto trading',
+    subheadline: 'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and instant token swap.',
+    cta_button: 'Open Oasis Trade',
+    quotes_block: {
+      title: 'Leverage your collateral, quicker',
+      body: 'Oasis Trade allows you to access the Maker Protocol and use your collateral to instantly leverage your positions in just two transactions.',
+      quote1: 'Copy is in progress...',
+      author1: 'Marketing Team'
+    },
+    feature1_heading: 'Liquidity and decentralization',
+    feature1_content: 'Get the price you want with low slippage. Anyone with an Ethereal wallet can make trade.',
+    feature2_heading: 'Increase profits with leverage',
+    feature2_content: 'A simple interface that allows you to manage your Vault. No middleman or third part controls your funds.',
+    feature3_heading: 'Quickly swap tokens for free',
+    feature3_content: 'Oasis trade allows you to get in and out of positions instantly, without fees.',
+    feature4_heading: 'Non custodial',
+    feature4_content: 'The system is a set of ownerless, autonomous smart contracts. You maintain control over your funds.'
   },
   overview_page: {
     title: 'Overview',
