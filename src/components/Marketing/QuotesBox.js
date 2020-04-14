@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Box, Text } from '@makerdao/ui-components-core';
 import { TextBlock } from '../Typography';
 import { Link } from 'react-navi';
+import FadeIn from './FadeIn';
 
 const QuotesBoxStyle = styled(Box)`
   background: gray;
@@ -71,5 +72,11 @@ const QuotesBox = ({
     </QuotesBoxStyle>
   );
 };
+
+export const QuotesFadeIn = ({ children, ...props }) => (
+  <FadeIn triggerOffset={100} moveDistance="80px" {...props}>
+    {children}
+  </FadeIn>
+);
 
 export default hot(QuotesBox);

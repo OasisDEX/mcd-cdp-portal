@@ -14,7 +14,8 @@ import {
   ThickUnderline,
   Parallaxed,
   FadeIn,
-  FilledButton
+  FilledButton,
+  QuotesFadeIn
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -101,7 +102,7 @@ function TradeLanding() {
         </StyledConnectHero>
       </FixedHeaderTrigger>
       <Box height="300px" />
-      <FadeIn triggerOffset={180} moveDistance="80px">
+      <QuotesFadeIn triggerOffset={180}>
         <StyledQuotesBox
           title={lang.trade_landing.quotes_block.title}
           body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}
@@ -110,7 +111,7 @@ function TradeLanding() {
           url="https://chat.makerdao.com/group/team-marketing-internal"
           quotesImg={<QuotesImg />}
         />
-      </FadeIn>
+      </QuotesFadeIn>
       <Features
         mt="249px"
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(

@@ -2,7 +2,7 @@ import FullWidth from './FullWidth';
 import Questions, { buildQuestionsFromLangObj } from './Questions';
 import { FilledButton } from './Buttons';
 import ConnectHero from './ConnectHero';
-import QuotesBox from './QuotesBox';
+import QuotesBox, { QuotesFadeIn } from './QuotesBox';
 import Features from './Features';
 import styled from 'styled-components';
 import OasisLogoLink from './OasisLogoLink';
@@ -33,6 +33,7 @@ export {
   ConnectHero,
   ThickUnderline,
   QuotesBox,
+  QuotesFadeIn,
   Features,
   OasisLogoLink,
   FixedHeaderTrigger,

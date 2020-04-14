@@ -18,7 +18,7 @@ import {
   buildQuestionsFromLangObj,
   FixedHeaderTrigger,
   Parallaxed,
-  FadeIn
+  QuotesFadeIn
 } from '../components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -214,7 +214,7 @@ function Borrow() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="226px">
-        <FadeIn triggerOffset={100} moveDistance="80px">
+        <QuotesFadeIn>
           <StyledQuotesBox
             title={lang.borrow_landing.quotes_block.title}
             body={lang.borrow_landing.quotes_block.body}
@@ -230,7 +230,7 @@ function Borrow() {
               <FrontBall size="180px" />
             </Parallaxed>
           </StyledQuotesBox>
-        </FadeIn>
+        </QuotesFadeIn>
       </GradientBox>
       <Features
         mt="200px"
