@@ -15,8 +15,8 @@ const FadeInStyle = styled.div`
 
 const FadeIn = ({
   triggerOffset = 0, // extra pixels you need to scroll down in order for the animation to trigger
-  moveDistance = '40%',
-  duration = '0.7s',
+  moveDistance = '30%',
+  duration = '1s',
   children,
   ...props
 }) => {

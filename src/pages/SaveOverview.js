@@ -126,7 +126,7 @@ function SaveOverview() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="227px">
-        <FadeIn triggerOffset={100} moveDistance="120px">
+        <FadeIn triggerOffset={100} moveDistance="80px">
           <StyledQuotesBox
             title={lang.save_landing.quotes_block.title}
             body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}

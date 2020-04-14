@@ -214,7 +214,7 @@ function Borrow() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox mt="226px">
-        <FadeIn triggerOffset={100} moveDistance="120px">
+        <FadeIn triggerOffset={100} moveDistance="80px">
           <StyledQuotesBox
             title={lang.borrow_landing.quotes_block.title}
             body={lang.borrow_landing.quotes_block.body}

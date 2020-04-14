@@ -101,7 +101,7 @@ function TradeLanding() {
         </StyledConnectHero>
       </FixedHeaderTrigger>
       <Box height="300px" />
-      <FadeIn triggerOffset={100} moveDistance="120px">
+      <FadeIn triggerOffset={180} moveDistance="80px">
         <StyledQuotesBox
           title={lang.trade_landing.quotes_block.title}
           body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}

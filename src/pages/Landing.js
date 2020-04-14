@@ -497,7 +497,7 @@ function Landing() {
         <Box mt="149px">
           <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
-        <FadeIn moveDistance="107px" duration="0.8s">
+        <FadeIn moveDistance="47px">
           <Cards mt="80px" />
         </FadeIn>
         <SupportedTokens mt="103px" />
@@ -508,7 +508,7 @@ function Landing() {
             <BlurryBackground />
           </FullWidth>
           <Box m="0 auto" display="inline-block">
-            <FadeIn triggerOffset={150} moveDistance="150px">
+            <FadeIn triggerOffset={150} moveDistance="80px">
               <BulletPoints />
             </FadeIn>
           </Box>
