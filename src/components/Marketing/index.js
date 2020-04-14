@@ -9,6 +9,7 @@ import OasisLogoLink from './OasisLogoLink';
 import FixedHeaderTrigger from './FixedHeaderTrigger';
 import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
+import { Box } from '@makerdao/ui-components-core';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -25,6 +26,15 @@ const ThickUnderline = styled.div`
   }
 `;
 
+const SeparatorDot = styled(Box)`
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: ${props => props.theme.colors.darkPurple};
+  opacity: 0.2;
+`;
+
 export {
   FullWidth,
   Questions,
@@ -32,6 +42,7 @@ export {
   FilledButton,
   ConnectHero,
   ThickUnderline,
+  SeparatorDot,
   QuotesBox,
   QuotesFadeIn,
   Features,

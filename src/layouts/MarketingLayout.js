@@ -8,7 +8,7 @@ import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
 import { getColor, marketingTheme } from 'styles/theme';
 import { Box, Flex } from '@makerdao/ui-components-core';
-import { OasisLogoLink } from 'components/Marketing';
+import { OasisLogoLink, SeparatorDot } from 'components/Marketing';
 
 const MarketingLayoutStyle = styled.div`
   text-rendering: optimizeLegibility;
@@ -114,16 +114,6 @@ const MainNav = props => {
   );
 };
 
-const SeparatorDot = styled.div`
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  border-radius: 2px;
-  background-color: ${props => props.theme.colors.darkPurple};
-  opacity: 0.2;
-  margin: 0 38px;
-`;
-
 const centerFooterMaxWidth = '640px';
 
 const Footer = styled.footer`
@@ -220,7 +210,7 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
                 alignItems="center"
               >
                 <MainNav fontSize="16px" separation="52px" />
-                <SeparatorDot />
+                <SeparatorDot m="0 38px" />
               </Flex>
             )}
             <Nav>
