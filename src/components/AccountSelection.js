@@ -205,7 +205,7 @@ function AccountSelection({ buttonWidth, ...props }) {
       <DropdownWrapper>
         <Dropdown
           hitBoxMargin="8px 0"
-          placement="top"
+          placement="bottom"
           trigger={
             <FilledButton width={buttonWidth}>
               {lang.providers.connect_wallet}
