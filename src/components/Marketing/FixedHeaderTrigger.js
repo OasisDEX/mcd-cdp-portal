@@ -26,7 +26,7 @@ const HeaderStyle = styled(Box)`
   }
 
   &.visible {
-    z-index: 1000;
+    z-index: 10;
     opacity: 1;
     .cta-container {
       transform: translateX(0);
