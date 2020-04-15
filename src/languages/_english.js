@@ -25,7 +25,7 @@ export default {
     trade_card: {
       title: 'Trade',
       description:
-        "Place orders in the Marketplace, or simply exchange your tokens instantly for what's available.",
+        'Place orders in the Marketplace, or simply exchange your tokens instantly.',
       button: 'Start Trading'
     },
     borrow_card: {
@@ -50,7 +50,7 @@ export default {
       'Oasis is built on top of audited and formally verified smart contracts created by Maker, the industry leader in secure decentralized finance.',
     section3_title: 'Completely permissionless',
     section3_p:
-      'Oasis is a decentralized, non-custodial platform, accessible using an Ethereum-supported wallet. You—and only you—control your assets.',
+      'You—and only you—control your assets. Oasis is a decentralized, non-custodial platform, accessible using an Ethereum-supported wallet.',
     questions_title: 'Questions',
     question1: 'What is Oasis?',
     answer1:

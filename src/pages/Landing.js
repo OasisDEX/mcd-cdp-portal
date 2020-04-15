@@ -160,7 +160,7 @@ const Cards = (() => {
         <Card
           style={{
             background:
-              'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)'
+              'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)'
           }}
         >
           <BorrowIcon />
@@ -189,7 +189,7 @@ const Cards = (() => {
         <Card
           style={{
             background:
-              'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)',
+              'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)',
             marginBottom: 0
           }}
         >
