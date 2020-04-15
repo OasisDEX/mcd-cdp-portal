@@ -57,11 +57,13 @@ const IconBox = styled(Box)`
   }
 `;
 
-const IconButtonStyle = styled(Box)`
+const Item = styled(Box)`
   width: 255px;
   padding: 12px 26px 12px;
   cursor: pointer;
+`;
 
+const IconItemStyle = styled(Item)`
   .text {
     margin-left: 23px;
   }
@@ -71,26 +73,39 @@ const IconButtonStyle = styled(Box)`
   }
 `;
 
-const IconButton = ({ icon, iconSize = '26.67px', children, ...props }) => {
+const IconItem = ({ icon, iconSize = '26.67px', children, ...props }) => {
   return (
-    <IconButtonStyle {...props}>
+    <IconItemStyle {...props}>
       <Flex alignItems="center" justifyContent="flex-start" height="32px">
         <IconBox size={iconSize}>{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>
-    </IconButtonStyle>
+    </IconItemStyle>
   );
 };
 
-function BrowserProviderButton({ provider, ...props }) {
+function BrowserProviderItem({ provider, ...props }) {
   const { lang } = useLanguage();
   const icon = useBrowserIcon(provider);
   return (
-    <IconButton icon={icon} {...props}>
+    <IconItem icon={icon} {...props}>
       {lang.providers[provider] || 'Active Wallet'}
-    </IconButton>
+    </IconItem>
   );
 }
+
+const NavItem = styled(Item)`
+  font-weight: bold;
+  font-size: ${props => props.theme.fontSizes.s};
+  line-height: 31px;
+  letter-spacing: 0.5px;
+  color: #1aab9b;
+  text-align: left;
+
+  :hover {
+    opacity: 0.6;
+  }
+`;
 
 function AccountSelection({ buttonWidth, ...props }) {
   const [showMore, setShowMore] = useState(false);
@@ -123,43 +138,43 @@ function AccountSelection({ buttonWidth, ...props }) {
 
   // wallet buttons
   const walletLink = (
-    <IconButton
+    <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
       disabled={!makerAuthenticated}
       icon={<WalletLinkLogo />}
     >
       {lang.landing_page.wallet_link}
-    </IconButton>
+    </IconItem>
   );
 
   const walletConnect = (
-    <IconButton
+    <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
       icon={<WalletConnectLogo style={{ width: '28px' }} />}
     >
       {lang.landing_page.wallet_connect}
-    </IconButton>
+    </IconItem>
   );
 
   const ledger = (
-    <IconButton
+    <IconItem
       onClick={connectLedgerWallet}
       disabled={!makerAuthenticated}
       icon={<LedgerLogo />}
       iconSize="27px"
     >
       {lang.providers.ledger_nano}
-    </IconButton>
+    </IconItem>
   );
 
   const trezor = (
-    <IconButton
+    <IconItem
       onClick={connectTrezorWallet}
       disabled={!makerAuthenticated}
       icon={<TrezorLogo />}
     >
       {lang.providers.trezor}
-    </IconButton>
+    </IconItem>
   );
 
   return (
@@ -177,9 +192,9 @@ function AccountSelection({ buttonWidth, ...props }) {
         >
           {showMore ? (
             <DropdownItems>
-              <Text onClick={() => setShowMore(false)}>
+              <NavItem onClick={() => setShowMore(false)}>
                 {lang.providers.main_wallets}
-              </Text>
+              </NavItem>
               {walletLink}
               {walletConnect}
               {ledger}
@@ -187,7 +202,7 @@ function AccountSelection({ buttonWidth, ...props }) {
             </DropdownItems>
           ) : (
             <DropdownItems>
-              <BrowserProviderButton
+              <BrowserProviderItem
                 onClick={connectBrowserWallet}
                 disabled={!makerAuthenticated}
                 provider={providerName}
@@ -197,9 +212,9 @@ function AccountSelection({ buttonWidth, ...props }) {
               <BrowserView>{ledger}</BrowserView>
               <BrowserView>{trezor}</BrowserView>
               <BrowserView>
-                <Text onClick={() => setShowMore(true)}>
+                <NavItem onClick={() => setShowMore(true)}>
                   {lang.providers.more_wallets}
-                </Text>
+                </NavItem>
               </BrowserView>
               {/* <ReadOnlyConnect /> */}
             </DropdownItems>
