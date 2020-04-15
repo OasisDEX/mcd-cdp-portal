@@ -177,6 +177,9 @@ function AccountSelection({ buttonWidth, ...props }) {
     </IconItem>
   );
 
+  const mainWallets = [walletLink, walletConnect, ledger, trezor];
+  const otherWallets = [walletLink, walletConnect, ledger, trezor]; // will change
+
   return (
     <Box width={buttonWidth} {...props}>
       <DropdownWrapper>
@@ -194,11 +197,9 @@ function AccountSelection({ buttonWidth, ...props }) {
             <DropdownItems>
               <NavItem onClick={() => setShowMore(false)}>
                 {lang.providers.main_wallets}
+                {` (${mainWallets.length + 1})`}
               </NavItem>
-              {walletLink}
-              {walletConnect}
-              {ledger}
-              {trezor}
+              {otherWallets}
             </DropdownItems>
           ) : (
             <DropdownItems>
@@ -207,13 +208,13 @@ function AccountSelection({ buttonWidth, ...props }) {
                 disabled={!makerAuthenticated}
                 provider={providerName}
               />
-              <BrowserView>{walletLink}</BrowserView>
-              <BrowserView>{walletConnect}</BrowserView>
-              <BrowserView>{ledger}</BrowserView>
-              <BrowserView>{trezor}</BrowserView>
+              {mainWallets.map((wallet, index) => (
+                <BrowserView key={index}>{wallet}</BrowserView>
+              ))}
               <BrowserView>
                 <NavItem onClick={() => setShowMore(true)}>
                   {lang.providers.more_wallets}
+                  {` (${otherWallets.length})`}
                 </NavItem>
               </BrowserView>
               {/* <ReadOnlyConnect /> */}
