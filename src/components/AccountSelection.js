@@ -136,7 +136,7 @@ function AccountSelection({ buttonWidth, ...props }) {
     }
   }
 
-  // wallet buttons
+  // wallet items
   const walletLink = (
     <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
@@ -177,8 +177,8 @@ function AccountSelection({ buttonWidth, ...props }) {
     </IconItem>
   );
 
-  const mainWallets = [walletLink, walletConnect, ledger, trezor];
-  const otherWallets = [walletLink, walletConnect, ledger, trezor]; // will change
+  const mainWallets = [ledger, trezor];
+  const otherWallets = [walletLink, walletConnect];
 
   return (
     <Box width={buttonWidth} {...props}>
