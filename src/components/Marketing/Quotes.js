@@ -43,7 +43,7 @@ const Author = styled(Text).attrs(() => ({
   }
 `;
 
-const QuotesBox = ({
+const Quotes = ({
   title,
   body,
   quote,
@@ -81,4 +81,4 @@ export const QuotesFadeIn = ({ children, ...props }) => (
   </FadeIn>
 );
 
-export default hot(QuotesBox);
+export default hot(Quotes);

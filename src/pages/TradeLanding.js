@@ -10,7 +10,7 @@ import {
   FixedHeaderTrigger,
   FullWidth,
   Questions,
-  QuotesBox,
+  Quotes,
   ThickUnderline,
   Parallaxed,
   FilledButton,
@@ -57,7 +57,7 @@ const HeroBackground = (() => {
   );
 })();
 
-const StyledQuotesBox = styled(QuotesBox)`
+const StyledQuotes = styled(Quotes)`
   background: linear-gradient(125.71deg, #cbfffa 0%, #e7fce9 100%);
 
   :after {
@@ -105,7 +105,7 @@ function TradeLanding() {
         background="radial-gradient(242.42% 146.56% at 0% 0%, #E8FFFC 0%, #F8FFE6 50.52%, #E8FFFC 100%)"
       >
         <QuotesFadeIn>
-          <StyledQuotesBox
+          <StyledQuotes
             title={lang.trade_landing.quotes_block.title}
             body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}
             quote={lang.trade_landing.quotes_block.quote1}

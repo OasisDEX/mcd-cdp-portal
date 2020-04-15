@@ -11,7 +11,7 @@ import {
   FixedHeaderTrigger,
   FullWidth,
   Questions,
-  QuotesBox,
+  Quotes,
   GradientBox,
   ThickUnderline,
   Parallaxed,
@@ -54,7 +54,7 @@ const HeroBackground = (() => {
   );
 })();
 
-const StyledQuotesBox = styled(QuotesBox)`
+const StyledQuotes = styled(Quotes)`
   background: radial-gradient(100% 181.73% at 0% 0%, #feffc6 0%, #d5ffe3 100%);
 
   :after {
@@ -104,7 +104,7 @@ function SaveOverview() {
         background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
       >
         <QuotesFadeIn>
-          <StyledQuotesBox
+          <StyledQuotes
             title={lang.save_landing.quotes_block.title}
             body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
             quote={lang.save_landing.quotes_block.quote1}

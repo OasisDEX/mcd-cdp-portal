@@ -2,7 +2,7 @@ import FullWidth from './FullWidth';
 import Questions, { buildQuestionsFromLangObj } from './Questions';
 import { FilledButton } from './Buttons';
 import ConnectHero from './ConnectHero';
-import QuotesBox, { QuotesFadeIn } from './QuotesBox';
+import Quotes, { QuotesFadeIn } from './Quotes';
 import GradientBox from './GradientBox';
 import Features from './Features';
 import styled from 'styled-components';
@@ -44,7 +44,7 @@ export {
   ConnectHero,
   ThickUnderline,
   SeparatorDot,
-  QuotesBox,
+  Quotes,
   GradientBox,
   QuotesFadeIn,
   Features,

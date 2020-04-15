@@ -12,7 +12,7 @@ import {
   ConnectHero,
   FullWidth,
   ThickUnderline,
-  QuotesBox,
+  Quotes,
   GradientBox,
   Features,
   Questions,
@@ -133,7 +133,7 @@ const BlurryBall = styled.div`
   filter: blur(15px);
 `;
 
-const StyledQuotesBox = styled(QuotesBox)`
+const StyledQuotes = styled(Quotes)`
   background: radial-gradient(100% 181.73% at 0% 0%, #fef1d1 0%, #f9fb9e 100%);
   :after {
     content: '';
@@ -191,7 +191,7 @@ function Borrow() {
         <Box display="inline-block">
           <BlurryBall />
           <QuotesFadeIn>
-            <StyledQuotesBox
+            <StyledQuotes
               title={lang.borrow_landing.quotes_block.title}
               body={lang.borrow_landing.quotes_block.body}
               quote={lang.borrow_landing.quotes_block.quote1}
@@ -205,7 +205,7 @@ function Borrow() {
               >
                 <FrontBall size="180px" />
               </Parallaxed>
-            </StyledQuotesBox>
+            </StyledQuotes>
           </QuotesFadeIn>
         </Box>
       </GradientBox>
