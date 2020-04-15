@@ -97,7 +97,6 @@ function TradeLanding() {
           <Box height="83px">
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
-          <Text fontSize="19px">{lang.trade_landing.connect_to_start}</Text>
           {ctaButton}
         </StyledConnectHero>
       </FixedHeaderTrigger>
