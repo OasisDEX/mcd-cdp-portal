@@ -5,18 +5,19 @@ import {
   Box,
   Dropdown,
   DefaultDropdown,
-  Text
+  Text,
+  Flex
 } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
-import BrowserProviderButton from 'components/BrowserProviderButton';
-import IconButton from 'components/IconButton';
 import { FilledButton } from 'components/Marketing';
 
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import useLanguage from 'hooks/useLanguage';
+import useBrowserIcon from 'hooks/useBrowserIcon';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
@@ -44,6 +45,52 @@ const DropdownItems = styled(DefaultDropdown)`
   border-radius: 10px;
   padding: 10px 7px 12px;
 `;
+
+const IconBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  &,
+  svg,
+  img {
+    width: ${props => props.size};
+    height: ${props => props.size};
+  }
+`;
+
+const IconButtonStyle = styled(Box)`
+  width: 255px;
+  padding: 12px 26px 12px;
+  cursor: pointer;
+
+  .text {
+    margin-left: 23px;
+  }
+
+  :hover .text {
+    opacity: 0.6;
+  }
+`;
+
+const IconButton = ({ icon, iconSize = '26.67px', children, ...props }) => {
+  return (
+    <IconButtonStyle {...props}>
+      <Flex alignItems="center" justifyContent="flex-start" height="32px">
+        <IconBox size={iconSize}>{icon}</IconBox>
+        <Text className="text">{children}</Text>
+      </Flex>
+    </IconButtonStyle>
+  );
+};
+
+function BrowserProviderButton({ provider, ...props }) {
+  const { lang } = useLanguage();
+  const icon = useBrowserIcon(provider);
+  return (
+    <IconButton icon={icon} {...props}>
+      {lang.providers[provider] || 'Active Wallet'}
+    </IconButton>
+  );
+}
 
 function AccountSelection({ buttonWidth, ...props }) {
   const [showMore, setShowMore] = useState(false);

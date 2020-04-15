@@ -15,6 +15,7 @@ import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import useBrowserIcon from 'hooks/useBrowserIcon';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
@@ -25,7 +26,6 @@ import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
-import { useBrowserIcon } from './BrowserProviderButton';
 
 const negativeMarginY = css`
   margin-top: -5px;
