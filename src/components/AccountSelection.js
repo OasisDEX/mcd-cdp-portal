@@ -27,14 +27,6 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 
-const DropdownWrapper = styled(Box)`
-  :hover {
-    ${FilledButton} {
-      background-color: #50445e;
-    }
-  }
-`;
-
 const DropdownItems = styled(DefaultDropdown)`
   margin-bottom: 8px;
   min-width: 320px;
@@ -57,6 +49,36 @@ const DropdownItems = styled(DefaultDropdown)`
   }
 `;
 
+const DropdownWrapper = styled(Box)`
+  :hover {
+    ${FilledButton} {
+      background-color: #50445e;
+    }
+  }
+
+  ${DropdownItems} {
+    &.smaller {
+      position: absolute;
+      top: 0;
+    }
+    &.show {
+      opacity: 1;
+      z-index: 1;
+    }
+    &.hide {
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+
+  [data-placement='top'] {
+    ${DropdownItems}.smaller {
+      top: unset;
+      bottom: -8px;
+    }
+  }
+`;
+
 const IconBox = styled(Box)`
   display: flex;
   align-items: center;
@@ -72,12 +94,6 @@ const Item = styled(Box)`
   width: 255px;
   padding: 12px 26px 12px;
   cursor: pointer;
-`;
-
-const InvisibleItem = styled.div`
-  width: 255px;
-  margin-bottom: 8px;
-  height: 56px;
 `;
 
 const IconItemStyle = styled(Item)`
@@ -125,7 +141,7 @@ const NavItem = styled(Item)`
 `;
 
 function AccountSelection({ buttonWidth, ...props }) {
-  const [showMore, setShowMore] = useState(false);
+  const [showMain, setShowMain] = useState(true);
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -198,7 +214,6 @@ function AccountSelection({ buttonWidth, ...props }) {
   const otherWallets = [walletLink, walletConnect];
 
   const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
-  const maxLength = Math.max(mainWalletsCount, otherWallets.length);
 
   return (
     <Box width={buttonWidth} {...props}>
@@ -213,29 +228,12 @@ function AccountSelection({ buttonWidth, ...props }) {
             </FilledButton>
           }
         >
-          {showMore ? (
-            <DropdownItems>
-              <div className="invisible-items-top">
-                {/*
-                  Pad dropdown with invisible items to prevent it from
-                  disappearing when swapping between main and other wallets.
-                */}
-                {Array(maxLength - otherWallets.length).fill(<InvisibleItem />)}
-              </div>
-              <NavItem onClick={() => setShowMore(false)}>
-                {lang.providers.main_wallets}
-                {` (${mainWalletsCount})`}
-              </NavItem>
-              {otherWallets}
-              <div className="invisible-items-bottom">
-                {Array(maxLength - otherWallets.length).fill(<InvisibleItem />)}
-              </div>
-            </DropdownItems>
-          ) : (
-            <DropdownItems>
-              <div className="invisible-items-top">
-                {Array(maxLength - mainWalletsCount).fill(<InvisibleItem />)}
-              </div>
+          <div>
+            <DropdownItems
+              className={`${
+                mainWalletsCount >= otherWallets.length ? 'larger' : 'smaller'
+              } ${showMain ? 'show' : 'hide'}`}
+            >
               <BrowserProviderItem
                 onClick={connectBrowserWallet}
                 disabled={!makerAuthenticated}
@@ -245,16 +243,24 @@ function AccountSelection({ buttonWidth, ...props }) {
                 <BrowserView key={index}>{wallet}</BrowserView>
               ))}
               <BrowserView>
-                <NavItem onClick={() => setShowMore(true)}>
+                <NavItem onClick={() => setShowMain(false)}>
                   {lang.providers.more_wallets}
                   {` (${otherWallets.length})`}
                 </NavItem>
               </BrowserView>
-              <div className="invisible-items-bottom">
-                {Array(maxLength - mainWalletsCount).fill(<InvisibleItem />)}
-              </div>
             </DropdownItems>
-          )}
+            <DropdownItems
+              className={`${
+                otherWallets.length > mainWalletsCount ? 'larger' : 'smaller'
+              } ${showMain ? 'hide' : 'show'}`}
+            >
+              <NavItem onClick={() => setShowMain(true)}>
+                {lang.providers.main_wallets}
+                {` (${mainWalletsCount})`}
+              </NavItem>
+              {otherWallets}
+            </DropdownItems>
+          </div>
         </Dropdown>
       </DropdownWrapper>
     </Box>
