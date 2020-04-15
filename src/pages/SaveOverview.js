@@ -14,7 +14,6 @@ import {
   QuotesBox,
   ThickUnderline,
   Parallaxed,
-  FadeIn,
   QuotesFadeIn
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
@@ -27,6 +26,7 @@ import { ReactComponent as Feat1 } from 'images/landing/save/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/save/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/save/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
+import { Link } from 'react-navi';
 
 const HeroBackground = (() => {
   const BackTriangles = styled(BackTrianglesBase)`
@@ -152,6 +152,15 @@ function SaveOverview() {
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          links={
+            <Link
+              href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/dsr"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {lang.save_landing.questions.bottom_link1}
+            </Link>
+          }
         />
       </Box>
     </PageContentLayout>

@@ -13,7 +13,6 @@ import {
   QuotesBox,
   ThickUnderline,
   Parallaxed,
-  FadeIn,
   FilledButton,
   QuotesFadeIn
 } from '../components/Marketing';
@@ -125,6 +124,11 @@ function TradeLanding() {
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          links={
+            <Link href="#" target="_blank" rel="noopener noreferrer">
+              {lang.trade_landing.questions.bottom_link1}
+            </Link>
+          }
         />
       </Box>
     </PageContentLayout>

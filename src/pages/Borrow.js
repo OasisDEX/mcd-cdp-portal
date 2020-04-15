@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
-import { useNavigation } from 'react-navi';
+import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
@@ -18,7 +18,8 @@ import {
   buildQuestionsFromLangObj,
   FixedHeaderTrigger,
   Parallaxed,
-  QuotesFadeIn
+  QuotesFadeIn,
+  SeparatorDot
 } from '../components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -246,6 +247,25 @@ function Borrow() {
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          links={
+            <>
+              <Link
+                href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/vault"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {lang.borrow_landing.questions.bottom_link1}
+              </Link>
+              <SeparatorDot mx="24px" />
+              <Link
+                href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/glossary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {lang.borrow_landing.questions.bottom_link2}
+              </Link>
+            </>
+          }
         />
       </Box>
     </PageContentLayout>

@@ -105,7 +105,11 @@ export default {
     feature3_heading: 'Many possibilities',
     feature3_content: 'Manage a diverse range of Vaults from a single page. Easily track the important information you need to know.',
     feature4_heading: 'No more limits',
-    feature4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.'
+    feature4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.',
+    questions: {
+      bottom_link1: 'Full list of Oasis Vault FAQs',
+      bottom_link2: 'Glossary of terms'
+    }
   },
   save_landing: {
     page_name: 'Oasis Save',
@@ -125,7 +129,10 @@ export default {
     feature3_heading: 'Honest and transparent rate',
     feature3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
     feature4_heading: 'Secure from the ground up',
-    feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.'
+    feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.',
+    questions: {
+      bottom_link1: 'Full list of Oasis Save FAQs'
+    }
   },
   trade_landing: {
     page_name: 'Oasis Trade',
@@ -145,7 +152,10 @@ export default {
     feature3_heading: 'Quickly swap tokens for free',
     feature3_content: 'Oasis trade allows you to get in and out of positions instantly, without fees.',
     feature4_heading: 'Non custodial',
-    feature4_content: 'The system is a set of ownerless, autonomous smart contracts. You maintain control over your funds.'
+    feature4_content: 'The system is a set of ownerless, autonomous smart contracts. You maintain control over your funds.',
+    questions: {
+      bottom_link1: 'Full list of Oasis Trade FAQs'
+    }
   },
   overview_page: {
     title: 'Overview',

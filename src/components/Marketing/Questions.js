@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Text } from '@makerdao/ui-components-core';
+import { Flex, Text } from '@makerdao/ui-components-core';
 
 const answerAnimationTime = '350ms';
 const separatorColor = '#EBEBEB';
@@ -169,7 +169,14 @@ const SeparatorLine = styled.div`
   top: ${props => (props.isSelected ? 0 : '-1px')};
 `;
 
-const Questions = ({ questions }) => {
+const Links = styled(Flex)`
+  font-size: ${props => props.theme.fontSizes.s};
+  align-items: center;
+  text-decoration: underline;
+  margin-top: 32px;
+`;
+
+const Questions = ({ questions, links }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
@@ -196,6 +203,7 @@ const Questions = ({ questions }) => {
           </div>
         );
       })}
+      <Links>{links}</Links>
     </div>
   );
 };
