@@ -148,7 +148,7 @@ function SaveOverview() {
           })
         )}
       />
-      <Box mt="153px" mb="126px">
+      <Box mt="280px" mb="126px">
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
