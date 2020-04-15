@@ -92,7 +92,7 @@ const IconBox = styled(Box)`
 
 const Item = styled(Box)`
   width: 255px;
-  padding: 12px 26px 12px;
+  padding: 12px 26px;
   cursor: pointer;
 `;
 
@@ -130,10 +130,10 @@ function BrowserProviderItem({ provider, ...props }) {
 const NavItem = styled(Item)`
   font-weight: bold;
   font-size: ${props => props.theme.fontSizes.s};
-  line-height: 31px;
   letter-spacing: 0.5px;
   color: #1aab9b;
   text-align: left;
+  padding: 9px 26px;
 
   :hover {
     opacity: 0.6;
