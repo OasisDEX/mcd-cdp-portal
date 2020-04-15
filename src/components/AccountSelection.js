@@ -75,10 +75,8 @@ function AccountSelection({ buttonWidth, ...props }) {
           placement="bottom"
           trigger={
             <FilledButton width={buttonWidth}>
-              <span style={{ marginRight: '15px' }}>
-                {lang.providers.connect_wallet}
-              </span>
-              <CaratDown />
+              {lang.providers.connect_wallet}
+              <CaratDown style={{ marginTop: '2px', marginLeft: '15px' }} />
             </FilledButton>
           }
         >
