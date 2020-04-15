@@ -525,6 +525,8 @@ export default {
   providers: {
     connect_wallet: 'Connect a wallet',
     connect_wallet_long: 'Connect wallet to get started',
+    more_wallets: 'More wallets',
+    main_wallets: 'Main wallets',
     metamask: 'MetaMask',
     trust: 'Trust',
     coinbase: 'Coinbase Wallet',

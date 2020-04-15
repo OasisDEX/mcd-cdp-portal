@@ -1,7 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
-import { Box, Dropdown, DefaultDropdown } from '@makerdao/ui-components-core';
+import {
+  Box,
+  Dropdown,
+  DefaultDropdown,
+  Text
+} from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
@@ -41,6 +46,7 @@ const DropdownItems = styled(DefaultDropdown)`
 `;
 
 function AccountSelection({ buttonWidth, ...props }) {
+  const [showMore, setShowMore] = useState(false);
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -68,6 +74,47 @@ function AccountSelection({ buttonWidth, ...props }) {
     }
   }
 
+  // wallet buttons
+  const walletLink = (
+    <IconButton
+      onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+      disabled={!makerAuthenticated}
+      icon={<WalletLinkLogo />}
+    >
+      {lang.landing_page.wallet_link}
+    </IconButton>
+  );
+
+  const walletConnect = (
+    <IconButton
+      onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
+      icon={<WalletConnectLogo style={{ width: '28px' }} />}
+    >
+      {lang.landing_page.wallet_connect}
+    </IconButton>
+  );
+
+  const ledger = (
+    <IconButton
+      onClick={connectLedgerWallet}
+      disabled={!makerAuthenticated}
+      icon={<LedgerLogo />}
+      iconSize="27px"
+    >
+      {lang.providers.ledger_nano}
+    </IconButton>
+  );
+
+  const trezor = (
+    <IconButton
+      onClick={connectTrezorWallet}
+      disabled={!makerAuthenticated}
+      icon={<TrezorLogo />}
+    >
+      {lang.providers.trezor}
+    </IconButton>
+  );
+
   return (
     <Box width={buttonWidth} {...props}>
       <DropdownWrapper>
@@ -81,67 +128,35 @@ function AccountSelection({ buttonWidth, ...props }) {
             </FilledButton>
           }
         >
-          <DropdownItems>
-            <BrowserProviderButton
-              onClick={connectBrowserWallet}
-              disabled={!makerAuthenticated}
-              provider={providerName}
-              css={{
-                backgroundColor: 'white'
-              }}
-            />
-            <BrowserView>
-              <IconButton
-                onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
+          {showMore ? (
+            <DropdownItems>
+              <Text onClick={() => setShowMore(false)}>
+                {lang.providers.main_wallets}
+              </Text>
+              {walletLink}
+              {walletConnect}
+              {ledger}
+              {trezor}
+            </DropdownItems>
+          ) : (
+            <DropdownItems>
+              <BrowserProviderButton
+                onClick={connectBrowserWallet}
                 disabled={!makerAuthenticated}
-                icon={<WalletLinkLogo />}
-                css={{
-                  backgroundColor: 'white'
-                }}
-              >
-                {lang.landing_page.wallet_link}
-              </IconButton>
-            </BrowserView>
-            <BrowserView>
-              <IconButton
-                onClick={() =>
-                  connectToProviderOfType(AccountTypes.WALLETCONNECT)
-                }
-                icon={<WalletConnectLogo style={{ width: '28px' }} />}
-                css={{
-                  backgroundColor: 'white'
-                }}
-              >
-                {lang.landing_page.wallet_connect}
-              </IconButton>
-            </BrowserView>
-            <BrowserView>
-              <IconButton
-                onClick={connectLedgerWallet}
-                disabled={!makerAuthenticated}
-                icon={<LedgerLogo />}
-                css={{
-                  backgroundColor: 'white'
-                }}
-                iconSize="27px"
-              >
-                {lang.providers.ledger_nano}
-              </IconButton>
-            </BrowserView>
-            <BrowserView>
-              <IconButton
-                onClick={connectTrezorWallet}
-                disabled={!makerAuthenticated}
-                icon={<TrezorLogo />}
-                css={{
-                  backgroundColor: 'white'
-                }}
-              >
-                {lang.providers.trezor}
-              </IconButton>
-            </BrowserView>
-            {/* <ReadOnlyConnect /> */}
-          </DropdownItems>
+                provider={providerName}
+              />
+              <BrowserView>{walletLink}</BrowserView>
+              <BrowserView>{walletConnect}</BrowserView>
+              <BrowserView>{ledger}</BrowserView>
+              <BrowserView>{trezor}</BrowserView>
+              <BrowserView>
+                <Text onClick={() => setShowMore(true)}>
+                  {lang.providers.more_wallets}
+                </Text>
+              </BrowserView>
+              {/* <ReadOnlyConnect /> */}
+            </DropdownItems>
+          )}
         </Dropdown>
       </DropdownWrapper>
     </Box>
