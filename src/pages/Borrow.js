@@ -225,7 +225,7 @@ function Borrow() {
             quotesImg={<QuotesImg />}
           >
             <Parallaxed
-              initialOffset="1388"
+              initialOffset="1100"
               style={{ position: 'absolute', bottom: '78px', right: '70px' }}
             >
               <FrontBall size="180px" />

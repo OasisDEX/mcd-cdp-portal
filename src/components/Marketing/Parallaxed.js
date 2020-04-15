@@ -7,7 +7,7 @@ const Parallaxed = ({ style, children, initialOffset = 0, ...props }) => {
   return (
     <div
       style={{
-        transform: `translateY(${(scrollY - initialOffset) / 14}px)`,
+        transform: `translateY(${Math.round((scrollY - initialOffset) / 8)}px)`,
         ...style
       }}
       {...props}
