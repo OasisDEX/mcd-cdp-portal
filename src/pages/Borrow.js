@@ -201,7 +201,7 @@ function Borrow() {
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
-          <ThickUnderline background="linear-gradient(170.88deg, #d2ff72 9.13%, #fdc134 87.83%)">
+          <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
           <Text.h1 mt="16px" mb="15px">
