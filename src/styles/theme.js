@@ -108,6 +108,10 @@ export const marketingTheme = (() => {
         letterSpacing: '0.5px',
         color: mColors.violetGray
       }
+    },
+    fontSizes: {
+      ...theme.fontSizes,
+      s: '1.9rem'
     }
   };
 })();

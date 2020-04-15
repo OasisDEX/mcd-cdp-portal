@@ -209,7 +209,7 @@ function Borrow() {
           <Box height="150px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
-          <Text fontSize="19px">{lang.borrow_landing.connect_to_start}</Text>
+          <Text fontSize="s">{lang.borrow_landing.connect_to_start}</Text>
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         </ConnectHero>
       </FixedHeaderTrigger>

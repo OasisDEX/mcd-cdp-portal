@@ -122,7 +122,7 @@ function SaveOverview() {
           <Box height="150px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
-          <Text fontSize="19px">{lang.save_landing.connect_to_start}</Text>
+          <Text fontSize="s">{lang.save_landing.connect_to_start}</Text>
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         </ConnectHero>
       </FixedHeaderTrigger>

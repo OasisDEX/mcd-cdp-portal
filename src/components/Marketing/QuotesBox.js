@@ -27,15 +27,17 @@ const QuotesImgWrapper = styled.div`
   justify-self: left;
 `;
 
-const Quote = styled(TextBlock)`
+const Quote = styled(TextBlock).attrs(() => ({
+  fontSize: 's'
+}))`
   font-weight: bold;
-  font-size: 19px;
   line-height: 30px;
 `;
 
-const Author = styled(Text)`
+const Author = styled(Text).attrs(() => ({
+  fontSize: 's'
+}))`
   margin-top: 16px;
-  font-size: 19px;
   .name {
     text-decoration: underline;
   }

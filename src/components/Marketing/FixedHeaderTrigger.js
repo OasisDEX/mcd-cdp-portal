@@ -54,7 +54,7 @@ const Header = ({ cta, ...props }) => {
 
   const defaultCTA = (
     <Flex alignItems="center" className="selector-container">
-      <Text display={{ s: 'none', xl: 'inline' }} fontSize="19px">
+      <Text display={{ s: 'none', xl: 'inline' }} fontSize="s">
         {lang.providers.connect_wallet_long}
       </Text>
       <AccountSelection ml="24px" buttonWidth="248px" display="inline" />

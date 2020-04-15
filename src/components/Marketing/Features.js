@@ -34,7 +34,7 @@ const Features = ({ features, ...props }) => {
           <Flex>
             {point.img}
             <Text.h4>{point.title}</Text.h4>
-            <Text fontSize="19px">{point.content}</Text>
+            <Text fontSize="s">{point.content}</Text>
           </Flex>
         </FadeIn>
       ))}
