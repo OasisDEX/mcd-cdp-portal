@@ -30,6 +30,7 @@ const DropdownWrapper = styled(Box)`
 `;
 
 const DropdownItems = styled(DefaultDropdown)`
+  margin-bottom: 8px;
   min-width: 320px;
   background: #ffffff;
   border: 1px solid #ecf1f3;
@@ -72,7 +73,7 @@ function AccountSelection({ buttonWidth, ...props }) {
       <DropdownWrapper>
         <Dropdown
           hitBoxMargin="8px 0"
-          placement="bottom"
+          placement="top"
           trigger={
             <FilledButton width={buttonWidth}>
               {lang.providers.connect_wallet}
