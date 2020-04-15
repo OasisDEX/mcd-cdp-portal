@@ -44,6 +44,17 @@ const DropdownItems = styled(DefaultDropdown)`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   padding: 10px 7px 12px;
+  position: relative;
+
+  .invisible-items-top {
+    position: absolute;
+    bottom: calc(100% + 15px);
+  }
+
+  .invisible-items-bottom {
+    position: absolute;
+    top: calc(100% + 15px);
+  }
 `;
 
 const IconBox = styled(Box)`
@@ -61,6 +72,12 @@ const Item = styled(Box)`
   width: 255px;
   padding: 12px 26px 12px;
   cursor: pointer;
+`;
+
+const InvisibleItem = styled.div`
+  width: 255px;
+  margin-bottom: 8px;
+  height: 56px;
 `;
 
 const IconItemStyle = styled(Item)`
@@ -180,6 +197,9 @@ function AccountSelection({ buttonWidth, ...props }) {
   const mainWallets = [ledger, trezor];
   const otherWallets = [walletLink, walletConnect];
 
+  const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
+  const maxLength = Math.max(mainWalletsCount, otherWallets.length);
+
   return (
     <Box width={buttonWidth} {...props}>
       <DropdownWrapper>
@@ -195,14 +215,27 @@ function AccountSelection({ buttonWidth, ...props }) {
         >
           {showMore ? (
             <DropdownItems>
+              <div className="invisible-items-top">
+                {/*
+                  Pad dropdown with invisible items to prevent it from
+                  disappearing when swapping between main and other wallets.
+                */}
+                {Array(maxLength - otherWallets.length).fill(<InvisibleItem />)}
+              </div>
               <NavItem onClick={() => setShowMore(false)}>
                 {lang.providers.main_wallets}
-                {` (${mainWallets.length + 1})`}
+                {` (${mainWalletsCount})`}
               </NavItem>
               {otherWallets}
+              <div className="invisible-items-bottom">
+                {Array(maxLength - otherWallets.length).fill(<InvisibleItem />)}
+              </div>
             </DropdownItems>
           ) : (
             <DropdownItems>
+              <div className="invisible-items-top">
+                {Array(maxLength - mainWalletsCount).fill(<InvisibleItem />)}
+              </div>
               <BrowserProviderItem
                 onClick={connectBrowserWallet}
                 disabled={!makerAuthenticated}
@@ -217,7 +250,9 @@ function AccountSelection({ buttonWidth, ...props }) {
                   {` (${otherWallets.length})`}
                 </NavItem>
               </BrowserView>
-              {/* <ReadOnlyConnect /> */}
+              <div className="invisible-items-bottom">
+                {Array(maxLength - mainWalletsCount).fill(<InvisibleItem />)}
+              </div>
             </DropdownItems>
           )}
         </Dropdown>
