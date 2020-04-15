@@ -12,6 +12,7 @@ import {
   FullWidth,
   Questions,
   QuotesBox,
+  GradientBox,
   ThickUnderline,
   Parallaxed,
   QuotesFadeIn
@@ -50,34 +51,6 @@ const HeroBackground = (() => {
         </Parallaxed>
       </Box>
     </FullWidth>
-  );
-})();
-
-const GradientBox = (() => {
-  const Gradient = styled(FullWidth)`
-    background: linear-gradient(
-      170.64deg,
-      #f5ffda 7.17%,
-      rgba(255, 245, 222, 0.490208) 59.55%,
-      #f5ffda 108.77%
-    );
-    filter: blur(38px);
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-  `;
-
-  const GradientBoxStyle = styled(Box)`
-    position: relative;
-    padding: 116px 0 121px;
-  `;
-
-  return ({ children, ...props }) => (
-    <GradientBoxStyle {...props}>
-      <Gradient />
-      {children}
-    </GradientBoxStyle>
   );
 })();
 
@@ -126,7 +99,10 @@ function SaveOverview() {
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         </ConnectHero>
       </FixedHeaderTrigger>
-      <GradientBox mt="227px">
+      <GradientBox
+        mt="227px"
+        background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
+      >
         <QuotesFadeIn>
           <StyledQuotesBox
             title={lang.save_landing.quotes_block.title}

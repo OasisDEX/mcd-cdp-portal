@@ -3,6 +3,7 @@ import Questions, { buildQuestionsFromLangObj } from './Questions';
 import { FilledButton } from './Buttons';
 import ConnectHero from './ConnectHero';
 import QuotesBox, { QuotesFadeIn } from './QuotesBox';
+import GradientBox from './GradientBox';
 import Features from './Features';
 import styled from 'styled-components';
 import OasisLogoLink from './OasisLogoLink';
@@ -44,6 +45,7 @@ export {
   ThickUnderline,
   SeparatorDot,
   QuotesBox,
+  GradientBox,
   QuotesFadeIn,
   Features,
   OasisLogoLink,

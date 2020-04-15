@@ -13,6 +13,7 @@ import {
   FullWidth,
   ThickUnderline,
   QuotesBox,
+  GradientBox,
   Features,
   Questions,
   buildQuestionsFromLangObj,
@@ -117,51 +118,20 @@ const HeroBackground = (() => {
   );
 })();
 
-const GradientBox = (() => {
-  const Gradient = styled(FullWidth)`
-    background: linear-gradient(
-      170.64deg,
-      #f5ffda 7.17%,
-      rgba(255, 245, 222, 0.490208) 59.55%,
-      #f5ffda 108.77%
-    );
-    filter: blur(38px);
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-  `;
-
-  const BlurryBall = styled.div`
-    position: absolute;
-    width: 83px;
-    height: 83px;
-    top: 111px;
-    left: -111px;
-    background: radial-gradient(
-      51.51% 110.6% at 32.77% 50%,
-      #d2ff72 0%,
-      #fdc134 100%
-    );
-    border-radius: 50%;
-    filter: blur(15px);
-  `;
-
-  const GradientBoxStyle = styled(Box)`
-    position: relative;
-    padding: 116px 0 121px;
-  `;
-
-  return ({ children, ...props }) => (
-    <GradientBoxStyle {...props}>
-      <Gradient />
-      <Box style={{ display: 'inline-block' }}>
-        <BlurryBall />
-        {children}
-      </Box>
-    </GradientBoxStyle>
+const BlurryBall = styled.div`
+  position: absolute;
+  width: 83px;
+  height: 83px;
+  top: 111px;
+  left: -111px;
+  background: radial-gradient(
+    51.51% 110.6% at 32.77% 50%,
+    #d2ff72 0%,
+    #fdc134 100%
   );
-})();
+  border-radius: 50%;
+  filter: blur(15px);
+`;
 
 const StyledQuotesBox = styled(QuotesBox)`
   background: radial-gradient(100% 181.73% at 0% 0%, #fef1d1 0%, #f9fb9e 100%);
@@ -214,24 +184,30 @@ function Borrow() {
           <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
         </ConnectHero>
       </FixedHeaderTrigger>
-      <GradientBox mt="226px">
-        <QuotesFadeIn>
-          <StyledQuotesBox
-            title={lang.borrow_landing.quotes_block.title}
-            body={lang.borrow_landing.quotes_block.body}
-            quote={lang.borrow_landing.quotes_block.quote1}
-            author={lang.borrow_landing.quotes_block.author1}
-            url={`/${Routes.BORROW}/2434`}
-            quotesImg={<QuotesImg />}
-          >
-            <Parallaxed
-              initialOffset="1100"
-              style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+      <GradientBox
+        mt="226px"
+        background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
+      >
+        <Box display="inline-block">
+          <BlurryBall />
+          <QuotesFadeIn>
+            <StyledQuotesBox
+              title={lang.borrow_landing.quotes_block.title}
+              body={lang.borrow_landing.quotes_block.body}
+              quote={lang.borrow_landing.quotes_block.quote1}
+              author={lang.borrow_landing.quotes_block.author1}
+              url={`/${Routes.BORROW}/2434`}
+              quotesImg={<QuotesImg />}
             >
-              <FrontBall size="180px" />
-            </Parallaxed>
-          </StyledQuotesBox>
-        </QuotesFadeIn>
+              <Parallaxed
+                initialOffset="1100"
+                style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+              >
+                <FrontBall size="180px" />
+              </Parallaxed>
+            </StyledQuotesBox>
+          </QuotesFadeIn>
+        </Box>
       </GradientBox>
       <Features
         mt="200px"

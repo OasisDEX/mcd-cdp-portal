@@ -14,7 +14,8 @@ import {
   ThickUnderline,
   Parallaxed,
   FilledButton,
-  QuotesFadeIn
+  QuotesFadeIn,
+  GradientBox
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -57,7 +58,7 @@ const HeroBackground = (() => {
 })();
 
 const StyledQuotesBox = styled(QuotesBox)`
-  background: linear-gradient(125.71deg, #e7fcfa 0%, #e7fce9 100%);
+  background: linear-gradient(125.71deg, #cbfffa 0%, #e7fce9 100%);
 
   :after {
     content: '';
@@ -99,17 +100,21 @@ function TradeLanding() {
           {ctaButton}
         </StyledConnectHero>
       </FixedHeaderTrigger>
-      <Box height="300px" />
-      <QuotesFadeIn triggerOffset={180}>
-        <StyledQuotesBox
-          title={lang.trade_landing.quotes_block.title}
-          body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}
-          quote={lang.trade_landing.quotes_block.quote1}
-          author={lang.trade_landing.quotes_block.author1}
-          url="https://chat.makerdao.com/group/team-marketing-internal"
-          quotesImg={<QuotesImg />}
-        />
-      </QuotesFadeIn>
+      <GradientBox
+        mt="427px"
+        background="radial-gradient(242.42% 146.56% at 0% 0%, #E8FFFC 0%, #F8FFE6 50.52%, #E8FFFC 100%)"
+      >
+        <QuotesFadeIn>
+          <StyledQuotesBox
+            title={lang.trade_landing.quotes_block.title}
+            body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}
+            quote={lang.trade_landing.quotes_block.quote1}
+            author={lang.trade_landing.quotes_block.author1}
+            url="https://chat.makerdao.com/group/team-marketing-internal"
+            quotesImg={<QuotesImg />}
+          />
+        </QuotesFadeIn>
+      </GradientBox>
       <Features
         mt="249px"
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
