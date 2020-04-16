@@ -109,7 +109,7 @@ const HeroBackground = (() => {
         <SmallBlurryBall />
         <DimGiantBall />
         <DimBall />
-        <Parallaxed style={{ position: 'static' }}>
+        <Parallaxed style={{ position: 'absolute', width: '100%' }}>
           <TopBall />
           <SmallBall />
         </Parallaxed>
