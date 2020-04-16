@@ -92,7 +92,7 @@ function SaveOverview() {
           <Text.h1 mt="16px" mb="18px" maxWidth="700px">
             {lang.save_landing.headline}
           </Text.h1>
-          <Box height="150px" maxWidth="690px">
+          <Box minHeight="150px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s">{lang.save_landing.connect_to_start}</Text>

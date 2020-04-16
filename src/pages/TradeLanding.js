@@ -94,7 +94,7 @@ function TradeLanding() {
           <Text.h1 mt="16px" mb="23px">
             {lang.trade_landing.headline}
           </Text.h1>
-          <Box height="83px">
+          <Box minHeight="83px">
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           {ctaButton}

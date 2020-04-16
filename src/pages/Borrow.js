@@ -177,7 +177,7 @@ function Borrow() {
           <Text.h1 mt="16px" mb="15px">
             {lang.borrow_landing.headline}
           </Text.h1>
-          <Box height="150px" maxWidth="720px">
+          <Box minHeight="150px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s">{lang.borrow_landing.connect_to_start}</Text>
