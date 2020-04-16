@@ -1,17 +1,40 @@
-import React from 'react';
-import useScroll from 'hooks/useScroll';
+import React, { useEffect, useRef } from 'react';
+import ScrollManager from 'window-scroll-manager';
 
-const Parallaxed = ({ style, children, initialOffset = 0, ...props }) => {
-  const scrollY = useScroll();
+const Parallaxed = ({ children, initialOffset = 0, ...props }) => {
+  const element = useRef(null);
+
+  const scrollHandler = (() => {
+    let prevTranslate;
+
+    return e => {
+      if (!element.current) {
+        return;
+      }
+
+      const translate = Math.round(
+        (e.detail.scrollPositionY - initialOffset) / 8
+      );
+      if (translate === prevTranslate) {
+        return;
+      }
+      prevTranslate = translate;
+      requestAnimationFrame(() => {
+        element.current.style.transform = `translateY(${translate}px)`;
+      });
+    };
+  })();
+
+  useEffect(() => {
+    new ScrollManager();
+    window.addEventListener('window-scroll', scrollHandler);
+    return () => {
+      window.removeEventListener('window-scroll', scrollHandler);
+    };
+  }, [scrollHandler]);
 
   return (
-    <div
-      style={{
-        transform: `translateY(${Math.round((scrollY - initialOffset) / 8)}px)`,
-        ...style
-      }}
-      {...props}
-    >
+    <div ref={element} {...props}>
       {children}
     </div>
   );
