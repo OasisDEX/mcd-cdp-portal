@@ -68,6 +68,7 @@ const DropdownWrapper = styled(Box)`
     &.hide {
       opacity: 0;
       z-index: -1;
+      pointer-events: none;
     }
   }
 
@@ -249,17 +250,19 @@ function AccountSelection({ buttonWidth, ...props }) {
                 </NavItem>
               </BrowserView>
             </DropdownItems>
-            <DropdownItems
-              className={`${
-                otherWallets.length > mainWalletsCount ? 'larger' : 'smaller'
-              } ${showMain ? 'hide' : 'show'}`}
-            >
-              <NavItem onClick={() => setShowMain(true)}>
-                {lang.providers.main_wallets}
-                {` (${mainWalletsCount})`}
-              </NavItem>
-              {otherWallets}
-            </DropdownItems>
+            <BrowserView style={{ position: 'static' }}>
+              <DropdownItems
+                className={`${
+                  otherWallets.length > mainWalletsCount ? 'larger' : 'smaller'
+                } ${showMain ? 'hide' : 'show'}`}
+              >
+                <NavItem onClick={() => setShowMain(true)}>
+                  {lang.providers.main_wallets}
+                  {` (${mainWalletsCount})`}
+                </NavItem>
+                {otherWallets}
+              </DropdownItems>
+            </BrowserView>
           </div>
         </Dropdown>
       </DropdownWrapper>
