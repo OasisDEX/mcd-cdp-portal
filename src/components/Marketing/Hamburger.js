@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
+import React from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 const Patty = styled.span``;
 
@@ -59,18 +59,18 @@ const HamburgerBun = styled.div`
   }
 `;
 
-const Hamburger = ({ active }) => {
+const Hamburger = styled(({ active, ...props }) => {
   return (
-    <HamburgerBun isCross={active}>
+    <HamburgerBun isCross={active} {...props}>
       <Patty />
       <Patty />
       <Patty />
     </HamburgerBun>
   );
-};
+})``;
 
 Hamburger.propTypes = {
-  active: PropTypes.bool,
+  active: PropTypes.bool
 };
 
 export default Hamburger;

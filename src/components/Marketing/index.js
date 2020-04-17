@@ -10,6 +10,7 @@ import OasisLogoLink from './OasisLogoLink';
 import FixedHeaderTrigger from './FixedHeaderTrigger';
 import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
+import Hamburger from './Hamburger';
 import { Box } from '@makerdao/ui-components-core';
 
 const ThickUnderline = styled.div`
@@ -51,5 +52,6 @@ export {
   OasisLogoLink,
   FixedHeaderTrigger,
   Parallaxed,
-  FadeIn
+  FadeIn,
+  Hamburger
 };
