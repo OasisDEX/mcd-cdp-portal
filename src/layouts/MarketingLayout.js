@@ -183,10 +183,45 @@ const Footer = styled.footer`
   }
 `;
 
+const MobileMenu = styled(Box)`
+  position: fixed;
+  top: 43px;
+  left: 0;
+  width: 100vw;
+  padding: 33px;
+  background-color: #fff;
+  overflow-y: scroll;
+  transition: all 0.2s ease-in-out;
+  z-index: 99;
+
+  ${MainNavStyle} {
+    margin-top: 118px;
+    float: left;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 26px;
+    a:not(:first-child) {
+      margin-left: 0;
+      margin-top: 63px;
+    }
+  }
+`;
+
 // It has the Oasis logo, the top nav links, and the copyright notice.
 const MarketingLayout = ({ showNavInFooter, children }) => {
   const { lang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  function toggleMenu() {
+    if (!mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.height = 'unset';
+    }
+    setMobileMenuOpen(!mobileMenuOpen);
+  }
 
   return (
     <ThemeProvider theme={marketingTheme}>
@@ -221,14 +256,17 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
             crossOrigin="anonymous"
           />
         </Helmet>
-        <Header>
+        <Header className={mobileMenuOpen ? 'menu-open' : ''}>
           <OasisLogoLink />
           <MainNav mt="4px" />
-          <Hamburger
-            active={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          />
+          <Hamburger active={mobileMenuOpen} onClick={() => toggleMenu()} />
         </Header>
+        <MobileMenu
+          opacity={mobileMenuOpen ? 1 : 0}
+          height={mobileMenuOpen ? '100%' : '0'}
+        >
+          <MainNav />
+        </MobileMenu>
         {children}
         <CookieNotice />
         <Footer>
