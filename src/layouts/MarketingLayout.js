@@ -15,7 +15,6 @@ const MarketingLayoutStyle = styled.div`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: auto;
 
-  padding-top: 32px;
   font-family: 'FT Base', Arial, Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -28,16 +27,6 @@ const MarketingLayoutStyle = styled.div`
   a {
     color: ${getColor('darkPurple')};
     text-decoration: none;
-  }
-`;
-
-const centerContent = css`
-  margin: 0 auto;
-  max-width: 1280px;
-  padding: 0 40px;
-
-  @media only screen and (max-width: 425px) {
-    padding: 0 10px;
   }
 `;
 
@@ -97,8 +86,19 @@ const MainNav = props => {
   );
 };
 
+const centerContent = css`
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 24px;
+
+  @media only screen and (min-width: ${props => props.theme.breakpoints.m}) {
+    padding: 0 40px;
+  }
+`;
+
 const Header = styled.header`
   ${centerContent};
+  margin-top: 16px;
   text-align: left;
   letter-spacing: 0.3px;
   display: flex;
@@ -121,9 +121,12 @@ const Header = styled.header`
 
   ${Hamburger} {
     display: block;
+    margin-right: 3px;
   }
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
+    margin-top: 32px;
+
     ${MainNavStyle} {
       display: inline-flex;
     }

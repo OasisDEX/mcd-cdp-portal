@@ -5,12 +5,16 @@ import styled from 'styled-components';
 const Patty = styled.span``;
 
 const HamburgerBun = styled.div`
-  width: 20px;
+  width: 22px;
   height: 16px;
-  position: relative;
+  padding: 2px;
   transform: rotate(0deg);
   transition: 0.5s ease-in-out;
   cursor: pointer;
+
+  & > div {
+    position: relative;
+  }
 
   span {
     display: block;
@@ -29,12 +33,13 @@ const HamburgerBun = styled.div`
     }
 
     &:nth-child(2) {
-      top: 7px;
+      top: 6px;
+      width: 14px;
       transform-origin: left center;
     }
 
     &:nth-child(3) {
-      top: 14px;
+      top: 12px;
       transform-origin: left center;
     }
 
@@ -62,9 +67,11 @@ const HamburgerBun = styled.div`
 const Hamburger = styled(({ active, ...props }) => {
   return (
     <HamburgerBun isCross={active} {...props}>
-      <Patty />
-      <Patty />
-      <Patty />
+      <div>
+        <Patty />
+        <Patty />
+        <Patty />
+      </div>
     </HamburgerBun>
   );
 })``;
