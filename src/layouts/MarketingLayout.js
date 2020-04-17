@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
@@ -186,6 +186,8 @@ const Footer = styled.footer`
 // It has the Oasis logo, the top nav links, and the copyright notice.
 const MarketingLayout = ({ showNavInFooter, children }) => {
   const { lang } = useLanguage();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <ThemeProvider theme={marketingTheme}>
       <MarketingLayoutStyle>
@@ -222,7 +224,10 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
         <Header>
           <OasisLogoLink />
           <MainNav mt="4px" />
-          <Hamburger />
+          <Hamburger
+            active={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          />
         </Header>
         {children}
         <CookieNotice />

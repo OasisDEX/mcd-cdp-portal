@@ -35,6 +35,8 @@ const HamburgerBun = styled.div`
     &:nth-child(2) {
       top: 6px;
       width: 14px;
+      left: unset;
+      right: 4px;
       transform-origin: left center;
     }
 
@@ -48,7 +50,9 @@ const HamburgerBun = styled.div`
       `
       &:nth-child(1) {
         transform: rotate(45deg);
+        width: 23px;
         left: 0px;
+        top: -2px;
       }
 
       &:nth-child(2) {
@@ -58,7 +62,9 @@ const HamburgerBun = styled.div`
 
       &:nth-child(3) {
         transform: rotate(-45deg);
+        width: 23px;
         left: 0px;
+        top: 14px;
       }
     `}
   }
