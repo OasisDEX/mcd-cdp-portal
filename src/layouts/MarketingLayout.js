@@ -188,22 +188,30 @@ const MobileMenu = styled(Box)`
   top: 43px;
   left: 0;
   width: 100vw;
-  padding: 33px;
+  padding: 39px 33px 33px;
   background-color: #fff;
   overflow-y: scroll;
   transition: all 0.2s ease-in-out;
   z-index: 99;
 
   ${MainNavStyle} {
-    margin-top: 118px;
-    float: left;
+    margin-top: 64px;
     flex-direction: column;
     align-items: flex-start;
     font-size: 26px;
+    float: left;
     a:not(:first-child) {
       margin-left: 0;
       margin-top: 63px;
     }
+  }
+
+  ${OasisLogoLink} {
+    display: block;
+    text-align: left;
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: 0.3px;
   }
 `;
 
@@ -257,7 +265,9 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
           />
         </Helmet>
         <Header className={mobileMenuOpen ? 'menu-open' : ''}>
-          <OasisLogoLink />
+          <OasisLogoLink
+            style={{ visibility: mobileMenuOpen ? 'hidden' : 'visible' }}
+          />
           <MainNav mt="4px" />
           <Hamburger active={mobileMenuOpen} onClick={() => toggleMenu()} />
         </Header>
@@ -265,7 +275,10 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
           opacity={mobileMenuOpen ? 1 : 0}
           height={mobileMenuOpen ? '100%' : '0'}
         >
-          <MainNav />
+          <Box display="inline-block" style={{ float: 'left' }}>
+            <OasisLogoLink onClick={() => toggleMenu()} />
+            <MainNav />
+          </Box>
         </MobileMenu>
         {children}
         <CookieNotice />

@@ -8,8 +8,8 @@ const StyledLink = styled(Link)`
   font-weight: bold;
 `;
 
-export default props => (
+export default styled(props => (
   <StyledLink {...props} href="/">
     Oasis
   </StyledLink>
-);
+))``;
