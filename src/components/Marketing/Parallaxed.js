@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import ScrollManager from 'window-scroll-manager';
 
 const Parallaxed = ({ children, initialOffset = 0, ...props }) => {
   const element = useRef(null);
@@ -6,12 +7,14 @@ const Parallaxed = ({ children, initialOffset = 0, ...props }) => {
   const scrollHandler = (() => {
     let prevTranslate;
 
-    return () => {
+    return e => {
       if (!element.current) {
         return;
       }
 
-      const translate = Math.round((window.scrollY - initialOffset) / 8);
+      const translate = Math.round(
+        (e.detail.scrollPositionY - initialOffset) / 8
+      );
       if (translate === prevTranslate) {
         return;
       }
@@ -21,9 +24,10 @@ const Parallaxed = ({ children, initialOffset = 0, ...props }) => {
   })();
 
   useEffect(() => {
-    window.addEventListener('scroll', scrollHandler);
+    new ScrollManager();
+    window.addEventListener('window-scroll', scrollHandler);
     return () => {
-      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('window-scroll', scrollHandler);
     };
   }, [scrollHandler]);
 
