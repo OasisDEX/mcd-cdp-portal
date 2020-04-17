@@ -12,9 +12,8 @@ const Parallaxed = ({ children, initialOffset = 0, ...props }) => {
         return;
       }
 
-      const translate = Math.round(
-        (e.detail.scrollPositionY - initialOffset) / 8
-      );
+      const translate =
+        Math.round((e.detail.scrollPositionY - initialOffset) / 4) / 2;
       if (translate === prevTranslate) {
         return;
       }
