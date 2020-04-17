@@ -54,18 +54,6 @@ const MainNavStyle = styled(Nav)`
   a {
     color: ${getColor('violetGray')};
   }
-
-  @media (max-width: 550px) {
-    a:not(:first-child) {
-      margin-left: 38px;
-    }
-  }
-
-  @media (max-width: 425px) {
-    a:not(:first-child) {
-      margin-left: 20px;
-    }
-  }
 `;
 
 const MainNav = props => {
@@ -137,12 +125,12 @@ const Header = styled.header`
   }
 `;
 
-const centerFooterMaxWidth = '640px';
+const centerFooterMaxWidth = '980px';
 
 const Footer = styled.footer`
   ${centerContent};
   margin-top: 90px;
-  margin-bottom: 70px;
+  margin-bottom: 39px;
   letter-spacing: 0.3px;
 
   *,
@@ -154,31 +142,73 @@ const Footer = styled.footer`
   .navs {
     display: inline-flex;
     align-items: center;
-    float: right;
+    float: none;
+    text-align: center;
+    flex-direction: column;
+  }
+
+  ${SeparatorDot} {
+    display: none;
+  }
+
+  ${MainNavStyle} {
+    margin-bottom: 24px;
+  }
+
+  .legal-nav {
+    a:not(:first-child) {
+      margin-left: 44px;
+    }
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    margin-bottom: 70px;
+
+    ${SeparatorDot} {
+      display: inline-block;
+    }
+
+    ${MainNavStyle} {
+      margin-bottom: 0;
+    }
+
+    .legal-nav {
+      a:not(:first-child) {
+        margin-left: 56px;
+      }
+    }
   }
 
   ${Nav} {
-    float: none;
+    float: right;
   }
 
   ${Nav}, .navs {
-    @media (max-width: ${centerFooterMaxWidth}) {
-      float: none;
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      text-align: center;
+      flex-direction: row;
+    }
+
+    @media (min-width: ${centerFooterMaxWidth}) {
+      float: right;
     }
   }
 
   .copyright {
-    text-align: left;
-    font-size: 16px;
+    font-size: 13px;
+
     white-space: nowrap;
 
-    @media (max-width: ${centerFooterMaxWidth}) {
-      padding-top: 60px;
-      text-align: center;
+    padding-top: 48px;
+    text-align: center;
+
+    @media (min-width: 375px) {
+      font-size: 16px;
     }
 
-    @media (max-width: 425px) {
-      font-size: 13px;
+    @media (min-width: ${centerFooterMaxWidth}) {
+      text-align: left;
+      padding-top: 0;
     }
   }
 `;
@@ -293,7 +323,7 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
                 <SeparatorDot m="0 38px" />
               </Flex>
             )}
-            <Nav>
+            <Nav className="legal-nav">
               <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
               <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
             </Nav>
