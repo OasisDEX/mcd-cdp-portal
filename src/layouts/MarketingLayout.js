@@ -125,6 +125,38 @@ const Header = styled.header`
   }
 `;
 
+const MobileMenu = styled(Box)`
+  position: fixed;
+  top: 43px;
+  left: 0;
+  width: 100vw;
+  padding: 39px 33px 33px;
+  background-color: #fff;
+  overflow-y: scroll;
+  transition: all 0.2s ease-in-out;
+  z-index: 99;
+
+  ${MainNavStyle} {
+    margin-top: 64px;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 26px;
+    float: left;
+    a:not(:first-child) {
+      margin-left: 0;
+      margin-top: 63px;
+    }
+  }
+
+  ${OasisLogoLink} {
+    display: block;
+    text-align: left;
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: 0.3px;
+  }
+`;
+
 const centerFooterMaxWidth = '980px';
 
 const Footer = styled.footer`
@@ -210,38 +242,6 @@ const Footer = styled.footer`
       text-align: left;
       padding-top: 0;
     }
-  }
-`;
-
-const MobileMenu = styled(Box)`
-  position: fixed;
-  top: 43px;
-  left: 0;
-  width: 100vw;
-  padding: 39px 33px 33px;
-  background-color: #fff;
-  overflow-y: scroll;
-  transition: all 0.2s ease-in-out;
-  z-index: 99;
-
-  ${MainNavStyle} {
-    margin-top: 64px;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 26px;
-    float: left;
-    a:not(:first-child) {
-      margin-left: 0;
-      margin-top: 63px;
-    }
-  }
-
-  ${OasisLogoLink} {
-    display: block;
-    text-align: left;
-    font-size: 40px;
-    line-height: 48px;
-    letter-spacing: 0.3px;
   }
 `;
 
