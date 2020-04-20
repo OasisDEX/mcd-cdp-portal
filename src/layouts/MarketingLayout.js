@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
@@ -249,16 +249,19 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
   const { lang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  function toggleMenu() {
-    if (!mobileMenuOpen) {
+  useEffect(() => {
+    if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.height = '100vh';
     } else {
       document.body.style.overflow = 'unset';
       document.body.style.height = 'unset';
     }
-    setMobileMenuOpen(!mobileMenuOpen);
-  }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.height = 'unset';
+    };
+  }, [mobileMenuOpen]);
 
   return (
     <ThemeProvider theme={marketingTheme}>
@@ -298,7 +301,10 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
             style={{ visibility: mobileMenuOpen ? 'hidden' : 'visible' }}
           />
           <MainNav mt="4px" />
-          <Hamburger active={mobileMenuOpen} onClick={() => toggleMenu()} />
+          <Hamburger
+            active={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          />
         </Header>
         <MobileMenu
           opacity={mobileMenuOpen ? 1 : 0}
@@ -307,7 +313,7 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
         >
           <Box p="39px 33px 33px">
             <Box display="inline-block" style={{ float: 'left' }}>
-              <OasisLogoLink onClick={() => toggleMenu()} />
+              <OasisLogoLink onClick={() => setMobileMenuOpen(false)} />
               <MainNav />
             </Box>
           </Box>
