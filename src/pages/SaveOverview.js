@@ -15,7 +15,9 @@ import {
   GradientBox,
   ThickUnderline,
   Parallaxed,
-  QuotesFadeIn
+  QuotesFadeIn,
+  H1,
+  H2
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -89,9 +91,9 @@ function SaveOverview() {
           <ThickUnderline background="linear-gradient(173.93deg, #F7FFD8 14.25%, #42FF99 80.99%)">
             <Text.h4>{lang.save_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 mt="16px" mb="18px" maxWidth="700px">
+          <H1 mt="16px" mb="18px" maxWidth="700px">
             {lang.save_landing.headline}
-          </Text.h1>
+          </H1>
           <Box minHeight="150px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
@@ -125,7 +127,7 @@ function SaveOverview() {
         )}
       />
       <Box mt="280px" mb="126px">
-        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
+        <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
           links={

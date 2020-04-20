@@ -11,7 +11,7 @@ import FixedHeaderTrigger from './FixedHeaderTrigger';
 import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
-import { Box } from '@makerdao/ui-components-core';
+import { Box, Text } from '@makerdao/ui-components-core';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -37,6 +37,22 @@ const SeparatorDot = styled(Box)`
   opacity: 0.2;
 `;
 
+const H1 = styled(Text.h1)`
+  font-size: 5.2rem;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    font-size: ${props => props.theme.typography.h1.fontSize};
+  }
+`;
+
+const H2 = styled(Text.h2)`
+  font-size: 4rem;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    font-size: ${props => props.theme.typography.h2.fontSize};
+  }
+`;
+
 export {
   FullWidth,
   Questions,
@@ -53,5 +69,7 @@ export {
   FixedHeaderTrigger,
   Parallaxed,
   FadeIn,
-  Hamburger
+  Hamburger,
+  H1,
+  H2
 };

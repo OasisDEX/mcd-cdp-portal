@@ -20,7 +20,9 @@ import {
   FixedHeaderTrigger,
   Parallaxed,
   QuotesFadeIn,
-  SeparatorDot
+  SeparatorDot,
+  H1,
+  H2
 } from '../components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -174,9 +176,9 @@ function Borrow() {
           <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 mt="16px" mb="15px">
+          <H1 mt="16px" mb="15px">
             {lang.borrow_landing.headline}
-          </Text.h1>
+          </H1>
           <Box minHeight="150px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
@@ -220,7 +222,7 @@ function Borrow() {
         )}
       />
       <Box mt="280px" mb="126px">
-        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
+        <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
           links={
