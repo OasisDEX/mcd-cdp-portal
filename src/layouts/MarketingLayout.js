@@ -130,7 +130,6 @@ const MobileMenu = styled(Box)`
   top: 43px;
   left: 0;
   width: 100vw;
-  padding: 39px 33px 33px;
   background-color: #fff;
   overflow-y: scroll;
   transition: all 0.2s ease-in-out;
@@ -304,10 +303,13 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
         <MobileMenu
           opacity={mobileMenuOpen ? 1 : 0}
           height={mobileMenuOpen ? '100%' : '0'}
+          display={{ s: 'block', m: 'none' }}
         >
-          <Box display="inline-block" style={{ float: 'left' }}>
-            <OasisLogoLink onClick={() => toggleMenu()} />
-            <MainNav />
+          <Box p="39px 33px 33px">
+            <Box display="inline-block" style={{ float: 'left' }}>
+              <OasisLogoLink onClick={() => toggleMenu()} />
+              <MainNav />
+            </Box>
           </Box>
         </MobileMenu>
         {children}
