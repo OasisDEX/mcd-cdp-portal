@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Flex, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Text } from '@makerdao/ui-components-core';
 
 const answerAnimationTime = '350ms';
 const separatorColor = '#EBEBEB';
@@ -19,7 +19,11 @@ const QuestionAndAnswerStyle = styled.div`
 
   .question {
     margin-right: 58px;
-    line-height: 36px;
+    line-height: 31px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      line-height: 36px;
+    }
   }
 
   .answer {
@@ -180,7 +184,7 @@ const Questions = ({ questions, links }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   return (
-    <div
+    <Box
       style={{
         maxWidth: '800px',
         margin: '29px auto',
@@ -188,6 +192,7 @@ const Questions = ({ questions, links }) => {
         fontSize: '18px',
         lineHeight: '25px'
       }}
+      px={{ s: '12px', m: 0 }}
     >
       {questions.map(({ q, a }, index) => {
         const isSelected = index === selectedIndex;
@@ -204,7 +209,7 @@ const Questions = ({ questions, links }) => {
         );
       })}
       <Links>{links}</Links>
-    </div>
+    </Box>
   );
 };
 

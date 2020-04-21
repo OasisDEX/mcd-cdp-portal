@@ -450,19 +450,32 @@ const BulletPoints = (() => {
     max-width: 966px;
     background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
     text-align: left;
-    padding: 131px 13% 122px 12%;
-
-    @media (max-width: ${props => props.theme.breakpoints.m}) {
-      padding-top: 104px;
-      padding-bottom: 97px;
-    }
+    padding: 120px 24px 122px;
 
     & > div:not(:first-child) {
-      margin-top: 121px;
+      margin-top: 123px;
     }
 
     .title {
-      margin-bottom: 23px;
+      margin-bottom: 21px;
+    }
+
+    width: 100vw;
+    position: relative;
+    left: -12px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      padding: 131px 13% 122px 12%;
+      width: inherit;
+      left: unset;
+
+      .title {
+        margin-bottom: 23px;
+      }
+
+      & > div:not(:first-child) {
+        margin-top: 121px;
+      }
     }
   `;
 
@@ -511,6 +524,7 @@ function Landing() {
         <Box mt="207px" height="100%">
           <FullWidth
             style={{ height: '91%', position: 'absolute', top: '-25px' }}
+            display={{ s: 'none', m: 'inherit' }}
           >
             <BlurryBackground />
           </FullWidth>
@@ -520,7 +534,7 @@ function Landing() {
             </FadeIn>
           </Box>
         </Box>
-        <Box mt="153px" mb="126px">
+        <Box mt={{ s: '158px', m: '153px' }} mb="126px">
           <H2>{lang.landing_page.questions_title}</H2>
           <Questions
             questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
