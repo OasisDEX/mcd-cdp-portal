@@ -39,14 +39,24 @@ const StyledConnectHero = styled(ConnectHero)`
 const HeroBackground = (() => {
   const BackParallelograms = styled(BackParallelogramsBase)`
     position: absolute;
-    left: -98px;
-    top: -129px;
+    left: -81px;
+    top: -45px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      left: -98px;
+      top: -129px;
+    }
   `;
 
   const FrontParallelograms = styled(FrontParallelogramsBase)`
     position: absolute;
-    left: -179px;
-    top: -84px;
+    left: -162px;
+    top: 0;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      left: -179px;
+      top: -84px;
+    }
   `;
 
   return () => (
