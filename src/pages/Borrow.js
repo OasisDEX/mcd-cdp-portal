@@ -10,7 +10,6 @@ import useLanguage from 'hooks/useLanguage';
 import { Box, Position, Text } from '@makerdao/ui-components-core';
 import {
   ConnectHero,
-  FullWidth,
   ThickUnderline,
   Quotes,
   GradientBox,
@@ -88,7 +87,12 @@ const HeroBackground = (() => {
   `;
 
   return () => (
-    <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
+    <Box
+      width="100%"
+      zIndex="-1"
+      height="670px"
+      style={{ position: 'absolute' }}
+    >
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
         <Pos top={{ s: '-30px', m: '13px' }} left={{ s: '-86px', m: '-83px' }}>
@@ -112,7 +116,7 @@ const HeroBackground = (() => {
           </Parallaxed>
         </Pos>
       </Box>
-    </FullWidth>
+    </Box>
   );
 })();
 

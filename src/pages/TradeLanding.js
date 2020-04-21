@@ -8,7 +8,6 @@ import {
   ConnectHero,
   Features,
   FixedHeaderTrigger,
-  FullWidth,
   Questions,
   Quotes,
   ThickUnderline,
@@ -60,14 +59,19 @@ const HeroBackground = (() => {
   `;
 
   return () => (
-    <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
+    <Box
+      width="100%"
+      zIndex="-1"
+      height="670px"
+      style={{ position: 'absolute' }}
+    >
       <Box maxWidth="866px" m="0 auto">
         <BackParallelograms />
         <Parallaxed style={{ zIndex: 10 }}>
           <FrontParallelograms />
         </Parallaxed>
       </Box>
-    </FullWidth>
+    </Box>
   );
 })();
 
