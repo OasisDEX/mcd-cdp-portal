@@ -291,7 +291,9 @@ export default {
     generate: 'Generated {0} new Dai from Vault',
     pay_back: 'Repaid {0} Dai to Vault',
     give: 'Vault given to {0} by {1}',
-    migrate: 'Vault upgraded from SCD'
+    migrate: 'Vault upgraded from SCD',
+    bite: 'Auctioned {0} {1} from Vault',
+    reclaim: 'Reclaimed {0} {1} after auction(s)'
   },
   action_sidebar: {
     deposit_title: 'Deposit {0}',
@@ -476,6 +478,12 @@ export default {
     non_savings_owner:
       'You are currently viewing the savings of another address ({0})',
     emergency_shutdown_active:
-      'Emergency shutdown has been initiated on {0}. This dashboard is currently read-only. If you have any vaults or DAI, please go to {1}. For more information you can read more {2}'
+      'Emergency shutdown has been initiated on {0}. This dashboard is currently read-only. If you have any vaults or DAI, please go to {1}. For more information you can read more {2}',
+    vault_below_next_price:
+      'Your {0} Vault has entered the liquidation phase and your collateral will be auctioned at {1}. You can still avoid auction by depositing at least {2} or repaying {3}',
+    vault_below_current_price:
+      'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}',
+    vault_is_liquidated:
+      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.'
   }
 };

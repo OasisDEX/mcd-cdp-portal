@@ -32,7 +32,6 @@ function CDPView({ cdpId }) {
   );
 
   const vault = watch.vault(cdpId);
-
   return useMemo(
     () =>
       vault && vault.externalOwnerAddress ? (
@@ -43,6 +42,8 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={vault.externalOwnerAddress}
         />
+      ) : vault && vault.externalOwnerAddress === null ? (
+        <Unavailable />
       ) : vault === null ? (
         <Unavailable />
       ) : (

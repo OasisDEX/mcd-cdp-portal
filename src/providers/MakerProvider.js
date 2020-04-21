@@ -34,9 +34,11 @@ function MakerProvider({
   const [txLastUpdate, setTxLastUpdate] = useState({});
   const [maker, setMaker] = useState(null);
   const [watcher, setWatcher] = useState(null);
-  const navigation = useNavigation(network, mocks);
-  const { trackBtnClick } = useAnalytics();
 
+  const navNetwork = network === 'kovan-osm' ? 'kovan' : network;
+  const navigation = useNavigation(navNetwork, mocks);
+
+  const { trackBtnClick } = useAnalytics();
   const initAccount = account => {
     mixpanelIdentify(account.address, account.type);
     setAccount({ ...account });
@@ -62,7 +64,6 @@ function MakerProvider({
       throw new Error(
         'browser ethereum provider and URL network param do not match.'
       );
-
     if (
       !browserProvider.address ||
       !browserProvider.address.match(/^0x[a-fA-F0-9]{40}$/)
@@ -173,6 +174,7 @@ function MakerProvider({
     return () => {
       txManagerSub.unsub();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [maker, connectBrowserProvider]);
 
   const connectToProviderOfType = async type => {

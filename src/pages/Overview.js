@@ -21,8 +21,8 @@ import useModal from '../hooks/useModal';
 import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
+import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
-import { watch } from 'hooks/useObservable';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -56,40 +56,10 @@ function Overview({ viewedAddress }) {
   const { viewedAddressVaults } = useVaults();
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-
-  const emergencyShutdownActive = watch.emergencyShutdownActive();
-  const emergencyShutdownTime = watch.emergencyShutdownTime();
-
+  const { emergencyShutdownActive } = useEmergencyShutdown();
   const { addNotification, deleteNotifications } = useNotification();
 
   useEffect(() => {
-    if (emergencyShutdownActive) {
-      addNotification({
-        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
-        content: lang.formatString(
-          lang.notifications.emergency_shutdown_active,
-          emergencyShutdownTime
-            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
-            : '--',
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'http://migrate.makerdao.com/'}
-            target="_blank"
-          >
-            {'http://migrate.makerdao.com/'}
-          </Link>,
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'https://forum.makerdao.com/'}
-            target="_blank"
-          >
-            {'here'}
-          </Link>
-        ),
-        level: SAFETY_LEVELS.DANGER
-      });
-    }
-
     if (account && viewedAddress !== account.address) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,
@@ -100,13 +70,9 @@ function Overview({ viewedAddress }) {
         level: SAFETY_LEVELS.WARNING
       });
     }
-    return () =>
-      deleteNotifications([
-        NotificationList.NON_OVERVIEW_OWNER,
-        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
-      ]);
+    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewedAddress, account, emergencyShutdownTime, emergencyShutdownActive]);
+  }, [viewedAddress, account]);
 
   const { show } = useModal();
   if (!viewedAddressVaults) {

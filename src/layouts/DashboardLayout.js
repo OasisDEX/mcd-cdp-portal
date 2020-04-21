@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader/root';
 import SidebarBase from 'components/SidebarBase';
 import theme, { getSpace } from '../styles/theme';
 
-const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
+const DashboardLayout = ({ mobileNav, navbar, children }) => {
   return (
     <Grid
       bg="lightGrey"
@@ -31,4 +31,4 @@ const ResponsivePageLayout = ({ mobileNav, navbar, children }) => {
   );
 };
 
-export default hot(ResponsivePageLayout);
+export default hot(DashboardLayout);

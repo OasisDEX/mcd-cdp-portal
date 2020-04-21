@@ -4,8 +4,7 @@ import {
   Grid,
   Text,
   Button,
-  Address,
-  Link
+  Address
 } from '@makerdao/ui-components-core';
 
 import theme from '../styles/theme';
@@ -37,39 +36,9 @@ function Save({ viewedAddress }) {
   const { lang } = useLanguage();
   const { account, network } = useMaker();
   const { addNotification, deleteNotifications } = useNotification();
-  const {
-    emergencyShutdownActive,
-    emergencyShutdownTime
-  } = useEmergencyShutdown();
+  const { emergencyShutdownActive } = useEmergencyShutdown();
 
   useEffect(() => {
-    if (emergencyShutdownActive) {
-      addNotification({
-        id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
-        content: lang.formatString(
-          lang.notifications.emergency_shutdown_active,
-          emergencyShutdownTime
-            ? `${emergencyShutdownTime.toUTCString().slice(0, -3)} UTC`
-            : '--',
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'http://migrate.makerdao.com/'}
-            target="_blank"
-          >
-            {'http://migrate.makerdao.com/'}
-          </Link>,
-          <Link
-            css={{ textDecoration: 'underline' }}
-            href={'https://forum.makerdao.com/'}
-            target="_blank"
-          >
-            {'here'}
-          </Link>
-        ),
-        level: SAFETY_LEVELS.DANGER
-      });
-    }
-
     if (account && viewedAddress && viewedAddress !== account.address) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,
@@ -80,13 +49,9 @@ function Save({ viewedAddress }) {
         level: SAFETY_LEVELS.WARNING
       });
     }
-    return () =>
-      deleteNotifications([
-        NotificationList.NON_OVERVIEW_OWNER,
-        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE
-      ]);
+    return () => deleteNotifications([NotificationList.NON_OVERVIEW_OWNER]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewedAddress, account, emergencyShutdownActive, emergencyShutdownTime]);
+  }, [viewedAddress, account]);
 
   const viewedProxyAddress = watch.proxyAddress(viewedAddress);
   const savings = useSavings(viewedAddress);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, Card, Flex, Link, CardBody } from '@makerdao/ui-components-core';
-import { prettifyNumber } from 'utils/ui';
+import { formatter } from 'utils/ui';
 import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
@@ -52,7 +52,7 @@ const SidebarFeeds = ({ feeds }) => {
                       .join('/')}
                   </Text>
                   <Text fontSize="1.4rem" color="darkPurple">
-                    {prettifyNumber(value)}
+                    {`${formatter(value)} ${value.symbol}`}
                   </Text>
                 </Flex>
               )
