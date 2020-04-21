@@ -84,7 +84,7 @@ const Cards = (() => {
     padding: 57px 40px 60px;
 
     @media (max-width: 1238px) {
-      margin-bottom: 35px;
+      margin-bottom: 24px;
     }
 
     .title {
@@ -275,7 +275,12 @@ const SupportedTokens = (() => {
     margin: 74px auto 69px;
     justify-content: center;
     justify-items: center;
-    grid-row-gap: 60px;
+
+    grid-row-gap: 85px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      grid-row-gap: 60px;
+    }
   `;
 
   const TokenStyle = styled.div`
@@ -305,7 +310,7 @@ const SupportedTokens = (() => {
     span.onlyOnTrade:after {
       font-family: 'Arial Hebrew', Arial, sans-serif;
       content: '*';
-      font-size: 34px;
+      font-size: 3.4rem;
       position: absolute;
       top: 1rem;
       line-height: 20px;
@@ -338,7 +343,7 @@ const SupportedTokens = (() => {
             xl: 'repeat(5, 1fr)'
           }}
           maxWidth={{
-            s: '396px',
+            s: '313px',
             m: '656px',
             l: '850px',
             xl: '1080px'
@@ -496,8 +501,8 @@ function Landing() {
     <MarketingLayout>
       <SEO title="Oasis" />
       <Content>
-        <Box mt="149px">
-          <H1>{lang.landing_page.headline}</H1>
+        <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
+          <H1 style={{ lineHeight: '62px' }}>{lang.landing_page.headline}</H1>
         </Box>
         <FadeIn moveDistance="47px">
           <Cards mt="80px" />
