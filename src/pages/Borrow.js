@@ -7,7 +7,7 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box, Position, Text } from '@makerdao/ui-components-core';
 import {
   ConnectHero,
   FullWidth,
@@ -65,7 +65,7 @@ const HeroBackground = (() => {
     size: '72px'
   }))`
     top: 434px;
-    left: 48px;
+    left: 143px;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
       #eaffcf 0%,
@@ -77,44 +77,50 @@ const HeroBackground = (() => {
   const TopBall = styled(FrontBall).attrs(() => ({
     size: '212px'
   }))`
-    top: -23px;
-    left: -159px;
+    position: static;
   `;
 
   const SmallBall = styled(FrontBall).attrs(() => ({
     size: '86px'
   }))`
-    top: 327px;
-    right: 89px;
+    position: static;
   `;
 
   const DimGiantBall = styled(Ball).attrs(() => ({
     size: '352px'
   }))`
-    top: 24px;
-    left: -85px;
+    position: static;
     background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
   `;
 
   const DimBall = styled(Ball).attrs(() => ({
     size: '182px'
   }))`
-    top: 243px;
-    right: -39px;
+    position: static;
     background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
+  `;
+
+  const Pos = styled(Position)`
+    position: absolute;
   `;
 
   return () => (
     <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
-        <SmallBlurryBall />
-        <DimGiantBall />
-        <DimBall />
-        <Parallaxed style={{ position: 'absolute', width: '100%' }}>
-          <TopBall />
-          <SmallBall />
-        </Parallaxed>
+        <Pos top="13px" left="-83px">
+          <DimGiantBall />
+          <Parallaxed style={{position: 'absolute', top: '-36px', left: '-67px'}}>
+            <TopBall />
+          </Parallaxed>
+          <SmallBlurryBall />
+        </Pos>
+        <Pos top="354px" right="-18px">
+          <DimBall />
+          <Parallaxed style={{ position: 'absolute', top: '98px', left: '-33px'}}>
+            <SmallBall />
+          </Parallaxed>
+        </Pos>
       </Box>
     </FullWidth>
   );
