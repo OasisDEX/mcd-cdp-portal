@@ -42,6 +42,8 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={vault.externalOwnerAddress}
         />
+      ) : vault && vault.externalOwnerAddress === null ? (
+        <Unavailable />
       ) : vault === null ? (
         <Unavailable />
       ) : (
