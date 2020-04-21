@@ -34,14 +34,24 @@ import { Link } from 'react-navi';
 const HeroBackground = (() => {
   const BackTriangles = styled(BackTrianglesBase)`
     position: absolute;
-    left: -184px;
-    top: -196px;
+    left: -45px;
+    top: -164px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      left: -184px;
+      top: -196px;
+    }
   `;
 
   const FrontTriangles = styled(FrontTrianglesBase)`
     position: absolute;
-    left: -174px;
-    top: -108px;
+    left: -35px;
+    top: -76px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      left: -174px;
+      top: -108px;
+    }
   `;
 
   return () => (
@@ -88,7 +98,7 @@ function SaveOverview() {
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
-          <ThickUnderline background="linear-gradient(173.93deg, #F7FFD8 14.25%, #42FF99 80.99%)">
+          <ThickUnderline background="linear-gradient(354.42deg, #B7FFB8 0%, #FCFF9E 64.82%)">
             <Text.h4>{lang.save_landing.page_name}</Text.h4>
           </ThickUnderline>
           <H1
