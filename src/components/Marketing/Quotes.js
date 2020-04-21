@@ -13,6 +13,13 @@ const QuotesBoxStyle = styled(Box)`
   padding: 100px 9.1% 76px;
   margin: 0 auto;
   position: relative;
+  width: 100vw;
+  left: -12px;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    width: unset;
+    left: unset;
+  }
 `;
 
 const QuoteWrapper = styled(Box)`

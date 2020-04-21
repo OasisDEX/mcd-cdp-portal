@@ -73,16 +73,18 @@ const HeroBackground = (() => {
 const StyledQuotes = styled(Quotes)`
   background: radial-gradient(100% 181.73% at 0% 0%, #feffc6 0%, #d5ffe3 100%);
 
-  :after {
-    content: '';
-    display: block;
-    background: #c9ffe1;
-    height: 80%;
-    width: 110%;
-    position: absolute;
-    top: 13%;
-    left: -5%;
-    z-index: -1;
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    :after {
+      content: '';
+      display: block;
+      background: #c9ffe1;
+      height: 80%;
+      width: 110%;
+      position: absolute;
+      top: 13%;
+      left: -5%;
+      z-index: -1;
+    }
   }
 `;
 

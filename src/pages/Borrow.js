@@ -137,16 +137,19 @@ const BlurryBall = styled.div`
 
 const StyledQuotes = styled(Quotes)`
   background: radial-gradient(100% 181.73% at 0% 0%, #fef1d1 0%, #f9fb9e 100%);
-  :after {
-    content: '';
-    display: block;
-    background: #ffeec5;
-    height: 98%;
-    width: 58%;
-    position: absolute;
-    top: 49px;
-    right: -40px;
-    z-index: -1;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    :after {
+      content: '';
+      display: block;
+      background: #ffeec5;
+      height: 98%;
+      width: 58%;
+      position: absolute;
+      top: 49px;
+      right: -40px;
+      z-index: -1;
+    }
   }
 `;
 
@@ -201,16 +204,21 @@ function Borrow() {
               url={`/${Routes.BORROW}/2434`}
               quotesImg={<QuotesImg />}
             >
-              <Parallaxed
-                initialOffset="1100"
-                style={{
-                  position: 'absolute',
-                  bottom: '-110px',
-                  right: '-110px'
-                }}
+              <Box
+                display={{ s: 'none', m: 'block' }}
+                style={{ position: 'static' }}
               >
-                <FrontBall size="180px" />
-              </Parallaxed>
+                <Parallaxed
+                  initialOffset="1100"
+                  style={{
+                    position: 'absolute',
+                    bottom: '-110px',
+                    right: '-110px'
+                  }}
+                >
+                  <FrontBall size="180px" />
+                </Parallaxed>
+              </Box>
             </StyledQuotes>
           </QuotesFadeIn>
         </Box>

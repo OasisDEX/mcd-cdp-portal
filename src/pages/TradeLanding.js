@@ -78,16 +78,18 @@ const HeroBackground = (() => {
 const StyledQuotes = styled(Quotes)`
   background: linear-gradient(125.71deg, #cbfffa 0%, #e7fce9 100%);
 
-  :after {
-    content: '';
-    display: block;
-    background: #bffff8;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    z-index: -1;
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    :after {
+      content: '';
+      display: block;
+      background: #bffff8;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      z-index: -1;
+    }
   }
 `;
 

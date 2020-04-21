@@ -14,7 +14,11 @@ const Gradient = styled(FullWidth)`
 
 const GradientBoxStyle = styled(Box)`
   position: relative;
-  padding: 116px 0 121px;
+  padding: 56px 0;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    padding: 116px 0 121px;
+  }
 `;
 
 const GradientBox = ({ background, children, ...props }) => (
