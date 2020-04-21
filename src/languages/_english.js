@@ -90,7 +90,7 @@ export default {
   borrow_landing: {
     page_name: 'Oasis Borrow',
     headline: 'Give yourself some credit',
-    subheadline: 'Borrow against your assets by generating DAI and access liquidity without losing exposure. With DeFi, you\'re always in control of your funds.',
+    subheadline: 'Access liquidity, while making sure you don\'t lose exposure. Vaults make it easy to borrow against your assets by generating DAI.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
       title: 'Maximize your profits',
@@ -114,7 +114,7 @@ export default {
   save_landing: {
     page_name: 'Oasis Save',
     headline: 'The most trusted way to earn on your Dai',
-    subheadline: 'Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No Lockups.',
+    subheadline: 'Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No speculation.',
     connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
       title: 'Earn savings rate',

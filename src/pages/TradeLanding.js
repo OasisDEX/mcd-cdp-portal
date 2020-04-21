@@ -31,7 +31,9 @@ import { ReactComponent as Feat3 } from 'images/landing/trade/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/trade/feature-4.svg';
 
 const StyledConnectHero = styled(ConnectHero)`
-  margin: 127px auto 0;
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    margin: 127px auto 0;
+  }
 `;
 
 const HeroBackground = (() => {
@@ -79,7 +81,7 @@ function TradeLanding() {
   const { lang } = useLanguage();
   const ctaButton = (
     <Link href="https://oasis.app/trade/market/">
-      <FilledButton width="237px" mt="17px" mb="8px">
+      <FilledButton className="button" width="237px">
         {lang.trade_landing.cta_button}
       </FilledButton>
     </Link>
@@ -93,10 +95,10 @@ function TradeLanding() {
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 mt="16px" mb="23px">
+          <H1 className="headline" style={{ marginBottom: '23px' }}>
             {lang.trade_landing.headline}
           </H1>
-          <Box minHeight="83px">
+          <Box minHeight="83px" mb={{ s: '9px', m: 'inherit' }}>
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           {ctaButton}

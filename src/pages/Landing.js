@@ -515,7 +515,7 @@ function Landing() {
       <SEO title="Oasis" />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
-          <H1 style={{ lineHeight: '62px' }}>{lang.landing_page.headline}</H1>
+          <H1>{lang.landing_page.headline}</H1>
         </Box>
         <FadeIn moveDistance="47px">
           <Cards mt="80px" />

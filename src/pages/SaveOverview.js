@@ -91,14 +91,20 @@ function SaveOverview() {
           <ThickUnderline background="linear-gradient(173.93deg, #F7FFD8 14.25%, #42FF99 80.99%)">
             <Text.h4>{lang.save_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 mt="16px" mb="18px" maxWidth="700px">
+          <H1
+            className="headline"
+            style={{ marginBottom: '23px' }}
+            maxWidth="700px"
+          >
             {lang.save_landing.headline}
           </H1>
-          <Box minHeight="150px" maxWidth="690px">
+          <Box minHeight="86px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
-          <Text fontSize="s">{lang.save_landing.connect_to_start}</Text>
-          <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
+          <Text fontSize="s" className="connect-to-start">
+            {lang.save_landing.connect_to_start}
+          </Text>
+          <AccountSelection className="button" buttonWidth="248px" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox

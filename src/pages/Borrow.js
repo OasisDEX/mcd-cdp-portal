@@ -176,14 +176,14 @@ function Borrow() {
           <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 mt="16px" mb="15px">
-            {lang.borrow_landing.headline}
-          </H1>
-          <Box minHeight="150px" maxWidth="720px">
+          <H1 className="headline">{lang.borrow_landing.headline}</H1>
+          <Box minHeight="128px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
-          <Text fontSize="s">{lang.borrow_landing.connect_to_start}</Text>
-          <AccountSelection buttonWidth="248px" mt="17px" mb="8px" />
+          <Text fontSize="s" className="connect-to-start">
+            {lang.borrow_landing.connect_to_start}
+          </Text>
+          <AccountSelection className="button" buttonWidth="248px" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox
