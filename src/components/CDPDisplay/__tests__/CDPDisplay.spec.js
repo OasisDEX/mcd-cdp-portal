@@ -41,7 +41,7 @@ beforeAll(async () => {
 
 afterEach(cleanup);
 
-test.skip('Vault Display page and actions', async () => {
+test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
     getByText,
