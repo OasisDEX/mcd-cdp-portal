@@ -12,11 +12,21 @@ const StyledGrid = styled(Grid)`
   ${Flex} {
     flex-direction: column;
   }
+
   ${Text.h4} {
-    margin: 22px 0 15px;
+    margin: 25px 0 15px;
+    letter-spacing: 0.3px;
   }
+
   ${Text} {
     display: block;
+    letter-spacing: unset;
+
+    line-height: 31px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      line-height: inherit;
+    }
   }
 `;
 
@@ -27,6 +37,7 @@ const Features = ({ features, ...props }) => {
       maxWidth={{ s: '500px', l: '1120px' }}
       gridRowGap="118px"
       gridColumnGap="120px"
+      pl={{ s: '23px', m: 0 }}
       {...props}
     >
       {features.map(point => (

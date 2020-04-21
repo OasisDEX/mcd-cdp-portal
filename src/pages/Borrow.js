@@ -224,7 +224,7 @@ function Borrow() {
         </Box>
       </GradientBox>
       <Features
-        mt="200px"
+        mt={{ s: '158px', m: '200px' }}
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
