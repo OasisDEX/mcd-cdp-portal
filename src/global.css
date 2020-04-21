@@ -33,6 +33,14 @@ a {
 }
 
 @font-face {
+  font-family: 'FT Base';
+  src: url('/fonts/FTBase-Medium.woff2') format('woff2'),
+  url('/fonts/FTBase-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "SF Mono";
   font-weight: 400;
   src: url("/fonts/SFMono-Regular.otf");
