@@ -7,10 +7,10 @@ import { Link } from 'react-navi';
 import FadeIn from './FadeIn';
 import { H2 } from './index';
 
-const QuotesBoxStyle = styled(Box)`
+const QuotesStyle = styled(Box)`
   background: gray;
   max-width: 980px;
-  padding: 100px 9.1% 76px;
+  padding: 100px 24px 53px;
   margin: 0 auto;
   position: relative;
   width: 100vw;
@@ -19,15 +19,8 @@ const QuotesBoxStyle = styled(Box)`
   @media (min-width: ${props => props.theme.breakpoints.m}) {
     width: unset;
     left: unset;
+    padding: 100px 9.1% 76px;
   }
-`;
-
-const QuoteWrapper = styled(Box)`
-  display: grid;
-  grid-template-columns: 50px auto 50px;
-  grid-column-gap: 7px;
-  max-width: 760px;
-  margin: 48px auto;
 `;
 
 const QuotesImgWrapper = styled.div`
@@ -35,11 +28,27 @@ const QuotesImgWrapper = styled.div`
   justify-self: left;
 `;
 
+const QuoteWrapper = styled(Box)`
+  margin: 51px auto;
+  ${QuotesImgWrapper} {
+    margin-bottom: 21px;
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    margin: 48px auto;
+    display: grid;
+    grid-template-columns: 44px auto 44px;
+    grid-column-gap: 7px;
+    max-width: 760px;
+  }
+`;
+
 const Quote = styled(TextBlock).attrs(() => ({
   fontSize: 's'
 }))`
-  font-weight: bold;
+  font-weight: 500;
   line-height: 30px;
+  letter-spacing: 0.05px;
 `;
 
 const Author = styled(Text).attrs(() => ({
@@ -62,7 +71,7 @@ const Quotes = ({
   ...props
 }) => {
   return (
-    <QuotesBoxStyle {...props}>
+    <QuotesStyle {...props}>
       <H2 mb="16px">{title}</H2>
       <Text>{body}</Text>
       <QuoteWrapper>
@@ -79,7 +88,7 @@ const Quotes = ({
         <div />
       </QuoteWrapper>
       {children}
-    </QuotesBoxStyle>
+    </QuotesStyle>
   );
 };
 
