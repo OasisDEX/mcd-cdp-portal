@@ -51,7 +51,7 @@ const HeroBackground = (() => {
     size: '154px'
   }))`
     position: absolute;
-    top: 56px;
+    top: 7px;
     right: -110px;
     background: radial-gradient(
       51.51% 110.6% at 32.77% 50%,
@@ -59,6 +59,10 @@ const HeroBackground = (() => {
       #ffe29d 100%
     );
     filter: blur(20px);
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      top: 56px;
+    }
   `;
 
   const SmallBlurryBall = styled(Ball).attrs(() => ({
@@ -87,7 +91,7 @@ const HeroBackground = (() => {
     <FullWidth zIndex="-1" height="670px" style={{ position: 'absolute' }}>
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
-        <Pos top="13px" left="-83px">
+        <Pos top={{ s: '-30px', m: '13px' }} left={{ s: '-86px', m: '-83px' }}>
           <DimBall size="352px" />
           <Parallaxed
             style={{ position: 'absolute', top: '-36px', left: '-67px' }}
@@ -96,7 +100,10 @@ const HeroBackground = (() => {
           </Parallaxed>
           <SmallBlurryBall />
         </Pos>
-        <Pos top="354px" right="-18px">
+        <Pos
+          top={{ s: '306px', m: '354px' }}
+          right={{ s: '-105px', m: '-18px' }}
+        >
           <DimBall size="182px" />
           <Parallaxed
             style={{ position: 'absolute', top: '98px', left: '-33px' }}
