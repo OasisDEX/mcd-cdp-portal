@@ -32,7 +32,6 @@ import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 
 const Ball = styled.div`
-  position: absolute;
   width: ${props => props.size};
   height: ${props => props.size};
   border-radius: 50%;
@@ -51,6 +50,7 @@ const HeroBackground = (() => {
   const BlurryBall = styled(Ball).attrs(() => ({
     size: '154px'
   }))`
+    position: absolute;
     top: 56px;
     right: -110px;
     background: radial-gradient(
@@ -64,6 +64,7 @@ const HeroBackground = (() => {
   const SmallBlurryBall = styled(Ball).attrs(() => ({
     size: '72px'
   }))`
+    position: absolute;
     top: 434px;
     left: 143px;
     background: radial-gradient(
@@ -74,29 +75,7 @@ const HeroBackground = (() => {
     filter: blur(13px);
   `;
 
-  const TopBall = styled(FrontBall).attrs(() => ({
-    size: '212px'
-  }))`
-    position: static;
-  `;
-
-  const SmallBall = styled(FrontBall).attrs(() => ({
-    size: '86px'
-  }))`
-    position: static;
-  `;
-
-  const DimGiantBall = styled(Ball).attrs(() => ({
-    size: '352px'
-  }))`
-    position: static;
-    background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
-  `;
-
-  const DimBall = styled(Ball).attrs(() => ({
-    size: '182px'
-  }))`
-    position: static;
+  const DimBall = styled(Ball)`
     background: linear-gradient(271.64deg, #fff1cd 0%, #fefea5 100%);
   `;
 
@@ -109,16 +88,20 @@ const HeroBackground = (() => {
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
         <Pos top="13px" left="-83px">
-          <DimGiantBall />
-          <Parallaxed style={{position: 'absolute', top: '-36px', left: '-67px'}}>
-            <TopBall />
+          <DimBall size="352px" />
+          <Parallaxed
+            style={{ position: 'absolute', top: '-36px', left: '-67px' }}
+          >
+            <FrontBall size="212px" />
           </Parallaxed>
           <SmallBlurryBall />
         </Pos>
         <Pos top="354px" right="-18px">
-          <DimBall />
-          <Parallaxed style={{ position: 'absolute', top: '98px', left: '-33px'}}>
-            <SmallBall />
+          <DimBall size="182px" />
+          <Parallaxed
+            style={{ position: 'absolute', top: '98px', left: '-33px' }}
+          >
+            <FrontBall size="86px" />
           </Parallaxed>
         </Pos>
       </Box>
@@ -209,7 +192,11 @@ function Borrow() {
             >
               <Parallaxed
                 initialOffset="1100"
-                style={{ position: 'absolute', bottom: '78px', right: '70px' }}
+                style={{
+                  position: 'absolute',
+                  bottom: '-110px',
+                  right: '-110px'
+                }}
               >
                 <FrontBall size="180px" />
               </Parallaxed>
