@@ -1,5 +1,8 @@
 import FullWidth from './FullWidth';
-import Questions, { buildQuestionsFromLangObj } from './Questions';
+import Questions, {
+  buildQuestionsFromLangObj,
+  QuestionsWrapper
+} from './Questions';
 import { FilledButton } from './Buttons';
 import ConnectHero from './ConnectHero';
 import Quotes, { QuotesFadeIn } from './Quotes';
@@ -60,6 +63,7 @@ const H2 = styled(Text.h2)`
 export {
   FullWidth,
   Questions,
+  QuestionsWrapper,
   buildQuestionsFromLangObj,
   FilledButton,
   ConnectHero,

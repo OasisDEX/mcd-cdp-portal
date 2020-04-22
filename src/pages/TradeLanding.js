@@ -9,6 +9,7 @@ import {
   Features,
   FixedHeaderTrigger,
   Questions,
+  QuestionsWrapper,
   Quotes,
   ThickUnderline,
   Parallaxed,
@@ -145,7 +146,7 @@ function TradeLanding() {
           })
         )}
       />
-      <Box mt={{ s: '159px', m: '280px' }} mb={{ s: '-37px', m: '126px' }}>
+      <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
@@ -155,7 +156,7 @@ function TradeLanding() {
             </Link>
           }
         />
-      </Box>
+      </QuestionsWrapper>
     </PageContentLayout>
   );
 }

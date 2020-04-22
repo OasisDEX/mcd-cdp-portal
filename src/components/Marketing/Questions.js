@@ -192,6 +192,11 @@ const Links = styled(Flex)`
   }
 `;
 
+export const QuestionsWrapper = styled(Box).attrs(() => ({
+  mt: { s: '159px', m: '280px' },
+  mb: { s: '-37px', m: '126px' }
+}))``;
+
 const Questions = ({ questions, links }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
 

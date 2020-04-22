@@ -10,6 +10,7 @@ import {
   Features,
   FixedHeaderTrigger,
   Questions,
+  QuestionsWrapper,
   Quotes,
   GradientBox,
   ThickUnderline,
@@ -148,7 +149,7 @@ function SaveOverview() {
           })
         )}
       />
-      <Box mt={{ s: '159px', m: '280px' }} mb={{ s: '-37px', m: '126px' }}>
+      <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
@@ -162,7 +163,7 @@ function SaveOverview() {
             </Link>
           }
         />
-      </Box>
+      </QuestionsWrapper>
     </PageContentLayout>
   );
 }

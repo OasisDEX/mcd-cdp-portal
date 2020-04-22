@@ -15,6 +15,7 @@ import {
   GradientBox,
   Features,
   Questions,
+  QuestionsWrapper,
   buildQuestionsFromLangObj,
   FixedHeaderTrigger,
   Parallaxed,
@@ -22,7 +23,7 @@ import {
   SeparatorDot,
   H1,
   H2
-} from '../components/Marketing';
+} from 'components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
@@ -233,7 +234,7 @@ function Borrow() {
           })
         )}
       />
-      <Box mt={{ s: '159px', m: '280px' }} mb={{ s: '-37px', m: '126px' }}>
+      <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
@@ -259,7 +260,7 @@ function Borrow() {
             </>
           }
         />
-      </Box>
+      </QuestionsWrapper>
     </PageContentLayout>
   );
 }
