@@ -178,6 +178,18 @@ const Links = styled(Flex)`
   align-items: center;
   text-decoration: underline;
   margin-top: 32px;
+
+  flex-direction: column;
+  a {
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    flex-direction: row;
+    a {
+      margin-bottom: inherit;
+    }
+  }
 `;
 
 const Questions = ({ questions, links }) => {
@@ -187,12 +199,12 @@ const Questions = ({ questions, links }) => {
     <Box
       style={{
         maxWidth: '800px',
-        margin: '29px auto',
         textAlign: 'left',
         fontSize: '18px',
         lineHeight: '25px'
       }}
       px={{ s: '12px', m: 0 }}
+      m={{ s: '25px auto', m: '29px auto' }}
     >
       {questions.map(({ q, a }, index) => {
         const isSelected = index === selectedIndex;

@@ -145,7 +145,7 @@ function TradeLanding() {
           })
         )}
       />
-      <Box mt="280px" mb="126px">
+      <Box mt={{ s: '159px', m: '280px' }} mb={{ s: '-37px', m: '126px' }}>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}

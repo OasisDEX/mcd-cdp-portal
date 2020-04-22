@@ -233,7 +233,7 @@ function Borrow() {
           })
         )}
       />
-      <Box mt="280px" mb="126px">
+      <Box mt={{ s: '159px', m: '280px' }} mb={{ s: '-37px', m: '126px' }}>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
@@ -246,7 +246,9 @@ function Borrow() {
               >
                 {lang.borrow_landing.questions.bottom_link1}
               </Link>
-              <SeparatorDot mx="24px" />
+              <Box display={{ s: 'none', m: 'inline-block' }}>
+                <SeparatorDot mx="24px" />
+              </Box>
               <Link
                 href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/glossary"
                 target="_blank"
