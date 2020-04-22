@@ -80,6 +80,7 @@ const Card = styled.div`
     height: 39px;
     line-height: 38px;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .button.enabled {

@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import lang, { languages, defaultLocale } from 'languages';
+import lang, { locales, defaultLocale } from 'languages';
 import { getPreferredLanguage } from 'utils/language';
 import debug from 'debug';
 const log = debug('maker:LanguageProvider');
@@ -35,7 +35,7 @@ function LanguageProvider({ children }) {
     ].filter(x => x);
 
     const detectedLanguage = getPreferredLanguage({
-      languages: languages.map(language => language.value),
+      languages: locales,
       overrides: localeOverrides,
       fallback: defaultLocale
     });
