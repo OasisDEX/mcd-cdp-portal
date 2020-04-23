@@ -172,11 +172,30 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     [balances, uniqueFeeds]
   );
 
+  const initateWidget = () => {
+    const Wyre = window.Wyre;
+    const widget = new Wyre({
+      env: 'test',
+      operation: {
+          type: 'debitcard-hosted-dialog',
+          dest: `ethereum:${window.ethereum.selectedAddress}`,
+          destCurrency: "ETH",
+          paymentMethod: 'debit-card'
+      }
+  });
+    widget.open()
+  }
+
   return (
     <>
       <CardBody css={{ borderRadius: '0 0 4px 4px', overflow: 'hidden' }}>
         <Box px="s" pt="sm" pb="s2">
           <Text t="large">{lang.sidebar.wallet_balances}</Text>
+          <Button mx='10px'  pt='2px' pb='2px' px='5px'
+            onClick={() => initateWidget()}
+          >
+          Buy
+          </Button>
         </Box>
         <Flex justifyContent="space-between" px="s" mb="4px">
           <Text color="steel" fontWeight="bold" t="smallCaps" width="20%">
