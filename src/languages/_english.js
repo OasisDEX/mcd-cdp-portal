@@ -44,7 +44,7 @@ export default {
     token_section_only_on_trade: 'Only available on Oasis Trade',
     section1_title: 'What is Oasis?',
     section1_p:
-      'Oasis is a platform for decentralized finance. Use it to trade tokens, borrow Dai and earn savings — all in one place.',
+      'Oasis is a platform for decentralized finance. Use it to exchange tokens, borrow Dai and earn savings — all in one place.',
     section2_title: 'Secure protocol built on Ethereum',
     section2_p:
       'Oasis is built on top of audited and formally verified smart contracts created by Maker, the industry leader in secure decentralized finance.',
@@ -90,16 +90,16 @@ export default {
   borrow_landing: {
     page_name: 'Oasis Borrow',
     headline: 'Give yourself some credit',
-    subheadline: 'Access liquidity, while making sure you don\'t lose exposure. Vaults make it easy to borrow against your assets by generating DAI.',
+    subheadline: 'Access liquidity, while making sure you don\'t long exposure to your collateral. Vaults make it easy activate that collateral by generating DAI.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
       title: 'Maximize your profits',
-      body: 'Seize opportunity and capitalize on future crypto asset prices. Use your borrowed DAI to create a leverage position on any asset, increasing your exposure.',
+      body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to increase your exposure on any asset.',
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
     feature1_heading: 'Flexible repayment and terms',
-    feature1_content: 'Vaults use open-ended credit. Meaning no fixed repayment schedules, pay back or borrow when it suits you.',
+    feature1_content: 'Vaults are open-ended credit. Meaning no fixed repayment schedules, pay back or borrow when it suits you.',
     feature2_heading: 'Secure and easy to use',
     feature2_content: 'A simple interface that allows you to manage your Vault. No middleman or third party controls your funds.',
     feature3_heading: 'Many possibilities',
@@ -118,16 +118,16 @@ export default {
     connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
       title: 'Earn savings rate',
-      body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable gains.',
+      body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable savings.',
       quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save Account 2434'
     },
     feature1_heading: 'A smarter, better money',
     feature1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
-    feature2_heading: 'More stability, less volatility',
-    feature2_content: 'Dai is designed to be stable at all times, just like cash. Stay in the crypto ecosystem without any of the volatility.',
+    feature2_heading: 'Less volatility, no uncertainty',
+    feature2_content: 'Dai is designed to be stable, just like cash. Stay in the crypto ecosystem without the volatility.',
     feature3_heading: 'Honest and transparent rate',
-    feature3_content: 'Built on top of the Dai Savings Rate, a risk-free rate that is intrinsic to the MakerDAO protocol.',
+    feature3_content: 'The Dai Savings Rate is governed by MKR holders and is set based on the supply and demand of Dai on exchanges.',
     feature4_heading: 'Secure from the ground up',
     feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.',
     questions: {
@@ -146,13 +146,13 @@ export default {
       author1: 'Marketing Team'
     },
     feature1_heading: 'Liquidity and decentralization',
-    feature1_content: 'Get the price you want with low slippage. Anyone with an Ethereal wallet can make trade.',
+    feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
     feature2_heading: 'Increase profits with leverage',
-    feature2_content: 'A simple interface that allows you to manage your Vault. No middleman or third part controls your funds.',
-    feature3_heading: 'Quickly swap tokens for free',
-    feature3_content: 'Oasis trade allows you to get in and out of positions instantly, without fees.',
+    feature2_content: 'A simple interface that allows you to manage your Leveraged position with direct access to the Oasis Market.',
+    feature3_heading: 'Instantly swap tokens',
+    feature3_content: 'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
     feature4_heading: 'Non custodial',
-    feature4_content: 'The system is a set of ownerless, autonomous smart contracts. You maintain control over your funds.',
+    feature4_content: 'Oasis never touches or handles your tokens as all trades are settled within the contract. You are always in control of your funds.',
     questions: {
       bottom_link1: 'Full list of Oasis Trade FAQs'
     }
