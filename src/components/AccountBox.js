@@ -28,6 +28,8 @@ import theme from '../styles/theme';
 import FullScreenAction from './CDPDisplay/FullScreenAction';
 import useCdpTypes from '../hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+import useMaker from '../hooks/useMaker';
+
 
 const migrateUrl = 'https://oasis.app/trade/account';
 
@@ -122,10 +124,10 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     () =>
       prices
         ? prices.reduce((acc, price) => {
-            const [, symbol] = price.symbol.split('/');
-            acc[symbol] = price;
-            return acc;
-          }, {})
+          const [, symbol] = price.symbol.split('/');
+          acc[symbol] = price;
+          return acc;
+        }, {})
         : {},
     [prices]
   );
@@ -157,8 +159,8 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
         const usdRatio = tokenIsDaiOrDsr
           ? new BigNumber(1)
           : token === 'MWETH'
-          ? uniqueFeeds['ETH']
-          : uniqueFeeds[token];
+            ? uniqueFeeds['ETH']
+            : uniqueFeeds[token];
         return [
           {
             token,
@@ -172,14 +174,18 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     [balances, uniqueFeeds]
   );
 
+  const { maker } = useMaker();
+
   const initateWidget = () => {
+    const accountsService = maker.service('accounts');
+    const address = accountsService.currentAddress();
     const Wyre = window.Wyre;
     const widget = new Wyre({
       env: 'test',
       operation: {
         type: 'debitcard-hosted-dialog',
-        dest: `ethereum:${window.ethereum.selectedAddress}`,
-        destCurrency: 'ETH',
+        dest: `ethereum:${address}`,
+        destCurrency: 'DAI',
         paymentMethod: 'debit-card'
       }
     });
@@ -249,21 +255,21 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                         {lang.sidebar.migrate}
                       </ActionButton>
                     ) : (
-                      <ActionButton
-                        disabled={!hasActiveAccount}
-                        onClick={() => {
-                          trackBtnClick('Send', {
-                            collateral: formatSymbol(token)
-                          });
-                          showAction({
-                            type: 'send',
-                            props: { token, trackBtnClick }
-                          });
-                        }}
-                      >
-                        {lang.sidebar.send}
-                      </ActionButton>
-                    ))
+                          <ActionButton
+                            disabled={!hasActiveAccount}
+                            onClick={() => {
+                              trackBtnClick('Send', {
+                                collateral: formatSymbol(token)
+                              });
+                              showAction({
+                                type: 'send',
+                                props: { token, trackBtnClick }
+                              });
+                            }}
+                          >
+                            {lang.sidebar.send}
+                          </ActionButton>
+                        ))
                   }
                 />
               )
@@ -279,11 +285,11 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                 <Carat />
               </>
             ) : (
-              <>
-                <Text pr="xs">{lang.sidebar.view_less}</Text>
-                <Carat rotation={180} />
-              </>
-            )}
+                <>
+                  <Text pr="xs">{lang.sidebar.view_less}</Text>
+                  <Carat rotation={180} />
+                </>
+              )}
           </Flex>
         </StyledCardBody>
       )}

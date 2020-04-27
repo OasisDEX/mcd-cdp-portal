@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "MCD CDP Portal",
   "builds": [
     {
       "src": "package.json",
@@ -14,8 +13,6 @@
   ],
   "github": {
     "enabled": false
-  },
-  "env": {
-    "BLANK_SECRET": "@blank-secret"
   }
+  
 }
