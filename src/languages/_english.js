@@ -90,7 +90,7 @@ export default {
   borrow_landing: {
     page_name: 'Oasis Borrow',
     headline: 'Give yourself some credit',
-    subheadline: 'Access liquidity, while making sure you don\'t long exposure to your collateral. Vaults make it easy activate that collateral by generating DAI.',
+    subheadline: 'Access liquidity, while making sure you don\'t lose long exposure to your collateral. Vaults make it easy activate that collateral by generating DAI.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
       title: 'Maximize your profits',
