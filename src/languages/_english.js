@@ -90,10 +90,10 @@ export default {
   borrow_landing: {
     page_name: 'Oasis Borrow',
     headline: 'Give yourself some credit',
-    subheadline: 'Access liquidity, while making sure you don\'t lose long exposure to your collateral. Vaults make it easy activate that collateral by generating DAI.',
+    subheadline: 'Vaults make it easy to utilize your collateral by generating DAI against it. Realize liquidity through a vault and ensure you don\'t lose long exposure to your collateral.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
-      title: 'Maximize your profits',
+      title: 'Maximize your opportunity',
       body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to increase your exposure on any asset.',
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
@@ -151,7 +151,7 @@ export default {
     feature2_content: 'A simple interface that allows you to manage your Leveraged position with direct access to the Oasis Market.',
     feature3_heading: 'Instantly swap tokens',
     feature3_content: 'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
-    feature4_heading: 'Non custodial',
+    feature4_heading: 'Non-custodial',
     feature4_content: 'Oasis never touches or handles your tokens as all trades are settled within the contract. You are always in control of your funds.',
     questions: {
       bottom_link1: 'Full list of Oasis Trade FAQs'
