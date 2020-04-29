@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
 import {
@@ -25,7 +25,7 @@ import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
-import { BrowserView } from 'react-device-detect';
+import { BrowserView, isMobile } from 'react-device-detect';
 
 const DropdownItems = styled(DefaultDropdown)`
   margin-bottom: 8px;
@@ -142,7 +142,22 @@ const NavItem = styled(Item)`
 `;
 
 function AccountSelection({ buttonWidth, ...props }) {
+  const dropdown = useRef(null);
   const [showMain, setShowMain] = useState(true);
+  const [isOpen, setIsOpen] = useState(false); // only for mobile
+
+  useEffect(() => {
+    function handleDocumentClick(e) {
+      if (!dropdown.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('click', handleDocumentClick);
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  });
+
   const providerName = getWebClientProviderName();
   const {
     maker,
@@ -221,13 +236,17 @@ function AccountSelection({ buttonWidth, ...props }) {
   const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
 
   return (
-    <Box width={buttonWidth} {...props}>
+    <Box width={buttonWidth} {...props} ref={dropdown}>
       <DropdownWrapper>
         <Dropdown
           hitBoxMargin="8px 0"
           placement="bottom"
+          openOnHover={!isMobile}
+          show={isMobile ? isOpen : undefined}
           trigger={
-            <FilledButton width={buttonWidth}>
+            <FilledButton width={buttonWidth} onClick={() => {
+              setIsOpen(!isOpen); // only for mobile
+            }}>
               {lang.providers.connect_wallet}
               <CaratDown style={{ marginTop: '2px', marginLeft: '15px' }} />
             </FilledButton>
