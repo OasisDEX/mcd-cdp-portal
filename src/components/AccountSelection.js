@@ -50,11 +50,22 @@ const DropdownItems = styled(DefaultDropdown)`
 `;
 
 const DropdownWrapper = styled(Box)`
-  :hover {
-    ${FilledButton} {
-      background-color: #50445e;
+  ${props =>
+    props.isMobile
+      ? `
+    ${FilledButton}, ${FilledButton}:hover {
+       background-color: ${
+         props.isOpen ? '#50445e' : props.theme.colors.darkPurple
+       };
     }
-  }
+  `
+      : `
+    :hover {
+      ${FilledButton} {
+        background-color: #50445e;
+      }
+    }
+  `}
 
   ${DropdownItems} {
     &.smaller {
@@ -237,16 +248,19 @@ function AccountSelection({ buttonWidth, ...props }) {
 
   return (
     <Box width={buttonWidth} {...props} ref={dropdown}>
-      <DropdownWrapper>
+      <DropdownWrapper isMobile={isMobile} isOpen={isOpen}>
         <Dropdown
           hitBoxMargin="8px 0"
           placement="bottom"
           openOnHover={!isMobile}
           show={isMobile ? isOpen : undefined}
           trigger={
-            <FilledButton width={buttonWidth} onClick={() => {
-              setIsOpen(!isOpen); // only for mobile
-            }}>
+            <FilledButton
+              width={buttonWidth}
+              onClick={() => {
+                setIsOpen(!isOpen); // only for mobile
+              }}
+            >
               {lang.providers.connect_wallet}
               <CaratDown style={{ marginTop: '2px', marginLeft: '15px' }} />
             </FilledButton>
