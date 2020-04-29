@@ -176,6 +176,7 @@ function AccountSelection({ buttonWidth, ...props }) {
       onClick={() => connectToProviderOfType(AccountTypes.WALLETLINK)}
       disabled={!makerAuthenticated}
       icon={<WalletLinkLogo />}
+      key="wallet-link"
     >
       {lang.landing_page.wallet_link}
     </IconItem>
@@ -185,6 +186,7 @@ function AccountSelection({ buttonWidth, ...props }) {
     <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
       icon={<WalletConnectLogo style={{ width: '28px' }} />}
+      key="wallet-connect"
     >
       {lang.landing_page.wallet_connect}
     </IconItem>
@@ -196,6 +198,7 @@ function AccountSelection({ buttonWidth, ...props }) {
       disabled={!makerAuthenticated}
       icon={<LedgerLogo />}
       iconSize="27px"
+      key="ledger"
     >
       {lang.providers.ledger_nano}
     </IconItem>
@@ -206,6 +209,7 @@ function AccountSelection({ buttonWidth, ...props }) {
       onClick={connectTrezorWallet}
       disabled={!makerAuthenticated}
       icon={<TrezorLogo />}
+      key="trezor"
     >
       {lang.providers.trezor}
     </IconItem>
@@ -239,11 +243,12 @@ function AccountSelection({ buttonWidth, ...props }) {
                 onClick={connectBrowserWallet}
                 disabled={!makerAuthenticated}
                 provider={providerName}
+                key="browser-provider-wallet"
               />
               {mainWallets.map((wallet, index) => (
                 <BrowserView key={index}>{wallet}</BrowserView>
               ))}
-              <BrowserView>
+              <BrowserView key="see-more-wallets-link">
                 <NavItem onClick={() => setShowMain(false)}>
                   {lang.providers.more_wallets}
                   {` (${otherWallets.length})`}
@@ -256,7 +261,10 @@ function AccountSelection({ buttonWidth, ...props }) {
                   otherWallets.length > mainWalletsCount ? 'larger' : 'smaller'
                 } ${showMain ? 'hide' : 'show'}`}
               >
-                <NavItem onClick={() => setShowMain(true)}>
+                <NavItem
+                  key="see-main-wallets-link"
+                  onClick={() => setShowMain(true)}
+                >
                   {lang.providers.main_wallets}
                   {` (${mainWalletsCount})`}
                 </NavItem>
