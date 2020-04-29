@@ -25,7 +25,7 @@ export default {
     trade_card: {
       title: 'Trade',
       description:
-        'Place orders in the Marketplace, or simply exchange your tokens instantly.',
+        'Place orders in the Marketplace, exchange your tokens, or Multiply your assets, quickly.',
       button: 'Start Trading'
     },
     borrow_card: {
@@ -94,12 +94,12 @@ export default {
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
       title: 'Maximize your opportunity',
-      body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to increase your exposure on any asset.',
+      body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to create a multiplied position on any asset, increasing your exposure.',
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
     feature1_heading: 'Flexible repayment and terms',
-    feature1_content: 'Vaults are open-ended credit. Meaning no fixed repayment schedules, pay back or borrow when it suits you.',
+    feature1_content: 'Vaults are open-ended. Meaning no fixed repayment schedules, pay back or generate Dai when it suits you.',
     feature2_heading: 'Secure and easy to use',
     feature2_content: 'A simple interface that allows you to manage your Vault. No middleman or third party controls your funds.',
     feature3_heading: 'Many possibilities',
@@ -118,9 +118,9 @@ export default {
     connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
       title: 'Earn savings rate',
-      body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable savings.',
+      body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable earnings.',
       quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
-      author1: 'Oasis Save Account 2434'
+      author1: 'Oasis Save User'
     },
     feature1_heading: 'A smarter, better money',
     feature1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
@@ -140,15 +140,15 @@ export default {
     subheadline: 'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and instant token swap.',
     cta_button: 'Open Oasis Trade',
     quotes_block: {
-      title: 'Leverage your collateral, quicker',
-      body: 'Oasis Trade allows you to access the Maker Protocol and use your collateral to instantly leverage your positions in just two transactions.',
+      title: 'Place orders at the price you set',
+      body: 'Oasis Trade allows you to create orders where you set the Price. Using either Limit Orders or Average Price Fill or Kill, you set the price and slippage limit so you know you won’t pay more than you expect.',
       quote1: 'Copy is in progress...',
       author1: 'Marketing Team'
     },
     feature1_heading: 'Liquidity and decentralization',
     feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
-    feature2_heading: 'Increase profits with leverage',
-    feature2_content: 'A simple interface that allows you to manage your Leveraged position with direct access to the Oasis Market.',
+    feature2_heading: 'Increase exposure with Multiply',
+    feature2_content: 'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
     feature3_heading: 'Instantly swap tokens',
     feature3_content: 'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
     feature4_heading: 'Non-custodial',
