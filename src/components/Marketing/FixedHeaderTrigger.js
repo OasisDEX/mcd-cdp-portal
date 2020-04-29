@@ -82,7 +82,7 @@ const FixedHeaderTrigger = ({ cta, children, ...props }) => {
       {...props}
     >
       <div>
-        <Header cta={cta} className={show ? 'visible' : ''} />
+        <Header cta={show ? cta : <div />} className={show ? 'visible' : ''} />
         {children}
       </div>
     </VisibilitySensor>
