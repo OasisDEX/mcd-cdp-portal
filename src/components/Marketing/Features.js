@@ -21,12 +21,7 @@ const StyledGrid = styled(Grid)`
   ${Text} {
     display: block;
     letter-spacing: unset;
-
     line-height: 31px;
-
-    @media (min-width: ${props => props.theme.breakpoints.m}) {
-      line-height: inherit;
-    }
   }
 `;
 
