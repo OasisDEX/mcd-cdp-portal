@@ -55,7 +55,7 @@ const Author = styled(Text).attrs(() => ({
   fontSize: 's'
 }))`
   margin-top: 16px;
-  .name {
+  .author-link {
     text-decoration: underline;
   }
 `;
@@ -80,9 +80,13 @@ const Quotes = ({
           <Quote>“{quote}”</Quote>
           <Author as="div">
             <span>— </span>
-            <Link className="name" href={url}>
-              {author}
-            </Link>
+            {url ? (
+              <Link className="author-link" href={url}>
+                {author}
+              </Link>
+            ) : (
+              <span>{author}</span>
+            )}
           </Author>
         </div>
         <div />

@@ -130,7 +130,6 @@ function TradeLanding() {
             body={<Box mb="95px">{lang.trade_landing.quotes_block.body}</Box>}
             quote={lang.trade_landing.quotes_block.quote1}
             author={lang.trade_landing.quotes_block.author1}
-            url="https://chat.makerdao.com/group/team-marketing-internal"
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>

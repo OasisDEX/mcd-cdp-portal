@@ -162,14 +162,14 @@ export default {
     quotes_block: {
       title: 'Place orders at the price you set',
       body: 'Oasis Trade allows you to create orders where you set the Price. Using either Limit Orders or Average Price Fill or Kill, you set the price and slippage limit so you know you won’t pay more than you expect.',
-      quote1: 'Copy is in progress...',
-      author1: 'Marketing Team'
+      quote1: 'When I am looking to make trades, I always come back to Oasis because I know it\'s where I can get the best price. Not to mention not having to deal with all the hassles of the legacy financial system., wiring funds back and forth from place to place.',
+      author1: 'Oasis Trade User '
     },
     feature1_heading: 'Liquidity and decentralization',
     feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
-    feature2_heading: 'Increase exposure with Multiply',
-    feature2_content: 'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
-    feature3_heading: 'Instantly swap tokens',
+    feature2_heading: 'Increase exposure with Dai Markets',
+    feature2_content: 'If you’ve opened a Vault on the Maker Protocol, utilise the Dai Markets on Oasis Trade to increase your exposure to trade your Dai for the original asset.',
+    feature3_heading: 'Quickly swap tokens',
     feature3_content: 'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
     feature4_heading: 'Non-custodial',
     feature4_content: 'Oasis never touches or handles your tokens as all trades are settled within the contract. You are always in control of your funds.',
