@@ -152,7 +152,10 @@ function SaveOverview() {
       <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
-          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          questions={buildQuestionsFromLangObj(
+            lang.save_landing.questions,
+            lang
+          )}
           links={
             <Link
               href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/dsr"

@@ -107,6 +107,16 @@ export default {
     feature4_heading: 'No more limits',
     feature4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.',
     questions: {
+      question1: 'What assets can I use as collateral?',
+      answer1: 'Currently, Oasis Borrow supports ETH, BAT and USDC. There are plans for more types of collateral, and in some cases there can be multiple versions of the same collateral type with different risk parameters. You can read the Collateral On-boarding Guide for the Maker Protocol to find out more.',
+      question2: 'How much does it cost?',
+      answer2: 'The costs of generating Dai against collateral varies depending on the collateral, and the risk profile. When generating Dai against collateral, you will be charged a Stability Fee, which is shown as an annualised rate against your outstanding debt. This is calculated per second, and is automatically added to your total debt amount. There are also other fees associated with the Maker Protocol, including a Liquidation Penalty added in the event of a liquidation and each the user will have to pay Gas Fees with each transaction submitted.',
+      question3: 'What happens if my Vault goes below the Liquidation Price',
+      answer3: 'If your Vault falls below your stated Liquidation Price, meaning it is now below the Minimum Collateralisation Ratio, then your Vault becomes at risk of liquidation. This means that keepers of the system can put your collateral up for auction and sell it to cover your outstanding debt, stability fees, and the Liquidation Penalty. If your vault has any collateral remaining at the end of auction (i.e., the auction proceeds covered your debt and fees and collateral remains), this will be returned to you. Please note that there is no guarantee that your collateral will be sold for the current market price and the amount of collateral, if any, that may revert back to you cannot be known until the auction has ended.',
+      question4: 'What if I don\'t have a supported collateral, how can I get Dai?',
+      answer4: 'If you don\'t have any of the supported collateral types, then you cannot use Oasis Borrow to generate Dai. You can still get Dai, but you would need to use an exchange to trade your collateral for Dai. You can check Oasis Trade which supports more collateral types.',
+      question5: 'Do the rates and fees change, and if so how often?',
+      answer5: 'Yes, the fees, including Stability Fees and Liquidation Penalties are set by Maker Governance. These can be changed at any time due to continuous governance nature of the Maker Protocol. You can see more about Governance of the Maker Protocol at vote.makerdao.com. For Gas Fee\'s, these are determined by the activity on the Ethereum Network. In most cases, you have the option to set your Gas Fee, but if the network is busy, you will have to pay more for your transactions to go through in a timely manner.',
       bottom_link1: 'Full list of Oasis Vault FAQs',
       bottom_link2: 'Glossary of terms'
     }
@@ -131,6 +141,16 @@ export default {
     feature4_heading: 'Secure from the ground up',
     feature4_content: 'Oasis regularly undergoes security audits and checks. Built by the developers of the MakerDAO protocol.',
     questions: {
+      question1: 'How is the Dai Savings Rate determined?',
+      answer1: 'The Dai Savings Rate is determined through governance of the Maker Protocol by MKR token holders. The rate which is chosen based on a number of parameters including, but not limited to the current supply and demand of Dai, and the current stability fees charged on Vaults.',
+      question2: 'Where does the earned Dai come from?',
+      answer2: 'The earnings you receive from the Dai Savings Rate come directly from the Maker Protocol. Your Dai is never leant out, instead Dai is taken from the Maker Protocol where it charges fees for generating Dai from Vaults (known as Stability Fees).',
+      question3: 'How much does it cost to use the Dai Savings Rate?',
+      answer3: 'There are no fees to pay for using the Dai Savings Rate other than the transaction, or Gas, fee\'s for using the Ethereum Network. The actual costs of these transaction fees varies depending on how busy the network is.',
+      question4: 'Can anyone else withdraw my Dai after I deposited it?',
+      answer4: 'No. Providing you don\'t share your wallet or private key with anyone else, only you are able to control and access the Dai deposited into Oasis Save. For this reason, it is also very important to backup your wallet, as there is no way to return your Dai if you lose access to your wallet.',
+      question5: 'What are the risks involved?',
+      answer5: 'As with all forms of digital, online technology, there is a risk of bugs and errors with the code. The Maker Protocol smart contracts, which run the Dai Savings Rate, have been through thorough testing, and multiple third party audits to address these risks. The biggest risk if often down to you and how you control your wallet - you should ensure you never share your private key or seed phrase with anyone else, and always make sure you keep a secure backup incase you need to restore your wallet in the future.',
       bottom_link1: 'Full list of Oasis Save FAQs'
     }
   },
@@ -154,6 +174,16 @@ export default {
     feature4_heading: 'Non-custodial',
     feature4_content: 'Oasis never touches or handles your tokens as all trades are settled within the contract. You are always in control of your funds.',
     questions: {
+      question1: 'Do I have to pay any fees for using Oasis Trade?',
+      answer1: 'The only fee\'s that apply to Oasis Trade are fees for Gas. These are the fees you pay to use and interact with the Ethereum Blockchain. These fee\'s vary based on how busy the Ethereum network is, and how quickly you would like transaction to be processed.',
+      question2: 'Can I buy cryptocurrency with my debit or credit card?',
+      answer2: 'Oasis Trade only allows you to trade selected Ethereum tokens, such as Dai, ETH, USDC and more. There is no way to buy crypto using a debit or credit card using Oasis Trade.',
+      question3: 'What is the difference between Market and Instant trades?',
+      answer3: 'With Market, when you create an order you are placing an order in the order book. In order for your order to be matched, you need another user to \'Take\' your order by either buying or selling at a price that includes your open order. Instant allows you to quickly trade one token for another at the best price available on the order book. This means you can see the price you will pay for the token and once your transaction confirms, you will get the token (the price may move slightly due to slippage).',
+      question4: 'What is slippage and is there a limit to how much the price can change?',
+      answer4: 'Slippage is where the price you think you are getting changes between the point you place your order and the time the transaction is processed. For example, you place an order to buy 1 ETH for 200 Dai, but by the time the transaction has confirmed, the price is now 202 Dai per ETH. This means you would get 0.99 ETH for 200 Dai instead. Within Oasis Trade you can set your slippage limit by a percentage, which means once your order is being matched, if it can\'t meet the price +/- slippage limit, then the order will automatically cancel. ',
+      question5: 'Does Oasis or anyone at Oasis have any access to my crypto or my wallet?',
+      answer5: 'No, Oasis Trade is a fully non-custodial, decentralised exchange. This means that you are in full control of your funds at all times, and only you can place orders or move your funds around. All orders are placed and settled directly in the smart contract, and everything is fully audit-able on-chain at all times.',
       bottom_link1: 'Full list of Oasis Trade FAQs'
     }
   },

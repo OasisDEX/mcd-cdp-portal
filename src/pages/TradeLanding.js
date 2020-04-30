@@ -1,6 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import { Link } from 'react-navi';
 import PageContentLayout from 'layouts/PageContentLayout';
 
 import {
@@ -149,12 +148,10 @@ function TradeLanding() {
       <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
-          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
-          links={
-            <Link href="#" target="_blank" rel="noopener noreferrer">
-              {lang.trade_landing.questions.bottom_link1}
-            </Link>
-          }
+          questions={buildQuestionsFromLangObj(
+            lang.trade_landing.questions,
+            lang
+          )}
         />
       </QuestionsWrapper>
     </PageContentLayout>

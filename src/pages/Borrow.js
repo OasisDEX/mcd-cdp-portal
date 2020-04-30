@@ -237,7 +237,10 @@ function Borrow() {
       <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
-          questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          questions={buildQuestionsFromLangObj(
+            lang.borrow_landing.questions,
+            lang
+          )}
           links={
             <>
               <Link
