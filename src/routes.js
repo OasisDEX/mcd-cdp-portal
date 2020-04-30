@@ -8,6 +8,7 @@ import MarketingLayout from './layouts/MarketingLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
+import BorrowWBTCLanding from 'pages/BorrowWBTCLanding';
 import Save from 'pages/Save';
 import SaveOverview from 'pages/SaveOverview';
 import TradeLanding from 'pages/TradeLanding';
@@ -113,6 +114,12 @@ export default mount({
 
       return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
     })
+  ),
+
+  [`/${Routes.BORROW}/btc`]: compose(
+    withView(dappProvidersView),
+    withView(marketingLayoutView),
+    route(() => ({ title: 'Borrow', view: <BorrowWBTCLanding /> }))
   ),
 
   [`/${Routes.SAVE}`]: compose(

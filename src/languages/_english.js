@@ -121,6 +121,24 @@ export default {
       bottom_link2: 'Glossary of terms'
     }
   },
+  wbtc_landing: {
+    headline: 'How to use Bitcoin to generate Dai',
+    subheadline: 'Bridge bitcoin to the ethereum blockchain with wBTC and get Dai liquidity from your BTC',
+    about_title: 'About WBTC',
+    about_content: 'Wrapped Bitcoin (wBTC) acts a bridge to bring BTC to the ethereum blockchain. It\'s the first ERC20 token backed 1:1 with Bitcoin.',
+    about_learn_more: 'Learn more at https://www.wbtc.network/',
+    step1: 'Signup to Coinlist',
+    step1_details: 'Navigate to (hyperlink) and create an account',
+    step2: 'Complete KYC on Coinlist',
+    step2_details: 'Enter the required information and have your BTC wallet ready to connect',
+    step3: 'Wrap your BTC into WBTC',
+    step3_details: 'Wrap your BTC, turning it into wBTC on the ethereum network',
+    step4: 'Send your WBTC to a compatible wallet',
+    step4_details: 'Send your wBTC to Metamask, Ledger, Trezor, or a compatible ERC20 wallet \n',
+    step5: 'Create a WBTC Vault to Generate Dai',
+    step5_details: 'Navigate to {link_text} and open your vault with wBTC as collateral and generate your new Dai',
+    step5_link_text: 'Oasis.app/borrow'
+  },
   save_landing: {
     page_name: 'Oasis Save',
     headline: 'The most trusted way to earn on your Dai',
