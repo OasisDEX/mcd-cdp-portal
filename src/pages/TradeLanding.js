@@ -97,7 +97,7 @@ const StyledQuotes = styled(Quotes)`
 function TradeLanding() {
   const { lang } = useLanguage();
   const ctaButton = (
-    <Link href="https://oasis.app/trade/market/">
+    <Link href="/trade/market/">
       <FilledButton className="button" width="237px">
         {lang.trade_landing.cta_button}
       </FilledButton>
