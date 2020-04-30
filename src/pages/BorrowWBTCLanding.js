@@ -18,6 +18,7 @@ import {
   H1,
   H2
 } from 'components/Marketing';
+import { ReactComponent as MainImg } from 'images/landing/borrow-wbtc/main.svg';
 
 function Borrow() {
   const { account } = useMaker();
@@ -40,21 +41,27 @@ function Borrow() {
   return (
     <PageContentLayout>
       <FixedHeaderTrigger>
-        <Flex>
-          <Box>
+        <Flex justifyContent="space-between" pt="18px">
+          <Box textAlign="left" maxWidth="535px">
             <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
               <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
             </ThickUnderline>
-            <H1 className="headline">{lang.wbtc_landing.headline}</H1>
-            <Box>
-              <Text>{lang.borrow_landing.subheadline}</Text>
+            <H1 className="headline" mt="24px" mb="29px">
+              {lang.borrow_wbtc_landing.headline}
+            </H1>
+            <Box mb="10px" minHeight="90px">
+              <Text>{lang.borrow_wbtc_landing.subheadline}</Text>
             </Box>
             <Text fontSize="s" className="connect-to-start">
               {lang.borrow_landing.connect_to_start}
             </Text>
-            <AccountSelection className="button" buttonWidth="248px" />
+            <AccountSelection
+              className="button"
+              buttonWidth="248px"
+              mt="27px"
+            />
           </Box>
-          <Box>(image)</Box>
+          <MainImg />
         </Flex>
       </FixedHeaderTrigger>
 

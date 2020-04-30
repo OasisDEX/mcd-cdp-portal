@@ -121,7 +121,7 @@ export default {
       bottom_link2: 'Glossary of terms'
     }
   },
-  wbtc_landing: {
+  borrow_wbtc_landing: {
     headline: 'How to use Bitcoin to generate Dai',
     subheadline: 'Bridge bitcoin to the ethereum blockchain with wBTC and get Dai liquidity from your BTC',
     about_title: 'About WBTC',
