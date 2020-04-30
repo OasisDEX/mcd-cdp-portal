@@ -56,7 +56,7 @@ const Generate = ({ vault, reset }) => {
   );
 
   const amountToGenerate = amount || 0;
-  const undercollateralized = daiAvailable.lt(amount);
+  const undercollateralized = daiAvailable.lt(amountToGenerate);
 
   const generate = () => {
     maker.service('mcd:cdpManager').draw(vault.id, vaultType, MDAI(amount));
