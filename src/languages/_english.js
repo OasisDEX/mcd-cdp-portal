@@ -127,7 +127,7 @@ export default {
     subheadline: 'Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No speculation.',
     connect_to_start: 'To open or manage your savings, connect a crypto wallet',
     quotes_block: {
-      title: 'Earn savings rate',
+      title: 'Earn a Dai Savings Rate',
       body: 'Oasis Save helps you stay patient while waiting out volatile market conditions, allowing you to confidently capture steady, predictable earnings.',
       quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save User'
