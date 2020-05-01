@@ -42,7 +42,7 @@ const Step = ({ number, title, details, Img, ...props }) => {
       justifyContent="space-between"
       alignItems="center"
       width="100%"
-      mt="153px"
+      mt="136px"
       {...props}
     >
       <Flex height="210px" alignItems="center">
@@ -146,7 +146,7 @@ function BorrowWBTCLanding() {
           Img={Step5Img}
         />
       </Box>
-      <QuestionsWrapper>
+      <QuestionsWrapper mt={{ s: '159px', m: '250px' }}>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
           questions={buildQuestionsFromLangObj(

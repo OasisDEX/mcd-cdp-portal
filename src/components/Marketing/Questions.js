@@ -192,9 +192,9 @@ const Links = styled(Flex)`
   }
 `;
 
-export const QuestionsWrapper = styled(Box).attrs(() => ({
-  mt: { s: '159px', m: '280px' },
-  mb: { s: '-37px', m: '126px' }
+export const QuestionsWrapper = styled(Box).attrs(props => ({
+  mt: props.mt || { s: '159px', m: '280px' },
+  mb: props.mb || { s: '-37px', m: '126px' }
 }))``;
 
 const Questions = ({ questions, links }) => {
