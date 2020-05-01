@@ -128,7 +128,7 @@ export default {
     about_content: 'Wrapped Bitcoin (wBTC) acts a bridge to bring BTC to the ethereum blockchain. It\'s the first ERC20 token backed 1:1 with Bitcoin.',
     about_learn_more: 'Learn more at https://www.wbtc.network/',
     step1: 'Signup to Coinlist',
-    step1_details: 'Navigate to (hyperlink) and create an account',
+    step1_details: 'Navigate to CoinList and create an account',
     step2: 'Complete KYC on Coinlist',
     step2_details: 'Enter the required information and have your BTC wallet ready to connect',
     step3: 'Wrap your BTC into WBTC',

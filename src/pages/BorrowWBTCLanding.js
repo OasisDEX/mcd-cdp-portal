@@ -26,36 +26,44 @@ import { ReactComponent as Step3Img } from 'images/landing/borrow-wbtc/step3.svg
 import { ReactComponent as Step4Img } from 'images/landing/borrow-wbtc/step4.svg';
 import { ReactComponent as Step5Img } from 'images/landing/borrow-wbtc/step5.svg';
 
-const stepImages = [Step1Img, Step2Img, Step3Img, Step4Img, Step5Img];
-
-const StepNumber = styled.div`
+const StepNumber = styled(Box)`
   background: #ffeec5;
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 `;
 
-const Step = ({ number, title, details, Img, ...props }) => (
-  <Flex justifyItems="space-between" {...props}>
-    <Box>
-      <Img />
-    </Box>
-    <Box textAlign="left">
-      <StepNumber>
-        <Text.h4>{number}</Text.h4>
-      </StepNumber>
-      <Box display="inline-block">
-        <Text.h4>{title}</Text.h4>
-        <Text fontSize="s">{details}</Text>
-      </Box>
-    </Box>
-  </Flex>
-);
+const Step = ({ number, title, details, Img, ...props }) => {
+  const numberCircleSize = '56px';
 
-function Borrow() {
+  return (
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      width="100%"
+      mt="153px"
+      {...props}
+    >
+      <Flex height="210px" alignItems="center">
+        <Img />
+      </Flex>
+      <Flex textAlign="left" width="620px" flexShrink={1}>
+        <StepNumber width={numberCircleSize} height={numberCircleSize}>
+          <Text.h4>{number}</Text.h4>
+        </StepNumber>
+        <Box ml="36px" maxWidth="509px">
+          <Flex height={numberCircleSize} alignItems="center">
+            <Text.h4>{title}</Text.h4>
+          </Flex>
+          <Text fontSize="s">{details}</Text>
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
+
+function BorrowWBTCLanding() {
   const { account } = useMaker();
   const navigation = useNavigation();
   const { lang } = useLanguage();
@@ -106,16 +114,37 @@ function Borrow() {
         <TextBlock>{lang.borrow_wbtc_landing.about_content}</TextBlock>
         <Text>{lang.borrow_wbtc_landing.about_learn_more}</Text>
       </Box>
-      <Box>
-        {stepImages.map((Img, index) => (
-          <Step
-            key={index}
-            number={index + 1}
-            title={lang.borrow_wbtc_landing[`step${index + 1}`]}
-            details={lang.borrow_wbtc_landing[`step${index + 1}_details`]}
-            Img={Img}
-          />
-        ))}
+      <Box maxWidth="1145px">
+        <Step
+          number={1}
+          title={lang.borrow_wbtc_landing.step1}
+          details={lang.borrow_wbtc_landing.step1_details}
+          Img={Step1Img}
+        />
+        <Step
+          number={2}
+          title={lang.borrow_wbtc_landing.step2}
+          details={lang.borrow_wbtc_landing.step2_details}
+          Img={Step2Img}
+        />
+        <Step
+          number={3}
+          title={lang.borrow_wbtc_landing.step3}
+          details={lang.borrow_wbtc_landing.step3_details}
+          Img={Step3Img}
+        />
+        <Step
+          number={4}
+          title={lang.borrow_wbtc_landing.step4}
+          details={lang.borrow_wbtc_landing.step4_details}
+          Img={Step4Img}
+        />
+        <Step
+          number={5}
+          title={lang.borrow_wbtc_landing.step5}
+          details={lang.borrow_wbtc_landing.step5_details}
+          Img={Step5Img}
+        />
       </Box>
       <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
@@ -151,4 +180,4 @@ function Borrow() {
   );
 }
 
-export default hot(Borrow);
+export default hot(BorrowWBTCLanding);
