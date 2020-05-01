@@ -89,7 +89,7 @@ export default {
   },
   borrow_landing: {
     page_name: 'Oasis Borrow',
-    headline: 'Give yourself some credit',
+    headline: 'Put your assets to work',
     subheadline: 'Vaults make it easy to utilize your collateral by generating DAI against it. Realize liquidity through a vault and ensure you don\'t lose long exposure to your collateral.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
     quotes_block: {
