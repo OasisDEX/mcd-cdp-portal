@@ -78,10 +78,22 @@ const HeroStyle = styled(Flex)`
   justify-content: space-between;
 
   flex-direction: column-reverse;
-  margin-top: -30px;
+  margin-top: -39px;
 
   .content {
     text-align: center;
+    padding-top: 45px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    .headline {
+      margin-top: 7px;
+      margin-bottom: 24px;
+    }
+
+    .subheadline {
+      margin-bottom: 59px;
+    }
   }
 
   .img {
@@ -110,6 +122,15 @@ const HeroStyle = styled(Flex)`
       max-width: 547px;
       padding-right: 12px;
       flex-shrink: 1;
+
+      .headline {
+        margin-top: 24px;
+        margin-bottom: 29px;
+      }
+
+      .subheadline {
+        margin-bottom: 10px;
+      }
     }
 
     .img {
@@ -151,10 +172,8 @@ function BorrowWBTCLanding() {
             <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
               <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
             </ThickUnderline>
-            <H1 className="headline" mt="24px" mb="29px">
-              {lang.borrow_wbtc_landing.headline}
-            </H1>
-            <Box mb="10px" minHeight="90px">
+            <H1 className="headline">{lang.borrow_wbtc_landing.headline}</H1>
+            <Box className="subheadline">
               <Text>{lang.borrow_wbtc_landing.subheadline}</Text>
             </Box>
             <Text fontSize="s" className="connect-to-start">

@@ -123,7 +123,7 @@ export default {
   },
   borrow_wbtc_landing: {
     headline: 'How to use Bitcoin to generate Dai',
-    subheadline: 'Bridge bitcoin to the ethereum blockchain with wBTC and get Dai liquidity from your BTC',
+    subheadline: 'Bitcoin can now be used to open a vault and generate Dai through wBTC, a bridge that brings bitcoin to the ethereum blockchain.',
     about_title: 'About WBTC',
     about_content: 'Wrapped Bitcoin (wBTC) acts a bridge to bring BTC to the ethereum blockchain. It\'s the first ERC20 token backed 1:1 with Bitcoin.',
     about_learn_more: 'Learn more at {link}',
