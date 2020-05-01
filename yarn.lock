@@ -13999,6 +13999,13 @@ react-spring@^8.0.15:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
+react-visibility-sensor@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-visibility-sensor/-/react-visibility-sensor-5.1.1.tgz#5238380960d3a0b2be0b7faddff38541e337f5a9"
+  integrity sha512-cTUHqIK+zDYpeK19rzW6zF9YfT4486TIgizZW53wEZ+/GPBbK7cNS0EHyJVyHYacwFEvvHLEKfgJndbemWhB/w==
+  dependencies:
+    prop-types "^15.7.2"
+
 react@^16.8.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
@@ -17245,6 +17252,11 @@ widest-line@^2.0.0:
   integrity sha512-Ba5m9/Fa4Xt9eb2ELXt77JxVDV8w7qQrH0zS/TWSJdLyAwQjWoOzpzj5lwVftDz6n/EOu3tNACS84v509qwnJA==
   dependencies:
     string-width "^2.1.1"
+
+window-scroll-manager@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/window-scroll-manager/-/window-scroll-manager-1.1.4.tgz#7033c12edf778cb85fe545d3a1c37e1f1a7870c9"
+  integrity sha512-Oj916sD6Daigs128qtksCcBGvwXcuTuMn65m1FEp/QINBwbkval43p0qfZna2GFExXZFdoMTT3/s1of0szsG7A==
 
 window-size@^0.1.4:
   version "0.1.4"

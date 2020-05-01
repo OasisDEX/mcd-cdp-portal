@@ -1,11 +1,11 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 
-import OasisLayout from '../layouts/OasisLayout';
+import MarketingLayout from '../layouts/MarketingLayout';
 import LegalTextLayout from '../layouts/LegalTextLayout';
 
 const Privacy = () => (
-  <OasisLayout>
+  <MarketingLayout>
     <LegalTextLayout>
       <h1>Privacy Policy</h1>
       <div className="subheading">Last updated: 30 September 2019</div>
@@ -231,7 +231,7 @@ const Privacy = () => (
         <a href="mailto:legal@oasis.app">legal@oasis.app</a>.
       </p>
     </LegalTextLayout>
-  </OasisLayout>
+  </MarketingLayout>
 );
 
 export default hot(Privacy);
