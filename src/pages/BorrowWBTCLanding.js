@@ -18,7 +18,42 @@ import {
   H1,
   H2
 } from 'components/Marketing';
+import { TextBlock } from 'components/Typography';
 import { ReactComponent as MainImg } from 'images/landing/borrow-wbtc/main.svg';
+import { ReactComponent as Step1Img } from 'images/landing/borrow-wbtc/step1.svg';
+import { ReactComponent as Step2Img } from 'images/landing/borrow-wbtc/step2.svg';
+import { ReactComponent as Step3Img } from 'images/landing/borrow-wbtc/step3.svg';
+import { ReactComponent as Step4Img } from 'images/landing/borrow-wbtc/step4.svg';
+import { ReactComponent as Step5Img } from 'images/landing/borrow-wbtc/step5.svg';
+
+const stepImages = [Step1Img, Step2Img, Step3Img, Step4Img, Step5Img];
+
+const StepNumber = styled.div`
+  background: #ffeec5;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Step = ({ number, title, details, Img, ...props }) => (
+  <Flex {...props}>
+    <Box>
+      <Img />
+    </Box>
+    <Box>
+      <StepNumber>
+        <Text.h4>{number}</Text.h4>
+      </StepNumber>
+      <Box>
+        <Text.h4>{title}</Text.h4>
+        <Text fontSize="s">{details}</Text>
+      </Box>
+    </Box>
+  </Flex>
+);
 
 function Borrow() {
   const { account } = useMaker();
@@ -64,7 +99,24 @@ function Borrow() {
           <MainImg />
         </Flex>
       </FixedHeaderTrigger>
-
+      <Box maxWidth="790px" m="180px auto">
+        <H2 style={{ marginBottom: '20px' }}>
+          {lang.borrow_wbtc_landing.about_title}
+        </H2>
+        <TextBlock>{lang.borrow_wbtc_landing.about_content}</TextBlock>
+        <Text>{lang.borrow_wbtc_landing.about_learn_more}</Text>
+      </Box>
+      <Box>
+        {stepImages.map((Img, index) => (
+          <Step
+            key={index}
+            number={index + 1}
+            title={lang.borrow_wbtc_landing[`step${index + 1}`]}
+            details={lang.borrow_wbtc_landing[`step${index + 1}_details`]}
+            Img={Img}
+          />
+        ))}
+      </Box>
       <QuestionsWrapper>
         <H2>{lang.landing_page.questions_title}</H2>
         <Questions
