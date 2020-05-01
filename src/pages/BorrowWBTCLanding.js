@@ -34,32 +34,65 @@ const StepNumber = styled(Box)`
   justify-content: center;
 `;
 
+const StepStyle = styled(Flex)`
+  .img {
+    transform: scale(0.8);
+
+    @media (min-width: ${props => props.theme.breakpoints.l}) {
+      transform: unset;
+    }
+  }
+`;
+
 const Step = ({ number, title, details, Img, ...props }) => {
   const numberCircleSize = '56px';
 
   return (
-    <Flex
+    <StepStyle
       justifyContent="space-between"
+      flexDirection={{ s: 'column', l: 'row' }}
       alignItems="center"
       width="100%"
-      mt="136px"
+      mt={{ s: '82px', l: '136px' }}
       {...props}
     >
       <Flex height="210px" alignItems="center">
-        <Img />
+        <Img className="img" />
       </Flex>
-      <Flex textAlign="left" width="620px" flexShrink={1}>
-        <StepNumber width={numberCircleSize} height={numberCircleSize}>
+      <Flex
+        textAlign={{ s: 'center', l: 'left' }}
+        width={{ l: '620px' }}
+        flexShrink={1}
+        flexDirection={{ s: 'column', l: 'row' }}
+      >
+        <StepNumber
+          width={numberCircleSize}
+          height={numberCircleSize}
+          m={{ s: '35px auto 11px', l: 'unset' }}
+        >
           <Text.h4>{number}</Text.h4>
         </StepNumber>
-        <Box ml="36px" maxWidth="509px">
-          <Flex height={numberCircleSize} alignItems="center">
-            <Text.h4>{title}</Text.h4>
+        <Box
+          px={{ s: '10px', l: 'unset' }}
+          m={{ s: '13px 0 0', l: '0 0 0 36px' }}
+          maxWidth={{ s: '470px', l: '509px' }}
+        >
+          <Flex
+            height={{ l: numberCircleSize }}
+            alignItems="center"
+            justifyContent={{ s: 'center', l: 'start' }}
+            mb={{ s: '17px', l: 'unset' }}
+          >
+            <Text.h4 style={{ flexShrink: 1 }}>{title}</Text.h4>
           </Flex>
-          <Text fontSize="s">{details}</Text>
+          <Box textAlign={{ s: 'center', l: 'left' }}>
+            <Text fontSize="s" letterSpacing={0} lineHeight="31px">
+              {details}
+            </Text>
+          </Box>
         </Box>
       </Flex>
-    </Flex>
+    </StepStyle>
   );
 };
 
