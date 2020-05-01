@@ -1,4 +1,4 @@
-import { ETH, BAT, USDC } from '@makerdao/dai-plugin-mcd';
+import { ETH, BAT, USDC, WBTC } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -9,34 +9,6 @@ export default [
     currency: ETH, // the associated dai.js currency type
     networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
   },
-  // {
-  //   slug: 'eth-b',
-  //   symbol: 'ETH-B',
-  //   key: 'ETH-B',
-  //   gem: 'ETH',
-  //   currency: ETH
-  // },
-  // {
-  //   slug: 'rep-a',
-  //   symbol: 'REP-A',
-  //   key: 'REP-A',
-  //   gem: 'REP',
-  //   currency: REP
-  // },
-  // {
-  //   slug: 'zrx-a',
-  //   symbol: 'ZRX-A',
-  //   key: 'ZRX-A',
-  //   gem: 'ZRX',
-  //   currency: ZRX
-  // },
-  // {
-  //   slug: 'omg-a',
-  //   symbol: 'OMG-A',
-  //   key: 'OMG-A',
-  //   gem: 'OMG',
-  //   currency: OMG
-  // },
   {
     slug: 'bat-a',
     symbol: 'BAT-A',
@@ -45,14 +17,6 @@ export default [
     currency: BAT,
     networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
   },
-  // {
-  //   slug: 'zbtc-a',
-  //   symbol: 'zBTC-A',
-  //   key: 'zBTC-A',
-  //   gem: 'zBTC',
-  //   currency: zBTC,
-  //   networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
-  // },
   {
     slug: 'usdc-a',
     symbol: 'USDC-A',
@@ -61,22 +25,14 @@ export default [
     currency: USDC,
     networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli'],
     decimals: 6
+  },
+  {
+    slug: 'wbtc-a',
+    symbol: 'WBTC-A',
+    key: 'WBTC-A',
+    gem: 'WBTC',
+    currency: WBTC,
+    networks: ['kovan'],
+    decimals: 8
   }
-  // {
-  //   slug: 'dgd-a',
-  //   symbol: 'DGD-A',
-  //   key: 'DGD-A',
-  //   gem: 'DGD',
-  //   currency: DGD,
-  //   networks: ['kovan', 'mainnet'],
-  //   decimals: 9
-  // }
-  // {
-  //   slug: 'dgd-a',
-  //   symbol: 'DGD-A',
-  //   key: 'DGD-A',
-  //   gem: 'DGD',
-  //   currency: DGD,
-  //   decimals: 9
-  // }
 ];

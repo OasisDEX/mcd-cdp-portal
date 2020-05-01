@@ -31,7 +31,7 @@ const SidebarFeeds = ({ feeds }) => {
         {feeds &&
           feeds.map(
             (value, index) =>
-              (!collapsed || index < 3) && (
+              (!collapsed || index < 4) && (
                 <Flex
                   key={`feed_${index}`}
                   justifyContent="space-between"
@@ -58,7 +58,7 @@ const SidebarFeeds = ({ feeds }) => {
               )
           )}
       </CardBody>
-      {feeds && feeds.length > 3 && (
+      {feeds && feeds.length > 4 && (
         <StyledCardBody p="s" onClick={() => setCollapsed(!collapsed)}>
           <Flex justifyContent="center" alignItems="center">
             {collapsed ? (
