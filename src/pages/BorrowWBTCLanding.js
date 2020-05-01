@@ -37,8 +37,14 @@ const StepNumber = styled(Box)`
 const StepStyle = styled(Flex)`
   .img {
     transform: scale(0.8);
+    width: 460px;
+    margin: 0 auto;
 
     @media (min-width: ${props => props.theme.breakpoints.l}) {
+      transform: scale(0.9);
+    }
+
+    @media (min-width: ${props => props.theme.breakpoints.xl}) {
       transform: unset;
     }
   }
@@ -49,21 +55,25 @@ const Step = ({ number, title, details, Img, ...props }) => {
 
   return (
     <StepStyle
-      justifyContent="space-between"
+      justifyContent="start"
       flexDirection={{ s: 'column', l: 'row' }}
       alignItems="center"
-      width="100%"
       mt={{ s: '82px', l: '136px' }}
       {...props}
     >
-      <Flex height="210px" alignItems="center">
-        <Img className="img" />
+      <Flex
+        height="210px"
+        width={{ s: '350px', xl: '460px' }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Img className="img" width="460px" />
       </Flex>
       <Flex
         textAlign={{ s: 'center', l: 'left' }}
-        width={{ l: '620px' }}
-        flexShrink={1}
         flexDirection={{ s: 'column', l: 'row' }}
+        ml={{ l: '30px', xl: '65px' }}
+        flexShrink={1}
       >
         <StepNumber
           width={numberCircleSize}
@@ -74,14 +84,15 @@ const Step = ({ number, title, details, Img, ...props }) => {
         </StepNumber>
         <Box
           px={{ s: '10px', l: 'unset' }}
-          m={{ s: '13px 0 0', l: '0 0 0 36px' }}
+          m={{ s: '13px 0 0', l: '12px 0 0 36px' }}
+          flexShrink={1}
           maxWidth={{ s: '470px', l: '509px' }}
         >
           <Flex
-            height={{ l: numberCircleSize }}
             alignItems="center"
             justifyContent={{ s: 'center', l: 'start' }}
-            mb={{ s: '17px', l: 'unset' }}
+            mb="17px"
+            textAlign={{ s: 'center', l: 'left' }}
           >
             <Text.h4 style={{ flexShrink: 1 }}>{title}</Text.h4>
           </Flex>
@@ -154,6 +165,7 @@ const HeroStyle = styled(Flex)`
       text-align: left;
       max-width: 547px;
       padding-right: 12px;
+      padding-top: 0;
       flex-shrink: 1;
 
       .headline {
@@ -238,7 +250,7 @@ function BorrowWBTCLanding() {
           })}
         </Text>
       </Box>
-      <Box maxWidth="1145px">
+      <Box>
         <Step
           number={1}
           title={lang.borrow_wbtc_landing.step1}
