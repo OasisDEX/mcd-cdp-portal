@@ -7,6 +7,6 @@ jest.mock('react-navi');
 test('basic rendering', () => {
   navi.useCurrentRoute.mockReturnValue({ url: { search: '' } });
   const { getByText } = renderWithProviders(<Landing />);
-  getByText(/Trade, Borrow, and Save using Dai./);
+  getByText(/Trade, borrow, and save using Dai/);
   getByText(/Maker Ecosystem Growth Holdings/);
 });

@@ -41,7 +41,7 @@ export default {
       button: '存 Dai'
     },
     token_section_title: 'Oasis Trade 支持的交易对',
-    token_section_only_on_trade: '* 只在 Oasis Trade 支持',
+    token_section_only_on_trade: '只在 Oasis Trade 支持',
     section1_title: 'Oasis 是什么?',
     section1_p:
       'Oasis 是去中心化金融 (DeFi) 的一站式平台。你可以交易数字资产、借 Dai 和存 Dai 赚利息。',
@@ -67,21 +67,21 @@ export default {
     answer3_link1_text: 'Metamask',
     answer3_link2_url: 'https://wallet.coinbase.com/',
     answer3_link2_text: 'Coinbase Wallet',
-    question5: 'Oasis 安全吗?',
-    answer5:
+    question4: 'Oasis 安全吗?',
+    answer4:
       'Oasis 具备最高的安全标准，并且经过日常的审计和形式化验证。此外, Oasis 是 {0} 协议，任何人都可以测试和审计。',
-    answer5_link1_url: 'https://github.com/OasisDEX',
-    answer5_link1_text: '开源',
-    question6: '在 Oasis 上交易需要付手续费吗？',
-    answer6:
+    answer4_link1_url: 'https://github.com/OasisDEX',
+    answer4_link1_text: '开源',
+    question5: '在 Oasis 上交易需要付手续费吗？',
+    answer5:
       'Oasis 协议本身是完全免费的。在使用过程中，你仅需要支付以太坊矿工费。',
-    question7: '如何联系 Oasis 团队?',
-    answer7: '你可以通过 {0} 联系 Oasis 团队。',
-    answer7_link1_url: 'https://chat.makerdao.com',
-    answer7_link1_text: 'chat',
-    question8:
+    question6: '如何联系 Oasis 团队?',
+    answer6: '你可以通过 {0} 联系 Oasis 团队。',
+    answer6_link1_url: 'https://chat.makerdao.com',
+    answer6_link1_text: 'chat',
+    question7:
       '我可以用银行卡在 Oasis 上购买比特币或者以太坊吗？',
-    answer8:
+    answer7:
       '你无法在 Oasis 用银行卡购买加密资产，你可以用 Dai 购买以太坊和其他资产。',
     read_only: 'Read-Only',
     wallet_connect: 'Wallet Connect',

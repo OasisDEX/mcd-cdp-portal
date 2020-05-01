@@ -9,12 +9,13 @@ import {
 } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { useCurrentRoute } from 'react-navi';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
 import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import useBrowserIcon from 'hooks/useBrowserIcon';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
@@ -23,24 +24,39 @@ import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
-import { StyledTrezorLogo, StyledWalletConnectLogo } from './AccountSelection';
-import { useBrowserIcon } from './BrowserProviderButton';
+import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
+import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
+
+const negativeMarginY = css`
+  margin-top: -5px;
+  margin-bottom: -5px;
+`;
 
 const StyledLedgerLogo = styled(LedgerLogo)`
   max-width: 14px;
-  margin-top: 4px;
+  position: relative;
+  top: 4px;
 `;
 
 const StyledWalletLinkLogo = styled(WalletLinkLogo)`
-  margin-top: -5px;
-  margin-bottom: -5px;
+  ${negativeMarginY};
   height: 21px;
   width: 21px;
+`;
+
+const StyledTrezorLogo = styled(TrezorLogo)`
+  ${negativeMarginY};
+`;
+
+const StyledWalletConnectLogo = styled(WalletConnectLogo)`
+  ${negativeMarginY};
 `;
 
 const IconBox = styled(Box)`
   & > svg {
     display: inline-block;
+    width: 20px;
+    height: 20px;
   }
   width: 26px;
   text-align: center;
@@ -205,7 +221,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
               connectToProviderOfType(AccountTypes.WALLETCONNECT);
               close();
             }}
-            icon={<StyledWalletConnectLogo />}
+            icon={<StyledWalletConnectLogo style={{ width: '26.67px' }} />}
           >
             {lang.landing_page.wallet_connect}
           </Option>

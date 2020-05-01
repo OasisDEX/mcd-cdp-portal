@@ -9,12 +9,12 @@ jest.mock('hooks/useAnalytics');
 useAnalytics.mockReturnValue(jest.fn());
 
 test('Save overview flow and re-route', async () => {
-  const { getByText } = await renderWithMaker(<SaveOverview />, {
+  const { getAllByText } = await renderWithMaker(<SaveOverview />, {
     waitForAuth: false
   });
 
-  const connectWalletBtn = await waitForElement(() =>
-    getByText('Active Wallet')
+  const connectWalletBtn = await waitForElement(
+    () => getAllByText('Active Wallet')[0]
   );
   fireEvent.click(connectWalletBtn);
 

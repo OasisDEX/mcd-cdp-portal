@@ -1,14 +1,28 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { Link, useCurrentRoute } from 'react-navi';
 
-import OasisLayout from '../layouts/OasisLayout';
-import SEO from '../components/SEO';
+import MarketingLayout from 'layouts/MarketingLayout';
+import SEO from 'components/SEO';
+import {
+  Questions,
+  buildQuestionsFromLangObj,
+  FullWidth,
+  FadeIn,
+  FilledButton,
+  H1,
+  H2
+} from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
-import { Routes } from '../utils/constants';
+import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
+import { getColor } from 'styles/theme';
 
+import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
+import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
+import { ReactComponent as SaveIcon } from 'images/landing/save-icon.svg';
+import { Box, Grid, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
 import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
 import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
@@ -20,546 +34,514 @@ import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
 import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
 import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
 
-const Hero = styled.div`
-  color: #1e2e3a;
-  font-size: 38px;
-  margin-top: 97px;
-`;
+const Content = ({ children }) => (
+  <Box p={{ s: '0 12px', l: '0 32px' }}>
+    <Box maxWidth="1200px" mx="auto">
+      {children}
+    </Box>
+  </Box>
+);
 
-const Cards = styled.div`
-  max-width: 1000px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin: 80px auto;
+const Cards = (() => {
+  const CardsContainer = styled(Box)`
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-right: auto;
+    margin-left: auto;
+    padding-bottom: 66px;
 
-  @media (max-width: 1020px) {
-    max-width: 300px;
-  }
-`;
-
-const Card = styled.div`
-  overflow: hidden;
-  border-radius: 15px;
-  width: 300px;
-  height: 355px;
-  color: #ffffff;
-  position: relative;
-  flex-shrink: 1;
-
-  @media (max-width: 1020px) {
-    margin-bottom: 35px;
-  }
-
-  .title {
-    font-size: 29px;
-    margin-top: 56px;
-  }
-
-  .description {
-    font-size: 17px;
-    margin-top: 25px;
-    margin-right: 23px;
-    margin-left: 23px;
-    line-height: 26px;
-  }
-
-  .buttonContainer {
-    position: absolute;
-    bottom: 32px;
-    width: 100%;
-  }
-
-  .button {
-    padding-right: 22px;
-    padding-left: 22px;
-    border-radius: 6px;
-    display: inline-block;
-    font-size: 15px;
-    font-weight: 500;
-    height: 39px;
-    line-height: 38px;
-    text-decoration: none;
-  }
-
-  .button.enabled {
-    box-shadow: 0 2px 2px ${props => props.btnShadowColor};
-    transition: all 0.15s ease;
-  }
-
-  .button.enabled:hover {
-    box-shadow: 0 5px 5px ${props => props.btnShadowColor};
-    transform: translateY(-1px);
-  }
-`;
-
-const TextSection = styled.div`
-  margin-top: 81px;
-
-  h3 {
-    font-size: 30px;
-    font-weight: normal;
-    margin-bottom: 20px;
-    line-height: 40px;
-    color: #000;
-  }
-
-  p {
-    max-width: 580px;
-    margin: 0 auto;
-    font-size: 20px;
-    line-height: 30px;
-  }
-`;
-
-const tokens = [
-  {
-    name: 'Dai',
-    icon: DaiIcon
-  },
-  {
-    name: 'ETH',
-    icon: EthIcon
-  },
-  {
-    name: 'REP*',
-    icon: RepIcon
-  },
-  {
-    name: 'ZRX*',
-    icon: ZrxIcon
-  },
-  {
-    name: 'BAT',
-    icon: BatIcon
-  },
-  {
-    name: 'USDC',
-    icon: UsdcIcon
-  },
-  {
-    name: 'LINK*',
-    icon: LinkIcon
-  },
-  {
-    name: 'PAX*',
-    icon: PaxIcon
-  },
-  {
-    name: 'TUSD*',
-    icon: TusdIcon
-  },
-  {
-    name: 'WBTC*',
-    icon: WbtcIcon
-  }
-];
-
-const TokenList = styled.div`
-  max-width: 900px;
-  display: flex;
-  justify-content: center;
-  align-content: space-between;
-  flex-wrap: wrap;
-  margin: 22px auto 0;
-
-  @media (max-width: 1000px) {
-    max-width: 560px;
-  }
-`;
-
-const Token = ({ name, icon }) => {
-  const Icon = icon;
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        margin: '38px 35px 22px'
-      }}
-    >
-      <Icon width="22" height="22" style={{ flexGrow: 0, flexShrink: 0 }} />
-      <span
-        style={{
-          fontSize: '17px',
-          lineHeight: '22px',
-          marginLeft: '13px',
-          flexGrow: 0,
-          flexShrink: 0
-        }}
-      >
-        {name}
-      </span>
-    </div>
-  );
-};
-
-const answerPaddingBottom = 21;
-const answerAnimationTime = '350ms';
-
-const QuestionAndAnswerStyle = styled.div`
-  position: relative;
-
-  .question-row {
-    padding-top: 14px;
-    padding-bottom: 18px;
-    letter-spacing: 0.007em;
-    position: relative;
-  }
-
-  .question {
-    margin-right: 25px;
-  }
-
-  .answer {
-    overflow: hidden;
-    transition: max-height ${answerAnimationTime} ease,
-      padding-bottom ${answerAnimationTime} ease;
-    font-size: 18px;
-    line-height: 29px;
-
-    a {
-      text-decoration: underline;
-    }
-  }
-
-  &.active {
-    .answer {
-      padding-bottom: ${answerPaddingBottom}px;
-    }
-  }
-  .plus-minus-toggle {
-    cursor: pointer;
-    height: 21px;
-    position: absolute;
-    width: 21px;
-    right: 4px;
-    top: 50%;
-    z-index: 2;
-
-    &:before,
-    &:after {
-      background: #000;
-      content: '';
-      height: 1px;
-      left: 0;
+    :after {
+      content: ' ';
+      display: block;
       position: absolute;
-      top: 0;
-      width: 21px;
-      transition: transform ${answerAnimationTime} ease,
-        opacity ${answerAnimationTime} ease;
+      z-index: -1;
+      bottom: 0;
+      width: 93%;
+      left: 3.5%;
+      height: 95%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 249, 237, 0) 0%,
+        #fff9ed 100%
+      );
     }
 
-    &:after {
-      transform-origin: center;
-      opacity: 0;
-    }
-  }
-
-  &.collapsed {
-    .plus-minus-toggle {
-      &:after {
-        transform: rotate(90deg);
-        opacity: 1;
-      }
-
-      &:before {
-        transform: rotate(180deg);
+    @media (max-width: 1238px) {
+      max-width: 368px;
+      :after {
+        content: none;
       }
     }
-  }
-`;
-function debounce(fn, ms) {
-  let timer;
-  return () => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = null;
-      fn.apply(this, arguments);
-    }, ms);
-  };
-}
+  `;
 
-const QuestionAndAnswer = ({ question, answer, onClick, isSelected }) => {
-  const answerElement = useRef(null);
-  const [height, setHeight] = React.useState(0);
-  React.useEffect(() => {
-    const debouncedHandleResize = debounce(function handleResize() {
-      setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
-    }, 300);
+  const Card = styled.div`
+    overflow: hidden;
+    width: 368px;
+    position: relative;
+    flex-shrink: 1;
+    text-align: left;
+    padding: 57px 40px 60px;
 
-    window.addEventListener('resize', debouncedHandleResize);
-    setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
-    // set the height after fonts have probably loaded, or system font is used
-    const timeoutId = setTimeout(() => {
-      setHeight(answerElement.current ? answerElement.current.clientHeight : 0);
-    }, 3200);
-    return () => {
-      window.removeEventListener('resize', debouncedHandleResize);
-      clearTimeout(timeoutId);
-    };
-  }, [height]);
-
-  return (
-    <QuestionAndAnswerStyle
-      key={question}
-      className={isSelected ? 'active' : 'collapsed'}
-    >
-      <div className="question-row">
-        <div style={{ cursor: 'pointer' }} onClick={onClick}>
-          <div className="question">{question}</div>
-          <div className="plus-minus-toggle" />
-        </div>
-      </div>
-      <div
-        className="answer"
-        style={{ maxHeight: isSelected ? height + answerPaddingBottom : 0 }}
-      >
-        <div ref={answerElement}>{answer}</div>
-      </div>
-    </QuestionAndAnswerStyle>
-  );
-};
-
-const Questions = () => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const { lang } = useLanguage();
-  const link = (url, text) => (
-    <a href={url} target="_blank" rel="noopener noreferrer">
-      {text}
-    </a>
-  );
-  const questions = [
-    {
-      q: lang.landing_page.question1,
-      a: lang.landing_page.answer1
-    },
-    {
-      q: lang.landing_page.question2,
-      a: lang.formatString(
-        lang.landing_page.answer2,
-        link(
-          lang.landing_page.answer2_link1_url,
-          lang.landing_page.answer2_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question3,
-      a: lang.formatString(
-        lang.landing_page.answer3,
-        link(
-          lang.landing_page.answer3_link1_url,
-          lang.landing_page.answer3_link1_text
-        ),
-        link(
-          lang.landing_page.answer3_link2_url,
-          lang.landing_page.answer3_link2_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question5,
-      a: lang.formatString(
-        lang.landing_page.answer5,
-        link(
-          lang.landing_page.answer5_link1_url,
-          lang.landing_page.answer5_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question6,
-      a: lang.landing_page.answer6
-    },
-    {
-      q: lang.landing_page.question7,
-      a: lang.formatString(
-        lang.landing_page.answer7,
-        link(
-          lang.landing_page.answer7_link1_url,
-          lang.landing_page.answer7_link1_text
-        )
-      )
-    },
-    {
-      q: lang.landing_page.question8,
-      a: lang.landing_page.answer8
+    @media (max-width: 1238px) {
+      margin-bottom: 24px;
     }
-  ];
 
-  return (
-    <div
-      style={{
-        maxWidth: '700px',
-        margin: '0 auto',
-        textAlign: 'left',
-        fontSize: '18px',
-        lineHeight: '25px'
-      }}
-    >
-      {questions.map(({ q, a }, index) => {
-        const isSelected = index === selectedIndex;
-        return (
-          <div key={q}>
-            <QuestionAndAnswer
-              question={q}
-              answer={a}
-              onClick={() => setSelectedIndex(isSelected ? null : index)}
-              isSelected={isSelected}
-            />
-            {index < questions.length - 1 ? (
-              <div
-                style={{ borderBottom: '1px solid #9E9E9E', opacity: 0.9 }}
-              />
-            ) : null}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+    .title {
+      font-size: 28px;
+      line-height: 28px;
+      margin-top: 21px;
+      margin-bottom: 13px;
+      font-weight: bold;
+      color: ${getColor('darkPurple')};
+    }
 
-function Landing() {
-  const { url } = useCurrentRoute();
-  const { lang } = useLanguage();
+    .description {
+      min-height: 136px;
+      display: block;
+    }
 
-  return (
-    <OasisLayout>
-      <SEO title="Oasis" />
-      <Hero>{lang.landing_page.headline}</Hero>
-      <Cards>
+    .buttonContainer {
+      margin-top: 18px;
+      display: inline-block;
+      transition: all 0.15s ease;
+      padding-bottom: 0;
+      cursor: pointer;
+      :hover {
+        margin-top: 16px;
+        padding-bottom: 2px;
+
+        ${FilledButton} {
+          background-color: #50445e;
+        }
+      }
+    }
+
+    ${FilledButton} {
+      display: inline-flex;
+      padding: 12px 24px;
+      height: unset;
+      font-size: 18px;
+      line-height: 22px;
+      text-decoration: none;
+    }
+  `;
+
+  return props => {
+    const { url } = useCurrentRoute();
+    const { lang } = useLanguage();
+
+    return (
+      <CardsContainer {...props}>
         <Card
           style={{
             background:
-              'linear-gradient(180deg, #C2D7E4 0%, #DBF1EC 100%), #7AAAC5'
+              'radial-gradient(111.67% 100% at 0% 0%, #F2FFE6 0%, #C6FFF9 100%)'
           }}
-          btnShadowColor="#c8e4e6"
         >
-          <div className="title" style={{ color: '#253A44' }}>
-            {lang.landing_page.trade_card.title}
-          </div>
-          <div className="description" style={{ color: '#14303A' }}>
+          <TradeIcon />
+          <h1 className="title">{lang.landing_page.trade_card.title}</h1>
+          <Text className="description">
             {lang.landing_page.trade_card.description}
-          </div>
+          </Text>
           <div className="buttonContainer">
-            <a
-              href="/trade"
-              className="button enabled"
-              style={{
-                color: '#5894B5',
-                backgroundColor: 'white'
-              }}
+            <Link
+              href={`/${Routes.TRADE}`}
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'StartTrading',
                   product: 'oasis-landing'
                 });
               }}
+              className="button-link"
             >
-              {lang.landing_page.trade_card.button}
-            </a>
+              <FilledButton>{lang.landing_page.trade_card.button}</FilledButton>
+            </Link>
           </div>
         </Card>
         <Card
           style={{
             background:
-              'linear-gradient(180deg, #F0DED8 0%, #FDF2E1 100%), linear-gradient(0deg, #EFBF98, #EFBF98)'
+              'radial-gradient(100% 100% at 0% 0%, #FFE9E9 0%, #FFE9B5 100%)'
           }}
-          btnShadowColor="#F1E3DB"
         >
-          <div className="title" style={{ color: '#5B2E1B' }}>
-            {lang.landing_page.borrow_card.title}
-          </div>
-          <div className="description" style={{ color: '#5B2E1B' }}>
+          <BorrowIcon />
+          <h1 className="title">{lang.landing_page.borrow_card.title}</h1>
+          <Text className="description">
             {lang.landing_page.borrow_card.description}
-          </div>
+          </Text>
           <div className="buttonContainer">
-            <div className="button">
-              <Link
-                href={`/${Routes.BORROW}${url.search}`}
-                prefetch={true}
-                className="button enabled"
-                style={{
-                  color: '#945F47',
-                  backgroundColor: 'white'
-                }}
-                onClick={() => {
-                  mixpanel.track('btn-click', {
-                    id: 'BorrowDai',
-                    product: 'oasis-landing'
-                  });
-                }}
-              >
+            <Link
+              href={`/${Routes.BORROW}${url.search}`}
+              prefetch={true}
+              onClick={() => {
+                mixpanel.track('btn-click', {
+                  id: 'BorrowDai',
+                  product: 'oasis-landing'
+                });
+              }}
+              className="button-link"
+            >
+              <FilledButton>
                 {lang.landing_page.borrow_card.button}
-              </Link>
-            </div>
+              </FilledButton>
+            </Link>
           </div>
         </Card>
         <Card
           style={{
-            background: 'linear-gradient(180deg, #D5E8E3 0%, #EEF0E4 100%)',
+            background:
+              'radial-gradient(100% 100% at 0% 0%, #E2FFCC 0%, #FFF1CF 100%)',
             marginBottom: 0
           }}
-          btnShadowColor="#D7E9E3"
         >
-          <div className="title" style={{ color: '#002F28' }}>
-            {lang.landing_page.save_card.title}
-          </div>
-          <div className="description" style={{ color: '#002F28' }}>
+          <SaveIcon />
+          <h1 className="title">{lang.landing_page.save_card.title}</h1>
+          <Text className="description">
             {lang.landing_page.save_card.description}
-          </div>
+          </Text>
           <div className="buttonContainer">
-            <div className="button">
-              <Link
-                href={`/${Routes.SAVE}${url.search}`}
-                prefetch={true}
-                className="button enabled"
-                style={{
-                  color: '#699C90',
-                  backgroundColor: 'white'
-                }}
-                onClick={() => {
-                  mixpanel.track('btn-click', {
-                    id: 'SaveDai',
-                    product: 'oasis-landing'
-                  });
-                }}
-              >
-                {lang.landing_page.save_card.button}
-              </Link>
-            </div>
+            <Link
+              href={`/${Routes.SAVE}${url.search}`}
+              prefetch={true}
+              onClick={() => {
+                mixpanel.track('btn-click', {
+                  id: 'SaveDai',
+                  product: 'oasis-landing'
+                });
+              }}
+              className="button-link"
+            >
+              <FilledButton>{lang.landing_page.save_card.button}</FilledButton>
+            </Link>
           </div>
         </Card>
-      </Cards>
-      <TextSection style={{ marginTop: '103px' }}>
-        <h3>{lang.landing_page.token_section_title}</h3>
-        <TokenList>
-          {tokens.map(({ name, icon }) => (
-            <Token name={name} icon={icon} key={name} />
+      </CardsContainer>
+    );
+  };
+})();
+
+const SupportedTokens = (() => {
+  const tokens = [
+    {
+      name: 'Dai',
+      icon: DaiIcon
+    },
+    {
+      name: 'Ethereum',
+      icon: EthIcon
+    },
+    {
+      name: 'BAT',
+      icon: BatIcon
+    },
+    {
+      name: 'Augur',
+      icon: RepIcon,
+      onlyOnTrade: true
+    },
+    {
+      name: 'USDC',
+      icon: UsdcIcon
+    },
+    {
+      name: '0x',
+      icon: ZrxIcon,
+      onlyOnTrade: true
+    },
+    {
+      name: 'LINK',
+      icon: LinkIcon,
+      onlyOnTrade: true
+    },
+    {
+      name: 'PAX',
+      icon: PaxIcon,
+      onlyOnTrade: true
+    },
+    {
+      name: 'TUSD',
+      icon: TusdIcon,
+      onlyOnTrade: true
+    },
+    {
+      name: 'WBTC',
+      icon: WbtcIcon,
+      onlyOnTrade: true
+    }
+  ];
+
+  const TokenList = styled(Grid)`
+    margin: 74px auto 69px;
+    justify-content: center;
+    justify-items: center;
+
+    grid-row-gap: 85px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      grid-row-gap: 60px;
+    }
+  `;
+
+  const TokenStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+
+    svg {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    svg {
+      width: 70px;
+      height: 70px;
+    }
+
+    span {
+      margin-top: 28px;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+      color: ${getColor('darkPurple')};
+      position: relative;
+    }
+
+    span.onlyOnTrade:after {
+      font-family: 'Arial Hebrew', Arial, sans-serif;
+      content: '*';
+      font-size: 3.4rem;
+      position: absolute;
+      top: 1rem;
+      line-height: 20px;
+    }
+  `;
+
+  const Token = ({ config: { name, icon, onlyOnTrade } }) => {
+    const Icon = icon;
+    return (
+      <FadeIn triggerOffset={70}>
+        <TokenStyle>
+          <Icon />
+          <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
+        </TokenStyle>
+      </FadeIn>
+    );
+  };
+
+  return props => {
+    const { lang } = useLanguage();
+
+    return (
+      <Box {...props}>
+        <H2>{lang.landing_page.token_section_title}</H2>
+        <TokenList
+          gridTemplateColumns={{
+            s: 'repeat(2, 1fr)',
+            m: 'repeat(3, 1fr)',
+            l: 'repeat(4, 1fr)',
+            xl: 'repeat(5, 1fr)'
+          }}
+          maxWidth={{
+            s: '313px',
+            m: '656px',
+            l: '850px',
+            xl: '1080px'
+          }}
+        >
+          {tokens.map(config => (
+            <Token config={config} key={config.name} />
           ))}
         </TokenList>
-        <span style={{ fontSize: '10px' }}>
+        <span
+          style={{
+            fontSize: '18px',
+            letterSpacing: '0.5px',
+            color: '#4F445E',
+            position: 'relative'
+          }}
+        >
+          <span
+            style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+          >
+            *
+          </span>{' '}
           {lang.landing_page.token_section_only_on_trade}
         </span>
-      </TextSection>
-      <TextSection style={{ marginTop: '95px' }}>
-        <h3>{lang.landing_page.section1_title}</h3>
-        <p>{lang.landing_page.section1_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.section2_title}</h3>
-        <p>{lang.landing_page.section2_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.section3_title}</h3>
-        <p>{lang.landing_page.section3_p}</p>
-      </TextSection>
-      <TextSection>
-        <h3>{lang.landing_page.questions_title}</h3>
-        <Questions />
-      </TextSection>
-    </OasisLayout>
+      </Box>
+    );
+  };
+})();
+
+const BlurryBackground = (() => {
+  const ballsContainerOriginalWidth = 1440;
+
+  // adjust this based on how much do we want the balls to move when reducing window size
+  const ballsContainerMaxWidth = 1180;
+
+  // converts absolute positioning to percentage based.
+  const perc = absolutePx =>
+    ((absolutePx / ballsContainerMaxWidth) * 100).toFixed(1);
+  // changes the distance from original container width, to the new width.
+  const adjustDistance = originalDistance =>
+    originalDistance -
+    (ballsContainerOriginalWidth - ballsContainerMaxWidth) / 2;
+
+  const BallTop = styled.div`
+    position: absolute;
+    width: 206px;
+    height: 206px;
+    top: -45px;
+    left: ${perc(adjustDistance(130))}%;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #eaffcf 0%,
+      #fedb88 100%
+    );
+    border-radius: 50%;
+    filter: blur(33px);
+  `;
+
+  const BallRight = styled.div`
+    position: absolute;
+    width: 83px;
+    height: 83px;
+    top: 619px;
+    right: ${perc(adjustDistance(140))}%;
+    background: radial-gradient(
+      51.51% 110.6% at 32.77% 50%,
+      #d2ff72 0%,
+      #fdc134 100%
+    );
+    border-radius: 50%;
+    filter: blur(15px);
+  `;
+
+  const BlurryBackgroundStyle = styled.div`
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+      99.92% 100% at 40.9% 100%,
+      #f7fce7 0%,
+      #fff9ed 54.69%,
+      rgba(255, 249, 237, 0) 100%
+    );
+    z-index: -1;
+
+    & > div {
+      position: relative;
+      max-width: ${ballsContainerMaxWidth}px;
+      margin: 0 auto;
+    }
+  `;
+
+  return props => (
+    <BlurryBackgroundStyle {...props}>
+      <div>
+        <BallTop />
+        <BallRight />
+      </div>
+    </BlurryBackgroundStyle>
+  );
+})();
+
+const BulletPoints = (() => {
+  const JumboBlock = styled(Box)`
+    max-width: 966px;
+    background: radial-gradient(100% 100% at 0% 0%, #f4ffec 0%, #fef4db 100%);
+    text-align: left;
+    padding: 120px 24px 122px;
+
+    & > div:not(:first-child) {
+      margin-top: 123px;
+    }
+
+    .title {
+      margin-bottom: 21px;
+    }
+
+    width: 100vw;
+    position: relative;
+    left: -12px;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      padding: 131px 13% 122px 12%;
+      width: inherit;
+      left: unset;
+
+      .title {
+        margin-bottom: 23px;
+      }
+
+      & > div:not(:first-child) {
+        margin-top: 121px;
+      }
+    }
+  `;
+
+  return props => {
+    const { lang } = useLanguage();
+
+    return (
+      <JumboBlock mr={{ s: 0, xl: '35px' }} {...props}>
+        <div>
+          <Text.h3 className="title">
+            {lang.landing_page.section1_title}
+          </Text.h3>
+          <Text>{lang.landing_page.section1_p}</Text>
+        </div>
+        <div>
+          <Text.h3 className="title">
+            {lang.landing_page.section2_title}
+          </Text.h3>
+          <Text>{lang.landing_page.section2_p}</Text>
+        </div>
+        <div>
+          <Text.h3 className="title">
+            {lang.landing_page.section3_title}
+          </Text.h3>
+          <Text>{lang.landing_page.section3_p}</Text>
+        </div>
+      </JumboBlock>
+    );
+  };
+})();
+
+function Landing() {
+  const { lang } = useLanguage();
+
+  return (
+    <MarketingLayout>
+      <SEO title="Oasis" />
+      <Content>
+        <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
+          <H1>{lang.landing_page.headline}</H1>
+        </Box>
+        <FadeIn moveDistance="47px">
+          <Cards mt="80px" />
+        </FadeIn>
+        <SupportedTokens mt="103px" />
+        <Box mt="207px" height="100%">
+          <FullWidth
+            style={{ height: '91%', position: 'absolute', top: '-25px' }}
+            display={{ s: 'none', m: 'inherit' }}
+          >
+            <BlurryBackground />
+          </FullWidth>
+          <Box m="0 auto" display="inline-block">
+            <FadeIn triggerOffset={150} moveDistance="80px">
+              <BulletPoints />
+            </FadeIn>
+          </Box>
+        </Box>
+        <Box mt={{ s: '158px', m: '153px' }} mb="126px">
+          <H2>{lang.landing_page.questions_title}</H2>
+          <Questions
+            questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
+          />
+        </Box>
+      </Content>
+    </MarketingLayout>
   );
 }
 
