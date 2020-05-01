@@ -74,6 +74,53 @@ const ExternalLink = ({ children, ...props }) => (
   </a>
 );
 
+const HeroStyle = styled(Flex)`
+  justify-content: space-between;
+
+  flex-direction: column-reverse;
+  margin-top: -30px;
+
+  .content {
+    text-align: center;
+  }
+
+  .img {
+    width: 100vw;
+    left: -12px;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.l}) {
+    margin-top: 0;
+    flex-direction: row;
+    padding-top: 18px;
+
+    .content {
+      text-align: left;
+      max-width: 535px;
+    }
+
+    .img {
+      width: unset;
+      left: unset;
+    }
+
+    .button {
+      margin-left: unset;
+      margin-right: unset;
+    }
+  }
+`;
+
 function BorrowWBTCLanding() {
   const { account } = useMaker();
   const navigation = useNavigation();
@@ -95,8 +142,8 @@ function BorrowWBTCLanding() {
   return (
     <PageContentLayout>
       <FixedHeaderTrigger>
-        <Flex justifyContent="space-between" pt="18px">
-          <Box textAlign="left" maxWidth="535px">
+        <HeroStyle>
+          <Box className="content">
             <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
               <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
             </ThickUnderline>
@@ -115,8 +162,10 @@ function BorrowWBTCLanding() {
               mt="27px"
             />
           </Box>
-          <MainImg />
-        </Flex>
+          <Box className="img">
+            <MainImg />
+          </Box>
+        </HeroStyle>
       </FixedHeaderTrigger>
       <Box maxWidth="790px" m="180px auto">
         <H2 style={{ marginBottom: '20px' }}>
