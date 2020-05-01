@@ -103,15 +103,19 @@ const HeroStyle = styled(Flex)`
     margin-top: 0;
     flex-direction: row;
     padding-top: 18px;
+    align-items: start;
 
     .content {
       text-align: left;
-      max-width: 535px;
+      max-width: 547px;
+      padding-right: 12px;
+      flex-shrink: 1;
     }
 
     .img {
       width: unset;
       left: unset;
+      flex-shrink: 1;
     }
 
     .button {
