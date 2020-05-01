@@ -33,21 +33,21 @@ const StepNumber = styled.div`
   border-radius: 50%;
   width: 56px;
   height: 56px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 `;
 
 const Step = ({ number, title, details, Img, ...props }) => (
-  <Flex {...props}>
+  <Flex justifyItems="space-between" {...props}>
     <Box>
       <Img />
     </Box>
-    <Box>
+    <Box textAlign="left">
       <StepNumber>
         <Text.h4>{number}</Text.h4>
       </StepNumber>
-      <Box>
+      <Box display="inline-block">
         <Text.h4>{title}</Text.h4>
         <Text fontSize="s">{details}</Text>
       </Box>
