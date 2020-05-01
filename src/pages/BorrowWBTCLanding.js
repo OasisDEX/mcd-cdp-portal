@@ -63,6 +63,17 @@ const Step = ({ number, title, details, Img, ...props }) => {
   );
 };
 
+const ExternalLink = ({ children, ...props }) => (
+  <a
+    {...props}
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{ textDecoration: 'underline', ...props.style }}
+  >
+    {children}
+  </a>
+);
+
 function BorrowWBTCLanding() {
   const { account } = useMaker();
   const navigation = useNavigation();
@@ -112,13 +123,27 @@ function BorrowWBTCLanding() {
           {lang.borrow_wbtc_landing.about_title}
         </H2>
         <TextBlock>{lang.borrow_wbtc_landing.about_content}</TextBlock>
-        <Text>{lang.borrow_wbtc_landing.about_learn_more}</Text>
+        <Text>
+          {lang.formatString(lang.borrow_wbtc_landing.about_learn_more, {
+            link: (
+              <ExternalLink href="https://www.wbtc.network/">
+                https://www.wbtc.network/
+              </ExternalLink>
+            )
+          })}
+        </Text>
       </Box>
       <Box maxWidth="1145px">
         <Step
           number={1}
           title={lang.borrow_wbtc_landing.step1}
-          details={lang.borrow_wbtc_landing.step1_details}
+          details={lang.formatString(lang.borrow_wbtc_landing.step1_details, {
+            link: (
+              <ExternalLink href="https://coinlist.co/wbtc-signup?referral_code=FETRCM">
+                CoinList
+              </ExternalLink>
+            )
+          })}
           Img={Step1Img}
         />
         <Step
@@ -142,7 +167,16 @@ function BorrowWBTCLanding() {
         <Step
           number={5}
           title={lang.borrow_wbtc_landing.step5}
-          details={lang.borrow_wbtc_landing.step5_details}
+          details={lang.formatString(lang.borrow_wbtc_landing.step5_details, {
+            link: (
+              <Link
+                style={{ textDecoration: 'underline' }}
+                href={`/${Routes.BORROW}`}
+              >
+                {lang.borrow_wbtc_landing.step5_link_text}
+              </Link>
+            )
+          })}
           Img={Step5Img}
         />
       </Box>
