@@ -164,6 +164,7 @@ const HeroStyle = styled(Flex)`
     .content {
       text-align: left;
       max-width: 547px;
+      padding-left: 0;
       padding-right: 12px;
       padding-top: 0;
       flex-shrink: 1;
