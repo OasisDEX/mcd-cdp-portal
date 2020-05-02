@@ -92,6 +92,7 @@ export default {
     headline: 'Give yourself some credit',
     subheadline: 'Vaults make it easy to utilize your collateral by generating DAI against it. Realize liquidity through a vault and ensure you don\'t lose long exposure to your collateral.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
+    wbtc_notice: 'Bitcoin can now be used to open a Vault and generate Dai.',
     quotes_block: {
       title: 'Maximize your opportunity',
       body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to create a multiplied position on any asset, increasing your exposure.',
@@ -572,6 +573,7 @@ export default {
   cookie_notice: 'By using this website you agree to our {0}',
   privacy_policy: 'privacy policy',
   see_how_it_works: 'See how it works',
+  learn_more: 'Learn more',
   providers: {
     connect_wallet: 'Connect a wallet',
     connect_wallet_long: 'Connect wallet to get started',
