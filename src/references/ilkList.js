@@ -32,7 +32,7 @@ export default [
     key: 'WBTC-A',
     gem: 'WBTC',
     currency: WBTC,
-    networks: ['kovan'],
+    networks: ['kovan', 'mainnet'],
     decimals: 8
   }
 ];
