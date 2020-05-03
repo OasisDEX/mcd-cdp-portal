@@ -18,6 +18,8 @@ import { Box, Text } from '@makerdao/ui-components-core';
 
 const ThickUnderline = styled.div`
   background: none;
+  display: inline-block;
+
   :after {
     content: '';
     display: block;

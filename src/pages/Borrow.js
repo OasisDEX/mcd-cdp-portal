@@ -7,7 +7,7 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import { Box, Position, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Position, Text } from '@makerdao/ui-components-core';
 import {
   ConnectHero,
   ThickUnderline,
@@ -30,6 +30,7 @@ import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
+import { ReactComponent as BtcToDai } from 'images/landing/borrow/btc-to-dai.svg';
 
 const Ball = styled.div`
   width: ${props => props.size};
@@ -154,6 +155,40 @@ const StyledQuotes = styled(Quotes)`
   }
 `;
 
+const WBTCNoticeStyle = styled(Flex)`
+  background: linear-gradient(286.06deg, #fff1cd 0%, #fefea5 100%);
+  opacity: 0.8;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 18px 32px;
+  text-align: left;
+  svg {
+    margin-right: 22px;
+  }
+
+  span {
+    flex-shrink: 1;
+  }
+
+  a {
+    white-space: nowrap;
+    text-decoration: underline;
+  }
+`;
+
+const WBTCNotice = ({ lang, ...props }) => {
+  return (
+    <WBTCNoticeStyle {...props}>
+      <BtcToDai />
+      <span>
+        {lang.borrow_landing.wbtc_notice}{' '}
+        <Link href={`/${Routes.BORROW}/btc`}>{lang.learn_more}</Link>
+      </span>
+    </WBTCNoticeStyle>
+  );
+};
+
 function Borrow() {
   const { account } = useMaker();
   const navigation = useNavigation();
@@ -190,6 +225,7 @@ function Borrow() {
           <AccountSelection className="button" buttonWidth="248px" />
         </ConnectHero>
       </FixedHeaderTrigger>
+      <WBTCNotice lang={lang} mt="30px" />
       <GradientBox
         mt="226px"
         background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
