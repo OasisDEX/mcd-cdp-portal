@@ -25,7 +25,7 @@ export default {
     trade_card: {
       title: 'Trade',
       description:
-        'Place orders in the Marketplace, exchange your tokens, or Multiply your assets, quickly.',
+        'Place orders in the decentralised Marketplace, or exchange your tokens quickly.',
       button: 'Start Trading'
     },
     borrow_card: {

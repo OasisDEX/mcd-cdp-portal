@@ -19,8 +19,6 @@ test('Save overview flow and re-route', async () => {
   fireEvent.click(connectWalletBtn);
 
   expect(mocks.navigation.navigate.mock.calls[0][0]).toEqual(
-    `/${
-      Routes.SAVE
-    }/owner/0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6?network=testnet`
+    `/${Routes.SAVE}/owner/0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6?network=testnet`
   );
 });
