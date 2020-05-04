@@ -109,7 +109,7 @@ export default {
     feature4_content: 'You no longer have to miss out on market opportunities or sell your crypto when you need cash.',
     questions: {
       question1: 'What assets can I use as collateral?',
-      answer1: 'Currently, Oasis Borrow supports ETH, BAT and USDC. There are plans for more types of collateral, and in some cases there can be multiple versions of the same collateral type with different risk parameters. You can read the Collateral On-boarding Guide for the Maker Protocol to find out more.',
+      answer1: 'Currently, Oasis Borrow supports ETH, BAT, USDC and WBTC. There are plans for more types of collateral, and in some cases there can be multiple versions of the same collateral type with different risk parameters. You can read the Collateral On-boarding Guide for the Maker Protocol to find out more.',
       question2: 'How much does it cost?',
       answer2: 'The costs of generating Dai against collateral varies depending on the collateral, and the risk profile. When generating Dai against collateral, you will be charged a Stability Fee, which is shown as an annualised rate against your outstanding debt. This is calculated per second, and is automatically added to your total debt amount. There are also other fees associated with the Maker Protocol, including a Liquidation Penalty added in the event of a liquidation and each the user will have to pay Gas Fees with each transaction submitted.',
       question3: 'What happens if my Vault goes below the Liquidation Price',

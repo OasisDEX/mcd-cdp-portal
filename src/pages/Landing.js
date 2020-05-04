@@ -236,13 +236,18 @@ const SupportedTokens = (() => {
       icon: BatIcon
     },
     {
+      name: 'USDC',
+      icon: UsdcIcon
+    },
+    {
+      name: 'WBTC',
+      icon: WbtcIcon,
+      onlyOnTrade: false
+    },
+    {
       name: 'Augur',
       icon: RepIcon,
       onlyOnTrade: true
-    },
-    {
-      name: 'USDC',
-      icon: UsdcIcon
     },
     {
       name: '0x',
@@ -262,11 +267,6 @@ const SupportedTokens = (() => {
     {
       name: 'TUSD',
       icon: TusdIcon,
-      onlyOnTrade: true
-    },
-    {
-      name: 'WBTC',
-      icon: WbtcIcon,
       onlyOnTrade: true
     }
   ];
