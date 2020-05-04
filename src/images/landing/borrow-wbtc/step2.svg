@@ -1,0 +1,72 @@
+<svg width="460" height="282" viewBox="0 0 460 282" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="101" y="52" width="211" height="142" rx="10" fill="#FFFAEE"/>
+    <mask id="mask0" maskUnits="userSpaceOnUse" x="119" y="80" width="59" height="59">
+        <rect x="119" y="80" width="59" height="59" rx="10" fill="url(#paint0_radial)"/>
+    </mask>
+    <g mask="url(#mask0)">
+        <rect x="119" y="80" width="59" height="59" rx="10" fill="url(#paint1_linear_s2)"/>
+        <circle cx="148.153" cy="98.4211" r="13.4211" fill="url(#paint2_linear_s2)"/>
+        <path d="M177.011 132.944C177.011 140.679 182.637 145.5 148.233 145.5C113.83 145.5 119.322 140.679 119.322 132.944C119.322 125.21 124.482 117.491 148.233 117.491C171.984 117.491 177.011 125.21 177.011 132.944Z" fill="url(#paint3_linear_s2)"/>
+    </g>
+    <rect x="122" y="156" width="24" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="186" y="169" width="24" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="148" y="169" width="24" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="210" y="156" width="12" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="122" y="169" width="12" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="236" y="156" width="12" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="160" y="156" width="36" height="5" rx="2.5" fill="#FEE9B9"/>
+    <rect x="198" y="108" width="91" height="8" rx="4" fill="#FEE9B9"/>
+    <path d="M101 60C101 55.5817 104.582 52 109 52H304C308.418 52 312 55.5817 312 60H101Z" fill="url(#paint4_linear_s2)"/>
+    <g filter="url(#_filter0_d_s2)">
+        <rect x="256" y="93" width="106" height="139" rx="10" fill="url(#paint5_linear_s2)"/>
+    </g>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M337 187H281V191H337V187ZM329 197H289V201H329V197Z" fill="url(#paint6_linear_s2)"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M328.833 145.593C327.926 152.604 323.388 158.475 317.167 161.262C317.54 160.389 317.872 159.425 318.166 158.399C318.996 155.491 319.584 151.843 319.846 147.806C321.749 147.544 323.497 147.216 325.041 146.829C326.444 146.479 327.73 146.069 328.833 145.593ZM309 163C310.02 163 311.021 162.924 312 162.777V162C311.96 162 311.941 162.005 311.941 162.005L311.942 162.005C311.961 161.998 312.224 161.903 312.678 161.23C313.229 160.414 313.805 159.101 314.32 157.3C315.013 154.871 315.54 151.76 315.806 148.238C313.649 148.409 311.362 148.5 309 148.5C307.001 148.5 305.057 148.435 303.199 148.311C303.467 151.803 303.991 154.888 304.68 157.3C305.195 159.101 305.771 160.414 306.322 161.23C306.776 161.903 307.039 161.998 307.058 162.005C307.058 162.005 307.059 162.005 307.059 162.005C307.059 162.005 307.04 162 307 162V162.901C307.658 162.967 308.325 163 309 163ZM302.056 161.762C295.212 159.228 290.133 153.055 289.167 145.593C290.27 146.069 291.556 146.479 292.959 146.829C294.773 147.283 296.867 147.657 299.162 147.936C299.429 151.922 300.013 155.522 300.834 158.399C301.185 159.625 301.59 160.763 302.056 161.762ZM303.011 144.289C304.904 144.426 306.913 144.5 309 144.5C311.459 144.5 313.81 144.397 315.99 144.209C315.997 143.81 316 143.406 316 143C316 137.333 315.341 132.276 314.32 128.7C313.805 126.899 313.229 125.586 312.678 124.77C312.224 124.097 311.961 124.002 311.942 123.995L311.941 123.995L311.942 123.995C311.947 123.996 311.966 124 312 124V123.223C311.021 123.076 310.02 123 309 123C308.325 123 307.658 123.033 307 123.099V124C307.04 124 307.059 123.995 307.059 123.995C307.059 123.995 307.058 123.995 307.058 123.995C307.039 124.002 306.776 124.097 306.322 124.77C305.771 125.586 305.195 126.899 304.68 128.7C303.659 132.276 303 137.333 303 143C303 143.433 303.004 143.863 303.011 144.289ZM302.056 124.238C301.59 125.237 301.185 126.375 300.834 127.601C299.685 131.626 299 137.069 299 143C299 143.296 299.002 143.591 299.005 143.884C297.114 143.635 295.403 143.318 293.929 142.949C292.023 142.472 290.622 141.937 289.747 141.419C289.409 141.219 289.213 141.063 289.103 140.959C289.884 133.25 295.044 126.835 302.056 124.238ZM324.071 142.949C322.861 143.251 321.493 143.519 319.996 143.743C319.999 143.496 320 143.249 320 143C320 137.069 319.315 131.626 318.166 127.601C317.872 126.575 317.54 125.611 317.167 124.738C323.551 127.597 328.162 133.705 328.897 140.959C328.787 141.063 328.591 141.219 328.253 141.419C327.378 141.937 325.977 142.472 324.071 142.949ZM332.918 141C331.902 128.681 321.581 119 309 119C296.419 119 286.098 128.681 285.082 141H285C285 141.19 285.015 141.374 285.043 141.551C285.014 142.03 285 142.513 285 143C285 156.255 295.745 167 309 167C322.255 167 333 156.255 333 143C333 142.513 332.986 142.03 332.957 141.551C332.985 141.374 333 141.19 333 141H332.918Z" fill="url(#paint7_linear_s2)"/>
+    <defs>
+        <filter id="_filter0_d_s2" x="246" y="83" width="126" height="159" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+            <feOffset/>
+            <feGaussianBlur stdDeviation="5"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+        </filter>
+        <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(119 80) rotate(45) scale(83.4386 101.515)">
+            <stop stop-color="#FEF1D1"/>
+            <stop offset="1" stop-color="#F9FB9E"/>
+        </radialGradient>
+        <linearGradient id="paint1_linear_s2" x1="120.797" y1="80" x2="190.382" y2="106.561" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ECFFC5"/>
+            <stop offset="1" stop-color="#FEE8B6"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_s2" x1="161.574" y1="85" x2="161.574" y2="111.842" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F8EE12"/>
+            <stop offset="1" stop-color="#FEB23F"/>
+            <stop offset="1" stop-color="#FEC062"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_s2" x1="177.353" y1="117.491" x2="177.353" y2="145.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F8EE12"/>
+            <stop offset="1" stop-color="#FEB23F"/>
+            <stop offset="1" stop-color="#FEC062"/>
+        </linearGradient>
+        <linearGradient id="paint4_linear_s2" x1="107.426" y1="52" x2="110.212" y2="80.0439" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ECFFC5"/>
+            <stop offset="1" stop-color="#FEE8B6"/>
+        </linearGradient>
+        <linearGradient id="paint5_linear_s2" x1="295" y1="93" x2="391.962" y2="209.153" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ECFFC5"/>
+            <stop offset="1" stop-color="#FEE8B6"/>
+        </linearGradient>
+        <linearGradient id="paint6_linear_s2" x1="281" y1="187" x2="329" y2="201" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F8EE12"/>
+            <stop offset="1" stop-color="#FEB23F"/>
+            <stop offset="1" stop-color="#FEC062"/>
+        </linearGradient>
+        <linearGradient id="paint7_linear_s2" x1="333" y1="119" x2="333" y2="167" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#F8EE12"/>
+            <stop offset="1" stop-color="#FEB23F"/>
+            <stop offset="1" stop-color="#FEC062"/>
+        </linearGradient>
+    </defs>
+</svg>

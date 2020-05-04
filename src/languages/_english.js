@@ -89,9 +89,10 @@ export default {
   },
   borrow_landing: {
     page_name: 'Oasis Borrow',
-    headline: 'Give yourself some credit',
+    headline: 'Put your assets to work',
     subheadline: 'Vaults make it easy to utilize your collateral by generating DAI against it. Realize liquidity through a vault and ensure you don\'t lose long exposure to your collateral.',
     connect_to_start: 'To open or manage a Vault, connect a crypto wallet',
+    wbtc_notice: 'Bitcoin can now be used to open a Vault and generate Dai.',
     quotes_block: {
       title: 'Maximize your opportunity',
       body: 'Seize opportunity and capitalize on future crypto asset prices. Use your generated DAI to create a multiplied position on any asset, increasing your exposure.',
@@ -120,6 +121,24 @@ export default {
       bottom_link1: 'Full list of Oasis Vault FAQs',
       bottom_link2: 'Glossary of terms'
     }
+  },
+  borrow_wbtc_landing: {
+    headline: 'How to use Bitcoin to generate Dai',
+    subheadline: 'Bitcoin can now be used to open a vault and generate Dai through wBTC, a bridge that brings bitcoin to the ethereum blockchain.',
+    about_title: 'About WBTC',
+    about_content: 'Wrapped Bitcoin (wBTC) acts a bridge to bring BTC to the ethereum blockchain. It\'s the first ERC20 token backed 1:1 with Bitcoin.',
+    about_learn_more: 'Learn more at {link}',
+    step1: 'Signup to CoinList',
+    step1_details: 'Navigate to {link} and create an account',
+    step2: 'Complete KYC on CoinList',
+    step2_details: 'Enter the required information and have your wallet with BTC on it ready',
+    step3: 'Wrap your BTC into WBTC',
+    step3_details: 'Using CoinList\'s feature, wrap your BTC, turning it into wBTC on the ethereum network',
+    step4: 'Send your WBTC to a compatible wallet',
+    step4_details: 'Send your wBTC to Metamask, Ledger, Trezor, or a compatible ERC20 wallet',
+    step5: 'Create a WBTC Vault to Generate Dai',
+    step5_details: 'Navigate to {link} and open your vault with wBTC as collateral and generate your new Dai',
+    step5_link_text: 'Oasis.app/borrow'
   },
   save_landing: {
     page_name: 'Oasis Save',
@@ -554,6 +573,7 @@ export default {
   cookie_notice: 'By using this website you agree to our {0}',
   privacy_policy: 'privacy policy',
   see_how_it_works: 'See how it works',
+  learn_more: 'Learn more',
   providers: {
     connect_wallet: 'Connect a wallet',
     connect_wallet_long: 'Connect wallet to get started',
