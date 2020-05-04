@@ -56,18 +56,30 @@ const MainNavStyle = styled(Nav)`
   }
 `;
 
-const MainNav = props => {
+const MainNav = ({ onLinkClicked, ...props }) => {
   const { lang } = useLanguage();
 
   return (
     <MainNavStyle {...props}>
-      <Link href={`/${Routes.TRADE}`} activeStyle={{ fontWeight: 'bold' }}>
+      <Link
+        href={`/${Routes.TRADE}`}
+        activeStyle={{ fontWeight: 'bold' }}
+        onClick={() => onLinkClicked && onLinkClicked()}
+      >
         {lang.navbar.trade}
       </Link>
-      <Link href={`/${Routes.BORROW}`} activeStyle={{ fontWeight: 'bold' }}>
+      <Link
+        href={`/${Routes.BORROW}`}
+        activeStyle={{ fontWeight: 'bold' }}
+        onClick={() => onLinkClicked && onLinkClicked()}
+      >
         {lang.navbar.borrow}
       </Link>
-      <Link href={`/${Routes.SAVE}`} activeStyle={{ fontWeight: 'bold' }}>
+      <Link
+        href={`/${Routes.SAVE}`}
+        activeStyle={{ fontWeight: 'bold' }}
+        onClick={() => onLinkClicked && onLinkClicked()}
+      >
         {lang.navbar.save}
       </Link>
     </MainNavStyle>
@@ -245,6 +257,7 @@ const Footer = styled.footer`
 `;
 
 // It has the Oasis logo, the top nav links, and the copyright notice.
+// It also has a ThemeProvider
 const MarketingLayout = ({ showNavInFooter, children }) => {
   const { lang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -328,7 +341,7 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
           <Box p="39px 33px 33px">
             <Box display="inline-block" style={{ float: 'left' }}>
               <OasisLogoLink onClick={() => setMobileMenuOpen(false)} />
-              <MainNav />
+              <MainNav onLinkClicked={() => setMobileMenuOpen(false)} />
             </Box>
           </Box>
         </MobileMenu>
