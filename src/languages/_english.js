@@ -169,7 +169,7 @@ export default {
       question4: 'Can anyone else withdraw my Dai after I deposited it?',
       answer4: 'No. Providing you don\'t share your wallet or private key with anyone else, only you are able to control and access the Dai deposited into Oasis Save. For this reason, it is also very important to backup your wallet, as there is no way to return your Dai if you lose access to your wallet.',
       question5: 'What are the risks involved?',
-      answer5: 'As with all forms of digital, online technology, there is a risk of bugs and errors with the code. The Maker Protocol smart contracts, which run the Dai Savings Rate, have been through thorough testing, and multiple third party audits to address these risks. The biggest risk if often down to you and how you control your wallet - you should ensure you never share your private key or seed phrase with anyone else, and always make sure you keep a secure backup incase you need to restore your wallet in the future.',
+      answer5: 'As with all forms of digital, online technology, there is a risk of bugs and errors with the code. The Maker Protocol smart contracts, which run the Dai Savings Rate, have been through thorough testing, and multiple third party audits to address these risks. The biggest risk is often down to you and how you control your wallet - you should ensure you never share your private key or seed phrase with anyone else, and always make sure you keep a secure backup in case you need to restore your wallet in the future.',
       bottom_link1: 'Full list of Oasis Save FAQs'
     }
   },
