@@ -16,7 +16,7 @@ const config = {
     },
     mixpanel: {
       token: '4ff3f85397ffc3c6b6f0d4120a4ea40a',
-      config: { debug: true, ip: false }
+      config: { debug: true, ip: false, api_host: "mpp.makerfoundation.com" }
     },
     gaTrackingId: 'UA-128164213-4',
     fathom: {
