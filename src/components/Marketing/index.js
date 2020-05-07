@@ -14,6 +14,7 @@ import FixedHeaderTrigger from './FixedHeaderTrigger';
 import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
+import { BorrowCalculator } from './Calculators';
 import { Box, Text } from '@makerdao/ui-components-core';
 
 const ThickUnderline = styled.div`
@@ -81,5 +82,6 @@ export {
   FadeIn,
   Hamburger,
   H1,
-  H2
+  H2,
+  BorrowCalculator
 };
