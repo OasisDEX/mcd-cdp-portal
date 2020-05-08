@@ -114,12 +114,14 @@ const BorrowCalculator = () => {
   const { currentPrice: ethPrice } = useOraclePrices({ gem: 'ETH' });
   const { currentPrice: batPrice } = useOraclePrices({ gem: 'BAT' });
   const { currentPrice: usdcPrice } = useOraclePrices({ gem: 'USDC' });
+  const { currentPrice: wbtcPrice } = useOraclePrices({ gem: 'WBTC' });
 
   console.log('PRICE:', ethPrice?.toString());
   const gems = [
     { symbol: 'ETH', name: 'Ethereum', Icon: EthIcon, price: ethPrice },
     { symbol: 'BAT', Icon: BatIcon, price: batPrice },
-    { symbol: 'USDC', Icon: UsdcIcon, price: usdcPrice }
+    { symbol: 'USDC', Icon: UsdcIcon, price: usdcPrice },
+    { symbol: 'WBTC', Icon: WbtcIcon, price: wbtcPrice }
   ];
 
   const [selectedValue, setSelectedValue] = useState(gems[0].symbol);

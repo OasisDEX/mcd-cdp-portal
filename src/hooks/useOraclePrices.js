@@ -15,7 +15,7 @@ function useOraclePrices({ gem, interval = 5 * 1000 }) {
     network => network === maker.service('web3').networkName
   );
 
-  const isValidGem = ['ETH', 'BAT'].some(g => g === gem);
+  const isValidGem = ['ETH', 'BAT', 'WBTC'].some(g => g === gem);
 
   const isCancelled = useRef(false);
   useInterval(async () => {
