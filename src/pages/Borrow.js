@@ -22,7 +22,8 @@ import {
   QuotesFadeIn,
   SeparatorDot,
   H1,
-  H2
+  H2,
+  BorrowCalculator
 } from 'components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -259,6 +260,7 @@ function Borrow() {
             </StyledQuotes>
           </QuotesFadeIn>
         </Box>
+        <BorrowCalculator />
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}
