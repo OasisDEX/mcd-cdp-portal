@@ -3,6 +3,9 @@ import useOraclePrices from 'hooks/useOraclePrices';
 import { Box, Flex, Text } from '@makerdao/ui-components-core';
 
 import styled from 'styled-components';
+import { prettifyCurrency } from 'utils/ui';
+import useLanguage from 'hooks/useLanguage';
+
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
@@ -23,6 +26,7 @@ const Dropdown = (() => {
 
   const Items = styled(Box)`
     position: absolute;
+    z-index: 1;
     width: calc(100% - 2px);
     top: calc(100% + 5px);
     right: 0;
@@ -85,8 +89,6 @@ const CalculatorStyle = styled(Box)`
   padding: 20px;
 `;
 
-// can_borrow = (deposit_amount*price)/(ratio/100)
-
 const ItemWithIconStyle = styled.div`
   height: 58px;
   display: flex;
@@ -108,6 +110,14 @@ const ItemWithIcon = ({ img, text }) => (
     </Text>
   </ItemWithIconStyle>
 );
+
+const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
+  if (!price) {
+    return '...';
+  }
+  const daiAvailable = price.times(depositAmount).dividedBy(colRatio / 100);
+  return prettifyCurrency(locale, daiAvailable, 0);
+};
 
 const BorrowCalculator = () => {
   const gems = [
@@ -136,6 +146,10 @@ const BorrowCalculator = () => {
 
   const [selectedValue, setSelectedValue] = useState(gems[0].symbol);
   const selectedGem = gems.find(gem => gem.symbol === selectedValue);
+  const colRatioRange = [500, 200];
+  const collateralAmount = 120;
+  const { lang } = useLanguage();
+  const interfaceLocale = lang.getInterfaceLanguage();
 
   return (
     <CalculatorStyle>
@@ -151,9 +165,38 @@ const BorrowCalculator = () => {
         }))}
         onSelected={selected => setSelectedValue(selected)}
       />
+      <div>Collateral amount: {collateralAmount}</div>
       <div>
         {selectedGem.symbol} price:{' '}
         {selectedGem.price && selectedGem.price.toString()}
+      </div>
+      <div>
+        <div style={{ fontSize: '20px' }}>
+          Dai Available{' '}
+          <Text fontSize="15px" color="gray">
+            formula: (deposit_amount * price)/(ratio/100)
+          </Text>
+          :
+        </div>
+        <div style={{ fontSize: '58px' }}>
+          {getDaiAvailable(
+            interfaceLocale,
+            collateralAmount,
+            selectedGem.price,
+            colRatioRange[0]
+          )}
+          {' - '}
+          {getDaiAvailable(
+            interfaceLocale,
+            collateralAmount,
+            selectedGem.price,
+            colRatioRange[1]
+          )}
+        </div>
+        <div>
+          Collateralization Ratio between {colRatioRange[0]}% -{' '}
+          {colRatioRange[1]}%
+        </div>
       </div>
     </CalculatorStyle>
   );
