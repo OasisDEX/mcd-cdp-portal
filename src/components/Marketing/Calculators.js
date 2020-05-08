@@ -1,21 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import useMaker from 'hooks/useMaker';
-import uniqBy from 'lodash.uniqby';
-import { Box } from '@makerdao/ui-components-core';
-import styled from 'styled-components';
+import React, { useState } from 'react';
+import useOraclePrices from 'hooks/useOraclePrices';
+import { Box, Flex, Text } from '@makerdao/ui-components-core';
 
+import styled from 'styled-components';
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
-import useOraclePrices from '../../hooks/useOraclePrices';
+
+import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 
 const Dropdown = (() => {
-  const Trigger = styled(Box)``;
+  const Trigger = styled(Flex)`
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d4d9e1;
+    border-radius: 5px;
+    padding-right: 27.79px;
+    cursor: pointer;
+  `;
 
-  const Items = styled(Box)``;
+  const Items = styled(Box)`
+    position: absolute;
+    width: calc(100% - 2px);
+    top: calc(100% + 5px);
+    right: 0;
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding-top: 12px;
+    padding-left: 1px;
+    padding-bottom: 16px;
 
-  const DropdownStyle = styled(Box)``;
+    .item:hover .text {
+      opacity: 0.6;
+    }
+  `;
+
+  const DropdownStyle = styled(Box)`
+    width: 396px;
+    position: relative;
+  `;
 
   return ({ items, onSelected }) => {
     const [selected, setSelected] = useState(items[0].value);
@@ -27,6 +53,7 @@ const Dropdown = (() => {
       <DropdownStyle>
         <Trigger onClick={() => setIsOpen(!isOpen)}>
           {getSelectedItem().render()}
+          <CaratDown style={{ fill: '#231536' }} />
         </Trigger>
         <Items display={isOpen ? 'block' : 'none'}>
           {items
@@ -37,6 +64,7 @@ const Dropdown = (() => {
                 onClick={() => {
                   setSelected(item.value);
                   onSelected(item.value);
+                  setIsOpen(false);
                 }}
               >
                 {item.render()}
@@ -48,15 +76,37 @@ const Dropdown = (() => {
   };
 })();
 
-const CalculatorStyle = styled(Box)``;
+const CalculatorStyle = styled(Box)`
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  width: 980px;
+  height: 554px;
+  padding: 20px;
+`;
 
 // can_borrow = (deposit_amount*price)/(ratio/100)
 
+const ItemWithIconStyle = styled.div`
+  height: 58px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding-left: 26.83px;
+  cursor: pointer;
+
+  svg {
+    margin-right: 14px;
+  }
+`;
+
 const ItemWithIcon = ({ img, text }) => (
-  <div>
+  <ItemWithIconStyle className="item">
     {img}
-    {text}
-  </div>
+    <Text className="text" fontSize="18px" letterSpacing="0.5px">
+      {text}
+    </Text>
+  </ItemWithIconStyle>
 );
 
 const BorrowCalculator = () => {
@@ -65,7 +115,7 @@ const BorrowCalculator = () => {
   const { currentPrice: batPrice } = useOraclePrices({ gem: 'BAT' });
   const { currentPrice: usdcPrice } = useOraclePrices({ gem: 'USDC' });
 
-  console.log('PRICE:', ethPrice);
+  console.log('PRICE:', ethPrice?.toString());
   const gems = [
     { symbol: 'ETH', name: 'Ethereum', Icon: EthIcon, price: ethPrice },
     { symbol: 'BAT', Icon: BatIcon, price: batPrice },

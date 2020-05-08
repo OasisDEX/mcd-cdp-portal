@@ -262,7 +262,9 @@ function AccountSelection({ buttonWidth, ...props }) {
               }}
             >
               {lang.providers.connect_wallet}
-              <CaratDown style={{ marginTop: '2px', marginLeft: '15px' }} />
+              <CaratDown
+                style={{ marginTop: '2px', marginLeft: '15px', fill: 'white' }}
+              />
             </FilledButton>
           }
         >
