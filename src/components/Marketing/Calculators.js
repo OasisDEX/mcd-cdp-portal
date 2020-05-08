@@ -110,18 +110,28 @@ const ItemWithIcon = ({ img, text }) => (
 );
 
 const BorrowCalculator = () => {
-  // todo: find where to better get the price from in the code
-  const { currentPrice: ethPrice } = useOraclePrices({ gem: 'ETH' });
-  const { currentPrice: batPrice } = useOraclePrices({ gem: 'BAT' });
-  const { currentPrice: usdcPrice } = useOraclePrices({ gem: 'USDC' });
-  const { currentPrice: wbtcPrice } = useOraclePrices({ gem: 'WBTC' });
-
-  console.log('PRICE:', ethPrice?.toString());
   const gems = [
-    { symbol: 'ETH', name: 'Ethereum', Icon: EthIcon, price: ethPrice },
-    { symbol: 'BAT', Icon: BatIcon, price: batPrice },
-    { symbol: 'USDC', Icon: UsdcIcon, price: usdcPrice },
-    { symbol: 'WBTC', Icon: WbtcIcon, price: wbtcPrice }
+    {
+      symbol: 'ETH',
+      name: 'Ethereum',
+      Icon: EthIcon,
+      price: useOraclePrices({ gem: 'ETH' }).currentPrice
+    },
+    {
+      symbol: 'BAT',
+      Icon: BatIcon,
+      price: useOraclePrices({ gem: 'BAT' }).currentPrice
+    },
+    {
+      symbol: 'USDC',
+      Icon: UsdcIcon,
+      price: useOraclePrices({ gem: 'USDC' }).currentPrice
+    },
+    {
+      symbol: 'WBTC',
+      Icon: WbtcIcon,
+      price: useOraclePrices({ gem: 'WBTC' }).currentPrice
+    }
   ];
 
   const [selectedValue, setSelectedValue] = useState(gems[0].symbol);
