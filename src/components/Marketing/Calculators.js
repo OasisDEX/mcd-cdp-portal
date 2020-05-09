@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useOraclePrices from 'hooks/useOraclePrices';
-import { Box, Flex, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
 
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ const Dropdown = (() => {
 
   const Items = styled(Box)`
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     width: calc(100% - 2px);
     top: calc(100% + 5px);
     right: 0;
@@ -44,7 +44,6 @@ const Dropdown = (() => {
   `;
 
   const DropdownStyle = styled(Box)`
-    width: 396px;
     position: relative;
   `;
 
@@ -94,6 +93,10 @@ const Slider = (() => {
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     cursor: grab;
     border-radius: 50%;
+
+    :focus {
+      outline: none;
+    }
   `;
 
   const Track = styled.div`
@@ -120,7 +123,6 @@ const CalculatorStyle = styled(Box)`
   border-radius: 3px;
   width: 980px;
   height: 554px;
-  padding: 20px;
   margin: 0 auto;
 `;
 
@@ -153,6 +155,12 @@ const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
   const daiAvailable = price.times(depositAmount).dividedBy(colRatio / 100);
   return prettifyCurrency(locale, daiAvailable, 0);
 };
+
+const CapsText = styled(Text)`
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+`;
 
 const BorrowCalculator = () => {
   const gems = [
@@ -188,54 +196,58 @@ const BorrowCalculator = () => {
 
   return (
     <CalculatorStyle>
-      <Dropdown
-        items={gems.map(gem => ({
-          value: gem.symbol,
-          render: () => (
-            <ItemWithIcon
-              text={gem.name || gem.symbol}
-              img={<gem.Icon width="28.33" height="28.33" />}
-            />
-          )
-        }))}
-        onSelected={selected => setSelectedValue(selected)}
-      />
-      <div>Collateral amount: {collateralAmount}</div>
-      <div>
-        {selectedGem.symbol} price:{' '}
-        {selectedGem.price && selectedGem.price.toString()}
-      </div>
-      <div>
-        <div style={{ fontSize: '20px' }}>
-          Dai Available{' '}
-          <Text fontSize="15px" color="gray">
-            formula: (deposit_amount * price)/(ratio/100)
-          </Text>
-          :
-        </div>
-        <Slider
-          defaultValue={collateralAmount}
-          onChange={value => setCollateralAmount(value)}
+      <Grid
+        gridTemplateColumns="217px 396px"
+        alignItems="center"
+        gridColumnGap="100px"
+        gridRowGap="53px"
+        justifyContent="center"
+        my="72px"
+      >
+        <CapsText textAlign="right" fontSize="s">
+          {lang.collateral_type}
+        </CapsText>
+        <Dropdown
+          items={gems.map(gem => ({
+            value: gem.symbol,
+            render: () => (
+              <ItemWithIcon
+                text={gem.name || gem.symbol}
+                img={<gem.Icon width="28.33" height="28.33" />}
+              />
+            )
+          }))}
+          onSelected={selected => setSelectedValue(selected)}
         />
-        <div style={{ fontSize: '58px' }}>
-          {getDaiAvailable(
-            interfaceLocale,
-            collateralAmount,
-            selectedGem.price,
-            colRatioRange[0]
-          )}
-          {' - '}
-          {getDaiAvailable(
-            interfaceLocale,
-            collateralAmount,
-            selectedGem.price,
-            colRatioRange[1]
-          )}
-        </div>
-        <div>
-          Collateralization Ratio between {colRatioRange[0]}% -{' '}
-          {colRatioRange[1]}%
-        </div>
+        <CapsText textAlign="right" fontSize="s">
+          {lang.collateral_amount}
+        </CapsText>
+        <Box position="relative">
+          <Position position="absolute" bottom="14px" right="0">
+            <CapsText textAlign="right" fontSize="22px">
+              {collateralAmount} {selectedGem.symbol}
+            </CapsText>
+          </Position>
+          <Slider
+            defaultValue={collateralAmount}
+            onChange={value => setCollateralAmount(value)}
+          />
+        </Box>
+      </Grid>
+      <div>
+        {getDaiAvailable(
+          interfaceLocale,
+          collateralAmount,
+          selectedGem.price,
+          colRatioRange[0]
+        )}
+        {' - '}
+        {getDaiAvailable(
+          interfaceLocale,
+          collateralAmount,
+          selectedGem.price,
+          colRatioRange[1]
+        )}
       </div>
     </CalculatorStyle>
   );
