@@ -22,7 +22,7 @@ const Dropdown = (() => {
     background: #ffffff;
     border: 1px solid #d4d9e1;
     border-radius: 5px;
-    padding-right: 27.79px;
+    padding-right: 27px;
     cursor: pointer;
   `;
 
@@ -58,7 +58,7 @@ const Dropdown = (() => {
       <DropdownStyle>
         <Trigger onClick={() => setIsOpen(!isOpen)}>
           {getSelectedItem().render()}
-          <CaratDown style={{ fill: '#231536' }} />
+          <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
         </Trigger>
         <Items display={isOpen ? 'block' : 'none'}>
           {items
@@ -128,15 +128,15 @@ const CalculatorStyle = styled(Box)`
 `;
 
 const ItemWithIconStyle = styled.div`
-  height: 58px;
+  height: 56px;
   display: flex;
   align-items: center;
   text-align: left;
-  padding-left: 26.83px;
+  padding-left: 26px;
   cursor: pointer;
 
   svg {
-    margin-right: 14px;
+    margin-right: 13px;
   }
 `;
 
@@ -214,9 +214,11 @@ const BorrowCalculator = () => {
         gridTemplateColumns="217px 396px"
         alignItems="center"
         gridColumnGap="100px"
-        gridRowGap="53px"
+        gridRowGap="84px"
         justifyContent="center"
-        my="72px"
+        mt="71px"
+        mb="69px"
+        mr="4px"
       >
         <CapsText textAlign="right" fontSize="s">
           {lang.collateral_type}
@@ -237,9 +239,10 @@ const BorrowCalculator = () => {
           {lang.collateral_amount}
         </CapsText>
         <Box position="relative">
-          <Position position="absolute" bottom="14px" right="0">
+          <Position position="absolute" bottom="17px" right="0">
             <CapsText textAlign="right" fontSize="22px">
-              {collateralAmount} {selectedGem.symbol}
+              {collateralAmount}
+              <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
             </CapsText>
           </Position>
           <Slider
@@ -249,12 +252,14 @@ const BorrowCalculator = () => {
         </Box>
       </Grid>
       <Box background="#e5e5e5" height="1px" />
-      <Box textAlign="center">
+      <Box textAlign="center" pt="36px">
         <CapsText fontSize="s">
           {lang.borrow_landing.calc_dai_available}
         </CapsText>
-        <div>
-          <DaiImg />
+        <Box mt="18px" mb="27px">
+          <DaiImg
+            style={{ marginRight: '15px', position: 'relative', top: '1px' }}
+          />
           <GradientValue>
             {getDaiAvailable(
               interfaceLocale,
@@ -270,8 +275,8 @@ const BorrowCalculator = () => {
               colRatioRange[1]
             )}
           </GradientValue>
-        </div>
-        <Text fontSize="16px" color="#9C9DA7">
+        </Box>
+        <Text fontSize="16px" color="#9C9DA7" letterSpacing="0.5px">
           {lang.formatString(lang.borrow_landing.calc_footnote, {
             fee: '[todo]',
             max_ratio: colRatioRange[0],
