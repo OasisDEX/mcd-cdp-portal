@@ -13,6 +13,7 @@ import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
+import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -162,6 +163,19 @@ const CapsText = styled(Text)`
   font-weight: bold;
 `;
 
+const GradientValue = styled(Text)`
+  font-size: 58px;
+  font-weight: 500;
+  background: linear-gradient(
+    125.96deg,
+    #fdc134 17.59%,
+    #c9e03b 48.87%,
+    #2dc1b1 83.6%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
+
 const BorrowCalculator = () => {
   const gems = [
     {
@@ -234,21 +248,37 @@ const BorrowCalculator = () => {
           />
         </Box>
       </Grid>
-      <div>
-        {getDaiAvailable(
-          interfaceLocale,
-          collateralAmount,
-          selectedGem.price,
-          colRatioRange[0]
-        )}
-        {' - '}
-        {getDaiAvailable(
-          interfaceLocale,
-          collateralAmount,
-          selectedGem.price,
-          colRatioRange[1]
-        )}
-      </div>
+      <Box background="#e5e5e5" height="1px" />
+      <Box textAlign="center">
+        <CapsText fontSize="s">
+          {lang.borrow_landing.calc_dai_available}
+        </CapsText>
+        <div>
+          <DaiImg />
+          <GradientValue>
+            {getDaiAvailable(
+              interfaceLocale,
+              collateralAmount,
+              selectedGem.price,
+              colRatioRange[0]
+            )}
+            {' - '}
+            {getDaiAvailable(
+              interfaceLocale,
+              collateralAmount,
+              selectedGem.price,
+              colRatioRange[1]
+            )}
+          </GradientValue>
+        </div>
+        <Text fontSize="16px" color="#9C9DA7">
+          {lang.formatString(lang.borrow_landing.calc_footnote, {
+            fee: '[todo]',
+            max_ratio: colRatioRange[0],
+            min_ratio: colRatioRange[1]
+          })}
+        </Text>
+      </Box>
     </CalculatorStyle>
   );
 };
