@@ -122,9 +122,7 @@ const CalculatorStyle = styled(Box)`
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  width: 980px;
   height: 554px;
-  margin: 0 auto;
 `;
 
 const ItemWithIconStyle = styled.div`
@@ -176,7 +174,7 @@ const GradientValue = styled(Text)`
   -webkit-text-fill-color: transparent;
 `;
 
-const BorrowCalculator = () => {
+const BorrowCalculator = props => {
   const gems = [
     {
       symbol: 'ETH',
@@ -209,7 +207,7 @@ const BorrowCalculator = () => {
   const interfaceLocale = lang.getInterfaceLanguage();
 
   return (
-    <CalculatorStyle>
+    <CalculatorStyle {...props}>
       <Grid
         gridTemplateColumns="217px 396px"
         alignItems="center"

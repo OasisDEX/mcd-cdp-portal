@@ -99,6 +99,8 @@ export default {
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
+    calc_heading: 'How much can I borrow?',
+    calc_subheading: 'To see how much cash you can get right now, enter your desired collateral type',
     calc_dai_available: 'Dai available to you',
     calc_footnote: 'The above figure assumes a Stability Fee of {fee}% and a Collateralization Ratio between {max_ratio}% - {min_ratio}%.',
     feature1_heading: 'Flexible repayment and terms',

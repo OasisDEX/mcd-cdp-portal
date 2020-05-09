@@ -260,10 +260,14 @@ function Borrow() {
             </StyledQuotes>
           </QuotesFadeIn>
         </Box>
-        <BorrowCalculator />
+        <Box m="326px auto 0" maxWidth="980px">
+          <H2 mb="16px">{lang.borrow_landing.calc_heading}</H2>
+          <Text>{lang.borrow_landing.calc_subheading}</Text>
+          <BorrowCalculator mt="40px" />
+        </Box>
       </GradientBox>
       <Features
-        mt={{ s: '158px', m: '200px' }}
+        mt={{ s: '158px', m: '240px' }}
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
