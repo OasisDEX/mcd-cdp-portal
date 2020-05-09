@@ -51,6 +51,7 @@
     "react-localization": "^1.0.13",
     "react-navi": "^0.13.6",
     "react-scripts": "3.2.0",
+    "react-slider": "^1.0.4",
     "react-spring": "^8.0.15",
     "react-visibility-sensor": "^5.1.1",
     "reinspect": "^1.0.1",

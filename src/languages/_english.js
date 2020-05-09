@@ -99,6 +99,8 @@ export default {
       quote1: 'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions',
       author1: 'Vault 2434'
     },
+    calc_dai_available: 'Dai available to you',
+    calc_footnote: 'The above figure assumes a Stability Fee of {fee}% and a Collateralization Ratio between {max_ratio}% - {min_ratio}%.',
     feature1_heading: 'Flexible repayment and terms',
     feature1_content: 'Vaults are open-ended. Meaning no fixed repayment schedules, pay back or generate Dai when it suits you.',
     feature2_heading: 'Secure and easy to use',
@@ -562,6 +564,7 @@ export default {
   liquidation_ratio_shortened: 'Liq ratio',
   // "liquidation_price_shortened": "Liq Price",
   collateral_type: 'Collateral Type',
+  collateral_amount: 'Collateral Amount',
   collateralization: 'Your Collateralization Ratio',
   collateralization_ratio: 'Collateralization ratio',
   current_ilk_price: 'Current {0} Price',

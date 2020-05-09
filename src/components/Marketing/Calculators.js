@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useOraclePrices from 'hooks/useOraclePrices';
 import { Box, Flex, Text } from '@makerdao/ui-components-core';
+import ReactSlider from 'react-slider';
 
 import styled from 'styled-components';
 import { prettifyCurrency } from 'utils/ui';
@@ -80,6 +81,39 @@ const Dropdown = (() => {
   };
 })();
 
+const Slider = (() => {
+  const StyledSlider = styled(ReactSlider)`
+    width: 100%;
+  `;
+
+  const Thumb = styled.div`
+    width: 20px;
+    height: 20px;
+    top: -8px;
+    background: #231536;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    cursor: grab;
+    border-radius: 50%;
+  `;
+
+  const Track = styled.div`
+    background: #dedce1;
+    border-radius: 3px;
+    height: 4px;
+  `;
+
+  return props => (
+    <StyledSlider
+      min={5}
+      max={200}
+      step={5}
+      renderTrack={props => <Track {...props} />}
+      renderThumb={props => <Thumb {...props} />}
+      {...props}
+    />
+  );
+})();
+
 const CalculatorStyle = styled(Box)`
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -87,6 +121,7 @@ const CalculatorStyle = styled(Box)`
   width: 980px;
   height: 554px;
   padding: 20px;
+  margin: 0 auto;
 `;
 
 const ItemWithIconStyle = styled.div`
@@ -147,7 +182,7 @@ const BorrowCalculator = () => {
   const [selectedValue, setSelectedValue] = useState(gems[0].symbol);
   const selectedGem = gems.find(gem => gem.symbol === selectedValue);
   const colRatioRange = [500, 200];
-  const collateralAmount = 120;
+  const [collateralAmount, setCollateralAmount] = useState(120);
   const { lang } = useLanguage();
   const interfaceLocale = lang.getInterfaceLanguage();
 
@@ -178,6 +213,10 @@ const BorrowCalculator = () => {
           </Text>
           :
         </div>
+        <Slider
+          defaultValue={collateralAmount}
+          onChange={value => setCollateralAmount(value)}
+        />
         <div style={{ fontSize: '58px' }}>
           {getDaiAvailable(
             interfaceLocale,
