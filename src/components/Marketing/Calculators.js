@@ -166,19 +166,6 @@ const CapsText = styled(Text).attrs(props => ({
   display: block;
 `;
 
-const GradientValue = styled(Text)`
-  font-size: 58px;
-  font-weight: 500;
-  background: linear-gradient(
-    125.96deg,
-    #fdc134 17.59%,
-    #c9e03b 48.87%,
-    #2dc1b1 83.6%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-`;
-
 const useDaiSavingsRate = () => {
   const [rate, setRate] = useState(null);
   const { maker } = useMaker();
@@ -192,6 +179,38 @@ const useDaiSavingsRate = () => {
 
   return rate;
 };
+
+const DaiAmount = (() => {
+  const GradientValue = styled(Text)`
+    font-size: 58px;
+    font-weight: 500;
+    background: linear-gradient(
+      125.96deg,
+      #fdc134 17.59%,
+      #c9e03b 48.87%,
+      #2dc1b1 83.6%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  `;
+
+  return ({ children, ...props }) => (
+    <Box {...props}>
+      <DaiImg
+        style={{ marginRight: '15px', position: 'relative', top: '1px' }}
+      />
+      <GradientValue>{children}</GradientValue>
+    </Box>
+  );
+})();
+
+const Separator = () => <Box background="#e5e5e5" height="1px" />;
+
+const Footnote = styled(Text).attrs(() => ({
+  fontSize: '16px',
+  color: '#9C9DA7',
+  letterSpacing: '0.5px'
+}))``;
 
 const BorrowCalculator = props => {
   const gems = [
@@ -224,7 +243,6 @@ const BorrowCalculator = props => {
   const [collateralAmount, setCollateralAmount] = useState(120);
   const { lang } = useLanguage();
   const interfaceLocale = lang.getInterfaceLanguage();
-  const dsr = useDaiSavingsRate();
 
   return (
     <CalculatorStyle {...props}>
@@ -264,41 +282,33 @@ const BorrowCalculator = props => {
           />
         </Box>
       </Grid>
-      <Box background="#e5e5e5" height="1px" />
+      <Separator />
       <Box textAlign="center" pt="36px">
         <CapsText fontSize="s">
           {lang.borrow_landing.calc_dai_available}
         </CapsText>
-        <Box mt="18px" mb="27px">
-          <DaiImg
-            style={{ marginRight: '15px', position: 'relative', top: '1px' }}
-          />
-          <GradientValue>
-            {getDaiAvailable(
-              interfaceLocale,
-              collateralAmount,
-              selectedGem.price,
-              colRatioRange[0]
-            )}
-            {' - '}
-            {getDaiAvailable(
-              interfaceLocale,
-              collateralAmount,
-              selectedGem.price,
-              colRatioRange[1]
-            )}
-          </GradientValue>
-        </Box>
-        <Text fontSize="16px" color="#9C9DA7" letterSpacing="0.5px">
+        <DaiAmount mt="18px" mb="27px">
+          {getDaiAvailable(
+            interfaceLocale,
+            collateralAmount,
+            selectedGem.price,
+            colRatioRange[0]
+          )}
+          {' - '}
+          {getDaiAvailable(
+            interfaceLocale,
+            collateralAmount,
+            selectedGem.price,
+            colRatioRange[1]
+          )}
+        </DaiAmount>
+        <Footnote>
           {lang.formatString(lang.borrow_landing.calc_footnote, {
-            fee: dsr
-              ?.minus(1)
-              .times(100)
-              .toFixed(2),
+            fee: '[todo]',
             max_ratio: colRatioRange[0],
             min_ratio: colRatioRange[1]
           })}
-        </Text>
+        </Footnote>
       </Box>
     </CalculatorStyle>
   );
@@ -379,9 +389,19 @@ const SaveCalculator = (() => {
             hideSelected={false}
           />
         </Box>
-
-        <div>Amount of savings: {prettifyCurrency(locale, savings, 0)}</div>
-        <div>Total Dai: {prettifyCurrency(locale, totalDai, 0)}</div>
+        <Separator />
+        <Box maxWidth="478px" m="0 auto">
+          <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
+          <DaiAmount>{prettifyCurrency(locale, savings, 0)}</DaiAmount>
+          <Separator />
+          <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
+          <DaiAmount>{prettifyCurrency(locale, totalDai, 0)}</DaiAmount>
+          <Footnote>
+            {lang.formatString(lang.save_landing.calc_footnote, {
+              dsr: dsr ? ((dsr - 1) * 100).toFixed(1) : '...'
+            })}
+          </Footnote>
+        </Box>
       </CalculatorStyle>
     );
   };
