@@ -155,6 +155,13 @@ export default {
       quote1: 'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save User'
     },
+    calc_heading: 'How much can I earn?',
+    calc_subheading: 'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
+    calc_how_much: 'How much DAI would you like to deposit?',
+    calc_how_long: 'How long do you plan on earning Dai?',
+    calc_savings_earned: 'Amount of savings earned on your DAI',
+    calc_total_dai: 'Total DAI you will have',
+    calc_footnote: 'The above figure assumes an average Dai Savings Rate of {dsr}%',
     feature1_heading: 'A smarter, better money',
     feature1_content: 'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
     feature2_heading: 'Less volatility, no uncertainty',

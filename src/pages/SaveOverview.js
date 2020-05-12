@@ -140,8 +140,8 @@ function SaveOverview() {
           />
         </QuotesFadeIn>
         <Box m="326px auto 0" maxWidth="980px">
-          <H2 mb="16px">{lang.borrow_landing.calc_heading}</H2>
-          <Text>{lang.borrow_landing.calc_subheading}</Text>
+          <H2 mb="16px">{lang.save_landing.calc_heading}</H2>
+          <Text>{lang.save_landing.calc_subheading}</Text>
           <SaveCalculator mt="40px" />
         </Box>
       </GradientBox>

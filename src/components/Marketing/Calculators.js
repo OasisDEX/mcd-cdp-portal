@@ -157,10 +157,13 @@ const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
   return prettifyCurrency(locale, daiAvailable, 0);
 };
 
-const CapsText = styled(Text)`
+const CapsText = styled(Text).attrs(props => ({
+  fontSize: props.fontSize || 's'
+}))`
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: bold;
+  display: block;
 `;
 
 const GradientValue = styled(Text)`
@@ -185,7 +188,7 @@ const useDaiSavingsRate = () => {
       const savingsService = maker.service('mcd:savings');
       setRate(await savingsService.getYearlyRate());
     })();
-  }, []);
+  }, [maker]);
 
   return rate;
 };
@@ -235,9 +238,7 @@ const BorrowCalculator = props => {
         mb="69px"
         mr="4px"
       >
-        <CapsText textAlign="right" fontSize="s">
-          {lang.collateral_type}
-        </CapsText>
+        <CapsText textAlign="right">{lang.collateral_type}</CapsText>
         <Dropdown
           items={gems.map(gem => ({
             value: gem.symbol,
@@ -250,9 +251,7 @@ const BorrowCalculator = props => {
           }))}
           onSelected={selected => setSelectedValue(selected)}
         />
-        <CapsText textAlign="right" fontSize="s">
-          {lang.collateral_amount}
-        </CapsText>
+        <CapsText textAlign="right">{lang.collateral_amount}</CapsText>
         <Box position="relative">
           <Position position="absolute" bottom="17px" right="0">
             <CapsText textAlign="right" fontSize="22px">
@@ -307,6 +306,21 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
+  const DepositButton = styled(Flex)`
+    border: 1px solid #d4d9e1;
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 99px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    &.selected {
+      border-color: ${props => props.theme.colors.darkPurple};
+      cursor: default;
+    }
+  `;
+
   return props => {
     const { lang } = useLanguage();
     const locale = lang.getInterfaceLanguage();
@@ -319,6 +333,22 @@ const SaveCalculator = (() => {
 
     return (
       <CalculatorStyle {...props}>
+        <Box maxWidth="473px" m="0 auto">
+          <CapsText>{lang.save_landing.calc_how_much}</CapsText>
+          <Flex justifyContent="space-between">
+            {deposits.map((amount, index) => (
+              <DepositButton
+                key={index}
+                onClick={() => setDepositIndex(index)}
+                className={depositIndex === index ? 'selected' : ''}
+              >
+                <Text fontSize="s">${amount}</Text>
+              </DepositButton>
+            ))}
+          </Flex>
+          <CapsText>{lang.save_landing.calc_how_long}</CapsText>
+        </Box>
+
         <div>Amount of savings: {prettifyCurrency(locale, savings, 0)}</div>
         <div>Total Dai: {prettifyCurrency(locale, totalDai, 0)}</div>
       </CalculatorStyle>
