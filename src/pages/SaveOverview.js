@@ -17,7 +17,8 @@ import {
   Parallaxed,
   QuotesFadeIn,
   H1,
-  H2
+  H2,
+  SaveCalculator
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -138,6 +139,11 @@ function SaveOverview() {
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>
+        <Box m="326px auto 0" maxWidth="980px">
+          <H2 mb="16px">{lang.borrow_landing.calc_heading}</H2>
+          <Text>{lang.borrow_landing.calc_subheading}</Text>
+          <SaveCalculator mt="40px" />
+        </Box>
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}

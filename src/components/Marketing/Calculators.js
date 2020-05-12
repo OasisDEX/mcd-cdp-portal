@@ -15,6 +15,7 @@ import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 import useMaker from 'hooks/useMaker';
+import { BigNumber } from 'bignumber.js';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -182,10 +183,7 @@ const useDaiSavingsRate = () => {
   useEffect(() => {
     (async () => {
       const savingsService = maker.service('mcd:savings');
-      const percEarning = (await savingsService.getYearlyRate())
-        .minus(1)
-        .times(100);
-      setRate(percEarning);
+      setRate(await savingsService.getYearlyRate());
     })();
   }, []);
 
@@ -295,7 +293,10 @@ const BorrowCalculator = props => {
         </Box>
         <Text fontSize="16px" color="#9C9DA7" letterSpacing="0.5px">
           {lang.formatString(lang.borrow_landing.calc_footnote, {
-            fee: dsr?.toFixed(2),
+            fee: dsr
+              ?.minus(1)
+              .times(100)
+              .toFixed(2),
             max_ratio: colRatioRange[0],
             min_ratio: colRatioRange[1]
           })}
@@ -306,9 +307,23 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
-  return () => {
-    return <CalculatorStyle></CalculatorStyle>;
+  return props => {
+    const { lang } = useLanguage();
+    const locale = lang.getInterfaceLanguage();
+    const dsr = useDaiSavingsRate();
+    const deposits = [500, 2000, 4000, 6000];
+    const [depositIndex, setDepositIndex] = useState(0);
+    const [yearsEarning, setYearsEarning] = useState(2);
+    const totalDai = dsr?.pow(yearsEarning).times(deposits[depositIndex]);
+    const savings = totalDai?.minus(deposits[depositIndex]);
+
+    return (
+      <CalculatorStyle {...props}>
+        <div>Amount of savings: {prettifyCurrency(locale, savings, 0)}</div>
+        <div>Total Dai: {prettifyCurrency(locale, totalDai, 0)}</div>
+      </CalculatorStyle>
+    );
   };
 })();
 
-export { BorrowCalculator };
+export { BorrowCalculator, SaveCalculator };
