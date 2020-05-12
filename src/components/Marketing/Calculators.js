@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useOraclePrices from 'hooks/useOraclePrices';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
@@ -14,6 +14,7 @@ import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
+import useMaker from 'hooks/useMaker';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -174,6 +175,23 @@ const GradientValue = styled(Text)`
   -webkit-text-fill-color: transparent;
 `;
 
+const useDaiSavingsRate = () => {
+  const [rate, setRate] = useState(null);
+  const { maker } = useMaker();
+
+  useEffect(() => {
+    (async () => {
+      const savingsService = maker.service('mcd:savings');
+      const percEarning = (await savingsService.getYearlyRate())
+        .minus(1)
+        .times(100);
+      setRate(percEarning);
+    })();
+  }, []);
+
+  return rate;
+};
+
 const BorrowCalculator = props => {
   const gems = [
     {
@@ -205,6 +223,7 @@ const BorrowCalculator = props => {
   const [collateralAmount, setCollateralAmount] = useState(120);
   const { lang } = useLanguage();
   const interfaceLocale = lang.getInterfaceLanguage();
+  const dsr = useDaiSavingsRate();
 
   return (
     <CalculatorStyle {...props}>
@@ -276,7 +295,7 @@ const BorrowCalculator = props => {
         </Box>
         <Text fontSize="16px" color="#9C9DA7" letterSpacing="0.5px">
           {lang.formatString(lang.borrow_landing.calc_footnote, {
-            fee: '[todo]',
+            fee: dsr?.toFixed(2),
             max_ratio: colRatioRange[0],
             min_ratio: colRatioRange[1]
           })}
@@ -285,5 +304,11 @@ const BorrowCalculator = props => {
     </CalculatorStyle>
   );
 };
+
+const SaveCalculator = (() => {
+  return () => {
+    return <CalculatorStyle></CalculatorStyle>;
+  };
+})();
 
 export { BorrowCalculator };
