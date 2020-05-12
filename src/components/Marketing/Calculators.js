@@ -50,7 +50,7 @@ const Dropdown = (() => {
     position: relative;
   `;
 
-  return ({ items, onSelected }) => {
+  return ({ items, onSelected, hideSelected = true }) => {
     const [selected, setSelected] = useState(items[0].value);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -64,7 +64,7 @@ const Dropdown = (() => {
         </Trigger>
         <Items display={isOpen ? 'block' : 'none'}>
           {items
-            .filter(item => item.value !== selected)
+            .filter(item => !hideSelected || item.value !== selected)
             .map(item => (
               <div
                 key={item.value}
@@ -127,7 +127,7 @@ const CalculatorStyle = styled(Box)`
   height: 554px;
 `;
 
-const ItemWithIconStyle = styled.div`
+const DropdownItemStyle = styled.div`
   height: 56px;
   display: flex;
   align-items: center;
@@ -140,13 +140,13 @@ const ItemWithIconStyle = styled.div`
   }
 `;
 
-const ItemWithIcon = ({ img, text }) => (
-  <ItemWithIconStyle className="item">
+const DropdownItem = ({ img, children }) => (
+  <DropdownItemStyle className="item">
     {img}
     <Text className="text" fontSize="18px" letterSpacing="0.5px">
-      {text}
+      {children}
     </Text>
-  </ItemWithIconStyle>
+  </DropdownItemStyle>
 );
 
 const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
@@ -243,10 +243,9 @@ const BorrowCalculator = props => {
           items={gems.map(gem => ({
             value: gem.symbol,
             render: () => (
-              <ItemWithIcon
-                text={gem.name || gem.symbol}
-                img={<gem.Icon width="28.33" height="28.33" />}
-              />
+              <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
+                {gem.name || gem.symbol}
+              </DropdownItem>
             )
           }))}
           onSelected={selected => setSelectedValue(selected)}
@@ -324,12 +323,14 @@ const SaveCalculator = (() => {
   return props => {
     const { lang } = useLanguage();
     const locale = lang.getInterfaceLanguage();
-    const dsr = useDaiSavingsRate();
+    const dsr = useDaiSavingsRate()?.toNumber();
     const deposits = [500, 2000, 4000, 6000];
     const [depositIndex, setDepositIndex] = useState(0);
-    const [yearsEarning, setYearsEarning] = useState(2);
-    const totalDai = dsr?.pow(yearsEarning).times(deposits[depositIndex]);
-    const savings = totalDai?.minus(deposits[depositIndex]);
+    const [yearsEarning, setYearsEarning] = useState(1);
+    const totalDai = dsr
+      ? deposits[depositIndex] * Math.pow(dsr, yearsEarning)
+      : null;
+    const savings = totalDai ? totalDai - deposits[depositIndex] : null;
 
     return (
       <CalculatorStyle {...props}>
@@ -347,6 +348,36 @@ const SaveCalculator = (() => {
             ))}
           </Flex>
           <CapsText>{lang.save_landing.calc_how_long}</CapsText>
+          {/* todo: use some i18n function for durations */}
+          <Dropdown
+            items={[
+              {
+                text: '1 month',
+                years: 1 / 12
+              },
+              {
+                text: '6 months',
+                years: 0.5
+              },
+              {
+                text: '1 year',
+                years: 1
+              },
+              {
+                text: '2 years',
+                years: 2
+              },
+              {
+                text: '10 years',
+                years: 10
+              }
+            ].map(duration => ({
+              value: duration.years,
+              render: () => <DropdownItem>{duration.text}</DropdownItem>
+            }))}
+            onSelected={value => setYearsEarning(value)}
+            hideSelected={false}
+          />
         </Box>
 
         <div>Amount of savings: {prettifyCurrency(locale, savings, 0)}</div>
