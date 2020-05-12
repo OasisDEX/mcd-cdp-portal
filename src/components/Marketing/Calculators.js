@@ -50,14 +50,14 @@ const Dropdown = (() => {
     position: relative;
   `;
 
-  return ({ items, onSelected, hideSelected = true }) => {
+  return ({ items, onSelected, hideSelected = true, ...props }) => {
     const [selected, setSelected] = useState(items[0].value);
     const [isOpen, setIsOpen] = useState(false);
 
     const getSelectedItem = () => items.find(gem => gem.value === selected);
 
     return (
-      <DropdownStyle>
+      <DropdownStyle {...props}>
         <Trigger onClick={() => setIsOpen(!isOpen)}>
           {getSelectedItem().render()}
           <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
@@ -124,7 +124,6 @@ const CalculatorStyle = styled(Box)`
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;
-  height: 554px;
 `;
 
 const DropdownItemStyle = styled.div`
@@ -194,17 +193,26 @@ const DaiAmount = (() => {
     -webkit-text-fill-color: transparent;
   `;
 
+  const DaiAmountStyle = styled(Box)`
+    .dai-symbol {
+      margin-right: 15px;
+      position: relative;
+      top: 1px;
+    }
+  `;
+
   return ({ children, ...props }) => (
-    <Box {...props}>
-      <DaiImg
-        style={{ marginRight: '15px', position: 'relative', top: '1px' }}
-      />
+    <DaiAmountStyle {...props}>
+      <DaiImg className="dai-symbol" />
       <GradientValue>{children}</GradientValue>
-    </Box>
+    </DaiAmountStyle>
   );
 })();
 
-const Separator = () => <Box background="#e5e5e5" height="1px" />;
+const Separator = styled(Box)`
+  background-color: #e5e5e5;
+  height: 1px;
+`;
 
 const Footnote = styled(Text).attrs(() => ({
   fontSize: '16px',
@@ -283,7 +291,7 @@ const BorrowCalculator = props => {
         </Box>
       </Grid>
       <Separator />
-      <Box textAlign="center" pt="36px">
+      <Box textAlign="center" pt="36px" pb="40px">
         <CapsText fontSize="s">
           {lang.borrow_landing.calc_dai_available}
         </CapsText>
@@ -330,6 +338,12 @@ const SaveCalculator = (() => {
     }
   `;
 
+  const StyledDaiAmount = styled(DaiAmount)`
+    .dai-symbol {
+      margin-right: 24px;
+    }
+  `;
+
   return props => {
     const { lang } = useLanguage();
     const locale = lang.getInterfaceLanguage();
@@ -343,10 +357,15 @@ const SaveCalculator = (() => {
     const savings = totalDai ? totalDai - deposits[depositIndex] : null;
 
     return (
-      <CalculatorStyle {...props}>
-        <Box maxWidth="473px" m="0 auto">
+      <CalculatorStyle textAlign="left" {...props}>
+        <Box maxWidth="473px" m="0 auto" pt="57px" pb="64px">
           <CapsText>{lang.save_landing.calc_how_much}</CapsText>
-          <Flex justifyContent="space-between">
+          <Flex
+            justifyContent="space-between"
+            mt="19px"
+            mb="43px"
+            height="58px"
+          >
             {deposits.map((amount, index) => (
               <DepositButton
                 key={index}
@@ -360,6 +379,7 @@ const SaveCalculator = (() => {
           <CapsText>{lang.save_landing.calc_how_long}</CapsText>
           {/* todo: use some i18n function for durations */}
           <Dropdown
+            mt="7px"
             items={[
               {
                 text: '1 month',
@@ -390,15 +410,19 @@ const SaveCalculator = (() => {
           />
         </Box>
         <Separator />
-        <Box maxWidth="478px" m="0 auto">
+        <Box maxWidth="473px" m="0 auto" pt="43px" pb="92px">
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
-          <DaiAmount>{prettifyCurrency(locale, savings, 0)}</DaiAmount>
-          <Separator />
+          <StyledDaiAmount mt="19px" mb="36px">
+            {prettifyCurrency(locale, savings, 0)}
+          </StyledDaiAmount>
+          <Separator mb="16px" />
           <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
-          <DaiAmount>{prettifyCurrency(locale, totalDai, 0)}</DaiAmount>
+          <StyledDaiAmount mt="19px" mb="39px">
+            {prettifyCurrency(locale, totalDai, 0)}
+          </StyledDaiAmount>
           <Footnote>
             {lang.formatString(lang.save_landing.calc_footnote, {
-              dsr: dsr ? ((dsr - 1) * 100).toFixed(1) : '...'
+              dsr: dsr ? ((dsr - 1) * 100).toFixed(2) : '...'
             })}
           </Footnote>
         </Box>
