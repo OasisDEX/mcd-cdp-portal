@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import useOraclePrices from 'hooks/useOraclePrices';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
 
@@ -15,6 +14,8 @@ import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 import useMaker from 'hooks/useMaker';
+import useCdpTypes from 'hooks/useCdpTypes';
+import { watch } from 'hooks/useObservable';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -165,14 +166,6 @@ const DropdownItem = ({ img, children }) => (
   </DropdownItemStyle>
 );
 
-const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
-  if (!price) {
-    return '...';
-  }
-  const daiAvailable = price.times(depositAmount).dividedBy(colRatio / 100);
-  return prettifyCurrency(locale, daiAvailable, 0);
-};
-
 const CapsText = styled(Text).attrs(props => ({
   fontSize: props.fontSize || 's'
 }))`
@@ -237,30 +230,45 @@ const Footnote = styled(Text).attrs(() => ({
   letterSpacing: '0.5px'
 }))``;
 
+const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
+  if (!price) {
+    return '...';
+  }
+  const daiAvailable = price.times(depositAmount).dividedBy(colRatio / 100);
+  return prettifyCurrency(locale, daiAvailable, 0);
+};
+
 const BorrowCalculator = props => {
-  const gems = [
-    {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      Icon: EthIcon,
-      price: useOraclePrices({ gem: 'ETH' }).currentPrice
+  const { cdpTypesList } = useCdpTypes();
+  const prices = watch.collateralTypesPrices(cdpTypesList);
+
+  const cdpTypesMetaData = {
+    'ETH-A': {
+      text: 'Ethereum',
+      Icon: EthIcon
     },
-    {
-      symbol: 'BAT',
-      Icon: BatIcon,
-      price: useOraclePrices({ gem: 'BAT' }).currentPrice
+    'BAT-A': {
+      Icon: BatIcon
     },
-    {
-      symbol: 'USDC',
-      Icon: UsdcIcon,
-      price: useOraclePrices({ gem: 'USDC' }).currentPrice
+    'USDC-A': {
+      Icon: UsdcIcon
     },
-    {
-      symbol: 'WBTC',
-      Icon: WbtcIcon,
-      price: useOraclePrices({ gem: 'WBTC' }).currentPrice
+    'WBTC-A': {
+      Icon: WbtcIcon
     }
-  ];
+  };
+
+  const gems = cdpTypesList
+    .map((cdpTypeName, index) => ({
+      name: cdpTypeName,
+      price: prices && prices[index].toBigNumber()
+    }))
+    .filter(cdpType => cdpType.name.endsWith('-A')) // only first cdp type per collateral
+    .map(cdpType => ({
+      ...cdpType,
+      ...cdpTypesMetaData[cdpType.name],
+      symbol: cdpType.name.replace('-A', '')
+    }));
 
   const [selectedValue, setSelectedValue] = useState(gems[0].symbol);
   const selectedGem = gems.find(gem => gem.symbol === selectedValue);
@@ -287,7 +295,7 @@ const BorrowCalculator = props => {
             value: gem.symbol,
             render: () => (
               <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
-                {gem.name || gem.symbol}
+                {gem.text || gem.symbol}
               </DropdownItem>
             )
           }))}
@@ -441,7 +449,7 @@ const SaveCalculator = (() => {
           </StyledDaiAmount>
           <Footnote>
             {lang.formatString(lang.save_landing.calc_footnote, {
-              dsr: dsr ? ((dsr - 1) * 100).toFixed(2) : '...'
+              dsr: dsr ? ((dsr - 1) * 100).toFixed(1) : '...'
             })}
           </Footnote>
         </Box>
