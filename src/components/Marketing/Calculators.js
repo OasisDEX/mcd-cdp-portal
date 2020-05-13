@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useOraclePrices from 'hooks/useOraclePrices';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
@@ -56,13 +56,26 @@ const Dropdown = (() => {
     hideSelected = true,
     ...props
   }) => {
+    const dropdown = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const getSelectedItem = () =>
       items.find(gem => gem.value === selectedValue);
 
+    useEffect(() => {
+      function handleDocumentClick(e) {
+        if (!dropdown.current.contains(e.target)) {
+          setIsOpen(false);
+        }
+      }
+      document.addEventListener('click', handleDocumentClick);
+      return () => {
+        document.removeEventListener('click', handleDocumentClick);
+      };
+    });
+
     return (
-      <DropdownStyle {...props}>
+      <DropdownStyle ref={dropdown} {...props}>
         <Trigger onClick={() => setIsOpen(!isOpen)}>
           {getSelectedItem().render()}
           <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
