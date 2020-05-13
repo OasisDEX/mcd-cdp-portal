@@ -5,6 +5,7 @@ import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import useLanguage from 'hooks/useLanguage';
+import BigNumber from 'bignumber.js';
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -52,7 +53,9 @@ const SidebarFeeds = ({ feeds }) => {
                       .join('/')}
                   </Text>
                   <Text fontSize="1.4rem" color="darkPurple">
-                    {`${formatter(value)} ${value.symbol}`}
+                    {`${formatter(value, {
+                      rounding: BigNumber.ROUND_HALF_UP
+                    })} ${value.symbol}`}
                   </Text>
                 </Flex>
               )
