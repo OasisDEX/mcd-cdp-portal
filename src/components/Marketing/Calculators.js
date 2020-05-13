@@ -15,7 +15,6 @@ import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 import useMaker from 'hooks/useMaker';
-import { BigNumber } from 'bignumber.js';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -50,11 +49,17 @@ const Dropdown = (() => {
     position: relative;
   `;
 
-  return ({ items, onSelected, hideSelected = true, ...props }) => {
-    const [selected, setSelected] = useState(items[0].value);
+  return ({
+    items,
+    selectedValue,
+    onSelected,
+    hideSelected = true,
+    ...props
+  }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const getSelectedItem = () => items.find(gem => gem.value === selected);
+    const getSelectedItem = () =>
+      items.find(gem => gem.value === selectedValue);
 
     return (
       <DropdownStyle {...props}>
@@ -64,12 +69,11 @@ const Dropdown = (() => {
         </Trigger>
         <Items display={isOpen ? 'block' : 'none'}>
           {items
-            .filter(item => !hideSelected || item.value !== selected)
+            .filter(item => !hideSelected || item.value !== selectedValue)
             .map(item => (
               <div
                 key={item.value}
                 onClick={() => {
-                  setSelected(item.value);
                   onSelected(item.value);
                   setIsOpen(false);
                 }}
@@ -275,6 +279,7 @@ const BorrowCalculator = props => {
             )
           }))}
           onSelected={selected => setSelectedValue(selected)}
+          selectedValue={selectedValue}
         />
         <CapsText textAlign="right">{lang.collateral_amount}</CapsText>
         <Box position="relative">
@@ -406,6 +411,7 @@ const SaveCalculator = (() => {
               render: () => <DropdownItem>{duration.text}</DropdownItem>
             }))}
             onSelected={value => setYearsEarning(value)}
+            selectedValue={yearsEarning}
             hideSelected={false}
           />
         </Box>
