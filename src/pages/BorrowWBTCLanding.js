@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
-import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
@@ -16,7 +15,8 @@ import {
   FixedHeaderTrigger,
   SeparatorDot,
   H1,
-  H2
+  H2,
+  StyledPageContentLayout
 } from 'components/Marketing';
 import { TextBlock } from 'components/Typography';
 import { ReactComponent as MainImg } from 'images/landing/borrow-wbtc/main.svg';
@@ -211,7 +211,7 @@ function BorrowWBTCLanding() {
   }, [account, navigation]);
 
   return (
-    <PageContentLayout>
+    <StyledPageContentLayout>
       <FixedHeaderTrigger>
         <HeroStyle>
           <Box className="content">
@@ -328,7 +328,7 @@ function BorrowWBTCLanding() {
           }
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

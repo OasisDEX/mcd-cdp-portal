@@ -23,7 +23,8 @@ import {
   SeparatorDot,
   H1,
   H2,
-  BorrowCalculator
+  BorrowCalculator,
+  StyledPageContentLayout
 } from 'components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -209,7 +210,7 @@ function Borrow() {
   }, [account, navigation]);
 
   return (
-    <PageContentLayout>
+    <StyledPageContentLayout>
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
@@ -306,7 +307,7 @@ function Borrow() {
           }
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

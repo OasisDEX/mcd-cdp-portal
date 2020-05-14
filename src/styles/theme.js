@@ -112,7 +112,8 @@ export const marketingTheme = (() => {
     fontSizes: {
       ...theme.fontSizes,
       s: '1.9rem'
-    }
+    },
+    mobilePaddingX: '12px' // used for making some components full width on mobile
   };
 })();
 

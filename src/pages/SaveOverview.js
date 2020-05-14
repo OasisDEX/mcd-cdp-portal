@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useMaker from 'hooks/useMaker';
-import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import {
@@ -18,7 +17,8 @@ import {
   QuotesFadeIn,
   H1,
   H2,
-  SaveCalculator
+  SaveCalculator,
+  StyledPageContentLayout
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -102,7 +102,7 @@ function SaveOverview() {
     }
   }, [account, navigation, network]);
   return (
-    <PageContentLayout>
+    <StyledPageContentLayout>
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
@@ -173,7 +173,7 @@ function SaveOverview() {
           }
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

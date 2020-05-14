@@ -16,6 +16,8 @@ import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
 import { BorrowCalculator, SaveCalculator } from './Calculators';
 import { Box, Text } from '@makerdao/ui-components-core';
+import PageContentLayout from 'layouts/PageContentLayout';
+import { marketingTheme } from 'styles/theme';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -63,6 +65,10 @@ const H2 = styled(Text.h2)`
   }
 `;
 
+const StyledPageContentLayout = styled(PageContentLayout).attrs(() => ({
+  p: { s: `25px ${marketingTheme.mobilePaddingX}`, l: '30px 32px' }
+}))``;
+
 export {
   FullWidth,
   Questions,
@@ -84,5 +90,6 @@ export {
   H1,
   H2,
   BorrowCalculator,
-  SaveCalculator
+  SaveCalculator,
+  StyledPageContentLayout
 };

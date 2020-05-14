@@ -17,7 +17,7 @@ import {
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
-import { getColor } from 'styles/theme';
+import { getColor, marketingTheme } from 'styles/theme';
 
 import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
 import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
@@ -35,7 +35,7 @@ import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
 import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
 
 const Content = ({ children }) => (
-  <Box p={{ s: '0 12px', l: '0 32px' }}>
+  <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
     <Box maxWidth="1200px" mx="auto">
       {children}
     </Box>
@@ -462,7 +462,7 @@ const BulletPoints = (() => {
 
     width: 100vw;
     position: relative;
-    left: -12px;
+    left: -${props => props.theme.mobilePaddingX};
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
       padding: 131px 13% 122px 12%;

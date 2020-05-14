@@ -16,7 +16,8 @@ import {
   QuotesFadeIn,
   GradientBox,
   H1,
-  H2
+  H2,
+  StyledPageContentLayout
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -104,7 +105,7 @@ function TradeLanding() {
   );
 
   return (
-    <PageContentLayout enableNotifications={false}>
+    <StyledPageContentLayout enableNotifications={false}>
       <FixedHeaderTrigger cta={ctaButton}>
         <StyledConnectHero>
           <HeroBackground />
@@ -153,7 +154,7 @@ function TradeLanding() {
           )}
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

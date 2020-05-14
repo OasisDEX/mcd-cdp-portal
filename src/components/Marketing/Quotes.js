@@ -14,7 +14,7 @@ const QuotesStyle = styled(Box)`
   margin: 0 auto;
   position: relative;
   width: 100vw;
-  left: -12px;
+  left: -${props => props.theme.mobilePaddingX};
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
     width: unset;
