@@ -128,9 +128,6 @@ const Slider = (() => {
 
   return props => (
     <StyledSlider
-      min={5}
-      max={200}
-      step={5}
       renderTrack={props => <Track {...props} />}
       renderThumb={props => <Thumb {...props} />}
       {...props}
@@ -245,16 +242,28 @@ const BorrowCalculator = props => {
   const cdpTypesMetaData = {
     'ETH-A': {
       text: 'Ethereum',
-      Icon: EthIcon
+      Icon: EthIcon,
+      colRatioRange: [500, 200],
+      amountRange: [1, 500],
+      amountStart: 25
     },
     'BAT-A': {
-      Icon: BatIcon
+      Icon: BatIcon,
+      colRatioRange: [500, 200],
+      amountRange: [200, 100000],
+      amountStart: 2500
     },
     'USDC-A': {
-      Icon: UsdcIcon
+      Icon: UsdcIcon,
+      colRatioRange: [150, 120],
+      amountRange: [100, 100000],
+      amountStart: 5000
     },
     'WBTC-A': {
-      Icon: WbtcIcon
+      Icon: WbtcIcon,
+      colRatioRange: [500, 200],
+      amountRange: [0.1, 100],
+      amountStart: 0.5
     }
   };
 
@@ -270,10 +279,14 @@ const BorrowCalculator = props => {
       symbol: cdpType.name.replace('-A', '')
     }));
 
-  const [selectedValue, setSelectedValue] = useState(gems[0].symbol);
-  const selectedGem = gems.find(gem => gem.symbol === selectedValue);
-  const colRatioRange = [500, 200];
-  const [collateralAmount, setCollateralAmount] = useState(120);
+  const [selectedSymbol, setSelectedSymbol] = useState(gems[0].symbol);
+  const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
+  const [collateralAmounts, setCollateralAmounts] = useState(
+    gems.reduce((acc, gem) => {
+      acc[gem.symbol] = gem.amountStart;
+      return acc;
+    }, {})
+  );
   const { lang } = useLanguage();
   const interfaceLocale = lang.getInterfaceLanguage();
 
@@ -299,20 +312,28 @@ const BorrowCalculator = props => {
               </DropdownItem>
             )
           }))}
-          onSelected={selected => setSelectedValue(selected)}
-          selectedValue={selectedValue}
+          onSelected={selected => setSelectedSymbol(selected)}
+          selectedValue={selectedSymbol}
         />
         <CapsText textAlign="right">{lang.collateral_amount}</CapsText>
         <Box position="relative">
           <Position position="absolute" bottom="17px" right="0">
             <CapsText textAlign="right" fontSize="22px">
-              {collateralAmount}
+              {collateralAmounts[selectedSymbol]}
               <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
             </CapsText>
           </Position>
           <Slider
-            defaultValue={collateralAmount}
-            onChange={value => setCollateralAmount(value)}
+            value={collateralAmounts[selectedSymbol]}
+            min={selectedGem.amountRange[0]}
+            max={selectedGem.amountRange[1]}
+            step={selectedGem.sliderStep || selectedGem.amountRange[0]}
+            onChange={value =>
+              setCollateralAmounts({
+                ...collateralAmounts,
+                [selectedSymbol]: value
+              })
+            }
           />
         </Box>
       </Grid>
@@ -324,23 +345,22 @@ const BorrowCalculator = props => {
         <DaiAmount mt="18px" mb="27px">
           {getDaiAvailable(
             interfaceLocale,
-            collateralAmount,
+            collateralAmounts[selectedSymbol],
             selectedGem.price,
-            colRatioRange[0]
+            selectedGem.colRatioRange[0]
           )}
           {' - '}
           {getDaiAvailable(
             interfaceLocale,
-            collateralAmount,
+            collateralAmounts[selectedSymbol],
             selectedGem.price,
-            colRatioRange[1]
+            selectedGem.colRatioRange[1]
           )}
         </DaiAmount>
         <Footnote>
           {lang.formatString(lang.borrow_landing.calc_footnote, {
-            fee: '[todo]',
-            max_ratio: colRatioRange[0],
-            min_ratio: colRatioRange[1]
+            max_ratio: selectedGem.colRatioRange[0],
+            min_ratio: selectedGem.colRatioRange[1]
           })}
         </Footnote>
       </Box>

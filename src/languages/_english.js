@@ -102,7 +102,7 @@ export default {
     calc_heading: 'How much can I borrow?',
     calc_subheading: 'To see how much cash you can get right now, enter your desired collateral type',
     calc_dai_available: 'Dai available to you',
-    calc_footnote: 'The above figure assumes a Stability Fee of {fee}% and a Collateralization Ratio between {max_ratio}% - {min_ratio}%.',
+    calc_footnote: 'The above figure assumes a Collateralization Ratio between {max_ratio}% - {min_ratio}%.',
     feature1_heading: 'Flexible repayment and terms',
     feature1_content: 'Vaults are open-ended. Meaning no fixed repayment schedules, pay back or generate Dai when it suits you.',
     feature2_heading: 'Secure and easy to use',
