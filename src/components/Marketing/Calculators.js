@@ -297,25 +297,25 @@ const BorrowCalculator = props => {
       text: 'Ethereum',
       Icon: EthIcon,
       colRatioRange: [500, 200],
-      amountRange: [1, 500],
+      amountRange: [1, 350],
       amountStart: 25
     },
     'BAT-A': {
       Icon: BatIcon,
       colRatioRange: [500, 200],
-      amountRange: [200, 100000],
-      amountStart: 2500
+      amountRange: [200, 70000],
+      amountStart: 2400
     },
     'USDC-A': {
       Icon: UsdcIcon,
       colRatioRange: [150, 120],
-      amountRange: [100, 100000],
+      amountRange: [200, 70000],
       amountStart: 5000
     },
     'WBTC-A': {
       Icon: WbtcIcon,
       colRatioRange: [500, 200],
-      amountRange: [0.1, 40],
+      amountRange: [0.1, 35],
       amountStart: 0.5
     }
   };
