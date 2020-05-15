@@ -272,18 +272,19 @@ const BorrowCalcTopGrid = styled(Grid)`
   margin: 57px auto 34px;
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
-    grid-template-columns: 217px 329px;
+    grid-template-columns: 217px 340px;
     grid-template-rows: unset;
     align-items: center;
     grid-row-gap: 84px;
     justify-content: space-around;
     margin: 71px auto 69px;
     padding-right: 4px;
-    max-width: 821px;
+    max-width: 700px;
   }
 
   @media (min-width: ${props => props.theme.breakpoints.l}) {
     grid-template-columns: 217px 396px;
+    max-width: 821px;
   }
 `;
 
