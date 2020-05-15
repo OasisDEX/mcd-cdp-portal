@@ -314,7 +314,7 @@ const BorrowCalculator = props => {
     'WBTC-A': {
       Icon: WbtcIcon,
       colRatioRange: [500, 200],
-      amountRange: [0.1, 100],
+      amountRange: [0.1, 40],
       amountStart: 0.5
     }
   };
