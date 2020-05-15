@@ -48,6 +48,7 @@ const Dropdown = (() => {
 
   const DropdownStyle = styled(Box)`
     position: relative;
+    max-height: 58px;
   `;
 
   return ({
@@ -137,8 +138,17 @@ const Slider = (() => {
 
 const CalculatorStyle = styled(Box)`
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+  width: 100vw;
+  left: -${props => props.theme.mobilePaddingX};
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    width: unset;
+    left: unset;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+  }
 `;
 
 const DropdownItemStyle = styled.div`
@@ -188,7 +198,8 @@ const useDaiSavingsRate = () => {
 
 const DaiAmount = (() => {
   const GradientValue = styled(Text)`
-    font-size: 58px;
+    line-height: unset;
+    font-size: 38px;
     font-weight: 500;
     background: linear-gradient(
       125.96deg,
@@ -198,13 +209,24 @@ const DaiAmount = (() => {
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    @media (min-width: ${props => props.theme.breakpoints.m}) {
+      font-size: 58px;
+    }
   `;
 
   const DaiAmountStyle = styled(Box)`
     .dai-symbol {
-      margin-right: 15px;
+      margin-right: 12px;
       position: relative;
-      top: 1px;
+      top: 7px;
+      width: 39px;
+
+      @media (min-width: ${props => props.theme.breakpoints.m}) {
+        margin-right: 15px;
+        top: 1px;
+        width: unset;
+      }
     }
   `;
 
@@ -234,6 +256,36 @@ const getDaiAvailable = (locale, depositAmount, price, colRatio) => {
   const daiAvailable = price.times(depositAmount).dividedBy(colRatio / 100);
   return prettifyCurrency(locale, daiAvailable, 0);
 };
+
+const BorrowCalcContent = styled(Box)`
+  max-width: 396px;
+  margin: 0 auto;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    max-width: unset;
+  }
+`;
+
+const BorrowCalcTopGrid = styled(Grid)`
+  grid-template-columns: 100%;
+  grid-template-rows: 45px 116px 84px auto;
+  margin: 57px auto 34px;
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    grid-template-columns: 217px 329px;
+    grid-template-rows: unset;
+    align-items: center;
+    grid-row-gap: 84px;
+    justify-content: space-around;
+    margin: 71px auto 69px;
+    padding-right: 4px;
+    max-width: 821px;
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.l}) {
+    grid-template-columns: 217px 396px;
+  }
+`;
 
 const BorrowCalculator = props => {
   const { cdpTypesList } = useCdpTypes();
@@ -291,79 +343,80 @@ const BorrowCalculator = props => {
   const interfaceLocale = lang.getInterfaceLanguage();
 
   return (
-    <CalculatorStyle {...props}>
-      <Grid
-        gridTemplateColumns="217px 396px"
-        alignItems="center"
-        gridColumnGap="100px"
-        gridRowGap="84px"
-        justifyContent="center"
-        mt="71px"
-        mb="69px"
-        mr="4px"
-      >
-        <CapsText textAlign="right">{lang.collateral_type}</CapsText>
-        <Dropdown
-          items={gems.map(gem => ({
-            value: gem.symbol,
-            render: () => (
-              <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
-                {gem.text || gem.symbol}
-              </DropdownItem>
-            )
-          }))}
-          onSelected={selected => setSelectedSymbol(selected)}
-          selectedValue={selectedSymbol}
-        />
-        <CapsText textAlign="right">{lang.collateral_amount}</CapsText>
-        <Box position="relative">
-          <Position position="absolute" bottom="17px" right="0">
-            <CapsText textAlign="right" fontSize="22px">
-              {collateralAmounts[selectedSymbol]}
-              <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
-            </CapsText>
-          </Position>
-          <Slider
-            value={collateralAmounts[selectedSymbol]}
-            min={selectedGem.amountRange[0]}
-            max={selectedGem.amountRange[1]}
-            step={selectedGem.sliderStep || selectedGem.amountRange[0]}
-            onChange={value =>
-              setCollateralAmounts({
-                ...collateralAmounts,
-                [selectedSymbol]: value
-              })
-            }
+    <CalculatorStyle px={{ s: '22px', m: '0' }} {...props}>
+      <BorrowCalcContent>
+        <BorrowCalcTopGrid>
+          <CapsText textAlign={{ s: 'left', m: 'right' }}>
+            {lang.collateral_type}
+          </CapsText>
+          <Dropdown
+            items={gems.map(gem => ({
+              value: gem.symbol,
+              render: () => (
+                <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
+                  {gem.text || gem.symbol}
+                </DropdownItem>
+              )
+            }))}
+            onSelected={selected => setSelectedSymbol(selected)}
+            selectedValue={selectedSymbol}
           />
+          <CapsText textAlign={{ s: 'left', m: 'right' }}>
+            {lang.collateral_amount}
+          </CapsText>
+          <Box position="relative">
+            <Position position="absolute" bottom="17px" right="0">
+              <CapsText textAlign="right" fontSize="22px">
+                {collateralAmounts[selectedSymbol]}
+                <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
+              </CapsText>
+            </Position>
+            <Slider
+              value={collateralAmounts[selectedSymbol]}
+              min={selectedGem.amountRange[0]}
+              max={selectedGem.amountRange[1]}
+              step={selectedGem.sliderStep || selectedGem.amountRange[0]}
+              onChange={value =>
+                setCollateralAmounts({
+                  ...collateralAmounts,
+                  [selectedSymbol]: value
+                })
+              }
+            />
+          </Box>
+        </BorrowCalcTopGrid>
+        <Separator display={{ s: 'none', m: 'block' }} />
+        <Box textAlign={{ s: 'left', m: 'center' }} pt="36px" pb="40px">
+          <CapsText fontSize="s">
+            {lang.borrow_landing.calc_dai_available}
+          </CapsText>
+          <DaiAmount
+            mt={{ s: '13px', m: '2px' }}
+            mb={{ s: '24px', m: '17px' }}
+            ml={{ s: '3px', m: '0' }}
+          >
+            {getDaiAvailable(
+              interfaceLocale,
+              collateralAmounts[selectedSymbol],
+              selectedGem.price,
+              selectedGem.colRatioRange[0]
+            )}
+            {' - '}
+            {getDaiAvailable(
+              interfaceLocale,
+              collateralAmounts[selectedSymbol],
+              selectedGem.price,
+              selectedGem.colRatioRange[1]
+            )}
+          </DaiAmount>
+          <Footnote>
+            {lang.formatString(lang.borrow_landing.calc_footnote, {
+              max_ratio: selectedGem.colRatioRange[0],
+              min_ratio: selectedGem.colRatioRange[1]
+            })}
+          </Footnote>
         </Box>
-      </Grid>
-      <Separator />
-      <Box textAlign="center" pt="36px" pb="40px">
-        <CapsText fontSize="s">
-          {lang.borrow_landing.calc_dai_available}
-        </CapsText>
-        <DaiAmount mt="18px" mb="27px">
-          {getDaiAvailable(
-            interfaceLocale,
-            collateralAmounts[selectedSymbol],
-            selectedGem.price,
-            selectedGem.colRatioRange[0]
-          )}
-          {' - '}
-          {getDaiAvailable(
-            interfaceLocale,
-            collateralAmounts[selectedSymbol],
-            selectedGem.price,
-            selectedGem.colRatioRange[1]
-          )}
-        </DaiAmount>
-        <Footnote>
-          {lang.formatString(lang.borrow_landing.calc_footnote, {
-            max_ratio: selectedGem.colRatioRange[0],
-            min_ratio: selectedGem.colRatioRange[1]
-          })}
-        </Footnote>
-      </Box>
+      </BorrowCalcContent>
     </CalculatorStyle>
   );
 };

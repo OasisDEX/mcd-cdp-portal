@@ -1,7 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import PageContentLayout from 'layouts/PageContentLayout';
-
 import {
   buildQuestionsFromLangObj,
   ConnectHero,

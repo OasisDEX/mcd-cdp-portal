@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
-import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
