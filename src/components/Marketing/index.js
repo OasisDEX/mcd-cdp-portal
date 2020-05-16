@@ -45,26 +45,6 @@ const SeparatorDot = styled(Box)`
   opacity: 0.2;
 `;
 
-const H1 = styled(Text.h1)`
-  font-size: 5.2rem;
-  line-height: 62px;
-
-  @media (min-width: ${props => props.theme.breakpoints.m}) {
-    font-size: ${props => props.theme.typography.h1.fontSize};
-    line-height: ${props => props.theme.typography.h1.lineHeight};
-  }
-`;
-
-const H2 = styled(Text.h2)`
-  font-size: 4rem;
-  line-height: 48px;
-
-  @media (min-width: ${props => props.theme.breakpoints.m}) {
-    font-size: ${props => props.theme.typography.h2.fontSize};
-    line-height: ${props => props.theme.typography.h2.lineHeight};
-  }
-`;
-
 const StyledPageContentLayout = styled(PageContentLayout).attrs(() => ({
   p: { s: `25px ${marketingTheme.mobilePaddingX}`, l: '30px 32px' }
 }))``;
@@ -87,8 +67,6 @@ export {
   Parallaxed,
   FadeIn,
   Hamburger,
-  H1,
-  H2,
   BorrowCalculator,
   SaveCalculator,
   StyledPageContentLayout

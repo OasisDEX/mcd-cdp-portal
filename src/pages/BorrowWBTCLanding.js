@@ -14,8 +14,6 @@ import {
   buildQuestionsFromLangObj,
   FixedHeaderTrigger,
   SeparatorDot,
-  H1,
-  H2,
   StyledPageContentLayout
 } from 'components/Marketing';
 import { TextBlock } from 'components/Typography';
@@ -218,7 +216,9 @@ function BorrowWBTCLanding() {
             <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
               <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
             </ThickUnderline>
-            <H1 className="headline">{lang.borrow_wbtc_landing.headline}</H1>
+            <Text.h1 className="headline">
+              {lang.borrow_wbtc_landing.headline}
+            </Text.h1>
             <Box className="subheadline">
               <Text>{lang.borrow_wbtc_landing.subheadline}</Text>
             </Box>
@@ -237,9 +237,9 @@ function BorrowWBTCLanding() {
         </HeroStyle>
       </FixedHeaderTrigger>
       <Box maxWidth="790px" m="180px auto">
-        <H2 style={{ marginBottom: '20px' }}>
+        <Text.h2 style={{ marginBottom: '20px' }}>
           {lang.borrow_wbtc_landing.about_title}
-        </H2>
+        </Text.h2>
         <TextBlock>{lang.borrow_wbtc_landing.about_content}</TextBlock>
         <Text>
           {lang.formatString(lang.borrow_wbtc_landing.about_learn_more, {
@@ -299,7 +299,7 @@ function BorrowWBTCLanding() {
         />
       </Box>
       <QuestionsWrapper mt={{ s: '159px', m: '250px' }}>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.borrow_landing.questions,

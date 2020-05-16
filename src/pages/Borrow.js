@@ -20,8 +20,6 @@ import {
   Parallaxed,
   QuotesFadeIn,
   SeparatorDot,
-  H1,
-  H2,
   BorrowCalculator,
   StyledPageContentLayout
 } from 'components/Marketing';
@@ -216,7 +214,7 @@ function Borrow() {
           <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 className="headline">{lang.borrow_landing.headline}</H1>
+          <Text.h1 className="headline">{lang.borrow_landing.headline}</Text.h1>
           <Box minHeight="128px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
@@ -261,7 +259,7 @@ function Borrow() {
           </QuotesFadeIn>
         </Box>
         <Box m="326px auto 0" maxWidth="980px">
-          <H2 mb="16px">{lang.borrow_landing.calc_heading}</H2>
+          <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
           <Text>{lang.borrow_landing.calc_subheading}</Text>
           <BorrowCalculator mt="40px" />
         </Box>
@@ -277,7 +275,7 @@ function Borrow() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.borrow_landing.questions,

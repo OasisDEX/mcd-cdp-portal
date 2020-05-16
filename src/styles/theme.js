@@ -83,35 +83,35 @@ export const marketingTheme = (() => {
       ...theme.typography,
       h1: {
         ...mHeading,
-        fontSize: '5.8rem',
-        lineHeight: '70px'
+        fontSize: '4.8rem',
+        lineHeight: '58px'
       },
       h2: {
         ...mHeading,
-        fontSize: '4.6rem',
-        lineHeight: '55px'
+        fontSize: '4rem',
+        lineHeight: '48px'
       },
       h3: {
         ...mHeading,
-        fontSize: '3.6rem',
-        lineHeight: '43px'
+        fontSize: '3.2rem',
+        lineHeight: '38px'
       },
       h4: {
         ...mHeading,
-        fontSize: '2.6rem',
-        lineHeight: '31px'
+        fontSize: '2.0rem',
+        lineHeight: '27px'
       },
       body: {
         fontFamily: mFont,
-        fontSize: '2.2rem',
-        lineHeight: '34px',
+        fontSize: '1.8rem',
+        lineHeight: '28px',
         letterSpacing: '0.5px',
         color: mColors.violetGray
       }
     },
     fontSizes: {
       ...theme.fontSizes,
-      s: '1.9rem'
+      s: '1.8rem'
     },
     mobilePaddingX: '12px' // used for making some components full width on mobile
   };

@@ -5,7 +5,6 @@ import { Box, Text } from '@makerdao/ui-components-core';
 import { TextBlock } from '../Typography';
 import { Link } from 'react-navi';
 import FadeIn from './FadeIn';
-import { H2 } from './index';
 
 const QuotesStyle = styled(Box)`
   background: gray;
@@ -72,7 +71,7 @@ const Quotes = ({
 }) => {
   return (
     <QuotesStyle {...props}>
-      <H2 mb="16px">{title}</H2>
+      <Text.h2 mb="16px">{title}</Text.h2>
       <Text>{body}</Text>
       <QuoteWrapper>
         <QuotesImgWrapper>{quotesImg}</QuotesImgWrapper>

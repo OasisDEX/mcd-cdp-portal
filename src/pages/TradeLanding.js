@@ -13,8 +13,6 @@ import {
   FilledButton,
   QuotesFadeIn,
   GradientBox,
-  H1,
-  H2,
   StyledPageContentLayout
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
@@ -110,9 +108,9 @@ function TradeLanding() {
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 className="headline" style={{ marginBottom: '23px' }}>
+          <Text.h1 className="headline" style={{ marginBottom: '23px' }}>
             {lang.trade_landing.headline}
-          </H1>
+          </Text.h1>
           <Box minHeight="83px" mb={{ s: '9px', m: 'inherit' }}>
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
@@ -144,7 +142,7 @@ function TradeLanding() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.trade_landing.questions,

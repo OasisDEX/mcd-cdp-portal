@@ -10,9 +10,7 @@ import {
   buildQuestionsFromLangObj,
   FullWidth,
   FadeIn,
-  FilledButton,
-  H1,
-  H2
+  FilledButton
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -88,7 +86,7 @@ const Cards = (() => {
     }
 
     .title {
-      font-size: 28px;
+      font-size: 26px;
       line-height: 28px;
       margin-top: 21px;
       margin-bottom: 13px;
@@ -121,7 +119,6 @@ const Cards = (() => {
       display: inline-flex;
       padding: 12px 24px;
       height: unset;
-      font-size: 18px;
       line-height: 22px;
       text-decoration: none;
     }
@@ -334,7 +331,7 @@ const SupportedTokens = (() => {
 
     return (
       <Box {...props}>
-        <H2>{lang.landing_page.token_section_title}</H2>
+        <Text.h2>{lang.landing_page.token_section_title}</Text.h2>
         <TokenList
           gridTemplateColumns={{
             s: 'repeat(2, 1fr)',
@@ -515,7 +512,7 @@ function Landing() {
       <SEO title="Oasis" />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
-          <H1>{lang.landing_page.headline}</H1>
+          <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
         <FadeIn moveDistance="47px">
           <Cards mt="80px" />
@@ -535,7 +532,7 @@ function Landing() {
           </Box>
         </Box>
         <Box mt={{ s: '158px', m: '153px' }} mb="126px">
-          <H2>{lang.landing_page.questions_title}</H2>
+          <Text.h2>{lang.landing_page.questions_title}</Text.h2>
           <Questions
             questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
           />

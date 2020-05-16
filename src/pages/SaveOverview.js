@@ -15,9 +15,6 @@ import {
   ThickUnderline,
   Parallaxed,
   QuotesFadeIn,
-  H1,
-  H2,
-  SaveCalculator,
   StyledPageContentLayout
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
@@ -109,13 +106,13 @@ function SaveOverview() {
           <ThickUnderline background="linear-gradient(354.42deg, #B7FFB8 0%, #FCFF9E 64.82%)">
             <Text.h4>{lang.save_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1
+          <Text.h1
             className="headline"
             style={{ marginBottom: '23px' }}
             maxWidth="700px"
           >
             {lang.save_landing.headline}
-          </H1>
+          </Text.h1>
           <Box minHeight="86px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
@@ -151,7 +148,7 @@ function SaveOverview() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.save_landing.questions,
