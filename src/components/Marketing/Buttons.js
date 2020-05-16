@@ -3,7 +3,6 @@ import { Box } from '@makerdao/ui-components-core';
 
 const Button = styled(Box)`
   border-radius: 40px;
-  height: 52px;
 
   display: inline-flex;
   align-items: center;

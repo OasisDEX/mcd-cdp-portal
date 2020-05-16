@@ -244,7 +244,7 @@ const Separator = styled(Box)`
 `;
 
 const Footnote = styled(Text).attrs(() => ({
-  fontSize: '16px',
+  fontSize: 's',
   color: '#9C9DA7',
   letterSpacing: '0.5px'
 }))``;

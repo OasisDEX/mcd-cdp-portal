@@ -152,7 +152,7 @@ const NavItem = styled(Item)`
   }
 `;
 
-function AccountSelection({ buttonWidth, ...props }) {
+function AccountSelection({ buttonWidth = '213px', ...props }) {
   const dropdown = useRef(null);
   const [showMain, setShowMain] = useState(true);
   const [isOpen, setIsOpen] = useState(false); // only for mobile
@@ -257,13 +257,14 @@ function AccountSelection({ buttonWidth, ...props }) {
           trigger={
             <FilledButton
               width={buttonWidth}
+              height="44px"
               onClick={() => {
                 setIsOpen(!isOpen); // only for mobile
               }}
             >
               {lang.providers.connect_wallet}
               <CaratDown
-                style={{ marginTop: '2px', marginLeft: '15px', fill: 'white' }}
+                style={{ marginTop: '2px', marginLeft: '19px', fill: 'white' }}
               />
             </FilledButton>
           }

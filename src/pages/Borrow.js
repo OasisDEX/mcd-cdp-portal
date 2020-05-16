@@ -215,13 +215,13 @@ function Borrow() {
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
           <Text.h1 className="headline">{lang.borrow_landing.headline}</Text.h1>
-          <Box minHeight="128px" maxWidth="720px">
+          <Box minHeight="81px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s" className="connect-to-start">
             {lang.borrow_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" buttonWidth="248px" />
+          <AccountSelection className="button" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <WBTCNotice lang={lang} mt="30px" />

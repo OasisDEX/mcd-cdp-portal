@@ -111,7 +111,7 @@ export const marketingTheme = (() => {
     },
     fontSizes: {
       ...theme.fontSizes,
-      s: '1.8rem'
+      s: '1.6rem'
     },
     mobilePaddingX: '12px' // used for making some components full width on mobile
   };

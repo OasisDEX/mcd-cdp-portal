@@ -15,7 +15,7 @@ import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
 import { BorrowCalculator, SaveCalculator } from './Calculators';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box } from '@makerdao/ui-components-core';
 import PageContentLayout from 'layouts/PageContentLayout';
 import { marketingTheme } from 'styles/theme';
 
@@ -26,11 +26,11 @@ const ThickUnderline = styled.div`
   :after {
     content: '';
     display: block;
-    height: 7px;
+    height: 5px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
     width: 100%;
     position: absolute;
-    bottom: 0;
+    bottom: 3px;
     z-index: -1;
     background: ${props => props.background};
   }

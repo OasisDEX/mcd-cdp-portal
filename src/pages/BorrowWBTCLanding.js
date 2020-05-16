@@ -225,11 +225,7 @@ function BorrowWBTCLanding() {
             <Text fontSize="s" className="connect-to-start">
               {lang.borrow_landing.connect_to_start}
             </Text>
-            <AccountSelection
-              className="button"
-              buttonWidth="248px"
-              mt="27px"
-            />
+            <AccountSelection className="button" mt="27px" />
           </Box>
           <Box className="img">
             <MainImg />

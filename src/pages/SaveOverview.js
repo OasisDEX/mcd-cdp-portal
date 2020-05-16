@@ -108,18 +108,18 @@ function SaveOverview() {
           </ThickUnderline>
           <Text.h1
             className="headline"
-            style={{ marginBottom: '23px' }}
+            style={{ marginBottom: '17px' }}
             maxWidth="700px"
           >
             {lang.save_landing.headline}
           </Text.h1>
-          <Box minHeight="86px" maxWidth="690px">
+          <Box minHeight="81px" maxWidth="690px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s" className="connect-to-start">
             {lang.save_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" buttonWidth="248px" />
+          <AccountSelection className="button" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox

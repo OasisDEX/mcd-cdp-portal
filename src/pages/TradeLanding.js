@@ -28,7 +28,7 @@ import { ReactComponent as Feat4 } from 'images/landing/trade/feature-4.svg';
 
 const StyledConnectHero = styled(ConnectHero)`
   @media (min-width: ${props => props.theme.breakpoints.m}) {
-    margin: 127px auto 0;
+    margin: 178px auto 0;
   }
 `;
 
@@ -94,7 +94,7 @@ function TradeLanding() {
   const { lang } = useLanguage();
   const ctaButton = (
     <a href="/trade/market/">
-      <FilledButton className="button" width="237px">
+      <FilledButton className="button" width="185px" height="44px">
         {lang.trade_landing.cta_button}
       </FilledButton>
     </a>
@@ -108,10 +108,10 @@ function TradeLanding() {
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 className="headline" style={{ marginBottom: '23px' }}>
+          <Text.h1 className="headline" style={{ marginBottom: '16px' }}>
             {lang.trade_landing.headline}
           </Text.h1>
-          <Box minHeight="83px" mb={{ s: '9px', m: 'inherit' }}>
+          <Box minHeight="107px" mb={{ s: '9px', m: 'inherit' }}>
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           {ctaButton}
