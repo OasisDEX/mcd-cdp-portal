@@ -304,7 +304,7 @@ const BorrowCalculator = props => {
       Icon: BatIcon,
       colRatioRange: [500, 200],
       amountRange: [200, 70000],
-      amountStart: 2400
+      amountStart: 600
     },
     'USDC-A': {
       Icon: UsdcIcon,
