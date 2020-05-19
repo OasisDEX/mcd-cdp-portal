@@ -15,7 +15,8 @@ import {
   ThickUnderline,
   Parallaxed,
   QuotesFadeIn,
-  StyledPageContentLayout
+  StyledPageContentLayout,
+  SaveCalculator
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -136,6 +137,11 @@ function SaveOverview() {
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>
+        <Box m="326px auto 0" maxWidth="813px">
+          <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
+          <Text>{lang.save_landing.calc_subheading}</Text>
+          <SaveCalculator mt="40px" />
+        </Box>
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}

@@ -105,6 +105,7 @@ const Dropdown = (() => {
 const Slider = (() => {
   const StyledSlider = styled(ReactSlider)`
     width: 100%;
+    height: 20px;
   `;
 
   const Thumb = styled.div`
@@ -423,20 +424,23 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
-  const DepositButton = styled(Flex)`
-    border: 1px solid #d4d9e1;
-    box-sizing: border-box;
-    border-radius: 5px;
-    width: 99px;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    &.selected {
-      border-color: ${props => props.theme.colors.darkPurple};
-      cursor: default;
-    }
-  `;
+  const SliderWithDisplay = ({onChange, displayValue, ...props}) => {
+    const [value, setValue] = useState(props.value);
+    return <Box position="relative">
+      <Position position="absolute" bottom="27px" right="0">
+        <Text textAlign="right">
+          {displayValue(value)}
+        </Text>
+      </Position>
+      <Slider
+        onChange={value => {
+          setValue(value);
+          onChange(value);
+        }}
+        {...props}
+      />
+    </Box>;
+  };
 
   const StyledDaiAmount = styled(DaiAmount)`
     .dai-symbol {
@@ -444,72 +448,78 @@ const SaveCalculator = (() => {
     }
   `;
 
+  const getSavings = (dsr, deposit, years) => dsr
+    ? deposit * Math.pow(dsr, years)
+    : null;
+
+  const getTotalSavings = (dsr, initial, monthly, years) => {
+    return getSavings(dsr, initial, years);
+  };
+
+  const SlidersStyle = styled(Box)`
+    max-width: 473px; 
+    margin: 0 auto; 
+    padding-top: 57px;
+    padding-bottom: 64px;
+    
+    & > div {
+      margin-bottom: 56px;
+      
+      & > ${CapsText} {
+        margin-bottom: 62px;
+      }
+      
+      
+    }
+    
+  `;
+
   return props => {
     const { lang } = useLanguage();
     const locale = lang.getInterfaceLanguage();
     const dsr = useDaiSavingsRate()?.toNumber();
-    const deposits = [500, 2000, 4000, 6000];
-    const [depositIndex, setDepositIndex] = useState(0);
-    const [yearsEarning, setYearsEarning] = useState(1);
-    const totalDai = dsr
-      ? deposits[depositIndex] * Math.pow(dsr, yearsEarning)
-      : null;
-    const savings = totalDai ? totalDai - deposits[depositIndex] : null;
+    const [initialDeposit, setInitialDeposit] = useState(100);
+    const [monthlyContribution, setMonthlyContribution] = useState(0);
+    const [timeSliderValue, setTimeSliderValue] = useState(0);
+    const yearsEarning = timeSliderValue === 0 ? 0.5 : timeSliderValue;
+    const totalDai = getTotalSavings(dsr, initialDeposit, monthlyContribution, yearsEarning);
+    const savings = totalDai ? totalDai - initialDeposit : null;
 
     return (
       <CalculatorStyle textAlign="left" {...props}>
-        <Box maxWidth="473px" m="0 auto" pt="57px" pb="64px">
-          <CapsText>{lang.save_landing.calc_how_much}</CapsText>
-          <Flex
-            justifyContent="space-between"
-            mt="19px"
-            mb="43px"
-            height="58px"
-          >
-            {deposits.map((amount, index) => (
-              <DepositButton
-                key={index}
-                onClick={() => setDepositIndex(index)}
-                className={depositIndex === index ? 'selected' : ''}
-              >
-                <Text fontSize="s">${amount}</Text>
-              </DepositButton>
-            ))}
-          </Flex>
-          <CapsText>{lang.save_landing.calc_how_long}</CapsText>
-          {/* todo: use some i18n function for durations */}
-          <Dropdown
-            mt="7px"
-            items={[
-              {
-                text: '1 month',
-                years: 1 / 12
-              },
-              {
-                text: '6 months',
-                years: 0.5
-              },
-              {
-                text: '1 year',
-                years: 1
-              },
-              {
-                text: '2 years',
-                years: 2
-              },
-              {
-                text: '10 years',
-                years: 10
-              }
-            ].map(duration => ({
-              value: duration.years,
-              render: () => <DropdownItem>{duration.text}</DropdownItem>
-            }))}
-            onSelected={value => setYearsEarning(value)}
-            selectedValue={yearsEarning}
-            hideSelected={false}
-          />
-        </Box>
+        <SlidersStyle>
+          <div>
+            <CapsText>{lang.save_landing.calc_initial}</CapsText>
+            <SliderWithDisplay
+              min={100}
+              max={100000}
+              value={initialDeposit}
+              onChange={value => setInitialDeposit(value)}
+              displayValue={value => `${prettifyCurrency(locale, value, 0)} DAI`}
+            />
+          </div>
+          <div style={{opacity: 0.5}}>
+            <CapsText>{lang.save_landing.calc_contribution}</CapsText>
+            <SliderWithDisplay
+              min={0}
+              max={10000}
+              value={monthlyContribution}
+              onChange={value => setMonthlyContribution(value)}
+              displayValue={value => `${prettifyCurrency(locale, value, 0)} DAI`}
+            />
+          </div>
+          <div>
+            <CapsText>{lang.save_landing.calc_how_long}</CapsText>
+            {/* todo: use some i18n function for durations */}
+            <SliderWithDisplay
+              min={0}
+              max={25}
+              value={timeSliderValue}
+              onChange={value => setTimeSliderValue(value)}
+              displayValue={value => value === 0 ? '6 months' : `${value} years`}
+            />
+          </div>
+        </SlidersStyle>
         <Separator />
         <Box maxWidth="473px" m="0 auto" pt="43px" pb="92px">
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
