@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
-
 import styled from 'styled-components';
+
 import { prettifyCurrency } from 'utils/ui';
-import useLanguage from 'hooks/useLanguage';
 
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
-
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
+
+import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
@@ -424,22 +424,22 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
-  const SliderWithDisplay = ({onChange, displayValue, ...props}) => {
+  const SliderWithDisplay = ({ onChange, displayValue, ...props }) => {
     const [value, setValue] = useState(props.value);
-    return <Box position="relative">
-      <Position position="absolute" bottom="27px" right="0">
-        <Text textAlign="right">
-          {displayValue(value)}
-        </Text>
-      </Position>
-      <Slider
-        onChange={value => {
-          setValue(value);
-          onChange(value);
-        }}
-        {...props}
-      />
-    </Box>;
+    return (
+      <Box position="relative">
+        <Position position="absolute" bottom="27px" right="0">
+          <Text textAlign="right">{displayValue(value)}</Text>
+        </Position>
+        <Slider
+          onChange={value => {
+            setValue(value);
+            onChange(value);
+          }}
+          {...props}
+        />
+      </Box>
+    );
   };
 
   const StyledDaiAmount = styled(DaiAmount)`
@@ -448,30 +448,34 @@ const SaveCalculator = (() => {
     }
   `;
 
-  const getSavings = (dsr, deposit, years) => dsr
-    ? deposit * Math.pow(dsr, years)
-    : null;
+  const getSavings = (dsr, deposit, years) =>
+    dsr ? deposit * Math.pow(dsr, years) : null;
 
   const getTotalSavings = (dsr, initial, monthly, years) => {
-    return getSavings(dsr, initial, years);
+    let savings = getSavings(dsr, initial, years);
+    if (monthly === 0) {
+      return savings;
+    }
+    const totalMonths = years * 12;
+    for (let months = 1; months < totalMonths; months++) {
+      savings += getSavings(dsr, monthly, months / 12);
+    }
+    return savings;
   };
 
   const SlidersStyle = styled(Box)`
-    max-width: 473px; 
-    margin: 0 auto; 
+    max-width: 473px;
+    margin: 0 auto;
     padding-top: 57px;
     padding-bottom: 64px;
-    
+
     & > div {
       margin-bottom: 56px;
-      
+
       & > ${CapsText} {
         margin-bottom: 62px;
       }
-      
-      
     }
-    
   `;
 
   return props => {
@@ -482,8 +486,17 @@ const SaveCalculator = (() => {
     const [monthlyContribution, setMonthlyContribution] = useState(0);
     const [timeSliderValue, setTimeSliderValue] = useState(0);
     const yearsEarning = timeSliderValue === 0 ? 0.5 : timeSliderValue;
-    const totalDai = getTotalSavings(dsr, initialDeposit, monthlyContribution, yearsEarning);
-    const savings = totalDai ? totalDai - initialDeposit : null;
+    const totalDai = getTotalSavings(
+      dsr,
+      initialDeposit,
+      monthlyContribution,
+      yearsEarning
+    );
+    const savings = totalDai
+      ? totalDai -
+        initialDeposit -
+        monthlyContribution * (yearsEarning * 12 - 1)
+      : null;
 
     return (
       <CalculatorStyle textAlign="left" {...props}>
@@ -495,17 +508,21 @@ const SaveCalculator = (() => {
               max={100000}
               value={initialDeposit}
               onChange={value => setInitialDeposit(value)}
-              displayValue={value => `${prettifyCurrency(locale, value, 0)} DAI`}
+              displayValue={value =>
+                `${prettifyCurrency(locale, value, 0)} DAI`
+              }
             />
           </div>
-          <div style={{opacity: 0.5}}>
+          <div>
             <CapsText>{lang.save_landing.calc_contribution}</CapsText>
             <SliderWithDisplay
               min={0}
               max={10000}
               value={monthlyContribution}
               onChange={value => setMonthlyContribution(value)}
-              displayValue={value => `${prettifyCurrency(locale, value, 0)} DAI`}
+              displayValue={value =>
+                `${prettifyCurrency(locale, value, 0)} DAI`
+              }
             />
           </div>
           <div>
@@ -516,7 +533,9 @@ const SaveCalculator = (() => {
               max={25}
               value={timeSliderValue}
               onChange={value => setTimeSliderValue(value)}
-              displayValue={value => value === 0 ? '6 months' : `${value} years`}
+              displayValue={value =>
+                value === 0 ? '6 months' : `${value} years`
+              }
             />
           </div>
         </SlidersStyle>
@@ -524,12 +543,12 @@ const SaveCalculator = (() => {
         <Box maxWidth="473px" m="0 auto" pt="43px" pb="92px">
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
           <StyledDaiAmount mt="19px" mb="36px">
-            {prettifyCurrency(locale, savings, 0)}
+            {prettifyCurrency(locale, savings, 2)}
           </StyledDaiAmount>
           <Separator mb="16px" />
           <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
           <StyledDaiAmount mt="19px" mb="39px">
-            {prettifyCurrency(locale, totalDai, 0)}
+            {prettifyCurrency(locale, totalDai, 2)}
           </StyledDaiAmount>
           <Footnote>
             {lang.formatString(lang.save_landing.calc_footnote, {
