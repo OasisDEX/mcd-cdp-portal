@@ -96,17 +96,17 @@ const HeroBackground = (() => {
     >
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
-        <Pos top={{ s: '-30px', m: '13px' }} left={{ s: '-86px', m: '-83px' }}>
-          <DimBall size="352px" />
+        <Pos top={{ s: '-30px', m: '-17px' }} left={{ s: '-86px', m: '-83px' }}>
+          <DimBall size="280px" />
           <Parallaxed
             style={{ position: 'absolute', top: '-36px', left: '-67px' }}
           >
-            <FrontBall size="212px" />
+            <FrontBall size="186px" />
           </Parallaxed>
           <SmallBlurryBall />
         </Pos>
         <Pos
-          top={{ s: '306px', m: '354px' }}
+          top={{ s: '306px', m: '270px' }}
           right={{ s: '-105px', m: '-18px' }}
         >
           <DimBall size="182px" />
@@ -252,20 +252,20 @@ function Borrow() {
                     right: '-110px'
                   }}
                 >
-                  <FrontBall size="180px" />
+                  <FrontBall size="164px" />
                 </Parallaxed>
               </Box>
             </StyledQuotes>
           </QuotesFadeIn>
         </Box>
-        <Box m="326px auto 0" maxWidth="980px">
+        <Box m="296px auto 0" maxWidth="980px">
           <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
           <Text>{lang.borrow_landing.calc_subheading}</Text>
           <BorrowCalculator mt="40px" />
         </Box>
       </GradientBox>
       <Features
-        mt={{ s: '158px', m: '240px' }}
+        mt={{ s: '158px', m: '207px' }}
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,

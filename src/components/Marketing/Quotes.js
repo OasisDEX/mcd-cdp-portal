@@ -42,9 +42,7 @@ const QuoteWrapper = styled(Box)`
   }
 `;
 
-const Quote = styled(TextBlock).attrs(() => ({
-  fontSize: 's'
-}))`
+const Quote = styled(TextBlock)`
   font-weight: 500;
   line-height: 30px;
   letter-spacing: 0.05px;

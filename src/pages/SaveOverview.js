@@ -124,7 +124,7 @@ function SaveOverview() {
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox
-        mt="227px"
+        mt="141px"
         background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
       >
         <QuotesFadeIn>
@@ -137,7 +137,7 @@ function SaveOverview() {
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>
-        <Box m="326px auto 0" maxWidth="813px">
+        <Box m="256px auto 0" maxWidth="813px">
           <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
           <Text>{lang.save_landing.calc_subheading}</Text>
           <SaveCalculator mt="40px" />

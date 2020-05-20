@@ -29,7 +29,7 @@ import { BrowserView, isMobile } from 'react-device-detect';
 
 const DropdownItems = styled(DefaultDropdown)`
   margin-bottom: 8px;
-  min-width: 320px;
+  min-width: 270px;
   background: #ffffff;
   border: 1px solid #ecf1f3;
   box-sizing: border-box;
@@ -121,7 +121,7 @@ const IconItemStyle = styled(Item)`
 const IconItem = ({ icon, iconSize = '26.67px', children, ...props }) => {
   return (
     <IconItemStyle {...props}>
-      <Flex alignItems="center" justifyContent="flex-start" height="32px">
+      <Flex alignItems="center" justifyContent="flex-start" height="29px">
         <IconBox size={iconSize}>{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>
