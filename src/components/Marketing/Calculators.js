@@ -16,6 +16,7 @@ import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+import BigNumber from 'bignumber.js';
 
 const Dropdown = (() => {
   const Trigger = styled(Flex)`
@@ -174,9 +175,7 @@ const DropdownItem = ({ img, children }) => (
   </DropdownItemStyle>
 );
 
-const CapsText = styled(Text).attrs(props => ({
-  fontSize: props.fontSize || 's'
-}))`
+const CapsText = styled(Text)`
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: bold;
@@ -245,7 +244,7 @@ const Separator = styled(Box)`
 `;
 
 const Footnote = styled(Text).attrs(() => ({
-  fontSize: 's',
+  fontSize: '15px',
   color: '#9C9DA7',
   letterSpacing: '0.5px'
 }))``;
@@ -367,8 +366,8 @@ const BorrowCalculator = props => {
             {lang.collateral_amount}
           </CapsText>
           <Box position="relative">
-            <Position position="absolute" bottom="17px" right="0">
-              <CapsText textAlign="right" fontSize="22px">
+            <Position position="absolute" bottom="37px" right="0">
+              <CapsText textAlign="right" fontSize="21px">
                 {collateralAmounts[selectedSymbol]}
                 <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
               </CapsText>
@@ -389,9 +388,7 @@ const BorrowCalculator = props => {
         </BorrowCalcTopGrid>
         <Separator display={{ s: 'none', m: 'block' }} />
         <Box textAlign={{ s: 'left', m: 'center' }} pt="36px" pb="40px">
-          <CapsText fontSize="s">
-            {lang.borrow_landing.calc_dai_available}
-          </CapsText>
+          <CapsText>{lang.borrow_landing.calc_dai_available}</CapsText>
           <DaiAmount
             mt={{ s: '13px', m: '2px' }}
             mb={{ s: '24px', m: '17px' }}
@@ -428,8 +425,10 @@ const SaveCalculator = (() => {
     const [value, setValue] = useState(props.value);
     return (
       <Box position="relative">
-        <Position position="absolute" bottom="27px" right="0">
-          <Text textAlign="right">{displayValue(value)}</Text>
+        <Position position="absolute" bottom="38px" right="0">
+          <Text textAlign="right" fontSize="19px">
+            {displayValue(value)}
+          </Text>
         </Position>
         <Slider
           onChange={value => {
@@ -443,6 +442,8 @@ const SaveCalculator = (() => {
   };
 
   const StyledDaiAmount = styled(DaiAmount)`
+    margin-top: 3px;
+    margin-bottom: 28px;
     .dai-symbol {
       margin-right: 24px;
     }
@@ -466,17 +467,40 @@ const SaveCalculator = (() => {
   const SlidersStyle = styled(Box)`
     max-width: 473px;
     margin: 0 auto;
-    padding-top: 57px;
-    padding-bottom: 64px;
+    padding-top: 61px;
+    padding-bottom: 22px;
 
     & > div {
-      margin-bottom: 56px;
+      margin-bottom: 47px;
 
       & > ${CapsText} {
-        margin-bottom: 62px;
+        margin-bottom: 58px;
       }
     }
   `;
+
+  function getSeparator(locale, separatorType) {
+    const numberWithGroupAndDecimalSeparator = 1000.1;
+    const numFormat = Intl.NumberFormat(locale);
+    return numFormat.formatToParts
+      ? numFormat
+          .formatToParts(numberWithGroupAndDecimalSeparator)
+          .find(part => part.type === separatorType)?.value
+      : null;
+  }
+
+  const twoDecimalsTruncated = (locale, num) => {
+    const threeDecimalsString = new BigNumber(num).toFormat(
+      3,
+      BigNumber.ROUND_HALF_CEIL,
+      {
+        decimalSeparator: getSeparator(locale, 'decimal') || '.',
+        groupSeparator: getSeparator(locale, 'group'),
+        groupSize: 3
+      }
+    );
+    return threeDecimalsString.substr(0, threeDecimalsString.length - 1);
+  };
 
   return props => {
     const { lang } = useLanguage();
@@ -494,8 +518,7 @@ const SaveCalculator = (() => {
     );
     const savings = totalDai
       ? totalDai -
-        initialDeposit -
-        monthlyContribution * (yearsEarning * 12 - 1)
+        (initialDeposit + monthlyContribution * (yearsEarning * 12 - 1))
       : null;
 
     return (
@@ -540,15 +563,15 @@ const SaveCalculator = (() => {
           </div>
         </SlidersStyle>
         <Separator />
-        <Box maxWidth="473px" m="0 auto" pt="43px" pb="92px">
+        <Box maxWidth="473px" m="0 auto" pt="47px" pb="43px">
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
-          <StyledDaiAmount mt="19px" mb="36px">
-            {prettifyCurrency(locale, savings, 2)}
+          <StyledDaiAmount>
+            {twoDecimalsTruncated(locale, savings)}
           </StyledDaiAmount>
-          <Separator mb="16px" />
+          <Separator mb="20px" />
           <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
-          <StyledDaiAmount mt="19px" mb="39px">
-            {prettifyCurrency(locale, totalDai, 2)}
+          <StyledDaiAmount>
+            {twoDecimalsTruncated(locale, totalDai)}
           </StyledDaiAmount>
           <Footnote>
             {lang.formatString(lang.save_landing.calc_footnote, {
