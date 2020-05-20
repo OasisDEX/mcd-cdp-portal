@@ -541,6 +541,7 @@ const SaveCalculator = (() => {
             <SliderWithDisplay
               min={0}
               max={10000}
+              step={50}
               value={monthlyContribution}
               onChange={value => setMonthlyContribution(value)}
               displayValue={value =>
