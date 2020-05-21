@@ -48,8 +48,8 @@ const HeroBackground = (() => {
     top: -76px;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -174px;
-      top: -108px;
+      left: -178px;
+      top: -121px;
     }
   `;
 
@@ -114,7 +114,7 @@ function SaveOverview() {
           >
             {lang.save_landing.headline}
           </Text.h1>
-          <Box minHeight="81px" maxWidth="690px">
+          <Box minHeight="81px" maxWidth="720px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s" className="connect-to-start">
