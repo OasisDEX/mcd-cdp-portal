@@ -197,10 +197,8 @@ const useDaiSavingsRate = () => {
 };
 
 const DaiAmount = (() => {
-  const GradientValue = styled(Text)`
-    line-height: unset;
-    font-size: 38px;
-    font-weight: 500;
+  const GradientValue = styled(Text.h1)`
+    display: inline-block;
     background: linear-gradient(
       125.96deg,
       #fdc134 17.59%,
@@ -209,24 +207,13 @@ const DaiAmount = (() => {
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    @media (min-width: ${props => props.theme.breakpoints.m}) {
-      font-size: 58px;
-    }
   `;
 
   const DaiAmountStyle = styled(Box)`
     .dai-symbol {
-      margin-right: 12px;
       position: relative;
-      top: 7px;
-      width: 39px;
-
-      @media (min-width: ${props => props.theme.breakpoints.m}) {
-        margin-right: 15px;
-        top: 1px;
-        width: unset;
-      }
+      margin-right: 22px;
+      top: 5px;
     }
   `;
 
@@ -244,7 +231,7 @@ const Separator = styled(Box)`
 `;
 
 const Footnote = styled(Text).attrs(() => ({
-  fontSize: '15px',
+  fontSize: '16px',
   color: '#9C9DA7',
   letterSpacing: '0.5px'
 }))``;
@@ -367,7 +354,7 @@ const BorrowCalculator = props => {
           </CapsText>
           <Box position="relative">
             <Position position="absolute" bottom="37px" right="0">
-              <CapsText textAlign="right" fontSize="21px">
+              <CapsText textAlign="right">
                 {collateralAmounts[selectedSymbol]}
                 <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
               </CapsText>
@@ -387,11 +374,11 @@ const BorrowCalculator = props => {
           </Box>
         </BorrowCalcTopGrid>
         <Separator display={{ s: 'none', m: 'block' }} />
-        <Box textAlign={{ s: 'left', m: 'center' }} pt="36px" pb="40px">
+        <Box textAlign={{ s: 'left', m: 'center' }} pt="39px" pb="49px">
           <CapsText>{lang.borrow_landing.calc_dai_available}</CapsText>
           <DaiAmount
-            mt={{ s: '13px', m: '2px' }}
-            mb={{ s: '24px', m: '17px' }}
+            mt={{ s: '13px', m: '10px' }}
+            mb={{ s: '24px', m: '21px' }}
             ml={{ s: '3px', m: '0' }}
           >
             {getDaiAvailable(
@@ -421,8 +408,6 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
-  const SIDE_PADDING = '23px';
-
   const SliderWithDisplay = ({ onChange, displayValue, ...props }) => {
     const [value, setValue] = useState(props.value);
     return (
@@ -444,10 +429,11 @@ const SaveCalculator = (() => {
   };
 
   const StyledDaiAmount = styled(DaiAmount)`
-    margin-top: 3px;
-    margin-bottom: 28px;
+    margin-top: 11px;
+    margin-bottom: 29px;
     .dai-symbol {
-      margin-right: 24px;
+      margin-right: 16px;
+      transform: scale(0.92);
     }
   `;
 
@@ -466,17 +452,18 @@ const SaveCalculator = (() => {
     return savings;
   };
 
-  const SlidersStyle = styled(Box)`
-    max-width: 473px;
+  const Content = styled(Box)`
+    max-width: 519px;
     margin: 0 auto;
-    padding: 61px ${SIDE_PADDING} 22px;
+    padding-right: 23px;
+    padding-left: 23px;
+  `;
 
-    & > div {
-      margin-bottom: 47px;
+  const SliderAndLabel = styled(Box)`
+    margin-bottom: 47px;
 
-      & > ${CapsText} {
-        margin-bottom: 58px;
-      }
+    & > ${CapsText} {
+      margin-bottom: 58px;
     }
   `;
 
@@ -524,8 +511,8 @@ const SaveCalculator = (() => {
 
     return (
       <CalculatorStyle textAlign="left" {...props}>
-        <SlidersStyle>
-          <div>
+        <Content pt="61px" pb="22px">
+          <SliderAndLabel>
             <CapsText>{lang.save_landing.calc_initial}</CapsText>
             <SliderWithDisplay
               min={100}
@@ -536,8 +523,8 @@ const SaveCalculator = (() => {
                 `${prettifyCurrency(locale, value, 0)} DAI`
               }
             />
-          </div>
-          <div>
+          </SliderAndLabel>
+          <SliderAndLabel>
             <CapsText>{lang.save_landing.calc_contribution}</CapsText>
             <SliderWithDisplay
               min={0}
@@ -549,8 +536,8 @@ const SaveCalculator = (() => {
                 `${prettifyCurrency(locale, value, 0)} DAI`
               }
             />
-          </div>
-          <div>
+          </SliderAndLabel>
+          <SliderAndLabel>
             <CapsText>{lang.save_landing.calc_how_long}</CapsText>
             {/* todo: use some i18n function for durations */}
             <SliderWithDisplay
@@ -562,15 +549,15 @@ const SaveCalculator = (() => {
                 value === 0 ? '6 months' : `${value} years`
               }
             />
-          </div>
-        </SlidersStyle>
+          </SliderAndLabel>
+        </Content>
         <Separator />
-        <Box maxWidth="473px" m="0 auto" p={`47px ${SIDE_PADDING} 43px`}>
+        <Content pt="46px" pb="58px">
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
           <StyledDaiAmount>
             {twoDecimalsTruncated(locale, savings)}
           </StyledDaiAmount>
-          <Separator mb="20px" display={{ s: 'none', m: 'block' }} />
+          <Separator mt="4px" mb="30px" display={{ s: 'none', m: 'block' }} />
           <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
           <StyledDaiAmount>
             {twoDecimalsTruncated(locale, totalDai)}
@@ -580,7 +567,7 @@ const SaveCalculator = (() => {
               dsr: dsr ? ((dsr - 1) * 100).toFixed(1) : '...'
             })}
           </Footnote>
-        </Box>
+        </Content>
       </CalculatorStyle>
     );
   };
