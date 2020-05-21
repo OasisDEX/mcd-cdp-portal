@@ -39,8 +39,8 @@ const HeroBackground = (() => {
     top: -45px;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -98px;
-      top: -129px;
+      left: -66px;
+      top: -123px;
     }
   `;
 
@@ -50,8 +50,8 @@ const HeroBackground = (() => {
     top: 0;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -179px;
-      top: -84px;
+      left: -171px;
+      top: -143px;
     }
   `;
 
@@ -108,17 +108,21 @@ function TradeLanding() {
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <Text.h1 className="headline" style={{ marginBottom: '16px' }}>
+          <Text.h1 className="headline" style={{ marginBottom: '17px' }}>
             {lang.trade_landing.headline}
           </Text.h1>
-          <Box minHeight="107px" mb={{ s: '9px', m: 'inherit' }}>
+          <Box
+            minHeight="107px"
+            maxWidth="760px"
+            mb={{ s: '9px', m: 'inherit' }}
+          >
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           {ctaButton}
         </StyledConnectHero>
       </FixedHeaderTrigger>
       <GradientBox
-        mt="427px"
+        mt="211px"
         background="radial-gradient(242.42% 146.56% at 0% 0%, #E8FFFC 0%, #F8FFE6 50.52%, #E8FFFC 100%)"
       >
         <QuotesFadeIn>

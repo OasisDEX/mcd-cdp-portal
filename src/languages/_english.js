@@ -188,7 +188,7 @@ export default {
   trade_landing: {
     page_name: 'Oasis Trade',
     headline: 'Peer to peer crypto trading',
-    subheadline: 'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and instant token swap.',
+    subheadline: 'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and quick token swap.',
     cta_button: 'Open Oasis Trade',
     quotes_block: {
       title: 'Place orders at the price you set',
