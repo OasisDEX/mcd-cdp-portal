@@ -198,7 +198,7 @@ const useDaiSavingsRate = () => {
 
 const DaiAmount = (() => {
   const GradientValue = styled(Text.h1)`
-    display: inline-block;
+    display: inline;
     background: linear-gradient(
       125.96deg,
       #fdc134 17.59%,
@@ -467,6 +467,7 @@ const SaveCalculator = (() => {
     }
   `;
 
+  // todo: This varies between browsers. Fix, remove or replace.
   function getSeparator(locale, separatorType) {
     const numberWithGroupAndDecimalSeparator = 1000.1;
     const numFormat = Intl.NumberFormat(locale);

@@ -28,6 +28,8 @@ import { ReactComponent as Feat1 } from 'images/landing/save/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/save/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/save/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
+import { ReactComponent as CalculatorLeftTriangles } from 'images/landing/save/calculator-left-triangles.svg';
+import { ReactComponent as CalculatorRightTriangle } from 'images/landing/save/calculator-right-triangle.svg';
 import { Link } from 'react-navi';
 
 const HeroBackground = (() => {
@@ -140,7 +142,25 @@ function SaveOverview() {
         <Box m="256px auto 0" maxWidth="813px">
           <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
           <Text>{lang.save_landing.calc_subheading}</Text>
-          <SaveCalculator mt="40px" />
+          <Box position="relative">
+            <Parallaxed
+              initialOffset={1750}
+              style={{
+                position: 'absolute',
+                top: '177px',
+                width: '100%',
+                height: '400px'
+              }}
+            >
+              <CalculatorLeftTriangles
+                style={{ position: 'absolute', left: '-172px' }}
+              />
+              <CalculatorRightTriangle
+                style={{ position: 'absolute', right: '-205px', top: '107px' }}
+              />
+            </Parallaxed>
+            <SaveCalculator mt="40px" />
+          </Box>
         </Box>
       </GradientBox>
       <Features
