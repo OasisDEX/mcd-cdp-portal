@@ -421,6 +421,8 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
+  const SIDE_PADDING = '23px';
+
   const SliderWithDisplay = ({ onChange, displayValue, ...props }) => {
     const [value, setValue] = useState(props.value);
     return (
@@ -467,8 +469,7 @@ const SaveCalculator = (() => {
   const SlidersStyle = styled(Box)`
     max-width: 473px;
     margin: 0 auto;
-    padding-top: 61px;
-    padding-bottom: 22px;
+    padding: 61px ${SIDE_PADDING} 22px;
 
     & > div {
       margin-bottom: 47px;
@@ -564,12 +565,12 @@ const SaveCalculator = (() => {
           </div>
         </SlidersStyle>
         <Separator />
-        <Box maxWidth="473px" m="0 auto" pt="47px" pb="43px">
+        <Box maxWidth="473px" m="0 auto" p={`47px ${SIDE_PADDING} 43px`}>
           <CapsText>{lang.save_landing.calc_savings_earned}</CapsText>
           <StyledDaiAmount>
             {twoDecimalsTruncated(locale, savings)}
           </StyledDaiAmount>
-          <Separator mb="20px" />
+          <Separator mb="20px" display={{ s: 'none', m: 'block' }} />
           <CapsText>{lang.save_landing.calc_total_dai}</CapsText>
           <StyledDaiAmount>
             {twoDecimalsTruncated(locale, totalDai)}
