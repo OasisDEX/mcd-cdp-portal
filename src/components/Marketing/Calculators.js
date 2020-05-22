@@ -283,25 +283,25 @@ const BorrowCalculator = props => {
     'ETH-A': {
       text: 'Ethereum',
       Icon: EthIcon,
-      colRatioRange: [500, 200],
+      colRatio: 200,
       amountRange: [1, 350],
       amountStart: 25
     },
     'BAT-A': {
       Icon: BatIcon,
-      colRatioRange: [500, 200],
+      colRatio: 200,
       amountRange: [200, 70000],
       amountStart: 600
     },
     'USDC-A': {
       Icon: UsdcIcon,
-      colRatioRange: [150, 120],
+      colRatio: 120,
       amountRange: [200, 70000],
       amountStart: 5000
     },
     'WBTC-A': {
       Icon: WbtcIcon,
-      colRatioRange: [500, 200],
+      colRatio: 200,
       amountRange: [0.1, 35],
       amountStart: 0.5
     }
@@ -374,31 +374,29 @@ const BorrowCalculator = props => {
           </Box>
         </BorrowCalcTopGrid>
         <Separator display={{ s: 'none', m: 'block' }} />
-        <Box textAlign={{ s: 'left', m: 'center' }} pt="39px" pb="49px">
-          <CapsText>{lang.borrow_landing.calc_dai_available}</CapsText>
-          <DaiAmount
-            mt={{ s: '13px', m: '10px' }}
-            mb={{ s: '24px', m: '21px' }}
-            ml={{ s: '3px', m: '0' }}
-          >
-            {getDaiAvailable(
-              interfaceLocale,
-              collateralAmounts[selectedSymbol],
-              selectedGem.price,
-              selectedGem.colRatioRange[0]
-            )}
-            {' - '}
-            {getDaiAvailable(
-              interfaceLocale,
-              collateralAmounts[selectedSymbol],
-              selectedGem.price,
-              selectedGem.colRatioRange[1]
-            )}
-          </DaiAmount>
+        <Box textAlign={{ s: 'left', m: 'center' }} pt="39px" pb="42px">
+          <CapsText>
+            {lang.formatString(lang.borrow_landing.calc_dai_available, {
+              amount: (
+                <DaiAmount
+                  mt={{ s: '13px', m: '10px' }}
+                  mb={{ s: '24px', m: '23px' }}
+                  ml={{ s: '3px', m: '0' }}
+                >
+                  {getDaiAvailable(
+                    interfaceLocale,
+                    collateralAmounts[selectedSymbol],
+                    selectedGem.price,
+                    selectedGem.colRatio
+                  )}
+                </DaiAmount>
+              )
+            })}
+          </CapsText>
+          <Box height="23px" />
           <Footnote>
             {lang.formatString(lang.borrow_landing.calc_footnote, {
-              max_ratio: selectedGem.colRatioRange[0],
-              min_ratio: selectedGem.colRatioRange[1]
+              ratio: selectedGem.colRatio
             })}
           </Footnote>
         </Box>
