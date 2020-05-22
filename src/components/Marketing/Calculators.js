@@ -280,6 +280,7 @@ const SmartStepSlider = ({
   max,
   onChange,
   value: ignoredValue,
+  secondDigitIncrease = 1,
   ...props
 }) => {
   const [values, setValues] = useState([min]);
@@ -287,7 +288,6 @@ const SmartStepSlider = ({
     // load values to be shown on the slider
     const _min = Math.floor(min);
     const _max = Math.floor(max);
-    const secondDigitIncrease = 5;
     let sliderValues = [];
     let _value = _min;
     while (_value < _max) {
@@ -573,9 +573,9 @@ const SaveCalculator = (() => {
           <SliderAndLabel>
             <CapsText>{lang.save_landing.calc_contribution}</CapsText>
             <SliderWithDisplay
+              CustomSlider={SmartStepSlider}
               min={0}
               max={10000}
-              step={50}
               value={monthlyContribution}
               onChange={value => setMonthlyContribution(value)}
               displayValue={value =>
