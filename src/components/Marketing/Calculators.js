@@ -594,7 +594,9 @@ const SaveCalculator = (() => {
               value={timeSliderValue}
               onChange={value => setTimeSliderValue(value)}
               displayValue={value =>
-                value === 0 ? '6 months' : `${value} years`
+                value === 0
+                  ? '6 months'
+                  : `${value} year${value > 1 ? 's' : ''}`
               }
             />
           </SliderAndLabel>
