@@ -275,6 +275,46 @@ const BorrowCalcTopGrid = styled(Grid)`
   }
 `;
 
+const SmartStepSlider = ({
+  min,
+  max,
+  onChange,
+  value: ignoredValue,
+  ...props
+}) => {
+  const [values, setValues] = useState([min]);
+  useEffect(() => {
+    // load values to be shown on the slider
+    const _min = Math.floor(min);
+    const _max = Math.floor(max);
+    const secondDigitIncrease = 5;
+    let sliderValues = [];
+    let _value = _min;
+    while (_value < _max) {
+      sliderValues.push(_value);
+      const digits = _value.toString().length;
+      if (digits === 1) {
+        _value++;
+        continue;
+      }
+      _value += Math.pow(10, digits - 2) * secondDigitIncrease;
+    }
+    sliderValues.push(_max);
+    setValues(sliderValues);
+  }, [min, max]);
+
+  return (
+    <Slider
+      min={0}
+      max={values.length - 1}
+      onChange={index => {
+        onChange(() => values[index]);
+      }}
+      {...props}
+    />
+  );
+};
+
 const BorrowCalculator = props => {
   const { cdpTypesList } = useCdpTypes();
   const prices = watch.collateralTypesPrices(cdpTypesList);
@@ -406,8 +446,14 @@ const BorrowCalculator = props => {
 };
 
 const SaveCalculator = (() => {
-  const SliderWithDisplay = ({ onChange, displayValue, ...props }) => {
+  const SliderWithDisplay = ({
+    CustomSlider,
+    onChange,
+    displayValue,
+    ...props
+  }) => {
     const [value, setValue] = useState(props.value);
+    const UsedSlider = CustomSlider || Slider;
     return (
       <Box position="relative">
         <Position position="absolute" bottom="38px" right="0">
@@ -415,7 +461,7 @@ const SaveCalculator = (() => {
             {displayValue(value)}
           </Text>
         </Position>
-        <Slider
+        <UsedSlider
           onChange={value => {
             setValue(value);
             onChange(value);
@@ -514,6 +560,7 @@ const SaveCalculator = (() => {
           <SliderAndLabel>
             <CapsText>{lang.save_landing.calc_initial}</CapsText>
             <SliderWithDisplay
+              CustomSlider={SmartStepSlider}
               min={100}
               max={100000}
               value={initialDeposit}
