@@ -275,11 +275,13 @@ const BorrowCalcTopGrid = styled(Grid)`
   }
 `;
 
+// Increases value relative to the number of digits.
 const SmartStepSlider = ({
   min,
   max,
   onChange,
   value: ignoredValue,
+  step: ignoredStep,
   secondDigitIncrease = 1,
   ...props
 }) => {
