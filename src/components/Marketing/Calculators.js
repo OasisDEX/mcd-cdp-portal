@@ -182,7 +182,7 @@ const CapsText = styled(Text)`
   display: block;
 `;
 
-const useDaiSavingsRate = () => {
+export const useDaiSavingsRate = () => {
   const [rate, setRate] = useState(null);
   const { maker } = useMaker();
 
@@ -303,7 +303,7 @@ const SmartStepSlider = ({
     }
     sliderValues.push(_max);
     setValues(sliderValues);
-  }, [min, max]);
+  }, [min, max, secondDigitIncrease]);
 
   return (
     <Slider

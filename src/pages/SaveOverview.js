@@ -31,6 +31,7 @@ import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
 import { ReactComponent as CalculatorLeftTriangles } from 'images/landing/save/calculator-left-triangles.svg';
 import { ReactComponent as CalculatorRightTriangle } from 'images/landing/save/calculator-right-triangle.svg';
 import { Link } from 'react-navi';
+import { useDaiSavingsRate } from '../components/Marketing/Calculators';
 
 const HeroBackground = (() => {
   const BackTriangles = styled(BackTrianglesBase)`
@@ -93,6 +94,7 @@ const StyledQuotes = styled(Quotes)`
 function SaveOverview() {
   const { account, network, navigation } = useMaker();
   const { lang } = useLanguage();
+  const dsr = useDaiSavingsRate()?.toNumber() - 1;
 
   useEffect(() => {
     if (account && account.address) {
@@ -139,29 +141,35 @@ function SaveOverview() {
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>
-        <Box m="256px auto 0" maxWidth="813px">
-          <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
-          <Text>{lang.save_landing.calc_subheading}</Text>
-          <Box position="relative">
-            <Parallaxed
-              initialOffset={1750}
-              style={{
-                position: 'absolute',
-                top: '177px',
-                width: '100%',
-                height: '400px'
-              }}
-            >
-              <CalculatorLeftTriangles
-                style={{ position: 'absolute', left: '-172px' }}
-              />
-              <CalculatorRightTriangle
-                style={{ position: 'absolute', right: '-205px', top: '107px' }}
-              />
-            </Parallaxed>
-            <SaveCalculator mt="40px" />
+        {dsr > 0 && (
+          <Box m="256px auto 0" maxWidth="813px">
+            <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
+            <Text>{lang.save_landing.calc_subheading}</Text>
+            <Box position="relative">
+              <Parallaxed
+                initialOffset={1750}
+                style={{
+                  position: 'absolute',
+                  top: '177px',
+                  width: '100%',
+                  height: '400px'
+                }}
+              >
+                <CalculatorLeftTriangles
+                  style={{ position: 'absolute', left: '-172px' }}
+                />
+                <CalculatorRightTriangle
+                  style={{
+                    position: 'absolute',
+                    right: '-205px',
+                    top: '107px'
+                  }}
+                />
+              </Parallaxed>
+              <SaveCalculator mt="40px" />
+            </Box>
           </Box>
-        </Box>
+        )}
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}
