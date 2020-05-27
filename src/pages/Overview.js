@@ -58,7 +58,6 @@ function Overview({ viewedAddress }) {
   const { lang } = useLanguage();
   const { emergencyShutdownActive } = useEmergencyShutdown();
   const { addNotification, deleteNotifications } = useNotification();
-  console.log('xewx');
   useEffect(() => {
     if (account && viewedAddress !== account.address) {
       addNotification({

@@ -18,8 +18,6 @@ function VaultsProvider({ children, viewedAddress }) {
   const rawUserVaultsList = watch.userVaultsList(account?.address);
   const rawViewedAddressVaultsList = watch.userVaultsList(viewedAddress);
 
-  console.log(rawViewedAddressVaultsList, rawUserVaultsList);
-
   const userVaultsList = rawUserVaultsList
     ? rawUserVaultsList.filter(vault =>
         cdpTypesList.some(cdpType => cdpType === vault.vaultType)
