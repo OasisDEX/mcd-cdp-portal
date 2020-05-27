@@ -16,7 +16,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useSidebar from 'hooks/useSidebar';
 import useLanguage from 'hooks/useLanguage';
 import { showWalletTokens } from 'references/config';
-import { prettifyNumber, formatSymbol } from 'utils/ui';
+import { prettifyNumber } from 'utils/ui';
 import { Toggles } from 'utils/constants';
 import useToggle from 'hooks/useToggle';
 import useAnalytics from 'hooks/useAnalytics';
@@ -146,17 +146,14 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
     () =>
       showWalletTokens.reduceRight((acc, token) => {
         const balanceGtZero = !!(balances[token] && balances[token].gt(0));
-        if (token !== 'ETH' && token !== 'MDAI' && !balanceGtZero) return acc;
-        const symbol = formatSymbol(token);
+        if (token !== 'ETH' && token !== 'DAI' && !balanceGtZero) return acc;
+        const symbol = token;
 
         const tokenIsDaiOrDsr =
-          token === 'MDAI' ||
-          token === 'DAI' ||
-          token === 'SAI' ||
-          token === 'DSR';
+          token === 'DAI' || token === 'SAI' || token === 'DSR';
         const usdRatio = tokenIsDaiOrDsr
           ? new BigNumber(1)
-          : token === 'MWETH'
+          : token === 'WETH'
           ? uniqueFeeds['ETH']
           : uniqueFeeds[token];
         return [
@@ -230,7 +227,7 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                         disabled={!hasActiveAccount}
                         onClick={() => {
                           trackBtnClick('Send', {
-                            collateral: formatSymbol(token)
+                            collateral: token
                           });
                           showAction({
                             type: 'send',

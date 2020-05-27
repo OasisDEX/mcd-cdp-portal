@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import assert from 'assert';
 import { wait, fireEvent, waitForElement } from '@testing-library/react';
-import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks, TestAccountProvider } from '@makerdao/test-helpers';
 
 import DSRDeposit from '../DSRDeposit';
@@ -33,11 +33,11 @@ beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
   await await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(1), DAI(AMOUNT));
 
   TestAccountProvider.setIndex(345);
   noProxyAcct = TestAccountProvider.nextAccount();
-  const token = maker.getToken(MDAI.symbol);
+  const token = maker.getToken(DAI.symbol);
   await token.transfer(noProxyAcct.address, AMOUNT);
 });
 

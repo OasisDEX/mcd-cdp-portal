@@ -10,7 +10,7 @@ import {
   cleanup
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrency } from '@makerdao/currency';
 import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import Save from '../Save';
@@ -49,7 +49,7 @@ beforeAll(async () => {
   web3 = maker.service('web3');
   await await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(1), MDAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(1), DAI(AMOUNT));
 });
 
 afterEach(cleanup);
@@ -147,16 +147,16 @@ test('cannot deposit more than token allowance', async () => {
   const tokenBalanceMock = (address, tokens) => {
     return of(
       tokens.map(token => {
-        if (token === 'MDAI') return MDAI(BigNumber(50));
+        if (token === 'DAI') return DAI(BigNumber(50));
         else return createCurrency(token)(0);
       })
     );
   };
   const savingsMock = () =>
     of({
-      daiLockedInDsr: MDAI('5000'),
+      daiLockedInDsr: DAI('5000'),
       annualDaiSavingsRate: BigNumber(1),
-      savingsDai: MDAI('100'),
+      savingsDai: DAI('100'),
       savingsRateAccumulator: BigNumber(1)
     });
   const watch = () =>
@@ -165,7 +165,7 @@ test('cannot deposit more than token allowance', async () => {
       tokenBalances: tokenBalanceMock,
       tokenAllowance: () => of(BigNumber('10')),
       proxyAddress: () => of(TEST_ADDRESS_PROXY),
-      daiLockedInDsr: () => of(MDAI('100')),
+      daiLockedInDsr: () => of(DAI('100')),
       collateralTypesPrices: () => of([]),
       totalDaiSupply: MOCK_OBS_RESPONSE,
       vaultsCreated: MOCK_OBS_RESPONSE,

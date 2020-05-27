@@ -1,7 +1,7 @@
 import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
@@ -56,9 +56,9 @@ const BAT_ACCOUNT_BALANCE = '200.123451234512345123';
 const DSR_AMT = '100';
 const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
 
-const liquidationRatio = createCurrencyRatio(USD, MDAI)('2');
+const liquidationRatio = createCurrencyRatio(USD, DAI)('2');
 const collateralValue = USD(74.852);
-const debtValue = MDAI(26);
+const debtValue = DAI(26);
 
 // The vault observable gets passed in as a prop, so we have to mock it here
 const mockVault = {
@@ -82,7 +82,7 @@ const mockVault = {
 // Define mock observable schemas
 const proxyAddress = () => of(TEST_ADDRESS_PROXY);
 const tokenAllowance = () => of(BigNumber(Infinity));
-const daiLockedInDsr = () => of(MDAI(DSR_AMT));
+const daiLockedInDsr = () => of(DAI(DSR_AMT));
 const tokenBalances = (address, tokens) => {
   return of(
     tokens.map(token => {

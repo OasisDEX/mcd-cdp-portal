@@ -6,7 +6,7 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
 import { TestAccountProvider, mineBlocks } from '@makerdao/test-helpers';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
@@ -33,14 +33,14 @@ const LIQUIDATION_RATIO = '200';
 const COL_AMT = 300.123456789012345678;
 
 const collateralAmount = BAT(0); //only used to retrieve gem symbol
-const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
+const liquidationRatio = createCurrencyRatio(USD, DAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(12004.938271560493);
 
 const mockVault = {
   id: 1,
   collateralType: ILK,
-  debtValue: MDAI(0),
-  daiAvailable: MDAI(36.014814),
+  debtValue: DAI(0),
+  daiAvailable: DAI(36.014814),
   vaultType: ILK,
   collateralAmount,
   liquidationRatio,

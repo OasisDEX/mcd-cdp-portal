@@ -6,7 +6,7 @@ import {
   act
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BAT, USD, MDAI } from '@makerdao/dai-plugin-mcd';
+import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
 import { createCurrencyRatio } from '@makerdao/currency';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
@@ -40,16 +40,16 @@ afterAll(() => {
 
 afterEach(cleanup);
 
-const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
+const liquidationRatio = createCurrencyRatio(USD, DAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(12004.938271560493);
-const debtValue = MDAI(0);
+const debtValue = DAI(0);
 
 const mockVault = {
   id: 1,
   collateralType: ILK,
   debtValue,
   encumberedDebt: fromWei(0),
-  daiAvailable: MDAI(36.014814),
+  daiAvailable: DAI(36.014814),
   vaultType: ILK,
   collateralAmount: BAT(0), // used to retrieve gem symbol
   encumberedCollateral: fromWei(1000000000000000000),
@@ -142,7 +142,7 @@ test('calls the wipeAndFree function as expected', async () => {
   // next, the ilk
   expect(mockWipeAndFree.mock.calls[0][1]).toBe(ILK);
   // next, the amount to wipe
-  expect(mockWipeAndFree.mock.calls[0][2]).toMatchObject(MDAI(0));
+  expect(mockWipeAndFree.mock.calls[0][2]).toMatchObject(DAI(0));
   // finally, the amount to free as a currency object
   expect(mockWipeAndFree.mock.calls[0][3]).toMatchObject(BAT(WD_AMT));
 });

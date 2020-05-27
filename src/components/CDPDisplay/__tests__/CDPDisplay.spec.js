@@ -7,7 +7,7 @@ import {
   waitForElement
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { ETH, DAI } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks } from '@makerdao/test-helpers';
 
 import CDPDisplay from '../';
@@ -36,7 +36,7 @@ beforeAll(async () => {
   web3 = maker.service('web3');
   await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(AMOUNT));
 });
 
 afterEach(cleanup);

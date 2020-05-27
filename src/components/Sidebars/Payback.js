@@ -1,5 +1,5 @@
 import React from 'react';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import debug from 'debug';
 
@@ -30,9 +30,9 @@ const Payback = ({ vault, reset }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
   const balances = useWalletBalances();
-  const daiBalance = balances.MDAI;
+  const daiBalance = balances.DAI;
 
-  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('MDAI');
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance('DAI');
   const { hasProxy } = useProxy();
 
   let { debtValue, debtFloor, collateralAmount } = vault;
@@ -91,7 +91,7 @@ const Payback = ({ vault, reset }) => {
     else log('Calling wipe()');
     wipeAll
       ? cdpManager.wipeAll(vault.id, owner)
-      : cdpManager.wipe(vault.id, MDAI(amount), owner);
+      : cdpManager.wipe(vault.id, DAI(amount), owner);
     reset();
   };
 
@@ -101,12 +101,12 @@ const Payback = ({ vault, reset }) => {
   const liquidationPrice = undercollateralized
     ? BigNumber(0)
     : vault.calculateLiquidationPrice({
-        debtValue: MDAI(debtValue.minus(amountToPayback))
+        debtValue: DAI(debtValue.minus(amountToPayback))
       });
   const collateralizationRatio = undercollateralized
     ? Infinity
     : vault.calculateCollateralizationRatio({
-        debtValue: MDAI(debtValue.minus(amountToPayback))
+        debtValue: DAI(debtValue.minus(amountToPayback))
       });
   return (
     <Grid gridRowGap="m">
@@ -136,7 +136,7 @@ const Payback = ({ vault, reset }) => {
           }
         />
       </Grid>
-      <ProxyAllowanceToggle token="MDAI" trackBtnClick={trackBtnClick} />
+      <ProxyAllowanceToggle token="DAI" trackBtnClick={trackBtnClick} />
       <Grid gridTemplateColumns="1fr 1fr" gridColumnGap="s">
         <Button
           disabled={!valid}
