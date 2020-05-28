@@ -38,7 +38,7 @@ const ConnectDropdownStyle = styled.div`
     z-index: 200;
   }
 
-  :hover {
+  ${props => (props.openOnHover ? ':hover, :active' : '&.show')} {
     .dropdown-menu {
       opacity: 1;
       pointer-events: auto;
@@ -46,15 +46,9 @@ const ConnectDropdownStyle = styled.div`
   }
 `;
 
-const ConnectDropdown = ({
-  trigger,
-  show,
-  openOnHover,
-  children,
-  ...props
-}) => {
+const ConnectDropdown = ({ trigger, show, children, ...props }) => {
   return (
-    <ConnectDropdownStyle {...props}>
+    <ConnectDropdownStyle className={show ? 'show' : ''} {...props}>
       <div className="dropdown-trigger-wrapper">{trigger}</div>
       <div className="dropdown-menu">{children}</div>
     </ConnectDropdownStyle>
