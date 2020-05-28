@@ -81,6 +81,7 @@ const SetupProxyAndAllowance = () => {
 
 test('proxy toggle', async () => {
   const { getByTestId } = renderWithMaker(<SetupProxyAndAllowance />);
+
   const [proxyToggle, allowanceToggle] = await Promise.all([
     waitForElement(() => getByTestId('proxy-toggle')),
     waitForElement(() => getByTestId('allowance-toggle'))

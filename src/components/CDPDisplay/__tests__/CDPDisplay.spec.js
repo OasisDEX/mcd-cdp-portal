@@ -106,8 +106,8 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('87.');
-  expect(getEthUsdValue()).toBe('$13.1K');
+  expect(getEthBal()).toContain('86.');
+  expect(getEthUsdValue()).toBe('$13.0K');
 
   /**Generate */
   click(getByText('Generate'));
@@ -186,6 +186,6 @@ test('Vault Display page and actions', async () => {
   expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
 
   // check updated balances
-  expect(getEthBal()).toContain('89.');
-  expect(getEthUsdValue()).toBe('$13.4K');
+  expect(getEthBal()).toContain('88.');
+  expect(getEthUsdValue()).toBe('$13.3K');
 }, 45000);
