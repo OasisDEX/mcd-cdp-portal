@@ -264,6 +264,7 @@ const CDPCreateDeposit = ({
 
   function handleInputChange({ target }) {
     if (parseFloat(target.value) < 0) return;
+    console.log(target.value);
     dispatch({
       type: `form/set-${target.name}`,
       payload: { value: target.value }

@@ -36,8 +36,8 @@
   },
   "defaultNetwork": "1",
   "exTestchainApiUrl": "http://localhost:4000/chain",
-  "showFeeds": ["ETH", "BAT", "USDC", "WBTC"],
-  "showWalletTokens": ["DAI", "DSR", "ETH", "SAI", "WETH", "BAT", "USDC", "WBTC"],
+  "showFeeds": ["ETH", "BAT", "USDC", "WBTC", "TUSD"],
+  "showWalletTokens": ["DAI", "DSR", "ETH", "SAI", "WETH", "BAT", "USDC", "WBTC", "TUSD"],
   "trackingPages": {
     "Overview": "Overview",
     "CDP": "Dashboard",
