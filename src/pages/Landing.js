@@ -10,14 +10,12 @@ import {
   buildQuestionsFromLangObj,
   FullWidth,
   FadeIn,
-  FilledButton,
-  H1,
-  H2
+  FilledButton
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
-import { getColor } from 'styles/theme';
+import { getColor, marketingTheme } from 'styles/theme';
 
 import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
 import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
@@ -35,7 +33,7 @@ import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
 import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
 
 const Content = ({ children }) => (
-  <Box p={{ s: '0 12px', l: '0 32px' }}>
+  <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
     <Box maxWidth="1200px" mx="auto">
       {children}
     </Box>
@@ -49,7 +47,7 @@ const Cards = (() => {
     flex-wrap: wrap;
     margin-right: auto;
     margin-left: auto;
-    padding-bottom: 66px;
+    padding-bottom: 48px;
 
     :after {
       content: ' ';
@@ -59,7 +57,7 @@ const Cards = (() => {
       bottom: 0;
       width: 93%;
       left: 3.5%;
-      height: 95%;
+      height: 91%;
       background: linear-gradient(
         180deg,
         rgba(255, 249, 237, 0) 0%,
@@ -81,23 +79,23 @@ const Cards = (() => {
     position: relative;
     flex-shrink: 1;
     text-align: left;
-    padding: 57px 40px 60px;
+    padding: 64px 40px;
 
     @media (max-width: 1238px) {
       margin-bottom: 24px;
     }
 
     .title {
-      font-size: 28px;
-      line-height: 28px;
+      font-size: 26px;
+      line-height: 27px;
       margin-top: 21px;
-      margin-bottom: 13px;
+      margin-bottom: 12px;
       font-weight: bold;
       color: ${getColor('darkPurple')};
     }
 
     .description {
-      min-height: 136px;
+      min-height: 98px;
       display: block;
     }
 
@@ -119,10 +117,9 @@ const Cards = (() => {
 
     ${FilledButton} {
       display: inline-flex;
-      padding: 12px 24px;
+      padding: 12px 24px 13px;
       height: unset;
-      font-size: 18px;
-      line-height: 22px;
+      line-height: 19px;
       text-decoration: none;
     }
   `;
@@ -301,7 +298,7 @@ const SupportedTokens = (() => {
 
     span {
       margin-top: 28px;
-      font-size: 22px;
+      font-size: ${props => props.theme.typography.body.fontSize};
       letter-spacing: 0.5px;
       color: ${getColor('darkPurple')};
       position: relative;
@@ -310,9 +307,9 @@ const SupportedTokens = (() => {
     span.onlyOnTrade:after {
       font-family: 'Arial Hebrew', Arial, sans-serif;
       content: '*';
-      font-size: 3.4rem;
+      font-size: 2.7rem;
       position: absolute;
-      top: 1rem;
+      top: 0.45rem;
       line-height: 20px;
     }
   `;
@@ -334,7 +331,7 @@ const SupportedTokens = (() => {
 
     return (
       <Box {...props}>
-        <H2>{lang.landing_page.token_section_title}</H2>
+        <Text.h2>{lang.landing_page.token_section_title}</Text.h2>
         <TokenList
           gridTemplateColumns={{
             s: 'repeat(2, 1fr)',
@@ -462,7 +459,7 @@ const BulletPoints = (() => {
 
     width: 100vw;
     position: relative;
-    left: -12px;
+    left: -${props => props.theme.mobilePaddingX};
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
       padding: 131px 13% 122px 12%;
@@ -515,13 +512,13 @@ function Landing() {
       <SEO title="Oasis" />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
-          <H1>{lang.landing_page.headline}</H1>
+          <Text.h1>{lang.landing_page.headline}</Text.h1>
         </Box>
         <FadeIn moveDistance="47px">
-          <Cards mt="80px" />
+          <Cards mt="72px" />
         </FadeIn>
-        <SupportedTokens mt="103px" />
-        <Box mt="207px" height="100%">
+        <SupportedTokens mt="200px" />
+        <Box mt="323px" height="100%">
           <FullWidth
             style={{ height: '91%', position: 'absolute', top: '-25px' }}
             display={{ s: 'none', m: 'inherit' }}
@@ -534,8 +531,8 @@ function Landing() {
             </FadeIn>
           </Box>
         </Box>
-        <Box mt={{ s: '158px', m: '153px' }} mb="126px">
-          <H2>{lang.landing_page.questions_title}</H2>
+        <Box mt={{ s: '158px', m: '200px' }} mb="98px">
+          <Text.h2>{lang.landing_page.questions_title}</Text.h2>
           <Questions
             questions={buildQuestionsFromLangObj(lang.landing_page, lang)}
           />

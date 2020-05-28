@@ -49,7 +49,7 @@ const Nav = styled(Box)`
 `;
 
 const MainNavStyle = styled(Nav)`
-  font-size: ${props => props.fontSize || '19px'};
+  font-size: ${props => props.fontSize || '18px'};
 
   a {
     color: ${getColor('violetGray')};
@@ -327,7 +327,7 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
           <OasisLogoLink
             style={{ visibility: mobileMenuOpen ? 'hidden' : 'visible' }}
           />
-          <MainNav mt="4px" />
+          <MainNav separation="67px" />
           <Hamburger
             active={mobileMenuOpen}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

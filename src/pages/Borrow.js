@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
-import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
@@ -21,8 +20,8 @@ import {
   Parallaxed,
   QuotesFadeIn,
   SeparatorDot,
-  H1,
-  H2
+  BorrowCalculator,
+  StyledPageContentLayout
 } from 'components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -97,17 +96,17 @@ const HeroBackground = (() => {
     >
       <Box maxWidth="866px" m="0 auto">
         <BlurryBall />
-        <Pos top={{ s: '-30px', m: '13px' }} left={{ s: '-86px', m: '-83px' }}>
-          <DimBall size="352px" />
+        <Pos top={{ s: '-30px', m: '-17px' }} left={{ s: '-86px', m: '-83px' }}>
+          <DimBall size="280px" />
           <Parallaxed
             style={{ position: 'absolute', top: '-36px', left: '-67px' }}
           >
-            <FrontBall size="212px" />
+            <FrontBall size="186px" />
           </Parallaxed>
           <SmallBlurryBall />
         </Pos>
         <Pos
-          top={{ s: '306px', m: '354px' }}
+          top={{ s: '306px', m: '270px' }}
           right={{ s: '-105px', m: '-18px' }}
         >
           <DimBall size="182px" />
@@ -208,21 +207,21 @@ function Borrow() {
   }, [account, navigation]);
 
   return (
-    <PageContentLayout>
+    <StyledPageContentLayout>
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
             <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 className="headline">{lang.borrow_landing.headline}</H1>
-          <Box minHeight="128px" maxWidth="720px">
+          <Text.h1 className="headline">{lang.borrow_landing.headline}</Text.h1>
+          <Box minHeight="81px" maxWidth="720px">
             <Text>{lang.borrow_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s" className="connect-to-start">
             {lang.borrow_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" buttonWidth="248px" />
+          <AccountSelection className="button" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <WBTCNotice lang={lang} mt="30px" />
@@ -253,15 +252,20 @@ function Borrow() {
                     right: '-110px'
                   }}
                 >
-                  <FrontBall size="180px" />
+                  <FrontBall size="164px" />
                 </Parallaxed>
               </Box>
             </StyledQuotes>
           </QuotesFadeIn>
         </Box>
+        <Box m="296px auto 0" maxWidth="980px">
+          <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
+          <Text>{lang.borrow_landing.calc_subheading}</Text>
+          <BorrowCalculator mt="40px" />
+        </Box>
       </GradientBox>
       <Features
-        mt={{ s: '158px', m: '200px' }}
+        mt={{ s: '158px', m: '207px' }}
         features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
           (img, index) => ({
             img: img,
@@ -271,7 +275,7 @@ function Borrow() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.borrow_landing.questions,
@@ -300,7 +304,7 @@ function Borrow() {
           }
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 
