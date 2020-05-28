@@ -1,13 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
-import {
-  Box,
-  Dropdown,
-  DefaultDropdown,
-  Text,
-  Flex
-} from '@makerdao/ui-components-core';
+import { Box, Dropdown, Text, Flex } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
@@ -27,7 +21,7 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView, isMobile } from 'react-device-detect';
 
-const DropdownItems = styled(DefaultDropdown)`
+const DropdownItems = styled(Box)`
   margin-bottom: 8px;
   min-width: 270px;
   background: #ffffff;
@@ -38,14 +32,9 @@ const DropdownItems = styled(DefaultDropdown)`
   padding: 10px 7px 12px;
   position: relative;
 
-  .invisible-items-top {
-    position: absolute;
-    bottom: calc(100% + 15px);
-  }
-
-  .invisible-items-bottom {
-    position: absolute;
-    top: calc(100% + 15px);
+  & > * {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 `;
 
