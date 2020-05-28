@@ -106,5 +106,8 @@
     "wait-for-expect": "^1.1.1",
     "webpack-bundle-analyzer": "^3.0.3"
   },
+  "resolutions": {
+    "@makerdao/dai-plugin-mcd/@makerdao/currency": "0.9.7"
+  },
   "types": "./typings/main.d.ts"
 }
