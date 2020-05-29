@@ -55,7 +55,11 @@ const Generate = ({ vault, reset }) => {
     }
   );
 
-  const amountToGenerate = amount || 0;
+  const amountToGenerate =
+    amount && !BigNumber(amount).isNegative()
+      ? BigNumber(amount)
+      : BigNumber(0);
+
   const undercollateralized = daiAvailable.lt(amountToGenerate);
 
   const generate = () => {
