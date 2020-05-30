@@ -46,7 +46,7 @@ const cdpTypes = [
   { currency: BAT, ilk: 'BAT-A' },
   { currency: USDC, ilk: 'USDC-A', decimals: 6 },
   { currency: WBTC, ilk: 'WBTC-A', decimals: 8 },
-  { currency: USDC, ilk: 'USDC-B', decimals: 8 },
+  { currency: USDC, ilk: 'USDC-B', decimals: 6 },
   { currency: TUSD, ilk: 'TUSD-A', decimas: 18 }
 ];
 
