@@ -32,7 +32,7 @@ export default [
     key: 'USDC-B',
     gem: 'USDC',
     currency: USDC,
-    networks: ['kovan'],
+    networks: ['kovan', 'mainnet'],
     decimals: 6
   },
   {
@@ -50,6 +50,6 @@ export default [
     key: 'TUSD-A',
     gem: 'TUSD',
     currency: TUSD,
-    networks: ['kovan']
+    networks: ['kovan', 'mainnet']
   }
 ];
