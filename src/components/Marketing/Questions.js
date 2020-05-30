@@ -11,7 +11,7 @@ const QuestionAndAnswerStyle = styled.div`
 
   .question-row {
     padding-top: 27px;
-    padding-bottom: 34px;
+    padding-bottom: 24px;
     letter-spacing: 0.007em;
     position: relative;
     border-bottom: 1px solid ${separatorColor};
@@ -43,11 +43,11 @@ const QuestionAndAnswerStyle = styled.div`
 
   .plus-minus-toggle {
     cursor: pointer;
-    height: 24px;
+    height: 20px;
     position: absolute;
-    width: 24px;
-    right: 2px;
-    top: calc(50% - 1px);
+    width: 20px;
+    right: 6px;
+    top: calc(50% - 3px);
     z-index: 2;
 
     &:before,
@@ -58,7 +58,7 @@ const QuestionAndAnswerStyle = styled.div`
       left: 0;
       position: absolute;
       top: 0;
-      width: 24px;
+      width: 20px;
       border-radius: 1px;
       transition: transform ${answerAnimationTime} ease,
         opacity ${answerAnimationTime} ease;

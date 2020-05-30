@@ -1,13 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { hot } from 'react-hot-loader/root';
-import {
-  Box,
-  Dropdown,
-  DefaultDropdown,
-  Text,
-  Flex
-} from '@makerdao/ui-components-core';
+import { Box, Text, Flex } from '@makerdao/ui-components-core';
 import lang from 'languages';
 import { mixpanelIdentify } from 'utils/analytics';
 
@@ -27,9 +21,43 @@ import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView, isMobile } from 'react-device-detect';
 
-const DropdownItems = styled(DefaultDropdown)`
+const ConnectDropdownStyle = styled.div`
+  .dropdown-trigger-wrapper {
+    margin: -8px;
+    padding: 8px;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.2s;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 200;
+  }
+
+  ${props => (props.openOnHover ? ':hover, :active' : '&.show')} {
+    .dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+`;
+
+const ConnectDropdown = ({ trigger, show, children, ...props }) => {
+  return (
+    <ConnectDropdownStyle className={show ? 'show' : ''} {...props}>
+      <div className="dropdown-trigger-wrapper">{trigger}</div>
+      <div className="dropdown-menu">{children}</div>
+    </ConnectDropdownStyle>
+  );
+};
+
+const DropdownItems = styled(Box)`
   margin-bottom: 8px;
-  min-width: 320px;
+  min-width: 270px;
   background: #ffffff;
   border: 1px solid #ecf1f3;
   box-sizing: border-box;
@@ -38,14 +66,9 @@ const DropdownItems = styled(DefaultDropdown)`
   padding: 10px 7px 12px;
   position: relative;
 
-  .invisible-items-top {
-    position: absolute;
-    bottom: calc(100% + 15px);
-  }
-
-  .invisible-items-bottom {
-    position: absolute;
-    top: calc(100% + 15px);
+  & > * {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 `;
 
@@ -82,13 +105,6 @@ const DropdownWrapper = styled(Box)`
       pointer-events: none;
     }
   }
-
-  [data-placement='top'] {
-    ${DropdownItems}.smaller {
-      top: unset;
-      bottom: -8px;
-    }
-  }
 `;
 
 const IconBox = styled(Box)`
@@ -121,7 +137,7 @@ const IconItemStyle = styled(Item)`
 const IconItem = ({ icon, iconSize = '26.67px', children, ...props }) => {
   return (
     <IconItemStyle {...props}>
-      <Flex alignItems="center" justifyContent="flex-start" height="32px">
+      <Flex alignItems="center" justifyContent="flex-start" height="29px">
         <IconBox size={iconSize}>{icon}</IconBox>
         <Text className="text">{children}</Text>
       </Flex>
@@ -152,7 +168,7 @@ const NavItem = styled(Item)`
   }
 `;
 
-function AccountSelection({ buttonWidth, ...props }) {
+function AccountSelection({ buttonWidth = '213px', ...props }) {
   const dropdown = useRef(null);
   const [showMain, setShowMain] = useState(true);
   const [isOpen, setIsOpen] = useState(false); // only for mobile
@@ -249,20 +265,21 @@ function AccountSelection({ buttonWidth, ...props }) {
   return (
     <Box width={buttonWidth} {...props} ref={dropdown}>
       <DropdownWrapper isMobile={isMobile} isOpen={isOpen}>
-        <Dropdown
-          hitBoxMargin="8px 0"
-          placement="bottom"
+        <ConnectDropdown
           openOnHover={!isMobile}
           show={isMobile ? isOpen : undefined}
           trigger={
             <FilledButton
               width={buttonWidth}
+              height="44px"
               onClick={() => {
                 setIsOpen(!isOpen); // only for mobile
               }}
             >
               {lang.providers.connect_wallet}
-              <CaratDown style={{ marginTop: '2px', marginLeft: '15px' }} />
+              <CaratDown
+                style={{ marginTop: '2px', marginLeft: '19px', fill: 'white' }}
+              />
             </FilledButton>
           }
         >
@@ -305,7 +322,7 @@ function AccountSelection({ buttonWidth, ...props }) {
               </DropdownItems>
             </BrowserView>
           </div>
-        </Dropdown>
+        </ConnectDropdown>
       </DropdownWrapper>
     </Box>
   );
