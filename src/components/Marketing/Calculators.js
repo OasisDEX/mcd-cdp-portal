@@ -10,6 +10,7 @@ import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
+import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
@@ -390,7 +391,10 @@ const BorrowCalculator = props => {
             items={gems.map(gem => ({
               value: gem.symbol,
               render: () => (
-                <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
+                <DropdownItem img={gem.Icon ?
+                  <gem.Icon width="28.33" height="28.33" /> :
+                  <DefaultIcon width="28.33" height="28.33"/>
+                }>
                   {gem.text || gem.symbol}
                 </DropdownItem>
               )
