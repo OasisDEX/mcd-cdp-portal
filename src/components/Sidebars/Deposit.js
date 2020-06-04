@@ -53,7 +53,10 @@ const Deposit = ({ vault, reset }) => {
     }
   );
   const valid = amount && !amountErrors && hasAllowance && hasProxy;
-  const amountToDeposit = amount || BigNumber(0);
+  const amountToDeposit =
+    amount && !BigNumber(amount).isNegative()
+      ? BigNumber(amount)
+      : BigNumber(0);
 
   const deposit = () => {
     const currency = getCurrency({ ilk: vaultType });

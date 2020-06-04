@@ -2,7 +2,7 @@ import React from 'react';
 import * as navi from 'react-navi';
 import { waitForElement, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import Overview from '../Overview';
 import { renderWithVaults } from '../../../test/helpers/render';
 import { instantiateMaker } from '../../maker';
@@ -27,11 +27,11 @@ beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
   await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(VAULT1_ART));
+    .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(VAULT1_ART));
 
   await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(VAULT2_ETH), MDAI(VAULT2_ART));
+    .openLockAndDraw(ILK, ETH(VAULT2_ETH), DAI(VAULT2_ART));
 });
 
 afterEach(cleanup);

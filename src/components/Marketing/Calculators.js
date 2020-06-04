@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { prettifyCurrency } from 'utils/ui';
 
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
+import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
@@ -346,6 +347,12 @@ const BorrowCalculator = props => {
       colRatio: 200,
       amountRange: [0.1, 35],
       amountStart: 0.5
+    },
+    'TUSD-A': {
+      Icon: TusdIcon,
+      colRatio: 120,
+      amountRange: [200, 70000],
+      amountStart: 5000
     }
   };
 

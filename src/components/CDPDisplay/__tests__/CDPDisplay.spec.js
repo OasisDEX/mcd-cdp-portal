@@ -7,7 +7,7 @@ import {
   waitForElement
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MDAI, ETH } from '@makerdao/dai-plugin-mcd';
+import { ETH, DAI } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks } from '@makerdao/test-helpers';
 
 import CDPDisplay from '../';
@@ -36,7 +36,7 @@ beforeAll(async () => {
   web3 = maker.service('web3');
   await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(VAULT1_ETH), MDAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(AMOUNT));
 });
 
 afterEach(cleanup);
@@ -106,8 +106,8 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('87.');
-  expect(getEthUsdValue()).toBe('$13.1K');
+  expect(getEthBal()).toContain('86.');
+  expect(getEthUsdValue()).toBe('$13.0K');
 
   /**Generate */
   click(getByText('Generate'));
@@ -186,6 +186,6 @@ test('Vault Display page and actions', async () => {
   expect(wdEvent.textContent).toBe('Withdrew 2.00 ETH from Vault');
 
   // check updated balances
-  expect(getEthBal()).toContain('89.');
-  expect(getEthUsdValue()).toBe('$13.4K');
+  expect(getEthBal()).toContain('88.');
+  expect(getEthUsdValue()).toBe('$13.3K');
 }, 45000);

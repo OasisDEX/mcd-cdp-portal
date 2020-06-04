@@ -102,6 +102,10 @@ export default {
         '在 2018 年 9 月的时候，我希望增加 ETH 的持仓量。卖是不可能卖的，用「金库」很方便，只需要两笔交易就可以安全做多我的 ETH。',
       author1: '第 2434 号金库持有者'
     },
+    calc_heading: '借 Dai 计算器',
+    calc_subheading: '输入希望抵押的类型和数量，看看可以借多少 Dai',
+    calc_dai_available: '目前你可以借 {amount} Dai',
+    calc_footnote: '以上的计算基于 {ratio}% 的抵押率',
     feature1_heading: '灵活的偿还期限',
     feature1_content:
       '金库没有固定的偿还期限，你可以随借随还。',
@@ -592,6 +596,7 @@ export default {
   liquidation_ratio_shortened: '清算线',
   // "liquidation_price_shortened": "Liq Price",
   collateral_type: '抵押品类型',
+  collateral_amount: '抵押数量',
   collateralization: '抵押率',
   collateralization_ratio: '抵押率',
   current_ilk_price: '当前 {0} 价格',

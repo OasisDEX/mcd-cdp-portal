@@ -30,7 +30,15 @@ const SidebarFeeds = ({ feeds }) => {
 
       <CardBody mt="s2">
         {feeds &&
-          feeds.map(
+          Object.values(
+            feeds.reduce(
+              (acc, price) => ({
+                ...acc,
+                [price.symbol]: price
+              }),
+              {}
+            )
+          ).map(
             (value, index) =>
               (!collapsed || index < 4) && (
                 <Flex

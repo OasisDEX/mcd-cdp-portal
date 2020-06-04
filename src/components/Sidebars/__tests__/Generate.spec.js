@@ -2,7 +2,7 @@ import React from 'react';
 import { cleanup, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
-import { BAT, MDAI, USD } from '@makerdao/dai-plugin-mcd';
+import { BAT, DAI, USD } from '@makerdao/dai-plugin-mcd';
 import BigNumber from 'bignumber.js';
 
 import Generate from '../Generate';
@@ -37,13 +37,13 @@ afterAll(() => {
 afterEach(cleanup);
 
 const collateralAmount = BAT(COL_AMT);
-const liquidationRatio = createCurrencyRatio(USD, MDAI)(LIQUIDATION_RATIO);
+const liquidationRatio = createCurrencyRatio(USD, DAI)(LIQUIDATION_RATIO);
 const collateralValue = USD(72.03);
 
 const mockVault = {
   id: 1,
-  debtValue: MDAI(0),
-  daiAvailable: MDAI(36.014814),
+  debtValue: DAI(0),
+  daiAvailable: DAI(36.014814),
   vaultType: ILK,
   collateralAmount,
   liquidationRatio,
@@ -146,5 +146,5 @@ test('calls the draw function as expected', async () => {
   // next, the ilk
   expect(mockDraw.mock.calls[0][1]).toBe(ILK);
   // finally, the draw amount as a currency object
-  expect(mockDraw.mock.calls[0][2]).toMatchObject(MDAI(DRAW_AMT));
+  expect(mockDraw.mock.calls[0][2]).toMatchObject(DAI(DRAW_AMT));
 });
