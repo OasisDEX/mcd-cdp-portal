@@ -10,6 +10,7 @@ import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
+import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
@@ -331,41 +332,44 @@ const BorrowCalculator = props => {
       amountStart: 25
     },
     'BAT-A': {
+      text: 'BAT',
       Icon: BatIcon,
       colRatio: 200,
       amountRange: [200, 70000],
       amountStart: 600
     },
     'USDC-A': {
+      text: 'USDC',
       Icon: UsdcIcon,
       colRatio: 120,
       amountRange: [200, 70000],
       amountStart: 5000
     },
     'WBTC-A': {
+      text: 'WBTC',
       Icon: WbtcIcon,
       colRatio: 200,
       amountRange: [0.1, 35],
       amountStart: 0.5
     },
     'TUSD-A': {
+      text: 'TUSD',
       Icon: TusdIcon,
       colRatio: 120,
       amountRange: [200, 70000],
       amountStart: 5000
     }
   };
-
   const gems = cdpTypesList
     .map((cdpTypeName, index) => ({
       name: cdpTypeName,
       price: prices && prices[index].toBigNumber()
     }))
-    .filter(cdpType => cdpType.name.endsWith('-A')) // only first cdp type per collateral
+    .filter(cdpType => cdpTypesMetaData[cdpType.name])
     .map(cdpType => ({
       ...cdpType,
       ...cdpTypesMetaData[cdpType.name],
-      symbol: cdpType.name.replace('-A', '')
+      symbol: cdpType.name
     }));
 
   const [selectedSymbol, setSelectedSymbol] = useState(gems[0].symbol);
@@ -390,7 +394,15 @@ const BorrowCalculator = props => {
             items={gems.map(gem => ({
               value: gem.symbol,
               render: () => (
-                <DropdownItem img={<gem.Icon width="28.33" height="28.33" />}>
+                <DropdownItem
+                  img={
+                    gem.Icon ? (
+                      <gem.Icon width="28.33" height="28.33" />
+                    ) : (
+                      <DefaultIcon width="28.33" height="28.33" />
+                    )
+                  }
+                >
                   {gem.text || gem.symbol}
                 </DropdownItem>
               )
@@ -405,7 +417,9 @@ const BorrowCalculator = props => {
             <Position position="absolute" bottom="37px" right="0">
               <CapsText textAlign="right">
                 {collateralAmounts[selectedSymbol]}
-                <span style={{ marginLeft: '3px' }}>{selectedGem.symbol}</span>
+                <span style={{ marginLeft: '3px' }}>
+                  {selectedGem.symbol.split('-')[0]}
+                </span>
               </CapsText>
             </Position>
             <Slider
