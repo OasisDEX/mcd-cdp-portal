@@ -643,6 +643,7 @@ export default {
     alphawallet: 'Alpha Wallet',
     ledger_nano: 'Ledger Nano',
     trezor: 'Trezor',
+    dcent: 'D\'CENT',
     other: 'Active Wallet',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',

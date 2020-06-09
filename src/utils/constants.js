@@ -17,6 +17,7 @@ export const TxLifecycle = {
 export const AccountTypes = {
   LEDGER: 'ledger',
   TREZOR: 'trezor',
+  DCENT: 'dcent',
   METAMASK: 'browser',
   WALLETLINK: 'walletlink',
   WALLETCONNECT: 'walletconnect'
