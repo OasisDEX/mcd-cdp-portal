@@ -15,6 +15,7 @@ import useBrowserIcon from 'hooks/useBrowserIcon';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+import { ReactComponent as DcentLogo } from 'images/dcent.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
@@ -262,7 +263,7 @@ function AccountSelection({ buttonWidth = '213px', ...props }) {
     <IconItem
       onClick={connectDcentWallet}
       disabled={!makerAuthenticated}
-      icon={<TrezorLogo />}
+      icon={<DcentLogo />}
       key="dcent"
     >
       {lang.providers.dcent}
