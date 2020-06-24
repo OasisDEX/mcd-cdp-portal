@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, withView, compose } from 'navi';
+import {
+  map,
+  route,
+  mount,
+  withView,
+  compose,
+  withTitle,
+  withHead
+} from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -86,13 +94,29 @@ const marketingLayoutView = () => (
   </MarketingLayout>
 );
 
+const withMeta = ({ title, description }) =>
+  compose(
+    withTitle(title),
+    withHead(
+      <>
+        <meta name="description" content={description} />
+      </>
+    )
+  );
+
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
   [`/${Routes.BORROW}`]: compose(
+    withMeta({
+      title: 'Oasis Borrow',
+      description:
+        'Put your assets to work. Maker Vaults on Oasis Borrow make it easy to utilize your collateral by generating Dai against it. ' +
+        "Realize liquidity through a Vault and ensure you don't lose long exposure to your collateral."
+    }),
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Borrow', view: <Borrow /> }))
+    withView(() => <Borrow />)
   ),
 
   [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
