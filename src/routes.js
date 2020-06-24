@@ -35,6 +35,8 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
 import { Routes } from 'utils/constants';
+import useLanguage from './hooks/useLanguage';
+import Helmet from 'react-helmet';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -94,26 +96,33 @@ const marketingLayoutView = () => (
   </MarketingLayout>
 );
 
-const withMeta = ({ title, description }) =>
-  compose(
-    withTitle(title),
-    withHead(
-      <>
-        <meta name="description" content={description} />
-      </>
-    )
+const PageHead = ({ title, description }) => (
+  <Helmet>
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+  </Helmet>
+);
+
+const BorrowHead = () => {
+  const { lang } = useLanguage();
+
+  return (
+    <>
+      <PageHead
+        title={lang.landing_page.borrow_card.title}
+        description={lang.landing_page.borrow_card.description}
+      />
+      <View />
+    </>
   );
+};
 
 export default mount({
   '/': route(() => ({ title: 'Landing', view: <Landing /> })),
 
   [`/${Routes.BORROW}`]: compose(
-    withMeta({
-      title: 'Oasis Borrow',
-      description:
-        'Put your assets to work. Maker Vaults on Oasis Borrow make it easy to utilize your collateral by generating Dai against it. ' +
-        "Realize liquidity through a Vault and ensure you don't lose long exposure to your collateral."
-    }),
+    withView(() => <BorrowHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
     withView(() => <Borrow />)
