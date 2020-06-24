@@ -3,6 +3,7 @@ import { StateInspector } from 'reinspect';
 import LanguageProvider from 'providers/LanguageProvider';
 import styled, { ThemeProvider } from 'styled-components';
 import { Router, NotFoundBoundary } from 'react-navi';
+import HelmetProvider from 'react-navi-helmet-async';
 import { createBrowserNavigation } from 'navi';
 import { hot } from 'react-hot-loader/root';
 import { GenericNotFound } from 'pages/NotFound';
@@ -48,7 +49,9 @@ function App() {
       <NotFoundBoundary render={GenericNotFound}>
         <ErrorBoundary>
           <Suspense fallback={<LoadingLayout />}>
-            <Router navigation={navigation} />
+            <HelmetProvider>
+              <Router navigation={navigation} />
+            </HelmetProvider>
           </Suspense>
         </ErrorBoundary>
       </NotFoundBoundary>
