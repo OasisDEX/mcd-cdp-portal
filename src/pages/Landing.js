@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Link, useCurrentRoute } from 'react-navi';
 
 import MarketingLayout from 'layouts/MarketingLayout';
-import SEO from 'components/SEO';
 import {
   Questions,
   buildQuestionsFromLangObj,
@@ -509,7 +508,6 @@ function Landing() {
 
   return (
     <MarketingLayout>
-      <SEO title="Oasis" />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
           <Text.h1>{lang.landing_page.headline}</Text.h1>
