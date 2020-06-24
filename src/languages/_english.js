@@ -21,6 +21,10 @@ export default {
     not_applicable: 'N/A'
   },
   landing_page: {
+    meta: {
+      title: 'Oasis.app',
+      description: 'Trade, Borrow and Save using Dai. Place orders on the marketplace using Trade, generate Dai, a stablecoin pegged to 1 USD, on Borrow and earn savings on your Dai using Save. All on Oasis.app.'
+    },
     headline: 'Trade, borrow, and save using Dai',
     trade_card: {
       title: 'Trade',
@@ -88,6 +92,10 @@ export default {
     wallet_link: 'Coinbase Wallet'
   },
   borrow_landing: {
+    meta: {
+      title: 'Oasis Borrow',
+      description: 'Put your assets to work. Maker Vaults on Oasis Borrow make it easy to utilize your collateral by generating Dai against it. Realize liquidity through a Vault and ensure you don\'t lose long exposure to your collateral.'
+    },
     page_name: 'Oasis Borrow',
     headline: 'Put your assets to work',
     subheadline:
@@ -164,6 +172,10 @@ export default {
     step5_link_text: 'Oasis.app/borrow'
   },
   save_landing: {
+    meta: {
+      title: 'Oasis Save',
+      description: 'The most trusted way to earn on your Dai. Anyone with an internet connection can deposit DAI, and earn savings instantly. No fees. No minimums. No speculation.'
+    },
     page_name: 'Oasis Save',
     headline: 'The most trusted way to earn on your Dai',
     subheadline:
@@ -218,6 +230,10 @@ export default {
     }
   },
   trade_landing: {
+    meta: {
+      title: 'Oasis Trade',
+      description: 'Peer to peer, decentralised crypto trading. Oasis Trade allows you to create orders where you set the Price. Using either Limit Orders or Average Price Fill or Kill, you set the price so you know you won’t pay more than you expect.'
+    },
     page_name: 'Oasis Trade',
     headline: 'Peer to peer crypto trading',
     subheadline:
