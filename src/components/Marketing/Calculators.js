@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
 import styled from 'styled-components';
+import ilks from 'references/ilkList';
 
 import { prettifyCurrency } from 'utils/ui';
 
@@ -16,7 +17,6 @@ import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
-import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
@@ -320,8 +320,19 @@ const SmartStepSlider = ({
 };
 
 const BorrowCalculator = props => {
-  const { cdpTypesList } = useCdpTypes();
-  const prices = watch.collateralTypesPrices(cdpTypesList);
+  const { network } = useMaker();
+  const types = ilks.filter(ilk => ilk.networks.includes(network));
+
+  const cdpTypesList = types
+    .reduce((acc, type) => {
+      if (!acc.includes(type.key)) acc.push(type.key);
+      return acc;
+    }, [])
+    .filter(type => type !== 'ZRX-A' && type !== 'KNC-A');
+
+  const prices = watch.collateralTypesPrices(
+    cdpTypesList.length ? cdpTypesList : []
+  );
 
   const cdpTypesMetaData = {
     'ETH-A': {
