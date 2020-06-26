@@ -25,6 +25,7 @@ import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
 import { of } from 'rxjs';
 import { ZERO_ADDRESS } from 'utils/constants';
+import { collateralDebtCeilings } from '@makerdao/dai-plugin-mcd/dist/schemas/computed';
 
 const { click, change } = fireEvent;
 
@@ -139,7 +140,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await wait(() => assert(getAllByText('external-link.svg').length === 2));
 }, 25000);
 
-test.skip('cannot deposit more than token allowance', async () => {
+test('cannot deposit more than token allowance', async () => {
   // Setup mocks for multicall observables
   const MOCK_OBS_RESPONSE = () => of(BigNumber(Infinity));
   const TEST_ADDRESS_PROXY = '0x570074CCb147ea3dE2E23fB038D4d78324278886';
@@ -173,7 +174,8 @@ test.skip('cannot deposit more than token allowance', async () => {
       annualDaiSavingsRate: MOCK_OBS_RESPONSE,
       systemCollateralization: MOCK_OBS_RESPONSE,
       emergencyShutdownActive: () => of(false),
-      emergencyShutdownTime: () => of(new Date(0))
+      emergencyShutdownTime: () => of(new Date(0)),
+      collateralDebtCeilings: () => of([])
     });
 
   const multicall = { watch };
