@@ -23,7 +23,7 @@ const ConnectHero = styled(Flex)`
   }
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
-    margin-top: 103px;
+    margin-top: 130px;
 
     .headline {
       margin-top: 16px;
@@ -31,7 +31,7 @@ const ConnectHero = styled(Flex)`
     }
 
     .button {
-      margin-top: 17px;
+      margin-top: 12px;
     }
   }
 `;

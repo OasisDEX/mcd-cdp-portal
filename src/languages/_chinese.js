@@ -87,6 +87,175 @@ export default {
     wallet_connect: 'Wallet Connect',
     wallet_link: 'Coinbase Wallet'
   },
+  borrow_landing: {
+    page_name: 'Oasis Borrow',
+    headline: '让你的资产增倍',
+    subheadline:
+      "通过「金库」轻松抵押资产生成 Dai。在获得流动性的同时，保持抵押品的增值机会。",
+    connect_to_start: '连接加密钱包，创建和管理「金库」',
+    wbtc_notice: '比特币可以抵押生成 Dai 了：',
+    quotes_block: {
+      title: '最大化你的收益机会',
+      body:
+        '通过生成的 Dai 做多加密资产',
+      quote1:
+        '在 2018 年 9 月的时候，我希望增加 ETH 的持仓量。卖是不可能卖的，用「金库」很方便，只需要两笔交易就可以安全做多我的 ETH。',
+      author1: '第 2434 号金库持有者'
+    },
+    calc_heading: '借 Dai 计算器',
+    calc_subheading: '输入希望抵押的类型和数量，看看可以借多少 Dai',
+    calc_dai_available: '目前你可以借 {amount} Dai',
+    calc_footnote: '以上的计算基于 {ratio}% 的抵押率',
+    feature1_heading: '灵活的偿还期限',
+    feature1_content:
+      '金库没有固定的偿还期限，你可以随借随还。',
+    feature2_heading: '安全简单好用',
+    feature2_content:
+      '一键式交互页面，无中心化和第三方控制资产。',
+    feature3_heading: '多样的选择',
+    feature3_content:
+      '管理不同类型的抵押品「金库」，所有记录透明可查。',
+    feature4_heading: '不受限制',
+    feature4_content:
+      '随时随地自由生成，不错过任何的市场机会。',
+    questions: {
+      question1: '我可以用哪些资产作为抵押品？',
+      answer1:
+        '目前，Oasis Borrow 支持 ETH、BAT、USDC 和 WBTC，且有计划新增更多类型的抵押品，而且不同抵押品类型可以有不同的风险参数。你可以阅读 Maker 协议《抵押品入选指南》来了解更多信息。',
+      question2: '抵押借 Dai 的成本是多少？',
+      answer2:
+        '根据抵押品的不同，生成 Dai 的成本也不同。抵押借 Dai 需要收取稳定费用，稳定费用按每秒钟复利计算，并自动加到金库的债务总额中，在前端以未偿债务的年化利率显示。此外，还有一些其它费用，包括清算时 13% 的清算罚金以及每一笔交易需支付的矿工费。',
+      question3: '如果我的金库抵押品低于清算价格会怎么样？',
+      answer3:
+        '如果你的金库抵押品低于清算价格，即金库抵押率已经达到清算线，那么系统会将金库的抵押品进行拍卖并出售，以支付金库的未偿债务、稳定费用和清算罚金。如果金库在拍卖结束时有抵押品剩余，那么剩余抵押品将退还给金库持有者。注，Maker 不能保证金库的抵押品会以市价出售，在拍卖结束前，无法确定会返还多少抵押品。',
+      question4:
+        "我没有支持的抵押品，如何获得 Dai ？",
+      answer4:
+        "如果你没有协议所支持的抵押品资产，那么就无法通过 Oasis Borrow 抵押生成 Dai 。不过你仍然可以在交易所将你的资产兑换成 Dai。你可以前往 Oasis Trade 交易获得 Dai。",
+      question5: '费率会不会变，多久变一次？',
+      answer5:
+        "费率会变化。稳定费率和清算罚金都是由 Maker 治理所决定的，由于 Maker 协议的持续治理，这些费率可以发生调整。你可以在 vote.makerdao.com 上查看关于 Maker 协议的各项治理。至于矿工费，这是由以太坊网络的拥堵情况决定的（你可以自己设置矿工费的高低）。如果网络很拥堵，你需要支付更多的矿工费才能快速打包交易。",
+      bottom_link1: 'Oasis 金库常见问题完整列表',
+      bottom_link2: '术语表'
+    }
+  },
+  borrow_wbtc_landing: {
+    headline: '如何用比特币生成 Dai',
+    subheadline:
+      '现在你可以开启金库，通过抵押 wBTC 生成 Dai。wBTC 是以太坊网络上发行的 BTC 锚定代币。',
+    about_title: '关于 WBTC',
+    about_content:
+      "wBTC (Wrapped Bitcoin) 是第一个 1:1 锚定 BTC 发行的以太坊 ERC20 代币。",
+    about_learn_more: '了解更多: {link}',
+    step1: '前往 CoinList 注册',
+    step1_details: '前往 {link} 并创建账户',
+    step2: '完成 CoinList 的 KYC',
+    step2_details:
+      '输入所需信息，准备好希望转换的 BTC。',
+    step3: '将 BTC 转换成 WBTC',
+    step3_details:
+      "通过 CoinList 的服务，将 BTC 转换成以太坊网络上的 wBTC。 ",
+    step4: '将 WBTC 发送到支持以太坊的钱包',
+    step4_details:
+      '将你的 wBTC 发送到 Metamask, Ledger, Trezor 或其它支持 ERC20 的钱包。',
+    step5: '创建 WBTC 金库生成 Dai',
+    step5_details:
+      '前往 {link} ，开始抵押 wBTC 生成 Dai',
+    step5_link_text: 'Oasis.app/borrow'
+  },
+  save_landing: {
+    page_name: 'Oasis Save',
+    headline: '最安全的储蓄方式',
+    subheadline:
+      '任何人都可以存入 Dai 获取实时收益。无手续费，无限额，低波动。',
+    connect_to_start:
+      '连接加密钱包，创建和管理「金库」',
+    quotes_block: {
+      title: '获取 Dai 存款利息',
+      body:
+        '在波动的市场环境里，找到资产的避风港。享受稳定收益，等待机会。',
+      quote1:
+        '当市场波动大的时候，我决定将资产换成 Dai 放在「金库」里。享受稳定收益带来的宁静，不用再担心暴跌。',
+      author1: 'Oasis Save 用户'
+    },
+    feature1_heading: '更好的货币',
+    feature1_content:
+      '随时随地管理自己的储蓄，控制权始终在用户自己手里。',
+    feature2_heading: '低波动',
+    feature2_content:
+      'Dai 是如现金一样的稳定币，免于加密货币市场的波动。',
+    feature3_heading: '透明的利率',
+    feature3_content:
+      'Dai 的利率是通过 MKR 持有者基于市场供需调节的。',
+    feature4_heading: '安全可靠',
+    feature4_content:
+      '多方安全审计，Maker 团队开发',
+    questions: {
+      question1: 'Dai 存款利率是如何决定的？',
+      answer1:
+        'Dai 存款利率是通过 MKR 持有者治理决定的。主要参考一系列参数，包括 Dai 的供需情况以及稳定费用水平。',
+      question2: 'Dai 的收益来源是什么？',
+      answer2:
+        'Dai 存款利率的收益直接来自于 Maker 协议中对借 Dai 金库收取的全局稳定费用。',
+      question3: '使用 Dai 存款利率有成本吗？',
+      answer3:
+        "使用 Dai 存款利率没有任何原生费用，除了支付以太坊网络的矿工费之外。以太坊矿工费由网络拥堵情况决定。",
+      question4: '我在 Oasis Save 存了 Dai 后，别人能挪用吗？',
+      answer4:
+        "不可以，任何人都无法控制你在 Oasis 金库里储蓄的 Dai。只要你保管好自己的钱包私钥，因此，备份钱包是非常重要的，如果你的钱包丢失了，Dai 是没有办法找回的。",
+      question5: 'Oasis Save 有什么风险吗？',
+      answer5:
+        '任何数字科技网络都存在着代码故障的风险。Maker 协议的 Dai 存款利率合约经过全面的测试以及多方审计。最大的风险往往在于你是否备份了钱包并确保没有将私钥或助记词分享给其他人。',
+      bottom_link1: 'Oasis Save 常见问题完整列表'
+    }
+  },
+  trade_landing: {
+    page_name: 'Oasis Trade',
+    headline: '点对点的加密货币交易',
+    subheadline:
+      '完全去中心化、零手续费，支持订单簿与闪兑',
+    cta_button: '前去交易',
+    quotes_block: {
+      title: '出价由你来定',
+      body:
+        'Oasis Trade 支持订单簿模式，由你决定出价，支持限价单或市价全额成交。灵活设置价格和滑点，交易不吃亏。',
+      quote1:
+        "Oasis 是我交易的首选，不仅有最好的价格，重要的是不需要将自己的资产通过传统交易所转来转去。",
+      author1: 'Oasis Trade 用户 '
+    },
+    feature1_heading: '高流动性且去中心化',
+    feature1_content:
+      '提供最好的价格，有以太坊钱包即可交易。',
+    feature2_heading: '杠杆利器',
+    feature2_content:
+      '如果你用「金库」生成了 Dai，可以通过 Oasis Trade 做多初始资产。',
+    feature3_heading: '秒级交易',
+    feature3_content:
+      '只需要支付以太坊网络矿工费，你就可以在一个区块内快速完成交易。',
+    feature4_heading: '无中心化托管',
+    feature4_content:
+      '所有的交易都通过智能合约结算，你始终掌握自己资产的控制权。',
+    questions: {
+      question1: '使用 Oasis Trade 需要支付任何费用吗？',
+      answer1:
+        "使用 Oasis Trade 没有任何原生费用，除了支付以太坊网络的矿工费之外。以太坊矿工费由网络拥堵情况决定。",
+      question2: '我可以用借记卡或信用卡购买加密货币吗？',
+      answer2:
+        'Oasis Trade 只支持交易 Dai、ETH、USDC、WBTC 等以太坊代币，不支持使用借记卡或信用卡购买。',
+      question3: '订单簿交易和闪兑有什么区别？',
+      answer3:
+        "订单簿模式下，你需要自定义价格创建或匹配订单，实现买入或卖出的撮合。闪兑模式下你能以订单簿上的最佳价格快速将一个代币换成另一个代币（成交价可能会因为滑点而略有变动）。",
+      question4:
+        '什么是价格滑点，是否可以限制范围？',
+      answer4:
+        "滑点是下单价格与实际成交价格之间的差异。例如，你下单买入1个 ETH，价格为 200 Dai，但到交易确认的时候，最优价格是 202 Dai/ETH。在 Oasis Trade 中，你可以通过百分比来设置你的滑点限制，这意味着你的订单匹配后，如果超过了滑点限制，那么订单将自动取消。",
+      question5:
+        'Oasis Trade 官方能否控制我的加密货币或钱包私钥？',
+      answer5:
+        '不会，Oasis Trade 是一个完全非托管、去中心化的交易所。这意味着资金的控制权永远在你自己手里，只有你能够下单或发送资金。所有的订单都是直接通过智能合约下单和结算，可以随时在以太坊网络上核对。',
+      bottom_link1: 'Oasis Trade 常见问题完整列表'
+    }
+  },
   overview_page: {
     title: '资产概览',
     your_cdps: '你的金库',
@@ -427,6 +596,7 @@ export default {
   liquidation_ratio_shortened: '清算线',
   // "liquidation_price_shortened": "Liq Price",
   collateral_type: '抵押品类型',
+  collateral_amount: '抵押数量',
   collateralization: '抵押率',
   collateralization_ratio: '抵押率',
   current_ilk_price: '当前 {0} 价格',
@@ -436,8 +606,13 @@ export default {
   terms_of_service: '服务条款',
   cookie_notice: '同意该网站 {0}',
   privacy_policy: '隐私政策',
+  see_how_it_works: '了解如何运行',
+  learn_more: '了解详情',
   providers: {
-    connect_wallet: '选择钱包连接',
+    connect_wallet: '连接钱包',
+    connect_wallet_long: '选择钱包进入',
+    more_wallets: '更多钱包',
+    main_wallets: '主要钱包',
     metamask: 'MetaMask',
     trust: 'Trust',
     coinbase: 'Coinbase Wallet',

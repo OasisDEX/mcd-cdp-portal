@@ -1,4 +1,4 @@
-import { ETH, BAT, USDC, WBTC } from '@makerdao/dai-plugin-mcd';
+import { ETH, BAT, USDC, WBTC, TUSD, ZRX, KNC } from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -27,6 +27,15 @@ export default [
     decimals: 6
   },
   {
+    slug: 'usdc-b',
+    symbol: 'USDC-B',
+    key: 'USDC-B',
+    gem: 'USDC',
+    currency: USDC,
+    networks: ['kovan', 'mainnet'],
+    decimals: 6
+  },
+  {
     slug: 'wbtc-a',
     symbol: 'WBTC-A',
     key: 'WBTC-A',
@@ -34,5 +43,29 @@ export default [
     currency: WBTC,
     networks: ['kovan', 'mainnet'],
     decimals: 8
+  },
+  {
+    slug: 'tusd-a',
+    symbol: 'TUSD-A',
+    key: 'TUSD-A',
+    gem: 'TUSD',
+    currency: TUSD,
+    networks: ['kovan', 'mainnet']
+  },
+  {
+    slug: 'knc-a',
+    symbol: 'KNC-A',
+    key: 'KNC-A',
+    gem: 'KNC',
+    currency: KNC,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'zrx-a',
+    symbol: 'ZRX-A',
+    key: 'ZRX-A',
+    gem: 'ZRX',
+    currency: ZRX,
+    networks: ['mainnet', 'kovan']
   }
 ];

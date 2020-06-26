@@ -9,7 +9,7 @@ import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { BigNumber } from 'bignumber.js';
 import { safeToFixed } from '../../utils/ui';
@@ -19,12 +19,13 @@ const DsrWithdraw = ({ savings, reset }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
 
-  const { symbol } = MDAI;
-  const displaySymbol = 'DAI';
+  const displaySymbol = DAI.symbol;
 
   const { daiLockedInDsr } = savings;
-  const { MDAI: daiBalance } = useWalletBalances();
-  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
+  const { DAI: daiBalance } = useWalletBalances();
+  const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
+    DAI.symbol
+  );
   const [withdrawMaxFlag, setWithdrawMaxFlag] = useState(false);
 
   const [
@@ -66,7 +67,7 @@ const DsrWithdraw = ({ savings, reset }) => {
     if (withdrawMaxFlag || new BigNumber(withdrawAmount).eq(daiLockedInDsr)) {
       maker.service('mcd:savings').exitAll();
     } else {
-      maker.service('mcd:savings').exit(MDAI(withdrawAmount));
+      maker.service('mcd:savings').exit(DAI(withdrawAmount));
     }
     reset();
   };
@@ -111,7 +112,7 @@ const DsrWithdraw = ({ savings, reset }) => {
         />
       </Grid>
       <ProxyAllowanceToggle
-        token="MDAI"
+        token="DAI"
         onlyShowAllowance={true}
         trackBtnClick={trackBtnClick}
       />

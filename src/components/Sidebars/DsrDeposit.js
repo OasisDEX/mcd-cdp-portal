@@ -9,7 +9,7 @@ import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { DAI } from '@makerdao/dai-plugin-mcd';
 import SetMax from 'components/SetMax';
 import { safeToFixed } from '../../utils/ui';
 
@@ -18,11 +18,11 @@ const DsrDeposit = ({ savings, reset }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
 
-  const { symbol } = MDAI;
+  const { symbol } = DAI;
   const displaySymbol = 'DAI';
 
   const { daiLockedInDsr } = savings;
-  const { MDAI: daiBalance } = useWalletBalances();
+  const { DAI: daiBalance } = useWalletBalances();
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(symbol);
 
   const [
@@ -57,7 +57,7 @@ const DsrDeposit = ({ savings, reset }) => {
   }, [daiBalance, setDepositAmount]);
 
   const deposit = () => {
-    maker.service('mcd:savings').join(MDAI(depositAmount));
+    maker.service('mcd:savings').join(DAI(depositAmount));
     reset();
   };
 
@@ -101,7 +101,7 @@ const DsrDeposit = ({ savings, reset }) => {
         />
       </Grid>
       <ProxyAllowanceToggle
-        token="MDAI"
+        token="DAI"
         onlyShowAllowance={true}
         trackBtnClick={trackBtnClick}
       />

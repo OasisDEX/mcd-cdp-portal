@@ -1,7 +1,5 @@
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
-import PageContentLayout from 'layouts/PageContentLayout';
-
 import {
   buildQuestionsFromLangObj,
   ConnectHero,
@@ -15,8 +13,7 @@ import {
   FilledButton,
   QuotesFadeIn,
   GradientBox,
-  H1,
-  H2
+  StyledPageContentLayout
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -31,7 +28,7 @@ import { ReactComponent as Feat4 } from 'images/landing/trade/feature-4.svg';
 
 const StyledConnectHero = styled(ConnectHero)`
   @media (min-width: ${props => props.theme.breakpoints.m}) {
-    margin: 127px auto 0;
+    margin: 178px auto 0;
   }
 `;
 
@@ -42,8 +39,8 @@ const HeroBackground = (() => {
     top: -45px;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -98px;
-      top: -129px;
+      left: -66px;
+      top: -123px;
     }
   `;
 
@@ -53,8 +50,8 @@ const HeroBackground = (() => {
     top: 0;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -179px;
-      top: -84px;
+      left: -171px;
+      top: -143px;
     }
   `;
 
@@ -97,31 +94,35 @@ function TradeLanding() {
   const { lang } = useLanguage();
   const ctaButton = (
     <a href="/trade/market/">
-      <FilledButton className="button" width="237px">
+      <FilledButton className="button" width="185px" height="44px">
         {lang.trade_landing.cta_button}
       </FilledButton>
     </a>
   );
 
   return (
-    <PageContentLayout enableNotifications={false}>
+    <StyledPageContentLayout enableNotifications={false}>
       <FixedHeaderTrigger cta={ctaButton}>
         <StyledConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(176.45deg, #ECFFDA 18.9%, #AFFFFA 100%)">
             <Text.h4>{lang.trade_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1 className="headline" style={{ marginBottom: '23px' }}>
+          <Text.h1 className="headline" style={{ marginBottom: '17px' }}>
             {lang.trade_landing.headline}
-          </H1>
-          <Box minHeight="83px" mb={{ s: '9px', m: 'inherit' }}>
+          </Text.h1>
+          <Box
+            minHeight="107px"
+            maxWidth="760px"
+            mb={{ s: '9px', m: 'inherit' }}
+          >
             <Text>{lang.trade_landing.subheadline}</Text>
           </Box>
           {ctaButton}
         </StyledConnectHero>
       </FixedHeaderTrigger>
       <GradientBox
-        mt="427px"
+        mt="211px"
         background="radial-gradient(242.42% 146.56% at 0% 0%, #E8FFFC 0%, #F8FFE6 50.52%, #E8FFFC 100%)"
       >
         <QuotesFadeIn>
@@ -145,7 +146,7 @@ function TradeLanding() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.trade_landing.questions,
@@ -153,7 +154,7 @@ function TradeLanding() {
           )}
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

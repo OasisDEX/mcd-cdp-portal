@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useMaker from 'hooks/useMaker';
-import PageContentLayout from 'layouts/PageContentLayout';
 import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import {
@@ -16,8 +15,8 @@ import {
   ThickUnderline,
   Parallaxed,
   QuotesFadeIn,
-  H1,
-  H2
+  StyledPageContentLayout,
+  SaveCalculator
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -29,7 +28,10 @@ import { ReactComponent as Feat1 } from 'images/landing/save/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/save/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/save/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
+import { ReactComponent as CalculatorLeftTriangles } from 'images/landing/save/calculator-left-triangles.svg';
+import { ReactComponent as CalculatorRightTriangle } from 'images/landing/save/calculator-right-triangle.svg';
 import { Link } from 'react-navi';
+import { useDaiSavingsRate } from '../components/Marketing/Calculators';
 
 const HeroBackground = (() => {
   const BackTriangles = styled(BackTrianglesBase)`
@@ -49,8 +51,8 @@ const HeroBackground = (() => {
     top: -76px;
 
     @media (min-width: ${props => props.theme.breakpoints.m}) {
-      left: -174px;
-      top: -108px;
+      left: -178px;
+      top: -121px;
     }
   `;
 
@@ -92,6 +94,7 @@ const StyledQuotes = styled(Quotes)`
 function SaveOverview() {
   const { account, network, navigation } = useMaker();
   const { lang } = useLanguage();
+  const dsr = useDaiSavingsRate()?.toNumber() - 1;
 
   useEffect(() => {
     if (account && account.address) {
@@ -101,31 +104,31 @@ function SaveOverview() {
     }
   }, [account, navigation, network]);
   return (
-    <PageContentLayout>
+    <StyledPageContentLayout>
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />
           <ThickUnderline background="linear-gradient(354.42deg, #B7FFB8 0%, #FCFF9E 64.82%)">
             <Text.h4>{lang.save_landing.page_name}</Text.h4>
           </ThickUnderline>
-          <H1
+          <Text.h1
             className="headline"
-            style={{ marginBottom: '23px' }}
+            style={{ marginBottom: '17px' }}
             maxWidth="700px"
           >
             {lang.save_landing.headline}
-          </H1>
-          <Box minHeight="86px" maxWidth="690px">
+          </Text.h1>
+          <Box minHeight="81px" maxWidth="720px">
             <Text>{lang.save_landing.subheadline}</Text>
           </Box>
           <Text fontSize="s" className="connect-to-start">
             {lang.save_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" buttonWidth="248px" />
+          <AccountSelection className="button" />
         </ConnectHero>
       </FixedHeaderTrigger>
       <GradientBox
-        mt="227px"
+        mt="141px"
         background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
       >
         <QuotesFadeIn>
@@ -138,6 +141,35 @@ function SaveOverview() {
             quotesImg={<QuotesImg />}
           />
         </QuotesFadeIn>
+        {dsr > 0 && (
+          <Box m="256px auto 0" maxWidth="813px">
+            <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
+            <Text>{lang.save_landing.calc_subheading}</Text>
+            <Box position="relative">
+              <Parallaxed
+                initialOffset={1750}
+                style={{
+                  position: 'absolute',
+                  top: '177px',
+                  width: '100%',
+                  height: '400px'
+                }}
+              >
+                <CalculatorLeftTriangles
+                  style={{ position: 'absolute', left: '-172px' }}
+                />
+                <CalculatorRightTriangle
+                  style={{
+                    position: 'absolute',
+                    right: '-205px',
+                    top: '107px'
+                  }}
+                />
+              </Parallaxed>
+              <SaveCalculator mt="40px" />
+            </Box>
+          </Box>
+        )}
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}
@@ -150,7 +182,7 @@ function SaveOverview() {
         )}
       />
       <QuestionsWrapper>
-        <H2>{lang.landing_page.questions_title}</H2>
+        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
             lang.save_landing.questions,
@@ -167,7 +199,7 @@ function SaveOverview() {
           }
         />
       </QuestionsWrapper>
-    </PageContentLayout>
+    </StyledPageContentLayout>
   );
 }
 

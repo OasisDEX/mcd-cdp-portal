@@ -70,11 +70,16 @@ function IlkTableRow({
       }
     });
   }
+  const disabled = ilk.gem === 'TUSD';
 
   return (
-    <tr css="white-space: nowrap;" onClick={selectIlk}>
+    <tr
+      style={disabled ? { color: '#ADADAD' } : { whiteSpace: 'nowrap' }}
+      onClick={() => !disabled && selectIlk()}
+    >
       <td>
         <Radio
+          disabled={disabled}
           checked={checked}
           readOnly
           mr="xs"
@@ -83,7 +88,14 @@ function IlkTableRow({
           }}
         />
       </td>
-      <td>{ilk.symbol}</td>
+      <td>
+        <div>{ilk.symbol}</div>
+        {disabled && (
+          <div style={{ fontSize: '11px', paddingBottom: '5px' }}>
+            Unavailable due to a token upgrade
+          </div>
+        )}
+      </td>
       <td>
         {formatter(annualStabilityFee, {
           percentage: true,

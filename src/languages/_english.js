@@ -25,7 +25,7 @@ export default {
     trade_card: {
       title: 'Trade',
       description:
-        'Place orders in the decentralised Marketplace, or exchange your tokens quickly.',
+        'Place orders in the Marketplace, exchange your tokens, or Multiply your assets, quickly.',
       button: 'Start Trading'
     },
     borrow_card: {
@@ -102,6 +102,10 @@ export default {
         'Back in Sep 2018, I was looking for a place to maximize my ETH holdings. Selling was not an option, so opening a Vault was perfect for me. After locking up my ETH I was going leverage long in two transactions.',
       author1: 'Vault 2434'
     },
+    calc_heading: 'How much can I borrow?',
+    calc_subheading: 'To see how much liquidity you can get right now, enter your desired collateral type',
+    calc_dai_available: 'Up to {amount} Dai is available for you to generate right now',
+    calc_footnote: 'The above figure assumes a Collateralization Ratio of {ratio}%',
     feature1_heading: 'Flexible repayment and terms',
     feature1_content:
       'Vaults are open-ended, meaning no fixed repayment schedules. Pay back or generate Dai when it suits you.',
@@ -174,6 +178,14 @@ export default {
         'When there was too much risk and volatility in the markets I decided to trade for DAI and deposit it in Oasis Save. It gave me peace of mind because I knew what my return would be, no more sleepless nights worrying about flash crashes',
       author1: 'Oasis Save User'
     },
+    calc_heading: 'How much can I earn?',
+    calc_subheading: 'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
+    calc_initial: 'Initial deposit',
+    calc_contribution: 'Monthly contribution',
+    calc_how_long: 'How long would you like to save for?',
+    calc_savings_earned: 'Amount of savings earned on your Dai',
+    calc_total_dai: 'Total Dai you will have',
+    calc_footnote: 'The above figure assumes an average Dai Savings Rate of {dsr}%',
     feature1_heading: 'A smarter, better money',
     feature1_content:
       'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
@@ -209,7 +221,7 @@ export default {
     page_name: 'Oasis Trade',
     headline: 'Peer to peer crypto trading',
     subheadline:
-      'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and instant token swap.',
+      'Oasis Trade is a decentralized, zero-fee token exchange with limit order support and quick token swap.',
     cta_button: 'Open Oasis Trade',
     quotes_block: {
       title: 'Place orders at the price you set',
@@ -220,11 +232,9 @@ export default {
       author1: 'Oasis Trade User '
     },
     feature1_heading: 'Liquidity and decentralization',
-    feature1_content:
-      'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
-    feature2_heading: 'Increase exposure with Dai Markets',
-    feature2_content:
-      'If you’ve opened a Vault on the Maker Protocol, utilise the Dai Markets on Oasis Trade to increase your exposure to trade your Dai for the original asset.',
+    feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
+    feature2_heading: 'Increase exposure with Multiply',
+    feature2_content: 'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
     feature3_heading: 'Quickly swap tokens',
     feature3_content:
       'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
@@ -608,6 +618,7 @@ export default {
   liquidation_ratio_shortened: 'Liq ratio',
   // "liquidation_price_shortened": "Liq Price",
   collateral_type: 'Collateral Type',
+  collateral_amount: 'Collateral Amount',
   collateralization: 'Your Collateralization Ratio',
   collateralization_ratio: 'Collateralization ratio',
   current_ilk_price: 'Current {0} Price',

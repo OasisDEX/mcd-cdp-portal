@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { useEffect } from 'react';
 import useMaker from 'hooks/useMaker';
-import { prettifyCurrency, formatSymbol } from 'utils/ui';
+import { prettifyCurrency } from 'utils/ui';
 import useLanguage from 'hooks/useLanguage';
 import { uniqueId } from 'utils/dev';
 import findIndex from 'lodash/findIndex';
@@ -49,7 +49,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         `${lang[langKey].depositing_gem}${suffix}`,
         <>
           <ValueText>{formatAmount(metadata.lockAmount)}</ValueText>{' '}
-          {formatSymbol(metadata.lockAmount.symbol)}
+          {metadata.lockAmount.symbol}
         </>
       );
     case 'wipeAndFreeETH':
@@ -58,21 +58,21 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
         `${lang[langKey].withdrawing_gem}${suffix}`,
         <>
           <ValueText>{formatAmount(metadata.freeAmount)}</ValueText>{' '}
-          {formatSymbol(metadata.freeAmount.symbol)}
+          {metadata.freeAmount.symbol}
         </>
       );
     case 'openLockETHAndDraw':
     case 'openLockGemAndDraw':
       return lang.formatString(
         `${lang[langKey].creating_cdp}${suffix}`
-        // <><ValueText>{formatAmount(metadata.lockAmount)}</ValueText> {formatSymbol(lockAmount.symbol)}</>
+        // <><ValueText>{formatAmount(metadata.lockAmount)}</ValueText> {(lockAmount.symbol)}</>
       );
     case 'transfer':
       return lang.formatString(
         `${lang[langKey].send}${suffix}`,
         <>
           <ValueText>{formatAmount(metadata.action.amount)}</ValueText>{' '}
-          {formatSymbol(metadata.action.amount.symbol)}
+          {metadata.action.amount.symbol}
         </>,
         <>
           <ValueText>{metadata.action.to.toLowerCase().substr(0, 5)}</ValueText>

@@ -5,7 +5,6 @@ import { Box, Text } from '@makerdao/ui-components-core';
 import { TextBlock } from '../Typography';
 import { Link } from 'react-navi';
 import FadeIn from './FadeIn';
-import { H2 } from './index';
 
 const QuotesStyle = styled(Box)`
   background: gray;
@@ -14,7 +13,7 @@ const QuotesStyle = styled(Box)`
   margin: 0 auto;
   position: relative;
   width: 100vw;
-  left: -12px;
+  left: -${props => props.theme.mobilePaddingX};
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
     width: unset;
@@ -43,9 +42,7 @@ const QuoteWrapper = styled(Box)`
   }
 `;
 
-const Quote = styled(TextBlock).attrs(() => ({
-  fontSize: 's'
-}))`
+const Quote = styled(TextBlock)`
   font-weight: 500;
   line-height: 30px;
   letter-spacing: 0.05px;
@@ -72,7 +69,7 @@ const Quotes = ({
 }) => {
   return (
     <QuotesStyle {...props}>
-      <H2 mb="16px">{title}</H2>
+      <Text.h2 mb="16px">{title}</Text.h2>
       <Text>{body}</Text>
       <QuoteWrapper>
         <QuotesImgWrapper>{quotesImg}</QuotesImgWrapper>
