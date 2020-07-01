@@ -14,7 +14,7 @@ import styled, { css } from 'styled-components';
 import { cutMiddle } from 'utils/ui';
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
-import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import { useLedger, useTrezor, useDcent } from 'hooks/useHardwareWallet';
 import useBrowserIcon from 'hooks/useBrowserIcon';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
@@ -26,6 +26,7 @@ import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
+import { ReactComponent as DCentLogo } from 'images/dcent.svg';
 
 const negativeMarginY = css`
   margin-top: -5px;
@@ -45,6 +46,10 @@ const StyledWalletLinkLogo = styled(WalletLinkLogo)`
 `;
 
 const StyledTrezorLogo = styled(TrezorLogo)`
+  ${negativeMarginY};
+`;
+
+const StyledDcentLogo = styled(DCentLogo)`
   ${negativeMarginY};
 `;
 
@@ -97,6 +102,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   } = useMaker();
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
+  const { connectDcentWallet } = useDcent({ onAccountChosen });
   const { activeAccountAddress } = useBrowserProvider();
   const [otherAccounts, setOtherAccounts] = useState([]);
   const { url } = useCurrentRoute();
@@ -235,6 +241,17 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             icon={<StyledWalletLinkLogo />}
           >
             {lang.landing_page.wallet_link}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectDcentWallet();
+              close();
+            }}
+            icon={<StyledDcentLogo />}
+          >
+            {lang.providers.dcent}
           </Option>
         </BrowserView>
         {account && (

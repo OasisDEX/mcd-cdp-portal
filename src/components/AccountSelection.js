@@ -9,12 +9,13 @@ import { FilledButton } from 'components/Marketing';
 
 import { getWebClientProviderName } from 'utils/web3';
 import useMaker from 'hooks/useMaker';
-import { useLedger, useTrezor } from 'hooks/useHardwareWallet';
+import { useLedger, useTrezor, useDcent } from 'hooks/useHardwareWallet';
 import useLanguage from 'hooks/useLanguage';
 import useBrowserIcon from 'hooks/useBrowserIcon';
 
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
+import { ReactComponent as DcentLogo } from 'images/dcent.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
@@ -201,6 +202,7 @@ function AccountSelection({ buttonWidth = '213px', ...props }) {
     [maker]
   );
   const { connectTrezorWallet } = useTrezor({ onAccountChosen });
+  const { connectDcentWallet } = useDcent({ onAccountChosen });
   const { connectLedgerWallet } = useLedger({ onAccountChosen });
 
   async function connectBrowserWallet() {
@@ -257,8 +259,19 @@ function AccountSelection({ buttonWidth = '213px', ...props }) {
     </IconItem>
   );
 
+  const dcent = (
+    <IconItem
+      onClick={connectDcentWallet}
+      disabled={!makerAuthenticated}
+      icon={<DcentLogo />}
+      key="dcent"
+    >
+      {lang.providers.dcent}
+    </IconItem>
+  );
+
   const mainWallets = [ledger, trezor];
-  const otherWallets = [walletLink, walletConnect];
+  const otherWallets = [walletLink, walletConnect, dcent];
 
   const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
 

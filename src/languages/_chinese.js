@@ -620,6 +620,7 @@ export default {
     alphawallet: 'Alpha Wallet',
     ledger_nano: 'Ledger Nano',
     trezor: 'Trezor',
+    dcent: 'D\'CENT',
     other: '当前钱包',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect'
