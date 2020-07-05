@@ -27,6 +27,7 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
 import { Routes } from 'utils/constants';
+import Arbitrage from 'pages/Arbitrage';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -134,6 +135,22 @@ export default mount({
       return {
         title: 'Save',
         view: <Save viewedAddress={viewedAddress} />
+      };
+    })
+  ),
+
+  [`/${Routes.ARBITRAGE}`]: compose(
+    withView(dappProvidersView),
+    withView(marketingLayoutView),
+    route(() => ({ title: 'Arbitrage', view: <p>Arbitrage Landing</p> }))
+  ),
+
+  [`/${Routes.ARBITRAGE}/owner/:viewedAddress`]: withDashboardLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
+      return {
+        title: 'Arbitrage',
+        view: <Arbitrage viewedAddress={viewedAddress} />
       };
     })
   ),

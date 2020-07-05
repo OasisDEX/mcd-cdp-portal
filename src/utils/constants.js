@@ -27,6 +27,7 @@ export const Routes = {
   BORROW: 'borrow',
   SAVE: 'save',
   TRADE: 'trade',
+  ARBITRAGE: 'arbitrage',
   PRIVACY: 'privacy',
   TERMS: 'terms'
 };

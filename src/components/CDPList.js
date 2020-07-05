@@ -110,9 +110,11 @@ const CDPList = memo(function({
 
   useMemo(() => {
     const onSavePage = url.pathname.startsWith(`/${Routes.SAVE}`);
+    const onArbPage = url.pathname.startsWith(`/${Routes.ARBITRAGE}`);
+
     if (onSavePage) {
       setListOpen(false);
-    } else if (!onSavePage && (account || viewedAddress)) {
+    } else if (!onSavePage && !onArbPage && (account || viewedAddress)) {
       setListOpen(true);
     }
   }, [account, url, viewedAddress]);

@@ -103,9 +103,12 @@ export default {
       author1: 'Vault 2434'
     },
     calc_heading: 'How much can I borrow?',
-    calc_subheading: 'To see how much liquidity you can get right now, enter your desired collateral type',
-    calc_dai_available: 'Up to {amount} Dai is available for you to generate right now',
-    calc_footnote: 'The above figure assumes a Collateralization Ratio of {ratio}%',
+    calc_subheading:
+      'To see how much liquidity you can get right now, enter your desired collateral type',
+    calc_dai_available:
+      'Up to {amount} Dai is available for you to generate right now',
+    calc_footnote:
+      'The above figure assumes a Collateralization Ratio of {ratio}%',
     feature1_heading: 'Flexible repayment and terms',
     feature1_content:
       'Vaults are open-ended, meaning no fixed repayment schedules. Pay back or generate Dai when it suits you.',
@@ -179,13 +182,15 @@ export default {
       author1: 'Oasis Save User'
     },
     calc_heading: 'How much can I earn?',
-    calc_subheading: 'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
+    calc_subheading:
+      'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
     calc_initial: 'Initial deposit',
     calc_contribution: 'Monthly contribution',
     calc_how_long: 'How long would you like to save for?',
     calc_savings_earned: 'Amount of savings earned on your Dai',
     calc_total_dai: 'Total Dai you will have',
-    calc_footnote: 'The above figure assumes an average Dai Savings Rate of {dsr}%',
+    calc_footnote:
+      'The above figure assumes an average Dai Savings Rate of {dsr}%',
     feature1_heading: 'A smarter, better money',
     feature1_content:
       'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
@@ -232,9 +237,11 @@ export default {
       author1: 'Oasis Trade User '
     },
     feature1_heading: 'Liquidity and decentralization',
-    feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
+    feature1_content:
+      'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
     feature2_heading: 'Increase exposure with Multiply',
-    feature2_content: 'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
+    feature2_content:
+      'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
     feature3_heading: 'Quickly swap tokens',
     feature3_content:
       'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
@@ -286,6 +293,7 @@ export default {
   navbar: {
     save: 'Save',
     borrow: 'Borrow',
+    arbitrage: 'Arbitrage',
     trade: 'Trade',
     privacy: 'Privacy',
     terms: 'Terms'
@@ -643,7 +651,7 @@ export default {
     alphawallet: 'Alpha Wallet',
     ledger_nano: 'Ledger Nano',
     trezor: 'Trezor',
-    dcent: 'D\'CENT',
+    dcent: "D'CENT",
     other: 'Active Wallet',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
@@ -667,5 +675,11 @@ export default {
       'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}',
     vault_is_liquidated:
       'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.'
+  },
+  arb: {
+    get_started_title: 'Dai trading at ~ {0} USDC',
+    no_arb: "This address either doesn't exist or has no ARB account history",
+    title: 'Swap USDC - DAI',
+    swap: 'Swap'
   }
 };
