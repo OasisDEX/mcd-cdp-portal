@@ -679,7 +679,9 @@ export default {
   arb: {
     get_started_title: 'Dai trading at ~ {0} USDC',
     no_arb: "This address either doesn't exist or has no ARB account history",
-    title: 'Swap USDC - DAI',
-    swap: 'Swap'
+    title: 'Swap stablecoins',
+    swap: 'Swap',
+    from: 'From',
+    to: 'To'
   }
 };

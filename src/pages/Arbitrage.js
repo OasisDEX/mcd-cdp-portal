@@ -21,17 +21,23 @@ function Arbitrage({ viewedAddress }) {
   const { lang } = useLanguage();
   const { account } = useMaker();
   const viewedProxyAddress = watch.proxyAddress(viewedAddress);
-  const [showOnboarding] = useState(true);
   const balances = useWalletBalances();
-  console.log(balances);
   const usdcBalance = balances.USDC;
 
   const daiUsd = '1.0125';
 
-  const [amount, setAmount, onAmountChange, amountErrors] = useValidatedInput(
+  const maxBaseAmount = usdcBalance;
+  const maxQuoteAmount = usdcBalance;
+
+  const [
+    baseAmount,
+    setBaseAmount,
+    onBaseAmountChange,
+    baseAmountErrors
+  ] = useValidatedInput(
     '',
     {
-      maxFloat: usdcBalance,
+      maxFloat: maxBaseAmount,
       minFloat: 0,
       isFloat: true
     },
@@ -40,93 +46,106 @@ function Arbitrage({ viewedAddress }) {
         lang.formatString(lang.action_sidebar.insufficient_balance, 'USDC')
     }
   );
+
+  const [
+    quoteAmount,
+    ,
+    onQuoteAmountChange,
+    quoteAmountErrors
+  ] = useValidatedInput(
+    '',
+    {
+      maxFloat: maxQuoteAmount,
+      minFloat: 0,
+      isFloat: true
+    },
+    {
+      maxFloat: () =>
+        lang.formatString(lang.action_sidebar.insufficient_balance, 'USDC')
+    }
+  );
+
   const maxPaybackAmount = usdcBalance;
+  const setMax = () => setBaseAmount(maxPaybackAmount.toString());
 
-  const setMax = () => setAmount(maxPaybackAmount.toString());
+  const fetchingProxyStatus = viewedProxyAddress === undefined;
 
-  return (
+  return fetchingProxyStatus ? (
+    <LoadingLayout />
+  ) : (
     <PageContentLayout>
-      {viewedProxyAddress === undefined ? (
-        <Flex
-          height="70vh"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
-          <LoadingLayout />
-        </Flex>
-      ) : viewedProxyAddress === null && showOnboarding ? (
-        <Flex
-          height="70vh"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-        >
-          {viewedAddress === account?.address ? (
-            <>
-              <Text.p t="h4" mb="26px">
-                {lang.formatString(lang.arb.get_started_title, daiUsd)}
-              </Text.p>
-              <Button p="s" css={{ cursor: 'pointer' }} onClick={() => null}>
-                {lang.actions.get_started}
-              </Button>
-            </>
-          ) : (
-            <Text.p>{lang.arb.no_arb}</Text.p>
-          )}
-        </Flex>
-      ) : (
-        <Grid
-          gridTemplateColumns={{
-            0: '1fr',
-            1: '1fr',
-            xl: '1fr 1fr 1fr'
-          }}
-          alignItems="center"
-          height="70vh"
-        >
-          <Box />
+      <Grid
+        gridTemplateColumns={{
+          0: '1fr',
+          1: '1fr',
+          2: '1fr',
+          xl: '1fr 4fr 1fr'
+        }}
+        alignItems="center"
+        height="70vh"
+      >
+        <Box />
+        <Grid gridRowGap="xl">
+          <Text.h1 textAlign="center" fontWeight="semibold">
+            {lang.arb.title}
+          </Text.h1>
           <Card p="l">
-            <Grid gridRowGap="l">
-              <Text.h3>{lang.arb.title}</Text.h3>
-              <Text.p>{'Lorem ipsum dolor sit amet, consectetur'}</Text.p>
-
-              <Grid
-                gridTemplateColumns="1fr 5fr"
-                alignItems="center"
-                gridColumnGap="s"
-              >
-                <Text.p>{'USDC'}</Text.p>
-                <Input
-                  type="number"
-                  value={amount}
-                  min="0"
-                  onChange={onAmountChange}
-                  placeholder="0.00"
-                  failureMessage={amountErrors}
-                  after={<SetMax onClick={setMax} />}
-                />
+            <Grid gridRowGap="l" py="xl" px="l">
+              <Grid gridRowGap="s">
+                <Text.p>{lang.arb.from}</Text.p>
+                <Grid
+                  gridTemplateColumns="3fr 1fr"
+                  alignItems="center"
+                  gridColumnGap="l"
+                >
+                  <Input
+                    type="number"
+                    value={baseAmount}
+                    min="0"
+                    onChange={onBaseAmountChange}
+                    placeholder="0.00"
+                    after={<SetMax onClick={setMax} />}
+                  />
+                  <Box bg="steel" height="100%">
+                    sss
+                  </Box>
+                </Grid>
+                {baseAmountErrors && (
+                  <Text.p fontSize="s" color="red">
+                    {baseAmountErrors}
+                  </Text.p>
+                )}
               </Grid>
-              <Grid
-                gridTemplateColumns="1fr 5fr"
-                alignItems="center"
-                gridColumnGap="s"
-              >
-                <Text.p>{'DAI '}</Text.p>
 
-                <Input
-                  type="number"
-                  value={amount}
-                  placeholder="0.00"
-                  disabled={true}
-                />
+              <Grid gridRowGap="s">
+                <Text.p>{lang.arb.to}</Text.p>
+                <Grid
+                  gridTemplateColumns="3fr 1fr"
+                  alignItems="center"
+                  gridColumnGap="l"
+                >
+                  <Input
+                    type="number"
+                    value={quoteAmount}
+                    min="0"
+                    onChange={onQuoteAmountChange}
+                    placeholder="0.00"
+                  />
+                  <Box bg="steel" height="100%">
+                    sss
+                  </Box>
+                </Grid>
+                {quoteAmountErrors && (
+                  <Text.p fontSize="s" color="red">
+                    {quoteAmountErrors}
+                  </Text.p>
+                )}
               </Grid>
-              <Button>{lang.arb.swap}</Button>
             </Grid>
           </Card>
-          <Box />
         </Grid>
-      )}
+        <Box />
+      </Grid>
     </PageContentLayout>
   );
 }
