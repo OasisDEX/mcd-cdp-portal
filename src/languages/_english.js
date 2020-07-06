@@ -682,6 +682,8 @@ export default {
     title: 'Swap stablecoins',
     swap: 'Swap',
     from: 'From',
-    to: 'To'
+    to: 'To',
+    insufficient_balance: 'Not enough balance. Please enter {0} {1} or less',
+    approve: 'Approve {0}'
   }
 };
