@@ -681,9 +681,12 @@ export default {
     no_arb: "This address either doesn't exist or has no ARB account history",
     title: 'Swap stablecoins',
     swap: 'Swap',
+    swapping: 'swapping',
     from: 'From',
     to: 'To',
     insufficient_balance: 'Not enough balance. Please enter {0} {1} or less',
-    approve: 'Approve {0}'
+    approve: 'Approve {0}',
+    swapping_from_to: '{0} {1} for {2} {3}',
+    fee_to_swap: 'fee to swap'
   }
 };

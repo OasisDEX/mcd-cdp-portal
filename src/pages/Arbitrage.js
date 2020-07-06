@@ -27,24 +27,23 @@ import { ReactComponent as CaratDown } from 'images/carat-down.svg';
 const defaultFromToken = 'USDC';
 const defaultToToken = 'DAI';
 
-const stableTokenList = ['USDC', 'DAI', 'TUSD', 'PAX', 'USDT'];
+const stableTokenList = ['USDC', 'DAI', 'TUSD'];
 
 const tokenImages = {
   USDC: UsdcToken,
   DAI: DaiToken,
-  TUSD: TusdToken,
-  PAX: PaxToken,
-  USDT: RepToken
+  TUSD: TusdToken
 };
 
 function Arbitrage({ viewedAddress }) {
   const { lang } = useLanguage();
 
-  const viewedProxyAddress = watch.proxyAddress(viewedAddress);
   const balances = useWalletBalances();
 
   const [fromToken, setFromToken] = useState(defaultFromToken);
   const [toToken, setToToken] = useState(defaultToToken);
+
+  const viewedProxyAddress = watch.proxyAddress(viewedAddress);
 
   const maxFromAmount =
     balances && balances[fromToken] ? balances[fromToken] : 0;
@@ -114,100 +113,132 @@ function Arbitrage({ viewedAddress }) {
             {lang.arb.title}
           </Text.h1>
           <Card>
-            <Grid gridRowGap="m" py="xl" px="xl">
-              <Text.p fontWeight="medium">{lang.arb.from}</Text.p>
+            <Grid gridRowGap="l" py="xl" px="xl">
+              <Grid gridRowGap="m">
+                <Text.p fontWeight="medium">{lang.arb.from}</Text.p>
 
-              <Grid gridRowGap="s">
-                <Grid
-                  gridTemplateColumns="3fr 1fr"
-                  alignItems="center"
-                  gridColumnGap="l"
-                >
-                  <Input
-                    type="number"
-                    value={fromAmount}
-                    min="0"
-                    onChange={onFromAmountChange}
-                    placeholder="0.00"
-                    after={<SetMax onClick={setMax} />}
-                  />
-                  <Dropdown trigger={<DropdownButton token={fromToken} />}>
-                    <DefaultDropdown>
-                      {tokenList.map((tkn, idx) => {
-                        const TokenImage = tokenImages[tkn];
-                        return (
-                          <Grid
-                            key={`to-${idx}`}
-                            onClick={() => setFromToken(tkn)}
-                            gridTemplateColumns="1fr 1fr"
-                          >
-                            <TokenImage height="20px" width="20px" />
-                            {tkn}
-                          </Grid>
-                        );
-                      })}
-                    </DefaultDropdown>
-                  </Dropdown>
+                <Grid gridRowGap="s">
+                  <Grid
+                    gridTemplateColumns="3fr 1fr"
+                    alignItems="center"
+                    gridColumnGap="l"
+                  >
+                    <Input
+                      type="number"
+                      value={fromAmount}
+                      min="0"
+                      onChange={onFromAmountChange}
+                      placeholder="0.00"
+                      after={<SetMax onClick={setMax} />}
+                    />
+                    <Dropdown trigger={<DropdownButton token={fromToken} />}>
+                      <DefaultDropdown>
+                        <Grid gridRowGap="m" px="s">
+                          {tokenList.map((tkn, idx) => {
+                            const TokenImage = tokenImages[tkn];
+                            return (
+                              <Grid
+                                key={`from-${idx}`}
+                                onClick={() => setFromToken(tkn)}
+                                gridTemplateColumns="1fr 1fr"
+                              >
+                                <TokenImage height="20px" width="20px" />
+                                {tkn}
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      </DefaultDropdown>
+                    </Dropdown>
+                  </Grid>
+                  {fromAmountErrors && (
+                    <Text.p fontSize="s" color="red">
+                      {fromAmountErrors}
+                    </Text.p>
+                  )}
                 </Grid>
-                {fromAmountErrors && (
-                  <Text.p fontSize="s" color="red">
-                    {fromAmountErrors}
-                  </Text.p>
-                )}
+
+                <Grid textAlign="center" gridTemplateColumns="3fr 1fr">
+                  <Grid gridTemplateColumns="1fr 1fr">
+                    <Text.p
+                      textAlign="left"
+                      alignSelf="end"
+                      fontWeight="medium"
+                    >
+                      {lang.arb.to}
+                    </Text.p>
+
+                    <SwapToken
+                      onClick={() => {
+                        setToToken(fromToken);
+                        setFromToken(toToken);
+                      }}
+                    />
+                  </Grid>
+                  <Box />
+                </Grid>
+
+                <Grid gridRowGap="s">
+                  <Grid
+                    gridTemplateColumns="3fr 1fr"
+                    alignItems="center"
+                    gridColumnGap="l"
+                  >
+                    <Input
+                      type="number"
+                      value={toAmount}
+                      min="0"
+                      onChange={onToAmountChange}
+                      placeholder="0.00"
+                    />
+                    <Dropdown trigger={<DropdownButton token={toToken} />}>
+                      <DefaultDropdown>
+                        <Grid gridRowGap="m" px="s">
+                          {tokenList.map((tkn, idx) => {
+                            const TokenImage = tokenImages[tkn];
+                            return (
+                              <Grid
+                                key={`to-${idx}`}
+                                onClick={() => setToToken(tkn)}
+                                gridTemplateColumns="1fr 1fr"
+                              >
+                                <TokenImage height="20px" width="20px" />
+                                {tkn}
+                              </Grid>
+                            );
+                          })}
+                        </Grid>
+                      </DefaultDropdown>
+                    </Dropdown>
+                  </Grid>
+                  {toAmountErrors && (
+                    <Text.p fontSize="s" color="red">
+                      {toAmountErrors}
+                    </Text.p>
+                  )}
+                </Grid>
               </Grid>
 
-              <Grid textAlign="center" gridTemplateColumns="3fr 1fr">
-                <Grid gridTemplateColumns="1fr 1fr">
-                  <Text.p textAlign="left" alignSelf="end" fontWeight="medium">
-                    {lang.arb.to}
-                  </Text.p>
-
-                  <SwapToken
-                    onClick={() => {
-                      setToToken(fromToken);
-                      setFromToken(toToken);
-                    }}
-                  />
+              <Grid gridRowGap="xs">
+                <Grid gridTemplateColumns="1fr 5fr" alignItems="center">
+                  <Text t="subheading">{lang.arb.swapping}:</Text>
+                  <Text>
+                    {lang.formatString(
+                      lang.arb.swapping_from_to,
+                      fromAmount ? fromAmount.toString() : '0.00',
+                      fromToken,
+                      toAmount ? toAmount.toString() : '0.00',
+                      toToken
+                    )}
+                  </Text>
                 </Grid>
-                <Box />
-              </Grid>
 
-              <Grid gridRowGap="s">
-                <Grid
-                  gridTemplateColumns="3fr 1fr"
-                  alignItems="center"
-                  gridColumnGap="l"
-                >
-                  <Input
-                    type="number"
-                    value={toAmount}
-                    min="0"
-                    onChange={onToAmountChange}
-                    placeholder="0.00"
-                  />
-                  <Dropdown trigger={<DropdownButton token={toToken} />}>
-                    <DefaultDropdown>
-                      {tokenList.map((tkn, idx) => {
-                        const TokenImage = tokenImages[tkn];
-                        return (
-                          <Grid
-                            key={`to-${idx}`}
-                            onClick={() => setToToken(tkn)}
-                            gridTemplateColumns="1fr 1fr"
-                          >
-                            <TokenImage height="20px" width="20px" />
-                            {tkn}
-                          </Grid>
-                        );
-                      })}
-                    </DefaultDropdown>
-                  </Dropdown>
+                <Grid gridTemplateColumns="1fr 5fr" alignItems="center">
+                  <Text t="subheading">{lang.arb.fee_to_swap}:</Text>
+                  <Text>
+                    {toAmount ? toAmount.toString() : '0.00'} {toToken} (2.00%)
+                  </Text>
                 </Grid>
-                {toAmountErrors && (
-                  <Text.p fontSize="s" color="red">
-                    {toAmountErrors}
-                  </Text.p>
-                )}
               </Grid>
 
               <Grid gridTemplateColumns="1fr 2fr 2fr 1fr" gridColumnGap="m">
