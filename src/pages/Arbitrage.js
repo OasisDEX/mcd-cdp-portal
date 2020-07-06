@@ -24,8 +24,8 @@ import { ReactComponent as TusdToken } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as RepToken } from 'images/oasis-tokens/rep.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down.svg';
 
-const defaultBaseToken = 'USDC';
-const defaultQuoteToken = 'DAI';
+const defaultFromToken = 'USDC';
+const defaultToToken = 'DAI';
 
 const stableTokenList = ['USDC', 'DAI', 'TUSD', 'PAX', 'USDT'];
 
@@ -43,27 +43,26 @@ function Arbitrage({ viewedAddress }) {
   const viewedProxyAddress = watch.proxyAddress(viewedAddress);
   const balances = useWalletBalances();
 
-  const [baseToken, setBaseToken] = useState(defaultBaseToken);
-  const [quoteToken, setQuoteToken] = useState(defaultQuoteToken);
+  const [fromToken, setFromToken] = useState(defaultFromToken);
+  const [toToken, setToToken] = useState(defaultToToken);
 
-  const maxBaseAmount =
-    balances && balances[baseToken] ? balances[baseToken] : 0;
-  const maxQuoteAmount =
-    balances && balances[quoteToken] ? balances[quoteToken] : 0;
+  const maxFromAmount =
+    balances && balances[fromToken] ? balances[fromToken] : 0;
+  const maxToAmount = balances && balances[toToken] ? balances[toToken] : 0;
 
   const tokenList = stableTokenList.filter(
-    tkn => tkn !== baseToken && tkn !== quoteToken
+    tkn => tkn !== fromToken && tkn !== toToken
   );
 
   const [
-    baseAmount,
-    setBaseAmount,
-    onBaseAmountChange,
-    baseAmountErrors
+    fromAmount,
+    setFromAmount,
+    onFromAmountChange,
+    fromAmountErrors
   ] = useValidatedInput(
     '',
     {
-      maxFloat: maxBaseAmount,
+      maxFloat: maxFromAmount,
       minFloat: 0,
       isFloat: true
     },
@@ -71,32 +70,27 @@ function Arbitrage({ viewedAddress }) {
       maxFloat: () =>
         lang.formatString(
           lang.arb.insufficient_balance,
-          maxBaseAmount,
-          baseToken
+          maxFromAmount,
+          fromToken
         )
     }
   );
 
-  const [
-    quoteAmount,
-    ,
-    onQuoteAmountChange,
-    quoteAmountErrors
-  ] = useValidatedInput(
+  const [toAmount, , onToAmountChange, toAmountErrors] = useValidatedInput(
     '',
     {
-      maxFloat: maxQuoteAmount,
+      maxFloat: maxToAmount,
       minFloat: 0,
       isFloat: true
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.arb.insufficient_balance, maxQuoteAmount)
+        lang.formatString(lang.arb.insufficient_balance, maxToAmount)
     }
   );
 
-  const maxPaybackAmount = maxBaseAmount;
-  const setMax = () => setBaseAmount(maxPaybackAmount.toString());
+  const maxPaybackAmount = maxFromAmount;
+  const setMax = () => setFromAmount(maxPaybackAmount.toString());
 
   const fetchingProxyStatus = viewedProxyAddress === undefined;
 
@@ -131,20 +125,20 @@ function Arbitrage({ viewedAddress }) {
                 >
                   <Input
                     type="number"
-                    value={baseAmount}
+                    value={fromAmount}
                     min="0"
-                    onChange={onBaseAmountChange}
+                    onChange={onFromAmountChange}
                     placeholder="0.00"
                     after={<SetMax onClick={setMax} />}
                   />
-                  <Dropdown trigger={<DropdownButton token={baseToken} />}>
+                  <Dropdown trigger={<DropdownButton token={fromToken} />}>
                     <DefaultDropdown>
                       {tokenList.map((tkn, idx) => {
                         const TokenImage = tokenImages[tkn];
                         return (
                           <Grid
-                            key={`quote-${idx}`}
-                            onClick={() => setBaseToken(tkn)}
+                            key={`to-${idx}`}
+                            onClick={() => setFromToken(tkn)}
                             gridTemplateColumns="1fr 1fr"
                           >
                             <TokenImage height="20px" width="20px" />
@@ -155,9 +149,9 @@ function Arbitrage({ viewedAddress }) {
                     </DefaultDropdown>
                   </Dropdown>
                 </Grid>
-                {baseAmountErrors && (
+                {fromAmountErrors && (
                   <Text.p fontSize="s" color="red">
-                    {baseAmountErrors}
+                    {fromAmountErrors}
                   </Text.p>
                 )}
               </Grid>
@@ -170,8 +164,8 @@ function Arbitrage({ viewedAddress }) {
 
                   <SwapToken
                     onClick={() => {
-                      setQuoteToken(baseToken);
-                      setBaseToken(quoteToken);
+                      setToToken(fromToken);
+                      setFromToken(toToken);
                     }}
                   />
                 </Grid>
@@ -186,19 +180,19 @@ function Arbitrage({ viewedAddress }) {
                 >
                   <Input
                     type="number"
-                    value={quoteAmount}
+                    value={toAmount}
                     min="0"
-                    onChange={onQuoteAmountChange}
+                    onChange={onToAmountChange}
                     placeholder="0.00"
                   />
-                  <Dropdown trigger={<DropdownButton token={quoteToken} />}>
+                  <Dropdown trigger={<DropdownButton token={toToken} />}>
                     <DefaultDropdown>
                       {tokenList.map((tkn, idx) => {
                         const TokenImage = tokenImages[tkn];
                         return (
                           <Grid
-                            key={`quote-${idx}`}
-                            onClick={() => setQuoteToken(tkn)}
+                            key={`to-${idx}`}
+                            onClick={() => setToToken(tkn)}
                             gridTemplateColumns="1fr 1fr"
                           >
                             <TokenImage height="20px" width="20px" />
@@ -209,9 +203,9 @@ function Arbitrage({ viewedAddress }) {
                     </DefaultDropdown>
                   </Dropdown>
                 </Grid>
-                {quoteAmountErrors && (
+                {toAmountErrors && (
                   <Text.p fontSize="s" color="red">
-                    {quoteAmountErrors}
+                    {toAmountErrors}
                   </Text.p>
                 )}
               </Grid>
@@ -219,7 +213,7 @@ function Arbitrage({ viewedAddress }) {
               <Grid gridTemplateColumns="1fr 2fr 2fr 1fr" gridColumnGap="m">
                 <Box />
                 <Button>
-                  {lang.formatString(lang.arb.approve, baseToken)}
+                  {lang.formatString(lang.arb.approve, fromToken)}
                 </Button>
                 <Button variant="secondary">{lang.arb.swap}</Button>
                 <Box />
