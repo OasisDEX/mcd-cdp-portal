@@ -12,7 +12,9 @@ import {
   Card,
   Grid,
   Input,
-  Box
+  Box,
+  Dropdown,
+  DefaultDropdown
 } from '@makerdao/ui-components-core';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useWalletBalances from 'hooks/useWalletBalances';
@@ -21,6 +23,8 @@ import { DAI, USDC } from '@makerdao/dai-plugin-mcd';
 
 const defaultBaseToken = 'USDC';
 const defaultQuoteToken = 'DAI';
+
+const stableTokenList = ['USDC', 'DAI', 'TUSD', 'PAX', 'USDT'];
 
 function Arbitrage({ viewedAddress }) {
   const { lang } = useLanguage();
@@ -36,6 +40,10 @@ function Arbitrage({ viewedAddress }) {
     balances && balances[baseToken] ? balances[baseToken] : 0;
   const maxQuoteAmount =
     balances && balances[quoteToken] ? balances[quoteToken] : 0;
+
+  const tokenList = stableTokenList.filter(
+    tkn => tkn !== baseToken && tkn !== quoteToken
+  );
 
   const [
     baseAmount,
@@ -94,13 +102,13 @@ function Arbitrage({ viewedAddress }) {
       >
         <Box />
         <Grid gridRowGap="xl">
-          <Text.h1 textAlign="center" fontWeight="semibold">
+          <Text.h1 textAlign="center" fontWeight="medium">
             {lang.arb.title}
           </Text.h1>
           <Card p="l">
             <Grid gridRowGap="l" py="xl" px="l">
               <Grid gridRowGap="s">
-                <Text.p>{lang.arb.from}</Text.p>
+                <Text.p fontWeight="medium">{lang.arb.from}</Text.p>
                 <Grid
                   gridTemplateColumns="3fr 1fr"
                   alignItems="center"
@@ -114,9 +122,18 @@ function Arbitrage({ viewedAddress }) {
                     placeholder="0.00"
                     after={<SetMax onClick={setMax} />}
                   />
-                  <Box bg="steel" height="100%">
-                    {baseToken}
-                  </Box>
+                  <Dropdown trigger={<Box>{baseToken}</Box>}>
+                    <DefaultDropdown>
+                      {tokenList.map((tkn, idx) => (
+                        <Box
+                          key={`quote-${idx}`}
+                          onClick={() => setBaseToken(tkn)}
+                        >
+                          {tkn}
+                        </Box>
+                      ))}
+                    </DefaultDropdown>
+                  </Dropdown>
                 </Grid>
                 {baseAmountErrors && (
                   <Text.p fontSize="s" color="red">
@@ -126,7 +143,7 @@ function Arbitrage({ viewedAddress }) {
               </Grid>
 
               <Grid gridRowGap="s">
-                <Text.p>{lang.arb.to}</Text.p>
+                <Text.p fontWeight="medium">{lang.arb.to}</Text.p>
                 <Grid
                   gridTemplateColumns="3fr 1fr"
                   alignItems="center"
@@ -139,9 +156,18 @@ function Arbitrage({ viewedAddress }) {
                     onChange={onQuoteAmountChange}
                     placeholder="0.00"
                   />
-                  <Box bg="steel" height="100%">
-                    {quoteToken}
-                  </Box>
+                  <Dropdown trigger={<Box>{quoteToken}</Box>}>
+                    <DefaultDropdown>
+                      {tokenList.map((tkn, idx) => (
+                        <Box
+                          key={`quote-${idx}`}
+                          onClick={() => setQuoteToken(tkn)}
+                        >
+                          {tkn}
+                        </Box>
+                      ))}
+                    </DefaultDropdown>
+                  </Dropdown>
                 </Grid>
                 {quoteAmountErrors && (
                   <Text.p fontSize="s" color="red">
