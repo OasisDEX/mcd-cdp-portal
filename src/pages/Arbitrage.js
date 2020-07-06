@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
 import useMaker from 'hooks/useMaker';
+import useCdpTypes from 'hooks/useCdpTypes';
 import useLanguage from 'hooks/useLanguage';
 import { watch } from 'hooks/useObservable';
 import {
@@ -16,18 +17,25 @@ import {
 import useValidatedInput from 'hooks/useValidatedInput';
 import useWalletBalances from 'hooks/useWalletBalances';
 import SetMax from 'components/SetMax';
+import { DAI, USDC } from '@makerdao/dai-plugin-mcd';
+
+const defaultBaseToken = 'USDC';
+const defaultQuoteToken = 'DAI';
 
 function Arbitrage({ viewedAddress }) {
   const { lang } = useLanguage();
   const { account } = useMaker();
+
   const viewedProxyAddress = watch.proxyAddress(viewedAddress);
   const balances = useWalletBalances();
-  const usdcBalance = balances.USDC;
 
-  const daiUsd = '1.0125';
+  const [baseToken, setBaseToken] = useState(defaultBaseToken);
+  const [quoteToken, setQuoteToken] = useState(defaultQuoteToken);
 
-  const maxBaseAmount = usdcBalance;
-  const maxQuoteAmount = usdcBalance;
+  const maxBaseAmount =
+    balances && balances[baseToken] ? balances[baseToken] : 0;
+  const maxQuoteAmount =
+    balances && balances[quoteToken] ? balances[quoteToken] : 0;
 
   const [
     baseAmount,
@@ -43,7 +51,7 @@ function Arbitrage({ viewedAddress }) {
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'USDC')
+        lang.formatString(lang.action_sidebar.insufficient_balance, baseToken)
     }
   );
 
@@ -61,11 +69,11 @@ function Arbitrage({ viewedAddress }) {
     },
     {
       maxFloat: () =>
-        lang.formatString(lang.action_sidebar.insufficient_balance, 'USDC')
+        lang.formatString(lang.action_sidebar.insufficient_balance, quoteToken)
     }
   );
 
-  const maxPaybackAmount = usdcBalance;
+  const maxPaybackAmount = maxBaseAmount;
   const setMax = () => setBaseAmount(maxPaybackAmount.toString());
 
   const fetchingProxyStatus = viewedProxyAddress === undefined;
@@ -107,7 +115,7 @@ function Arbitrage({ viewedAddress }) {
                     after={<SetMax onClick={setMax} />}
                   />
                   <Box bg="steel" height="100%">
-                    sss
+                    {baseToken}
                   </Box>
                 </Grid>
                 {baseAmountErrors && (
@@ -132,7 +140,7 @@ function Arbitrage({ viewedAddress }) {
                     placeholder="0.00"
                   />
                   <Box bg="steel" height="100%">
-                    sss
+                    {quoteToken}
                   </Box>
                 </Grid>
                 {quoteAmountErrors && (
