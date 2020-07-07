@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /privacy
 Disallow: /terms
+Sitemap: https://oasis.app/sitemap.xml
