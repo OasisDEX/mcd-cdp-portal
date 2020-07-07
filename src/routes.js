@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  map,
-  route,
-  mount,
-  withView,
-  compose,
-  withTitle,
-  withHead
-} from 'navi';
+import { map, route, mount, withView, compose } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -96,13 +88,35 @@ const marketingLayoutView = () => (
   </MarketingLayout>
 );
 
-const PageHead = ({ title, description }) => (
+// META TAGS
+const PageHead = ({ title, description, imgUrl }) => (
   <Helmet>
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="twitter:card" value="summary" />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://oasis.app" />
+    <meta property="og:image" content={imgUrl} />
+    <meta property="og:description" content={description} />
   </Helmet>
 );
+
+const LandingHead = () => {
+  const { lang } = useLanguage();
+
+  return (
+    <>
+      <PageHead
+        title={lang.landing_page.meta.title}
+        description={lang.landing_page.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis-app.png"
+      />
+      <View />
+    </>
+  );
+};
 
 const BorrowHead = () => {
   const { lang } = useLanguage();
@@ -110,8 +124,39 @@ const BorrowHead = () => {
   return (
     <>
       <PageHead
-        title={lang.landing_page.borrow_card.title}
-        description={lang.landing_page.borrow_card.description}
+        title={lang.borrow_landing.meta.title}
+        description={lang.borrow_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
+      />
+      <View />
+    </>
+  );
+};
+
+const SaveHead = () => {
+  const { lang } = useLanguage();
+
+  return (
+    <>
+      <PageHead
+        title={lang.save_landing.meta.title}
+        description={lang.save_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Save.png"
+      />
+      <View />
+    </>
+  );
+};
+
+const TradeHead = () => {
+  const { lang } = useLanguage();
+
+  return (
+    <>
+      <PageHead
+        title={lang.trade_landing.meta.title}
+        description={lang.trade_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Trade.png"
       />
       <View />
     </>
@@ -119,59 +164,76 @@ const BorrowHead = () => {
 };
 
 export default mount({
-  '/': route(() => ({ title: 'Landing', view: <Landing /> })),
+  '/': compose(
+    withView(() => <LandingHead />),
+    withView(() => <Landing />)
+  ),
 
   [`/${Routes.BORROW}`]: compose(
+    // a custom BorrowHead view is used instead of Navi's withTitle and
+    // withHead, so that we get translated meta-tags
     withView(() => <BorrowHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
     withView(() => <Borrow />)
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
-    route(request => {
-      const { viewedAddress } = request.params;
-      return {
-        title: 'Overview',
-        view: <Overview viewedAddress={viewedAddress} />
-      };
-    })
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: compose(
+    withView(() => <BorrowHead />),
+    withDashboardLayout(
+      route(request => {
+        const { viewedAddress } = request.params;
+        return {
+          title: 'Overview',
+          view: <Overview viewedAddress={viewedAddress} />
+        };
+      })
+    )
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withDashboardLayout(
-    map(request => {
-      const { cdpId } = request.params;
+  [`/${Routes.BORROW}/:cdpId`]: compose(
+    withView(() => <BorrowHead />),
+    withDashboardLayout(
+      map(request => {
+        const { cdpId } = request.params;
 
-      if (!/^\d+$/.test(cdpId))
-        return route({ view: <div>invalid cdp id</div> });
+        if (!/^\d+$/.test(cdpId))
+          return route({ view: <div>invalid cdp id</div> });
 
-      return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
-    })
+        return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
+      })
+    )
   ),
 
   [`/${Routes.BORROW}/btc`]: compose(
+    withView(() => <BorrowHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
     route(() => ({ title: 'Borrow', view: <BorrowWBTCLanding /> }))
   ),
 
   [`/${Routes.SAVE}`]: compose(
+    withView(() => <SaveHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
     route(() => ({ title: 'Save', view: <SaveOverview /> }))
   ),
 
-  [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
-    route(request => {
-      const { viewedAddress } = request.params;
-      return {
-        title: 'Save',
-        view: <Save viewedAddress={viewedAddress} />
-      };
-    })
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: compose(
+    withView(() => <SaveHead />),
+    withDashboardLayout(
+      route(request => {
+        const { viewedAddress } = request.params;
+        return {
+          title: 'Save',
+          view: <Save viewedAddress={viewedAddress} />
+        };
+      })
+    )
   ),
 
   [`/${Routes.TRADE}`]: compose(
+    withView(() => <TradeHead />),
     withView(marketingLayoutView),
     route(() => ({ title: 'Trade', view: <TradeLanding /> }))
   ),
