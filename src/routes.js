@@ -27,8 +27,6 @@ import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
 import { Routes } from 'utils/constants';
-import useLanguage from './hooks/useLanguage';
-import Helmet from 'react-helmet';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -88,93 +86,14 @@ const marketingLayoutView = () => (
   </MarketingLayout>
 );
 
-// META TAGS
-const PageHead = ({ title, description, imgUrl }) => (
-  <Helmet>
-    <title>{title}</title>
-    <meta name="title" content={title} />
-    <meta name="description" content={description} />
-    <meta name="twitter:card" value="summary" />
-    <meta property="og:title" content={title} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://oasis.app" />
-    <meta property="og:image" content={imgUrl} />
-    <meta property="og:description" content={description} />
-  </Helmet>
-);
-
-const LandingHead = () => {
-  const { lang } = useLanguage();
-
-  return (
-    <>
-      <PageHead
-        title={lang.landing_page.meta.title}
-        description={lang.landing_page.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis-app.png"
-      />
-      <View />
-    </>
-  );
-};
-
-const BorrowHead = () => {
-  const { lang } = useLanguage();
-
-  return (
-    <>
-      <PageHead
-        title={lang.borrow_landing.meta.title}
-        description={lang.borrow_landing.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
-      />
-      <View />
-    </>
-  );
-};
-
-const SaveHead = () => {
-  const { lang } = useLanguage();
-
-  return (
-    <>
-      <PageHead
-        title={lang.save_landing.meta.title}
-        description={lang.save_landing.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis_Save.png"
-      />
-      <View />
-    </>
-  );
-};
-
-const TradeHead = () => {
-  const { lang } = useLanguage();
-
-  return (
-    <>
-      <PageHead
-        title={lang.trade_landing.meta.title}
-        description={lang.trade_landing.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis_Trade.png"
-      />
-      <View />
-    </>
-  );
-};
-
 export default mount({
-  '/': compose(
-    withView(() => <LandingHead />),
-    withView(() => <Landing />)
-  ),
+  '/': withView(() => <Landing />),
 
   [`/${Routes.BORROW}`]: compose(
     // a custom BorrowHead view is used instead of Navi's withTitle and
     // withHead, so that we get translated meta-tags
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    withView(() => <BorrowHead />),
     withView(() => <Borrow />)
   ),
 
@@ -202,14 +121,12 @@ export default mount({
   [`/${Routes.BORROW}/btc`]: compose(
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    withView(() => <BorrowHead />),
     withView(() => <BorrowWBTCLanding />)
   ),
 
   [`/${Routes.SAVE}`]: compose(
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    withView(() => <SaveHead />),
     withView(() => <SaveOverview />)
   ),
 
@@ -225,7 +142,6 @@ export default mount({
 
   [`/${Routes.TRADE}`]: compose(
     withView(marketingLayoutView),
-    withView(() => <TradeHead />),
     withView(() => <TradeLanding />)
   ),
 
