@@ -172,70 +172,61 @@ export default mount({
   [`/${Routes.BORROW}`]: compose(
     // a custom BorrowHead view is used instead of Navi's withTitle and
     // withHead, so that we get translated meta-tags
-    withView(() => <BorrowHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
+    withView(() => <BorrowHead />),
     withView(() => <Borrow />)
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: compose(
-    withView(() => <BorrowHead />),
-    withDashboardLayout(
-      route(request => {
-        const { viewedAddress } = request.params;
-        return {
-          title: 'Overview',
-          view: <Overview viewedAddress={viewedAddress} />
-        };
-      })
-    )
+  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
+      return {
+        title: 'Overview',
+        view: <Overview viewedAddress={viewedAddress} />
+      };
+    })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: compose(
-    withView(() => <BorrowHead />),
-    withDashboardLayout(
-      map(request => {
-        const { cdpId } = request.params;
+  [`/${Routes.BORROW}/:cdpId`]: withDashboardLayout(
+    map(request => {
+      const { cdpId } = request.params;
 
-        if (!/^\d+$/.test(cdpId))
-          return route({ view: <div>invalid cdp id</div> });
+      if (!/^\d+$/.test(cdpId))
+        return route({ view: <div>invalid cdp id</div> });
 
-        return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
-      })
-    )
+      return route({ title: 'CDP', view: <CDPDisplay cdpId={cdpId} /> });
+    })
   ),
 
   [`/${Routes.BORROW}/btc`]: compose(
-    withView(() => <BorrowHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Borrow', view: <BorrowWBTCLanding /> }))
+    withView(() => <BorrowHead />),
+    withView(() => <BorrowWBTCLanding />)
   ),
 
   [`/${Routes.SAVE}`]: compose(
-    withView(() => <SaveHead />),
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Save', view: <SaveOverview /> }))
+    withView(() => <SaveHead />),
+    withView(() => <SaveOverview />)
   ),
 
-  [`/${Routes.SAVE}/owner/:viewedAddress`]: compose(
-    withView(() => <SaveHead />),
-    withDashboardLayout(
-      route(request => {
-        const { viewedAddress } = request.params;
-        return {
-          title: 'Save',
-          view: <Save viewedAddress={viewedAddress} />
-        };
-      })
-    )
+  [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
+    route(request => {
+      const { viewedAddress } = request.params;
+      return {
+        title: 'Save',
+        view: <Save viewedAddress={viewedAddress} />
+      };
+    })
   ),
 
   [`/${Routes.TRADE}`]: compose(
-    withView(() => <TradeHead />),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Trade', view: <TradeLanding /> }))
+    withView(() => <TradeHead />),
+    withView(() => <TradeLanding />)
   ),
 
   [`/${Routes.PRIVACY}`]: route(() => ({
