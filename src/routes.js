@@ -90,8 +90,6 @@ export default mount({
   '/': withView(() => <Landing />),
 
   [`/${Routes.BORROW}`]: compose(
-    // a custom BorrowHead view is used instead of Navi's withTitle and
-    // withHead, so that we get translated meta-tags
     withView(dappProvidersView),
     withView(marketingLayoutView),
     withView(() => <Borrow />)
