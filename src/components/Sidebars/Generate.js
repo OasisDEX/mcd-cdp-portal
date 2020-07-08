@@ -31,7 +31,7 @@ const Generate = ({ vault, reset }) => {
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
-  collateralDebtAvailable = collateralDebtAvailable.toBigNumber();
+  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
 
   const symbol = collateralAmount?.symbol;
 
