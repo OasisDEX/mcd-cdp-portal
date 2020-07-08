@@ -354,6 +354,7 @@ export default {
     setup_proxy_proxy_button: 'Setup',
     setup_proxy_allowance_button: 'Set',
     setup_vault: 'Setup Vault',
+    max_dai_available_to_generate: 'Max Dai available to Generate',
 
     deposit_title: 'Deposit {0} and Generate Dai',
     deposit_text:
@@ -489,6 +490,8 @@ export default {
     generate_description: 'How much DAI would you like to generate?',
     generate_warning:
       'The amount of Dai you are generating puts your Vault at risk of liquidation',
+    generate_threshold:
+      'The amount of Dai you are trying to generate exceeds the amount of Dai available. Please enter less than {0} Dai',
     payback_title: 'Pay Back DAI',
     payback_description: 'How much DAI would you like to pay back?',
     cdp_below_threshold: 'Vault below liquidation threshold',

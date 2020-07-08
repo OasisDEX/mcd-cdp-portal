@@ -20,6 +20,11 @@ const QuotesStyle = styled(Box)`
     left: unset;
     padding: 100px 9.1% 76px;
   }
+
+  @media (min-width: ${props => props.theme.breakpoints.xl}) {
+    padding-left: 120px;
+    padding-right: 120px;
+  }
 `;
 
 const QuotesImgWrapper = styled.div`

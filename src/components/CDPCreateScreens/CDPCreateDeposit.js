@@ -25,10 +25,23 @@ function OpenCDPForm({
   ilkData
 }) {
   const { lang } = useLanguage();
-  const { calculateMaxDai, liquidationRatio, debtFloor } = ilkData;
+  let {
+    calculateMaxDai,
+    liquidationRatio,
+    debtFloor,
+    collateralDebtAvailable
+  } = ilkData;
+  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
 
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
+  const daiAvailableToGenerate = daiAvailable.gt(collateralDebtAvailable)
+    ? collateralDebtAvailable
+    : daiAvailable;
+
   const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
+  const aboveDebtCeiling = collateralDebtAvailable?.lt(
+    BigNumber(cdpParams.daiToDraw)
+  );
 
   const { hasSufficientAllowance } = useTokenAllowance(selectedIlk.gem);
   const userHasSufficientGemBalance = greaterThanOrEqual(
@@ -109,7 +122,13 @@ function OpenCDPForm({
           (belowDustLimit
             ? lang.formatString(lang.cdp_create.below_dust_limit, debtFloor)
             : null) ||
-          (userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai)
+          (userCanDrawDaiAmount ? null : lang.cdp_create.draw_too_much_dai) ||
+          (aboveDebtCeiling
+            ? lang.formatString(
+                lang.action_sidebar.generate_threshold,
+                formatter(collateralDebtAvailable)
+              )
+            : null)
         }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
@@ -128,12 +147,12 @@ function OpenCDPForm({
               handleInputChange({
                 target: {
                   name: 'daiToDraw',
-                  value: formatter(daiAvailable)
+                  value: formatter(daiAvailableToGenerate)
                 }
               });
             }}
           >
-            {formatter(daiAvailable)} DAI
+            {formatter(daiAvailableToGenerate)} DAI
           </Text>
         </Box>
         <RatioDisplay
@@ -183,7 +202,13 @@ const CDPCreateDepositSidebar = ({
 }) => {
   const { lang } = useLanguage();
   const currency = selectedIlk.currency;
-  const { annualStabilityFee, collateralTypePrice } = ilkData;
+  let {
+    annualStabilityFee,
+    collateralTypePrice,
+    collateralDebtAvailable
+  } = ilkData;
+
+  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
 
   let liquidationPriceDisplay = formatter(
     ilkData.calculateliquidationPrice(
@@ -224,6 +249,10 @@ const CDPCreateDepositSidebar = ({
             percentage: true,
             rounding: BigNumber.ROUND_HALF_UP
           })}%`
+        ],
+        [
+          lang.cdp_create.max_dai_available_to_generate,
+          `${formatter(collateralDebtAvailable)} Dai`
         ]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
