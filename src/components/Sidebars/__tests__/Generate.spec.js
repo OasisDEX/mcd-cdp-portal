@@ -49,6 +49,7 @@ const mockVault = {
   liquidationRatio,
   debtFloor: BigNumber(DUST),
   collateralValue,
+  collateralDebtAvailable: DAI(1000),
   calculateLiquidationPrice: ({ debtValue: _debtValue }) =>
     math.liquidationPrice(collateralAmount, _debtValue, liquidationRatio),
   calculateCollateralizationRatio: ({ debtValue: _debtValue }) =>
@@ -94,6 +95,18 @@ test('input validation', async () => {
   );
   fireEvent.change(input, { target: { value: '21' } });
   expect(underDustLimitEl).not.toBeInTheDocument();
+});
+
+test('debt ceiling validation', async () => {
+  const { getByText, getByRole, findByText } = renderWithMaker(
+    <Generate vault={{ ...mockVault, collateralDebtAvailable: DAI(30) }} />
+  );
+
+  await findByText(/USD\/BAT/);
+
+  const input = getByRole('textbox');
+  fireEvent.change(input, { target: { value: '31' } });
+  getByText(lang.formatString(lang.action_sidebar.generate_threshold, '30.00'));
 });
 
 test('verify info container values', async () => {

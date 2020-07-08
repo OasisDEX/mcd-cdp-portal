@@ -103,9 +103,12 @@ export default {
       author1: 'Vault 2434'
     },
     calc_heading: 'How much can I borrow?',
-    calc_subheading: 'To see how much liquidity you can get right now, enter your desired collateral type',
-    calc_dai_available: 'Up to {amount} Dai is available for you to generate right now',
-    calc_footnote: 'The above figure assumes a Collateralization Ratio of {ratio}%',
+    calc_subheading:
+      'To see how much liquidity you can get right now, enter your desired collateral type',
+    calc_dai_available:
+      'Up to {amount} Dai is available for you to generate right now',
+    calc_footnote:
+      'The above figure assumes a Collateralization Ratio of {ratio}%',
     feature1_heading: 'Flexible repayment and terms',
     feature1_content:
       'Vaults are open-ended, meaning no fixed repayment schedules. Pay back or generate Dai when it suits you.',
@@ -179,13 +182,15 @@ export default {
       author1: 'Oasis Save User'
     },
     calc_heading: 'How much can I earn?',
-    calc_subheading: 'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
+    calc_subheading:
+      'To see how much savings you could earn at the current Dai Savings Rate simply input how much Dai you would like to deposit and select your desired time.',
     calc_initial: 'Initial deposit',
     calc_contribution: 'Monthly contribution',
     calc_how_long: 'How long would you like to save for?',
     calc_savings_earned: 'Amount of savings earned on your Dai',
     calc_total_dai: 'Total Dai you will have',
-    calc_footnote: 'The above figure assumes an average Dai Savings Rate of {dsr}%',
+    calc_footnote:
+      'The above figure assumes an average Dai Savings Rate of {dsr}%',
     feature1_heading: 'A smarter, better money',
     feature1_content:
       'Manage your savings from anywhere, at anytime. Oasis is a decentralized application meaning that you are the only person that controls it.',
@@ -232,9 +237,11 @@ export default {
       author1: 'Oasis Trade User '
     },
     feature1_heading: 'Liquidity and decentralization',
-    feature1_content: 'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
+    feature1_content:
+      'Get the price you want with low slippage. Anyone with a supported ethereum wallet can trade.',
     feature2_heading: 'Increase exposure with Multiply',
-    feature2_content: 'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
+    feature2_content:
+      'A simple interface that allows you to open and manage your Multiplied Position with direct access to the Oasis Market.',
     feature3_heading: 'Quickly swap tokens',
     feature3_content:
       'Oasis Trade permits you to get in and out of positions quickly, for a price you select and you only pay Gas Fees.',
@@ -346,6 +353,7 @@ export default {
     setup_proxy_proxy_button: 'Setup',
     setup_proxy_allowance_button: 'Set',
     setup_vault: 'Setup Vault',
+    max_dai_available_to_generate: 'Max Dai available to Generate',
 
     deposit_title: 'Deposit {0} and Generate Dai',
     deposit_text:
@@ -481,6 +489,8 @@ export default {
     generate_description: 'How much DAI would you like to generate?',
     generate_warning:
       'The amount of Dai you are generating puts your Vault at risk of liquidation',
+    generate_threshold:
+      'The amount of Dai you are trying to generate exceeds the amount of Dai available. Please enter less than {0} Dai',
     payback_title: 'Pay Back DAI',
     payback_description: 'How much DAI would you like to pay back?',
     cdp_below_threshold: 'Vault below liquidation threshold',
@@ -643,6 +653,7 @@ export default {
     alphawallet: 'Alpha Wallet',
     ledger_nano: 'Ledger Nano',
     trezor: 'Trezor',
+    dcent: "D'CENT",
     other: 'Active Wallet',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',

@@ -26,14 +26,20 @@ const Generate = ({ vault, reset }) => {
     debtFloor,
     collateralAmount,
     liquidationRatio,
-    collateralizationRatio: currentCollateralizationRatio
+    collateralizationRatio: currentCollateralizationRatio,
+    collateralDebtAvailable
   } = vault;
   BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_DOWN });
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
+  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
+
   const symbol = collateralAmount?.symbol;
 
   const dustLimitValidation = value =>
     greaterThan(debtFloor, add(value, debtValue));
+
+  const debtCeilingValidation = value =>
+    greaterThan(value, collateralDebtAvailable);
 
   const [amount, , onAmountChange, failureMessage] = useValidatedInput(
     '',
@@ -42,7 +48,8 @@ const Generate = ({ vault, reset }) => {
       minFloat: 0,
       isFloat: true,
       custom: {
-        dustLimit: dustLimitValidation
+        dustLimit: dustLimitValidation,
+        debtCeiling: debtCeilingValidation
       }
     },
     {
@@ -51,6 +58,11 @@ const Generate = ({ vault, reset }) => {
         lang.formatString(
           lang.cdp_create.below_dust_limit,
           formatter(debtFloor)
+        ),
+      debtCeiling: () =>
+        lang.formatString(
+          lang.action_sidebar.generate_threshold,
+          formatter(collateralDebtAvailable)
         )
     }
   );

@@ -4,6 +4,7 @@ import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
 import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
+import dcentPlugin from 'dai-plugin-dcent-web';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
@@ -63,6 +64,7 @@ export async function instantiateMaker({
       ledgerPlugin,
       [walletLinkPlugin, walletLinkPluginConfig],
       walletConnectPlugin,
+      dcentPlugin,
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
@@ -79,6 +81,9 @@ export async function instantiateMaker({
     },
     web3: {
       pollingInterval: network === 'testnet' ? 100 : null
+    },
+    gas: {
+      apiKey: '3e722dd73e76ba3d2eb7507e316727db8a71d1fbc960ed1018e999a53f75'
     },
     multicall: true
   };

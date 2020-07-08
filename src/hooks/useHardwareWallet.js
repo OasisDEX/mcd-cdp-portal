@@ -76,6 +76,25 @@ export function useTrezor({ onAccountChosen }) {
   return { connectTrezorWallet };
 }
 
+// Helper hook to show dcent connection modals. Only for use in this app.
+export function useDcent({ onAccountChosen }) {
+  const { show } = useModal();
+
+  const connectDcentWallet = useCallback(() => {
+    show({
+      modalType: 'hardwareaccountselect',
+      modalProps: {
+        type: AccountTypes.DCENT,
+        confirmAddress: address => {
+          onAccountChosen({ address }, AccountTypes.DCENT);
+        }
+      }
+    });
+  }, [show, onAccountChosen]);
+
+  return { connectDcentWallet };
+}
+
 // Helper hook to show ledger connection modals. Only for use in this app.
 export function useLedger({ onAccountChosen }) {
   const { show } = useModal();
