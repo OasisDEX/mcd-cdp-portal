@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { Link, useCurrentRoute } from 'react-navi';
 
 import MarketingLayout from 'layouts/MarketingLayout';
-import SEO from 'components/SEO';
 import {
   Questions,
   buildQuestionsFromLangObj,
   FullWidth,
   FadeIn,
-  FilledButton
+  FilledButton,
+  PageHead
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -509,7 +509,11 @@ function Landing() {
 
   return (
     <MarketingLayout>
-      <SEO title="Oasis" />
+      <PageHead
+        title={lang.landing_page.meta.title}
+        description={lang.landing_page.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis-app.png"
+      />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
           <Text.h1>{lang.landing_page.headline}</Text.h1>

@@ -16,7 +16,8 @@ import {
   Parallaxed,
   QuotesFadeIn,
   StyledPageContentLayout,
-  SaveCalculator
+  SaveCalculator,
+  PageHead
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -105,6 +106,11 @@ function SaveOverview() {
   }, [account, navigation, network]);
   return (
     <StyledPageContentLayout>
+      <PageHead
+        title={lang.save_landing.meta.title}
+        description={lang.save_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Save.png"
+      />
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />

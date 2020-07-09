@@ -13,7 +13,8 @@ import {
   FilledButton,
   QuotesFadeIn,
   GradientBox,
-  StyledPageContentLayout
+  StyledPageContentLayout,
+  PageHead
 } from '../components/Marketing';
 import { Box, Text } from '@makerdao/ui-components-core';
 import useLanguage from 'hooks/useLanguage';
@@ -102,6 +103,11 @@ function TradeLanding() {
 
   return (
     <StyledPageContentLayout enableNotifications={false}>
+      <PageHead
+        title={lang.trade_landing.meta.title}
+        description={lang.trade_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Trade.png"
+      />
       <FixedHeaderTrigger cta={ctaButton}>
         <StyledConnectHero>
           <HeroBackground />

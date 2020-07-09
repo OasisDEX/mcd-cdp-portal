@@ -87,12 +87,12 @@ const marketingLayoutView = () => (
 );
 
 export default mount({
-  '/': route(() => ({ title: 'Landing', view: <Landing /> })),
+  '/': withView(() => <Landing />),
 
   [`/${Routes.BORROW}`]: compose(
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Borrow', view: <Borrow /> }))
+    withView(() => <Borrow />)
   ),
 
   [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
@@ -119,13 +119,13 @@ export default mount({
   [`/${Routes.BORROW}/btc`]: compose(
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Borrow', view: <BorrowWBTCLanding /> }))
+    withView(() => <BorrowWBTCLanding />)
   ),
 
   [`/${Routes.SAVE}`]: compose(
     withView(dappProvidersView),
     withView(marketingLayoutView),
-    route(() => ({ title: 'Save', view: <SaveOverview /> }))
+    withView(() => <SaveOverview />)
   ),
 
   [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
@@ -140,7 +140,7 @@ export default mount({
 
   [`/${Routes.TRADE}`]: compose(
     withView(marketingLayoutView),
-    route(() => ({ title: 'Trade', view: <TradeLanding /> }))
+    withView(() => <TradeLanding />)
   ),
 
   [`/${Routes.PRIVACY}`]: route(() => ({
