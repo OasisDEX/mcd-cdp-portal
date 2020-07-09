@@ -31,6 +31,8 @@ import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
 import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
 import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
 import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
+import { ReactComponent as KncIcon } from '../images/oasis-tokens/knc.svg';
+import { ReactComponent as CompIcon } from '../images/oasis-tokens/comp.svg';
 
 const Content = ({ children }) => (
   <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
@@ -238,8 +240,15 @@ const SupportedTokens = (() => {
     },
     {
       name: 'WBTC',
-      icon: WbtcIcon,
-      onlyOnTrade: false
+      icon: WbtcIcon
+    },
+    {
+      name: '0x',
+      icon: ZrxIcon
+    },
+    {
+      name: 'KNC',
+      icon: KncIcon
     },
     {
       name: 'Augur',
@@ -247,8 +256,8 @@ const SupportedTokens = (() => {
       onlyOnTrade: true
     },
     {
-      name: '0x',
-      icon: ZrxIcon,
+      name: 'COMP',
+      icon: CompIcon,
       onlyOnTrade: true
     },
     {
