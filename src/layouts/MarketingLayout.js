@@ -82,6 +82,7 @@ const MainNav = ({ onLinkClicked, ...props }) => {
       >
         {lang.navbar.save}
       </Link>
+      <Link href="https://blog.oasis.app/">{lang.navbar.blog}</Link>
     </MainNavStyle>
   );
 };
