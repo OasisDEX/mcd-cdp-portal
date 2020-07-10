@@ -426,7 +426,7 @@ const BorrowCalculator = props => {
           </CapsText>
           <Box position="relative">
             <Position position="absolute" bottom="37px" right="0">
-              <CapsText textAlign="right">
+              <CapsText textAlign="right" data-testid="amount-chosen">
                 {collateralAmounts[selectedSymbol]}
                 <span style={{ marginLeft: '3px' }}>
                   {selectedGem.symbol.split('-')[0]}
