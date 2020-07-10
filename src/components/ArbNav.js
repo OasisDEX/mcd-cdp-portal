@@ -3,11 +3,11 @@ import { Link, useCurrentRoute } from 'react-navi';
 import styled from 'styled-components';
 import { Flex, Text } from '@makerdao/ui-components-core';
 
-import { ReactComponent as SaveIcon } from 'images/active-save-icon.svg';
+import { ReactComponent as ArbIcon } from 'images/arbitrage.svg';
 import { Routes } from '../utils/constants';
 import useLanguage from 'hooks/useLanguage';
 
-const StyledSaveIcon = styled(SaveIcon)`
+const StyledArbIcon = styled(ArbIcon)`
   path {
     stroke: ${props => props.textcolor};
     fill: ${props => props.textcolor};
@@ -42,7 +42,7 @@ const ArbNav = ({ account, ...props }) => {
         py="s"
         {...props}
       >
-        <StyledSaveIcon
+        <StyledArbIcon
           textcolor={textColor}
           selected={selected}
           connected={account}

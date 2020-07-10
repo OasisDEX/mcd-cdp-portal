@@ -571,7 +571,8 @@ export default {
     withdrawing_gem: 'Withdrawing {0}',
     depositing_gem: 'Depositing {0}',
     claiming_collateral: 'Claiming collateral',
-    send: 'Sending {0} to {1}'
+    send: 'Sending {0} to {1}',
+    exchange: 'Exchanging {0} for {1}'
   },
   transactions_past_tense: {
     unlocking_token: 'Unlocked {0}',
@@ -582,7 +583,8 @@ export default {
     withdrawing_gem: 'Withdrew {0}',
     depositing_gem: 'Deposited {0}',
     claiming_collateral: 'Claimed collateral',
-    send: 'Sent {0} to {1}'
+    send: 'Sent {0} to {1}',
+    exchange: 'Exchanged {0} for {1}'
   },
   transaction_manager: {
     transaction_singular_capitalised: 'Transaction',
@@ -682,14 +684,16 @@ export default {
   arb: {
     get_started_title: 'Dai trading at ~ {0} USDC',
     no_arb: "This address either doesn't exist or has no ARB account history",
-    title: 'Swap stablecoins',
-    swap: 'Swap',
+    title: 'Arbitrage Your Dai',
+    swap: 'Exchange',
     swapping: 'swapping',
     from: 'From',
     to: 'To',
     insufficient_balance: 'Not enough balance. Please enter {0} {1} or less',
     approve: 'Approve {0}',
     swapping_from_to: '{0} {1} for {2} {3}',
-    fee_to_swap: 'fee to swap'
+    fee_to_swap: 'fee to swap',
+    system_info: 'PSM System Info',
+    available: 'Available'
   }
 };

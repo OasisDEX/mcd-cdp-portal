@@ -7,7 +7,7 @@ import { useCurrentRoute } from 'react-navi';
 import { Routes } from 'utils/constants';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
-
+import SidebarArbitrage from 'components/SidebarArbitrage';
 const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
   const prices = watch.collateralTypesPrices(cdpTypesList);
@@ -17,9 +17,12 @@ const SidebarGlobalPanel = () => {
   const annualDaiSavingsRate = watch.annualDaiSavingsRate();
   const systemCollateralization = watch.systemCollateralization(cdpTypesList);
 
+  const psmTypesInfo = watch.psmTypesInfo();
+
   const { url } = useCurrentRoute();
   const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
   const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);
+  const routeIsArbitrage = url.pathname.startsWith(`/${Routes.ARBITRAGE}`);
 
   return useMemo(() => {
     return (
@@ -44,6 +47,9 @@ const SidebarGlobalPanel = () => {
               }}
             />
           )}
+          {routeIsArbitrage && psmTypesInfo && (
+            <SidebarArbitrage psmInfo={psmTypesInfo} />
+          )}
         </Grid>
       </Box>
     );
@@ -55,7 +61,9 @@ const SidebarGlobalPanel = () => {
     totalVaultsCreated,
     totalDaiLockedInDsr,
     annualDaiSavingsRate,
-    systemCollateralization
+    systemCollateralization,
+    routeIsArbitrage,
+    psmTypesInfo
   ]);
 };
 

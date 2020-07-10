@@ -50,7 +50,7 @@ export async function instantiateMaker({
 
   const mcdPluginConfig = {
     defaultCdpTypes,
-    prefetch: false,
+    prefetch: true,
     addressOverrides
   };
   const walletLinkPluginConfig = {

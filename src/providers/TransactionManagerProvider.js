@@ -93,12 +93,24 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
           `${lang[langKey].depositing_gem}${suffix}`,
           'DAI'
         );
+      if (metadata.contract.startsWith('PSM'))
+        return lang.formatString(
+          `${lang[langKey].exchange}${suffix}`,
+          metadata.from,
+          metadata.to
+        );
       else return '?';
     case 'exit':
       if (metadata.contract === 'PROXY_ACTIONS_DSR')
         return lang.formatString(
           `${lang[langKey].withdrawing_gem}${suffix}`,
           'DAI'
+        );
+      if (metadata.contract.startsWith('PSM'))
+        return lang.formatString(
+          `${lang[langKey].exchange}${suffix}`,
+          metadata.from,
+          metadata.to
         );
       else return '?';
     case 'exitAll':
