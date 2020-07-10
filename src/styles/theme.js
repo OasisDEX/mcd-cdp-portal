@@ -164,5 +164,3 @@ export function getSafetyLevels({ level, overrides = {} }) {
     {}
   );
 }
-
-console.log(theme);
