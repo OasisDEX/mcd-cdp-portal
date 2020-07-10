@@ -189,14 +189,15 @@ const WBTCNotice = ({ lang, ...props }) => {
   );
 };
 
-function Borrow() {
+// disableConnect is for testing
+function Borrow({disableConnect = false}) {
   const { account } = useMaker();
   const navigation = useNavigation();
   const { lang } = useLanguage();
 
   useEffect(() => {
     async function redirect() {
-      if (account) {
+      if (!disableConnect && account) {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
           pathname: `/${Routes.BORROW}/owner/${account.address}`,
@@ -205,7 +206,7 @@ function Borrow() {
       }
     }
     redirect();
-  }, [account, navigation]);
+  }, [account, navigation, disableConnect]);
 
   return (
     <StyledPageContentLayout>
