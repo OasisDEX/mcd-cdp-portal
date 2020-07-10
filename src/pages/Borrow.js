@@ -21,7 +21,8 @@ import {
   QuotesFadeIn,
   SeparatorDot,
   BorrowCalculator,
-  StyledPageContentLayout
+  StyledPageContentLayout,
+  PageHead
 } from 'components/Marketing';
 
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
@@ -208,6 +209,11 @@ function Borrow() {
 
   return (
     <StyledPageContentLayout>
+      <PageHead
+        title={lang.borrow_landing.meta.title}
+        description={lang.borrow_landing.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
+      />
       <FixedHeaderTrigger>
         <ConnectHero>
           <HeroBackground />

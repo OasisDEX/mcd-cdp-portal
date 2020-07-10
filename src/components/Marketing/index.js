@@ -1,3 +1,6 @@
+import { Box } from '@makerdao/ui-components-core';
+import { marketingTheme } from 'styles/theme';
+
 import FullWidth from './FullWidth';
 import Questions, {
   buildQuestionsFromLangObj,
@@ -15,9 +18,9 @@ import Parallaxed from './Parallaxed';
 import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
 import { BorrowCalculator, SaveCalculator } from './Calculators';
-import { Box } from '@makerdao/ui-components-core';
+import PageHead from './PageHead';
+
 import PageContentLayout from 'layouts/PageContentLayout';
-import { marketingTheme } from 'styles/theme';
 
 const ThickUnderline = styled.div`
   background: none;
@@ -69,5 +72,6 @@ export {
   Hamburger,
   BorrowCalculator,
   SaveCalculator,
-  StyledPageContentLayout
+  StyledPageContentLayout,
+  PageHead
 };

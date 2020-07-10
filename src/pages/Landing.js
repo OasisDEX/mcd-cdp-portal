@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { Link, useCurrentRoute } from 'react-navi';
 
 import MarketingLayout from 'layouts/MarketingLayout';
-import SEO from 'components/SEO';
 import {
   Questions,
   buildQuestionsFromLangObj,
   FullWidth,
   FadeIn,
-  FilledButton
+  FilledButton,
+  PageHead
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -31,6 +31,8 @@ import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
 import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
 import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
 import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
+import { ReactComponent as KncIcon } from '../images/oasis-tokens/knc.svg';
+import { ReactComponent as CompIcon } from '../images/oasis-tokens/comp.svg';
 
 const Content = ({ children }) => (
   <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
@@ -238,8 +240,15 @@ const SupportedTokens = (() => {
     },
     {
       name: 'WBTC',
-      icon: WbtcIcon,
-      onlyOnTrade: false
+      icon: WbtcIcon
+    },
+    {
+      name: '0x',
+      icon: ZrxIcon
+    },
+    {
+      name: 'KNC',
+      icon: KncIcon
     },
     {
       name: 'Augur',
@@ -247,8 +256,8 @@ const SupportedTokens = (() => {
       onlyOnTrade: true
     },
     {
-      name: '0x',
-      icon: ZrxIcon,
+      name: 'COMP',
+      icon: CompIcon,
       onlyOnTrade: true
     },
     {
@@ -509,7 +518,11 @@ function Landing() {
 
   return (
     <MarketingLayout>
-      <SEO title="Oasis" />
+      <PageHead
+        title={lang.landing_page.meta.title}
+        description={lang.landing_page.meta.description}
+        imgUrl="https://oasis.app/meta/Oasis-app.png"
+      />
       <Content>
         <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
           <Text.h1>{lang.landing_page.headline}</Text.h1>
