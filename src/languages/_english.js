@@ -694,6 +694,10 @@ export default {
     swapping_from_to: '{0} {1} for {2} {3}',
     fee_to_swap: 'fee to swap',
     system_info: 'PSM System Info',
-    available: 'Available'
+    available: 'Available',
+    available_join_validation:
+      'There is not enough Dai available to make this exchange, you can only exchange a maximum of {0} or less',
+    available_exit_validation:
+      'There is not enough {0} available to make this exchange, you can only exchange a maximum of {1} or less'
   }
 };

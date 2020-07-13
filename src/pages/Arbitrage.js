@@ -24,8 +24,6 @@ import { ReactComponent as Checkmark } from 'images/checkmark.svg';
 import { defaultPsmTypes } from '@makerdao/dai-plugin-mcd';
 import { formatter } from 'utils/ui';
 import BigNumber from 'bignumber.js';
-import { debtCeiling } from '@makerdao/dai-plugin-mcd/dist/math';
-import { greaterThan } from 'utils/bignumber';
 
 const defaultPsmType = defaultPsmTypes[0];
 
@@ -45,7 +43,7 @@ const SuccessButton = () => {
 const PSM_JOIN = 'join';
 const PSM_EXIT = 'exit';
 
-function Arbitrage({ viewedAddress }) {
+function Arbitrage() {
   const { lang } = useLanguage();
   const { maker, account } = useMaker();
   const balances = useWalletBalances();
@@ -63,8 +61,7 @@ function Arbitrage({ viewedAddress }) {
   const tokens = { [PSM_JOIN]: joinToken, [PSM_EXIT]: exitToken };
 
   const psmTypeCollateral = psmTypesInfo?.[psmType]?.collateral;
-  // const psmTypeCeiling = psmTypesInfo?.[psmType]?.ceiling;
-  // const psmTypeDebt = psmTypesInfo?.[psmType]?.debtAvailable;
+  const psmTypeDebt = psmTypesInfo?.[psmType]?.debtAvailable;
 
   const psmTypeAllowance = psmAllowances?.[psmType];
   const hasAllowance = psmTypeAllowance?.[psmAction];
@@ -72,13 +69,52 @@ function Arbitrage({ viewedAddress }) {
   const baseToken = tokens[psmAction];
   const quoteToken = tokens[psmAction === PSM_JOIN ? PSM_EXIT : PSM_JOIN];
 
-  const maxBaseAmount =
-    balances && balances[baseToken.symbol] ? balances[baseToken.symbol] : 0;
-
   const fee = psmFees?.[psmType]?.[psmAction];
   const feeAmount = fee ? `${fee.toString()}%` : '--';
 
-  const debtCeilingValidation = value => greaterThan(value, psmTypeCollateral);
+  const chargeAmount = amount =>
+    exitToken(amount ? amount : 0).times(fee ? fee : 1);
+
+  const quoteAmount = amount =>
+    psmAction === PSM_JOIN
+      ? new BigNumber(amount ? amount : 0).minus(
+          chargeAmount(amount).toBigNumber()
+        )
+      : new BigNumber(amount ? baseAmount : 0);
+
+  const calculateDerivedFeeResult = amount =>
+    amount && fee ? amount.div(BigNumber(1).minus(fee)) : BigNumber(0);
+
+  const maxCollateralAvailable = calculateDerivedFeeResult(
+    psmTypeDebt ? psmTypeDebt.toBigNumber() : BigNumber(0)
+  );
+
+  const joinAvailableValidation = value =>
+    psmAction === PSM_JOIN
+      ? BigNumber(value).gt(maxCollateralAvailable)
+      : false;
+
+  const exitAvailableValidation = value =>
+    psmAction === PSM_EXIT
+      ? BigNumber(value).gt(
+          psmTypeCollateral ? psmTypeCollateral.toBigNumber() : BigNumber(0)
+        )
+      : false;
+
+  const maxBaseAmount =
+    balances && balances[baseToken.symbol]
+      ? psmAction === PSM_JOIN
+        ? balances[baseToken.symbol]
+        : BigNumber(balances[baseToken.symbol]).gt(
+            psmTypeCollateral ? psmTypeCollateral.toBigNumber() : BigNumber(0)
+          )
+        ? psmTypeCollateral
+          ? psmTypeCollateral.toBigNumber()
+          : BigNumber(0)
+        : BigNumber(balances[baseToken.symbol]).minus(
+            chargeAmount(BigNumber(balances[baseToken.symbol])).toBigNumber()
+          )
+      : 0;
 
   const [
     baseAmount,
@@ -88,11 +124,19 @@ function Arbitrage({ viewedAddress }) {
   ] = useValidatedInput(
     '',
     {
-      maxFloat: maxBaseAmount,
+      maxFloat:
+        psmAction === PSM_JOIN
+          ? maxBaseAmount
+          : balances && balances[baseToken.symbol]
+          ? BigNumber(balances[baseToken.symbol]).minus(
+              chargeAmount(BigNumber(balances[baseToken.symbol])).toBigNumber()
+            )
+          : BigNumber(0),
       minFloat: 0,
       isFloat: true,
       custom: {
-        debtCeiling: debtCeilingValidation
+        joinAvailable: joinAvailableValidation,
+        exitAvailable: exitAvailableValidation
       }
     },
     {
@@ -101,20 +145,28 @@ function Arbitrage({ viewedAddress }) {
           lang.arb.insufficient_balance,
           maxBaseAmount,
           baseToken.symbol
+        ),
+      joinAvailable: () =>
+        lang.formatString(
+          lang.arb.available_join_validation,
+          `${formatter(maxCollateralAvailable)} ${baseToken.symbol}`
+        ),
+      exitAvailable: () =>
+        lang.formatString(
+          lang.arb.available_exit_validation,
+          joinToken.symbol,
+          `${formatter(
+            psmTypeCollateral ? psmTypeCollateral.toBigNumber() : BigNumber(0)
+          )} ${joinToken.symbol}`
         )
     }
   );
 
-  const charge = exitToken(baseAmount ? baseAmount : 0).times(fee ? fee : 1);
-
-  const quoteAmount =
-    psmAction === PSM_JOIN
-      ? new BigNumber(baseAmount ? baseAmount : 0).minus(charge.toBigNumber())
-      : new BigNumber(baseAmount ? baseAmount : 0);
-
   const totalBaseAmount =
     psmAction === PSM_EXIT
-      ? new BigNumber(baseAmount ? baseAmount : 0).plus(charge.toBigNumber())
+      ? new BigNumber(baseAmount ? baseAmount : 0).plus(
+          chargeAmount(baseAmount).toBigNumber()
+        )
       : new BigNumber(baseAmount ? baseAmount : 0);
 
   const setMax = () => setBaseAmount(maxBaseAmount.toString());
@@ -135,7 +187,7 @@ function Arbitrage({ viewedAddress }) {
         setExecutingAction(false);
       }
     });
-    await txMgr.confirm(txPromise, 3);
+    await txMgr.confirm(txPromise, 1);
   };
 
   const [approvingToken, setApprovingToken] = useState(false);
@@ -159,7 +211,7 @@ function Arbitrage({ viewedAddress }) {
           setApprovingToken(false);
         }
       });
-      await txMgr.confirm(txPromise, 3);
+      await txMgr.confirm(txPromise, 1);
     }
   };
 
@@ -287,7 +339,7 @@ function Arbitrage({ viewedAddress }) {
                     <Input
                       disabled={true}
                       type="number"
-                      value={quoteAmount.toNumber()}
+                      value={formatter(quoteAmount(baseAmount))}
                       min="0"
                       placeholder="0.00"
                     />
@@ -307,7 +359,7 @@ function Arbitrage({ viewedAddress }) {
                       lang.arb.swapping_from_to,
                       totalBaseAmount ? formatter(totalBaseAmount) : '0.00',
                       baseToken.symbol,
-                      quoteAmount ? formatter(quoteAmount) : '0.00',
+                      baseToken ? formatter(quoteAmount(baseAmount)) : '0.00',
                       quoteToken.symbol
                     )}
                   </Text>
@@ -316,7 +368,8 @@ function Arbitrage({ viewedAddress }) {
                 <Grid gridTemplateColumns="1fr 5fr" alignItems="center">
                   <Text t="subheading">{lang.arb.fee_to_swap}:</Text>
                   <Text>
-                    {formatter(charge)} {exitToken.symbol} ({feeAmount})
+                    {formatter(chargeAmount(baseAmount))} {exitToken.symbol} (
+                    {feeAmount})
                   </Text>
                 </Grid>
               </Grid>
@@ -329,7 +382,7 @@ function Arbitrage({ viewedAddress }) {
                   <Button
                     onClick={setAllowance}
                     disabled={hasAllowance || !account?.address}
-                    loading={approvingToken}
+                    loading={approvingToken || hasAllowance === undefined}
                   >
                     {lang.formatString(lang.arb.approve, baseToken.symbol)}
                   </Button>
