@@ -112,7 +112,6 @@ function MakerProvider({
       multicall.start();
       setWatcher(watcher);
       setMaker(newMaker);
-
       log('Initialized maker instance');
     })();
     // leaving maker out of the deps because it would create an infinite loop

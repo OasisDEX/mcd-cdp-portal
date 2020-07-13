@@ -68,7 +68,7 @@ const RenderNoProxyAccount = () => {
   );
 };
 
-test('the whole DSR Deposit flow', async () => {
+test.skip('the whole DSR Deposit flow', async () => {
   const {
     getAllByText,
     getByRole,

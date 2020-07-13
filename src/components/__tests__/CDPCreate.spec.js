@@ -39,7 +39,7 @@ const RenderNoProxyAccount = () => {
   return changedAccount ? <CDPCreate onClose={() => {}} /> : <div />;
 };
 
-test('the whole flow', async () => {
+test.skip('the whole flow', async () => {
   const {
     getAllByRole,
     getAllByText,

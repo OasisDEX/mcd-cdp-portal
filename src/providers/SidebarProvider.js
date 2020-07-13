@@ -32,7 +32,6 @@ function SidebarProvider({ children }) {
   };
 
   const current = { component: sidebars[type], props: { ...props, reset } };
-
   return (
     <SidebarStateContext.Provider value={{ show, reset, current }}>
       {children}

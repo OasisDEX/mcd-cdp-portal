@@ -2341,10 +2341,10 @@
     web3 "1.2.1"
     web3-provider-engine makerdao/provider-engine#kovan-fix-dist
 
-"@makerdao/dai@^0.31.4":
-  version "0.31.4"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.31.4.tgz#8cca45fe35599b7e109b37b70719535285d1075e"
-  integrity sha512-jns4cU+b1Lz0QDrz5+TD9+kK2cc1841lRGY3DeBSVVUahtEBGXzVDgh7ThJgygd1cd0P2Tw94ycD8n3To94akg==
+"@makerdao/dai@^0.31.7":
+  version "0.31.7"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai/-/dai-0.31.7.tgz#64b8b00bf6e48f37d7293ed6026290adefad4acf"
+  integrity sha512-ZWxfxIqM6PS1rZVs6FdyQZAem0ZAPNZTmPpic6OdzBiglpuqtaEBUHrbbH6QqfWkEdG8CJfbpp4y0F5gXfPLqQ==
   dependencies:
     "@babel/cli" "^7.2.3"
     "@babel/core" "^7.4.5"
