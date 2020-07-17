@@ -11,6 +11,8 @@ import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
+import { ReactComponent as KncIcon } from 'images/oasis-tokens/knc.svg';
+import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
@@ -323,12 +325,10 @@ const BorrowCalculator = props => {
   const { network } = useMaker();
   const types = ilks.filter(ilk => ilk.networks.includes(network));
 
-  const cdpTypesList = types
-    .reduce((acc, type) => {
-      if (!acc.includes(type.key)) acc.push(type.key);
-      return acc;
-    }, [])
-    .filter(type => type !== 'ZRX-A' && type !== 'KNC-A');
+  const cdpTypesList = types.reduce((acc, type) => {
+    if (!acc.includes(type.key)) acc.push(type.key);
+    return acc;
+  }, []);
 
   const prices = watch.collateralTypesPrices(
     cdpTypesList.length ? cdpTypesList : []
@@ -369,6 +369,20 @@ const BorrowCalculator = props => {
       colRatio: 120,
       amountRange: [200, 70000],
       amountStart: 5000
+    },
+    'ZRX-A': {
+      text: 'ZRX',
+      Icon: ZrxIcon,
+      colRatio: 200,
+      amountRange: [200, 70000],
+      amountStart: 100
+    },
+    'KNC-A': {
+      text: 'KNC',
+      Icon: KncIcon,
+      colRatio: 200,
+      amountRange: [200, 70000],
+      amountStart: 100
     }
   };
   const gems = cdpTypesList
