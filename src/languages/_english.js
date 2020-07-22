@@ -311,7 +311,8 @@ export default {
     borrow: 'Borrow',
     trade: 'Trade',
     privacy: 'Privacy',
-    terms: 'Terms'
+    terms: 'Terms',
+    blog: 'Blog'
   },
   sidebar: {
     wallet_balances: 'Wallet Balances',
