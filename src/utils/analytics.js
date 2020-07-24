@@ -16,7 +16,7 @@ const config = {
     },
     mixpanel: {
       token: '4ff3f85397ffc3c6b6f0d4120a4ea40a',
-      config: { debug: true, ip: false }
+      config: { debug: true, ip: false, api_host: "https://mpp.makerfoundation.com" }
     },
     gaTrackingId: 'UA-128164213-4',
     fathom: {
@@ -26,7 +26,7 @@ const config = {
   prod: {
     mixpanel: {
       token: 'a030d8845e34bfdc11be3d9f3054ad67',
-      config: { ip: false }
+      config: { ip: false, api_host: "https://mpp.makerfoundation.com" }
     },
     gaTrackingId: 'UA-128164213-3',
     userSnap: {
