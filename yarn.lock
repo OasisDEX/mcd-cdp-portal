@@ -2278,10 +2278,10 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^1.5.14-rc.1":
-  version "1.5.14-rc.1"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.5.14-rc.1.tgz#69336fcf7523a25dc9a2c240466907a33f25cede"
-  integrity sha512-qkImorJ6tQcsDsqGR59ZsCuq8KdmmHPnKcFPxpp6tmRTgDgl7GUyYllfAL2704E6uHQ7q88jacg8IeUS1dTlWg==
+"@makerdao/dai-plugin-mcd@^1.5.14":
+  version "1.5.14"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.5.14.tgz#f08c23d80c743ca7d84789fe96b13fbac06f5751"
+  integrity sha512-k7JaRLr8Uq59POYxaZbvsH6rSxJ4tVI1q0NDf2f9+yJr+NEd4crlEoniXevA0d6mljcx7Iu/lq9buXCgSwM7hg==
   dependencies:
     "@makerdao/currency" "^0.9.9"
     "@makerdao/services-core" "^0.9.9"
@@ -8204,7 +8204,7 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-"ganache-cli@github:makerdao/ganache-cli#fix/gas-est-crash":
+ganache-cli@makerdao/ganache-cli#fix/gas-est-crash:
   version "6.4.3-beta.0"
   resolved "https://codeload.github.com/makerdao/ganache-cli/tar.gz/3e512b61da2479042627e6155231dcb038110650"
   dependencies:

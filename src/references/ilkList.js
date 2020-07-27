@@ -83,6 +83,6 @@ export default [
     key: 'MANA-A',
     gem: 'MANA',
     currency: MANA,
-    networks: ['kovan']
+    networks: ['mainnet', 'kovan']
   }
 ];
