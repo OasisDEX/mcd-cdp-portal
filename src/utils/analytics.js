@@ -56,7 +56,8 @@ export const mixpanelInit = () => {
 
 export const mixpanelIdentify = (id, walletType) => {
   if (typeof mixpanel.config === 'undefined') return;
-  mixpanel.identify(id, { walletType });
+  mixpanel.people.set({ walletType });
+  mixpanel.identify(id);
 };
 
 export const userSnapInit = () => {
