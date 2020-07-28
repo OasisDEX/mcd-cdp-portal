@@ -71,7 +71,7 @@ const CDPCreateSetAllowance = ({ selectedIlk, isFirstVault, dispatch }) => {
         }}
         onBack={() => dispatch({ type: 'decrement-step' })}
         canGoBack={!proxyLoading}
-        canProgress={hasProxy && hasAllowance}
+        canProgress={(hasProxy && hasAllowance) || true}
       />
     </Box>
   );
