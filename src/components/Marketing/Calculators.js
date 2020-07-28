@@ -283,8 +283,6 @@ const SmartStepSlider = ({
   min,
   max,
   onChange,
-  value: ignoredValue,
-  step: ignoredStep,
   secondDigitIncrease = 1,
   ...props
 }) => {
@@ -411,7 +409,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
 
   useEffect(() => {
     setCollateralAmount(collateralAmounts[selectedSymbol]);
-  }, [selectedSymbol, collateralAmounts]);
+  }, [selectedSymbol]);
   return (
     <CalculatorStyle px={{ s: '22px', m: '0' }} {...props}>
       <BorrowCalcContent>
