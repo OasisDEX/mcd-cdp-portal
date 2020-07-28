@@ -9,6 +9,7 @@ import { prettifyCurrency } from 'utils/ui';
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
+import { ReactComponent as ManaIcon } from 'images/oasis-tokens/mana.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as KncIcon } from 'images/oasis-tokens/knc.svg';
@@ -348,6 +349,13 @@ const BorrowCalculator = props => {
       colRatio: 200,
       amountRange: [200, 70000],
       amountStart: 600
+    },
+    'MANA-A': {
+      text: 'MANA',
+      Icon: ManaIcon,
+      colRatio: 240,
+      amountRange: [1000, 350000],
+      amountStart: 3000
     },
     'USDC-A': {
       text: 'USDC',
