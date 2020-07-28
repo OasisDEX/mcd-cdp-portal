@@ -409,6 +409,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
 
   useEffect(() => {
     setCollateralAmount(collateralAmounts[selectedSymbol]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSymbol]);
   return (
     <CalculatorStyle px={{ s: '22px', m: '0' }} {...props}>
