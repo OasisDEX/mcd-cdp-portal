@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
 import styled from 'styled-components';
-import ilks from 'references/ilkList';
 
 import { prettifyCurrency } from 'utils/ui';
 
@@ -20,7 +19,6 @@ import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
-import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
 const Dropdown = (() => {
@@ -322,81 +320,76 @@ const SmartStepSlider = ({
   );
 };
 
-const BorrowCalculator = props => {
-  const { network } = useMaker();
-  const types = ilks.filter(ilk => ilk.networks.includes(network));
+const cdpTypesMetaData = {
+  'ETH-A': {
+    text: 'Ethereum',
+    Icon: EthIcon,
+    colRatio: 200,
+    amountRange: [1, 350],
+    amountStart: 25
+  },
+  'BAT-A': {
+    text: 'BAT',
+    Icon: BatIcon,
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 600
+  },
+  'MANA-A': {
+    text: 'MANA',
+    Icon: ManaIcon,
+    colRatio: 240,
+    amountRange: [1000, 350000],
+    amountStart: 3000
+  },
+  'USDC-A': {
+    text: 'USDC',
+    Icon: UsdcIcon,
+    colRatio: 120,
+    amountRange: [200, 70000],
+    amountStart: 5000
+  },
+  'WBTC-A': {
+    text: 'WBTC',
+    Icon: WbtcIcon,
+    colRatio: 200,
+    amountRange: [0.1, 35],
+    amountStart: 0.5
+  },
+  'TUSD-A': {
+    text: 'TUSD',
+    Icon: TusdIcon,
+    colRatio: 120,
+    amountRange: [200, 70000],
+    amountStart: 5000
+  },
+  'ZRX-A': {
+    text: 'ZRX',
+    Icon: ZrxIcon,
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'KNC-A': {
+    text: 'KNC',
+    Icon: KncIcon,
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  }
+};
 
-  const cdpTypesList = types.reduce((acc, type) => {
-    if (!acc.includes(type.key)) acc.push(type.key);
-    return acc;
-  }, []);
+const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
+  const { lang } = useLanguage();
+  const [selectedSymbol, setSelectedSymbol] = useState('ETH-A');
 
-  const prices = watch.collateralTypesPrices(
-    cdpTypesList.length ? cdpTypesList : []
-  );
+  const interfaceLocale = lang.getInterfaceLanguage();
 
-  const cdpTypesMetaData = {
-    'ETH-A': {
-      text: 'Ethereum',
-      Icon: EthIcon,
-      colRatio: 200,
-      amountRange: [1, 350],
-      amountStart: 25
-    },
-    'BAT-A': {
-      text: 'BAT',
-      Icon: BatIcon,
-      colRatio: 200,
-      amountRange: [200, 70000],
-      amountStart: 600
-    },
-    'MANA-A': {
-      text: 'MANA',
-      Icon: ManaIcon,
-      colRatio: 240,
-      amountRange: [1000, 350000],
-      amountStart: 3000
-    },
-    'USDC-A': {
-      text: 'USDC',
-      Icon: UsdcIcon,
-      colRatio: 120,
-      amountRange: [200, 70000],
-      amountStart: 5000
-    },
-    'WBTC-A': {
-      text: 'WBTC',
-      Icon: WbtcIcon,
-      colRatio: 200,
-      amountRange: [0.1, 35],
-      amountStart: 0.5
-    },
-    'TUSD-A': {
-      text: 'TUSD',
-      Icon: TusdIcon,
-      colRatio: 120,
-      amountRange: [200, 70000],
-      amountStart: 5000
-    },
-    'ZRX-A': {
-      text: 'ZRX',
-      Icon: ZrxIcon,
-      colRatio: 200,
-      amountRange: [200, 70000],
-      amountStart: 100
-    },
-    'KNC-A': {
-      text: 'KNC',
-      Icon: KncIcon,
-      colRatio: 200,
-      amountRange: [200, 70000],
-      amountStart: 100
-    }
-  };
   const gems = cdpTypesList
+    .map(({ symbol }) => symbol)
     .map((cdpTypeName, index) => ({
       name: cdpTypeName,
-      price: prices && prices[index].toBigNumber()
+      price: prices[index].toBigNumber()
     }))
     .filter(cdpType => cdpTypesMetaData[cdpType.name])
     .map(cdpType => ({
@@ -405,17 +398,20 @@ const BorrowCalculator = props => {
       symbol: cdpType.name
     }));
 
-  const [selectedSymbol, setSelectedSymbol] = useState(gems[0].symbol);
   const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
-  const [collateralAmounts, setCollateralAmounts] = useState(
-    gems.reduce((acc, gem) => {
-      acc[gem.symbol] = gem.amountStart;
-      return acc;
-    }, {})
-  );
-  const { lang } = useLanguage();
-  const interfaceLocale = lang.getInterfaceLanguage();
 
+  const collateralAmounts = gems.reduce((acc, gem) => {
+    acc[gem.symbol] = gem.amountStart;
+    return acc;
+  }, {});
+
+  const [collateralAmount, setCollateralAmount] = useState(
+    collateralAmounts[selectedSymbol]
+  );
+
+  useEffect(() => {
+    setCollateralAmount(collateralAmounts[selectedSymbol]);
+  }, [selectedSymbol, collateralAmounts]);
   return (
     <CalculatorStyle px={{ s: '22px', m: '0' }} {...props}>
       <BorrowCalcContent>
@@ -449,23 +445,18 @@ const BorrowCalculator = props => {
           <Box position="relative">
             <Position position="absolute" bottom="37px" right="0">
               <CapsText textAlign="right" data-testid="amount-chosen">
-                {collateralAmounts[selectedSymbol]}
+                {collateralAmount}
                 <span style={{ marginLeft: '3px' }}>
                   {selectedGem.symbol.split('-')[0]}
                 </span>
               </CapsText>
             </Position>
             <Slider
-              value={collateralAmounts[selectedSymbol]}
+              value={collateralAmount}
               min={selectedGem.amountRange[0]}
               max={selectedGem.amountRange[1]}
               step={selectedGem.sliderStep || selectedGem.amountRange[0]}
-              onChange={value =>
-                setCollateralAmounts({
-                  ...collateralAmounts,
-                  [selectedSymbol]: value
-                })
-              }
+              onChange={setCollateralAmount}
             />
           </Box>
         </BorrowCalcTopGrid>
@@ -481,7 +472,7 @@ const BorrowCalculator = props => {
                 >
                   {getDaiAvailable(
                     interfaceLocale,
-                    collateralAmounts[selectedSymbol],
+                    collateralAmount,
                     selectedGem.price,
                     selectedGem.colRatio
                   )}

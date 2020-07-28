@@ -26,7 +26,6 @@ import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
 import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
 import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
 import { ReactComponent as ManaIcon } from '../images/oasis-tokens/mana.svg';
-import { ReactComponent as RepIcon } from '../images/oasis-tokens/rep.svg';
 import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
 import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
 import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
