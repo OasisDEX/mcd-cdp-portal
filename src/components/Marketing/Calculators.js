@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import ReactSlider from 'react-slider';
 import styled from 'styled-components';
+import ilks from 'references/ilkList';
 
 import { prettifyCurrency } from 'utils/ui';
 
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
 import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
-import { ReactComponent as ManaIcon } from 'images/oasis-tokens/mana.svg';
 import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as KncIcon } from 'images/oasis-tokens/knc.svg';
@@ -19,6 +19,7 @@ import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
 import useLanguage from 'hooks/useLanguage';
 import useMaker from 'hooks/useMaker';
+import { watch } from 'hooks/useObservable';
 import BigNumber from 'bignumber.js';
 
 const Dropdown = (() => {
@@ -283,6 +284,8 @@ const SmartStepSlider = ({
   min,
   max,
   onChange,
+  value: ignoredValue,
+  step: ignoredStep,
   secondDigitIncrease = 1,
   ...props
 }) => {
@@ -318,76 +321,74 @@ const SmartStepSlider = ({
   );
 };
 
-const cdpTypesMetaData = {
-  'ETH-A': {
-    text: 'Ethereum',
-    Icon: EthIcon,
-    colRatio: 200,
-    amountRange: [1, 350],
-    amountStart: 25
-  },
-  'BAT-A': {
-    text: 'BAT',
-    Icon: BatIcon,
-    colRatio: 200,
-    amountRange: [200, 70000],
-    amountStart: 600
-  },
-  'MANA-A': {
-    text: 'MANA',
-    Icon: ManaIcon,
-    colRatio: 240,
-    amountRange: [1000, 350000],
-    amountStart: 3000
-  },
-  'USDC-A': {
-    text: 'USDC',
-    Icon: UsdcIcon,
-    colRatio: 120,
-    amountRange: [200, 70000],
-    amountStart: 5000
-  },
-  'WBTC-A': {
-    text: 'WBTC',
-    Icon: WbtcIcon,
-    colRatio: 200,
-    amountRange: [0.1, 35],
-    amountStart: 0.5
-  },
-  'TUSD-A': {
-    text: 'TUSD',
-    Icon: TusdIcon,
-    colRatio: 120,
-    amountRange: [200, 70000],
-    amountStart: 5000
-  },
-  'ZRX-A': {
-    text: 'ZRX',
-    Icon: ZrxIcon,
-    colRatio: 200,
-    amountRange: [200, 70000],
-    amountStart: 100
-  },
-  'KNC-A': {
-    text: 'KNC',
-    Icon: KncIcon,
-    colRatio: 200,
-    amountRange: [200, 70000],
-    amountStart: 100
-  }
-};
+const BorrowCalculator = props => {
+  const { network } = useMaker();
+  const types = ilks.filter(ilk => ilk.networks.includes(network));
 
-const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
-  const { lang } = useLanguage();
-  const [selectedSymbol, setSelectedSymbol] = useState('ETH-A');
+  const cdpTypesList = types.reduce((acc, type) => {
+    if (!acc.includes(type.key)) acc.push(type.key);
+    return acc;
+  }, []);
 
-  const interfaceLocale = lang.getInterfaceLanguage();
+  const prices = watch.collateralTypesPrices(
+    cdpTypesList.length ? cdpTypesList : []
+  );
 
+  const cdpTypesMetaData = {
+    'ETH-A': {
+      text: 'Ethereum',
+      Icon: EthIcon,
+      colRatio: 200,
+      amountRange: [1, 350],
+      amountStart: 25
+    },
+    'BAT-A': {
+      text: 'BAT',
+      Icon: BatIcon,
+      colRatio: 200,
+      amountRange: [200, 70000],
+      amountStart: 600
+    },
+    'USDC-A': {
+      text: 'USDC',
+      Icon: UsdcIcon,
+      colRatio: 120,
+      amountRange: [200, 70000],
+      amountStart: 5000
+    },
+    'WBTC-A': {
+      text: 'WBTC',
+      Icon: WbtcIcon,
+      colRatio: 200,
+      amountRange: [0.1, 35],
+      amountStart: 0.5
+    },
+    'TUSD-A': {
+      text: 'TUSD',
+      Icon: TusdIcon,
+      colRatio: 120,
+      amountRange: [200, 70000],
+      amountStart: 5000
+    },
+    'ZRX-A': {
+      text: 'ZRX',
+      Icon: ZrxIcon,
+      colRatio: 200,
+      amountRange: [200, 70000],
+      amountStart: 100
+    },
+    'KNC-A': {
+      text: 'KNC',
+      Icon: KncIcon,
+      colRatio: 200,
+      amountRange: [200, 70000],
+      amountStart: 100
+    }
+  };
   const gems = cdpTypesList
-    .map(({ symbol }) => symbol)
     .map((cdpTypeName, index) => ({
       name: cdpTypeName,
-      price: prices[index].toBigNumber()
+      price: prices && prices[index].toBigNumber()
     }))
     .filter(cdpType => cdpTypesMetaData[cdpType.name])
     .map(cdpType => ({
@@ -396,21 +397,17 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
       symbol: cdpType.name
     }));
 
+  const [selectedSymbol, setSelectedSymbol] = useState(gems[0].symbol);
   const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
-
-  const collateralAmounts = gems.reduce((acc, gem) => {
-    acc[gem.symbol] = gem.amountStart;
-    return acc;
-  }, {});
-
-  const [collateralAmount, setCollateralAmount] = useState(
-    collateralAmounts[selectedSymbol]
+  const [collateralAmounts, setCollateralAmounts] = useState(
+    gems.reduce((acc, gem) => {
+      acc[gem.symbol] = gem.amountStart;
+      return acc;
+    }, {})
   );
+  const { lang } = useLanguage();
+  const interfaceLocale = lang.getInterfaceLanguage();
 
-  useEffect(() => {
-    setCollateralAmount(collateralAmounts[selectedSymbol]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedSymbol]);
   return (
     <CalculatorStyle px={{ s: '22px', m: '0' }} {...props}>
       <BorrowCalcContent>
@@ -444,18 +441,23 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
           <Box position="relative">
             <Position position="absolute" bottom="37px" right="0">
               <CapsText textAlign="right" data-testid="amount-chosen">
-                {collateralAmount}
+                {collateralAmounts[selectedSymbol]}
                 <span style={{ marginLeft: '3px' }}>
                   {selectedGem.symbol.split('-')[0]}
                 </span>
               </CapsText>
             </Position>
             <Slider
-              value={collateralAmount}
+              value={collateralAmounts[selectedSymbol]}
               min={selectedGem.amountRange[0]}
               max={selectedGem.amountRange[1]}
               step={selectedGem.sliderStep || selectedGem.amountRange[0]}
-              onChange={setCollateralAmount}
+              onChange={value =>
+                setCollateralAmounts({
+                  ...collateralAmounts,
+                  [selectedSymbol]: value
+                })
+              }
             />
           </Box>
         </BorrowCalcTopGrid>
@@ -471,7 +473,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                 >
                   {getDaiAvailable(
                     interfaceLocale,
-                    collateralAmount,
+                    collateralAmounts[selectedSymbol],
                     selectedGem.price,
                     selectedGem.colRatio
                   )}

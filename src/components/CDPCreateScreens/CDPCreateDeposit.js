@@ -35,17 +35,13 @@ function OpenCDPForm({
 
   const daiAvailable = calculateMaxDai(BigNumber(cdpParams.gemsToLock || '0'));
   const daiAvailableToGenerate = daiAvailable.gt(collateralDebtAvailable)
-    ? collateralDebtAvailable.lt(debtFloor)
-      ? BigNumber(0)
-      : collateralDebtAvailable
+    ? collateralDebtAvailable
     : daiAvailable;
 
   const belowDustLimit = debtFloor?.gt(BigNumber(cdpParams.daiToDraw));
-  const aboveDebtCeiling =
-    collateralDebtAvailable?.lt(BigNumber(cdpParams.daiToDraw)) &&
-    collateralDebtAvailable?.gte(debtFloor);
-
-  const negDebtAvailable = collateralDebtAvailable?.lt(debtFloor);
+  const aboveDebtCeiling = collateralDebtAvailable?.lt(
+    BigNumber(cdpParams.daiToDraw)
+  );
 
   const { hasSufficientAllowance } = useTokenAllowance(selectedIlk.gem);
   const userHasSufficientGemBalance = greaterThanOrEqual(
@@ -132,8 +128,7 @@ function OpenCDPForm({
                 lang.action_sidebar.generate_threshold,
                 formatter(collateralDebtAvailable)
               )
-            : null) ||
-          (negDebtAvailable ? lang.action_sidebar.negative_debt_avail : null)
+            : null)
         }
         value={cdpParams.daiToDraw}
         onChange={handleInputChange}
@@ -215,10 +210,6 @@ const CDPCreateDepositSidebar = ({
 
   collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
 
-  const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
-    ? BigNumber(0)
-    : collateralDebtAvailable;
-
   let liquidationPriceDisplay = formatter(
     ilkData.calculateliquidationPrice(
       currency(cdpParams.gemsToLock || '0'),
@@ -261,7 +252,7 @@ const CDPCreateDepositSidebar = ({
         ],
         [
           lang.cdp_create.max_dai_available_to_generate,
-          `${formatter(maxDaiAvailableToGenerate)} Dai`
+          `${formatter(collateralDebtAvailable)} Dai`
         ]
       ].map(([title, value]) => (
         <Grid gridRowGap="xs" key={title}>
