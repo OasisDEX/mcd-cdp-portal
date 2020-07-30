@@ -63,7 +63,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development craco start",
-    "start:https": "HTTPS=true NODE_ENV=development craco start -v",
+    "start:https": "HTTPS=true NODE_ENV=development craco start",
     "build": "craco --max_old_space_size=8192 build",
     "precommit": "lint-staged",
     "test": "yarn testchain --ci craco test --runInBand",
