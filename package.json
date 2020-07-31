@@ -26,7 +26,7 @@
     "@makerdao/ui-components-footer": "^0.1.16",
     "@makerdao/ui-components-header": "^0.1.11-alpha.6",
     "@makerdao/ui-components-onboarding": "^0.1.2",
-    "@myetherwallet/dai-plugin-mewconnect": "0.0.4",
+    "@myetherwallet/dai-plugin-mewconnect": "0.0.5",
     "@testing-library/jest-dom": "^4.1.0",
     "@walletconnect/browser": "^1.0.0-beta.36",
     "@walletconnect/qrcode-modal": "^1.0.0-beta.36",
