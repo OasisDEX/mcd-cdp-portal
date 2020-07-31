@@ -16,7 +16,11 @@ const config = {
     },
     mixpanel: {
       token: '4ff3f85397ffc3c6b6f0d4120a4ea40a',
-      config: { debug: true, ip: false }
+      config: {
+        debug: true,
+        ip: false,
+        api_host: 'https://mpp.makerfoundation.com'
+      }
     },
     gaTrackingId: 'UA-128164213-4',
     fathom: {
@@ -26,7 +30,7 @@ const config = {
   prod: {
     mixpanel: {
       token: 'a030d8845e34bfdc11be3d9f3054ad67',
-      config: { ip: false }
+      config: { ip: false, api_host: 'https://mpp.makerfoundation.com' }
     },
     gaTrackingId: 'UA-128164213-3',
     userSnap: {
@@ -45,9 +49,7 @@ const config = {
 
 export const mixpanelInit = () => {
   log(
-    `[Mixpanel] Tracking initialized for ${env} env using ${
-      config.mixpanel.token
-    }`
+    `[Mixpanel] Tracking initialized for ${env} env using ${config.mixpanel.token}`
   );
   mixpanel.init(config.mixpanel.token, config.mixpanel.config);
   mixpanel.track('Pageview');
@@ -56,8 +58,8 @@ export const mixpanelInit = () => {
 
 export const mixpanelIdentify = (id, walletType) => {
   if (typeof mixpanel.config === 'undefined') return;
-  mixpanel.identify(id);
   mixpanel.people.set({ walletType });
+  mixpanel.identify(id);
 };
 
 export const userSnapInit = () => {
@@ -69,9 +71,7 @@ export const userSnapInit = () => {
     window.Usersnap = api;
   };
 
-  const scriptUrl = `//api.usersnap.com/load/${
-    config.userSnap.token
-  }.js?onload=onUsersnapLoad`;
+  const scriptUrl = `//api.usersnap.com/load/${config.userSnap.token}.js?onload=onUsersnapLoad`;
   const script = document.createElement('script');
   script.id = 'usersnap-script';
   script.src = scriptUrl;

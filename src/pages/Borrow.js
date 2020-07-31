@@ -25,6 +25,8 @@ import {
   PageHead
 } from 'components/Marketing';
 
+import useCdpTypes from 'hooks/useCdpTypes';
+import { watch } from 'hooks/useObservable';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
@@ -190,7 +192,7 @@ const WBTCNotice = ({ lang, ...props }) => {
 };
 
 // disableConnect is for testing
-function Borrow({disableConnect = false}) {
+function Borrow({ disableConnect = false }) {
   const { account } = useMaker();
   const navigation = useNavigation();
   const { lang } = useLanguage();
@@ -207,6 +209,11 @@ function Borrow({disableConnect = false}) {
     }
     redirect();
   }, [account, navigation, disableConnect]);
+
+  const { cdpTypes: cdpTypesList } = useCdpTypes();
+  const prices = watch.collateralTypesPrices(
+    cdpTypesList?.length ? cdpTypesList.map(({ symbol }) => symbol) : []
+  );
 
   return (
     <StyledPageContentLayout>
@@ -268,7 +275,13 @@ function Borrow({disableConnect = false}) {
         <Box m="296px auto 0" maxWidth="980px">
           <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
           <Text>{lang.borrow_landing.calc_subheading}</Text>
-          <BorrowCalculator mt="40px" />
+          {prices?.length && cdpTypesList?.length ? (
+            <BorrowCalculator
+              mt="40px"
+              prices={prices}
+              cdpTypesList={cdpTypesList}
+            />
+          ) : null}
         </Box>
       </GradientBox>
       <Features

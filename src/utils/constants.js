@@ -20,7 +20,7 @@ export const AccountTypes = {
   DCENT: 'dcent',
   METAMASK: 'browser',
   WALLETLINK: 'walletlink',
-  MEWCONNECT: 'MEWconnectProtocol',
+  MEWCONNECT: 'MEWconnect',
   WALLETCONNECT: 'walletconnect'
 };
 

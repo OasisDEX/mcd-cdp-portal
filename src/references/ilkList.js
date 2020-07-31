@@ -1,4 +1,13 @@
-import { ETH, BAT, USDC, WBTC, TUSD, ZRX, KNC } from '@makerdao/dai-plugin-mcd';
+import {
+  ETH,
+  BAT,
+  USDC,
+  WBTC,
+  TUSD,
+  ZRX,
+  KNC,
+  MANA
+} from '@makerdao/dai-plugin-mcd';
 
 export default [
   {
@@ -66,6 +75,14 @@ export default [
     key: 'ZRX-A',
     gem: 'ZRX',
     currency: ZRX,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'mana-a',
+    symbol: 'MANA-A',
+    key: 'MANA-A',
+    gem: 'MANA',
+    currency: MANA,
     networks: ['mainnet', 'kovan']
   }
 ];

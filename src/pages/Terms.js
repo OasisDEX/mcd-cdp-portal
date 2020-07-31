@@ -8,7 +8,7 @@ const Privacy = () => (
   <MarketingLayout>
     <LegalTextLayout>
       <h1>Terms of Service</h1>
-      <span className="subheading">Last Revised: 18 November 2019</span>
+      <span className="subheading">Last Revised: 29 June 2020</span>
 
       <p>
         Please read these Terms of Service (this “<strong>Agreement</strong>”)

@@ -203,7 +203,8 @@ function MakerProvider({
   const disconnect = () => {
     const subprovider = maker.service('accounts').currentWallet();
     if (subprovider.isWalletLink) disconnectWalletLink(subprovider);
-    else if(subprovider.name === 'MEWconnectProtocol') disconnectMewConnect(subprovider);
+    else if (subprovider.name === 'MEWconnect')
+      disconnectMewConnect(subprovider);
     else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
     else if (
       sessionStorage.getItem('lastConnectedWalletType') ===

@@ -1,5 +1,13 @@
-import Maker, { USD, DAI, SAI, defaultCdpTypes } from '@makerdao/dai';
-import McdPlugin, { ETH, BAT, USDC } from '@makerdao/dai-plugin-mcd';
+import Maker from '@makerdao/dai';
+import McdPlugin, {
+  ETH,
+  BAT,
+  USDC,
+  USD,
+  DAI,
+  SAI,
+  defaultCdpTypes
+} from '@makerdao/dai-plugin-mcd';
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
