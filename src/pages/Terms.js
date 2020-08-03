@@ -153,6 +153,18 @@ const Privacy = () => (
           or quasi-governmental body or regulatory agency, any self-regulatory
           organization.
         </li>
+        <li>
+          You are not a resident of any of the following countries or regions:
+          Belarus, Burma (Myanmar), Burundi, Central African Republic, Congo, Côte d'Ivoire,
+          Cuba, Iran, Iraq, Lebanon, Liberia, Libya, Mali, Nicaragua, North Korea, Somalia,
+          South Sudan, Sudan, Syria, Crimea (Ukraine/Russia), Venezuela, Yemen, Zimbabwe
+          (“<strong>Non-Supported Countries</strong>”).
+        </li>
+        <li>
+          You do not use Virtual Private Network software or any other privacy or anonymization
+          tools or techniques in order to circumvent any restrictions which apply to the Services,
+          especially those which restrict the geographical availability of the Services.
+        </li>
       </ul>
       <h3>1.3. Fees</h3>
       <p>
@@ -192,7 +204,9 @@ const Privacy = () => (
         that Company is not liable for your compliance with such laws. You
         further represent and warrant that you will not use the Site or the
         Services if the laws of your country of residency or establishment
-        prohibit you from doing so in accordance with this Agreement. Finally,
+        prohibit you from doing so in accordance with this Agreement. You
+        further represent that neither you nor your Organization is a resident
+        of any of the Non-Supported Countries. Finally,
         you represent and warrant that you will not use the Service for any
         illegal activity.
       </p>
@@ -803,11 +817,7 @@ const Privacy = () => (
 
       <h3>13.5 Privacy and Transparency</h3>
       <p>
-        Company respects the privacy of the Users by not requesting any
-        information that is unnecessary for the use of the Services. Since the
-        Services can be autonomously and directly accessed by the Users without
-        any involvement or actions taken by Company or any third-party, Company
-        does not process any personal data.
+        Company respects the privacy of the Users.
       </p>
       <p>
         The Services are being autonomously performed on blockchains, which are
@@ -817,29 +827,12 @@ const Privacy = () => (
         Services.
       </p>
       <p>
-        We may use aggregate statistical information about Users’ activity on
-        the Site for marketing or any other purpose. The Site may use a browser
-        feature called a “cookie” to collect information anonymously and track
-        user patterns. A cookie is a small text file containing a unique
-        identification number that identifies a customer’s browser, but not the
-        customer personally, each time that customer visits a websites using
-        cookies. Cookies provide Company with information such as which pages of
-        the Site are visited and how many people visited each one. This helps
-        enhance visitors’ online experience. Cookies also serve to identify your
-        computer so that your preferences can be saved for future visits, and
-        Company may work with third parties that use these cookies to help us.
-        The use of cookies is an industry standard and many major browsers are
-        initially set up to accept them. You can reset your browser to either
-        refuse to accept all cookies or to notify you when you have received a
-        cookie. However, if you refuse to accept cookies, you may not be able to
-        use some of the features available on the Site. We may also use other
-        tracking technologies, such as pixel tags or web beacons. Company may
-        also use IP addresses to analyze trends, administer the Site, track User
-        movements, and gather broad demographic information for aggregate use.
-        For systems administration and detecting usage patterns and
-        troubleshooting purposes, Company may also automatically log standard
-        access information including browser type, access times/open mail, URL
-        requested, and referral URL.
+        The Company will treat any information about you in accordance with its Privacy Policy,
+        which is incorporated herein by reference. The Privacy Policy provides an outline of
+        the types of data and information about you we may collect or process. You are asked
+        to read the Privacy Policy before you use the Site or Services. If you are unwilling
+        to accept the terms and conditions of the Privacy Policy, please do not use the Site
+        and the Services.
       </p>
 
       <h3>13.6 Communications</h3>
