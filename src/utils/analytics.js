@@ -59,7 +59,7 @@ export const mixpanelInit = () => {
 export const mixpanelIdentify = (id, walletType) => {
   if (typeof mixpanel.config === 'undefined') return;
   //mixpanel.people.set({ "walletType": walletType });
-  mixpanel.track('account-change', {"walletType" : walletType});
+  mixpanel.track('account-change', { walletType: walletType });
   mixpanel.identify(id);
 };
 
