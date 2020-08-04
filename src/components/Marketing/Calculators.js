@@ -4,16 +4,7 @@ import ReactSlider from 'react-slider';
 import styled from 'styled-components';
 
 import { prettifyCurrency } from 'utils/ui';
-
-import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
-import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
-import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
-import { ReactComponent as ManaIcon } from 'images/oasis-tokens/mana.svg';
-import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
-import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
-import { ReactComponent as KncIcon } from 'images/oasis-tokens/knc.svg';
-import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
-import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
+import TokenIcon from './TokenIcon';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
@@ -321,56 +312,48 @@ const SmartStepSlider = ({
 const cdpTypesMetaData = {
   'ETH-A': {
     text: 'Ethereum',
-    Icon: EthIcon,
     colRatio: 200,
     amountRange: [1, 350],
     amountStart: 25
   },
   'BAT-A': {
     text: 'BAT',
-    Icon: BatIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'MANA-A': {
     text: 'MANA',
-    Icon: ManaIcon,
     colRatio: 240,
     amountRange: [1000, 350000],
     amountStart: 3000
   },
   'USDC-A': {
     text: 'USDC',
-    Icon: UsdcIcon,
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'WBTC-A': {
     text: 'WBTC',
-    Icon: WbtcIcon,
     colRatio: 200,
     amountRange: [0.1, 35],
     amountStart: 0.5
   },
   'TUSD-A': {
     text: 'TUSD',
-    Icon: TusdIcon,
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'ZRX-A': {
     text: 'ZRX',
-    Icon: ZrxIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'KNC-A': {
     text: 'KNC',
-    Icon: KncIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
@@ -397,7 +380,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
     }));
 
   const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
-
+  const getTokenName = gem => gem.symbol.split('-')[0];
   const collateralAmounts = gems.reduce((acc, gem) => {
     acc[gem.symbol] = gem.amountStart;
     return acc;
@@ -424,11 +407,11 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
               render: () => (
                 <DropdownItem
                   img={
-                    gem.Icon ? (
-                      <gem.Icon width="28.33" height="28.33" />
-                    ) : (
-                      <DefaultIcon width="28.33" height="28.33" />
-                    )
+                    <TokenIcon
+                      symbol={getTokenName(gem)}
+                      width="28.33"
+                      height="28.33"
+                    />
                   }
                 >
                   {gem.text || gem.symbol}
@@ -446,7 +429,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
               <CapsText textAlign="right" data-testid="amount-chosen">
                 {collateralAmount}
                 <span style={{ marginLeft: '3px' }}>
-                  {selectedGem.symbol.split('-')[0]}
+                  {getTokenName(selectedGem)}
                 </span>
               </CapsText>
             </Position>

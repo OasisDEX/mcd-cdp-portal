@@ -178,7 +178,7 @@ export default {
   },
   borrow_markets: {
     meta: {
-      title: 'Oasis Borrow - Dai Available'
+      title: 'Oasis Borrow - Available DAI'
     },
     heading: 'Available DAI',
     subheading: 'The parameters and rates shown are subject to change at any time, even after a CDP has been opened. Keep an eye out for system updates and manage your Vault accordingly.'

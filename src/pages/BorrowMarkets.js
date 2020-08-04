@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useLanguage from 'hooks/useLanguage';
-import {
-  PageHead,
-  StyledPageContentLayout
-} from 'components/Marketing';
+import { PageHead, StyledPageContentLayout } from 'components/Marketing';
 import useCdpTypes from '../hooks/useCdpTypes';
 import { Box, Text } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
@@ -30,12 +27,18 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      {Object.entries(cdpTypesByGem).map(([gem, riskProfiles]) => <div key={gem}>
-        <strong>{gem}</strong>
-        <div>
-          {riskProfiles.map(cdpType => <div key={cdpType.symbol}>{cdpType.symbol}</div>)}
+      {Object.entries(cdpTypesByGem).map(([gem, riskProfiles]) => (
+        <div key={gem}>
+          <div>
+            <strong>{gem}</strong>
+          </div>
+          <div>
+            {riskProfiles.map(cdpType => (
+              <div key={cdpType.symbol}>{cdpType.symbol}</div>
+            ))}
+          </div>
         </div>
-      </div>)}
+      ))}
     </StyledPageContentLayout>
   );
 }
