@@ -176,6 +176,13 @@ export default {
       'Navigate to {link} and open your vault with wBTC as collateral and generate your new Dai',
     step5_link_text: 'Oasis.app/borrow'
   },
+  borrow_markets: {
+    meta: {
+      title: 'Oasis Borrow - Dai Available'
+    },
+    heading: 'Available DAI',
+    subheading: 'The parameters and rates shown are subject to change at any time, even after a CDP has been opened. Keep an eye out for system updates and manage your Vault accordingly.'
+  },
   save_landing: {
     meta: {
       title: 'Oasis Save',
