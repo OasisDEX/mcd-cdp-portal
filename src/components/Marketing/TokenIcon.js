@@ -30,10 +30,10 @@ const iconsByToken = {
   ZRX: ZrxIcon
 };
 
-const TokenIcon = ({ symbol, ...props }) => {
+const TokenIcon = ({ symbol, size = 70, ...props }) => {
   const Icon = iconsByToken[symbol.toUpperCase()] || DefaultIcon;
 
-  return <Icon {...props} />;
+  return <Icon width={size} height={size} {...props} />;
 };
 
 export default TokenIcon;
