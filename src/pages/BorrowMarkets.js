@@ -8,10 +8,18 @@ import {
   StyledPageContentLayout,
   TokenIcon
 } from 'components/Marketing';
-import { Box, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Text } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter } from '../utils/ui';
+import styled from 'styled-components';
+
+const StyledTable = styled.table`
+  td {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+`;
 
 function BorrowMarkets() {
   const { lang } = useLanguage();
@@ -34,39 +42,58 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      {collateralTypesData &&
-        Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => (
-          <div key={gem}>
-            <div>
-              <strong>
-                <TokenIcon symbol={gem} size={31.67} />
-                {gem}
-              </strong>
-            </div>
-            <div>
-              {cdpTypesData.map(cdpType => {
-                let { collateralDebtAvailable } = cdpType;
-                collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
+      <StyledTable style={{ width: '1090px', margin: '0 auto' }}>
+        <thead>
+          <th>TOKEN</th>
+          <th>STABILITY FEE</th>
+          <th>MIN COLATERAL RATIO</th>
+          <th>DAI AVAILABLE</th>
+        </thead>
+        {collateralTypesData &&
+          Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
+            return [
+              <tbody key={gem}>
+                <tr>
+                  <td>
+                    <Flex alignItems="center">
+                      <TokenIcon symbol={gem} size={31.67} />
+                      <strong>{gem}</strong>
+                    </Flex>
+                  </td>
+                </tr>
+              </tbody>,
+              <tbody
+                key={gem + '-risk-profiles'}
+                style={{ background: '#F6F8F9' }}
+              >
+                {cdpTypesData.map(cdpType => {
+                  let { collateralDebtAvailable } = cdpType;
+                  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
 
-                const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
-                  ? BigNumber(0)
-                  : collateralDebtAvailable;
+                  const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(
+                    0
+                  )
+                    ? BigNumber(0)
+                    : collateralDebtAvailable;
 
-                return (
-                  <div key={cdpType.symbol}>
-                    <span>{cdpType.symbol}</span>{' '}
-                    <span>
-                      Stability Fee: {cdpType.annualStabilityFee.toFixed(2)}
-                    </span>{' '}
-                    <span>
-                      Max Dai: {formatter(maxDaiAvailableToGenerate)} Dai
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+                  return (
+                    <tr key={cdpType.symbol}>
+                      <td>{cdpType.symbol}</td>
+                      <td>{cdpType.annualStabilityFee.toFixed(2)}%</td>
+                      <td>
+                        {formatter(cdpType.liquidationRatio, {
+                          percentage: true
+                        })}
+                        %
+                      </td>
+                      <td>{formatter(maxDaiAvailableToGenerate)} Dai</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            ];
+          })}
+      </StyledTable>
     </StyledPageContentLayout>
   );
 }
