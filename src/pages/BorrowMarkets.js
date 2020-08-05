@@ -51,6 +51,34 @@ function BorrowMarkets() {
         </thead>
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
+            const relevantData = cdpTypesData.map(data => {
+              let {
+                collateralDebtAvailable,
+                liquidationRatio,
+                annualStabilityFee
+              } = data;
+              collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
+
+              const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
+                ? BigNumber(0)
+                : collateralDebtAvailable;
+
+              return {
+                maxDaiAvailableToGenerate,
+                liquidationRatio,
+                annualStabilityFee
+              };
+            });
+            const fees = relevantData.map(data => data.annualStabilityFee);
+            const minFee = BigNumber.min.apply(null, fees);
+            const maxFee = BigNumber.max.apply(null, fees);
+
+            const colRatios = relevantData.map(data =>
+              data.liquidationRatio.toBigNumber()
+            );
+            const minRatio = BigNumber.min.apply(null, colRatios);
+            const maxRatio = BigNumber.max.apply(null, colRatios);
+
             return [
               <tbody key={gem}>
                 <tr>
@@ -60,36 +88,45 @@ function BorrowMarkets() {
                       <strong>{gem}</strong>
                     </Flex>
                   </td>
+                  <td>
+                    {minFee.toFixed(2)}%
+                    {!minFee.eq(maxFee) && <> - {maxFee.toFixed(2)}%</>}
+                  </td>
+                  <td>
+                    {formatter(minRatio, {
+                      percentage: true
+                    })}
+                    %
+                    {!minRatio.eq(maxRatio) && (
+                      <>
+                        {' '}
+                        -{' '}
+                        {formatter(maxRatio, {
+                          percentage: true
+                        })}
+                        %
+                      </>
+                    )}
+                  </td>
                 </tr>
               </tbody>,
               <tbody
                 key={gem + '-risk-profiles'}
                 style={{ background: '#F6F8F9' }}
               >
-                {cdpTypesData.map(cdpType => {
-                  let { collateralDebtAvailable } = cdpType;
-                  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
-
-                  const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(
-                    0
-                  )
-                    ? BigNumber(0)
-                    : collateralDebtAvailable;
-
-                  return (
-                    <tr key={cdpType.symbol}>
-                      <td>{cdpType.symbol}</td>
-                      <td>{cdpType.annualStabilityFee.toFixed(2)}%</td>
-                      <td>
-                        {formatter(cdpType.liquidationRatio, {
-                          percentage: true
-                        })}
-                        %
-                      </td>
-                      <td>{formatter(maxDaiAvailableToGenerate)} Dai</td>
-                    </tr>
-                  );
-                })}
+                {relevantData.map(cdpType => (
+                  <tr key={cdpType.symbol}>
+                    <td>{cdpType.symbol}</td>
+                    <td>{cdpType.annualStabilityFee.toFixed(2)}%</td>
+                    <td>
+                      {formatter(cdpType.liquidationRatio, {
+                        percentage: true
+                      })}
+                      %
+                    </td>
+                    <td>{formatter(cdpType.maxDaiAvailableToGenerate)} Dai</td>
+                  </tr>
+                ))}
               </tbody>
             ];
           })}
