@@ -8,18 +8,11 @@ import {
   StyledPageContentLayout,
   TokenIcon
 } from 'components/Marketing';
-import { Box, Flex, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Text, Table } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
-
-const StyledTable = styled.table`
-  td {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-`;
 
 function BorrowMarkets() {
   const { lang } = useLanguage();
@@ -42,13 +35,13 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <StyledTable style={{ width: '1090px', margin: '0 auto' }}>
-        <thead>
-          <th>TOKEN</th>
-          <th>STABILITY FEE</th>
-          <th>MIN COLATERAL RATIO</th>
-          <th>DAI AVAILABLE</th>
-        </thead>
+      <Table>
+        <Table.thead>
+          <Table.th>TOKEN</Table.th>
+          <Table.th>STABILITY FEE</Table.th>
+          <Table.th>MIN COLATERAL RATIO</Table.th>
+          <Table.th>DAI AVAILABLE</Table.th>
+        </Table.thead>
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
             const relevantData = cdpTypesData.map(data => {
@@ -90,71 +83,70 @@ function BorrowMarkets() {
             );
 
             return [
-              <tbody key={gem}>
-                <tr>
-                  <td>
+              <Table.tbody key={gem}>
+                <Table.tr>
+                  <Table.td>
                     <Flex alignItems="center">
                       <TokenIcon symbol={gem} size={31.67} />
                       <strong>{gem}</strong>
                     </Flex>
-                  </td>
-                  <td>
+                  </Table.td>
+                  <Table.td>
                     {formatter(minFee, { percentage: true })}%
                     {!minFee.eq(maxFee) && (
                       <> - {formatter(maxFee, { percentage: true })}%</>
                     )}
-                  </td>
-                  <td>
+                  </Table.td>
+                  <Table.td>
                     {formatter(minRatio, {
                       percentage: true
                     })}
                     %
                     {!minRatio.eq(maxRatio) && (
                       <>
-                        {' '}
-                        -{' '}
+                        {' - '}
                         {formatter(maxRatio, {
                           percentage: true
                         })}
                         %
                       </>
                     )}
-                  </td>
-                  <td>
+                  </Table.td>
+                  <Table.td>
                     {prettifyNumber(totalDaiAvailable, { truncate: true })}
-                  </td>
-                </tr>
-              </tbody>,
-              <tbody
+                  </Table.td>
+                </Table.tr>
+              </Table.tbody>,
+              <Table.tbody
                 key={gem + '-risk-profiles'}
                 style={{ background: '#F6F8F9' }}
               >
                 {relevantData.map(cdpType => (
-                  <tr key={cdpType.symbol}>
-                    <td>{cdpType.symbol}</td>
-                    <td>
+                  <Table.tr key={cdpType.symbol}>
+                    <Table.td>{cdpType.symbol}</Table.td>
+                    <Table.td>
                       {formatter(cdpType.annualStabilityFee, {
                         percentage: true
                       })}
                       %
-                    </td>
-                    <td>
+                    </Table.td>
+                    <Table.td>
                       {formatter(cdpType.liquidationRatio, {
                         percentage: true
                       })}
                       %
-                    </td>
-                    <td>
+                    </Table.td>
+                    <Table.td>
                       {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
                         truncate: true
                       })}
-                    </td>
-                  </tr>
+                    </Table.td>
+                  </Table.tr>
                 ))}
-              </tbody>
+              </Table.tbody>
             ];
           })}
-      </StyledTable>
+      </Table>
     </StyledPageContentLayout>
   );
 }
