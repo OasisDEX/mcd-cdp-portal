@@ -11,7 +11,7 @@ import {
 import { Box, Flex, Text } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
-import { formatter } from '../utils/ui';
+import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
 
 const StyledTable = styled.table`
@@ -69,6 +69,8 @@ function BorrowMarkets() {
                 annualStabilityFee
               };
             });
+
+            // aggregate data
             const fees = relevantData.map(data => data.annualStabilityFee);
             const minFee = BigNumber.min.apply(null, fees);
             const maxFee = BigNumber.max.apply(null, fees);
@@ -78,6 +80,14 @@ function BorrowMarkets() {
             );
             const minRatio = BigNumber.min.apply(null, colRatios);
             const maxRatio = BigNumber.max.apply(null, colRatios);
+
+            const daiAvailableList = relevantData.map(
+              data => data.maxDaiAvailableToGenerate
+            );
+            const totalDaiAvailable = BigNumber.sum.apply(
+              null,
+              daiAvailableList
+            );
 
             return [
               <tbody key={gem}>
@@ -89,8 +99,10 @@ function BorrowMarkets() {
                     </Flex>
                   </td>
                   <td>
-                    {minFee.toFixed(2)}%
-                    {!minFee.eq(maxFee) && <> - {maxFee.toFixed(2)}%</>}
+                    {formatter(minFee, { percentage: true })}%
+                    {!minFee.eq(maxFee) && (
+                      <> - {formatter(maxFee, { percentage: true })}%</>
+                    )}
                   </td>
                   <td>
                     {formatter(minRatio, {
@@ -108,6 +120,9 @@ function BorrowMarkets() {
                       </>
                     )}
                   </td>
+                  <td>
+                    {prettifyNumber(totalDaiAvailable, { truncate: true })}
+                  </td>
                 </tr>
               </tbody>,
               <tbody
@@ -117,14 +132,23 @@ function BorrowMarkets() {
                 {relevantData.map(cdpType => (
                   <tr key={cdpType.symbol}>
                     <td>{cdpType.symbol}</td>
-                    <td>{cdpType.annualStabilityFee.toFixed(2)}%</td>
+                    <td>
+                      {formatter(cdpType.annualStabilityFee, {
+                        percentage: true
+                      })}
+                      %
+                    </td>
                     <td>
                       {formatter(cdpType.liquidationRatio, {
                         percentage: true
                       })}
                       %
                     </td>
-                    <td>{formatter(cdpType.maxDaiAvailableToGenerate)} Dai</td>
+                    <td>
+                      {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
+                        truncate: true
+                      })}
+                    </td>
                   </tr>
                 ))}
               </tbody>
