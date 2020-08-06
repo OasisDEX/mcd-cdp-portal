@@ -181,7 +181,9 @@ export default {
       title: 'Oasis Borrow - Available DAI'
     },
     heading: 'Available DAI',
-    subheading: 'The parameters and rates shown are subject to change at any time, even after a CDP has been opened. Keep an eye out for system updates and manage your Vault accordingly.'
+    subheading: 'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
+    min_col_ratio: 'Min colateral ratio',
+    risk_profile: 'Risk Profile'
   },
   save_landing: {
     meta: {

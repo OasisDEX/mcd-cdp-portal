@@ -14,6 +14,17 @@ import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
 
+const tokenNames = {
+  ETH: 'Ether',
+  BAT: 'Basic Attention Token',
+  WBTC: 'Wrapped Bitcoin',
+  USDC: 'USD Coin',
+  MANA: 'Mana',
+  ZRX: '0x',
+  KNC: 'Kyber Network',
+  TUSD: 'TrueUSD'
+};
+
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
@@ -37,20 +48,15 @@ function BorrowMarkets() {
       </Box>
       <Table>
         <Table.thead>
-          <Table.th>TOKEN</Table.th>
-          <Table.th>STABILITY FEE</Table.th>
-          <Table.th>MIN COLATERAL RATIO</Table.th>
-          <Table.th>DAI AVAILABLE</Table.th>
+          <Table.th>{lang.overview_page.token}</Table.th>
+          <Table.th>{lang.stability_fee}</Table.th>
+          <Table.th>{lang.borrow_markets.min_col_ratio}</Table.th>
+          <Table.th>{lang.dai_available}</Table.th>
         </Table.thead>
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
-            const relevantData = cdpTypesData.map(data => {
-              let {
-                collateralDebtAvailable,
-                liquidationRatio,
-                annualStabilityFee
-              } = data;
-              collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
+            cdpTypesData = cdpTypesData.map(data => {
+              const collateralDebtAvailable = data.collateralDebtAvailable?.toBigNumber();
 
               const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
                 ? BigNumber(0)
@@ -58,23 +64,20 @@ function BorrowMarkets() {
 
               return {
                 maxDaiAvailableToGenerate,
-                liquidationRatio,
-                annualStabilityFee
+                ...data
               };
             });
 
             // aggregate data
-            const fees = relevantData.map(data => data.annualStabilityFee);
+            const fees = cdpTypesData.map(data => data.annualStabilityFee);
             const minFee = BigNumber.min.apply(null, fees);
             const maxFee = BigNumber.max.apply(null, fees);
-
-            const colRatios = relevantData.map(data =>
+            const colRatios = cdpTypesData.map(data =>
               data.liquidationRatio.toBigNumber()
             );
             const minRatio = BigNumber.min.apply(null, colRatios);
             const maxRatio = BigNumber.max.apply(null, colRatios);
-
-            const daiAvailableList = relevantData.map(
+            const daiAvailableList = cdpTypesData.map(
               data => data.maxDaiAvailableToGenerate
             );
             const totalDaiAvailable = BigNumber.sum.apply(
@@ -88,7 +91,8 @@ function BorrowMarkets() {
                   <Table.td>
                     <Flex alignItems="center">
                       <TokenIcon symbol={gem} size={31.67} />
-                      <strong>{gem}</strong>
+                      <span>{tokenNames[gem]} </span>
+                      <span>{gem}</span>
                     </Flex>
                   </Table.td>
                   <Table.td>
@@ -121,9 +125,12 @@ function BorrowMarkets() {
                 key={gem + '-risk-profiles'}
                 style={{ background: '#F6F8F9' }}
               >
-                {relevantData.map(cdpType => (
+                {cdpTypesData.map(cdpType => (
                   <Table.tr key={cdpType.symbol}>
-                    <Table.td>{cdpType.symbol}</Table.td>
+                    <Table.td>
+                      {gem} - {lang.borrow_markets.risk_profile}{' '}
+                      {cdpType.symbol.split('-')[1]}
+                    </Table.td>
                     <Table.td>
                       {formatter(cdpType.annualStabilityFee, {
                         percentage: true
