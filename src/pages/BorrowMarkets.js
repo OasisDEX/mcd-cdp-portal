@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useLanguage from 'hooks/useLanguage';
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -14,6 +14,7 @@ import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
 import usePrevious from '../hooks/usePrevious';
+import { ReactComponent as Carat } from 'images/carat-down.svg';
 
 const tokenNames = {
   ETH: 'Ether',
@@ -42,7 +43,7 @@ function BorrowMarkets() {
   const [expandedRows, setExpandedRows] = useState({});
   const isExpanded = rowIndex => expandedRows[rowIndex];
   const toggleRow = index => {
-    setExpandedRows({...expandedRows, [index]: !isExpanded(index)});
+    setExpandedRows({ ...expandedRows, [index]: !isExpanded(index) });
   };
 
   return (
@@ -56,7 +57,7 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <Table width="100%" maxWidth="1090px" m="0 auto">
+      <Table width="100%" maxWidth="1090px" m="61px auto 0">
         <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
           <Table.tr>
             <Table.th width={TABLE_PADDING} />
@@ -104,46 +105,46 @@ function BorrowMarkets() {
             );
 
             return [
-              <Table.tbody key={gem} px="33px">
-                <Table.tr>
-                  <Table.td />
-                  <Table.td>
-                    <TokenIcon symbol={gem} size={31.67} />
-                  </Table.td>
-                  <Table.td>
-                    <Flex alignItems="center">
-                      <span>{tokenNames[gem]} </span>
-                      <span>{gem}</span>
-                    </Flex>
-                  </Table.td>
-                  <Table.td>
-                    {formatter(minFee, { percentage: true })}%
-                    {!minFee.eq(maxFee) && (
-                      <> - {formatter(maxFee, { percentage: true })}%</>
-                    )}
-                  </Table.td>
-                  <Table.td>
-                    {formatter(minRatio, {
-                      percentage: true
-                    })}
-                    %
-                    {!minRatio.eq(maxRatio) && (
-                      <>
-                        {' - '}
-                        {formatter(maxRatio, {
-                          percentage: true
-                        })}
-                        %
-                      </>
-                    )}
-                  </Table.td>
-                  <Table.td>
-                    {prettifyNumber(totalDaiAvailable, { truncate: true })}
-                  </Table.td>
-                  <Table.td onClick={() => toggleRow(rowIndex)}>caret</Table.td>
-                  <Table.td />
-                </Table.tr>
-              </Table.tbody>,
+              <Table.tr key={gem}>
+                <Table.td borderBottom="1px solid white" />
+                <Table.td>
+                  <TokenIcon symbol={gem} size={31.67} />
+                </Table.td>
+                <Table.td>
+                  <Flex alignItems="center">
+                    <span>{tokenNames[gem]} </span>
+                    <span>{gem}</span>
+                  </Flex>
+                </Table.td>
+                <Table.td>
+                  {formatter(minFee, { percentage: true })}%
+                  {!minFee.eq(maxFee) && (
+                    <> - {formatter(maxFee, { percentage: true })}%</>
+                  )}
+                </Table.td>
+                <Table.td>
+                  {formatter(minRatio, {
+                    percentage: true
+                  })}
+                  %
+                  {!minRatio.eq(maxRatio) && (
+                    <>
+                      {' - '}
+                      {formatter(maxRatio, {
+                        percentage: true
+                      })}
+                      %
+                    </>
+                  )}
+                </Table.td>
+                <Table.td>
+                  {prettifyNumber(totalDaiAvailable, { truncate: true })}
+                </Table.td>
+                <Table.td onClick={() => toggleRow(rowIndex)}>
+                  <Carat />
+                </Table.td>
+                <Table.td borderBottom="1px solid white" />
+              </Table.tr>,
               <Table.tbody
                 key={gem + '-risk-profiles'}
                 display={isExpanded(rowIndex) ? 'default' : 'none'}
