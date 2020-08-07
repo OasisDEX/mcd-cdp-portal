@@ -13,6 +13,7 @@ import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
+import usePrevious from '../hooks/usePrevious';
 
 const tokenNames = {
   ETH: 'Ether',
@@ -30,7 +31,9 @@ const TABLE_PADDING = '33px';
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
-  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
+  let collateralTypesData = watch.collateralTypesData(cdpTypesList);
+  const prevData = usePrevious(collateralTypesData);
+  collateralTypesData = collateralTypesData || prevData;
 
   const cdpTypesByGem = groupBy(
     collateralTypesData,
@@ -50,14 +53,18 @@ function BorrowMarkets() {
       </Box>
       <Table width="100%" maxWidth="1090px" margin="0 auto">
         <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
-          <Table.th width={TABLE_PADDING} />
-          <Table.th />
-          <Table.th>{lang.overview_page.token}</Table.th>
-          <Table.th width="190px">{lang.stability_fee}</Table.th>
-          <Table.th width="190px">{lang.borrow_markets.min_col_ratio}</Table.th>
-          <Table.th width="190px">{lang.dai_available}</Table.th>
-          <Table.th />
-          <Table.th width={TABLE_PADDING} />
+          <Table.tr>
+            <Table.th width={TABLE_PADDING} />
+            <Table.th />
+            <Table.th>{lang.overview_page.token}</Table.th>
+            <Table.th width="190px">{lang.stability_fee}</Table.th>
+            <Table.th width="190px">
+              {lang.borrow_markets.min_col_ratio}
+            </Table.th>
+            <Table.th width="190px">{lang.dai_available}</Table.th>
+            <Table.th />
+            <Table.th width={TABLE_PADDING} />
+          </Table.tr>
         </Table.thead>
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
