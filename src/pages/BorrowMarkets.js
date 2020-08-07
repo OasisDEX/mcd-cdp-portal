@@ -25,6 +25,8 @@ const tokenNames = {
   TUSD: 'TrueUSD'
 };
 
+const TABLE_PADDING = '33px';
+
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
@@ -46,12 +48,16 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <Table>
-        <Table.thead>
+      <Table width="100%" maxWidth="1090px" margin="0 auto">
+        <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
+          <Table.th width={TABLE_PADDING} />
+          <Table.th />
           <Table.th>{lang.overview_page.token}</Table.th>
-          <Table.th>{lang.stability_fee}</Table.th>
-          <Table.th>{lang.borrow_markets.min_col_ratio}</Table.th>
-          <Table.th>{lang.dai_available}</Table.th>
+          <Table.th width="190px">{lang.stability_fee}</Table.th>
+          <Table.th width="190px">{lang.borrow_markets.min_col_ratio}</Table.th>
+          <Table.th width="190px">{lang.dai_available}</Table.th>
+          <Table.th />
+          <Table.th width={TABLE_PADDING} />
         </Table.thead>
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
@@ -86,11 +92,14 @@ function BorrowMarkets() {
             );
 
             return [
-              <Table.tbody key={gem}>
+              <Table.tbody key={gem} px="33px">
                 <Table.tr>
+                  <Table.td />
+                  <Table.td>
+                    <TokenIcon symbol={gem} size={31.67} />
+                  </Table.td>
                   <Table.td>
                     <Flex alignItems="center">
-                      <TokenIcon symbol={gem} size={31.67} />
                       <span>{tokenNames[gem]} </span>
                       <span>{gem}</span>
                     </Flex>
@@ -119,14 +128,38 @@ function BorrowMarkets() {
                   <Table.td>
                     {prettifyNumber(totalDaiAvailable, { truncate: true })}
                   </Table.td>
+                  <Table.td>caret</Table.td>
+                  <Table.td />
                 </Table.tr>
               </Table.tbody>,
               <Table.tbody
                 key={gem + '-risk-profiles'}
-                style={{ background: '#F6F8F9' }}
+                css={`
+                  ${Table.td} {
+                    background-color: #f6f8f9;
+                  }
+                  ${Table.tr}:first-child {
+                    .firstTD {
+                      border-top-left-radius: 6px;
+                    }
+                    .lastTD {
+                      border-top-right-radius: 6px;
+                    }
+                  }
+                  ${Table.tr}:last-child {
+                    .firstTD {
+                      border-bottom-left-radius: 6px;
+                    }
+                    .lastTD {
+                      border-bottom-right-radius: 6px;
+                    }
+                  }
+                `}
               >
                 {cdpTypesData.map(cdpType => (
-                  <Table.tr key={cdpType.symbol}>
+                  <Table.tr key={cdpType.symbol} borderBottom="none">
+                    <td />
+                    <Table.td className="firstTD" />
                     <Table.td>
                       {gem} - {lang.borrow_markets.risk_profile}{' '}
                       {cdpType.symbol.split('-')[1]}
@@ -148,6 +181,8 @@ function BorrowMarkets() {
                         truncate: true
                       })}
                     </Table.td>
+                    <Table.td className="lastTD" />
+                    <td />
                   </Table.tr>
                 ))}
               </Table.tbody>
