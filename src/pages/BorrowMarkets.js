@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { hot } from 'react-hot-loader/root';
 import useLanguage from 'hooks/useLanguage';
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -39,6 +39,11 @@ function BorrowMarkets() {
     collateralTypesData,
     type => type.symbol.split('-')[0]
   );
+  const [expandedRows, setExpandedRows] = useState({});
+  const isExpanded = rowIndex => expandedRows[rowIndex];
+  const toggleRow = index => {
+    setExpandedRows({...expandedRows, [index]: !isExpanded(index)});
+  };
 
   return (
     <StyledPageContentLayout>
@@ -51,7 +56,7 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <Table width="100%" maxWidth="1090px" margin="0 auto">
+      <Table width="100%" maxWidth="1090px" m="0 auto">
         <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
           <Table.tr>
             <Table.th width={TABLE_PADDING} />
@@ -67,7 +72,7 @@ function BorrowMarkets() {
           </Table.tr>
         </Table.thead>
         {collateralTypesData &&
-          Object.entries(cdpTypesByGem).map(([gem, cdpTypesData]) => {
+          Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
             cdpTypesData = cdpTypesData.map(data => {
               const collateralDebtAvailable = data.collateralDebtAvailable?.toBigNumber();
 
@@ -135,12 +140,13 @@ function BorrowMarkets() {
                   <Table.td>
                     {prettifyNumber(totalDaiAvailable, { truncate: true })}
                   </Table.td>
-                  <Table.td>caret</Table.td>
+                  <Table.td onClick={() => toggleRow(rowIndex)}>caret</Table.td>
                   <Table.td />
                 </Table.tr>
               </Table.tbody>,
               <Table.tbody
                 key={gem + '-risk-profiles'}
+                display={isExpanded(rowIndex) ? 'default' : 'none'}
                 css={`
                   ${Table.td} {
                     background-color: #f6f8f9;
