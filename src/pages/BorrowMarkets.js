@@ -8,7 +8,7 @@ import {
   StyledPageContentLayout,
   TokenIcon
 } from 'components/Marketing';
-import { Box, Flex, Text, Table } from '@makerdao/ui-components-core';
+import { Box, Text, Table } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
@@ -17,7 +17,7 @@ import usePrevious from '../hooks/usePrevious';
 import Carat from 'components/Carat';
 
 const tokenNames = {
-  ETH: 'Ethereum',
+  ETH: 'Ether',
   BAT: 'Basic Attention Token',
   WBTC: 'Wrapped Bitcoin',
   USDC: 'USD Coin',
@@ -30,13 +30,12 @@ const tokenNames = {
 const TABLE_PADDING = '33px';
 
 const Number = styled(Text)``;
-const GrayText = styled(Text)``;
 
 const StyledTable = styled(Table)`
   width: 100%;
   min-width: 401px;
   max-width: 1090px;
-  margin: 61px auto 0;
+  margin: 60px auto 0;
 
   ${Text} {
     color: ${props => props.theme.colors.darkPurple};
@@ -47,17 +46,22 @@ const StyledTable = styled(Table)`
     font-size: 15px;
   }
 
-  ${GrayText} {
-    color: #6f838f;
-  }
-
   .gem {
     color: ${props => props.theme.colors.darkPurple};
+  }
+
+  .profile-name {
+    color: #6f838f;
+    font-size: 14px;
   }
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
     .gem {
       color: #6f838f;
+    }
+
+    .profile-name {
+      font-size: ${props => props.theme.fontSizes.s};
     }
   }
 
@@ -148,8 +152,10 @@ function BorrowMarkets() {
         description={lang.borrow_landing.meta.description}
         imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
       />
-      <Box maxWidth="790px" m="0 auto">
-        <Text.h3>{lang.borrow_markets.heading}</Text.h3>
+      <Box maxWidth="844px" m="76px auto 0">
+        <Text.h3 fontWeight="normal" mb="12px">
+          {lang.borrow_markets.heading}
+        </Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
       <StyledTable>
@@ -217,9 +223,9 @@ function BorrowMarkets() {
                     <Text display={{ s: 'none', m: 'inline' }}>
                       {tokenNames[gem]}
                     </Text>
-                    <GrayText ml="8px" className="gem">
+                    <Text ml="8px" className="gem">
                       {gem}
-                    </GrayText>
+                    </Text>
                   </Table.td>
                   <Table.td>
                     <Number>
@@ -273,10 +279,10 @@ function BorrowMarkets() {
                     <td />
                     <Table.td className="firstTD" />
                     <Table.td>
-                      <GrayText>
+                      <Text className="profile-name">
                         {gem} - {lang.borrow_markets.risk_profile}{' '}
                         {cdpType.symbol.split('-')[1]}
-                      </GrayText>
+                      </Text>
                     </Table.td>
                     <Table.td>
                       <Number>
