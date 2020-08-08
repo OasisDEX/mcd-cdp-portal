@@ -14,7 +14,7 @@ import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
 import usePrevious from '../hooks/usePrevious';
-import { ReactComponent as Carat } from 'images/carat-down.svg';
+import Carat from 'components/Carat';
 
 const tokenNames = {
   ETH: 'Ether',
@@ -29,21 +29,34 @@ const tokenNames = {
 
 const TABLE_PADDING = '33px';
 
-// todo: convert to grid for performance and simpler code
 const StyledTable = styled(Table)`
   width: 100%;
   max-width: 1090px;
   margin: 61px auto 0;
 
   .summary:not(:nth-last-child(2)) {
-    transition: border-bottom-color 0.3s ease-out;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: rgba(224, 224, 224, 0.75);
+    border-bottom: 1px solid rgba(224, 224, 224, 0.75);
+  }
+
+  .expand-btn {
+    padding: 6px 0;
+    cursor: pointer;
+    svg {
+      stroke: #9aa3ad;
+      transition: transform 0.2s;
+    }
+
+    &:hover svg {
+      stroke: #60666c;
+    }
   }
 
   .summary.expanded {
-    border-bottom-color: rgba(224, 224, 224, 0);
+    border-bottom: none;
+
+    .expand-btn svg {
+      transform: rotate(180deg);
+    }
   }
 
   .risk-profiles {
@@ -66,25 +79,10 @@ const StyledTable = styled(Table)`
         border-bottom-right-radius: 6px;
       }
     }
-    
-    td,
-    div {
-      transition: all 0.2s ease-out;
-      opacity: 0;
-      max-height: 0;
-    }
-    td {
-      padding: 0 0;
-    }
+
+    display: none;
     &.expanded {
-      td,
-      div {
-        opacity: 1;
-        max-height: 306px;
-      }
-      td {
-        padding: 12px 0;
-      }
+      display: table-row-group;
     }
   }
 `;
@@ -204,8 +202,13 @@ function BorrowMarkets() {
                   <Table.td>
                     {prettifyNumber(totalDaiAvailable, { truncate: true })}
                   </Table.td>
-                  <Table.td onClick={() => toggleRow(rowIndex)}>
-                    <Carat className="carat" />
+                  <Table.td>
+                    <div
+                      className="expand-btn"
+                      onClick={() => toggleRow(rowIndex)}
+                    >
+                      <Carat />
+                    </div>
                   </Table.td>
                   <Table.td borderBottom="1px solid white" />
                 </Table.tr>
@@ -221,33 +224,25 @@ function BorrowMarkets() {
                     <td />
                     <Table.td className="firstTD" />
                     <Table.td>
-                      <div>
-                        {gem} - {lang.borrow_markets.risk_profile}{' '}
-                        {cdpType.symbol.split('-')[1]}
-                      </div>
+                      {gem} - {lang.borrow_markets.risk_profile}{' '}
+                      {cdpType.symbol.split('-')[1]}
                     </Table.td>
                     <Table.td>
-                      <div>
-                        {formatter(cdpType.annualStabilityFee, {
-                          percentage: true
-                        })}
-                        %
-                      </div>
+                      {formatter(cdpType.annualStabilityFee, {
+                        percentage: true
+                      })}
+                      %
                     </Table.td>
                     <Table.td>
-                      <div>
-                        {formatter(cdpType.liquidationRatio, {
-                          percentage: true
-                        })}
-                        %
-                      </div>
+                      {formatter(cdpType.liquidationRatio, {
+                        percentage: true
+                      })}
+                      %
                     </Table.td>
                     <Table.td>
-                      <div>
-                        {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
-                          truncate: true
-                        })}
-                      </div>
+                      {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
+                        truncate: true
+                      })}
                     </Table.td>
                     <Table.td className="lastTD" />
                     <td />
