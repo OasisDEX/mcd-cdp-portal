@@ -8,13 +8,14 @@ import {
   StyledPageContentLayout,
   TokenIcon
 } from 'components/Marketing';
-import { Box, Text, Table } from '@makerdao/ui-components-core';
+import { Box, Text, Table, Link } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
 import usePrevious from '../hooks/usePrevious';
 import Carat from 'components/Carat';
+import { ReactComponent as ExternalLinkIcon } from '../images/external-link.svg';
 
 const tokenNames = {
   ETH: 'Ether',
@@ -34,8 +35,7 @@ const Number = styled(Text)``;
 const StyledTable = styled(Table)`
   width: 100%;
   min-width: 401px;
-  max-width: 1090px;
-  margin: 60px auto 0;
+  margin: 60px auto 17px;
 
   ${Text} {
     color: ${props => props.theme.colors.darkPurple};
@@ -65,8 +65,18 @@ const StyledTable = styled(Table)`
     }
   }
 
+  ${Table.th} {
+    padding-bottom: 18px;
+    color: ${props => props.theme.colors.steel};
+  }
+
   ${Table.thead}, .summary:not(:nth-last-child(2)) {
     border-bottom: 1px solid #e8e8e8;
+  }
+
+  ${Table.td} {
+    padding-top: 14px;
+    padding-bottom: 13px;
   }
 
   .expand-btn {
@@ -102,7 +112,7 @@ const StyledTable = styled(Table)`
         border-top-right-radius: 6px;
       }
     }
-    ${Table.tr}:last-child {
+    ${Table.tr}:nth-last-child (2) {
       .firstTD {
         border-bottom-left-radius: 6px;
       }
@@ -146,6 +156,8 @@ function BorrowMarkets() {
       css={`
         overflow: scroll;
       `}
+      maxWidth="1090px"
+      m="0 auto"
     >
       <PageHead
         title={lang.borrow_markets.meta.title}
@@ -177,6 +189,7 @@ function BorrowMarkets() {
             <Table.th width={{ s: '0', m: TABLE_PADDING }} />
           </Table.tr>
         </Table.thead>
+        <tr style={{ height: '8px' }} />
         {collateralTypesData &&
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
             cdpTypesData = cdpTypesData.map(data => {
@@ -311,10 +324,20 @@ function BorrowMarkets() {
                     <td />
                   </Table.tr>
                 ))}
+                <tr style={{ height: '10px' }} />
               </Table.tbody>
             ];
           })}
       </StyledTable>
+      <Box textAlign="left">
+        <Link href={'https://makerdao.com/feeds'} target="_blank">
+          <Text color="blue" fontSize="15px">
+            {lang.sidebar.view_price_feeds}
+          </Text>
+          &nbsp;&nbsp;
+          <ExternalLinkIcon fill="#447afb" />
+        </Link>
+      </Box>
     </StyledPageContentLayout>
   );
 }
