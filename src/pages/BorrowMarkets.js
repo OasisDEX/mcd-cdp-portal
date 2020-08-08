@@ -29,6 +29,66 @@ const tokenNames = {
 
 const TABLE_PADDING = '33px';
 
+// todo: convert to grid for performance and simpler code
+const StyledTable = styled(Table)`
+  width: 100%;
+  max-width: 1090px;
+  margin: 61px auto 0;
+
+  .summary:not(:nth-last-child(2)) {
+    transition: border-bottom-color 0.3s ease-out;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgba(224, 224, 224, 0.75);
+  }
+
+  .summary.expanded {
+    border-bottom-color: rgba(224, 224, 224, 0);
+  }
+
+  .risk-profiles {
+    ${Table.td} {
+      background-color: #f6f8f9;
+    }
+    ${Table.tr}:first-child {
+      .firstTD {
+        border-top-left-radius: 6px;
+      }
+      .lastTD {
+        border-top-right-radius: 6px;
+      }
+    }
+    ${Table.tr}:last-child {
+      .firstTD {
+        border-bottom-left-radius: 6px;
+      }
+      .lastTD {
+        border-bottom-right-radius: 6px;
+      }
+    }
+    
+    td,
+    div {
+      transition: all 0.2s ease-out;
+      opacity: 0;
+      max-height: 0;
+    }
+    td {
+      padding: 0 0;
+    }
+    &.expanded {
+      td,
+      div {
+        opacity: 1;
+        max-height: 306px;
+      }
+      td {
+        padding: 12px 0;
+      }
+    }
+  }
+`;
+
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
@@ -57,7 +117,7 @@ function BorrowMarkets() {
         <Text.h3>{lang.borrow_markets.heading}</Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <Table width="100%" maxWidth="1090px" m="61px auto 0">
+      <StyledTable>
         <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
           <Table.tr>
             <Table.th width={TABLE_PADDING} />
@@ -105,95 +165,89 @@ function BorrowMarkets() {
             );
 
             return [
-              <Table.tr key={gem}>
-                <Table.td borderBottom="1px solid white" />
-                <Table.td>
-                  <TokenIcon symbol={gem} size={31.67} />
-                </Table.td>
-                <Table.td>
-                  <Flex alignItems="center">
-                    <span>{tokenNames[gem]} </span>
-                    <span>{gem}</span>
-                  </Flex>
-                </Table.td>
-                <Table.td>
-                  {formatter(minFee, { percentage: true })}%
-                  {!minFee.eq(maxFee) && (
-                    <> - {formatter(maxFee, { percentage: true })}%</>
-                  )}
-                </Table.td>
-                <Table.td>
-                  {formatter(minRatio, {
-                    percentage: true
-                  })}
-                  %
-                  {!minRatio.eq(maxRatio) && (
-                    <>
-                      {' - '}
-                      {formatter(maxRatio, {
-                        percentage: true
-                      })}
-                      %
-                    </>
-                  )}
-                </Table.td>
-                <Table.td>
-                  {prettifyNumber(totalDaiAvailable, { truncate: true })}
-                </Table.td>
-                <Table.td onClick={() => toggleRow(rowIndex)}>
-                  <Carat />
-                </Table.td>
-                <Table.td borderBottom="1px solid white" />
-              </Table.tr>,
+              <Table.tbody
+                key={gem}
+                className={`summary ${isExpanded(rowIndex) ? 'expanded' : ''}`}
+              >
+                <Table.tr>
+                  <Table.td borderBottom="1px solid white" />
+                  <Table.td>
+                    <TokenIcon symbol={gem} size={31.67} />
+                  </Table.td>
+                  <Table.td>
+                    <Flex alignItems="center">
+                      <span>{tokenNames[gem]} </span>
+                      <span>{gem}</span>
+                    </Flex>
+                  </Table.td>
+                  <Table.td>
+                    {formatter(minFee, { percentage: true })}%
+                    {!minFee.eq(maxFee) && (
+                      <> - {formatter(maxFee, { percentage: true })}%</>
+                    )}
+                  </Table.td>
+                  <Table.td>
+                    {formatter(minRatio, {
+                      percentage: true
+                    })}
+                    %
+                    {!minRatio.eq(maxRatio) && (
+                      <>
+                        {' - '}
+                        {formatter(maxRatio, {
+                          percentage: true
+                        })}
+                        %
+                      </>
+                    )}
+                  </Table.td>
+                  <Table.td>
+                    {prettifyNumber(totalDaiAvailable, { truncate: true })}
+                  </Table.td>
+                  <Table.td onClick={() => toggleRow(rowIndex)}>
+                    <Carat className="carat" />
+                  </Table.td>
+                  <Table.td borderBottom="1px solid white" />
+                </Table.tr>
+              </Table.tbody>,
               <Table.tbody
                 key={gem + '-risk-profiles'}
-                display={isExpanded(rowIndex) ? 'default' : 'none'}
-                css={`
-                  ${Table.td} {
-                    background-color: #f6f8f9;
-                  }
-                  ${Table.tr}:first-child {
-                    .firstTD {
-                      border-top-left-radius: 6px;
-                    }
-                    .lastTD {
-                      border-top-right-radius: 6px;
-                    }
-                  }
-                  ${Table.tr}:last-child {
-                    .firstTD {
-                      border-bottom-left-radius: 6px;
-                    }
-                    .lastTD {
-                      border-bottom-right-radius: 6px;
-                    }
-                  }
-                `}
+                className={`risk-profiles ${
+                  isExpanded(rowIndex) ? 'expanded' : ''
+                }`}
               >
                 {cdpTypesData.map(cdpType => (
                   <Table.tr key={cdpType.symbol} borderBottom="none">
                     <td />
                     <Table.td className="firstTD" />
                     <Table.td>
-                      {gem} - {lang.borrow_markets.risk_profile}{' '}
-                      {cdpType.symbol.split('-')[1]}
+                      <div>
+                        {gem} - {lang.borrow_markets.risk_profile}{' '}
+                        {cdpType.symbol.split('-')[1]}
+                      </div>
                     </Table.td>
                     <Table.td>
-                      {formatter(cdpType.annualStabilityFee, {
-                        percentage: true
-                      })}
-                      %
+                      <div>
+                        {formatter(cdpType.annualStabilityFee, {
+                          percentage: true
+                        })}
+                        %
+                      </div>
                     </Table.td>
                     <Table.td>
-                      {formatter(cdpType.liquidationRatio, {
-                        percentage: true
-                      })}
-                      %
+                      <div>
+                        {formatter(cdpType.liquidationRatio, {
+                          percentage: true
+                        })}
+                        %
+                      </div>
                     </Table.td>
                     <Table.td>
-                      {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
-                        truncate: true
-                      })}
+                      <div>
+                        {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
+                          truncate: true
+                        })}
+                      </div>
                     </Table.td>
                     <Table.td className="lastTD" />
                     <td />
@@ -202,7 +256,7 @@ function BorrowMarkets() {
               </Table.tbody>
             ];
           })}
-      </Table>
+      </StyledTable>
     </StyledPageContentLayout>
   );
 }
