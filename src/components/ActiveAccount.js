@@ -5,7 +5,7 @@ import { getWebClientProviderName } from 'utils/web3';
 import { cutMiddle } from 'utils/ui';
 import useLanguage from 'hooks/useLanguage';
 
-import { ReactComponent as CaratDownIcon } from 'images/carat-down.svg';
+import CaratDownIcon from 'components/Carat';
 
 const ActiveAccount = ({
   address,
