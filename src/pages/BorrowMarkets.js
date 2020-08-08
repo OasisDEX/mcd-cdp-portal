@@ -112,7 +112,7 @@ const StyledTable = styled(Table)`
         border-top-right-radius: 6px;
       }
     }
-    ${Table.tr}:nth-last-child (2) {
+    ${Table.tr}:nth-last-child(2) {
       .firstTD {
         border-bottom-left-radius: 6px;
       }
