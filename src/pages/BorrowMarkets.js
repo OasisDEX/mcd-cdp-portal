@@ -34,6 +34,7 @@ const GrayText = styled(Text)``;
 
 const StyledTable = styled(Table)`
   width: 100%;
+  min-width: 401px;
   max-width: 1090px;
   margin: 61px auto 0;
 
@@ -50,8 +51,18 @@ const StyledTable = styled(Table)`
     color: #6f838f;
   }
 
-  .summary:not(:nth-last-child(2)) {
-    border-bottom: 1px solid rgba(224, 224, 224, 0.75);
+  .gem {
+    color: ${props => props.theme.colors.darkPurple};
+  }
+
+  @media (min-width: ${props => props.theme.breakpoints.m}) {
+    .gem {
+      color: #6f838f;
+    }
+  }
+
+  ${Table.thead}, .summary:not(:nth-last-child(2)) {
+    border-bottom: 1px solid #e8e8e8;
   }
 
   .expand-btn {
@@ -101,6 +112,12 @@ const StyledTable = styled(Table)`
       display: table-row-group;
     }
   }
+
+  @media (max-width: ${props => props.theme.breakpoints.m}) {
+    ${Table.td}, ${Table.th} {
+      padding-right: 6px;
+    }
+  }
 `;
 
 function BorrowMarkets() {
@@ -121,7 +138,11 @@ function BorrowMarkets() {
   };
 
   return (
-    <StyledPageContentLayout>
+    <StyledPageContentLayout
+      css={`
+        overflow: scroll;
+      `}
+    >
       <PageHead
         title={lang.borrow_markets.meta.title}
         description={lang.borrow_landing.meta.description}
@@ -132,18 +153,22 @@ function BorrowMarkets() {
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
       <StyledTable>
-        <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
+        <Table.thead>
           <Table.tr>
-            <Table.th width={TABLE_PADDING} />
-            <Table.th width="49px" />
-            <Table.th>{lang.overview_page.token}</Table.th>
-            <Table.th width="190px">{lang.stability_fee}</Table.th>
-            <Table.th width="190px">
+            <Table.th width={{ s: '0', m: TABLE_PADDING }} />
+            <Table.th width={{ s: '30px', m: '49px' }} />
+            <Table.th minWidth="80px">{lang.overview_page.token}</Table.th>
+            <Table.th width={{ s: 'unset', xl: '190px' }}>
+              {lang.stability_fee}
+            </Table.th>
+            <Table.th width={{ s: 'unset', xl: '190px' }}>
               {lang.borrow_markets.min_col_ratio}
             </Table.th>
-            <Table.th width="190px">{lang.dai_available}</Table.th>
+            <Table.th width={{ s: 'unset', xl: '190px' }}>
+              {lang.dai_available}
+            </Table.th>
             <Table.th />
-            <Table.th width={TABLE_PADDING} />
+            <Table.th width={{ s: '0', m: TABLE_PADDING }} />
           </Table.tr>
         </Table.thead>
         {collateralTypesData &&
@@ -189,8 +214,12 @@ function BorrowMarkets() {
                     <TokenIcon symbol={gem} size={31.67} />
                   </Table.td>
                   <Table.td>
-                    <Text>{tokenNames[gem]}</Text>
-                    <GrayText ml="8px">{gem}</GrayText>
+                    <Text display={{ s: 'none', m: 'inline' }}>
+                      {tokenNames[gem]}
+                    </Text>
+                    <GrayText ml="8px" className="gem">
+                      {gem}
+                    </GrayText>
                   </Table.td>
                   <Table.td>
                     <Number>
