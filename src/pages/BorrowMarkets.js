@@ -17,7 +17,7 @@ import usePrevious from '../hooks/usePrevious';
 import Carat from 'components/Carat';
 
 const tokenNames = {
-  ETH: 'Ether',
+  ETH: 'Ethereum',
   BAT: 'Basic Attention Token',
   WBTC: 'Wrapped Bitcoin',
   USDC: 'USD Coin',
@@ -29,10 +29,26 @@ const tokenNames = {
 
 const TABLE_PADDING = '33px';
 
+const Number = styled(Text)``;
+const GrayText = styled(Text)``;
+
 const StyledTable = styled(Table)`
   width: 100%;
   max-width: 1090px;
   margin: 61px auto 0;
+
+  ${Text} {
+    color: ${props => props.theme.colors.darkPurple};
+    font-size: ${props => props.theme.fontSizes.s};
+  }
+
+  ${Number} {
+    font-size: 15px;
+  }
+
+  ${GrayText} {
+    color: #6f838f;
+  }
 
   .summary:not(:nth-last-child(2)) {
     border-bottom: 1px solid rgba(224, 224, 224, 0.75);
@@ -119,7 +135,7 @@ function BorrowMarkets() {
         <Table.thead borderBottom="1px solid rgba(224, 224, 224, 0.75)">
           <Table.tr>
             <Table.th width={TABLE_PADDING} />
-            <Table.th />
+            <Table.th width="49px" />
             <Table.th>{lang.overview_page.token}</Table.th>
             <Table.th width="190px">{lang.stability_fee}</Table.th>
             <Table.th width="190px">
@@ -173,34 +189,38 @@ function BorrowMarkets() {
                     <TokenIcon symbol={gem} size={31.67} />
                   </Table.td>
                   <Table.td>
-                    <Flex alignItems="center">
-                      <span>{tokenNames[gem]} </span>
-                      <span>{gem}</span>
-                    </Flex>
+                    <Text>{tokenNames[gem]}</Text>
+                    <GrayText ml="8px">{gem}</GrayText>
                   </Table.td>
                   <Table.td>
-                    {formatter(minFee, { percentage: true })}%
-                    {!minFee.eq(maxFee) && (
-                      <> - {formatter(maxFee, { percentage: true })}%</>
-                    )}
+                    <Number>
+                      {formatter(minFee, { percentage: true })}%
+                      {!minFee.eq(maxFee) && (
+                        <> - {formatter(maxFee, { percentage: true })}%</>
+                      )}
+                    </Number>
                   </Table.td>
                   <Table.td>
-                    {formatter(minRatio, {
-                      percentage: true
-                    })}
-                    %
-                    {!minRatio.eq(maxRatio) && (
-                      <>
-                        {' - '}
-                        {formatter(maxRatio, {
-                          percentage: true
-                        })}
-                        %
-                      </>
-                    )}
+                    <Number>
+                      {formatter(minRatio, {
+                        percentage: true
+                      })}
+                      %
+                      {!minRatio.eq(maxRatio) && (
+                        <>
+                          {' - '}
+                          {formatter(maxRatio, {
+                            percentage: true
+                          })}
+                          %
+                        </>
+                      )}
+                    </Number>
                   </Table.td>
                   <Table.td>
-                    {prettifyNumber(totalDaiAvailable, { truncate: true })}
+                    <Number>
+                      {prettifyNumber(totalDaiAvailable, { truncate: true })}
+                    </Number>
                   </Table.td>
                   <Table.td>
                     <div
@@ -224,25 +244,33 @@ function BorrowMarkets() {
                     <td />
                     <Table.td className="firstTD" />
                     <Table.td>
-                      {gem} - {lang.borrow_markets.risk_profile}{' '}
-                      {cdpType.symbol.split('-')[1]}
+                      <GrayText>
+                        {gem} - {lang.borrow_markets.risk_profile}{' '}
+                        {cdpType.symbol.split('-')[1]}
+                      </GrayText>
                     </Table.td>
                     <Table.td>
-                      {formatter(cdpType.annualStabilityFee, {
-                        percentage: true
-                      })}
-                      %
+                      <Number>
+                        {formatter(cdpType.annualStabilityFee, {
+                          percentage: true
+                        })}
+                        %
+                      </Number>
                     </Table.td>
                     <Table.td>
-                      {formatter(cdpType.liquidationRatio, {
-                        percentage: true
-                      })}
-                      %
+                      <Number>
+                        {formatter(cdpType.liquidationRatio, {
+                          percentage: true
+                        })}
+                        %
+                      </Number>
                     </Table.td>
                     <Table.td>
-                      {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
-                        truncate: true
-                      })}
+                      <Number>
+                        {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
+                          truncate: true
+                        })}
+                      </Number>
                     </Table.td>
                     <Table.td className="lastTD" />
                     <td />
