@@ -113,7 +113,7 @@ const StyledTable = styled(Table)`
         border-top-right-radius: 6px;
       }
     }
-    ${Table.tr}:nth-last-child (2) {
+    ${Table.tr}:nth-last-child(2) {
       .firstTD {
         border-bottom-left-radius: 6px;
       }
@@ -122,9 +122,29 @@ const StyledTable = styled(Table)`
       }
     }
 
-    display: none;
+    td,
+    div {
+      transition: opacity 0s;
+      opacity: 0;
+      max-height: 0;
+    }
+    td {
+      padding: 0 0;
+    }
+
     &.expanded {
-      display: table-row-group;
+      td,
+      div {
+        transition: opacity 0.2s ease;
+        opacity: 1;
+        max-height: 1100px;
+      }
+      td {
+        padding: 12px 0;
+      }
+      .risk-profiles-margin-row {
+        height: 10px;
+      }
     }
   }
 
@@ -291,39 +311,47 @@ function BorrowMarkets() {
                     <td />
                     <Table.td className="firstTD" />
                     <Table.td>
-                      <Text className="profile-name">
-                        {gem} - {lang.borrow_markets.risk_profile}{' '}
-                        {cdpType.symbol.split('-')[1]}
-                      </Text>
+                      <div>
+                        <Text className="profile-name">
+                          {gem} - {lang.borrow_markets.risk_profile}{' '}
+                          {cdpType.symbol.split('-')[1]}
+                        </Text>
+                      </div>
                     </Table.td>
                     <Table.td>
-                      <Number>
-                        {formatter(cdpType.annualStabilityFee, {
-                          percentage: true
-                        })}
-                        %
-                      </Number>
+                      <div>
+                        <Number>
+                          {formatter(cdpType.annualStabilityFee, {
+                            percentage: true
+                          })}
+                          %
+                        </Number>
+                      </div>
                     </Table.td>
                     <Table.td>
-                      <Number>
-                        {formatter(cdpType.liquidationRatio, {
-                          percentage: true
-                        })}
-                        %
-                      </Number>
+                      <div>
+                        <Number>
+                          {formatter(cdpType.liquidationRatio, {
+                            percentage: true
+                          })}
+                          %
+                        </Number>
+                      </div>
                     </Table.td>
                     <Table.td>
-                      <Number>
-                        {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
-                          truncate: true
-                        })}
-                      </Number>
+                      <div>
+                        <Number>
+                          {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
+                            truncate: true
+                          })}
+                        </Number>
+                      </div>
                     </Table.td>
                     <Table.td className="lastTD" />
                     <td />
                   </Table.tr>
                 ))}
-                <tr style={{ height: '10px' }} />
+                <tr className="risk-profiles-margin-row" />
               </Table.tbody>
             ];
           })
