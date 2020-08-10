@@ -135,7 +135,7 @@ const StyledTable = styled(Table)`
     &.expanded {
       td,
       div {
-        transition: opacity 0.2s ease;
+        transition: opacity 0.15s ease;
         opacity: 1;
         max-height: 1100px;
       }
