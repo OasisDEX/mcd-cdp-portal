@@ -66,13 +66,17 @@ export async function instantiateMaker({
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
   };
 
+  // const mewconnectPluginConfig = {
+  //   rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
+  // };
+
   const config = {
     log: false,
     plugins: [
       trezorPlugin,
       ledgerPlugin,
       [walletLinkPlugin, walletLinkPluginConfig],
-      [mewconnectPlugin, walletLinkPluginConfig],
+      mewconnectPlugin,
       walletConnectPlugin,
       dcentPlugin,
       [McdPlugin, mcdPluginConfig]

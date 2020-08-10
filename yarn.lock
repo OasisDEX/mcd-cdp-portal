@@ -2525,20 +2525,20 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@myetherwallet/dai-plugin-mewconnect@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@myetherwallet/dai-plugin-mewconnect/-/dai-plugin-mewconnect-0.0.4.tgz#3c9f4cc24aa6ed4ea96e457001346a036289aa8f"
-  integrity sha512-5AQ4+u/4YpS9S9zkeFtZ6AHqyBErpCy2Vbl8/GpVfuA15sSCHAvEQwI2NxmIebX9p8odCHQ5AOJl98n+Pqp3lg==
+"@myetherwallet/dai-plugin-mewconnect@0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@myetherwallet/dai-plugin-mewconnect/-/dai-plugin-mewconnect-0.0.11.tgz#077061ff5e37065375dfec8ef50c810d52c91f2f"
+  integrity sha512-xf0NBHSB/mGXJPYIvVFPCoLHsHsvToqHXNo8Yn5Ap9DFfZ8oyuruY5lmYV0yCWb8SH7pWcBHZI2VfbCsrS0Biw==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/dai" "^0.18.4"
     "@makerdao/services-core" "^0.9.9"
-    "@myetherwallet/mewconnect-web-client" "2.1.0-RC.5.13"
+    "@myetherwallet/mewconnect-web-client" "2.1.1-RC.4.5"
 
-"@myetherwallet/mewconnect-web-client@2.1.0-RC.5.13":
-  version "2.1.0-RC.5.13"
-  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.1.0-RC.5.13.tgz#23c0d1681ba14ed69c89dce3d2cd33e54dca0ef4"
-  integrity sha512-aY13Bv9qdeO0p6DrmlyrLOvtYgRY+RdENR6x4uPIBgmEzEh3zreuNoX39y+kUUXFAq4akXQOAYkZGr0C4eRrAA==
+"@myetherwallet/mewconnect-web-client@2.1.1-RC.4.5":
+  version "2.1.1-RC.4.5"
+  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.1.1-RC.4.5.tgz#89b49d31bcbcdf1ceda0025c3a39ba5ca3eed8b1"
+  integrity sha512-/r/02a7cfrReNTrbo/OlobA6NG7Y9HIvmjAlNL39DSNZX9d446fu/W7LRLFabjoAMvPrgdTPXqW5mwS3DvahrQ==
   dependencies:
     bignumber.js "^9.0.0"
     browser-or-node "^1.2.1"
@@ -2572,7 +2572,7 @@
     web3-core-requestmanager "1.2.4"
     web3-utils "1.2.4"
     webrtc-adapter "^6.4.3"
-    wrtc "^0.4.4"
+    wrtc "^0.4.6"
     ws "^7.2.1"
 
 "@nodelib/fs.scandir@2.1.3":
@@ -19055,7 +19055,7 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
-wrtc@^0.4.4:
+wrtc@^0.4.6:
   version "0.4.6"
   resolved "https://registry.yarnpkg.com/wrtc/-/wrtc-0.4.6.tgz#909ace2cffd34e11633d4e1c20527510a12e7b5b"
   integrity sha512-4uD+oFoY2yuo3AV9fum3cXUXR6v8YQHZlqBrKkCRGjW1BvKrVHtLNH4UaNLBLiJu9DL89WqUWmbzsQ9RxMzANw==
