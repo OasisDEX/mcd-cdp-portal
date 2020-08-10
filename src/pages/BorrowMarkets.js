@@ -13,7 +13,6 @@ import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
 import styled from 'styled-components';
-import usePrevious from '../hooks/usePrevious';
 import Carat from 'components/Carat';
 import { ReactComponent as ExternalLinkIcon } from '../images/external-link.svg';
 import { getColor } from '../styles/theme';
