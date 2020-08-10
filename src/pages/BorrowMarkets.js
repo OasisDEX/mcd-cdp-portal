@@ -284,9 +284,7 @@ function BorrowMarkets() {
                     </Number>
                   </Table.td>
                   <Table.td>
-                    <Number>
-                      {prettifyNumber(totalDaiAvailable, { truncate: true })}
-                    </Number>
+                    <Number>{prettifyNumber(totalDaiAvailable, true)}</Number>
                   </Table.td>
                   <Table.td>
                     <div
@@ -340,9 +338,10 @@ function BorrowMarkets() {
                     <Table.td>
                       <div>
                         <Number>
-                          {prettifyNumber(cdpType.maxDaiAvailableToGenerate, {
-                            truncate: true
-                          })}
+                          {prettifyNumber(
+                            cdpType.maxDaiAvailableToGenerate,
+                            true
+                          )}
                         </Number>
                       </div>
                     </Table.td>
