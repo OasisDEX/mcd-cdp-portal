@@ -8,7 +8,7 @@ import {
   StyledPageContentLayout,
   TokenIcon
 } from 'components/Marketing';
-import { Box, Text, Table, Link } from '@makerdao/ui-components-core';
+import { Box, Text, Table, Link, Loader } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import BigNumber from 'bignumber.js';
 import { formatter, prettifyNumber } from 'utils/ui';
@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import usePrevious from '../hooks/usePrevious';
 import Carat from 'components/Carat';
 import { ReactComponent as ExternalLinkIcon } from '../images/external-link.svg';
+import { getColor } from '../styles/theme';
 
 const tokenNames = {
   ETH: 'Ether',
@@ -112,7 +113,7 @@ const StyledTable = styled(Table)`
         border-top-right-radius: 6px;
       }
     }
-    ${Table.tr}:nth-last-child(2) {
+    ${Table.tr}:nth-last-child (2) {
       .firstTD {
         border-bottom-left-radius: 6px;
       }
@@ -190,7 +191,7 @@ function BorrowMarkets() {
           </Table.tr>
         </Table.thead>
         <tr style={{ height: '8px' }} />
-        {collateralTypesData &&
+        {collateralTypesData ? (
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
             cdpTypesData = cdpTypesData.map(data => {
               const collateralDebtAvailable = data.collateralDebtAvailable?.toBigNumber();
@@ -327,7 +328,19 @@ function BorrowMarkets() {
                 <tr style={{ height: '10px' }} />
               </Table.tbody>
             ];
-          })}
+          })
+        ) : (
+          <tr>
+            <td colSpan={8}>
+              <Loader
+                size="4rem"
+                color={getColor('spinner')}
+                bg="white"
+                m="40px auto"
+              />
+            </td>
+          </tr>
+        )}
       </StyledTable>
       <Box textAlign="left">
         <Link href={'https://makerdao.com/feeds'} target="_blank">
