@@ -208,7 +208,7 @@ function BorrowMarkets() {
             <Table.th width={{ s: '0', m: TABLE_PADDING }} />
           </Table.tr>
         </Table.thead>
-        <tr style={{ height: '8px' }} />
+        <tr style={{ height: '8px', border: 'none' }} />
         {collateralTypesData ? (
           Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
             cdpTypesData = cdpTypesData.map(data => {
