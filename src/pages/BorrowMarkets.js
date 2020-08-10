@@ -138,9 +138,7 @@ const StyledTable = styled(Table)`
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
-  let collateralTypesData = watch.collateralTypesData(cdpTypesList);
-  const prevData = usePrevious(collateralTypesData);
-  collateralTypesData = collateralTypesData || prevData;
+  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
 
   const cdpTypesByGem = groupBy(
     collateralTypesData,
