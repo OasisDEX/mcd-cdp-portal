@@ -178,12 +178,11 @@ export default {
   },
   borrow_markets: {
     meta: {
-      title: 'Oasis Borrow - Available DAI'
+      title: 'Oasis Borrow - Markets'
     },
-    heading: 'Available DAI',
+    heading: 'Borrow Markets',
     subheading: 'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
-    min_col_ratio: 'Min colateral ratio',
-    risk_profile: 'Risk Profile'
+    min_col_ratio: 'Min collateral ratio'
   },
   save_landing: {
     meta: {

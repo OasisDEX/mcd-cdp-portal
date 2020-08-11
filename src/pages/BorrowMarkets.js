@@ -52,16 +52,11 @@ const StyledTable = styled(Table)`
 
   .profile-name {
     color: #6f838f;
-    font-size: 14px;
   }
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
     .gem {
       color: #6f838f;
-    }
-
-    .profile-name {
-      font-size: ${props => props.theme.fontSizes.s};
     }
   }
 
@@ -112,6 +107,7 @@ const StyledTable = styled(Table)`
         border-top-right-radius: 6px;
       }
     }
+    /* prettier-ignore */
     ${Table.tr}:nth-last-child(2) {
       .firstTD {
         border-bottom-left-radius: 6px;
@@ -309,10 +305,7 @@ function BorrowMarkets() {
                     <Table.td className="firstTD" />
                     <Table.td>
                       <div>
-                        <Text className="profile-name">
-                          {gem} - {lang.borrow_markets.risk_profile}{' '}
-                          {cdpType.symbol.split('-')[1]}
-                        </Text>
+                        <Text className="profile-name">{cdpType.symbol}</Text>
                       </div>
                     </Table.td>
                     <Table.td>
