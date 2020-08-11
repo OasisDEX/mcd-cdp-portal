@@ -154,6 +154,7 @@ function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
   const collateralTypesData = watch.collateralTypesData(cdpTypesList);
+  const debtCeilings = watch.collateralDebtCeilings(cdpTypesList);
 
   const cdpTypesByGem = groupBy(
     collateralTypesData,
@@ -335,6 +336,13 @@ function BorrowMarkets() {
                             cdpType.maxDaiAvailableToGenerate,
                             true
                           )}
+                          {debtCeilings &&
+                            ` / ${prettifyNumber(
+                              debtCeilings[cdpType.symbol],
+                              true,
+                              2,
+                              false
+                            )}`}
                         </Number>
                       </div>
                     </Table.td>
