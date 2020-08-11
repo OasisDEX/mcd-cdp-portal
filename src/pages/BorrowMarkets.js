@@ -76,22 +76,36 @@ const StyledTable = styled(Table)`
 
   .expand-btn {
     padding: 6px 0;
-    cursor: pointer;
     svg {
       stroke: #9aa3ad;
       transition: transform 0.2s;
     }
-
-    &:hover svg {
-      stroke: #60666c;
-    }
   }
 
-  .summary.expanded {
-    border-bottom: none;
+  .summary {
+    cursor: pointer;
 
-    .expand-btn svg {
-      transform: rotate(180deg);
+    td.margin {
+      border-bottom: 1px solid white;
+    }
+
+    &:hover {
+      ${Table.td} {
+        background-color: rgba(246, 248, 249, 0.4);
+        box-shadow: inset 0 0 6px 3px rgba(255, 255, 255, 0.6);
+      }
+
+      .expand-btn svg {
+        stroke: #60666c;
+      }
+    }
+
+    &.expanded {
+      border-bottom: none;
+
+      .expand-btn svg {
+        transform: rotate(180deg);
+      }
     }
   }
 
@@ -241,9 +255,10 @@ function BorrowMarkets() {
               <Table.tbody
                 key={gem}
                 className={`summary ${isExpanded(rowIndex) ? 'expanded' : ''}`}
+                onClick={() => toggleRow(rowIndex)}
               >
                 <Table.tr>
-                  <Table.td borderBottom="1px solid white" />
+                  <td className="margin" />
                   <Table.td>
                     <TokenIcon symbol={gem} size={31.67} />
                   </Table.td>
@@ -284,14 +299,11 @@ function BorrowMarkets() {
                     <Number>{prettifyNumber(totalDaiAvailable, true)}</Number>
                   </Table.td>
                   <Table.td>
-                    <div
-                      className="expand-btn"
-                      onClick={() => toggleRow(rowIndex)}
-                    >
+                    <div className="expand-btn">
                       <Carat />
                     </div>
                   </Table.td>
-                  <Table.td borderBottom="1px solid white" />
+                  <td className="margin" />
                 </Table.tr>
               </Table.tbody>,
               <Table.tbody
