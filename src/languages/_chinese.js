@@ -623,7 +623,8 @@ export default {
     dcent: 'D\'CENT',
     other: '当前钱包',
     ledger: 'Ledger',
-    walletconnect: 'Wallet Connect'
+    walletconnect: 'Wallet Connect',
+    mewconnect: 'MEW Wallet'
   },
   notifications: {
     claim: '赎回',

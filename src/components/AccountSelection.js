@@ -234,7 +234,7 @@ function AccountSelection({ buttonWidth = '213px', ...props }) {
       icon={<MewConnectLogo />}
       key="mew-connect"
     >
-      {lang.landing_page.mewconnect}
+      {lang.providers.mewconnect}
     </IconItem>
   );
 
