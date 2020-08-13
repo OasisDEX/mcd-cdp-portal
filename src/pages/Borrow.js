@@ -210,9 +210,9 @@ function Borrow({ disableConnect = false }) {
     redirect();
   }, [account, navigation, disableConnect]);
 
-  const { cdpTypes: cdpTypesList } = useCdpTypes();
+  const { cdpTypesList } = useCdpTypes();
   const prices = watch.collateralTypesPrices(
-    cdpTypesList?.length ? cdpTypesList.map(({ symbol }) => symbol) : []
+    cdpTypesList?.length ? cdpTypesList : []
   );
 
   return (

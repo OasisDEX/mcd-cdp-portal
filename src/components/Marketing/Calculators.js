@@ -367,16 +367,14 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
   const interfaceLocale = lang.getInterfaceLanguage();
 
   const gems = cdpTypesList
-    .map(({ symbol }) => symbol)
     .map((cdpTypeName, index) => ({
-      name: cdpTypeName,
+      symbol: cdpTypeName,
       price: prices[index].toBigNumber()
     }))
-    .filter(cdpType => cdpTypesMetaData[cdpType.name])
+    .filter(cdpType => cdpTypesMetaData[cdpType.symbol])
     .map(cdpType => ({
       ...cdpType,
-      ...cdpTypesMetaData[cdpType.name],
-      symbol: cdpType.name
+      ...cdpTypesMetaData[cdpType.symbol]
     }));
 
   const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
