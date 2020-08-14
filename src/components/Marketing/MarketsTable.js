@@ -8,6 +8,7 @@ import Carat from '../Carat';
 import { getColor } from 'styles/theme';
 import useLanguage from 'hooks/useLanguage';
 import groupBy from 'lodash.groupby';
+import { watch } from 'hooks/useObservable';
 
 const TABLE_PADDING = '33px';
 
@@ -156,7 +157,9 @@ const MarketsTableStyle = styled(Table)`
   }
 `;
 
-const MarketsTable = ({ collateralTypesData, debtCeilings }) => {
+const MarketsTable = ({ cdpTypesList, ...props }) => {
+  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
+  const debtCeilings = watch.collateralDebtCeilings(cdpTypesList);
   const { lang } = useLanguage();
   const cdpTypesByGem = groupBy(
     collateralTypesData,
@@ -169,7 +172,7 @@ const MarketsTable = ({ collateralTypesData, debtCeilings }) => {
   };
 
   return (
-    <MarketsTableStyle>
+    <MarketsTableStyle {...props}>
       <Table.thead>
         <Table.tr>
           <Table.th width={{ s: '0', m: TABLE_PADDING }} />

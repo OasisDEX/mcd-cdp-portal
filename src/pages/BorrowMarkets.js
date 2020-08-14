@@ -2,7 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import useLanguage from 'hooks/useLanguage';
 import useCdpTypes from 'hooks/useCdpTypes';
-import { watch } from 'hooks/useObservable';
+
 import {
   MarketsTable,
   PageHead,
@@ -14,8 +14,6 @@ import { ReactComponent as ExternalLinkIcon } from '../images/external-link.svg'
 function BorrowMarkets() {
   const { lang } = useLanguage();
   const { cdpTypesList } = useCdpTypes();
-  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
-  const debtCeilings = watch.collateralDebtCeilings(cdpTypesList);
 
   return (
     <StyledPageContentLayout
@@ -36,10 +34,7 @@ function BorrowMarkets() {
         </Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <MarketsTable
-        collateralTypesData={collateralTypesData}
-        debtCeilings={debtCeilings}
-      />
+      <MarketsTable cdpTypesList={cdpTypesList} />
       <Box textAlign="left">
         <Link href={'https://makerdao.com/feeds'} target="_blank">
           <Text color="blue" fontSize="15px">

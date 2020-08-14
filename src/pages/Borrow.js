@@ -22,7 +22,8 @@ import {
   SeparatorDot,
   BorrowCalculator,
   StyledPageContentLayout,
-  PageHead
+  PageHead,
+  MarketsTable
 } from 'components/Marketing';
 
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -294,6 +295,19 @@ function Borrow({ disableConnect = false }) {
           })
         )}
       />
+      <Box>
+        <Box maxWidth="844px" m="76px auto 0">
+          <Text.h3 fontWeight="normal" mb="12px">
+            {lang.borrow_markets.heading}
+          </Text.h3>
+          <Text>{lang.borrow_markets.subheading}</Text>
+        </Box>
+        <MarketsTable
+          cdpTypesList={cdpTypesList.filter(symbol =>
+            ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
+          )}
+        />
+      </Box>
       <QuestionsWrapper>
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
