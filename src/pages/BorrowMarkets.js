@@ -34,7 +34,10 @@ function BorrowMarkets() {
         </Text.h3>
         <Text>{lang.borrow_markets.subheading}</Text>
       </Box>
-      <MarketsTable cdpTypesList={cdpTypesList} />
+      <MarketsTable
+        cdpTypesList={cdpTypesList}
+        style={{ marginTop: '60px', marginBottom: '17px' }}
+      />
       <Box textAlign="left">
         <Link href={'https://makerdao.com/feeds'} target="_blank">
           <Text color="blue" fontSize="15px">

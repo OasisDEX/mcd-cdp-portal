@@ -28,7 +28,7 @@ const tokenNames = {
 const MarketsTableStyle = styled(Table)`
   width: 100%;
   min-width: 401px;
-  margin: 60px auto 17px;
+  margin: 0 auto;
 
   ${Text} {
     color: ${props => props.theme.colors.darkPurple};

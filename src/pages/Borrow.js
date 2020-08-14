@@ -300,13 +300,28 @@ function Borrow({ disableConnect = false }) {
           <Text.h2 mb="34px">{lang.borrow_markets.heading}</Text.h2>
           <Text>{lang.borrow_markets.subheading}</Text>
         </Box>
-        <MarketsTable
-          cdpTypesList={cdpTypesList.filter(symbol =>
-            ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
-          )}
-          style={{ marginTop: '87px' }}
-        />
-        <Box textAlign="left" mt="35px" pl="37px">
+        <Box
+          mt={{ s: '54px', m: '87px' }}
+          css={`
+            overflow-x: scroll;
+            overflow-y: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            -ms-overflow-style: none;
+          `}
+        >
+          <MarketsTable
+            cdpTypesList={cdpTypesList.filter(symbol =>
+              ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
+            )}
+          />
+        </Box>
+        <Box
+          textAlign="left"
+          mt={{ s: '20px', m: '35px' }}
+          pl={{ s: '6px', m: '37px' }}
+        >
           <Link
             href={`/${Routes.BORROW}/markets`}
             style={{ textDecoration: 'underline' }}
