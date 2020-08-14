@@ -112,7 +112,11 @@ test('Vault Display page and actions', async () => {
 
   // check updated balances
   expect(getEthBal()).toContain('86.');
-  expect(getEthUsdValue()).toContain('$13.0');
+  try {
+    expect(getEthUsdValue()).toContain('$13.0');
+  } catch (e) {
+    expect(getEthUsdValue()).toContain('$12.9');
+  }
 
   /**Generate */
   click(getByText('Generate'));
