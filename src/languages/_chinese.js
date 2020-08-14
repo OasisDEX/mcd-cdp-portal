@@ -21,6 +21,10 @@ export default {
     not_applicable: 'N/A'
   },
   landing_page: {
+    meta: {
+      title: 'Oasis.app',
+      description: '"一站式 Dai 交易、借贷、存款平台。订单簿模式交易，抵押生成美元稳定币 Dai，存 Dai 获取收益。'
+    },
     headline: '一站式 Dai 交易、借贷、存款平台',
     trade_card: {
       title: 'Trade',
@@ -88,6 +92,10 @@ export default {
     wallet_link: 'Coinbase Wallet'
   },
   borrow_landing: {
+    meta: {
+      title: 'Oasis Borrow',
+      description: '让你的资产增倍。通过「金库」轻松抵押资产生成 Dai。在获得流动性的同时，保持抵押品的增值机会。'
+    },
     page_name: 'Oasis Borrow',
     headline: '让你的资产增倍',
     subheadline:
@@ -164,6 +172,10 @@ export default {
     step5_link_text: 'Oasis.app/borrow'
   },
   save_landing: {
+    meta: {
+      title: 'Oasis Save',
+      description: '最安全的储蓄方式。任何人都可以存入 Dai 获取实时收益。无手续费，无限额，低波动。'
+    },
     page_name: 'Oasis Save',
     headline: '最安全的储蓄方式',
     subheadline:
@@ -178,6 +190,16 @@ export default {
         '当市场波动大的时候，我决定将资产换成 Dai 放在「金库」里。享受稳定收益带来的宁静，不用再担心暴跌。',
       author1: 'Oasis Save 用户'
     },
+    calc_heading: '我可以赚多少利息？',
+    calc_subheading:
+      '输入存 Dai 数量和时间，看看可以赚取多少存款利息。',
+    calc_initial: '初始存入数额',
+    calc_contribution: '每月存款额',
+    calc_how_long: '存款时间',
+    calc_savings_earned: '已赚取的 Dai 数额',
+    calc_total_dai: '总 Dai 数额',
+    calc_footnote:
+      '以上的计算基于 {dsr}％ 的 Dai 存款利率',
     feature1_heading: '更好的货币',
     feature1_content:
       '随时随地管理自己的储蓄，控制权始终在用户自己手里。',
@@ -210,6 +232,10 @@ export default {
     }
   },
   trade_landing: {
+    meta: {
+      title: 'Oasis Trade',
+      description: '点对点的加密货币交易。完全去中心化、零手续费，支持订单簿与闪兑'
+    },
     page_name: 'Oasis Trade',
     headline: '点对点的加密货币交易',
     subheadline:
@@ -282,7 +308,8 @@ export default {
     borrow: '借贷',
     trade: '交易',
     privacy: '隐私政策',
-    terms: '条款'
+    terms: '条款',
+    blog: '博客'
   },
   sidebar: {
     wallet_balances: '钱包余额',
@@ -340,6 +367,7 @@ export default {
     setup_proxy_proxy_button: '初始化',
     setup_proxy_allowance_button: '授权',
     setup_vault: '初始化金库',
+    max_dai_available_to_generate: '最大可生成 Dai 数额',
 
     deposit_title: '抵押 {0} 并生成 Dai',
     deposit_text:
@@ -385,7 +413,12 @@ export default {
       "等待确认完成可以防止金库地址发生变动。我们建议用户等待10个确认完成，保证创建成功。该过程一般需要2分钟。",
     proxy_failure_not_mined: '本笔交易所需时间较长...',
     proxy_failure_not_mined_info:
-      '交易时间受网络拥堵程度影响，或者选择的矿工费过低。有些钱包可以选择用更高矿工费重新发起交易，或者你可以在 Etherscan 查询交易状态，稍后返回查看进程。'
+      '交易时间受网络拥堵程度影响，或者选择的矿工费过低。有些钱包可以选择用更高矿工费重新发起交易，或者你可以在 Etherscan 查询交易状态，稍后返回查看进程。',
+    proxy_failure_contract_data: '无法连接 Ledger 钱包…',
+    proxy_failure_contract_data_info: '如果在使用 Ledger 硬件钱包时看到此消息，通常意味着需要授权“合约数据”。请前往 Ledger 的以太坊应用，选择"设置"-"合约数据"。',
+    proxy_failure_rejected: '交易已拒绝',
+    proxy_failure_timeout: '交易超时，并被自动拒绝。',
+    proxy_failure_timeout_info: '此错误原因通常是没有在一定时间内签名交易，该交易已被钱包自动拒绝。对于这种情况，需要手动在钱包拒绝交易以允许重新签名。',
   },
   cdp_migrate: {
     select_title: '选择要映射的金库',
@@ -433,7 +466,8 @@ export default {
     generate: '生成',
     send: '发送',
     skip: '跳过',
-    get_started: '进入'
+    get_started: '进入',
+    try_again: '请再试一次'
   },
   actions_past_tense: {
     deposit: '已存入',
@@ -450,7 +484,9 @@ export default {
     generate: '从金库生成 {0} 新 Dai',
     pay_back: '偿还 {0} Dai 到金库',
     give: '金库转移从 {1} 转移到 {0}',
-    migrate: '单抵押 Dai 已成功转移到金库'
+    migrate: '单抵押 Dai 已成功转移到金库',
+    bite: '从金库拍卖了{0} {1}',
+    reclaim: '拍卖后剩余{0} {1}'
   },
   action_sidebar: {
     deposit_title: '存入 {0}',
@@ -463,6 +499,7 @@ export default {
     generate_description: '你希望生成多少 DAI?',
     generate_warning:
       '你生成的 Dai 的数量会让金额接近清算线风险',
+    generate_threshold: '尝试生成的 Dai 超过了可授权的数额，请输入少于 {0} 的 Dai 数额。',
     payback_title: '偿还 DAI',
     payback_description: '你希望偿还多少 DAI?',
     cdp_below_threshold: '金库低于清算线',
@@ -514,12 +551,14 @@ export default {
     dai_locked_dsr: '存在 DSR 中的 DAI',
     deposit_withdraw: '存入和取回',
     deposit_btn_cta: '实时获取收益',
-    withdraw_btn_cta: '随时安全可取'
+    withdraw_btn_cta: '随时安全可取',
+    no_savings: '此地址不存在或没有 Dai 存款利率记录'
   },
   verbs: {
     depositing: '存入',
     generating: '生成',
-    withdrawing: '取回'
+    withdrawing: '取回',
+    paying_back: '偿还'
   },
   table: {
     type: '类型',
@@ -567,6 +606,7 @@ export default {
     default: '请输入有效的信息'
   },
   connect: '连接',
+  disconnect: '断开',
   view: '查看',
   dismiss: 'Dismiss',
   exit: '退出',
@@ -601,6 +641,7 @@ export default {
   collateralization_ratio: '抵押率',
   current_ilk_price: '当前 {0} 价格',
   your_balance: '你的余额',
+  why_is_this: '为什么会出现这种情况？',
   // "risk_parameters": "Risk Parameters",
   terms_of_service_text: '我已经阅读并接受 {0}',
   terms_of_service: '服务条款',
@@ -623,7 +664,8 @@ export default {
     dcent: 'D\'CENT',
     other: '当前钱包',
     ledger: 'Ledger',
-    walletconnect: 'Wallet Connect'
+    walletconnect: 'Wallet Connect',
+    walletlink: 'Coinbase 钱包'
   },
   notifications: {
     claim: '赎回',
@@ -632,6 +674,11 @@ export default {
     non_vault_owner:
       '金库 ({0}) 持有者和当前钱包地址不匹配。',
     non_overview_owner:
-      '你目前在查看其他地址 ({0}) 的账户概览。'
+      '你目前在查看其他地址 ({0}) 的账户概览。',
+    non_savings_owner: '当前正在查看另一个地址（{0}）的存款',
+    emergency_shutdown_active: '紧急关停已于{0}启动。当前面板只供可读。如果你有任何金库或 Dai，请前往{1}。了解更多{2}。',
+    vault_below_next_price: '你的{0}金库已进入清算阶段，抵押品将在{1}拍卖。你仍然可以通过存入至少{2}或偿还{3}避免拍卖。',
+    vault_below_current_price: '你的{0}金库可以被清算，抵押品随时会被拍卖。你可以尝试通过存入至少{1}或偿还{2}避免拍卖。',
+    vault_is_liquidated: '你的金库已被清算，{0}已进入拍卖中。请在之后查看详细信息。'
   }
 };

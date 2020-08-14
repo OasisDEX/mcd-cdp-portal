@@ -131,6 +131,7 @@ export default {
     feature4_heading: 'No more limits',
     feature4_content:
       'You no longer have to miss out on market opportunities or sell your crypto when you need cash.',
+    markets_link: 'View full list of tokens',
     questions: {
       question1: 'What assets can I use as collateral?',
       answer1:
@@ -175,6 +176,14 @@ export default {
     step5_details:
       'Navigate to {link} and open your vault with wBTC as collateral and generate your new Dai',
     step5_link_text: 'Oasis.app/borrow'
+  },
+  borrow_markets: {
+    meta: {
+      title: 'Oasis Borrow - Markets'
+    },
+    heading: 'Borrow Markets',
+    subheading: 'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
+    min_col_ratio: 'Min collateral ratio'
   },
   save_landing: {
     meta: {

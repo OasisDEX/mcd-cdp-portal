@@ -22,7 +22,8 @@ import {
   SeparatorDot,
   BorrowCalculator,
   StyledPageContentLayout,
-  PageHead
+  PageHead,
+  MarketsTable
 } from 'components/Marketing';
 
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -210,9 +211,9 @@ function Borrow({ disableConnect = false }) {
     redirect();
   }, [account, navigation, disableConnect]);
 
-  const { cdpTypes: cdpTypesList } = useCdpTypes();
+  const { cdpTypesList } = useCdpTypes();
   const prices = watch.collateralTypesPrices(
-    cdpTypesList?.length ? cdpTypesList.map(({ symbol }) => symbol) : []
+    cdpTypesList?.length ? cdpTypesList : []
   );
 
   return (
@@ -294,7 +295,42 @@ function Borrow({ disableConnect = false }) {
           })
         )}
       />
-      <QuestionsWrapper>
+      <Box maxWidth="1007px" m="204px auto 0">
+        <Box maxWidth="777px" m="0 auto">
+          <Text.h2 mb="34px">{lang.borrow_markets.heading}</Text.h2>
+          <Text>{lang.borrow_markets.subheading}</Text>
+        </Box>
+        <Box
+          mt={{ s: '54px', m: '87px' }}
+          css={`
+            overflow-x: scroll;
+            overflow-y: hidden;
+            &::-webkit-scrollbar {
+              display: none;
+            }
+            -ms-overflow-style: none;
+          `}
+        >
+          <MarketsTable
+            cdpTypesList={cdpTypesList.filter(symbol =>
+              ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
+            )}
+          />
+        </Box>
+        <Box
+          textAlign="left"
+          mt={{ s: '20px', m: '35px' }}
+          pl={{ s: '6px', m: '37px' }}
+        >
+          <Link
+            href={`/${Routes.BORROW}/markets`}
+            style={{ textDecoration: 'underline' }}
+          >
+            {lang.borrow_landing.markets_link}
+          </Link>
+        </Box>
+      </Box>
+      <QuestionsWrapper mt="147px">
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(

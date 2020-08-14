@@ -19,6 +19,8 @@ import FadeIn from './FadeIn';
 import Hamburger from './Hamburger';
 import { BorrowCalculator, SaveCalculator } from './Calculators';
 import PageHead from './PageHead';
+import TokenIcon from './TokenIcon';
+import MarketsTable from './MarketsTable';
 
 import PageContentLayout from 'layouts/PageContentLayout';
 
@@ -73,5 +75,7 @@ export {
   BorrowCalculator,
   SaveCalculator,
   StyledPageContentLayout,
-  PageHead
+  PageHead,
+  TokenIcon,
+  MarketsTable
 };
