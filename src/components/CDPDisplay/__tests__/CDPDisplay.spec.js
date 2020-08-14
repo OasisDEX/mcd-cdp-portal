@@ -74,7 +74,12 @@ test('Vault Display page and actions', async () => {
     within(getBalancesEl()).getByText('DAI').nextElementSibling
       .nextElementSibling.textContent;
 
-  expect(getEthBal()).toContain('89.');
+  // These need to be updated on each different testchain version
+  try {
+    expect(getEthBal()).toContain('89.');
+  } catch (e) {
+    expect(getEthBal()).toContain('88.');
+  }
   expect(getEthUsdValue()).toContain('$13.3');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
