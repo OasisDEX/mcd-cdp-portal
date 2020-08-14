@@ -131,6 +131,7 @@ export default {
     feature4_heading: 'No more limits',
     feature4_content:
       'You no longer have to miss out on market opportunities or sell your crypto when you need cash.',
+    markets_link: 'View full list of tokens',
     questions: {
       question1: 'What assets can I use as collateral?',
       answer1:

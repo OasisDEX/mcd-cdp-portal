@@ -295,20 +295,27 @@ function Borrow({ disableConnect = false }) {
           })
         )}
       />
-      <Box>
-        <Box maxWidth="844px" m="76px auto 0">
-          <Text.h3 fontWeight="normal" mb="12px">
-            {lang.borrow_markets.heading}
-          </Text.h3>
+      <Box maxWidth="1007px" m="204px auto 0">
+        <Box maxWidth="777px" m="0 auto">
+          <Text.h2 mb="34px">{lang.borrow_markets.heading}</Text.h2>
           <Text>{lang.borrow_markets.subheading}</Text>
         </Box>
         <MarketsTable
           cdpTypesList={cdpTypesList.filter(symbol =>
             ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
           )}
+          style={{ marginTop: '87px' }}
         />
+        <Box textAlign="left" mt="35px" pl="37px">
+          <Link
+            href={`/${Routes.BORROW}/markets`}
+            style={{ textDecoration: 'underline' }}
+          >
+            {lang.borrow_landing.markets_link}
+          </Link>
+        </Box>
       </Box>
-      <QuestionsWrapper>
+      <QuestionsWrapper mt="147px">
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
         <Questions
           questions={buildQuestionsFromLangObj(
