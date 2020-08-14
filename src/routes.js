@@ -9,6 +9,7 @@ import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import BorrowWBTCLanding from 'pages/BorrowWBTCLanding';
+import BorrowMarkets from 'pages/BorrowMarkets';
 import Save from 'pages/Save';
 import SaveOverview from 'pages/SaveOverview';
 import TradeLanding from 'pages/TradeLanding';
@@ -120,6 +121,12 @@ export default mount({
     withView(dappProvidersView),
     withView(marketingLayoutView),
     withView(() => <BorrowWBTCLanding />)
+  ),
+
+  [`/${Routes.BORROW}/markets`]: compose(
+    withView(dappProvidersView),
+    withView(marketingLayoutView),
+    withView(() => <BorrowMarkets />)
   ),
 
   [`/${Routes.SAVE}`]: compose(

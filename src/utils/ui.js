@@ -51,12 +51,13 @@ export function prettifyNumber(
   if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
   let formattedNumber;
   if (truncate) {
-    if (num > 999999999999) formattedNumber = (num / 1000000).toFixed(1) + 'T';
-    if (num > 999999999) formattedNumber = (num / 1000000).toFixed(1) + 'B';
-    if (num > 999999) formattedNumber = (num / 1000000).toFixed(1) + 'M';
-    else if (num > 999) formattedNumber = (num / 1000).toFixed(1) + 'K';
-    else if (num < 1) formattedNumber = num.toFixed(4);
-    else formattedNumber = num.toFixed(decimalPlaces);
+    if (num > 999999999999) formattedNumber = (num / 1000000).toFixed(2) + 'T';
+    if (num > 999999999) formattedNumber = (num / 1000000).toFixed(2) + 'B';
+    if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
+    else if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
+    else if (num < 1) {
+      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
+    } else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     formattedNumber = num.toLocaleString();
   }
@@ -200,7 +201,9 @@ export const formatCurrencyValue = ({
     return infinity;
   if (percentage) value = value.times(100);
   if (integer) value = value.integerValue(BigNumber.ROUND_HALF_UP);
-  if (value.lt(1) && rounding === BigNumber.ROUND_DOWN) precision = medium;
+  if (value.lt(1) && rounding === BigNumber.ROUND_DOWN) {
+    precision = value.eq(0) ? short : medium;
+  }
   return value.toFixed(precision, rounding);
 };
 

@@ -75,7 +75,7 @@ test('Vault Display page and actions', async () => {
       .nextElementSibling.textContent;
 
   expect(getEthBal()).toContain('89.');
-  expect(getEthUsdValue()).toBe('$13.4K');
+  expect(getEthUsdValue()).toContain('$13.3');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
@@ -107,7 +107,7 @@ test('Vault Display page and actions', async () => {
 
   // check updated balances
   expect(getEthBal()).toContain('86.');
-  expect(getEthUsdValue()).toBe('$13.0K');
+  expect(getEthUsdValue()).toContain('$13.0');
 
   /**Generate */
   click(getByText('Generate'));
@@ -187,5 +187,5 @@ test('Vault Display page and actions', async () => {
 
   // check updated balances
   expect(getEthBal()).toContain('88.');
-  expect(getEthUsdValue()).toBe('$13.3K');
+  expect(getEthUsdValue()).toContain('$13.2');
 }, 45000);

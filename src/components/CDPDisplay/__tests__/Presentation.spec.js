@@ -98,7 +98,7 @@ test('render liquidation price correctly when no debt', async () => {
     />
   );
   await waitForElement(() => getByText('N/A')); //liquidation price
-  getByText('0.0000 USD');
+  getByText('0.00 USD');
 });
 
 test('reclaim banner rounds correctly when value is > 1', async () => {

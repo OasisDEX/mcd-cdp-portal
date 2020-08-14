@@ -10,7 +10,8 @@ import {
   FullWidth,
   FadeIn,
   FilledButton,
-  PageHead
+  PageHead,
+  TokenIcon
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
 import { Routes } from 'utils/constants';
@@ -21,18 +22,6 @@ import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
 import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
 import { ReactComponent as SaveIcon } from 'images/landing/save-icon.svg';
 import { Box, Grid, Text } from '@makerdao/ui-components-core';
-import { ReactComponent as BatIcon } from '../images/oasis-tokens/bat.svg';
-import { ReactComponent as ZrxIcon } from '../images/oasis-tokens/zrx.svg';
-import { ReactComponent as EthIcon } from '../images/oasis-tokens/eth.svg';
-import { ReactComponent as DaiIcon } from '../images/oasis-tokens/dai.svg';
-import { ReactComponent as ManaIcon } from '../images/oasis-tokens/mana.svg';
-import { ReactComponent as UsdcIcon } from '../images/oasis-tokens/usdc.svg';
-import { ReactComponent as LinkIcon } from '../images/oasis-tokens/link.svg';
-import { ReactComponent as PaxIcon } from '../images/oasis-tokens/pax.svg';
-import { ReactComponent as TusdIcon } from '../images/oasis-tokens/tusd.svg';
-import { ReactComponent as WbtcIcon } from '../images/oasis-tokens/wbtc.svg';
-import { ReactComponent as KncIcon } from '../images/oasis-tokens/knc.svg';
-import { ReactComponent as CompIcon } from '../images/oasis-tokens/comp.svg';
 
 const Content = ({ children }) => (
   <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
@@ -224,54 +213,45 @@ const SupportedTokens = (() => {
   const tokens = [
     {
       name: 'Dai',
-      icon: DaiIcon
+      symbol: 'DAI'
     },
     {
       name: 'Ethereum',
-      icon: EthIcon
+      symbol: 'ETH'
     },
     {
-      name: 'BAT',
-      icon: BatIcon
+      name: 'BAT'
     },
     {
-      name: 'USDC',
-      icon: UsdcIcon
+      name: 'USDC'
     },
     {
-      name: 'WBTC',
-      icon: WbtcIcon
+      name: 'WBTC'
     },
     {
-      name: 'MANA',
-      icon: ManaIcon
+      name: 'MANA'
     },
     {
       name: '0x',
-      icon: ZrxIcon
+      symbol: 'ZRX'
     },
     {
-      name: 'KNC',
-      icon: KncIcon
+      name: 'KNC'
     },
     {
       name: 'COMP',
-      icon: CompIcon,
       onlyOnTrade: true
     },
     {
       name: 'LINK',
-      icon: LinkIcon,
       onlyOnTrade: true
     },
     {
       name: 'PAX',
-      icon: PaxIcon,
       onlyOnTrade: true
     },
     {
       name: 'TUSD',
-      icon: TusdIcon,
       onlyOnTrade: true
     }
   ];
@@ -322,12 +302,11 @@ const SupportedTokens = (() => {
     }
   `;
 
-  const Token = ({ config: { name, icon, onlyOnTrade } }) => {
-    const Icon = icon;
+  const Token = ({ config: { name, symbol, onlyOnTrade } }) => {
     return (
       <FadeIn triggerOffset={70}>
         <TokenStyle>
-          <Icon />
+          <TokenIcon symbol={symbol || name} />
           <span className={onlyOnTrade ? 'onlyOnTrade' : ''}>{name}</span>
         </TokenStyle>
       </FadeIn>
