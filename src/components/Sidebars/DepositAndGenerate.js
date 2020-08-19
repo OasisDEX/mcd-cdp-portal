@@ -10,16 +10,20 @@ import useTokenAllowance from 'hooks/useTokenAllowance';
 import Info from './shared/Info';
 import InfoContainer from './shared/InfoContainer';
 import { DAI } from '@makerdao/dai-plugin-mcd';
-import {
-  daiAvailable as calcDaiAvailable,
-  liquidationPrice as calcLiquidationPrice
-} from '../../../node_modules/@makerdao/dai-plugin-mcd/src/math';
 import { getCurrency } from 'utils/cdp';
 import BigNumber from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';
 import RatioDisplay, { RatioDisplayTypes } from 'components/RatioDisplay';
 
 const { long, medium } = decimalRules;
+
+export function calcDaiAvailable(collateralValue, debtValue, liquidationRatio) {
+  const maxSafeDebtValue = collateralValue.div(liquidationRatio);
+  return debtValue.lt(maxSafeDebtValue)
+    ? DAI(maxSafeDebtValue.minus(debtValue))
+    : DAI(0);
+}
+
 const DepositAndGenerate = ({ vault, reset }) => {
   const { lang } = useLanguage();
   const { maker } = useMaker();
@@ -31,7 +35,8 @@ const DepositAndGenerate = ({ vault, reset }) => {
     collateralAmount,
     collateralTypePrice,
     collateralDebtAvailable,
-    collateralizationRatio
+    collateralizationRatio,
+    calculateLiquidationPrice
   } = vault;
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
   collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
@@ -117,11 +122,11 @@ const DepositAndGenerate = ({ vault, reset }) => {
     !generateAmount ? BigNumber(0) : BigNumber(generateAmount)
   );
 
-  const calculatedLiquidationPrice = calcLiquidationPrice(
-    calculatedCollateralAmount.toBigNumber(),
-    calculatedDebtValue,
-    liquidationRatio.toBigNumber()
-  );
+  const calculatedLiquidationPrice = calculateLiquidationPrice({
+    collateralAmount: calculatedCollateralAmount.toBigNumber(),
+    debtValue: calculatedDebtValue,
+    liquidationRatio: liquidationRatio.toBigNumber()
+  });
 
   const calculatedCollateralizationRatio = vault.calculateCollateralizationRatio(
     {
