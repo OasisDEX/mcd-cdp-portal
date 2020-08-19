@@ -38,6 +38,7 @@ const Payback = ({ vault, reset }) => {
   let { debtValue, debtFloor, collateralAmount } = vault;
   debtValue = debtValue.toBigNumber().decimalPlaces(18);
   const symbol = collateralAmount?.symbol;
+  const vaultUnderDustLimit = debtValue.gt(0) && debtValue.lt(debtFloor);
 
   // Amount being repaid can't result in a remaining debt lower than the dust
   // minimum unless the full amount is being repaid
@@ -63,10 +64,12 @@ const Payback = ({ vault, reset }) => {
           : lang.action_sidebar.cannot_payback_more_than_owed;
       },
       dustLimit: () =>
-        lang.formatString(
-          lang.cdp_create.dust_max_payback,
-          subtract(debtValue, debtFloor)
-        ),
+        vaultUnderDustLimit
+          ? lang.cdp_create.dust_payback_below_limit
+          : lang.formatString(
+              lang.cdp_create.dust_max_payback,
+              subtract(debtValue, debtFloor)
+            ),
       allowanceInvalid: () =>
         lang.formatString(lang.action_sidebar.invalid_allowance, 'DAI')
     }

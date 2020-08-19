@@ -418,6 +418,8 @@ export default {
     below_dust_limit: 'A Vault requires a minimum of {0} Dai to be generated',
     dust_max_payback:
       'You can repay all your outstanding debt, or a maximum of {0} Dai',
+    dust_payback_below_limit:
+      'Due to your Vault being below the minimum, you must repay all of your outstanding debt',
     stability_fee_description:
       'The fee calculated based on the outstanding debt of your Vault. This is continuously added to your existing debt.',
     liquidation_ratio_description:
