@@ -53,9 +53,12 @@ export default function({
     unlockedCollateral,
     liquidationRatio,
     minSafeCollateralAmount,
-    debtValue
+    debtValue,
+    debtFloor
   } = vault;
+
   log(`Rendering vault #${vault.id}`);
+
   const gem = collateralAmount?.symbol;
   let liquidationPrice = formatter(rawLiquidationPrice);
   let collateralizationRatio = formatter(rawCollateralizationRatio, {
@@ -260,6 +263,21 @@ export default function({
     }
   };
 
+  const vaultUnderDustLimit =
+    debtValue.toBigNumber().gt(0) && debtValue.toBigNumber().lt(debtFloor);
+  const totalGenerateableDai = debtValue.plus(vault.daiAvailable);
+
+  const disableDeposit =
+    !account || emergencyShutdownActive || vaultUnderDustLimit;
+  const disablePayback = !account || emergencyShutdownActive;
+  const disableWithdraw =
+    !account || !isOwner || emergencyShutdownActive || vaultUnderDustLimit;
+  const disableGenerate =
+    !account ||
+    !isOwner ||
+    emergencyShutdownActive ||
+    totalGenerateableDai.toBigNumber().lt(debtFloor);
+
   return (
     <PageContentLayout>
       <Box>
@@ -330,7 +348,7 @@ export default function({
             conversion={`${formatter(vault.collateralValue)} USD`}
             button={
               <ActionButton
-                disabled={!account || emergencyShutdownActive}
+                disabled={disableDeposit}
                 onClick={() => {
                   trackBtnClick('Deposit');
                   showAction({
@@ -349,7 +367,7 @@ export default function({
             conversion={`${formatter(vault.collateralAvailableValue)} USD`}
             button={
               <ActionButton
-                disabled={!account || !isOwner || emergencyShutdownActive}
+                disabled={disableWithdraw}
                 onClick={() => {
                   trackBtnClick('Withdraw');
                   showAction({
@@ -370,7 +388,7 @@ export default function({
             value={formatter(vault.debtValue) + ' DAI'}
             button={
               <ActionButton
-                disabled={!account || emergencyShutdownActive}
+                disabled={disablePayback}
                 onClick={() => {
                   trackBtnClick('Payback');
                   showAction({
@@ -388,7 +406,7 @@ export default function({
             value={`${formatter(vault.daiAvailable)} DAI`}
             button={
               <ActionButton
-                disabled={!account || !isOwner || emergencyShutdownActive}
+                disabled={disableGenerate}
                 onClick={() => {
                   trackBtnClick('Generate');
                   showAction({
