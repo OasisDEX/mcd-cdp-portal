@@ -261,7 +261,8 @@ export default function({
         level: SAFETY_LEVELS.SAFE,
         hasButton: true,
         buttonLabel: 'Deposit & Generate',
-        onClick: () => null
+        onClick: () =>
+          showAction({ type: 'depositAndGenerate', props: { vault } })
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

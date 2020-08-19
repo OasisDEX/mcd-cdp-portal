@@ -6,6 +6,7 @@ import Withdraw from './Withdraw';
 import Send from './Send';
 import DsrDeposit from './DsrDeposit';
 import DsrWithdraw from './DsrWithdraw';
+import DepositAndGenerate from './DepositAndGenerate';
 
 export default {
   global: Global,
@@ -15,5 +16,6 @@ export default {
   withdraw: Withdraw,
   send: Send,
   dsrdeposit: DsrDeposit,
-  dsrwithdraw: DsrWithdraw
+  dsrwithdraw: DsrWithdraw,
+  depositAndGenerate: DepositAndGenerate
 };

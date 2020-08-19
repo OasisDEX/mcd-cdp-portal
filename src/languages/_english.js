@@ -510,6 +510,7 @@ export default {
     reclaim: 'Reclaimed {0} {1} after auction(s)'
   },
   action_sidebar: {
+    deposit_and_generate_title: 'Deposit & Generate',
     deposit_title: 'Deposit {0}',
     deposit_description: 'How much {0} would you like to deposit?',
     withdraw_title: 'Withdraw {0}',
