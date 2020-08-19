@@ -121,6 +121,7 @@ const DepositAndGenerate = ({ vault, reset }) => {
   useEffect(() => {
     let e = { target: { value: generateAmount } };
     onGenerateAmountChange(e);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [depositAmount]);
 
   const calculatedDebtValue = debtValue.plus(
