@@ -39,6 +39,7 @@
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.11",
     "lodash.debounce": "^4.0.8",
+    "lodash.groupby": "^4.6.0",
     "lodash.uniqby": "^4.7.0",
     "mixpanel-browser": "^2.26.0",
     "navi": "^0.13.6",

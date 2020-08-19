@@ -4,16 +4,7 @@ import ReactSlider from 'react-slider';
 import styled from 'styled-components';
 
 import { prettifyCurrency } from 'utils/ui';
-
-import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
-import { ReactComponent as TusdIcon } from 'images/oasis-tokens/tusd.svg';
-import { ReactComponent as EthIcon } from 'images/oasis-tokens/eth.svg';
-import { ReactComponent as ManaIcon } from 'images/oasis-tokens/mana.svg';
-import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
-import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
-import { ReactComponent as KncIcon } from 'images/oasis-tokens/knc.svg';
-import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
-import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
+import TokenIcon from './TokenIcon';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { ReactComponent as DaiImg } from 'images/dai-color.svg';
 
@@ -321,56 +312,48 @@ const SmartStepSlider = ({
 const cdpTypesMetaData = {
   'ETH-A': {
     text: 'Ethereum',
-    Icon: EthIcon,
     colRatio: 200,
     amountRange: [1, 350],
     amountStart: 25
   },
   'BAT-A': {
     text: 'BAT',
-    Icon: BatIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'MANA-A': {
     text: 'MANA',
-    Icon: ManaIcon,
     colRatio: 240,
     amountRange: [1000, 350000],
     amountStart: 3000
   },
   'USDC-A': {
     text: 'USDC',
-    Icon: UsdcIcon,
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'WBTC-A': {
     text: 'WBTC',
-    Icon: WbtcIcon,
     colRatio: 200,
     amountRange: [0.1, 35],
     amountStart: 0.5
   },
   'TUSD-A': {
     text: 'TUSD',
-    Icon: TusdIcon,
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'ZRX-A': {
     text: 'ZRX',
-    Icon: ZrxIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'KNC-A': {
     text: 'KNC',
-    Icon: KncIcon,
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
@@ -383,23 +366,21 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
 
   const interfaceLocale = lang.getInterfaceLanguage();
 
-  const gems = cdpTypesList
-    .map(({ symbol }) => symbol)
+  const ilks = cdpTypesList
     .map((cdpTypeName, index) => ({
-      name: cdpTypeName,
+      symbol: cdpTypeName,
       price: prices[index].toBigNumber()
     }))
-    .filter(cdpType => cdpTypesMetaData[cdpType.name])
+    .filter(cdpType => cdpTypesMetaData[cdpType.symbol])
     .map(cdpType => ({
       ...cdpType,
-      ...cdpTypesMetaData[cdpType.name],
-      symbol: cdpType.name
+      ...cdpTypesMetaData[cdpType.symbol]
     }));
 
-  const selectedGem = gems.find(gem => gem.symbol === selectedSymbol);
-
-  const collateralAmounts = gems.reduce((acc, gem) => {
-    acc[gem.symbol] = gem.amountStart;
+  const selectedIlk = ilks.find(ilk => ilk.symbol === selectedSymbol);
+  const getTokenName = ilk => ilk.symbol.split('-')[0];
+  const collateralAmounts = ilks.reduce((acc, ilk) => {
+    acc[ilk.symbol] = ilk.amountStart;
     return acc;
   }, {});
 
@@ -419,19 +400,19 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
             {lang.collateral_type}
           </CapsText>
           <Dropdown
-            items={gems.map(gem => ({
-              value: gem.symbol,
+            items={ilks.map(ilk => ({
+              value: ilk.symbol,
               render: () => (
                 <DropdownItem
                   img={
-                    gem.Icon ? (
-                      <gem.Icon width="28.33" height="28.33" />
-                    ) : (
-                      <DefaultIcon width="28.33" height="28.33" />
-                    )
+                    <TokenIcon
+                      symbol={getTokenName(ilk)}
+                      width="28.33"
+                      height="28.33"
+                    />
                   }
                 >
-                  {gem.text || gem.symbol}
+                  {ilk.text || ilk.symbol}
                 </DropdownItem>
               )
             }))}
@@ -446,15 +427,15 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
               <CapsText textAlign="right" data-testid="amount-chosen">
                 {collateralAmount}
                 <span style={{ marginLeft: '3px' }}>
-                  {selectedGem.symbol.split('-')[0]}
+                  {getTokenName(selectedIlk)}
                 </span>
               </CapsText>
             </Position>
             <Slider
               value={collateralAmount}
-              min={selectedGem.amountRange[0]}
-              max={selectedGem.amountRange[1]}
-              step={selectedGem.sliderStep || selectedGem.amountRange[0]}
+              min={selectedIlk.amountRange[0]}
+              max={selectedIlk.amountRange[1]}
+              step={selectedIlk.sliderStep || selectedIlk.amountRange[0]}
               onChange={setCollateralAmount}
             />
           </Box>
@@ -472,8 +453,8 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                   {getDaiAvailable(
                     interfaceLocale,
                     collateralAmount,
-                    selectedGem.price,
-                    selectedGem.colRatio
+                    selectedIlk.price,
+                    selectedIlk.colRatio
                   )}
                 </DaiAmount>
               )
@@ -482,7 +463,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
           <Box height="23px" />
           <Footnote>
             {lang.formatString(lang.borrow_landing.calc_footnote, {
-              ratio: selectedGem.colRatio
+              ratio: selectedIlk.colRatio
             })}
           </Footnote>
         </Box>
