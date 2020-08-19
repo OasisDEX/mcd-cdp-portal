@@ -27,6 +27,7 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
       ? ' cancelled'
       : '';
 
+  console.log(type);
   switch (type) {
     case 'safeWipe':
       return lang.formatString(
@@ -66,6 +67,15 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
       return lang.formatString(
         `${lang[langKey].creating_cdp}${suffix}`
         // <><ValueText>{formatAmount(metadata.lockAmount)}</ValueText> {(lockAmount.symbol)}</>
+      );
+    case 'lockETHAndDraw':
+    case 'lockGemAndDraw':
+      return lang.formatString(
+        `${lang[langKey].deposit_generate}${suffix}`,
+        <>
+          <ValueText>{formatAmount(metadata.drawAmount)}</ValueText>{' '}
+          {metadata.drawAmount.symbol}
+        </>
       );
     case 'transfer':
       return lang.formatString(
