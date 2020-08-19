@@ -247,7 +247,7 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             }}
             icon={<StyledMewConnectLogo />}
           >
-            {lang.landing_page.mewconnect}
+            {lang.providers.mewconnect}
           </Option>
         </BrowserView>
         <BrowserView>

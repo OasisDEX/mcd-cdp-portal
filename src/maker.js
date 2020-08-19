@@ -66,10 +66,6 @@ export async function instantiateMaker({
     rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
   };
 
-  // const mewconnectPluginConfig = {
-  //   rpcUrl: networkConfig.rpcUrls[networkNameToId(network)]
-  // };
-
   const config = {
     log: false,
     plugins: [
