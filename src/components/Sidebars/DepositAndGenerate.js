@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
 import { formatCollateralizationRatio, formatter } from 'utils/ui';
 import useValidatedInput from 'hooks/useValidatedInput';
@@ -117,6 +117,11 @@ const DepositAndGenerate = ({ vault, reset }) => {
         )
     }
   );
+
+  useEffect(() => {
+    let e = { target: { value: generateAmount } };
+    onGenerateAmountChange(e);
+  }, [depositAmount]);
 
   const calculatedDebtValue = debtValue.plus(
     !generateAmount ? BigNumber(0) : BigNumber(generateAmount)
