@@ -278,6 +278,7 @@ export default function({
         NotificationList.VAULT_IS_LIQUIDATED,
         NotificationList.VAULT_UNDER_DUST
       ]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
