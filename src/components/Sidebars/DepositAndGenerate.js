@@ -13,7 +13,7 @@ import { DAI } from '@makerdao/dai-plugin-mcd';
 import {
   daiAvailable as calcDaiAvailable,
   liquidationPrice as calcLiquidationPrice
-} from '@makerdao/dai-plugin-mcd/src/math';
+} from '../../../node_modules/@makerdao/dai-plugin-mcd/src/math';
 import { getCurrency } from 'utils/cdp';
 import BigNumber from 'bignumber.js';
 import { decimalRules } from '../../styles/constants';

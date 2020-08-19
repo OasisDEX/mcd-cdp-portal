@@ -604,7 +604,8 @@ export default {
     withdrawing_gem: 'Withdrawing {0}',
     depositing_gem: 'Depositing {0}',
     claiming_collateral: 'Claiming collateral',
-    send: 'Sending {0} to {1}'
+    send: 'Sending {0} to {1}',
+    deposit_generate: 'Depositing & Generating {0}'
   },
   transactions_past_tense: {
     unlocking_token: 'Unlocked {0}',
@@ -615,7 +616,8 @@ export default {
     withdrawing_gem: 'Withdrew {0}',
     depositing_gem: 'Deposited {0}',
     claiming_collateral: 'Claimed collateral',
-    send: 'Sent {0} to {1}'
+    send: 'Sent {0} to {1}',
+    deposit_generate: 'Deposited & Generated {0}'
   },
   transaction_manager: {
     transaction_singular_capitalised: 'Transaction',
