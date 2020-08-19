@@ -182,7 +182,8 @@ export default {
       title: 'Oasis Borrow - Markets'
     },
     heading: 'Borrow Markets',
-    subheading: 'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
+    subheading:
+      'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
     min_col_ratio: 'Min collateral ratio'
   },
   save_landing: {
@@ -708,6 +709,8 @@ export default {
     vault_below_current_price:
       'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}',
     vault_is_liquidated:
-      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.'
+      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.',
+    vault_under_dust_limit:
+      'This Vault is currently under the dust limit by approximately {0} DAI. Either Payback {1} DAI or Deposit more {2}, enabling you to Generate more than the {3} DAI dust limit.'
   }
 };

@@ -84,6 +84,10 @@ export default function({
 
   const { currentPrice, nextPrice } = useOraclePrices({ gem });
 
+  const vaultUnderDustLimit =
+    debtValue.toBigNumber().gt(0) && debtValue.toBigNumber().lt(debtFloor);
+  const totalGenerateableDai = debtValue.plus(vault.daiAvailable);
+
   useEffect(() => {
     if (
       isOwner &&
@@ -240,17 +244,42 @@ export default function({
         level: SAFETY_LEVELS.WARNING
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner, account, vault, unlockedCollateral]);
 
-    return () =>
+  useEffect(() => {
+    if (vaultUnderDustLimit) {
+      addNotification({
+        id: NotificationList.VAULT_UNDER_DUST,
+        content: lang.formatString(
+          lang.notifications.vault_under_dust_limit,
+          formatter(debtFloor.minus(debtValue.toBigNumber())),
+          formatter(debtValue),
+          gem,
+          formatter(debtFloor)
+        ),
+        level: SAFETY_LEVELS.SAFE,
+        hasButton: true,
+        buttonLabel: 'Deposit & Generate',
+        onClick: () => null
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner, vaultUnderDustLimit]);
+
+  // unmounting removes all notifications
+  useEffect(
+    () => () =>
       deleteNotifications([
         NotificationList.CLAIM_COLLATERAL,
         NotificationList.NON_VAULT_OWNER,
         NotificationList.VAULT_BELOW_CURRENT_PRICE,
         NotificationList.VAULT_BELOW_NEXT_PRICE,
-        NotificationList.VAULT_IS_LIQUIDATED
-      ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, account, vault, unlockedCollateral]);
+        NotificationList.VAULT_IS_LIQUIDATED,
+        NotificationList.VAULT_UNDER_DUST
+      ]),
+    []
+  );
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -262,10 +291,6 @@ export default function({
       showSidebar(props);
     }
   };
-
-  const vaultUnderDustLimit =
-    debtValue.toBigNumber().gt(0) && debtValue.toBigNumber().lt(debtFloor);
-  const totalGenerateableDai = debtValue.plus(vault.daiAvailable);
 
   const disableDeposit =
     !account || emergencyShutdownActive || vaultUnderDustLimit;
