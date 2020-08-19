@@ -248,7 +248,7 @@ export default function({
   }, [isOwner, account, vault, unlockedCollateral]);
 
   useEffect(() => {
-    if (vaultUnderDustLimit) {
+    if (isOwner && vaultUnderDustLimit) {
       const amnt = formatter(debtFloor.minus(debtValue.toBigNumber()), {
         rounding: BigNumber.ROUND_HALF_UP
       });
@@ -265,6 +265,12 @@ export default function({
         onClick: () =>
           showAction({ type: 'depositAndGenerate', props: { vault } })
       });
+    }
+    if (
+      !vaultUnderDustLimit &&
+      notificationExists(NotificationList.VAULT_UNDER_DUST)
+    ) {
+      deleteNotifications([NotificationList.VAULT_UNDER_DUST]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, vaultUnderDustLimit]);

@@ -132,7 +132,6 @@ const DepositAndGenerate = ({ vault, reset }) => {
 
   const depositAndGenerate = () => {
     const currency = getCurrency({ ilk: vaultType });
-
     maker
       .service('mcd:cdpManager')
       .lockAndDraw(
@@ -188,6 +187,17 @@ const DepositAndGenerate = ({ vault, reset }) => {
         </Button>
       </Grid>
       <InfoContainer>
+        <Info
+          title={lang.action_sidebar.current_account_balance}
+          body={`${formatter(gemBalance, { precision: long })} ${symbol}`}
+        />
+        <Info
+          title={lang.formatString(
+            lang.action_sidebar.gem_usd_price_feed,
+            symbol
+          )}
+          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
+        />
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
           body={`${formatter(calculatedDaiAvailable, { precision: long })} DAI`}
