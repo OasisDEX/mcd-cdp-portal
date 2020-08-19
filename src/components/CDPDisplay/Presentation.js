@@ -249,16 +249,17 @@ export default function({
 
   useEffect(() => {
     if (vaultUnderDustLimit) {
+      const amnt = formatter(debtFloor.minus(debtValue.toBigNumber()), {
+        rounding: BigNumber.ROUND_HALF_UP
+      });
       addNotification({
         id: NotificationList.VAULT_UNDER_DUST,
         content: lang.formatString(
           lang.notifications.vault_under_dust_limit,
-          formatter(debtFloor.minus(debtValue.toBigNumber())),
-          formatter(debtValue),
-          gem,
-          formatter(debtFloor)
+          amnt,
+          amnt
         ),
-        level: SAFETY_LEVELS.SAFE,
+        level: SAFETY_LEVELS.WARNING,
         hasButton: true,
         buttonLabel: 'Deposit & Generate',
         onClick: () =>

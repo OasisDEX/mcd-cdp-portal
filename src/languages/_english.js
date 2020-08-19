@@ -712,6 +712,6 @@ export default {
     vault_is_liquidated:
       'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.',
     vault_under_dust_limit:
-      'This Vault is currently under the dust limit by approximately {0} DAI. Either Payback {1} DAI or Deposit more {2}, enabling you to Generate more than the {3} DAI dust limit.'
+      'This Vault is currently under the required minimum amount by approximately {0} Dai which has resulted in reduced functionality. For full access again, you need to Payback the full Outstanding Dai Debt amount, or Deposit additional collateral and Generate at least {1} Dai'
   }
 };
