@@ -53,9 +53,12 @@ export default function({
     unlockedCollateral,
     liquidationRatio,
     minSafeCollateralAmount,
-    debtValue
+    debtValue,
+    debtFloor
   } = vault;
+
   log(`Rendering vault #${vault.id}`);
+
   const gem = collateralAmount?.symbol;
   let liquidationPrice = formatter(rawLiquidationPrice);
   let collateralizationRatio = formatter(rawCollateralizationRatio, {
@@ -80,6 +83,10 @@ export default function({
   } = useNotification();
 
   const { currentPrice, nextPrice } = useOraclePrices({ gem });
+
+  const vaultUnderDustLimit =
+    debtValue.toBigNumber().gt(0) && debtValue.toBigNumber().lt(debtFloor);
+  const totalGenerateableDai = debtValue.plus(vault.daiAvailable);
 
   useEffect(() => {
     if (
@@ -237,17 +244,51 @@ export default function({
         level: SAFETY_LEVELS.WARNING
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner, account, vault, unlockedCollateral]);
 
-    return () =>
+  useEffect(() => {
+    if (isOwner && vaultUnderDustLimit) {
+      const amnt = formatter(debtFloor.minus(debtValue.toBigNumber()), {
+        rounding: BigNumber.ROUND_HALF_UP
+      });
+      addNotification({
+        id: NotificationList.VAULT_UNDER_DUST,
+        content: lang.formatString(
+          lang.notifications.vault_under_dust_limit,
+          amnt,
+          amnt
+        ),
+        level: SAFETY_LEVELS.WARNING,
+        hasButton: true,
+        buttonLabel: 'Deposit & Generate',
+        onClick: () =>
+          showAction({ type: 'depositAndGenerate', props: { vault } })
+      });
+    }
+    if (
+      !vaultUnderDustLimit &&
+      notificationExists(NotificationList.VAULT_UNDER_DUST)
+    ) {
+      deleteNotifications([NotificationList.VAULT_UNDER_DUST]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner, vaultUnderDustLimit]);
+
+  // unmounting removes all notifications
+  useEffect(
+    () => () =>
       deleteNotifications([
         NotificationList.CLAIM_COLLATERAL,
         NotificationList.NON_VAULT_OWNER,
         NotificationList.VAULT_BELOW_CURRENT_PRICE,
         NotificationList.VAULT_BELOW_NEXT_PRICE,
-        NotificationList.VAULT_IS_LIQUIDATED
-      ]);
+        NotificationList.VAULT_IS_LIQUIDATED,
+        NotificationList.VAULT_UNDER_DUST
+      ]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOwner, account, vault, unlockedCollateral]);
+    []
+  );
 
   const showAction = props => {
     const emSize = parseInt(getComputedStyle(document.body).fontSize);
@@ -259,6 +300,17 @@ export default function({
       showSidebar(props);
     }
   };
+
+  const disableDeposit =
+    !account || emergencyShutdownActive || vaultUnderDustLimit;
+  const disablePayback = !account || emergencyShutdownActive;
+  const disableWithdraw =
+    !account || !isOwner || emergencyShutdownActive || vaultUnderDustLimit;
+  const disableGenerate =
+    !account ||
+    !isOwner ||
+    emergencyShutdownActive ||
+    totalGenerateableDai.toBigNumber().lt(debtFloor);
 
   return (
     <PageContentLayout>
@@ -330,7 +382,7 @@ export default function({
             conversion={`${formatter(vault.collateralValue)} USD`}
             button={
               <ActionButton
-                disabled={!account || emergencyShutdownActive}
+                disabled={disableDeposit}
                 onClick={() => {
                   trackBtnClick('Deposit');
                   showAction({
@@ -349,7 +401,7 @@ export default function({
             conversion={`${formatter(vault.collateralAvailableValue)} USD`}
             button={
               <ActionButton
-                disabled={!account || !isOwner || emergencyShutdownActive}
+                disabled={disableWithdraw}
                 onClick={() => {
                   trackBtnClick('Withdraw');
                   showAction({
@@ -370,7 +422,7 @@ export default function({
             value={formatter(vault.debtValue) + ' DAI'}
             button={
               <ActionButton
-                disabled={!account || emergencyShutdownActive}
+                disabled={disablePayback}
                 onClick={() => {
                   trackBtnClick('Payback');
                   showAction({
@@ -388,7 +440,7 @@ export default function({
             value={`${formatter(vault.daiAvailable)} DAI`}
             button={
               <ActionButton
-                disabled={!account || !isOwner || emergencyShutdownActive}
+                disabled={disableGenerate}
                 onClick={() => {
                   trackBtnClick('Generate');
                   showAction({

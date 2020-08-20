@@ -182,7 +182,8 @@ export default {
       title: 'Oasis Borrow - Markets'
     },
     heading: 'Borrow Markets',
-    subheading: 'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
+    subheading:
+      'The parameters and rates shown are subject to change at any time, even after a Vault has been opened. Keep an eye out for system updates and manage your Vault accordingly.',
     min_col_ratio: 'Min collateral ratio'
   },
   save_landing: {
@@ -417,6 +418,8 @@ export default {
     below_dust_limit: 'A Vault requires a minimum of {0} Dai to be generated',
     dust_max_payback:
       'You can repay all your outstanding debt, or a maximum of {0} Dai',
+    dust_payback_below_limit:
+      'Due to your Vault being below the minimum, you must repay all of your outstanding debt',
     stability_fee_description:
       'The fee calculated based on the outstanding debt of your Vault. This is continuously added to your existing debt.',
     liquidation_ratio_description:
@@ -509,6 +512,7 @@ export default {
     reclaim: 'Reclaimed {0} {1} after auction(s)'
   },
   action_sidebar: {
+    deposit_and_generate_title: 'Deposit & Generate',
     deposit_title: 'Deposit {0}',
     deposit_description: 'How much {0} would you like to deposit?',
     withdraw_title: 'Withdraw {0}',
@@ -602,7 +606,8 @@ export default {
     withdrawing_gem: 'Withdrawing {0}',
     depositing_gem: 'Depositing {0}',
     claiming_collateral: 'Claiming collateral',
-    send: 'Sending {0} to {1}'
+    send: 'Sending {0} to {1}',
+    deposit_generate: 'Depositing & Generating {0}'
   },
   transactions_past_tense: {
     unlocking_token: 'Unlocked {0}',
@@ -613,7 +618,8 @@ export default {
     withdrawing_gem: 'Withdrew {0}',
     depositing_gem: 'Deposited {0}',
     claiming_collateral: 'Claimed collateral',
-    send: 'Sent {0} to {1}'
+    send: 'Sent {0} to {1}',
+    deposit_generate: 'Deposited & Generated {0}'
   },
   transaction_manager: {
     transaction_singular_capitalised: 'Transaction',
@@ -708,6 +714,8 @@ export default {
     vault_below_current_price:
       'Your {0} Vault is available for liquidation and your collateral can be auctioned at any time. You can try to avoid the auction by depositing at least {1} or repaying {2}',
     vault_is_liquidated:
-      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.'
+      'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.',
+    vault_under_dust_limit:
+      'This Vault is currently under the required minimum amount by approximately {0} Dai which has resulted in reduced functionality. For full access again, you need to Payback the full Outstanding Dai Debt amount, or Deposit additional collateral and Generate at least {1} Dai'
   }
 };
