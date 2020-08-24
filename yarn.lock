@@ -2525,20 +2525,20 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@myetherwallet/dai-plugin-mewconnect@0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@myetherwallet/dai-plugin-mewconnect/-/dai-plugin-mewconnect-0.0.11.tgz#077061ff5e37065375dfec8ef50c810d52c91f2f"
-  integrity sha512-xf0NBHSB/mGXJPYIvVFPCoLHsHsvToqHXNo8Yn5Ap9DFfZ8oyuruY5lmYV0yCWb8SH7pWcBHZI2VfbCsrS0Biw==
+"@myetherwallet/dai-plugin-mewconnect@0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@myetherwallet/dai-plugin-mewconnect/-/dai-plugin-mewconnect-0.0.15.tgz#2f4227680ea9ead7fcfbbc7a08a773296ff7baaa"
+  integrity sha512-7SAesCC23fHQpms49p+IzPoxfQ+Q/fgjVqRxTJmw5l31hAWbge2MNJqidZxfgAXHqZogKpKxC9S8fjHJgMUQuQ==
   dependencies:
     "@makerdao/currency" "^0.9.5"
     "@makerdao/dai" "^0.18.4"
     "@makerdao/services-core" "^0.9.9"
-    "@myetherwallet/mewconnect-web-client" "2.1.1-RC.4.5"
+    "@myetherwallet/mewconnect-web-client" "2.1.4"
 
-"@myetherwallet/mewconnect-web-client@2.1.1-RC.4.5":
-  version "2.1.1-RC.4.5"
-  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.1.1-RC.4.5.tgz#89b49d31bcbcdf1ceda0025c3a39ba5ca3eed8b1"
-  integrity sha512-/r/02a7cfrReNTrbo/OlobA6NG7Y9HIvmjAlNL39DSNZX9d446fu/W7LRLFabjoAMvPrgdTPXqW5mwS3DvahrQ==
+"@myetherwallet/mewconnect-web-client@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.1.4.tgz#33891c441193f76931766dbf13f948a64028838a"
+  integrity sha512-XNTbMim25IosnKZR4VB5qLT8dhbDp6WdH+MwUWFhusGaAr21dmxqPvYbYYGfY+NMh3MV1iSRRpaj6w0ekVnJpg==
   dependencies:
     bignumber.js "^9.0.0"
     browser-or-node "^1.2.1"
