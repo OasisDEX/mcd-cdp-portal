@@ -5,7 +5,9 @@ import {
   Table,
   Radio,
   Overflow,
-  Card
+  Card,
+  Text,
+  Tooltip
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber, formatter } from 'utils/ui';
@@ -16,33 +18,18 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import BigNumber from 'bignumber.js';
 
-const CDPCreateSelectCollateralSidebar = () => {
-  const { lang } = useLanguage();
-  return (
-    <Box px="l" py="m">
-      <Box>
-        {[
-          [lang.stability_fee, lang.cdp_create.stability_fee_description],
-          [
-            lang.liquidation_ratio,
-            lang.cdp_create.liquidation_ratio_description
-          ],
-          [
-            lang.liquidation_penalty,
-            lang.cdp_create.liquidation_penalty_description
-          ]
-        ].map(([title, text]) => (
-          <Grid mb="m" key={title} gridRowGap="xs">
-            <TextBlock t="h5" lineHeight="normal">
-              {title}
-            </TextBlock>
-            <TextBlock t="body">{text}</TextBlock>
-          </Grid>
-        ))}
-      </Box>
-    </Box>
-  );
-};
+const Help = ({ title, text }) => (
+  <Tooltip
+    content={
+      <Card width="361px" p="s">
+        <TextBlock t="h5" fontSize="m">
+          {title}
+        </TextBlock>
+        <Text fontSize="ss">{text}</Text>
+      </Card>
+    }
+  />
+);
 
 function IlkTableRow({
   ilk,
@@ -140,60 +127,67 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Grid
-        gridTemplateColumns={{ s: 'minmax(0, 1fr)', l: '2fr 1fr' }}
-        gridGap="m"
-        my="l"
-      >
-        <div>
-          <Card px="l" py="l">
-            <Overflow x="scroll" y="visible">
-              <Table
-                width="100%"
-                css={`
-                  th,
-                  td {
-                    padding-right: 10px;
-                  }
-                `}
-              >
-                <thead>
-                  <tr css="white-space: nowrap;">
-                    <th />
-                    <th>{lang.collateral_type}</th>
-                    <th>{lang.stability_fee}</th>
-                    <th>{lang.liquidation_ratio_shortened}</th>
-                    <th>{lang.liquidation_penalty_shortened}</th>
-                    <th css="text-align: right">{lang.your_balance}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cdpTypes.map(
-                    ilk =>
-                      collateralTypesData &&
-                      balances[ilk.gem] && (
-                        <IlkTableRow
-                          key={ilk.symbol}
-                          checked={ilk.symbol === selectedIlk.symbol}
-                          dispatch={dispatch}
-                          ilk={ilk}
-                          gemBalance={balances[ilk.gem]}
-                          isFirstVault={isFirstVault}
-                          ilkData={collateralTypesData.find(
-                            x => x.symbol === ilk.symbol
-                          )}
-                        />
-                      )
-                  )}
-                </tbody>
-              </Table>
-            </Overflow>
-          </Card>
-        </div>
-        <Card>
-          <CDPCreateSelectCollateralSidebar />
-        </Card>
-      </Grid>
+      <Card px="l" py="l" my="l">
+        <Overflow x="scroll" y="visible">
+          <Table
+            width="100%"
+            css={`
+              th,
+              td {
+                padding-right: 10px;
+              }
+            `}
+          >
+            <thead>
+              <tr css="white-space: nowrap;">
+                <th />
+                <th>{lang.collateral_type}</th>
+                <th>
+                  {lang.stability_fee}{' '}
+                  <Help
+                    title={lang.stability_fee}
+                    text={lang.cdp_create.stability_fee_description}
+                  />
+                </th>
+                <th>
+                  {lang.liquidation_ratio_shortened}{' '}
+                  <Help
+                    title={lang.liquidation_ratio}
+                    text={lang.cdp_create.liquidation_ratio_description}
+                  />
+                </th>
+                <th>
+                  {lang.liquidation_penalty_shortened}{' '}
+                  <Help
+                    title={lang.liquidation_penalty}
+                    text={lang.cdp_create.liquidation_penalty_description}
+                  />
+                </th>
+                <th css="text-align: right">{lang.your_balance}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cdpTypes.map(
+                ilk =>
+                  collateralTypesData &&
+                  balances[ilk.gem] && (
+                    <IlkTableRow
+                      key={ilk.symbol}
+                      checked={ilk.symbol === selectedIlk.symbol}
+                      dispatch={dispatch}
+                      ilk={ilk}
+                      gemBalance={balances[ilk.gem]}
+                      isFirstVault={isFirstVault}
+                      ilkData={collateralTypesData.find(
+                        x => x.symbol === ilk.symbol
+                      )}
+                    />
+                  )
+              )}
+            </tbody>
+          </Table>
+        </Overflow>
+      </Card>
       <ScreenFooter
         onNext={() => {
           trackBtnClick('Next', {
