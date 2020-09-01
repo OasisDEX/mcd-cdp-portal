@@ -238,7 +238,7 @@ export default function({
         id: NotificationList.NON_VAULT_OWNER,
         content: lang.formatString(
           lang.notifications.non_vault_owner,
-          <Address full={cdpOwner} shorten={true} expandable={false} />
+          vault.id
         ),
         level: SAFETY_LEVELS.WARNING
       });
