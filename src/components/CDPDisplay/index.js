@@ -5,6 +5,7 @@ import { getColor } from 'styles/theme';
 import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import CDPViewPresentation from './Presentation';
+import CDPProxyLessViewPresentation from './PresentationProxyLess';
 import Unavailable from '../Unavailable';
 import { Routes } from '../../utils/constants';
 import { useNavigation } from 'react-navi';
@@ -32,6 +33,7 @@ function CDPView({ cdpId }) {
   );
 
   const vault = watch.vault(cdpId);
+
   return useMemo(
     () =>
       vault && vault.externalOwnerAddress ? (
@@ -42,7 +44,17 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={vault.externalOwnerAddress}
         />
-      ) : vault && vault.externalOwnerAddress === null ? (
+      ) : 
+      vault ? (
+        <CDPProxyLessViewPresentation
+          vault={vault}
+          showSidebar={showSidebar}
+          account={account}
+          network={network}
+          cdpOwner={vault.externalOwnerAddress}
+        />
+      ) :
+      vault && vault.externalOwnerAddress === null ? (
         <Unavailable />
       ) : vault === null ? (
         <Unavailable />
