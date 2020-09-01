@@ -8,7 +8,7 @@ import {
   prettifyNumber,
   formatter
 } from 'utils/ui';
-import { cdpParamsAreValid, getMaxDaiAvailable } from '../../utils/cdp';
+import { cdpParamsAreValid, getMaxDaiAvailable } from 'utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';

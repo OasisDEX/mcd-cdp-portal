@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  Grid,
   Table,
   Radio,
   Overflow,
@@ -17,6 +16,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import BigNumber from 'bignumber.js';
+import { getMaxDaiAvailable } from 'utils/cdp';
 
 const Help = ({ title, text }) => (
   <Tooltip
@@ -98,6 +98,7 @@ function IlkTableRow({
           : prettifyNumber(gemBalance)}{' '}
         {ilk.gem}
       </td>
+      <td>{prettifyNumber(getMaxDaiAvailable(ilkData), true)}</td>
     </tr>
   );
 }
@@ -164,6 +165,7 @@ const CDPCreateSelectCollateral = ({
                   />
                 </th>
                 <th css="text-align: right">{lang.your_balance}</th>
+                <th>{lang.dai_available}</th>
               </tr>
             </thead>
             <tbody>
