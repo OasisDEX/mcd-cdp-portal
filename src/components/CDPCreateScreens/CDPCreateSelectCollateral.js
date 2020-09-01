@@ -6,7 +6,8 @@ import {
   Overflow,
   Card,
   Text,
-  Tooltip
+  Tooltip,
+  Flex
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber, formatter } from 'utils/ui';
@@ -18,8 +19,10 @@ import ScreenHeader from '../ScreenHeader';
 import BigNumber from 'bignumber.js';
 import { getMaxDaiAvailable } from 'utils/cdp';
 
-const Help = ({ title, text }) => (
+const Help = ({ title, text, ...props }) => (
   <Tooltip
+    fontSize="22.9px"
+    color="slate.400"
     content={
       <Card width="361px" p="s">
         <TextBlock t="h5" fontSize="m">
@@ -28,7 +31,17 @@ const Help = ({ title, text }) => (
         <Text fontSize="ss">{text}</Text>
       </Card>
     }
+    {...props}
   />
+);
+
+const HeaderContent = ({ children, tooltip }) => (
+  <Flex color="slate.400" height="24.4px" alignItems="center" my="-3px">
+    {children}
+    {tooltip && (
+      <Help title={tooltip.title} text={tooltip.text} mt="-3px" ml="xs" />
+    )}
+  </Flex>
 );
 
 function IlkTableRow({
@@ -92,7 +105,7 @@ function IlkTableRow({
       </td>
       <td>{formatter(liquidationRatio, { percentage: true })} %</td>
       <td>{formatter(liquidationPenalty, { percentage: true })} %</td>
-      <td css="text-align: right">
+      <td>
         {ilk.gem === 'USDC'
           ? prettifyNumber(gemBalance, { truncate: true })
           : prettifyNumber(gemBalance)}{' '}
@@ -128,44 +141,59 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Card px="l" py="l" my="l">
+      <Card px="l" py="l" my="l" borderRadius="6px">
         <Overflow x="scroll" y="visible">
           <Table
             width="100%"
             css={`
               th,
               td {
-                padding-right: 10px;
+                padding-right: 27px;
               }
             `}
           >
             <thead>
               <tr css="white-space: nowrap;">
                 <th />
-                <th>{lang.collateral_type}</th>
                 <th>
-                  {lang.stability_fee}{' '}
-                  <Help
-                    title={lang.stability_fee}
-                    text={lang.cdp_create.stability_fee_description}
-                  />
+                  <HeaderContent>{lang.collateral_type}</HeaderContent>
                 </th>
                 <th>
-                  {lang.liquidation_ratio_shortened}{' '}
-                  <Help
-                    title={lang.liquidation_ratio}
-                    text={lang.cdp_create.liquidation_ratio_description}
-                  />
+                  <HeaderContent
+                    tooltip={{
+                      title: lang.stability_fee,
+                      text: lang.cdp_create.stability_fee_description
+                    }}
+                  >
+                    {lang.stability_fee}{' '}
+                  </HeaderContent>
                 </th>
                 <th>
-                  {lang.liquidation_penalty_shortened}{' '}
-                  <Help
-                    title={lang.liquidation_penalty}
-                    text={lang.cdp_create.liquidation_penalty_description}
-                  />
+                  <HeaderContent
+                    tooltip={{
+                      title: lang.liquidation_ratio,
+                      text: lang.cdp_create.liquidation_ratio_description
+                    }}
+                  >
+                    {lang.liquidation_ratio_shortened}{' '}
+                  </HeaderContent>
                 </th>
-                <th css="text-align: right">{lang.your_balance}</th>
-                <th>{lang.dai_available}</th>
+                <th>
+                  <HeaderContent
+                    tooltip={{
+                      title: lang.liquidation_penalty,
+                      text: lang.cdp_create.liquidation_penalty_description
+                    }}
+                  >
+                    {lang.liquidation_penalty_shortened}{' '}
+                  </HeaderContent>
+                </th>
+                <th>
+                  <HeaderContent>{lang.your_balance}</HeaderContent>
+                </th>
+                <th>
+                  <HeaderContent>{lang.dai_available}</HeaderContent>
+                </th>
               </tr>
             </thead>
             <tbody>
