@@ -24,7 +24,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { FeatureFlags } from 'utils/constants';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
-import { formatter } from 'utils/ui';
+import { formatter, prettifyNumber } from 'utils/ui';
 import BigNumber from 'bignumber.js';
 import NextPriceLiquidation from '../NotificationContent/NextPriceLiquidatation';
 import useOraclePrices from 'hooks/useOraclePrices';
@@ -378,8 +378,8 @@ export default function({
         <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
-            value={`${formatter(vault.collateralAmount)} ${gem}`}
-            conversion={`${formatter(vault.collateralValue)} USD`}
+            value={`${prettifyNumber(vault.collateralAmount)}`}
+            conversion={`${prettifyNumber(vault.collateralValue)}`}
             button={
               <ActionButton
                 disabled={disableDeposit}
@@ -397,8 +397,8 @@ export default function({
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${formatter(vault.collateralAvailableAmount)} ${gem}`}
-            conversion={`${formatter(vault.collateralAvailableValue)} USD`}
+            value={`${prettifyNumber(vault.collateralAvailableAmount)} `}
+            conversion={`${prettifyNumber(vault.collateralAvailableValue)} `}
             button={
               <ActionButton
                 disabled={disableWithdraw}
@@ -419,7 +419,7 @@ export default function({
         <CdpViewCard title={lang.cdp_page.outstanding_dai_debt}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={formatter(vault.debtValue) + ' DAI'}
+            value={prettifyNumber(vault.debtValue)}
             button={
               <ActionButton
                 disabled={disablePayback}
@@ -437,7 +437,7 @@ export default function({
           />
           <ActionContainerRow
             title={lang.cdp_page.available_generate}
-            value={`${formatter(vault.daiAvailable)} DAI`}
+            value={`${prettifyNumber(vault.daiAvailable)} DAI`}
             button={
               <ActionButton
                 disabled={disableGenerate}
