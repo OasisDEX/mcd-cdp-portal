@@ -418,7 +418,7 @@ export default function({
         <CdpViewCard title={lang.cdp_page.outstanding_dai_debt}>
           <ActionContainerRow
             title={lang.cdp_page.outstanding_dai_debt}
-            value={prettifyNumber(vault.debtValue) }
+            value={prettifyNumber(vault.debtValue)}
             button={
               <ActionButton
                 disabled
