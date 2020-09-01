@@ -437,7 +437,7 @@ export default function({
           />
           <ActionContainerRow
             title={lang.cdp_page.available_generate}
-            value={`${prettifyNumber(vault.daiAvailable)} DAI`}
+            value={`${prettifyNumber(vault.daiAvailable)}`}
             button={
               <ActionButton
                 disabled={disableGenerate}
