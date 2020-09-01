@@ -44,8 +44,7 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={vault.externalOwnerAddress}
         />
-      ) : 
-      vault ? (
+      ) : vault ? (
         <CDPProxyLessViewPresentation
           vault={vault}
           showSidebar={showSidebar}
@@ -53,8 +52,7 @@ function CDPView({ cdpId }) {
           network={network}
           cdpOwner={vault.externalOwnerAddress}
         />
-      ) :
-      vault && vault.externalOwnerAddress === null ? (
+      ) : vault && vault.externalOwnerAddress === null ? (
         <Unavailable />
       ) : vault === null ? (
         <Unavailable />
