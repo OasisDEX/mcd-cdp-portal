@@ -6,6 +6,7 @@ import { Currency } from '@makerdao/currency';
 import { decimalRules } from '../styles/constants';
 const { short, medium } = decimalRules;
 
+
 export function formatCollateralizationRatio(ratio) {
   if (ratio === Infinity) return lang.cdp_page.not_applicable;
   if (isNaN(ratio)) return '---';
@@ -59,7 +60,11 @@ export function prettifyNumber(
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
     } else formattedNumber = num.toFixed(decimalPlaces);
   } else {
-    formattedNumber = num.toLocaleString();
+    var myObj = {
+      minimumFractionDigits: 2
+    }
+    
+    formattedNumber = num.toLocaleString(lang, myObj);
   }
   return keepSymbol ? formattedNumber + symbol : formattedNumber;
 }
