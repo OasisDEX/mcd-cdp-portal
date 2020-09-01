@@ -425,7 +425,7 @@ export default {
     liquidation_ratio_description:
       'The collateral-to-dai ratio at which the Vault becomes vulnerable to liquidation.',
     liquidation_penalty_description:
-      'This is the additional fee that you will pay on top of your debt when your position is liquidated. There could also be other costs involved depending on the price your collateral is sold',
+      'This is the additional fee that you will pay on top of your debt when your position is liquidated. There could also be other costs involved depending on the price your collateral is sold.',
     waiting_for_comfirmations: 'Waiting for confirmations... {0} of {1}',
     confirmed_with_confirmations: 'Confirmed with {0} confirmations',
     waiting_for_confirmations_info:

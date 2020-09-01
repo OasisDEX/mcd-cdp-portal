@@ -24,11 +24,28 @@ const Help = ({ title, text, ...props }) => (
     fontSize="22.9px"
     color="slate.400"
     content={
-      <Card width="361px" p="s">
-        <TextBlock t="h5" fontSize="m">
+      <Card
+        mt="xs"
+        width="361px"
+        px="m"
+        pt="17px"
+        pb="23px"
+        boxShadow="0px 1px 3px rgba(190, 190, 190, 0.25)"
+        borderRadius="6px"
+        border="border: 1px solid #E0E0E0"
+      >
+        <TextBlock
+          t="h5"
+          fontSize="m"
+          color="#252525"
+          letterSpacing="0.3px"
+          mb="14px"
+        >
           {title}
         </TextBlock>
-        <Text fontSize="ss">{text}</Text>
+        <Text fontSize="s" letterSpacing="0.15px" lineHeight="22px" mb="14px">
+          {text}
+        </Text>
       </Card>
     }
     {...props}
@@ -39,7 +56,13 @@ const HeaderContent = ({ children, tooltip }) => (
   <Flex color="slate.400" height="24.4px" alignItems="center" my="-3px">
     {children}
     {tooltip && (
-      <Help title={tooltip.title} text={tooltip.text} mt="-3px" ml="xs" />
+      <Help
+        title={tooltip.title}
+        text={tooltip.text}
+        mt="-3px"
+        ml="7px"
+        mr="2px"
+      />
     )}
   </Flex>
 );
