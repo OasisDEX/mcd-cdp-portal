@@ -9,6 +9,7 @@ import { getColor } from 'styles/theme';
 import useLanguage from 'hooks/useLanguage';
 import groupBy from 'lodash.groupby';
 import { watch } from 'hooks/useObservable';
+import { getMaxDaiAvailable } from 'utils/cdp';
 
 const TABLE_PADDING = '33px';
 
@@ -194,18 +195,10 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
       <tr style={{ height: '8px', border: 'none' }} />
       {collateralTypesData ? (
         Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
-          cdpTypesData = cdpTypesData.map(data => {
-            const collateralDebtAvailable = data.collateralDebtAvailable?.toBigNumber();
-
-            const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
-              ? BigNumber(0)
-              : collateralDebtAvailable;
-
-            return {
-              maxDaiAvailableToGenerate,
-              ...data
-            };
-          });
+          cdpTypesData = cdpTypesData.map(ilkData => ({
+            maxDaiAvailableToGenerate: getMaxDaiAvailable(ilkData),
+            ...ilkData
+          }));
 
           // aggregate data
           const fees = cdpTypesData.map(data => data.annualStabilityFee);

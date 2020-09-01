@@ -8,7 +8,7 @@ import {
   prettifyNumber,
   formatter
 } from 'utils/ui';
-import { cdpParamsAreValid } from '../../utils/cdp';
+import { cdpParamsAreValid, getMaxDaiAvailable } from '../../utils/cdp';
 import useTokenAllowance from 'hooks/useTokenAllowance';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
@@ -207,17 +207,9 @@ const CDPCreateDepositSidebar = ({
 }) => {
   const { lang } = useLanguage();
   const currency = selectedIlk.currency;
-  let {
-    annualStabilityFee,
-    collateralTypePrice,
-    collateralDebtAvailable
-  } = ilkData;
+  let { annualStabilityFee, collateralTypePrice } = ilkData;
 
-  collateralDebtAvailable = collateralDebtAvailable?.toBigNumber();
-
-  const maxDaiAvailableToGenerate = collateralDebtAvailable?.lt(0)
-    ? BigNumber(0)
-    : collateralDebtAvailable;
+  const maxDaiAvailableToGenerate = getMaxDaiAvailable(ilkData);
 
   let liquidationPriceDisplay = formatter(
     ilkData.calculateliquidationPrice(

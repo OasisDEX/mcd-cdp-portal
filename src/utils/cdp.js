@@ -1,6 +1,7 @@
 import { greaterThan } from './bignumber';
 import ilkList from '../references/ilkList';
 import assert from 'assert';
+import BigNumber from 'bignumber.js';
 
 export function cdpParamsAreValid(
   { gemsToLock, daiToDraw },
@@ -28,4 +29,12 @@ export function getCurrency(cdp) {
   const ilk = ilkList.find(i => i.key === ilkName);
   assert(ilk && ilk.currency, `could not find currency for ${ilkName}`);
   return ilk.currency;
+}
+
+export function getMaxDaiAvailable({ collateralDebtAvailable }) {
+  const collateralDebtAvailableBN = collateralDebtAvailable?.toBigNumber();
+
+  return collateralDebtAvailableBN?.lt(0)
+    ? BigNumber(0)
+    : collateralDebtAvailableBN;
 }
