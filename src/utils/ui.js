@@ -59,7 +59,8 @@ export function prettifyNumber(
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
     } else formattedNumber = num.toFixed(decimalPlaces);
   } else {
-    formattedNumber = num.toLocaleString();
+    if (num < 1 && num !== 0) decimalPlaces = 4;
+    formattedNumber = num.toLocaleString(lang, {minimumFractionDigits: decimalPlaces});
   }
   return keepSymbol ? formattedNumber + symbol : formattedNumber;
 }
