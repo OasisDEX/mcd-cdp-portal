@@ -60,7 +60,9 @@ export function prettifyNumber(
     } else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     if (num < 1 && num !== 0) decimalPlaces = 4;
-    formattedNumber = num.toLocaleString(lang, {minimumFractionDigits: decimalPlaces});
+    formattedNumber = num.toLocaleString(lang, {
+      minimumFractionDigits: decimalPlaces
+    });
   }
   return keepSymbol ? formattedNumber + symbol : formattedNumber;
 }
