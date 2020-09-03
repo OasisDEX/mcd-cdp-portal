@@ -55,7 +55,7 @@ test('the whole flow', async () => {
   await mineBlocks(web3);
 
   const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
-  await findByText(/100 ETH/); // ETH Balance
+  await findByText(/100.00 ETH/); // ETH Balance
   click(ethRadioButton);
   click(getByText('Continue'));
 

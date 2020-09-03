@@ -124,7 +124,10 @@ test('Vault Display page and actions', async () => {
 
   // amount to generate before
   const generateLabel = getByText('Available to generate');
-  expect(generateLabel.nextElementSibling.textContent).toBe('522.99 DAI');
+  //expect(generateLabel.nextElementSibling.textContent).toBe('522.99 DAI');
+  //Updated to be rounded up due to formatting changes - OK to round up on main display page,
+  //correct handling within sidebars still with correct numbers used.
+  expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
 
   // submit generate
   change(getByRole('textbox'), { target: { value: '25' } });
