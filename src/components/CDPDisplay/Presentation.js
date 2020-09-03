@@ -74,7 +74,9 @@ export default function({
     collateralizationRatio = lang.cdp_page.not_applicable;
   const isProxyLess = !cdpOwner; // cdp not created through our proxy
   const isOwner =
-    !isProxyLess && account && account.address.toLowerCase() === cdpOwner.toLowerCase();
+    !isProxyLess &&
+    account &&
+    account.address.toLowerCase() === cdpOwner.toLowerCase();
 
   const [actionShown, setActionShown] = useState(null);
   const {
@@ -240,7 +242,11 @@ export default function({
         id: NotificationList.NON_VAULT_OWNER,
         content: lang.formatString(
           lang.notifications.non_vault_owner,
-          isProxyLess ? vault.id : <Address full={cdpOwner} shorten={true} expandable={false} />
+          isProxyLess ? (
+            vault.id
+          ) : (
+            <Address full={cdpOwner} shorten={true} expandable={false} />
+          )
         ),
         level: SAFETY_LEVELS.WARNING
       });
@@ -306,7 +312,11 @@ export default function({
     isProxyLess || !account || emergencyShutdownActive || vaultUnderDustLimit;
   const disablePayback = isProxyLess || !account || emergencyShutdownActive;
   const disableWithdraw =
-    isProxyLess || !account || !isOwner || emergencyShutdownActive || vaultUnderDustLimit;
+    isProxyLess ||
+    !account ||
+    !isOwner ||
+    emergencyShutdownActive ||
+    vaultUnderDustLimit;
   const disableGenerate =
     isProxyLess ||
     !account ||
