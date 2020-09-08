@@ -232,11 +232,17 @@ const SupportedTokens = (() => {
       name: 'MANA'
     },
     {
+      name: 'KNC'
+    },
+    {
       name: '0x',
       symbol: 'ZRX'
     },
     {
-      name: 'KNC'
+      name: 'PAX'
+    },
+    {
+      name: 'USDT'
     },
     {
       name: 'COMP',
@@ -244,10 +250,6 @@ const SupportedTokens = (() => {
     },
     {
       name: 'LINK',
-      onlyOnTrade: true
-    },
-    {
-      name: 'PAX',
       onlyOnTrade: true
     },
     {
