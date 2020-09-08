@@ -23,7 +23,9 @@ const tokenNames = {
   MANA: 'Mana',
   ZRX: '0x',
   KNC: 'Kyber Network',
-  TUSD: 'TrueUSD'
+  TUSD: 'TrueUSD',
+  USDT: 'Tether',
+  PAXUSD: 'Paxos Standard'
 };
 
 const MarketsTableStyle = styled(Table)`
@@ -159,8 +161,11 @@ const MarketsTableStyle = styled(Table)`
 `;
 
 const MarketsTable = ({ cdpTypesList, ...props }) => {
-  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
-  const debtCeilings = watch.collateralDebtCeilings(cdpTypesList);
+  const cdpTypesListWithName = cdpTypesList.filter(
+    type => tokenNames[type.split('-')[0]]
+  );
+  const collateralTypesData = watch.collateralTypesData(cdpTypesListWithName);
+  const debtCeilings = watch.collateralDebtCeilings(cdpTypesListWithName);
   const { lang } = useLanguage();
   const cdpTypesByGem = groupBy(
     collateralTypesData,
