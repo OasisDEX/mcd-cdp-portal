@@ -6,7 +6,9 @@ import {
   TUSD,
   ZRX,
   KNC,
-  MANA
+  MANA,
+  USDT,
+  PAXUSD
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -83,6 +85,23 @@ export default [
     key: 'MANA-A',
     gem: 'MANA',
     currency: MANA,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'usdt-a',
+    symbol: 'USDT-A',
+    key: 'USDT-A',
+    gem: 'USDT',
+    currency: USDT,
+    networks: ['mainnet', 'kovan'],
+    decimals: 6
+  },
+  {
+    slug: 'paxusd-a',
+    symbol: 'PAXUSD-A',
+    key: 'PAXUSD-A',
+    gem: 'PAXUSD',
+    currency: PAXUSD,
     networks: ['mainnet', 'kovan']
   }
 ];
