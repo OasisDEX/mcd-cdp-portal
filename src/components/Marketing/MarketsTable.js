@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Loader, Table, Text } from '@makerdao/ui-components-core';
 import BigNumber from 'bignumber.js';
 import { TokenIcon } from './index';
-import { formatter, prettifyNumber } from 'utils/ui';
+import { prettifyNumber } from 'utils/ui';
 import Carat from '../Carat';
 import { getColor } from 'styles/theme';
 import useLanguage from 'hooks/useLanguage';
@@ -27,6 +27,9 @@ const tokenNames = {
   USDT: 'Tether',
   PAXUSD: 'Paxos Standard'
 };
+
+const formatPercentage = number =>
+  `${prettifyNumber(number.times(100), false, 2, false)}%`;
 
 const MarketsTableStyle = styled(Table)`
   width: 100%;
@@ -240,25 +243,17 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
                 </Table.td>
                 <Table.td>
                   <Number>
-                    {formatter(minFee, { percentage: true })}%
-                    {!minFee.eq(maxFee) && (
-                      <> - {formatter(maxFee, { percentage: true })}%</>
-                    )}
+                    {formatPercentage(minFee)}
+                    {!minFee.eq(maxFee) && <> - {formatPercentage(maxFee)}</>}
                   </Number>
                 </Table.td>
                 <Table.td>
                   <Number>
-                    {formatter(minRatio, {
-                      percentage: true
-                    })}
-                    %
+                    {formatPercentage(minRatio)}
                     {!minRatio.eq(maxRatio) && (
                       <>
                         {' - '}
-                        {formatter(maxRatio, {
-                          percentage: true
-                        })}
-                        %
+                        {formatPercentage(maxRatio)}
                       </>
                     )}
                   </Number>
@@ -292,20 +287,14 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
                   <Table.td>
                     <div>
                       <Number>
-                        {formatter(cdpType.annualStabilityFee, {
-                          percentage: true
-                        })}
-                        %
+                        {formatPercentage(cdpType.annualStabilityFee)}
                       </Number>
                     </div>
                   </Table.td>
                   <Table.td>
                     <div>
                       <Number>
-                        {formatter(cdpType.liquidationRatio, {
-                          percentage: true
-                        })}
-                        %
+                        {formatPercentage(cdpType.liquidationRatio)}
                       </Number>
                     </div>
                   </Table.td>
