@@ -81,7 +81,6 @@ function CDPCreate({ onClose }) {
   );
   const { cdpTypesList } = useCdpTypes();
   const collateralTypesData = watch.collateralTypesData(cdpTypesList);
-
   const { hasAllowance, hasSufficientAllowance } = useTokenAllowance(
     selectedIlk?.currency?.symbol
   );
