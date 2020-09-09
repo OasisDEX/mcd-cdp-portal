@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Table,
-  Radio,
   Overflow,
   Card,
   Text,
@@ -67,6 +66,37 @@ const HeaderContent = ({ children, tooltip }) => (
   </Flex>
 );
 
+const CustomRadio = ({ checked, disabled, size = '21px', ...props }) => (
+  <Flex
+    alignItems="center"
+    justifyContent="center"
+    width={size}
+    height={size}
+    {...props}
+  >
+    <Box
+      css={`
+        border: 1.4px solid #c4c4c4;
+        border-radius: 50%;
+        width: calc(${size} - 2px);
+        height: calc(${size} - 2px);
+        transition: all 0.15s ease;
+
+        &.checked {
+          border: 4px solid #1aab9b;
+          width: ${size};
+          height: ${size};
+        }
+
+        &.disabled {
+          background-color: #f5f5f5;
+        }
+      `}
+      className={`${disabled && 'disabled'} ${checked && 'checked'}`}
+    />
+  </Flex>
+);
+
 function IlkTableRow({
   ilk,
   checked,
@@ -101,15 +131,7 @@ function IlkTableRow({
       onClick={() => !disabled && selectIlk()}
     >
       <td>
-        <Radio
-          disabled={disabled}
-          checked={checked}
-          readOnly
-          mr="xs"
-          css={{
-            appearance: 'none'
-          }}
-        />
+        <CustomRadio disabled={disabled} checked={checked} mr="xs" />
       </td>
       <td>
         <div>{ilk.symbol}</div>
