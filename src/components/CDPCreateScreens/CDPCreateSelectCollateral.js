@@ -80,19 +80,23 @@ const CustomRadio = ({ checked, disabled, size = '21px', ...props }) => (
         border-radius: 50%;
         width: calc(${size} - 2px);
         height: calc(${size} - 2px);
-        transition: all 0.15s ease;
+        cursor: pointer;
 
         &.checked {
+          transition: all 0.15s ease;
           border: 4px solid #1aab9b;
           width: ${size};
           height: ${size};
+          cursor: default;
         }
 
         &.disabled {
           background-color: #f5f5f5;
+          cursor: default;
         }
       `}
-      className={`${disabled && 'disabled'} ${checked && 'checked'}`}
+      className={`${disabled && 'disabled'} ${checked &&
+        'checked'} radio-circle`}
     />
   </Flex>
 );
@@ -128,6 +132,17 @@ function IlkTableRow({
   return (
     <tr
       style={disabled ? { color: '#ADADAD' } : { whiteSpace: 'nowrap' }}
+      css={
+        !disabled &&
+        !checked &&
+        `
+        &:hover {
+          .radio-circle {
+            border-color: #979797;
+          }
+        }
+      `
+      }
       onClick={() => !disabled && selectIlk()}
     >
       <td>
