@@ -66,7 +66,7 @@ const HeaderContent = ({ children, tooltip }) => (
   </Flex>
 );
 
-const CustomRadio = ({ checked, disabled, size = '21px', ...props }) => (
+const CustomRadio = ({ checked, disabled, size = '23px', ...props }) => (
   <Flex
     alignItems="center"
     justifyContent="center"
@@ -83,7 +83,7 @@ const CustomRadio = ({ checked, disabled, size = '21px', ...props }) => (
         cursor: pointer;
 
         &.checked {
-          transition: all 0.15s ease;
+          transition: all 0.1s ease-out 0s;
           border: 4px solid #1aab9b;
           width: ${size};
           height: ${size};
