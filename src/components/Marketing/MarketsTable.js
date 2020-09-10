@@ -54,7 +54,7 @@ const MarketsTableStyle = styled(Table)`
   }
 
   @media (min-width: ${props => props.theme.breakpoints.m}) {
-    .gem {
+    .gem.dimmed {
       color: #6f838f;
     }
   }
@@ -164,11 +164,8 @@ const MarketsTableStyle = styled(Table)`
 `;
 
 const MarketsTable = ({ cdpTypesList, ...props }) => {
-  const cdpTypesListWithName = cdpTypesList.filter(
-    type => tokenNames[type.split('-')[0]]
-  );
-  const collateralTypesData = watch.collateralTypesData(cdpTypesListWithName);
-  const debtCeilings = watch.collateralDebtCeilings(cdpTypesListWithName);
+  const collateralTypesData = watch.collateralTypesData(cdpTypesList);
+  const debtCeilings = watch.collateralDebtCeilings(cdpTypesList);
   const { lang } = useLanguage();
   const cdpTypesByGem = groupBy(
     collateralTypesData,
@@ -185,7 +182,7 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
       <Table.thead>
         <Table.tr>
           <Table.th width={{ s: '0', m: TABLE_PADDING }} />
-          <Table.th width={{ s: '30px', m: '49px' }} />
+          <Table.th width={{ s: '42px', m: '49px' }} />
           <Table.th minWidth="80px">{lang.overview_page.token}</Table.th>
           <Table.th width={{ s: 'unset', xl: '190px' }}>
             {lang.stability_fee}
@@ -234,10 +231,12 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
                   <TokenIcon symbol={gem} size={31.67} />
                 </Table.td>
                 <Table.td>
-                  <Text display={{ s: 'none', m: 'inline' }}>
-                    {tokenNames[gem]}
-                  </Text>
-                  <Text ml="8px" className="gem">
+                  {tokenNames[gem] && (
+                    <Text display={{ s: 'none', m: 'inline' }} mr="8px">
+                      {tokenNames[gem]}
+                    </Text>
+                  )}
+                  <Text className={`gem ${tokenNames[gem] && 'dimmed'}`}>
                     {gem}
                   </Text>
                 </Table.td>
