@@ -222,7 +222,7 @@ const CDPCreateSelectCollateral = ({
               }
             `}
             fontSize="m"
-            pb="6px"
+            mb="6px"
           >
             <thead>
               <tr css="white-space: nowrap;">
