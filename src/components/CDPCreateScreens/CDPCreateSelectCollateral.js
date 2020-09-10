@@ -145,13 +145,13 @@ function IlkTableRow({
       }
       onClick={() => !disabled && selectIlk()}
     >
-      <td>
+      <td style={{ paddingRight: '14px' }}>
         <CustomRadio disabled={disabled} checked={checked} mr="xs" />
       </td>
       <td>
         <div>{ilk.symbol}</div>
         {disabled && (
-          <div style={{ fontSize: '11px', paddingBottom: '5px' }}>
+          <div style={{ fontSize: '11px', marginRight: '-6px' }}>
             Unavailable due to a token upgrade
           </div>
         )}
@@ -201,7 +201,7 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Card px="l" py="l" my="l" borderRadius="6px">
+      <Card px="l" pb="l" pt="26px" my="l" borderRadius="6px">
         <Overflow x="scroll" y="visible">
           <Table
             width="100%"
@@ -210,7 +210,18 @@ const CDPCreateSelectCollateral = ({
               td {
                 padding-right: 27px;
               }
+
+              th {
+                padding-bottom: 1px;
+              }
+
+              td {
+                padding-top: 10px;
+                padding-bottom: 10px;
+              }
             `}
+            fontSize="m"
+            pb="6px"
           >
             <thead>
               <tr css="white-space: nowrap;">
