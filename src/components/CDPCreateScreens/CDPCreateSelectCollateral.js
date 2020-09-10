@@ -111,6 +111,7 @@ function IlkTableRow({
 }) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
+  const { lang } = useLanguage();
 
   async function selectIlk() {
     trackInputChange('CollateralType', {
@@ -152,7 +153,7 @@ function IlkTableRow({
         <div>{ilk.symbol}</div>
         {disabled && (
           <div style={{ fontSize: '11px', marginRight: '-6px' }}>
-            Unavailable due to a token upgrade
+            {lang.cdp_create.select_unavailable}
           </div>
         )}
       </td>
