@@ -7,6 +7,7 @@ import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { Box, Flex, Position, Text } from '@makerdao/ui-components-core';
+import { getColor } from 'styles/theme';
 import {
   ConnectHero,
   ThickUnderline,
@@ -23,11 +24,14 @@ import {
   BorrowCalculator,
   StyledPageContentLayout,
   PageHead,
-  MarketsTable
+  MarketsTable,
+  HollowButton
 } from 'components/Marketing';
 
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+
+import { ReactComponent as PlayIcon } from 'images/landing/borrow/play.svg';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
@@ -236,7 +240,25 @@ function Borrow({ disableConnect = false }) {
           <Text fontSize="s" className="connect-to-start">
             {lang.borrow_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" />
+          <Flex alignItems="center" height="60px">
+            <HollowButton
+              height="44px"
+              position="relative"
+              style={{ top: '2px' }}
+              px="24px"
+              mr="22px"
+            >
+              <PlayIcon
+                style={{
+                  fill: getColor('darkPurple'),
+                  marginRight: '9px',
+                  marginLeft: '-4px'
+                }}
+              />
+              {lang.see_how_it_works}
+            </HollowButton>
+            <AccountSelection className="button" />
+          </Flex>
         </ConnectHero>
       </FixedHeaderTrigger>
       <WBTCNotice lang={lang} mt="30px" />

@@ -22,7 +22,7 @@ const Button = styled(Box)`
 const HollowButton = styled(Button)`
   border: 1px solid ${props => props.theme.colors.darkPurple};
   color: ${props => props.theme.colors.darkPurple};
-  font-weight: normal;
+  font-weight: bold;
 `;
 
 const FilledButton = styled(Button)`

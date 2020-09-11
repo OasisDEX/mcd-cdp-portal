@@ -6,7 +6,7 @@ import Questions, {
   buildQuestionsFromLangObj,
   QuestionsWrapper
 } from './Questions';
-import { FilledButton } from './Buttons';
+import { FilledButton, HollowButton } from './Buttons';
 import ConnectHero from './ConnectHero';
 import Quotes, { QuotesFadeIn } from './Quotes';
 import GradientBox from './GradientBox';
@@ -60,6 +60,7 @@ export {
   QuestionsWrapper,
   buildQuestionsFromLangObj,
   FilledButton,
+  HollowButton,
   ConnectHero,
   ThickUnderline,
   SeparatorDot,
