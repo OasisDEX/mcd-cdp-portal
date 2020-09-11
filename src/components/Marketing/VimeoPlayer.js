@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CrossIcon } from 'images/video-close-cross.svg';
 import Player from '@vimeo/player';
-import { Box, Loader } from '@makerdao/ui-components-core';
+import { Box } from '@makerdao/ui-components-core';
 
 // Keeps aspect ratio of div
 // credit: https://dabblet.com/gist/2590942
@@ -84,21 +84,6 @@ const VimeoPlayerStyle = styled(Box)`
     transform: translateX(-50%);
   }
 
-  .loading-screen {
-    width: 100%;
-    max-width: 850px;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    top: 2px;
-    left: 50%;
-    bottom: 2px;
-    transform: translateX(-50%);
-    z-index: -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   @media (min-width: 853px) {
     /* max video width */
     .close-button-container {
@@ -150,14 +135,6 @@ const VimeoPlayer = ({ showVideo, id, onCloseVideo }) => {
               allow="autoplay; fullscreen"
               allowfullscreen
             />
-            <div className="loading-screen">
-              <Loader
-                className="spinner"
-                size="50px"
-                color="white"
-                bg="rgba(0, 0, 0, 0.7)"
-              />
-            </div>
           </div>
         </AspectRatio>
       )}
