@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
@@ -38,6 +38,7 @@ import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 import { ReactComponent as BtcToDai } from 'images/landing/borrow/btc-to-dai.svg';
+import VimeoPlayer from '../components/Marketing/VimeoPlayer';
 
 const Ball = styled.div`
   width: ${props => props.size};
@@ -220,12 +221,19 @@ function Borrow({ disableConnect = false }) {
     cdpTypesList?.length ? cdpTypesList : []
   );
 
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <StyledPageContentLayout>
       <PageHead
         title={lang.borrow_landing.meta.title}
         description={lang.borrow_landing.meta.description}
         imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
+      />
+      <VimeoPlayer
+        id="427849477"
+        showVideo={showVideo}
+        onCloseVideo={() => setShowVideo(false)}
       />
       <FixedHeaderTrigger>
         <ConnectHero>
@@ -247,6 +255,7 @@ function Borrow({ disableConnect = false }) {
               style={{ top: '2px' }}
               px="24px"
               mr="22px"
+              onClick={() => setShowVideo(true)}
             >
               <PlayIcon
                 style={{
