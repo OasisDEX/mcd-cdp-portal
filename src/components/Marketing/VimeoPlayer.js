@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CrossIcon } from 'images/video-close-cross.svg';
-import { ReactComponent as PlayIcon } from 'images/video-unpause-play.svg';
 import Player from '@vimeo/player';
 import { Box, Loader } from '@makerdao/ui-components-core';
 
@@ -85,20 +84,6 @@ const VimeoPlayerStyle = styled(Box)`
     transform: translateX(-50%);
   }
 
-  .paused-overlay {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.25);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    svg {
-      height: 16%;
-      width: 100px;
-    }
-  }
-
   .loading-screen {
     width: 100%;
     max-width: 850px;
@@ -123,42 +108,18 @@ const VimeoPlayerStyle = styled(Box)`
 `;
 
 const VimeoPlayer = ({ showVideo, id, onCloseVideo }) => {
-  const [player, setPlayer] = useState(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-
   useEffect(() => {
     const iframe = document.querySelector('#dai-video');
     if (!showVideo || !iframe) {
       return;
     }
     const player = new Player(iframe);
-    setIsLoaded(false);
-    setIsPaused(false);
-    setPlayer(player);
     player.setVolume(0.3);
     player.on('ended', onCloseVideo);
-    player.on('play', () => setIsLoaded(true));
     return () => {
       player.off('ended');
-      player.off('play');
     };
   }, [showVideo, onCloseVideo]);
-
-  const togglePause = () => {
-    if (!player) {
-      return;
-    }
-    if (isPaused) {
-      player.play().then(() => {
-        setIsPaused(false);
-      });
-    } else {
-      player.pause().then(() => {
-        setIsPaused(true);
-      });
-    }
-  };
 
   return (
     <VimeoPlayerStyle
@@ -181,15 +142,6 @@ const VimeoPlayer = ({ showVideo, id, onCloseVideo }) => {
             </Box>
           </div>
           <div className="video-container">
-            {isLoaded && (
-              <div className="video-overlay" onClick={() => togglePause()}>
-                {isPaused && (
-                  <div className="paused-overlay">
-                    <PlayIcon />
-                  </div>
-                )}
-              </div>
-            )}
             <Video
               id="dai-video"
               className="video"
