@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Table,
-  Radio,
   Overflow,
   Card,
   Text,
@@ -67,6 +66,41 @@ const HeaderContent = ({ children, tooltip }) => (
   </Flex>
 );
 
+const CustomRadio = ({ checked, disabled, size = '23px', ...props }) => (
+  <Flex
+    alignItems="center"
+    justifyContent="center"
+    width={size}
+    height={size}
+    {...props}
+  >
+    <Box
+      css={`
+        border: 1.4px solid #c4c4c4;
+        border-radius: 50%;
+        width: calc(${size} - 2px);
+        height: calc(${size} - 2px);
+        cursor: pointer;
+
+        &.checked {
+          transition: all 0.1s ease-out 0s;
+          border: 4px solid #1aab9b;
+          width: ${size};
+          height: ${size};
+          cursor: default;
+        }
+
+        &.disabled {
+          background-color: #f5f5f5;
+          cursor: default;
+        }
+      `}
+      className={`${disabled && 'disabled'} ${checked &&
+        'checked'} radio-circle`}
+    />
+  </Flex>
+);
+
 function IlkTableRow({
   ilk,
   checked,
@@ -77,6 +111,7 @@ function IlkTableRow({
 }) {
   const { trackInputChange } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { annualStabilityFee, liquidationRatio, liquidationPenalty } = ilkData;
+  const { lang } = useLanguage();
 
   async function selectIlk() {
     trackInputChange('CollateralType', {
@@ -98,24 +133,27 @@ function IlkTableRow({
   return (
     <tr
       style={disabled ? { color: '#ADADAD' } : { whiteSpace: 'nowrap' }}
+      css={
+        !disabled &&
+        !checked &&
+        `
+        &:hover {
+          .radio-circle {
+            border-color: #979797;
+          }
+        }
+      `
+      }
       onClick={() => !disabled && selectIlk()}
     >
-      <td>
-        <Radio
-          disabled={disabled}
-          checked={checked}
-          readOnly
-          mr="xs"
-          css={{
-            appearance: 'none'
-          }}
-        />
+      <td style={{ paddingRight: '14px' }}>
+        <CustomRadio disabled={disabled} checked={checked} mr="xs" />
       </td>
       <td>
         <div>{ilk.symbol}</div>
         {disabled && (
-          <div style={{ fontSize: '11px', paddingBottom: '5px' }}>
-            Unavailable due to a token upgrade
+          <div style={{ fontSize: '11px', marginRight: '-6px' }}>
+            {lang.cdp_create.select_unavailable}
           </div>
         )}
       </td>
@@ -164,7 +202,7 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Card px="l" py="l" my="l" borderRadius="6px">
+      <Card px="l" pb="l" pt="26px" my="l" borderRadius="6px">
         <Overflow x="scroll" y="visible">
           <Table
             width="100%"
@@ -173,7 +211,18 @@ const CDPCreateSelectCollateral = ({
               td {
                 padding-right: 27px;
               }
+
+              th {
+                padding-bottom: 1px;
+              }
+
+              td {
+                padding-top: 10px;
+                padding-bottom: 10px;
+              }
             `}
+            fontSize="m"
+            mb="6px"
           >
             <thead>
               <tr css="white-space: nowrap;">
