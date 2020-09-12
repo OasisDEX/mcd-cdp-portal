@@ -6,7 +6,7 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import { Box, Flex, Position, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
 import { getColor } from 'styles/theme';
 import {
   ConnectHero,
@@ -248,13 +248,20 @@ function Borrow({ disableConnect = false }) {
           <Text fontSize="s" className="connect-to-start">
             {lang.borrow_landing.connect_to_start}
           </Text>
-          <Flex alignItems="center" height="60px">
+          <Grid
+            width={{ s: '213px', m: 'unset' }}
+            mt={{ s: '10px', m: '2px' }}
+            mb={{ s: 'unset', m: '2px' }}
+            gridTemplateColumns={{ s: 'unset', m: 'auto 213px' }}
+            gridTemplateRows={{ s: '44px 60px', m: '60px' }}
+            gridColumnGap="22px"
+            alignItems="center"
+          >
             <HollowButton
               height="44px"
               position="relative"
-              style={{ top: '2px' }}
+              style={{ top: '2px', backdropFilter: 'blur(25px)' }}
               px="24px"
-              mr="22px"
               onClick={() => setShowVideo(true)}
             >
               <PlayIcon
@@ -266,8 +273,8 @@ function Borrow({ disableConnect = false }) {
               />
               {lang.see_how_it_works}
             </HollowButton>
-            <AccountSelection className="button" />
-          </Flex>
+            <AccountSelection className="button" width="100%" />
+          </Grid>
         </ConnectHero>
       </FixedHeaderTrigger>
       <WBTCNotice lang={lang} mt="30px" />
