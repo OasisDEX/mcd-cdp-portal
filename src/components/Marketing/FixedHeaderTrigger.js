@@ -57,7 +57,7 @@ const Header = ({ cta, ...props }) => {
       <Text display={{ s: 'none', xl: 'inline' }} fontSize="s">
         {lang.providers.connect_wallet_long}
       </Text>
-      <AccountSelection ml="24px" buttonWidth="248px" display="inline" />
+      <AccountSelection ml="24px" width="248px" display="inline" />
     </Flex>
   );
 
