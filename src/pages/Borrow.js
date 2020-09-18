@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
@@ -6,7 +6,8 @@ import AccountSelection from 'components/AccountSelection';
 import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
-import { Box, Flex, Position, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
+import { getColor } from 'styles/theme';
 import {
   ConnectHero,
   ThickUnderline,
@@ -23,17 +24,21 @@ import {
   BorrowCalculator,
   StyledPageContentLayout,
   PageHead,
-  MarketsTable
+  MarketsTable,
+  HollowButton
 } from 'components/Marketing';
 
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+
+import { ReactComponent as PlayIcon } from 'images/landing/borrow/play.svg';
 import { ReactComponent as QuotesImg } from 'images/landing/borrow/quotes.svg';
 import { ReactComponent as Feat1 } from 'images/landing/borrow/feature-1.svg';
 import { ReactComponent as Feat2 } from 'images/landing/borrow/feature-2.svg';
 import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 import { ReactComponent as BtcToDai } from 'images/landing/borrow/btc-to-dai.svg';
+import VimeoPlayer from '../components/Marketing/VimeoPlayer';
 
 const Ball = styled.div`
   width: ${props => props.size};
@@ -216,12 +221,19 @@ function Borrow({ disableConnect = false }) {
     cdpTypesList?.length ? cdpTypesList : []
   );
 
+  const [showVideo, setShowVideo] = useState(false);
+
   return (
     <StyledPageContentLayout>
       <PageHead
         title={lang.borrow_landing.meta.title}
         description={lang.borrow_landing.meta.description}
         imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
+      />
+      <VimeoPlayer
+        id="427849477"
+        showVideo={showVideo}
+        onCloseVideo={() => setShowVideo(false)}
       />
       <FixedHeaderTrigger>
         <ConnectHero>
@@ -236,7 +248,33 @@ function Borrow({ disableConnect = false }) {
           <Text fontSize="s" className="connect-to-start">
             {lang.borrow_landing.connect_to_start}
           </Text>
-          <AccountSelection className="button" />
+          <Grid
+            width={{ s: '213px', m: 'unset' }}
+            mt={{ s: '10px', m: '2px' }}
+            mb={{ s: 'unset', m: '2px' }}
+            gridTemplateColumns={{ s: 'unset', m: 'auto 213px' }}
+            gridTemplateRows={{ s: '44px 60px', m: '60px' }}
+            gridColumnGap="22px"
+            alignItems="center"
+          >
+            <HollowButton
+              height="44px"
+              position="relative"
+              style={{ top: '2px', backdropFilter: 'blur(25px)' }}
+              px="24px"
+              onClick={() => setShowVideo(true)}
+            >
+              <PlayIcon
+                style={{
+                  fill: getColor('darkPurple'),
+                  marginRight: '9px',
+                  marginLeft: '-4px'
+                }}
+              />
+              {lang.see_how_it_works}
+            </HollowButton>
+            <AccountSelection className="button" width="100%" />
+          </Grid>
         </ConnectHero>
       </FixedHeaderTrigger>
       <WBTCNotice lang={lang} mt="30px" />
