@@ -169,7 +169,7 @@ const NavItem = styled(Item)`
   }
 `;
 
-function AccountSelection({ buttonWidth = '213px', ...props }) {
+function AccountSelection({ width = '213px', ...props }) {
   const dropdown = useRef(null);
   const [showMain, setShowMain] = useState(true);
   const [isOpen, setIsOpen] = useState(false); // only for mobile
@@ -276,14 +276,14 @@ function AccountSelection({ buttonWidth = '213px', ...props }) {
   const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
 
   return (
-    <Box width={buttonWidth} {...props} ref={dropdown}>
+    <Box width={width} {...props} ref={dropdown}>
       <DropdownWrapper isMobile={isMobile} isOpen={isOpen}>
         <ConnectDropdown
           openOnHover={!isMobile}
           show={isMobile ? isOpen : undefined}
           trigger={
             <FilledButton
-              width={buttonWidth}
+              width={width}
               height="44px"
               onClick={() => {
                 setIsOpen(!isOpen); // only for mobile
