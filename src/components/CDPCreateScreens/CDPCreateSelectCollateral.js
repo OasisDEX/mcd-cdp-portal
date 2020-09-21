@@ -128,7 +128,8 @@ function IlkTableRow({
       }
     });
   }
-  const disabled = ilk.gem === 'TUSD';
+  //const disabled = ilk.gem === 'TUSD';
+  const disabled = false;
 
   return (
     <tr
