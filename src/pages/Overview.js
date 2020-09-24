@@ -58,8 +58,12 @@ function Overview({ viewedAddress }) {
   const { lang } = useLanguage();
   const { emergencyShutdownActive } = useEmergencyShutdown();
   const { addNotification, deleteNotifications } = useNotification();
+
   useEffect(() => {
-    if (account && viewedAddress.toLowerCase() !== account.address.toLowerCase()) {
+    if (
+      account &&
+      viewedAddress.toLowerCase() !== account.address.toLowerCase()
+    ) {
       addNotification({
         id: NotificationList.NON_OVERVIEW_OWNER,
         content: lang.formatString(

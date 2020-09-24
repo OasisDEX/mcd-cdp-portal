@@ -11,8 +11,8 @@
     "Adrian le Bas <adrian@makerdao.com>"
   ],
   "dependencies": {
-    "@craco/craco": "^5.4.0",
-    "@hot-loader/react-dom": "^16.8.4",
+    "@craco/craco": "^5.6.4",
+    "@hot-loader/react-dom": "17.0.0-rc.2",
     "@makerdao/currency": "^0.9.9",
     "@makerdao/dai": "^0.32.4",
     "@makerdao/dai-plugin-config": "^0.2.15",
@@ -44,9 +44,9 @@
     "mixpanel-browser": "^2.26.0",
     "navi": "^0.13.6",
     "prop-types": "^15.7.2",
-    "react": "^16.8.0",
+    "react": "^16.13.1",
     "react-device-detect": "^1.9.10",
-    "react-dom": "^16.8.0",
+    "react-dom": "^16.13.1",
     "react-ga": "^2.5.7",
     "react-helmet": "^5.2.1",
     "react-hot-loader": "^4.8.0",

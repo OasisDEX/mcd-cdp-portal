@@ -210,7 +210,7 @@ function AccountSelection({ width = '213px', ...props }) {
       const connectedAddress = await connectBrowserProvider();
       onAccountChosen({ address: connectedAddress }, providerName);
     } catch (err) {
-      window.alert(err);
+      if (process.env.NODE_ENV !== 'test') window.alert(err);
     }
   }
 

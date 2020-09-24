@@ -38,7 +38,7 @@ const Features = ({ features, ...props }) => {
       {features.map(point => (
         <FadeIn key={point.title} triggerOffset={160} moveDistance="25%">
           <Flex>
-            {point.img}
+            {<point.img />}
             <Text.h4>{point.title}</Text.h4>
             <Text fontSize="s">{point.content}</Text>
           </Flex>

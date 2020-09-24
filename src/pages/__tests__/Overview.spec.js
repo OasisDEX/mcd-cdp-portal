@@ -16,15 +16,16 @@ navi.Link = styled.a``;
 
 const ILK = 'ETH-A';
 const VAULT1_ETH = '6';
-const VAULT1_ART = '80.1234567';
-const VAULT2_ETH = '1';
-const VAULT2_ART = '25';
+const VAULT1_ART = '180.1234567';
+const VAULT2_ETH = '3';
+const VAULT2_ART = '250';
 const VIEWED_ADDRESS = '0x16fb96a5fa0427af0c8f7cf1eb4870231c8154b6';
 
 let maker;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
+
   await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(VAULT1_ART));
@@ -45,17 +46,17 @@ test('render overview page and display calculated vault values', async () => {
   await waitForElement(() => getByText('Overview'));
 
   // Total collateral locked
-  getByText('$1050.00 USD');
+  getByText('$1350.00 USD');
   // Total Dai debt
-  getByText(/105.\d{1,2} DAI/);
+  getByText(/430.\d{1,2} DAI/);
   // Vault1 Dai debt
-  getByText(/80.\d{1,2} DAI/);
+  getByText(/180.\d{1,2} DAI/);
   // Current ratio
-  getByText(/11\d\d.\d\d%/);
+  getByText(/18\d%/);
   // Deposited
   getByText('6.00 ETH');
   // Available to withdraw
-  getByText('5.20 ETH');
+  getByText('4.20 ETH');
   // Privacy policy
   getByText('privacy policy');
 
