@@ -1,7 +1,7 @@
 import React from 'react';
 import Borrow from '../Borrow';
 import { renderWithMaker } from '../../../test/helpers/render';
-import { waitForElement } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import useAnalytics from 'hooks/useAnalytics';
 
 jest.mock('hooks/useAnalytics');
@@ -15,9 +15,7 @@ test('Borrow calculator renders', async () => {
     }
   );
 
-  const amountChosenElem = await waitForElement(() =>
-    getByTestId('amount-chosen')
-  );
+  const amountChosenElem = await waitFor(() => getByTestId('amount-chosen'));
 
   // 25 ETH is the default amount in the Borrow calculator
   expect(amountChosenElem.innerHTML.includes('25')).toBeTruthy();

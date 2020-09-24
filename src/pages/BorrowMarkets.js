@@ -19,6 +19,10 @@ function BorrowMarkets() {
     <StyledPageContentLayout
       css={`
         overflow: scroll;
+        scrollbar-width: none;
+        ::-webkit-scrollbar {
+          width: 0px;
+        }
       `}
       maxWidth="1090px"
       m="0 auto"

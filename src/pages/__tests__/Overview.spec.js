@@ -1,6 +1,6 @@
 import React from 'react';
 import * as navi from 'react-navi';
-import { waitForElement, cleanup } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import Overview from '../Overview';
@@ -25,7 +25,6 @@ let maker;
 
 beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
-
   await maker
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(VAULT1_ART));
@@ -38,14 +37,14 @@ beforeAll(async () => {
 afterEach(cleanup);
 
 test('render overview page and display calculated vault values', async () => {
-  const { getByText, getAllByText } = await renderWithVaults(
+  const { findByText, getByText, getAllByText } = await renderWithVaults(
     <Overview viewedAddress={VIEWED_ADDRESS} />,
     VIEWED_ADDRESS
   );
 
-  await waitForElement(() => getByText('Overview'));
+  await findByText('Overview', {}, { timeout: 5000 });
 
-  // Total collateral locked
+  //Total collateral locked
   getByText('$1350.00 USD');
   // Total Dai debt
   getByText(/430.\d{1,2} DAI/);

@@ -197,7 +197,6 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
           <Table.th width={{ s: '0', m: TABLE_PADDING }} />
         </Table.tr>
       </Table.thead>
-      <tr style={{ height: '8px', border: 'none' }} />
       {collateralTypesData ? (
         Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
           cdpTypesData = cdpTypesData.map(ilkData => ({
@@ -323,16 +322,18 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
           ];
         })
       ) : (
-        <tr>
-          <td colSpan={8}>
-            <Loader
-              size="4rem"
-              color={getColor('spinner')}
-              bg="white"
-              m="40px auto"
-            />
-          </td>
-        </tr>
+        <Table.tbody>
+          <tr>
+            <td colSpan={8}>
+              <Loader
+                size="4rem"
+                color={getColor('spinner')}
+                bg="white"
+                m="40px auto"
+              />
+            </td>
+          </tr>
+        </Table.tbody>
       )}
     </MarketsTableStyle>
   );

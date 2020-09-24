@@ -1,7 +1,7 @@
 import React from 'react';
 import SaveOverview from '../SaveOverview';
 import { renderWithMaker, mocks } from '../../../test/helpers/render';
-import { waitForElement, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { Routes } from 'utils/constants';
 import useAnalytics from 'hooks/useAnalytics';
 
@@ -9,13 +9,11 @@ jest.mock('hooks/useAnalytics');
 useAnalytics.mockReturnValue(jest.fn());
 
 test('Save overview flow and re-route', async () => {
-  const { getAllByText } = await renderWithMaker(<SaveOverview />, {
+  const { findAllByText } = await renderWithMaker(<SaveOverview />, {
     waitForAuth: false
   });
 
-  const connectWalletBtn = await waitForElement(
-    () => getAllByText('Active Wallet')[0]
-  );
+  const connectWalletBtn = (await findAllByText('Active Wallet'))[0];
   fireEvent.click(connectWalletBtn);
 
   expect(mocks.navigation.navigate.mock.calls[0][0]).toEqual(

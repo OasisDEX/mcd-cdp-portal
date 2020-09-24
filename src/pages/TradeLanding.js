@@ -143,13 +143,11 @@ function TradeLanding() {
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '200px' }}
-        features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
-          (img, index) => ({
-            img: img,
-            title: lang.trade_landing[`feature${index + 1}_heading`],
-            content: lang.trade_landing[`feature${index + 1}_content`]
-          })
-        )}
+        features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
+          img: img,
+          title: lang.trade_landing[`feature${index + 1}_heading`],
+          content: lang.trade_landing[`feature${index + 1}_content`]
+        }))}
       />
       <QuestionsWrapper>
         <Text.h2>{lang.landing_page.questions_title}</Text.h2>
