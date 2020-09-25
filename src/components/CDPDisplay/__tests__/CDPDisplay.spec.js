@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  cleanup,
-  fireEvent,
-  within,
-  wait,
-  waitForElement
-} from '@testing-library/react';
+import { cleanup, fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { ETH, DAI } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks } from '@makerdao/test-helpers';
@@ -100,7 +94,7 @@ test('Vault Display page and actions', async () => {
   change(depositSidebarInput, { target: { value: '2.33' } });
   const [, depSidebarBtn] = getAllByText('Deposit');
 
-  await wait(() => {
+  await waitFor(() => {
     expect(depSidebarBtn).not.toHaveAttribute('disabled');
   });
   click(depSidebarBtn);
@@ -155,9 +149,9 @@ test('Vault Display page and actions', async () => {
   expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 
   // must unlock Dai first
-  await waitForElement(() => getByTestId('allowance-toggle'));
+  await waitFor(() => getByTestId('allowance-toggle'));
   const allowanceBtn = getByTestId('allowance-toggle').children[1];
-  await wait(() => {
+  await waitFor(() => {
     expect(allowanceBtn).not.toHaveAttribute('disabled');
   });
   click(allowanceBtn);
@@ -169,7 +163,7 @@ test('Vault Display page and actions', async () => {
   const [, pbSidebarBtn] = getAllByText('Pay back');
 
   // wait for hasProxy check to complete
-  await wait(() => {
+  await waitFor(() => {
     expect(pbSidebarBtn).not.toHaveAttribute('disabled');
   });
   click(pbSidebarBtn);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup, waitForElement } from '@testing-library/react';
+import { render, cleanup, waitFor } from '@testing-library/react';
 
 import { NaviProvider } from 'react-navi';
 import { mount, route, createMemoryNavigation } from 'navi';
@@ -32,7 +32,7 @@ test('MobileNav menu displays Save, Borrow, and Trade buttons', async () => {
     </LanguageProvider>
   );
 
-  await waitForElement(() => getByText('Save'));
-  await waitForElement(() => getByText('Borrow'));
-  await waitForElement(() => getByText('Trade'));
+  await waitFor(() => getByText('Save'));
+  await waitFor(() => getByText('Borrow'));
+  await waitFor(() => getByText('Trade'));
 });

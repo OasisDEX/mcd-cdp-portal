@@ -8,11 +8,11 @@ jest.mock('react-navi');
 
 test('basic rendering for Borrow', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
-  const { getByText } = await renderWithAccount(
+  const { getByText, findByText } = await renderWithAccount(
     <SidebarProvider>
       <SidebarBase />
     </SidebarProvider>
   );
-  getByText('Wallet Balances');
+  await findByText('Wallet Balances');
   getByText('Price Feeds');
 });

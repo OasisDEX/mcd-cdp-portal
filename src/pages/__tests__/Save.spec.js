@@ -51,9 +51,9 @@ afterEach(cleanup);
 
 test('if allowance is 0, show toggle & disable input', async () => {
   const {
-    getAllByText,
     getAllByTestId,
     findByText,
+    findAllByText,
     getByTestId
   } = renderWithMaker(
     <SidebarProvider>
@@ -64,7 +64,7 @@ test('if allowance is 0, show toggle & disable input', async () => {
 
   await findByText('Savings');
   click(getByTestId('sidebar-deposit-button'));
-  await waitFor(() => getAllByText('Unlock DAI to continue'));
+  await findAllByText('Unlock DAI to continue');
 
   const depositInput = getAllByTestId('dsrdeposit-input')[2];
   expect(depositInput.disabled).toBe(true);
@@ -85,7 +85,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   );
 
   // Wait for page to render
-  await waitFor(() => getByText('Savings'));
+  await findByText('Savings');
   // Initial DSR balance
   getByText('DAI locked in DSR');
   // Savings to date
@@ -108,7 +108,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   const [allowanceToggle] = getAllByTestId('allowance-toggle');
 
   click(allowanceToggle.children[1]);
-  await waitFor(() => getByText('DAI unlocked'));
+  await findByText('DAI unlocked');
 
   // Input amount to deposit and click
   const depositInput = getAllByTestId('dsrdeposit-input')[2];
@@ -116,8 +116,8 @@ test('render save page and perform deposit and withdraw actions', async () => {
   click(getByTestId('deposit-button'));
 
   // Balance and history table update after deposit
-  await waitFor(() => getByText('21.12345', { exact: false }));
-  await waitFor(() => getByText(/Deposited/));
+  await findByText('21.12345', { exact: false });
+  await findByText(/Deposited/);
 
   /**Withdraw */
   click(getByTestId('sidebar-withdraw-button'));
@@ -132,8 +132,8 @@ test('render save page and perform deposit and withdraw actions', async () => {
   click(getByTestId('withdraw-button'));
 
   // Balance and history table update after withdraw
-  await waitFor(() => getByText('14.12345', { exact: false }));
-  await waitFor(() => getByText(/Withdrew/));
+  await findByText('14.12345', { exact: false });
+  await findByText(/Withdrew/);
 
   // Two entries in the history table
   await waitFor(() => assert(getAllByText('external-link.svg').length === 2));

@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  cleanup,
-  waitForElement,
-  fireEvent,
-  act
-} from '@testing-library/react';
+import { cleanup, waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
@@ -69,7 +64,7 @@ const mockVault = {
 test('basic rendering', async () => {
   const { getByText } = renderWithMaker(<Withdraw vault={mockVault} />);
 
-  await waitForElement(() => getByText(/40.00 USD\/BAT/));
+  await waitFor(() => getByText(/40.00 USD\/BAT/));
 
   getByText('Withdraw BAT');
 });
@@ -80,9 +75,9 @@ test('clicking SetMax adds max collateral available to input', async () => {
   );
 
   // BAT amount is rounded correctly in UI
-  await waitForElement(() => getByText(/300.123456 BAT/));
+  await waitFor(() => getByText(/300.123456 BAT/));
 
-  const setMax = await waitForElement(() => getByText('Set max'));
+  const setMax = await waitFor(() => getByText('Set max'));
   const input = (await findAllByTestId('withdraw-input'))[2];
 
   expect(input.value).toBe('');
@@ -98,16 +93,16 @@ test('input validation', async () => {
   const { getByText, findAllByTestId } = renderWithMaker(
     <Withdraw vault={mockVault} />
   );
-  await waitForElement(() => getByText(/300.123456 BAT/));
+  await waitFor(() => getByText(/300.123456 BAT/));
   const input = (await findAllByTestId('withdraw-input'))[2];
 
   // can't enter more collateral than available
   fireEvent.change(input, { target: { value: '500' } });
-  await waitForElement(() => getByText(/Vault below liquidation threshold/));
+  await waitFor(() => getByText(/Vault below liquidation threshold/));
 
   // must be greater than 0
   fireEvent.change(input, { target: { value: '0' } });
-  await waitForElement(() => getByText(/Amount must be greater than 0/));
+  await waitFor(() => getByText(/Amount must be greater than 0/));
 
   // must be a number
   fireEvent.change(input, { target: { value: 'abc' } });

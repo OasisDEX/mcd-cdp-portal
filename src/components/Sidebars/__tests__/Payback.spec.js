@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  cleanup,
-  waitForElement,
-  fireEvent,
-  act
-} from '@testing-library/react';
+import { cleanup, waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
@@ -83,8 +78,8 @@ test('proxy toggle', async () => {
   const { getByTestId } = renderWithMaker(<SetupProxyAndAllowance />);
 
   const [proxyToggle, allowanceToggle] = await Promise.all([
-    waitForElement(() => getByTestId('proxy-toggle')),
-    waitForElement(() => getByTestId('allowance-toggle'))
+    waitFor(() => getByTestId('proxy-toggle')),
+    waitFor(() => getByTestId('allowance-toggle'))
   ]);
 
   expect(proxyToggle).toHaveTextContent(lang.action_sidebar.create_proxy);
@@ -117,7 +112,7 @@ xtest('allowance toggle', async () => {
     <SetupProxyAndAllowance />
   );
 
-  await waitForElement(() => getByTestId('toggle-container'));
+  await waitFor(() => getByTestId('toggle-container'));
   expect(queryByTestId('proxy-toggle')).toBeNull();
   expect(queryByTestId('allowance-toggle')).not.toBeNull();
 
@@ -141,7 +136,7 @@ test('basic rendering', async () => {
   const { getByText } = renderWithMaker(<Payback vault={mockVault} />);
 
   // this waits for the initial proxy & allowance check to finish
-  await waitForElement(() => getByText(/Unlock DAI/));
+  await waitFor(() => getByText(/Unlock DAI/));
 
   // these throw errors if they don't match anything
   getByText('Pay Back DAI');

@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  cleanup,
-  waitForElement,
-  fireEvent,
-  act
-} from '@testing-library/react';
+import { cleanup, waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import Send from '../Send';
@@ -34,9 +29,9 @@ test('should send 1 BAT successfully', async () => {
   } = testAccounts;
 
   const [amountElements, addressElements, sendButton] = await Promise.all([
-    waitForElement(() => getAllByTestId('send-amount-input')),
-    waitForElement(() => getAllByTestId('send-address-input')),
-    waitForElement(() => getByTestId('send-button'))
+    waitFor(() => getAllByTestId('send-amount-input')),
+    waitFor(() => getAllByTestId('send-address-input')),
+    waitFor(() => getByTestId('send-button'))
   ]);
 
   const beforeBal1 = await maker.latest('tokenBalance', addr1, 'BAT');
@@ -78,7 +73,7 @@ test('basic rendering when sending ETH', async () => {
   const token = 'ETH';
   const { getByText } = render(<Send token={token} />);
 
-  await waitForElement(() =>
+  await waitFor(() =>
     getByText(lang.formatString(lang.action_sidebar.send_title, token))
   );
   getByText(lang.formatString(lang.action_sidebar.send_description, token));
@@ -92,7 +87,7 @@ test('basic rendering when sending DAI', async () => {
     getByText = _getByText;
   });
 
-  await waitForElement(() =>
+  await waitFor(() =>
     getByText(lang.formatString(lang.action_sidebar.send_title, token))
   );
   getByText(lang.formatString(lang.action_sidebar.send_description, token));
@@ -106,7 +101,7 @@ test('basic rendering when sending WETH', async () => {
     getByText = _getByText;
   });
 
-  await waitForElement(() =>
+  await waitFor(() =>
     getByText(lang.formatString(lang.action_sidebar.send_title, token))
   );
   getByText(lang.formatString(lang.action_sidebar.send_description, token));
