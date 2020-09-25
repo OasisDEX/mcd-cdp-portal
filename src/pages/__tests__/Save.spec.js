@@ -60,7 +60,7 @@ test('if allowance is 0, show toggle & disable input', async () => {
     </SidebarProvider>
   );
 
-  await findByText('Savings');
+  await findByText('Savings', {}, { timeout: 5000 });
   click(getByTestId('sidebar-deposit-button'));
   await findAllByText('Unlock DAI to continue');
 
