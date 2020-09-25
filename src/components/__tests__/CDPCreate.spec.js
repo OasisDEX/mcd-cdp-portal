@@ -50,7 +50,7 @@ test('the whole flow', async () => {
     unmount
   } = await renderWithAccount(<RenderNoProxyAccount />);
 
-  await findByText('Select a collateral type');
+  await findByText('Select a collateral type', {}, { timeout: 3000 });
 
   // Wait for balances & collateral data
   await mineBlocks(web3);
