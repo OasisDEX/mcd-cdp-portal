@@ -3,12 +3,7 @@ import * as navi from 'react-navi';
 import assert from 'assert';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
-import {
-  wait,
-  fireEvent,
-  waitForElement,
-  cleanup
-} from '@testing-library/react';
+import { fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrency } from '@makerdao/currency';
@@ -25,7 +20,6 @@ import { SidebarProvider } from '../../providers/SidebarProvider';
 import SidebarBase from 'components/SidebarBase';
 import { of } from 'rxjs';
 import { ZERO_ADDRESS } from 'utils/constants';
-import { collateralDebtCeilings } from '@makerdao/dai-plugin-mcd/dist/schemas/computed';
 
 const { click, change } = fireEvent;
 
@@ -40,7 +34,7 @@ navi.useCurrentRoute.mockReturnValue({
 });
 navi.Link = styled.a``;
 
-const AMOUNT = 80.1234567;
+const AMOUNT = 180.1234567;
 const ILK = 'ETH-A';
 let maker;
 let web3;
@@ -50,13 +44,18 @@ beforeAll(async () => {
   web3 = maker.service('web3');
   await await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(1), DAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(2), DAI(AMOUNT));
 });
 
 afterEach(cleanup);
 
 test('if allowance is 0, show toggle & disable input', async () => {
-  const { getAllByText, findByText, getByTestId, getByRole } = renderWithMaker(
+  const {
+    getAllByText,
+    getAllByTestId,
+    findByText,
+    getByTestId
+  } = renderWithMaker(
     <SidebarProvider>
       <Save viewedAddress={maker.currentAddress()} />
       <SidebarBase />
@@ -65,9 +64,9 @@ test('if allowance is 0, show toggle & disable input', async () => {
 
   await findByText('Savings');
   click(getByTestId('sidebar-deposit-button'));
-  await waitForElement(() => getAllByText('Unlock DAI to continue'));
+  await waitFor(() => getAllByText('Unlock DAI to continue'));
 
-  const depositInput = getByRole('textbox');
+  const depositInput = getAllByTestId('dsrdeposit-input')[2];
   expect(depositInput.disabled).toBe(true);
 });
 
@@ -77,7 +76,6 @@ test('render save page and perform deposit and withdraw actions', async () => {
     getByTestId,
     getAllByTestId,
     getByText,
-    getByRole,
     findByText
   } = await renderWithAccount(
     <SidebarProvider>
@@ -87,7 +85,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   );
 
   // Wait for page to render
-  await waitForElement(() => getByText('Savings'));
+  await waitFor(() => getByText('Savings'));
   // Initial DSR balance
   getByText('DAI locked in DSR');
   // Savings to date
@@ -97,7 +95,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   // Privacy policy
   getByText('privacy policy');
   // CTA in history table when empty
-  await wait(() =>
+  await waitFor(() =>
     getByText('Deposit Dai to see your first transaction and start earning')
   );
 
@@ -106,19 +104,20 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await findByText(/would you like to deposit/);
 
   // Unlock dai to continue
-  await waitForElement(() => getByTestId('allowance-toggle'));
+  await waitFor(() => getByTestId('allowance-toggle'));
   const [allowanceToggle] = getAllByTestId('allowance-toggle');
+
   click(allowanceToggle.children[1]);
-  await waitForElement(() => getByText('DAI unlocked'));
+  await waitFor(() => getByText('DAI unlocked'));
 
   // Input amount to deposit and click
-  const depositInput = getByRole('textbox');
+  const depositInput = getAllByTestId('dsrdeposit-input')[2];
   change(depositInput, { target: { value: '21.123456789' } });
   click(getByTestId('deposit-button'));
 
   // Balance and history table update after deposit
-  await wait(() => getByText('21.12345', { exact: false }));
-  await wait(() => getByText(/Deposited/));
+  await waitFor(() => getByText('21.12345', { exact: false }));
+  await waitFor(() => getByText(/Deposited/));
 
   /**Withdraw */
   click(getByTestId('sidebar-withdraw-button'));
@@ -128,16 +127,16 @@ test('render save page and perform deposit and withdraw actions', async () => {
   await mineBlocks(web3, 5);
 
   // Input amount to withdraw and click
-  const withdrawInput = getByRole('textbox');
+  const withdrawInput = getAllByTestId('dsrwithdraw-input')[2];
   change(withdrawInput, { target: { value: '7' } });
   click(getByTestId('withdraw-button'));
 
   // Balance and history table update after withdraw
-  await wait(() => getByText('14.12345', { exact: false }));
-  await wait(() => getByText(/Withdrew/));
+  await waitFor(() => getByText('14.12345', { exact: false }));
+  await waitFor(() => getByText(/Withdrew/));
 
   // Two entries in the history table
-  await wait(() => assert(getAllByText('external-link.svg').length === 2));
+  await waitFor(() => assert(getAllByText('external-link.svg').length === 2));
 }, 25000);
 
 test('cannot deposit more than token allowance', async () => {
@@ -180,7 +179,12 @@ test('cannot deposit more than token allowance', async () => {
 
   const multicall = { watch };
 
-  const { getByText, findByText, getByRole, getByTestId } = renderWithMaker(
+  const {
+    getByText,
+    findByText,
+    getAllByTestId,
+    getByTestId
+  } = renderWithMaker(
     React.createElement(() => {
       useMakerMock({ multicall });
       return (
@@ -196,7 +200,7 @@ test('cannot deposit more than token allowance', async () => {
   click(getByTestId('sidebar-deposit-button'));
   await findByText(/would you like to deposit/);
 
-  const depositInput = getByRole('textbox');
+  const depositInput = getAllByTestId('dsrdeposit-input')[2];
   expect(depositInput.disabled).toBe(false);
 
   change(depositInput, { target: { value: '20' } });
@@ -229,13 +233,13 @@ test('display onboarding path if connected address has no proxy', async () => {
     })
   );
 
-  await findByText(/Start earning/);
+  await findByText(/Start earning/, {}, { timeout: 2000 });
 });
 
 test('disable deposit/withdraw buttons if not connected wallet', async () => {
   const defaultAddress = maker.currentAddress();
   const account = TestAccountProvider.nextAccount();
-  const { getByText } = await renderWithMaker(
+  const { findByTestId } = await renderWithMaker(
     React.createElement(() => {
       const { maker } = useMakerMock();
       const [flag, setFlag] = React.useState(false);
@@ -256,15 +260,15 @@ test('disable deposit/withdraw buttons if not connected wallet', async () => {
     })
   );
 
-  const depositBtn = await waitForElement(() => getByText('Deposit'));
-  const withdrawBtn = await waitForElement(() => getByText('Withdraw'));
+  const depositBtn = await findByTestId('sidebar-deposit-button');
+  const withdrawBtn = await findByTestId('sidebar-withdraw-button');
+
   expect(depositBtn).toBeDisabled();
   expect(withdrawBtn).toBeDisabled();
 });
 
 test('should not display Save ui for addresses which have no proxy', async () => {
   const { findByText } = renderWithMaker(<Save viewedAddress={ZERO_ADDRESS} />);
-
   await findByText(
     "This address either doesn't exist or has no DSR account history"
   );

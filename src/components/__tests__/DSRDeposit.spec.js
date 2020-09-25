@@ -22,7 +22,7 @@ jest.mock('react-navi', () => ({
 
 const { click, change } = fireEvent;
 
-const AMOUNT = 80.1234567;
+const AMOUNT = 180.1234567;
 const ILK = 'ETH-A';
 let maker;
 let web3;
@@ -33,7 +33,7 @@ beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
   await await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(1), DAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(5), DAI(AMOUNT));
 
   TestAccountProvider.setIndex(345);
   noProxyAcct = TestAccountProvider.nextAccount();
@@ -74,7 +74,8 @@ test('the whole DSR Deposit flow', async () => {
     getByRole,
     getByText,
     findByText,
-    getAllByRole
+    getAllByRole,
+    findAllByTestId
   } = await renderWithAccount(<RenderNoProxyAccount />);
   getByText(lang.dsr_deposit.open_vault);
   // Open onboarding
@@ -99,8 +100,7 @@ test('the whole DSR Deposit flow', async () => {
   await waitForElement(() => getByText(`${prettifyNumber(AMOUNT)} DAI`));
   getByText(lang.dsr_deposit.deposit_form_title);
 
-  // Test input validation
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('dsrdeposit-onboarding-input'))[2];
   expect(input.value).toBe('');
   change(input, { target: { value: AMOUNT + 1 } });
   await waitForElement(() =>

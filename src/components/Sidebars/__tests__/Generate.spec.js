@@ -67,14 +67,14 @@ test('basic rendering', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole, findByText } = renderWithMaker(
+  const { getByText, findAllByTestId, findByText } = renderWithMaker(
     <Generate vault={mockVault} />
   );
 
   await findByText(/USD\/BAT/);
   // await findByText(/BAT\/USD/);
 
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('generate-input'))[2];
 
   // shouldn't allow drawing too much dai
   // given price, liq ratio, ink, and art, drawing 37 dai should undercollateralize the cdp
@@ -98,19 +98,19 @@ test('input validation', async () => {
 });
 
 test('debt ceiling validation', async () => {
-  const { getByText, getByRole, findByText } = renderWithMaker(
+  const { getByText, findAllByTestId, findByText } = renderWithMaker(
     <Generate vault={{ ...mockVault, collateralDebtAvailable: DAI(30) }} />
   );
 
   await findByText(/USD\/BAT/);
+  const input = (await findAllByTestId('generate-input'))[2];
 
-  const input = getByRole('textbox');
   fireEvent.change(input, { target: { value: '31' } });
   getByText(lang.formatString(lang.action_sidebar.generate_threshold, '30.00'));
 });
 
 test('verify info container values', async () => {
-  const { getByText, findByText, getByRole } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     <Generate vault={mockVault} />
   );
 
@@ -120,7 +120,8 @@ test('verify info container values', async () => {
   // dai available
   await findByText(/36.014814 DAI/);
 
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('generate-input'))[2];
+
   fireEvent.change(input, { target: { value: '21' } });
 
   // new liquidation price
@@ -133,7 +134,7 @@ test('verify info container values', async () => {
 
 test('calls the draw function as expected', async () => {
   let maker;
-  const { getByText, findByText, getByRole } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     React.createElement(() => {
       maker = useMaker().maker;
       return <Generate vault={mockVault} reset={() => {}} />;
@@ -143,7 +144,8 @@ test('calls the draw function as expected', async () => {
   await findByText(/USD\/BAT/);
 
   const DRAW_AMT = '21';
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('generate-input'))[2];
+
   fireEvent.change(input, { target: { value: DRAW_AMT } });
 
   const generateButton = getByText(lang.actions.generate);

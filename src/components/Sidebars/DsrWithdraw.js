@@ -109,6 +109,7 @@ const DsrWithdraw = ({ savings, reset }) => {
               }}
             />
           }
+          data-testid="dsrwithdraw-input"
         />
       </Grid>
       <ProxyAllowanceToggle

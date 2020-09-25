@@ -130,7 +130,6 @@ function IlkTableRow({
   }
   //const disabled = ilk.gem === 'TUSD';
   const disabled = false;
-
   return (
     <tr
       style={disabled ? { color: '#ADADAD' } : { whiteSpace: 'nowrap' }}
@@ -146,6 +145,7 @@ function IlkTableRow({
       `
       }
       onClick={() => !disabled && selectIlk()}
+      data-testid={`radio-${ilk.symbol}`}
     >
       <td style={{ paddingRight: '14px' }}>
         <CustomRadio disabled={disabled} checked={checked} mr="xs" />

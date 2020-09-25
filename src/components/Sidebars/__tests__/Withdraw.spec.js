@@ -75,7 +75,7 @@ test('basic rendering', async () => {
 });
 
 test('clicking SetMax adds max collateral available to input', async () => {
-  const { getByText, getByRole } = renderWithMaker(
+  const { getByText, findAllByTestId } = renderWithMaker(
     <Withdraw vault={mockVault} />
   );
 
@@ -83,7 +83,7 @@ test('clicking SetMax adds max collateral available to input', async () => {
   await waitForElement(() => getByText(/300.123456 BAT/));
 
   const setMax = await waitForElement(() => getByText('Set max'));
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('withdraw-input'))[2];
 
   expect(input.value).toBe('');
 
@@ -95,11 +95,11 @@ test('clicking SetMax adds max collateral available to input', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole } = renderWithMaker(
+  const { getByText, findAllByTestId } = renderWithMaker(
     <Withdraw vault={mockVault} />
   );
   await waitForElement(() => getByText(/300.123456 BAT/));
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('withdraw-input'))[2];
 
   // can't enter more collateral than available
   fireEvent.change(input, { target: { value: '500' } });
@@ -116,7 +116,7 @@ test('input validation', async () => {
 
 test('calls the wipeAndFree function as expected', async () => {
   let maker;
-  const { getByText, findByText, getByRole } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     React.createElement(() => {
       maker = useMaker().maker;
       return <Withdraw vault={mockVault} reset={() => {}} />;
@@ -126,7 +126,8 @@ test('calls the wipeAndFree function as expected', async () => {
   await findByText(/BAT\/USD Price feed/);
 
   const WD_AMT = '100';
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('withdraw-input'))[2];
+
   fireEvent.change(input, { target: { value: WD_AMT } });
 
   const withdrawButton = getByText(lang.actions.withdraw);
