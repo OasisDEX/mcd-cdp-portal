@@ -1,5 +1,4 @@
 import React from 'react';
-import { cleanup } from '@testing-library/react';
 import waitForExpect from 'wait-for-expect';
 import { renderWithProviders, mocks } from '../../../test/helpers/render';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
@@ -27,8 +26,6 @@ let useMakerHookValue;
 beforeAll(() => {
   testHookWithMakerProvider(() => (useMakerHookValue = useMaker()));
 });
-
-afterEach(cleanup);
 
 // we allow up to 10 seconds for this
 // test will throw a warning, see here for explanation:

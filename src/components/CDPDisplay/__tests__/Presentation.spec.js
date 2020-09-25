@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import * as navi from 'react-navi';
 import Presentation from '../Presentation';
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithMaker } from '../../../../test/helpers/render';
 import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import { ETH, USD, DAI } from '@makerdao/dai-plugin-mcd';
@@ -22,8 +22,6 @@ navi.Link = styled.a``;
 
 const LOL = createCurrency('LOL');
 const ILK = 'LOL-A';
-
-afterEach(cleanup);
 
 const account = {
   address: '0xtest'

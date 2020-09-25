@@ -8,14 +8,14 @@ jest.mock('hooks/useAnalytics');
 useAnalytics.mockReturnValue(jest.fn());
 
 test('Borrow calculator renders', async () => {
-  const { getByTestId } = await renderWithMaker(
+  const { findByTestId } = await renderWithMaker(
     <Borrow disableConnect={true} />,
     {
       waitForAuth: false
     }
   );
 
-  const amountChosenElem = await waitFor(() => getByTestId('amount-chosen'));
+  const amountChosenElem = await findByTestId('amount-chosen');
 
   // 25 ETH is the default amount in the Borrow calculator
   expect(amountChosenElem.innerHTML.includes('25')).toBeTruthy();

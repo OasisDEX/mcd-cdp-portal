@@ -3,7 +3,7 @@ import * as navi from 'react-navi';
 import assert from 'assert';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
-import { fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { createCurrency } from '@makerdao/currency';
@@ -47,8 +47,6 @@ beforeAll(async () => {
     .openLockAndDraw(ILK, ETH(2), DAI(AMOUNT));
 });
 
-afterEach(cleanup);
-
 test('if allowance is 0, show toggle & disable input', async () => {
   const {
     getAllByTestId,
@@ -85,7 +83,7 @@ test('render save page and perform deposit and withdraw actions', async () => {
   );
 
   // Wait for page to render
-  await findByText('Savings');
+  await findByText('Savings', {}, { timeout: 5000 });
   // Initial DSR balance
   getByText('DAI locked in DSR');
   // Savings to date

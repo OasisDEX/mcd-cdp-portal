@@ -1,6 +1,5 @@
 import React from 'react';
 import * as navi from 'react-navi';
-import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import Overview from '../Overview';
@@ -33,8 +32,6 @@ beforeAll(async () => {
     .service('mcd:cdpManager')
     .openLockAndDraw(ILK, ETH(VAULT2_ETH), DAI(VAULT2_ART));
 });
-
-afterEach(cleanup);
 
 test('render overview page and display calculated vault values', async () => {
   const { findByText, getByText, getAllByText } = await renderWithVaults(

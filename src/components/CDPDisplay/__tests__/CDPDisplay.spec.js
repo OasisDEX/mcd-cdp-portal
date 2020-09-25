@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, within, waitFor } from '@testing-library/react';
+import { fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { ETH, DAI } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks } from '@makerdao/test-helpers';
@@ -33,8 +33,6 @@ beforeAll(async () => {
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(AMOUNT));
 });
 
-afterEach(cleanup);
-
 test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
@@ -51,8 +49,8 @@ test('Vault Display page and actions', async () => {
     </SidebarProvider>
   );
 
-  await findByText('ETH-A Vault #1');
-  await findByText('Opened a new Vault with id #', {}, { timeout: 15000 });
+  await findByText('ETH-A Vault #1', {}, { timeout: 5000 });
+  await findByText('Opened a new Vault with id #', {}, { timeout: 5000 });
 
   /**Wallet Balances */
   const getBalancesEl = () =>

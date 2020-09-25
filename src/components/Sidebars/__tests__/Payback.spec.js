@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { cleanup, waitFor, fireEvent, act } from '@testing-library/react';
+import { waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { createCurrencyRatio } from '@makerdao/currency';
@@ -20,8 +20,6 @@ jest.mock('mixpanel-browser', () => ({
 jest.mock('react-navi', () => ({
   useCurrentRoute: () => ({ url: { pathname: '/test' } })
 }));
-
-afterEach(cleanup);
 
 const ILK = 'ETH-A';
 const LIQUIDATION_RATIO = '200';

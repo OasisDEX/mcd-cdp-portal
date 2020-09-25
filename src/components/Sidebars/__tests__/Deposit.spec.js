@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, act } from '@testing-library/react';
+import { fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
@@ -46,8 +46,6 @@ afterAll(() => {
   console.error = originalConsoleError;
   restoreSnapshot(snapshotData);
 });
-
-afterEach(cleanup);
 
 const ILK = 'BAT-A';
 const INITIAL_BAT = '300.123456789012345678';

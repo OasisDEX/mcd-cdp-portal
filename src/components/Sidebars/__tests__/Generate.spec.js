@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, act } from '@testing-library/react';
+import { fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import * as math from '@makerdao/dai-plugin-mcd/dist/math';
 import { BAT, DAI, USD } from '@makerdao/dai-plugin-mcd';
@@ -33,8 +33,6 @@ beforeAll(async () => {
 afterAll(() => {
   console.error = originalConsoleError;
 });
-
-afterEach(cleanup);
 
 const collateralAmount = BAT(COL_AMT);
 const liquidationRatio = createCurrencyRatio(USD, DAI)(LIQUIDATION_RATIO);

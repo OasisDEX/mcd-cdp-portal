@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, waitFor, fireEvent, act } from '@testing-library/react';
+import { waitFor, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithMaker as render } from '../../../../test/helpers/render';
 import Send from '../Send';
@@ -11,8 +11,6 @@ import waitForExpect from 'wait-for-expect';
 jest.mock('react-navi', () => ({
   useCurrentRoute: () => ({ url: { pathname: '/test' } })
 }));
-
-afterEach(cleanup);
 
 test('should send 1 BAT successfully', async () => {
   let maker;

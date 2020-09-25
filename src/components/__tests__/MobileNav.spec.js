@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 import { NaviProvider } from 'react-navi';
 import { mount, route, createMemoryNavigation } from 'navi';
@@ -10,8 +10,6 @@ import { mocks } from '../../../test/helpers/render';
 import LanguageProvider from '../../providers/LanguageProvider';
 import TestMakerProvider from '../../../test/helpers/TestMakerProvider';
 import MobileNav from '../MobileNav';
-
-afterEach(cleanup);
 
 const cdpId = 1;
 
