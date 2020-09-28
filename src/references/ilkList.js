@@ -8,7 +8,10 @@ import {
   KNC,
   MANA,
   USDT,
-  PAXUSD
+  PAXUSD,
+  COMP,
+  LRC,
+  LINK
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -102,6 +105,30 @@ export default [
     key: 'PAXUSD-A',
     gem: 'PAXUSD',
     currency: PAXUSD,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'comp-a',
+    symbol: 'COMP-A',
+    key: 'COMP-A',
+    gem: 'COMP',
+    currency: COMP,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'lrc-a',
+    symbol: 'LRC-A',
+    key: 'LRC-A',
+    gem: 'LRC',
+    currency: LRC,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'link-a',
+    symbol: 'LINK-A',
+    key: 'LINK-A',
+    gem: 'LINK',
+    currency: LINK,
     networks: ['mainnet', 'kovan']
   }
 ];
