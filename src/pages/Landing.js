@@ -245,16 +245,16 @@ const SupportedTokens = (() => {
       name: 'USDT'
     },
     {
-      name: 'COMP',
-      onlyOnTrade: true
+      name: 'COMP'
     },
     {
-      name: 'LINK',
-      onlyOnTrade: true
+      name: 'LINK'
     },
     {
-      name: 'TUSD',
-      onlyOnTrade: true
+      name: 'TUSD'
+    },
+    {
+      name: 'LRC'
     }
   ];
 
