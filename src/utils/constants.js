@@ -57,4 +57,20 @@ export const VendorErrors = {
   TIMEOUT: 'TransportError'
 };
 
+export const TokenNames = {
+  ETH: 'Ether',
+  BAT: 'Basic Attention Token',
+  WBTC: 'Wrapped Bitcoin',
+  USDC: 'USD Coin',
+  MANA: 'Mana',
+  ZRX: '0x',
+  KNC: 'Kyber Network',
+  TUSD: 'TrueUSD',
+  USDT: 'Tether',
+  PAXUSD: 'Paxos Standard',
+  LRC: 'Loopring',
+  COMP: 'Compound',
+  LINK: 'Chainlink'
+};
+
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
