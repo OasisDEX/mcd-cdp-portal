@@ -361,7 +361,7 @@ const cdpTypesMetaData = {
   'COMP-A': {
     text: 'COMP',
     colRatio: 200,
-    amountRange: [200, 5000],
+    amountRange: [100, 5000],
     amountStart: 100
   },
   'LRC-A': {
