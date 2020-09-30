@@ -25,7 +25,10 @@ const tokenNames = {
   KNC: 'Kyber Network',
   TUSD: 'TrueUSD',
   USDT: 'Tether',
-  PAXUSD: 'Paxos Standard'
+  PAXUSD: 'Paxos Standard',
+  LRC: 'Loopring',
+  COMP: 'Compound',
+  LINK: 'Chainlink'
 };
 
 const formatPercentage = number =>
