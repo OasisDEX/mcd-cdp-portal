@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import * as navi from 'react-navi';
 import Presentation from '../Presentation';
-import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { renderWithMaker } from '../../../../test/helpers/render';
 import { createCurrency, createCurrencyRatio } from '@makerdao/currency';
 import { ETH, USD, DAI } from '@makerdao/dai-plugin-mcd';
@@ -22,8 +22,6 @@ navi.Link = styled.a``;
 
 const LOL = createCurrency('LOL');
 const ILK = 'LOL-A';
-
-afterEach(cleanup);
 
 const account = {
   address: '0xtest'
@@ -69,7 +67,7 @@ test('basic rendering', async () => {
       showVaultHistory={false}
     />
   );
-  await waitForElement(() => getByText('9.10 LOL'));
+  await waitFor(() => getByText('9.10 LOL'));
   getByText('1,820.00 USD');
   getByText('120.00 DAI');
   getByText('1,213.33 DAI');
@@ -97,7 +95,7 @@ test('render liquidation price correctly when no debt', async () => {
       showVaultHistory={false}
     />
   );
-  await waitForElement(() => getByText('N/A')); //liquidation price
+  await waitFor(() => getByText('N/A')); //liquidation price
   getByText('0.00 USD');
 });
 
@@ -199,7 +197,7 @@ describe('on mobile', () => {
         <div id="portal1" />
       </Fragment>
     );
-    await waitForElement(() => getAllByText('Outstanding Dai debt'));
+    await waitFor(() => getAllByText('Outstanding Dai debt'));
     fireEvent.click(getByText('Deposit'));
     await findByText(/would you like to deposit/);
     expect(showSidebar).not.toBeCalled();

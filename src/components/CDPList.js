@@ -91,6 +91,7 @@ const CdpContainer = styled(Flex)`
   ::-webkit-scrollbar {
     width: 0px;
   }
+  scrollbar-width: none;
 `;
 
 const CDPList = memo(function({

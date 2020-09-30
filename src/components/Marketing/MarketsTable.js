@@ -10,23 +10,11 @@ import useLanguage from 'hooks/useLanguage';
 import groupBy from 'lodash.groupby';
 import { watch } from 'hooks/useObservable';
 import { getMaxDaiAvailable } from 'utils/cdp';
+import { TokenNames } from 'utils/constants';
 
 const TABLE_PADDING = '33px';
 
 const Number = styled(Text)``;
-
-const tokenNames = {
-  ETH: 'Ether',
-  BAT: 'Basic Attention Token',
-  WBTC: 'Wrapped Bitcoin',
-  USDC: 'USD Coin',
-  MANA: 'Mana',
-  ZRX: '0x',
-  KNC: 'Kyber Network',
-  TUSD: 'TrueUSD',
-  USDT: 'Tether',
-  PAXUSD: 'Paxos Standard'
-};
 
 const formatPercentage = number =>
   `${prettifyNumber(number.times(100), false, 2, false)}%`;
@@ -197,7 +185,6 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
           <Table.th width={{ s: '0', m: TABLE_PADDING }} />
         </Table.tr>
       </Table.thead>
-      <tr style={{ height: '8px', border: 'none' }} />
       {collateralTypesData ? (
         Object.entries(cdpTypesByGem).map(([gem, cdpTypesData], rowIndex) => {
           cdpTypesData = cdpTypesData.map(ilkData => ({
@@ -231,12 +218,12 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
                   <TokenIcon symbol={gem} size={31.67} />
                 </Table.td>
                 <Table.td>
-                  {tokenNames[gem] && (
+                  {TokenNames[gem] && (
                     <Text display={{ s: 'none', m: 'inline' }} mr="8px">
-                      {tokenNames[gem]}
+                      {TokenNames[gem]}
                     </Text>
                   )}
-                  <Text className={`gem ${tokenNames[gem] && 'dimmed'}`}>
+                  <Text className={`gem ${TokenNames[gem] && 'dimmed'}`}>
                     {gem}
                   </Text>
                 </Table.td>
@@ -323,16 +310,18 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
           ];
         })
       ) : (
-        <tr>
-          <td colSpan={8}>
-            <Loader
-              size="4rem"
-              color={getColor('spinner')}
-              bg="white"
-              m="40px auto"
-            />
-          </td>
-        </tr>
+        <Table.tbody>
+          <tr>
+            <td colSpan={8}>
+              <Loader
+                size="4rem"
+                color={getColor('spinner')}
+                bg="white"
+                m="40px auto"
+              />
+            </td>
+          </tr>
+        </Table.tbody>
       )}
     </MarketsTableStyle>
   );

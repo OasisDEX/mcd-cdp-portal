@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitForElement } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import LanguageProvider from '../../src/providers/LanguageProvider';
 import VaultsProvider from '../../src/providers/VaultsProvider';
 import NotificationProvider from '../../src/providers/NotificationProvider';
@@ -68,7 +68,7 @@ export async function renderWithAccount(children, ...args) {
     </WaitForAccount>,
     ...args
   );
-  await waitForElement(() => account);
+  await waitFor(() => account);
   return { ...output, account };
 }
 

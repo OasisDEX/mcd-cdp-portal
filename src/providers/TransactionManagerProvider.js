@@ -27,7 +27,6 @@ const formatTxMessage = (lang, { metadata, ...tx }, state) => {
       ? ' cancelled'
       : '';
 
-  console.log(type);
   switch (type) {
     case 'safeWipe':
       return lang.formatString(

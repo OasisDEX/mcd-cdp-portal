@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import assert from 'assert';
-import { wait, fireEvent, waitForElement } from '@testing-library/react';
+import { waitFor, fireEvent } from '@testing-library/react';
 import { DAI, ETH } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks, TestAccountProvider } from '@makerdao/test-helpers';
 
@@ -22,7 +22,7 @@ jest.mock('react-navi', () => ({
 
 const { click, change } = fireEvent;
 
-const AMOUNT = 80.1234567;
+const AMOUNT = 180.1234567;
 const ILK = 'ETH-A';
 let maker;
 let web3;
@@ -33,7 +33,7 @@ beforeAll(async () => {
   maker = await instantiateMaker({ network: 'testnet' });
   await await maker
     .service('mcd:cdpManager')
-    .openLockAndDraw(ILK, ETH(1), DAI(AMOUNT));
+    .openLockAndDraw(ILK, ETH(5), DAI(AMOUNT));
 
   TestAccountProvider.setIndex(345);
   noProxyAcct = TestAccountProvider.nextAccount();
@@ -74,9 +74,11 @@ test('the whole DSR Deposit flow', async () => {
     getByRole,
     getByText,
     findByText,
-    getAllByRole
+    getAllByRole,
+    findAllByTestId
   } = await renderWithAccount(<RenderNoProxyAccount />);
-  getByText(lang.dsr_deposit.open_vault);
+
+  await findByText(lang.dsr_deposit.open_vault);
   // Open onboarding
   click(getByText('Setup'));
 
@@ -88,22 +90,21 @@ test('the whole DSR Deposit flow', async () => {
   await findByText('Confirmed with 10 confirmations');
 
   // First checkmark is proxy, but need to set allowance for Dai
-  await wait(() => getByText('checkmark.svg'));
+  await waitFor(() => getByText('checkmark.svg'));
   click(allowanceBtn);
-  await wait(() => assert(getAllByText('checkmark.svg').length === 2));
+  await waitFor(() => assert(getAllByText('checkmark.svg').length === 2));
 
   // Allowance is now set, continue to DepositCreate step
   click(getByText(lang.actions.continue));
 
   // UI Formats the amount
-  await waitForElement(() => getByText(`${prettifyNumber(AMOUNT)} DAI`));
+  await waitFor(() => getByText(`${prettifyNumber(AMOUNT)} DAI`));
   getByText(lang.dsr_deposit.deposit_form_title);
 
-  // Test input validation
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('dsrdeposit-onboarding-input'))[2];
   expect(input.value).toBe('');
   change(input, { target: { value: AMOUNT + 1 } });
-  await waitForElement(() =>
+  await waitFor(() =>
     getByText(
       lang.formatString(lang.action_sidebar.insufficient_balance, 'DAI')
     )
@@ -123,16 +124,16 @@ test('the whole DSR Deposit flow', async () => {
   click(getByRole('checkbox'));
 
   const depositButton = getByText(lang.actions.deposit);
-  await wait(() => assert(!depositButton.disabled));
+  await waitFor(() => assert(!depositButton.disabled));
 
   click(depositButton);
 
-  await wait(() =>
+  await waitFor(() =>
     getByText(
       /The estimated time is [0-9]+ seconds. You can safely leave this page./
     )
   );
   await mineBlocks(web3);
   // The message changes after confirmation
-  await wait(() => getByText('You can safely leave this page.'));
+  await waitFor(() => getByText('You can safely leave this page.'));
 }, 15000);

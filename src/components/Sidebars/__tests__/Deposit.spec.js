@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, act } from '@testing-library/react';
+import { fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BAT, USD, DAI } from '@makerdao/dai-plugin-mcd';
 import { fromWei } from '@makerdao/dai-plugin-mcd/dist/utils';
@@ -46,8 +46,6 @@ afterAll(() => {
   console.error = originalConsoleError;
   restoreSnapshot(snapshotData);
 });
-
-afterEach(cleanup);
 
 const ILK = 'BAT-A';
 const INITIAL_BAT = '300.123456789012345678';
@@ -116,7 +114,7 @@ test('basic rendering', async () => {
 });
 
 test('input validation', async () => {
-  const { getByText, getByRole, findByText } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     React.createElement(() => {
       const { maker } = useMakerMock({ multicall });
 
@@ -137,7 +135,7 @@ test('input validation', async () => {
   // Balance rounded correctly
   await findByText('200.123451 BAT');
 
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('deposit-input'))[2];
 
   // can't deposit more BAT than there is in the connected wallet
   fireEvent.change(input, { target: { value: '201' } });
@@ -150,7 +148,7 @@ test('input validation', async () => {
 });
 
 test('verify info container values', async () => {
-  const { getByText, findByText, getByRole } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     React.createElement(() => {
       const { maker } = useMakerMock({ multicall });
       React.useEffect(() => {
@@ -177,8 +175,7 @@ test('verify info container values', async () => {
   await findByText(/0.1732 USD\/BAT/);
   // initial collat ratio
   await findByText(/287.89%/);
-
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('deposit-input'))[2];
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   // new liquidation price
@@ -194,7 +191,7 @@ test('verify info container values', async () => {
 test('calls the lock function as expected', async () => {
   let maker;
   const mockLock = jest.fn();
-  const { getByText, findByText, getByRole } = renderWithMaker(
+  const { getByText, findByText, findAllByTestId } = renderWithMaker(
     React.createElement(() => {
       maker = useMakerMock({
         multicall,
@@ -217,8 +214,7 @@ test('calls the lock function as expected', async () => {
 
   // Balance rounded correctly
   await findByText('200.123451 BAT');
-
-  const input = getByRole('textbox');
+  const input = (await findAllByTestId('deposit-input'))[2];
   fireEvent.change(input, { target: { value: BAT_ACCOUNT_BALANCE } });
 
   const depositButton = getByText(lang.actions.deposit);

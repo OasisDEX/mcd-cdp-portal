@@ -325,13 +325,11 @@ function Borrow({ disableConnect = false }) {
       </GradientBox>
       <Features
         mt={{ s: '158px', m: '207px' }}
-        features={[<Feat1 />, <Feat2 />, <Feat3 />, <Feat4 />].map(
-          (img, index) => ({
-            img: img,
-            title: lang.borrow_landing[`feature${index + 1}_heading`],
-            content: lang.borrow_landing[`feature${index + 1}_content`]
-          })
-        )}
+        features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
+          img: img,
+          title: lang.borrow_landing[`feature${index + 1}_heading`],
+          content: lang.borrow_landing[`feature${index + 1}_content`]
+        }))}
       />
       <Box maxWidth="1007px" m="204px auto 0">
         <Box maxWidth="777px" m="0 auto">

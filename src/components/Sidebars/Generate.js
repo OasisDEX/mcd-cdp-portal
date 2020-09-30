@@ -101,6 +101,7 @@ const Generate = ({ vault, reset }) => {
           onChange={onAmountChange}
           placeholder="0.00 DAI"
           failureMessage={failureMessage}
+          data-testid="generate-input"
         />
         <RatioDisplay
           type={RatioDisplayTypes.CARD}

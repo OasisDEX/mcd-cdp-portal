@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CDPCreate from '../CDPCreate';
 import { renderWithAccount } from '../../../test/helpers/render';
-import { wait, fireEvent } from '@testing-library/react';
+import { waitFor, fireEvent } from '@testing-library/react';
 import { mineBlocks, TestAccountProvider } from '@makerdao/test-helpers';
 import assert from 'assert';
 import useMaker from 'hooks/useMaker';
@@ -46,15 +46,16 @@ test('the whole flow', async () => {
     getByLabelText,
     getByText,
     findByText,
+    findByTestId,
     unmount
   } = await renderWithAccount(<RenderNoProxyAccount />);
 
-  getByText('Select a collateral type');
+  await findByText('Select a collateral type', {}, { timeout: 3000 });
 
   // Wait for balances & collateral data
   await mineBlocks(web3);
 
-  const [ethRadioButton] = getAllByRole('radio'); // ETH-A is the first ilk
+  const ethRadioButton = await findByTestId('radio-ETH-A'); // ETH-A is the first ilk
   await findByText(/100.00 ETH/); // ETH Balance
   click(ethRadioButton);
   click(getByText('Continue'));
@@ -67,30 +68,30 @@ test('the whole flow', async () => {
   await mineBlocks(web3, 15);
   await findByText('Confirmed with 10 confirmations');
 
-  await wait(() => assert(getAllByText('checkmark.svg').length === 2));
+  await waitFor(() => expect(getAllByText('checkmark.svg').length).toEqual(2));
   click(getByText('Continue'));
 
   // Deposit and Generate form
   getByText('Deposit ETH and Generate Dai');
-  change(getByLabelText('ETH'), { target: { value: '2.12845673' } });
-  change(getByLabelText('DAI'), { target: { value: '31.11911157' } });
+  change(getByLabelText('ETH'), { target: { value: '5.12845673' } });
+  change(getByLabelText('DAI'), { target: { value: '131.11911157' } });
   const continueButton = getByText('Continue');
-  await wait(() => assert(!continueButton.disabled));
+  await waitFor(() => assert(!continueButton.disabled));
   click(continueButton);
 
   // Confirmation page
   getByText('Confirm Vault Details');
-  getByText('2.128 ETH');
-  getByText('31.119 DAI');
-  getByText('1025.95%'); // collateralization ratio
+  await findByText('5.128 ETH');
+  await findByText('131.119 DAI');
+  await findByText('586.69%'); // collateralization ratio
   getAllByRole('checkbox').forEach(click); // terms & privacy
   const openButton = getByText('Open Vault');
-  await wait(() => assert(!openButton.disabled));
+  await waitFor(() => assert(!openButton.disabled));
   click(openButton);
 
-  await wait(() => getByText('Your Vault is being created'));
+  await waitFor(() => getByText('Your Vault is being created'));
   await mineBlocks(web3);
-  await wait(() => getByText('Your Vault has been created'));
+  await waitFor(() => getByText('Your Vault has been created'));
 
   // expect to be redirected to the new cdp page
   // should be triggered in VaultsProvider

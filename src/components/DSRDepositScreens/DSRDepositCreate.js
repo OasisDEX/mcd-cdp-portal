@@ -33,6 +33,7 @@ function DepositDaiForm({
         failureMessage={depositAmountErrors}
         min="0"
         placeholder="0 DAI"
+        data-testid="dsrdeposit-onboarding-input"
       />,
       <Box key="ba">
         <Text t="subheading">{lang.your_balance} </Text>

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  cleanup,
-  fireEvent,
-  within,
-  wait,
-  waitForElement
-} from '@testing-library/react';
+import { fireEvent, within, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { ETH, DAI } from '@makerdao/dai-plugin-mcd';
 import { mineBlocks } from '@makerdao/test-helpers';
@@ -39,16 +33,14 @@ beforeAll(async () => {
     .openLockAndDraw(ILK, ETH(VAULT1_ETH), DAI(AMOUNT));
 });
 
-afterEach(cleanup);
-
 test('Vault Display page and actions', async () => {
   navi.useCurrentRoute.mockReturnValue({ url: { pathname: '/borrow' } });
   const {
     getByText,
     getAllByText,
     getByTestId,
-    getByRole,
     findByText,
+    findAllByTestId,
     debug // eslint-disable-line no-unused-vars
   } = await renderWithAccount(
     <SidebarProvider>
@@ -57,8 +49,8 @@ test('Vault Display page and actions', async () => {
     </SidebarProvider>
   );
 
-  await findByText('ETH-A Vault #1');
-  await findByText('Opened a new Vault with id #', {}, { timeout: 15000 });
+  await findByText('ETH-A Vault #1', {}, { timeout: 5000 });
+  await findByText('Opened a new Vault with id #', {}, { timeout: 5000 });
 
   /**Wallet Balances */
   const getBalancesEl = () =>
@@ -80,7 +72,7 @@ test('Vault Display page and actions', async () => {
   } catch (e) {
     expect(getEthBal()).toContain('88.');
   }
-  expect(getEthUsdValue()).toContain('$13.3');
+  expect(getEthUsdValue()).toContain('$13.2');
   expect(getDaiBal()).toContain('210.');
   expect(getDaiUsdValue()).toBe('$210.00');
 
@@ -96,10 +88,11 @@ test('Vault Display page and actions', async () => {
   expect(depositLabel.nextElementSibling.textContent).toBe('5.00 ETH');
 
   // submit deposit
-  change(getByRole('textbox'), { target: { value: '2.33' } });
+  const depositSidebarInput = (await findAllByTestId('deposit-input'))[2];
+  change(depositSidebarInput, { target: { value: '2.33' } });
   const [, depSidebarBtn] = getAllByText('Deposit');
 
-  await wait(() => {
+  await waitFor(() => {
     expect(depSidebarBtn).not.toHaveAttribute('disabled');
   });
   click(depSidebarBtn);
@@ -111,11 +104,11 @@ test('Vault Display page and actions', async () => {
   );
 
   // check updated balances
-  expect(getEthBal()).toContain('86.');
+  expect(getEthBal()).toContain('85.');
   try {
     expect(getEthUsdValue()).toContain('$13.0');
   } catch (e) {
-    expect(getEthUsdValue()).toContain('$12.9');
+    expect(getEthUsdValue()).toContain('$12.8');
   }
 
   /**Generate */
@@ -130,7 +123,8 @@ test('Vault Display page and actions', async () => {
   expect(generateLabel.nextElementSibling.textContent).toBe('523.00 DAI');
 
   // submit generate
-  change(getByRole('textbox'), { target: { value: '25' } });
+  const generateSidebarInput = (await findAllByTestId('generate-input'))[2];
+  change(generateSidebarInput, { target: { value: '25' } });
   const [, genSidebarBtn] = getAllByText('Generate');
   click(genSidebarBtn);
 
@@ -153,20 +147,21 @@ test('Vault Display page and actions', async () => {
   expect(debtLabel.nextElementSibling.textContent).toBe('235.00 DAI');
 
   // must unlock Dai first
-  await waitForElement(() => getByTestId('allowance-toggle'));
+  await waitFor(() => getByTestId('allowance-toggle'));
   const allowanceBtn = getByTestId('allowance-toggle').children[1];
-  await wait(() => {
+  await waitFor(() => {
     expect(allowanceBtn).not.toHaveAttribute('disabled');
   });
   click(allowanceBtn);
   await findByText('DAI unlocked');
 
   // submit pay back
-  change(getByRole('textbox'), { target: { value: '1.23' } });
+  const paybackSidebarInput = (await findAllByTestId('payback-input'))[2];
+  change(paybackSidebarInput, { target: { value: '1.23' } });
   const [, pbSidebarBtn] = getAllByText('Pay back');
 
   // wait for hasProxy check to complete
-  await wait(() => {
+  await waitFor(() => {
     expect(pbSidebarBtn).not.toHaveAttribute('disabled');
   });
   click(pbSidebarBtn);
@@ -189,7 +184,8 @@ test('Vault Display page and actions', async () => {
   );
 
   // submit withdraw
-  change(getByRole('textbox'), { target: { value: '2' } });
+  const withdrawSidebarInput = (await findAllByTestId('withdraw-input'))[2];
+  change(withdrawSidebarInput, { target: { value: '2' } });
   const [, wdSidebarBtn] = getAllByText('Withdraw');
   click(wdSidebarBtn);
 
@@ -204,5 +200,5 @@ test('Vault Display page and actions', async () => {
     expect(getEthBal()).toContain('87.');
   }
 
-  expect(getEthUsdValue()).toContain('$13.2');
+  expect(getEthUsdValue()).toContain('$13.1');
 }, 45000);

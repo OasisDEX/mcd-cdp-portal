@@ -109,6 +109,7 @@ const Withdraw = ({ vault, reset }) => {
             ) : null
           }
           failureMessage={amountErrors}
+          data-testid="withdraw-input"
         />
         <RatioDisplay
           type={RatioDisplayTypes.CARD}

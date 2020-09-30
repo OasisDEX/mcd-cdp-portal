@@ -9,7 +9,7 @@ jest.mock('react-navi', () => ({
 }));
 
 test('annual dai savings figure rounds half-up', async () => {
-  const { getByText } = await renderWithAccount(
+  const { findByText } = await renderWithAccount(
     <SidebarProvider>
       <SidebarDetails
         {...{ system: { annualDaiSavingsRate: BigNumber(0.999999) } }}
@@ -17,5 +17,5 @@ test('annual dai savings figure rounds half-up', async () => {
     </SidebarProvider>
   );
 
-  getByText('1.00%');
+  await findByText('1.00%');
 });
