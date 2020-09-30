@@ -213,7 +213,8 @@ const SupportedTokens = (() => {
   const tokens = [
     {
       name: 'Dai',
-      symbol: 'DAI'
+      symbol: 'DAI',
+      onlyOnTrade: false // added for prop example
     },
     {
       name: 'Ethereum',
@@ -339,21 +340,23 @@ const SupportedTokens = (() => {
             <Token config={config} key={config.name} />
           ))}
         </TokenList>
-        <span
-          style={{
-            fontSize: '18px',
-            letterSpacing: '0.5px',
-            color: '#4F445E',
-            position: 'relative'
-          }}
-        >
+        {tokens.some(token => token.onlyOnTrade) && (
           <span
-            style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+            style={{
+              fontSize: '18px',
+              letterSpacing: '0.5px',
+              color: '#4F445E',
+              position: 'relative'
+            }}
           >
-            *
-          </span>{' '}
-          {lang.landing_page.token_section_only_on_trade}
-        </span>
+            <span
+              style={{ fontSize: '2.6rem', position: 'relative', top: '5px' }}
+            >
+              *
+            </span>{' '}
+            {lang.landing_page.token_section_only_on_trade}
+          </span>
+        )}
       </Box>
     );
   };
