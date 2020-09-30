@@ -357,6 +357,24 @@ const cdpTypesMetaData = {
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
+  },
+  'COMP-A': {
+    text: 'COMP',
+    colRatio: 200,
+    amountRange: [200, 5000],
+    amountStart: 100
+  },
+  'LRC-A': {
+    text: 'LRC',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 600
+  },
+  'LINK-A': {
+    text: 'LINK',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
   }
 };
 
