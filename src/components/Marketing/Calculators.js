@@ -61,7 +61,7 @@ const Dropdown = (() => {
 
     useEffect(() => {
       function handleDocumentClick(e) {
-        if (!dropdown.current.contains(e.target)) {
+        if (dropdown.current && !dropdown.current.contains(e.target)) {
           setIsOpen(false);
         }
       }
@@ -354,6 +354,24 @@ const cdpTypesMetaData = {
   },
   'KNC-A': {
     text: 'KNC',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'COMP-A': {
+    text: 'COMP',
+    colRatio: 200,
+    amountRange: [100, 5000],
+    amountStart: 100
+  },
+  'LRC-A': {
+    text: 'LRC',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 600
+  },
+  'LINK-A': {
+    text: 'LINK',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100

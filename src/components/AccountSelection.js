@@ -176,7 +176,7 @@ function AccountSelection({ width = '213px', ...props }) {
 
   useEffect(() => {
     function handleDocumentClick(e) {
-      if (!dropdown.current.contains(e.target)) {
+      if (dropdown.current && !dropdown.current.contains(e.target)) {
         setIsOpen(false);
       }
     }
