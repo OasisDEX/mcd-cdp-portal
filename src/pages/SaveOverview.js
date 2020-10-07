@@ -33,6 +33,7 @@ import { ReactComponent as CalculatorLeftTriangles } from 'images/landing/save/c
 import { ReactComponent as CalculatorRightTriangle } from 'images/landing/save/calculator-right-triangle.svg';
 import { Link } from 'react-navi';
 import { useDaiSavingsRate } from '../components/Marketing/Calculators';
+import MarketingLayout from '../layouts/MarketingLayout';
 
 const HeroBackground = (() => {
   const BackTriangles = styled(BackTrianglesBase)`
@@ -106,105 +107,107 @@ function SaveOverview() {
   }, [account, navigation, network]);
 
   return (
-    <StyledPageContentLayout>
-      <PageHead
-        title={lang.save_landing.meta.title}
-        description={lang.save_landing.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis_Save.png"
-      />
-      <FixedHeaderTrigger>
-        <ConnectHero>
-          <HeroBackground />
-          <ThickUnderline background="linear-gradient(354.42deg, #B7FFB8 0%, #FCFF9E 64.82%)">
-            <Text.h4>{lang.save_landing.page_name}</Text.h4>
-          </ThickUnderline>
-          <Text.h1
-            className="headline"
-            style={{ marginBottom: '17px' }}
-            maxWidth="700px"
-          >
-            {lang.save_landing.headline}
-          </Text.h1>
-          <Box minHeight="81px" maxWidth="720px">
-            <Text>{lang.save_landing.subheadline}</Text>
-          </Box>
-          <Text fontSize="s" className="connect-to-start">
-            {lang.save_landing.connect_to_start}
-          </Text>
-          <AccountSelection className="button" />
-        </ConnectHero>
-      </FixedHeaderTrigger>
-      <GradientBox
-        mt="141px"
-        background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
-      >
-        <QuotesFadeIn>
-          <StyledQuotes
-            title={lang.save_landing.quotes_block.title}
-            body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
-            quote={lang.save_landing.quotes_block.quote1}
-            author={lang.save_landing.quotes_block.author1}
-            url="https://dsr.fyi/0xb277d98b101af4f1a1c7fe6d443f6993f1904237"
-            quotesImg={<QuotesImg />}
-          />
-        </QuotesFadeIn>
-        {dsr > 0 && (
-          <Box m="256px auto 0" maxWidth="813px">
-            <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
-            <Text>{lang.save_landing.calc_subheading}</Text>
-            <Box position="relative">
-              <Parallaxed
-                initialOffset={1750}
-                style={{
-                  position: 'absolute',
-                  top: '177px',
-                  width: '100%',
-                  height: '400px'
-                }}
-              >
-                <CalculatorLeftTriangles
-                  style={{ position: 'absolute', left: '-172px' }}
-                />
-                <CalculatorRightTriangle
+    <MarketingLayout showNavInFooter={true}>
+      <StyledPageContentLayout>
+        <PageHead
+          title={lang.save_landing.meta.title}
+          description={lang.save_landing.meta.description}
+          imgUrl="https://oasis.app/meta/Oasis_Save.png"
+        />
+        <FixedHeaderTrigger>
+          <ConnectHero>
+            <HeroBackground />
+            <ThickUnderline background="linear-gradient(354.42deg, #B7FFB8 0%, #FCFF9E 64.82%)">
+              <Text.h4>{lang.save_landing.page_name}</Text.h4>
+            </ThickUnderline>
+            <Text.h1
+              className="headline"
+              style={{ marginBottom: '17px' }}
+              maxWidth="700px"
+            >
+              {lang.save_landing.headline}
+            </Text.h1>
+            <Box minHeight="81px" maxWidth="720px">
+              <Text>{lang.save_landing.subheadline}</Text>
+            </Box>
+            <Text fontSize="s" className="connect-to-start">
+              {lang.save_landing.connect_to_start}
+            </Text>
+            <AccountSelection className="button" />
+          </ConnectHero>
+        </FixedHeaderTrigger>
+        <GradientBox
+          mt="141px"
+          background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
+        >
+          <QuotesFadeIn>
+            <StyledQuotes
+              title={lang.save_landing.quotes_block.title}
+              body={<Box mb="95px">{lang.save_landing.quotes_block.body}</Box>}
+              quote={lang.save_landing.quotes_block.quote1}
+              author={lang.save_landing.quotes_block.author1}
+              url="https://dsr.fyi/0xb277d98b101af4f1a1c7fe6d443f6993f1904237"
+              quotesImg={<QuotesImg />}
+            />
+          </QuotesFadeIn>
+          {dsr > 0 && (
+            <Box m="256px auto 0" maxWidth="813px">
+              <Text.h2 mb="16px">{lang.save_landing.calc_heading}</Text.h2>
+              <Text>{lang.save_landing.calc_subheading}</Text>
+              <Box position="relative">
+                <Parallaxed
+                  initialOffset={1750}
                   style={{
                     position: 'absolute',
-                    right: '-205px',
-                    top: '107px'
+                    top: '177px',
+                    width: '100%',
+                    height: '400px'
                   }}
-                />
-              </Parallaxed>
-              <SaveCalculator mt="40px" />
+                >
+                  <CalculatorLeftTriangles
+                    style={{ position: 'absolute', left: '-172px' }}
+                  />
+                  <CalculatorRightTriangle
+                    style={{
+                      position: 'absolute',
+                      right: '-205px',
+                      top: '107px'
+                    }}
+                  />
+                </Parallaxed>
+                <SaveCalculator mt="40px" />
+              </Box>
             </Box>
-          </Box>
-        )}
-      </GradientBox>
-      <Features
-        mt={{ s: '158px', m: '200px' }}
-        features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
-          img: img,
-          title: lang.save_landing[`feature${index + 1}_heading`],
-          content: lang.save_landing[`feature${index + 1}_content`]
-        }))}
-      />
-      <QuestionsWrapper>
-        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
-        <Questions
-          questions={buildQuestionsFromLangObj(
-            lang.save_landing.questions,
-            lang
           )}
-          links={
-            <Link
-              href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/dsr"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {lang.save_landing.questions.bottom_link1}
-            </Link>
-          }
+        </GradientBox>
+        <Features
+          mt={{ s: '158px', m: '200px' }}
+          features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
+            img: img,
+            title: lang.save_landing[`feature${index + 1}_heading`],
+            content: lang.save_landing[`feature${index + 1}_content`]
+          }))}
         />
-      </QuestionsWrapper>
-    </StyledPageContentLayout>
+        <QuestionsWrapper>
+          <Text.h2>{lang.landing_page.questions_title}</Text.h2>
+          <Questions
+            questions={buildQuestionsFromLangObj(
+              lang.save_landing.questions,
+              lang
+            )}
+            links={
+              <Link
+                href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/dsr"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {lang.save_landing.questions.bottom_link1}
+              </Link>
+            }
+          />
+        </QuestionsWrapper>
+      </StyledPageContentLayout>
+    </MarketingLayout>
   );
 }
 
