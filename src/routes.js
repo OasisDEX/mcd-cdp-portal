@@ -4,7 +4,6 @@ import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import DashboardLayout from 'layouts/DashboardLayout';
-import MarketingLayout from './layouts/MarketingLayout';
 import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
