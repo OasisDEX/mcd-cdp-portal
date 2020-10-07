@@ -367,7 +367,12 @@ const MarketingLayout = ({
               <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
               <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
               {extraLegalLinks.map(link => (
-                <Link href={link.url} key={link.url}>
+                <Link
+                  href={link.url}
+                  key={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {link.text}
                 </Link>
               ))}
