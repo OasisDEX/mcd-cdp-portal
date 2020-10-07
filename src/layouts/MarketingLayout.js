@@ -169,7 +169,7 @@ const MobileMenu = styled(Box)`
   }
 `;
 
-const centerFooterMaxWidth = '980px';
+const centerFooterMaxWidth = '1150px';
 
 const Footer = styled.footer`
   ${centerContent};
@@ -215,7 +215,7 @@ const Footer = styled.footer`
     }
   }
 
-  @media (min-width: ${props => props.theme.breakpoints.m}) {
+  @media (min-width: 700px) {
     margin-bottom: 70px;
 
     ${SeparatorDot} {
@@ -242,7 +242,7 @@ const Footer = styled.footer`
   }
 
   ${Nav}, .navs {
-    @media (min-width: ${props => props.theme.breakpoints.m}) {
+    @media (min-width: 700px) {
       text-align: center;
       flex-direction: row;
     }
