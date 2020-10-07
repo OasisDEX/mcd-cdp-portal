@@ -39,6 +39,7 @@ import { ReactComponent as Feat3 } from 'images/landing/borrow/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 import { ReactComponent as BtcToDai } from 'images/landing/borrow/btc-to-dai.svg';
 import VimeoPlayer from '../components/Marketing/VimeoPlayer';
+import MarketingLayout from '../layouts/MarketingLayout';
 
 const Ball = styled.div`
   width: ${props => props.size};
@@ -224,179 +225,183 @@ function Borrow({ disableConnect = false }) {
   const [showVideo, setShowVideo] = useState(false);
 
   return (
-    <StyledPageContentLayout>
-      <PageHead
-        title={lang.borrow_landing.meta.title}
-        description={lang.borrow_landing.meta.description}
-        imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
-      />
-      <VimeoPlayer
-        id="427849477"
-        showVideo={showVideo}
-        onCloseVideo={() => setShowVideo(false)}
-      />
-      <FixedHeaderTrigger>
-        <ConnectHero>
-          <HeroBackground />
-          <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
-            <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
-          </ThickUnderline>
-          <Text.h1 className="headline">{lang.borrow_landing.headline}</Text.h1>
-          <Box minHeight="81px" maxWidth="720px">
-            <Text>{lang.borrow_landing.subheadline}</Text>
-          </Box>
-          <Text fontSize="s" className="connect-to-start">
-            {lang.borrow_landing.connect_to_start}
-          </Text>
-          <Grid
-            width={{ s: '213px', m: 'unset' }}
-            mt={{ s: '10px', m: '2px' }}
-            mb={{ s: 'unset', m: '2px' }}
-            gridTemplateColumns={{ s: 'unset', m: 'auto 213px' }}
-            gridTemplateRows={{ s: '44px 60px', m: '60px' }}
-            gridColumnGap="22px"
-            alignItems="center"
-          >
-            <HollowButton
-              height="44px"
-              position="relative"
-              style={{ top: '2px', backdropFilter: 'blur(25px)' }}
-              px="24px"
-              onClick={() => setShowVideo(true)}
-            >
-              <PlayIcon
-                style={{
-                  fill: getColor('darkPurple'),
-                  marginRight: '9px',
-                  marginLeft: '-4px'
-                }}
-              />
-              {lang.see_how_it_works}
-            </HollowButton>
-            <AccountSelection className="button" width="100%" />
-          </Grid>
-        </ConnectHero>
-      </FixedHeaderTrigger>
-      <WBTCNotice lang={lang} mt="30px" />
-      <GradientBox
-        mt="226px"
-        background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
-      >
-        <Box display="inline-block">
-          <BlurryBall />
-          <QuotesFadeIn>
-            <StyledQuotes
-              title={lang.borrow_landing.quotes_block.title}
-              body={lang.borrow_landing.quotes_block.body}
-              quote={lang.borrow_landing.quotes_block.quote1}
-              author={lang.borrow_landing.quotes_block.author1}
-              url={`/${Routes.BORROW}/2434`}
-              quotesImg={<QuotesImg />}
-            >
-              <Box
-                display={{ s: 'none', m: 'block' }}
-                style={{ position: 'static' }}
-              >
-                <Parallaxed
-                  initialOffset="1100"
-                  style={{
-                    position: 'absolute',
-                    bottom: '-110px',
-                    right: '-110px'
-                  }}
-                >
-                  <FrontBall size="164px" />
-                </Parallaxed>
-              </Box>
-            </StyledQuotes>
-          </QuotesFadeIn>
-        </Box>
-        <Box m="296px auto 0" maxWidth="980px">
-          <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
-          <Text>{lang.borrow_landing.calc_subheading}</Text>
-          {prices?.length && cdpTypesList?.length ? (
-            <BorrowCalculator
-              mt="40px"
-              prices={prices}
-              cdpTypesList={cdpTypesList}
-            />
-          ) : null}
-        </Box>
-      </GradientBox>
-      <Features
-        mt={{ s: '158px', m: '207px' }}
-        features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
-          img: img,
-          title: lang.borrow_landing[`feature${index + 1}_heading`],
-          content: lang.borrow_landing[`feature${index + 1}_content`]
-        }))}
-      />
-      <Box maxWidth="1007px" m="204px auto 0">
-        <Box maxWidth="777px" m="0 auto">
-          <Text.h2 mb="34px">{lang.borrow_markets.heading}</Text.h2>
-          <Text>{lang.borrow_markets.subheading}</Text>
-        </Box>
-        <Box
-          mt={{ s: '54px', m: '87px' }}
-          css={`
-            overflow-x: scroll;
-            overflow-y: hidden;
-            &::-webkit-scrollbar {
-              display: none;
-            }
-            -ms-overflow-style: none;
-          `}
-        >
-          <MarketsTable
-            cdpTypesList={cdpTypesList.filter(symbol =>
-              ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
-            )}
-          />
-        </Box>
-        <Box
-          textAlign="left"
-          mt={{ s: '20px', m: '35px' }}
-          pl={{ s: '6px', m: '37px' }}
-        >
-          <Link
-            href={`/${Routes.BORROW}/markets`}
-            style={{ textDecoration: 'underline' }}
-          >
-            {lang.borrow_landing.markets_link}
-          </Link>
-        </Box>
-      </Box>
-      <QuestionsWrapper mt="147px">
-        <Text.h2>{lang.landing_page.questions_title}</Text.h2>
-        <Questions
-          questions={buildQuestionsFromLangObj(
-            lang.borrow_landing.questions,
-            lang
-          )}
-          links={
-            <>
-              <Link
-                href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/vault"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {lang.borrow_landing.questions.bottom_link1}
-              </Link>
-              <Box display={{ s: 'none', m: 'inline-block' }}>
-                <SeparatorDot mx="24px" />
-              </Box>
-              <Link
-                href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/glossary"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {lang.borrow_landing.questions.bottom_link2}
-              </Link>
-            </>
-          }
+    <MarketingLayout showNavInFooter={true}>
+      <StyledPageContentLayout>
+        <PageHead
+          title={lang.borrow_landing.meta.title}
+          description={lang.borrow_landing.meta.description}
+          imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
         />
-      </QuestionsWrapper>
-    </StyledPageContentLayout>
+        <VimeoPlayer
+          id="427849477"
+          showVideo={showVideo}
+          onCloseVideo={() => setShowVideo(false)}
+        />
+        <FixedHeaderTrigger>
+          <ConnectHero>
+            <HeroBackground />
+            <ThickUnderline background="linear-gradient(176.36deg, #FFE9E9 26.84%, #FFDB87 97.79%)">
+              <Text.h4>{lang.borrow_landing.page_name}</Text.h4>
+            </ThickUnderline>
+            <Text.h1 className="headline">
+              {lang.borrow_landing.headline}
+            </Text.h1>
+            <Box minHeight="81px" maxWidth="720px">
+              <Text>{lang.borrow_landing.subheadline}</Text>
+            </Box>
+            <Text fontSize="s" className="connect-to-start">
+              {lang.borrow_landing.connect_to_start}
+            </Text>
+            <Grid
+              width={{ s: '213px', m: 'unset' }}
+              mt={{ s: '10px', m: '2px' }}
+              mb={{ s: 'unset', m: '2px' }}
+              gridTemplateColumns={{ s: 'unset', m: 'auto 213px' }}
+              gridTemplateRows={{ s: '44px 60px', m: '60px' }}
+              gridColumnGap="22px"
+              alignItems="center"
+            >
+              <HollowButton
+                height="44px"
+                position="relative"
+                style={{ top: '2px', backdropFilter: 'blur(25px)' }}
+                px="24px"
+                onClick={() => setShowVideo(true)}
+              >
+                <PlayIcon
+                  style={{
+                    fill: getColor('darkPurple'),
+                    marginRight: '9px',
+                    marginLeft: '-4px'
+                  }}
+                />
+                {lang.see_how_it_works}
+              </HollowButton>
+              <AccountSelection className="button" width="100%" />
+            </Grid>
+          </ConnectHero>
+        </FixedHeaderTrigger>
+        <WBTCNotice lang={lang} mt="30px" />
+        <GradientBox
+          mt="226px"
+          background="linear-gradient(170.64deg, #f5ffda 7.17%, rgba(255, 245, 222, 0.490208) 59.55%, #f5ffda 108.77%)"
+        >
+          <Box display="inline-block">
+            <BlurryBall />
+            <QuotesFadeIn>
+              <StyledQuotes
+                title={lang.borrow_landing.quotes_block.title}
+                body={lang.borrow_landing.quotes_block.body}
+                quote={lang.borrow_landing.quotes_block.quote1}
+                author={lang.borrow_landing.quotes_block.author1}
+                url={`/${Routes.BORROW}/2434`}
+                quotesImg={<QuotesImg />}
+              >
+                <Box
+                  display={{ s: 'none', m: 'block' }}
+                  style={{ position: 'static' }}
+                >
+                  <Parallaxed
+                    initialOffset="1100"
+                    style={{
+                      position: 'absolute',
+                      bottom: '-110px',
+                      right: '-110px'
+                    }}
+                  >
+                    <FrontBall size="164px" />
+                  </Parallaxed>
+                </Box>
+              </StyledQuotes>
+            </QuotesFadeIn>
+          </Box>
+          <Box m="296px auto 0" maxWidth="980px">
+            <Text.h2 mb="16px">{lang.borrow_landing.calc_heading}</Text.h2>
+            <Text>{lang.borrow_landing.calc_subheading}</Text>
+            {prices?.length && cdpTypesList?.length ? (
+              <BorrowCalculator
+                mt="40px"
+                prices={prices}
+                cdpTypesList={cdpTypesList}
+              />
+            ) : null}
+          </Box>
+        </GradientBox>
+        <Features
+          mt={{ s: '158px', m: '207px' }}
+          features={[Feat1, Feat2, Feat3, Feat4].map((img, index) => ({
+            img: img,
+            title: lang.borrow_landing[`feature${index + 1}_heading`],
+            content: lang.borrow_landing[`feature${index + 1}_content`]
+          }))}
+        />
+        <Box maxWidth="1007px" m="204px auto 0">
+          <Box maxWidth="777px" m="0 auto">
+            <Text.h2 mb="34px">{lang.borrow_markets.heading}</Text.h2>
+            <Text>{lang.borrow_markets.subheading}</Text>
+          </Box>
+          <Box
+            mt={{ s: '54px', m: '87px' }}
+            css={`
+              overflow-x: scroll;
+              overflow-y: hidden;
+              &::-webkit-scrollbar {
+                display: none;
+              }
+              -ms-overflow-style: none;
+            `}
+          >
+            <MarketsTable
+              cdpTypesList={cdpTypesList.filter(symbol =>
+                ['ETH', 'BAT', 'USDC', 'WBTC'].includes(symbol.split('-')[0])
+              )}
+            />
+          </Box>
+          <Box
+            textAlign="left"
+            mt={{ s: '20px', m: '35px' }}
+            pl={{ s: '6px', m: '37px' }}
+          >
+            <Link
+              href={`/${Routes.BORROW}/markets`}
+              style={{ textDecoration: 'underline' }}
+            >
+              {lang.borrow_landing.markets_link}
+            </Link>
+          </Box>
+        </Box>
+        <QuestionsWrapper mt="147px">
+          <Text.h2>{lang.landing_page.questions_title}</Text.h2>
+          <Questions
+            questions={buildQuestionsFromLangObj(
+              lang.borrow_landing.questions,
+              lang
+            )}
+            links={
+              <>
+                <Link
+                  href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/vault"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {lang.borrow_landing.questions.bottom_link1}
+                </Link>
+                <Box display={{ s: 'none', m: 'inline-block' }}>
+                  <SeparatorDot mx="24px" />
+                </Box>
+                <Link
+                  href="https://community-development.makerdao.com/makerdao-mcd-faqs/faqs/glossary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {lang.borrow_landing.questions.bottom_link2}
+                </Link>
+              </>
+            }
+          />
+        </QuestionsWrapper>
+      </StyledPageContentLayout>
+    </MarketingLayout>
   );
 }
 

@@ -81,18 +81,11 @@ const withDashboardLayout = childMatcher =>
     childMatcher
   );
 
-const marketingLayoutView = () => (
-  <MarketingLayout showNavInFooter={true}>
-    <View />
-  </MarketingLayout>
-);
-
 export default mount({
   '/': withView(() => <Landing />),
 
   [`/${Routes.BORROW}`]: compose(
     withView(dappProvidersView),
-    withView(marketingLayoutView),
     withView(() => <Borrow />)
   ),
 
@@ -119,19 +112,16 @@ export default mount({
 
   [`/${Routes.BORROW}/btc`]: compose(
     withView(dappProvidersView),
-    withView(marketingLayoutView),
     withView(() => <BorrowWBTCLanding />)
   ),
 
   [`/${Routes.BORROW}/markets`]: compose(
     withView(dappProvidersView),
-    withView(marketingLayoutView),
     withView(() => <BorrowMarkets />)
   ),
 
   [`/${Routes.SAVE}`]: compose(
     withView(dappProvidersView),
-    withView(marketingLayoutView),
     withView(() => <SaveOverview />)
   ),
 
@@ -145,10 +135,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.TRADE}`]: compose(
-    withView(marketingLayoutView),
-    withView(() => <TradeLanding />)
-  ),
+  [`/${Routes.TRADE}`]: withView(() => <TradeLanding />),
 
   [`/${Routes.PRIVACY}`]: route(() => ({
     title: 'Oasis - Privacy Policy',

@@ -173,6 +173,10 @@ const centerFooterMaxWidth = '980px';
 
 const Footer = styled.footer`
   ${centerContent};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
   margin-top: 90px;
   margin-bottom: 39px;
   letter-spacing: 0.3px;
@@ -200,8 +204,14 @@ const Footer = styled.footer`
   }
 
   .legal-nav {
-    a:not(:first-child) {
-      margin-left: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    a {
+      max-width: 80px;
+      &:not(:first-child) {
+        margin-left: 44px;
+      }
     }
   }
 
@@ -223,6 +233,10 @@ const Footer = styled.footer`
     }
   }
 
+  @media (min-width: ${centerFooterMaxWidth}) {
+    flex-direction: row-reverse;
+  }
+
   ${Nav} {
     float: right;
   }
@@ -231,10 +245,6 @@ const Footer = styled.footer`
     @media (min-width: ${props => props.theme.breakpoints.m}) {
       text-align: center;
       flex-direction: row;
-    }
-
-    @media (min-width: ${centerFooterMaxWidth}) {
-      float: right;
     }
   }
 
@@ -259,7 +269,11 @@ const Footer = styled.footer`
 
 // It has the Oasis logo, the top nav links, and the copyright notice.
 // It also has a ThemeProvider
-const MarketingLayout = ({ showNavInFooter, children }) => {
+const MarketingLayout = ({
+  showNavInFooter,
+  extraLegalLinks = [],
+  children
+}) => {
   const { lang } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -362,6 +376,11 @@ const MarketingLayout = ({ showNavInFooter, children }) => {
             <Nav className="legal-nav">
               <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
               <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+              {extraLegalLinks.map(link => (
+                <Link href={link.url} key={link.url}>
+                  {link.text}
+                </Link>
+              ))}
             </Nav>
           </div>
           <div className="copyright">
