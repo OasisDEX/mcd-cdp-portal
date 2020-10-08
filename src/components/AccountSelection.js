@@ -18,7 +18,6 @@ import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as DcentLogo } from 'images/dcent.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
-import { ReactComponent as MewConnectLogo } from 'images/mew_wallet_icon.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 import { AccountTypes } from 'utils/constants';
 import { BrowserView, isMobile } from 'react-device-detect';
@@ -227,17 +226,6 @@ function AccountSelection({ width = '213px', ...props }) {
     </IconItem>
   );
 
-  const mewConnect = (
-    <IconItem
-      onClick={() => connectToProviderOfType(AccountTypes.MEWCONNECT)}
-      disabled={!makerAuthenticated}
-      icon={<MewConnectLogo />}
-      key="mew-connect"
-    >
-      {lang.providers.mewconnect}
-    </IconItem>
-  );
-
   const walletConnect = (
     <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.WALLETCONNECT)}
@@ -283,7 +271,7 @@ function AccountSelection({ width = '213px', ...props }) {
   );
 
   const mainWallets = [ledger, trezor];
-  const otherWallets = [mewConnect, walletLink, walletConnect, dcent];
+  const otherWallets = [walletLink, walletConnect, dcent];
 
   const mainWalletsCount = mainWallets.length + 1; // Add the browser provider wallet
 

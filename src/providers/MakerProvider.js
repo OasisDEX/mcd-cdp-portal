@@ -192,7 +192,6 @@ function MakerProvider({
   };
 
   const disconnectWalletLink = subprovider => subprovider.resetWallet();
-  const disconnectMewConnect = subprovider => subprovider.close();
   const disconnectWalletConnect = async subprovider =>
     (await subprovider.getWalletConnector()).killSession();
   const disconnectBrowserWallet = () =>
@@ -203,8 +202,6 @@ function MakerProvider({
   const disconnect = () => {
     const subprovider = maker.service('accounts').currentWallet();
     if (subprovider.isWalletLink) disconnectWalletLink(subprovider);
-    else if (subprovider.isMewConnect)
-      disconnectMewConnect(subprovider);
     else if (subprovider.isWalletConnect) disconnectWalletConnect(subprovider);
     else if (
       sessionStorage.getItem('lastConnectedWalletType') ===
