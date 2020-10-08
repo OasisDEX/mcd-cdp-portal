@@ -696,7 +696,8 @@ export default {
     other: 'Active Wallet',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
-    walletlink: 'Coinbase Wallet'
+    walletlink: 'Coinbase Wallet',
+    mewconnect: 'MEW Wallet'
   },
   notifications: {
     claim: 'Claim',
