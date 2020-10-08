@@ -665,6 +665,7 @@ export default {
     other: '当前钱包',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
+    mewconnect: 'MEW Wallet',
     walletlink: 'Coinbase 钱包'
   },
   notifications: {

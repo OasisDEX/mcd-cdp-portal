@@ -11,6 +11,7 @@ import McdPlugin, {
 import trezorPlugin from '@makerdao/dai-plugin-trezor-web';
 import ledgerPlugin from '@makerdao/dai-plugin-ledger-web';
 import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
+import mewconnectPlugin from '@myetherwallet/dai-plugin-mewconnect';
 import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
 import dcentPlugin from 'dai-plugin-dcent-web';
 import configPlugin from '@makerdao/dai-plugin-config';
@@ -71,6 +72,7 @@ export async function instantiateMaker({
       trezorPlugin,
       ledgerPlugin,
       [walletLinkPlugin, walletLinkPluginConfig],
+      mewconnectPlugin,
       walletConnectPlugin,
       dcentPlugin,
       [McdPlugin, mcdPluginConfig]
