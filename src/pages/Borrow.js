@@ -40,6 +40,7 @@ import { ReactComponent as Feat4 } from 'images/landing/borrow/feature-4.svg';
 import { ReactComponent as BtcToDai } from 'images/landing/borrow/btc-to-dai.svg';
 import VimeoPlayer from '../components/Marketing/VimeoPlayer';
 import MarketingLayout from '../layouts/MarketingLayout';
+import mixpanel from 'mixpanel-browser';
 
 const Ball = styled.div`
   width: ${props => props.size};
@@ -266,7 +267,13 @@ function Borrow({ disableConnect = false }) {
                 position="relative"
                 style={{ top: '2px', backdropFilter: 'blur(25px)' }}
                 px="24px"
-                onClick={() => setShowVideo(true)}
+                onClick={() => {
+                  setShowVideo(true);
+                  mixpanel.track('btn-click', {
+                    id: 'PlayVideo',
+                    product: 'oasis-borrow'
+                  });
+                }}
               >
                 <PlayIcon
                   style={{

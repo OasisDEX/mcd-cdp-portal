@@ -24,6 +24,14 @@ export default [
     networks: ['kovan', 'mainnet', 'testnet', 'rinkeby', 'ropsten', 'goerli']
   },
   {
+    slug: 'eth-b',
+    symbol: 'ETH-B',
+    key: 'ETH-B',
+    gem: 'ETH',
+    currency: ETH,
+    networks: ['kovan', 'mainnet']
+  },
+  {
     slug: 'bat-a',
     symbol: 'BAT-A',
     key: 'BAT-A',
