@@ -90,7 +90,8 @@ export default {
       'You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.',
     read_only: 'Read-Only',
     wallet_connect: 'Wallet Connect',
-    wallet_link: 'Coinbase Wallet'
+    wallet_link: 'Coinbase Wallet',
+    portis: "Portis"
   },
   borrow_landing: {
     meta: {
@@ -696,7 +697,8 @@ export default {
     other: 'Active Wallet',
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
-    walletlink: 'Coinbase Wallet'
+    walletlink: 'Coinbase Wallet',
+    portis: "Portis"
   },
   notifications: {
     claim: 'Claim',

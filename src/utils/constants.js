@@ -19,6 +19,7 @@ export const AccountTypes = {
   TREZOR: 'trezor',
   DCENT: 'dcent',
   METAMASK: 'browser',
+  PORTIS: 'portis',
   WALLETLINK: 'walletlink',
   WALLETCONNECT: 'walletconnect'
 };
