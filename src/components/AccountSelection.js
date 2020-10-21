@@ -237,7 +237,7 @@ function AccountSelection({ width = '213px', ...props }) {
       {lang.landing_page.wallet_connect}
     </IconItem>
   );
-  
+
   const portis = (
     <IconItem
       onClick={() => connectToProviderOfType(AccountTypes.PORTIS)}

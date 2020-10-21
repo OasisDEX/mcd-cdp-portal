@@ -29,7 +29,6 @@ import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as DCentLogo } from 'images/dcent.svg';
 import { ReactComponent as PortisLogo } from 'images/portis.svg';
 
-
 const negativeMarginY = css`
   margin-top: -5px;
   margin-bottom: -5px;
