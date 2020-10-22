@@ -5,6 +5,7 @@ import { Flex, Text } from '@makerdao/ui-components-core';
 
 import { ReactComponent as SaveIcon } from 'images/active-save-icon.svg';
 import useLanguage from 'hooks/useLanguage';
+import useCheckRoute from 'hooks/useCheckRoute';
 
 const StyledSaveIcon = styled(SaveIcon)`
   path {
@@ -16,7 +17,8 @@ const StyledSaveIcon = styled(SaveIcon)`
 const SaveNav = ({ account, ...props }) => {
   const { lang } = useLanguage();
   const { url } = useCurrentRoute();
-  const selected = url.pathname.startsWith('/legacy/save');
+  const { isSave } = useCheckRoute();
+  const selected = isSave;
 
   const textColor =
     selected && account

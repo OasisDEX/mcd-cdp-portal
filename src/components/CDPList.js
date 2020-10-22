@@ -13,7 +13,7 @@ import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
 import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useAnalytics from 'hooks/useAnalytics';
@@ -21,6 +21,7 @@ import { getMeasurement } from '../styles/theme';
 import lang from 'languages';
 import useVaults from 'hooks/useVaults';
 import { watch } from 'hooks/useObservable';
+import useCheckRoute from 'hooks/useCheckRoute';
 
 const NavbarItemContent = ({ children, ...props }) => (
   <Flex
@@ -99,7 +100,7 @@ const CDPList = memo(function({
   currentQuery,
   mobile
 }) {
-  const { url } = useCurrentRoute();
+  const { isSave } = useCheckRoute();
   const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
   const { userVaults } = useVaults();
@@ -109,13 +110,12 @@ const CDPList = memo(function({
   const emergencyShutdownActive = watch.emergencyShutdownActive();
 
   useMemo(() => {
-    const onSavePage = url.pathname.startsWith('/save');
-    if (onSavePage) {
+    if (isSave) {
       setListOpen(false);
-    } else if (!onSavePage && (account || viewedAddress)) {
+    } else if (account || viewedAddress) {
       setListOpen(true);
     }
-  }, [account, url, viewedAddress]);
+  }, [account, isSave, viewedAddress]);
 
   useEffect(() => {
     if (account) {

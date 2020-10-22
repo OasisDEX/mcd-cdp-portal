@@ -1,6 +1,7 @@
 import mixpanel from 'mixpanel-browser';
 import { useCurrentRoute } from 'react-navi';
 import references from 'references/config';
+import useCheckRoute from './useCheckRoute';
 
 const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
 const fathomGoals = {
@@ -54,6 +55,7 @@ const fathomGoals = {
 
 export default function useAnalytics(section, page = null, product = null) {
   const { url, title } = useCurrentRoute();
+  const { isBorrow, isSave } = useCheckRoute();
 
   if (process.env.NODE_ENV !== 'production') {
     return { trackBtnClick: () => null, trackInputChange: () => null };
@@ -67,11 +69,7 @@ export default function useAnalytics(section, page = null, product = null) {
       window.fathom('trackGoal', fathomGoals[goal.id], goal.amount * 100 || 0);
 
     const getProductName = pathname => {
-      return pathname.startsWith('/')
-        ? 'Borrow'
-        : pathname.startsWith('/legacy/save')
-        ? 'Save'
-        : pathname;
+      return isBorrow ? 'Borrow' : isSave ? 'Save' : pathname;
     };
 
     const mixpanelOptions = {

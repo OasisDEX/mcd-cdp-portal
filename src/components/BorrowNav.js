@@ -8,6 +8,7 @@ import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
 import useLanguage from 'hooks/useLanguage';
 
 import CDPDropdown from './CDPDropdown';
+import useCheckRoute from 'hooks/useCheckRoute';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
   path {
@@ -19,7 +20,8 @@ const StyledBorrowIcon = styled(BorrowIcon)`
 const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-  const selected = url.pathname.startsWith('/');
+  const { isBorrow } = useCheckRoute();
+  const selected = isBorrow;
 
   const address = account
     ? account.address
