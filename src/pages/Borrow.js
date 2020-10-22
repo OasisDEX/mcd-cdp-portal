@@ -209,7 +209,7 @@ function Borrow({ disableConnect = false }) {
       if (!disableConnect && account) {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `owner/${account.address}`,
+          pathname: `/owner/${account.address}`,
           search
         });
       }
