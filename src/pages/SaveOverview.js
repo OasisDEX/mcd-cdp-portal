@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useMaker from 'hooks/useMaker';
 import AccountSelection from 'components/AccountSelection';
-import { Routes } from 'utils/constants';
 import {
   buildQuestionsFromLangObj,
   ConnectHero,
@@ -101,7 +100,7 @@ function SaveOverview() {
   useEffect(() => {
     if (account && account.address) {
       navigation.navigate(
-        `/${Routes.SAVE}/owner/${account.address}?network=${network}`
+        `/legacy/save/owner/${account.address}?network=${network}`
       );
     }
   }, [account, navigation, network]);

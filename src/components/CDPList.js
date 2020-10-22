@@ -17,7 +17,6 @@ import { Link, useCurrentRoute } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useAnalytics from 'hooks/useAnalytics';
-import { Routes } from '../utils/constants';
 import { getMeasurement } from '../styles/theme';
 import lang from 'languages';
 import useVaults from 'hooks/useVaults';
@@ -110,7 +109,7 @@ const CDPList = memo(function({
   const emergencyShutdownActive = watch.emergencyShutdownActive();
 
   useMemo(() => {
-    const onSavePage = url.pathname.startsWith(`/${Routes.SAVE}`);
+    const onSavePage = url.pathname.startsWith('/save');
     if (onSavePage) {
       setListOpen(false);
     } else if (!onSavePage && (account || viewedAddress)) {
@@ -120,9 +119,9 @@ const CDPList = memo(function({
 
   useEffect(() => {
     if (account) {
-      setOverviewPath(`/${Routes.BORROW}/owner/${account.address}`);
+      setOverviewPath(`/owner/${account.address}`);
     } else if (viewedAddress) {
-      setOverviewPath(`/${Routes.BORROW}/owner/${viewedAddress}`);
+      setOverviewPath(`/owner/${viewedAddress}`);
     }
   }, [maker, account, viewedAddress, setOverviewPath]);
 
@@ -229,7 +228,7 @@ const CDPList = memo(function({
           </NavbarItem>
           {userVaults.map(
             ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
-              const linkPath = `/${Routes.BORROW}/${id}`;
+              const linkPath = `/${id}`;
               const active = currentPath === linkPath;
               return (
                 <NavbarItem

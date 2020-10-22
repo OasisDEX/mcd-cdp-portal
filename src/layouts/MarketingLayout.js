@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-navi';
-import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
@@ -62,21 +61,21 @@ const MainNav = ({ onLinkClicked, ...props }) => {
   return (
     <MainNavStyle {...props}>
       <Link
-        href={`/${Routes.TRADE}`}
+        href={'/trade'}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.trade}
       </Link>
       <Link
-        href={`/${Routes.BORROW}`}
+        href={'/'}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.borrow}
       </Link>
       <Link
-        href={`/${Routes.SAVE}`}
+        href={'/legacy/save'}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
@@ -364,8 +363,8 @@ const MarketingLayout = ({
               </Flex>
             )}
             <Nav className="legal-nav">
-              <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
-              <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+              <Link href={'/privacy'}>{lang.navbar.privacy}</Link>
+              <Link href={'/terms'}>{lang.navbar.terms}</Link>
               {extraLegalLinks.map(link => (
                 <Link
                   href={link.url}

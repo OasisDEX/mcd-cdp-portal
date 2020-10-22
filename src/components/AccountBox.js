@@ -23,7 +23,6 @@ import useAnalytics from 'hooks/useAnalytics';
 import styled from 'styled-components';
 import Carat from './Carat';
 import { Link, useCurrentRoute } from 'react-navi';
-import { Routes } from 'utils/constants';
 import theme from '../styles/theme';
 import FullScreenAction from './CDPDisplay/FullScreenAction';
 import useCdpTypes from '../hooks/useCdpTypes';
@@ -202,9 +201,9 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                     hasActiveAccount &&
                     (symbol === 'DSR' ? (
                       <Link
-                        href={`/${Routes.SAVE}${url.search}`}
+                        href={`/legacy/save${url.search}`}
                         style={{
-                          visibility: url.pathname.startsWith(`/${Routes.SAVE}`)
+                          visibility: url.pathname.startsWith('/legacy/save')
                             ? 'hidden'
                             : 'visible'
                         }}

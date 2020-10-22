@@ -4,7 +4,6 @@ import SidebarSystem from 'components/SidebarSystem';
 import SidebarDetails from 'components/SidebarDetails';
 import { Box, Grid } from '@makerdao/ui-components-core';
 import { useCurrentRoute } from 'react-navi';
-import { Routes } from 'utils/constants';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
 
@@ -18,8 +17,8 @@ const SidebarGlobalPanel = () => {
   const systemCollateralization = watch.systemCollateralization(cdpTypesList);
 
   const { url } = useCurrentRoute();
-  const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
-  const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);
+  const routeIsBorrow = url.pathname.startsWith(`/`);
+  const routeIsSave = url.pathname.startsWith(`/legacy/save`);
 
   return useMemo(() => {
     return (

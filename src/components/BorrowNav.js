@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import CDPList from 'components/CDPList';
 import { Flex, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
-import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 
 import CDPDropdown from './CDPDropdown';
@@ -20,7 +19,7 @@ const StyledBorrowIcon = styled(BorrowIcon)`
 const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-  const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
+  const selected = url.pathname.startsWith('/');
 
   const address = account
     ? account.address
@@ -28,9 +27,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
     ? viewedAddress
     : null;
 
-  const path = address
-    ? `/${Routes.BORROW}/owner/${address}`
-    : `/${Routes.BORROW}`;
+  const path = address ? `/owner/${address}` : '';
 
   const textColor =
     selected && account

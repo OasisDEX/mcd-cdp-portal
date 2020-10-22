@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { watch } from 'hooks/useObservable';
 import useMaker from 'hooks/useMaker';
 import usePrevious from 'hooks/usePrevious';
-import { Routes } from 'utils/constants';
 import useCdpTypes from 'hooks/useCdpTypes';
 
 export const VaultsContext = createContext({});
@@ -57,7 +56,7 @@ function VaultsProvider({ children, viewedAddress }) {
   useEffect(() => {
     if (newVaultCreated) {
       const newVaultId = userVaultIds[0];
-      navigation.navigate(`/${Routes.BORROW}/${newVaultId}?network=${network}`);
+      navigation.navigate(`/${newVaultId}?network=${network}`);
     }
   }, [newVaultCreated, navigation, network, userVaultIds]);
 
