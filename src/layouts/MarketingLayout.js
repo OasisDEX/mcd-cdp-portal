@@ -363,8 +363,10 @@ const MarketingLayout = ({
               </Flex>
             )}
             <Nav className="legal-nav">
-              <Link href={'/privacy'}>{lang.navbar.privacy}</Link>
-              <Link href={'/terms'}>{lang.navbar.terms}</Link>
+              <Link href={'https://oasis.app/privacy'}>
+                {lang.navbar.privacy}
+              </Link>
+              <Link href={'https://oasis.app/terms'}>{lang.navbar.terms}</Link>
               {extraLegalLinks.map(link => (
                 <Link
                   href={link.url}

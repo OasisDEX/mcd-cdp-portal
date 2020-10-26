@@ -64,7 +64,7 @@ const CookieNotice = () => {
         <span style={{ fontSize: '14px', color: '#231536', flexShrink: 1 }}>
           {lang.formatString(
             lang.cookie_notice,
-            <Link href={'/privacy'}>
+            <Link href={'https://oasis.app/privacy'}>
               <NoticeLinkStyle>{lang.privacy_policy}</NoticeLinkStyle>
             </Link>
           )}
