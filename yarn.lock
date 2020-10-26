@@ -2460,10 +2460,10 @@
     bignumber.js "^8.1.1"
     rxjs "^6.5.4"
 
-"@makerdao/dai-plugin-portis@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-portis/-/dai-plugin-portis-0.0.2.tgz#ec504cf467b1d9c76c5355c781d67524508ba236"
-  integrity sha512-s0itilJr0EgGOYe70KwStH+dtn24kvLrbgQWNPjZoOXFXYS79JxhQP4ZpXXsxNzUBNTh7e8PfS2qLj2vYRI+kQ==
+"@makerdao/dai-plugin-portis@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-portis/-/dai-plugin-portis-0.0.4.tgz#f11764432502f2a7c2329e4dcdcc50f4933f57e3"
+  integrity sha512-W4/M5pUkxzWcODJOAVJ8rGNNQU1YP2WlqIntGoqU3XJvqhsFPu2RcFitFmCZJE/ECl38rwiW/bhL9OyI4DErPA==
   dependencies:
     "@portis/web3" "^2.0.0-beta.59"
     babel-runtime "^6.26.0"
