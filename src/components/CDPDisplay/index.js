@@ -6,7 +6,6 @@ import useMaker from 'hooks/useMaker';
 import useSidebar from 'hooks/useSidebar';
 import CDPViewPresentation from './Presentation';
 import Unavailable from '../Unavailable';
-import { Routes } from '../../utils/constants';
 import { useNavigation } from 'react-navi';
 import { watch } from 'hooks/useObservable';
 
@@ -23,7 +22,7 @@ function CDPView({ cdpId }) {
       (async function redirect() {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `/${Routes.BORROW}/owner/${account.address}`,
+          pathname: `/owner/${account.address}`,
           search
         });
       })();

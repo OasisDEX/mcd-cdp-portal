@@ -22,7 +22,7 @@ import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
-import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -286,7 +286,7 @@ function Overview({ viewedAddress }) {
                               }}
                             >
                               <Link
-                                href={`/${Routes.BORROW}/${id}${url.search}`}
+                                href={`/${id}${url.search}`}
                                 prefetch={true}
                               >
                                 <Text

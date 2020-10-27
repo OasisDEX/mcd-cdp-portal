@@ -14,7 +14,6 @@ import {
   TokenIcon
 } from 'components/Marketing';
 import mixpanel from 'mixpanel-browser';
-import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import { getColor, marketingTheme } from 'styles/theme';
 
@@ -134,7 +133,7 @@ const Cards = (() => {
           </Text>
           <div className="buttonContainer">
             <Link
-              href={`/${Routes.TRADE}`}
+              href={'/trade'}
               onClick={() => {
                 mixpanel.track('btn-click', {
                   id: 'StartTrading',
@@ -160,7 +159,7 @@ const Cards = (() => {
           </Text>
           <div className="buttonContainer">
             <Link
-              href={`/${Routes.BORROW}${url.search}`}
+              href={`/${url.search}`}
               prefetch={true}
               onClick={() => {
                 mixpanel.track('btn-click', {
@@ -190,7 +189,7 @@ const Cards = (() => {
           </Text>
           <div className="buttonContainer">
             <Link
-              href={`/${Routes.SAVE}${url.search}`}
+              href={'/legacy/save{url.search}'}
               prefetch={true}
               onClick={() => {
                 mixpanel.track('btn-click', {

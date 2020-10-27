@@ -23,14 +23,6 @@ export const AccountTypes = {
   WALLETCONNECT: 'walletconnect'
 };
 
-export const Routes = {
-  BORROW: 'borrow',
-  SAVE: 'save',
-  TRADE: 'trade',
-  PRIVACY: 'privacy',
-  TERMS: 'terms'
-};
-
 export const Toggles = {
   WALLETBALANCES: 'walletbalances'
 };

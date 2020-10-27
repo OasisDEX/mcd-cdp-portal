@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 import AccountSelection from 'components/AccountSelection';
-import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { Box, Flex, Text } from '@makerdao/ui-components-core';
@@ -200,7 +199,7 @@ function BorrowWBTCLanding() {
       if (account) {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `/${Routes.BORROW}/owner/${account.address}`,
+          pathname: `/owner/${account.address}`,
           search
         });
       }
@@ -283,10 +282,7 @@ function BorrowWBTCLanding() {
           title={lang.borrow_wbtc_landing.step5}
           details={lang.formatString(lang.borrow_wbtc_landing.step5_details, {
             link: (
-              <Link
-                style={{ textDecoration: 'underline' }}
-                href={`/${Routes.BORROW}`}
-              >
+              <Link style={{ textDecoration: 'underline' }} href={'/'}>
                 {lang.borrow_wbtc_landing.step5_link_text}
               </Link>
             )
