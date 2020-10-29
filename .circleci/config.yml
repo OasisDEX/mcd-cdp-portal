@@ -70,8 +70,8 @@ jobs:
             aws configure set aws_access_key_id $STAGE_AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $STAGE_AWS_SECRET_ACCESS_KEY
 
-            aws s3 sync build s3://$STAGE_AWS_BUCKET_NAME/borrow/ --delete --exclude 'trade/*' --exclude 'expired/*'
-            aws cloudfront create-invalidation --distribution-id $STAGE_AWS_CF_ID --paths "/*"
+            aws --profile default s3 sync build s3://$STAGE_AWS_BUCKET_NAME/borrow/ --delete --exclude 'trade/*' --exclude 'expired/*'
+            aws --profile default cloudfront create-invalidation --distribution-id $STAGE_AWS_CF_ID --paths "/*"
   deploy_prod:
     docker:
       - image: circleci/node:lts
@@ -97,8 +97,8 @@ jobs:
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
-            aws s3 sync build s3://$AWS_BUCKET_NAME/ --delete --exclude 'trade/*' --exclude 'expired/*'
-            aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
+            aws --profile default s3 sync build s3://$AWS_BUCKET_NAME/ --delete --exclude 'trade/*' --exclude 'expired/*'
+            aws --profile default cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
 
 workflows:
   version: 2
