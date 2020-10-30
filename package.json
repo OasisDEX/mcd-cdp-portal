@@ -4,7 +4,7 @@
   "version": "0.2.6-rc.1",
   "license": "AGPL",
   "private": true,
-  "homepage": ".",
+  "homepage": "/borrow/",
   "contributors": [
     "Michael Elliot <mike@makerdao.com>",
     "Joshua Levine <joshua@makerdao.com>",
