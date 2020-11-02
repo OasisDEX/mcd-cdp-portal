@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 import { Flex, Text } from '@makerdao/ui-components-core';
 
@@ -15,6 +15,7 @@ const StyledSaveIcon = styled(SaveIcon)`
 `;
 
 const SaveNav = ({ account, ...props }) => {
+  const navigation = useNavigation();
   const { lang } = useLanguage();
   const { url } = useCurrentRoute();
   const { isSave } = useCheckRoute();
@@ -30,8 +31,8 @@ const SaveNav = ({ account, ...props }) => {
       : 'gray';
 
   const saveUrl = account?.address
-    ? `/legacy/save/owner/${account?.address}${url.search}`
-    : `/legacy/save${url.search}`;
+    ? `${navigation.basename}/legacy/save/owner/${account?.address}${url.search}`
+    : `${navigation.basename}/legacy/save${url.search}`;
   return (
     <Link href={saveUrl}>
       <Flex

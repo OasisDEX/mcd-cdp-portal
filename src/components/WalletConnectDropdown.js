@@ -8,7 +8,7 @@ import {
   Flex
 } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import { useCurrentRoute } from 'react-navi';
+import { useCurrentRoute, useNavigation } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
@@ -92,6 +92,7 @@ const Option = ({ icon, children, ...props }) => {
 
 const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { lang } = useLanguage();
+  const { basename } = useNavigation();
   const {
     maker,
     account,
@@ -111,10 +112,12 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const browserIcon = useBrowserIcon(providerName);
 
   function onAccountChosen({ address }) {
-    if (url.pathname.startsWith('/legacy/save/owner/')) {
+    if (url.pathname.startsWith(`${basename}/legacy/save/owner/`)) {
       const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
       if (address !== urlAddress) {
-        navigation.navigate(`/legacy/save/owner/${address}${url.search}`);
+        navigation.navigate(
+          `${basename}/legacy/save/owner/${address}${url.search}`
+        );
       }
     }
     maker.useAccountWithAddress(address);

@@ -12,7 +12,7 @@ import {
   Address,
   Flex
 } from '@makerdao/ui-components-core';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import useMaker from 'hooks/useMaker';
 import RatioDisplay from '../components/RatioDisplay';
 import { getColor } from 'styles/theme';
@@ -51,6 +51,7 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview({ viewedAddress }) {
+  const navigation = useNavigation();
   const { trackBtnClick } = useAnalytics('Table');
   const { account } = useMaker();
   const { viewedAddressVaults } = useVaults();
@@ -286,7 +287,7 @@ function Overview({ viewedAddress }) {
                               }}
                             >
                               <Link
-                                href={`/${id}${url.search}`}
+                                href={`${navigation.basename}/${id}${url.search}`}
                                 prefetch={true}
                               >
                                 <Text

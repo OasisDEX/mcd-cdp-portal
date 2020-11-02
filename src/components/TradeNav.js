@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Flex, Text, Link } from '@makerdao/ui-components-core';
 import { ReactComponent as TradeIcon } from 'images/active-trade-icon.svg';
 import useLanguage from 'hooks/useLanguage';
+import { useNavigation } from 'react-navi';
 
 const StyledTradeIcon = styled(TradeIcon)`
   circle {
@@ -11,9 +12,10 @@ const StyledTradeIcon = styled(TradeIcon)`
 `;
 
 const TradeNav = ({ ...props }) => {
+  const navigation = useNavigation();
   const { lang } = useLanguage();
   return (
-    <Link href={'/trade'}>
+    <Link href={`${navigation.basename}/trade`}>
       <Flex
         flexDirection="column"
         alignItems="center"

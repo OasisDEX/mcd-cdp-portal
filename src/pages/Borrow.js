@@ -187,12 +187,13 @@ const WBTCNoticeStyle = styled(Flex)`
 `;
 
 const WBTCNotice = ({ lang, ...props }) => {
+  const navigation = useNavigation();
   return (
     <WBTCNoticeStyle {...props}>
       <BtcToDai />
       <span>
         {lang.borrow_landing.wbtc_notice}{' '}
-        <Link href={'/btc'}>{lang.learn_more}</Link>
+        <Link href={`${navigation.basename}/btc`}>{lang.learn_more}</Link>
       </span>
     </WBTCNoticeStyle>
   );
@@ -209,7 +210,7 @@ function Borrow({ disableConnect = false }) {
       if (!disableConnect && account) {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `/owner/${account.address}`,
+          pathname: `${navigation.basename}/owner/${account.address}`,
           search
         });
       }
@@ -300,7 +301,7 @@ function Borrow({ disableConnect = false }) {
                 body={lang.borrow_landing.quotes_block.body}
                 quote={lang.borrow_landing.quotes_block.quote1}
                 author={lang.borrow_landing.quotes_block.author1}
-                url={'/2434'}
+                url={`${navigation.basename}/2434`}
                 quotesImg={<QuotesImg />}
               >
                 <Box
@@ -368,7 +369,10 @@ function Borrow({ disableConnect = false }) {
             mt={{ s: '20px', m: '35px' }}
             pl={{ s: '6px', m: '37px' }}
           >
-            <Link href={'/markets'} style={{ textDecoration: 'underline' }}>
+            <Link
+              href={`${navigation.basename}/markets`}
+              style={{ textDecoration: 'underline' }}
+            >
               {lang.borrow_landing.markets_link}
             </Link>
           </Box>

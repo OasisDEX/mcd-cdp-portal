@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 
 import CDPList from 'components/CDPList';
@@ -18,6 +18,7 @@ const StyledBorrowIcon = styled(BorrowIcon)`
 `;
 
 const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
+  const navigation = useNavigation();
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
   const { isBorrow } = useCheckRoute();
@@ -29,7 +30,9 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
     ? viewedAddress
     : null;
 
-  const path = address ? `/owner/${address}` : '';
+  const path = address
+    ? `${navigation.basename}/owner/${address}`
+    : navigation.basename;
 
   const textColor =
     selected && account
@@ -39,7 +42,6 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
       : selected && !account
       ? 'black'
       : 'gray';
-
   return (
     <Fragment>
       {mobile && selected ? (
@@ -51,13 +53,13 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
         >
           <CDPList
             mobile={mobile}
-            currentPath={url.pathname}
+            currentPath={`${navigation.basename}/url.pathname`}
             currentQuery={url.search}
             viewedAddress={address}
           />
         </CDPDropdown>
       ) : (
-        <Link href={`${path}${url.search}`}>
+        <Link href={`${navigation.basename}/${path}${url.search}`}>
           <Flex
             bg={!account && selected && 'grey.200'}
             flexDirection="column"
@@ -79,7 +81,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
       )}
       {!mobile && (
         <CDPList
-          currentPath={url.pathname}
+          currentPath={`${navigation.basename}/${url.pathname}`}
           viewedAddress={address}
           currentQuery={url.search}
         />

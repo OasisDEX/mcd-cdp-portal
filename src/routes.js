@@ -77,6 +77,9 @@ const withDashboardLayout = childMatcher =>
   );
 
 export default mount({
+  // basename ought to be set to '/borrow' and router will construct
+  // these routes as basename+route
+
   '/': compose(
     withView(dappProvidersView),
     withView(() => <Borrow />)

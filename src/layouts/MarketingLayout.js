@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-navi';
+import { Link, useNavigation } from 'react-navi';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
@@ -57,25 +57,25 @@ const MainNavStyle = styled(Nav)`
 
 const MainNav = ({ onLinkClicked, ...props }) => {
   const { lang } = useLanguage();
-
+  const navigation = useNavigation();
   return (
     <MainNavStyle {...props}>
       <Link
-        href={'/trade'}
+        href={`${navigation.basename}/trade`}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.trade}
       </Link>
       <Link
-        href={'/'}
+        href={`${navigation.basename}`}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.borrow}
       </Link>
       <Link
-        href={'/legacy/save'}
+        href={`${navigation.basename}/legacy/save`}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >

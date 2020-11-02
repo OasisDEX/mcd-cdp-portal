@@ -13,7 +13,7 @@ import { ReactComponent as NavUp } from '../images/nav-up-icon.svg';
 import { ReactComponent as NavDown } from '../images/nav-down-icon.svg';
 import { Flex, Text, Box } from '@makerdao/ui-components-core';
 import RatioDisplay from './RatioDisplay';
-import { Link } from 'react-navi';
+import { Link, useNavigation } from 'react-navi';
 import useModal from 'hooks/useModal';
 import useMaker from 'hooks/useMaker';
 import useAnalytics from 'hooks/useAnalytics';
@@ -100,6 +100,7 @@ const CDPList = memo(function({
   currentQuery,
   mobile
 }) {
+  const navigation = useNavigation();
   const { isSave } = useCheckRoute();
   const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
@@ -119,11 +120,11 @@ const CDPList = memo(function({
 
   useEffect(() => {
     if (account) {
-      setOverviewPath(`/owner/${account.address}`);
+      setOverviewPath(`${navigation.basename}/owner/${account.address}`);
     } else if (viewedAddress) {
-      setOverviewPath(`/owner/${viewedAddress}`);
+      setOverviewPath(`${navigation.basename}/owner/${viewedAddress}`);
     }
-  }, [maker, account, viewedAddress, setOverviewPath]);
+  }, [maker, account, viewedAddress, setOverviewPath, navigation.basename]);
 
   const [scrollPosition, setScrollPosition] = useState({
     scrollTop: 0,
@@ -228,7 +229,7 @@ const CDPList = memo(function({
           </NavbarItem>
           {userVaults.map(
             ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
-              const linkPath = `/${id}`;
+              const linkPath = `${navigation.basename}/${id}`;
               const active = currentPath === linkPath;
               return (
                 <NavbarItem

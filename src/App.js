@@ -20,6 +20,7 @@ const Body = styled.div`
 `;
 
 const navigation = createBrowserNavigation({
+  basename: process.env.PUBLIC_URL,
   routes
 });
 
