@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, withView, compose } from 'navi';
+import { map, route, mount, withView, compose, redirect } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
@@ -115,6 +115,8 @@ export default mount({
     withView(dappProvidersView),
     withView(() => <BorrowMarkets />)
   ),
+
+  '/legacy': redirect(request => `./save${request.search}`),
 
   '/legacy/save': compose(
     withView(dappProvidersView),

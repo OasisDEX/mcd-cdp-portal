@@ -30,7 +30,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
     ? viewedAddress
     : null;
 
-  const path = address ? `/owner/${address}` : '';
+  const path = address ? `owner/${address}` : '';
 
   const textColor =
     selected && account
