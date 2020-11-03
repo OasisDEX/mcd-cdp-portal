@@ -22,7 +22,7 @@ function CDPView({ cdpId }) {
       (async function redirect() {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `/owner/${account.address}`,
+          pathname: `${navigation.basename}/owner/${account.address}`,
           search
         });
       })();

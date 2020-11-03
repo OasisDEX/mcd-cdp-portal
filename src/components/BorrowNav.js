@@ -30,9 +30,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
     ? viewedAddress
     : null;
 
-  const path = address
-    ? `${navigation.basename}/owner/${address}`
-    : navigation.basename;
+  const path = address ? `/owner/${address}` : '';
 
   const textColor =
     selected && account
@@ -53,7 +51,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
         >
           <CDPList
             mobile={mobile}
-            currentPath={`${navigation.basename}/url.pathname`}
+            currentPath={url.pathname}
             currentQuery={url.search}
             viewedAddress={address}
           />
@@ -81,7 +79,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
       )}
       {!mobile && (
         <CDPList
-          currentPath={`${navigation.basename}/${url.pathname}`}
+          currentPath={url.pathname}
           viewedAddress={address}
           currentQuery={url.search}
         />
