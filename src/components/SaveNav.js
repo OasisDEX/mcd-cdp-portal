@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useCurrentRoute, useNavigation } from 'react-navi';
+import { Link } from 'react-navi';
 import styled from 'styled-components';
 import { Flex, Text } from '@makerdao/ui-components-core';
 
@@ -15,9 +15,7 @@ const StyledSaveIcon = styled(SaveIcon)`
 `;
 
 const SaveNav = ({ account, ...props }) => {
-  const navigation = useNavigation();
   const { lang } = useLanguage();
-  const { url } = useCurrentRoute();
   const { isSave } = useCheckRoute();
   const selected = isSave;
 
@@ -30,9 +28,7 @@ const SaveNav = ({ account, ...props }) => {
       ? 'black'
       : 'gray';
 
-  const saveUrl = account?.address
-    ? `${navigation.basename}/legacy/save/owner/${account?.address}${url.search}`
-    : `${navigation.basename}/legacy/save${url.search}`;
+  const saveUrl = 'https://oasis.app/dashboard';
   return (
     <Link href={saveUrl}>
       <Flex

@@ -75,7 +75,7 @@ const MainNav = ({ onLinkClicked, ...props }) => {
         {lang.navbar.borrow}
       </Link>
       <Link
-        href={`${navigation.basename}/legacy/save`}
+        href={'https://oasis.app'}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
