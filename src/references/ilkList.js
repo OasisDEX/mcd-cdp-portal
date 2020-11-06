@@ -11,7 +11,9 @@ import {
   PAXUSD,
   COMP,
   LRC,
-  LINK
+  LINK,
+  YFI,
+  BAL
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -137,6 +139,22 @@ export default [
     key: 'LINK-A',
     gem: 'LINK',
     currency: LINK,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'yfi-a',
+    symbol: 'YFI-A',
+    key: 'YFI-A',
+    gem: 'YFI',
+    currency: YFI,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'bal-a',
+    symbol: 'BAL-A',
+    key: 'BAL-A',
+    gem: 'BAL',
+    currency: BAL,
     networks: ['mainnet', 'kovan']
   }
 ];
