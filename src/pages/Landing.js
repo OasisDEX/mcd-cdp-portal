@@ -21,7 +21,7 @@ import { getColor, marketingTheme } from 'styles/theme';
 import { ReactComponent as TradeIcon } from 'images/landing/trade-icon.svg';
 import { ReactComponent as BorrowIcon } from 'images/landing/borrow-icon.svg';
 import { ReactComponent as SaveIcon } from 'images/landing/save-icon.svg';
-import { Box, Grid, Text } from '@makerdao/ui-components-core';
+import { Box, Flex, Grid, Text, Card } from '@makerdao/ui-components-core';
 
 const Content = ({ children }) => (
   <Box p={{ s: `0 ${marketingTheme.mobilePaddingX}`, l: '0 32px' }}>
@@ -507,8 +507,32 @@ function Landing() {
         imgUrl="https://oasis.app/meta/Oasis-app.png"
       />
       <Content>
-        <Box mt={{ s: '126px', m: '149px' }} px={{ s: '10px', m: 0 }}>
-          <Text.h1>{lang.landing_page.headline}</Text.h1>
+        <Box mt={{ s: '76px', m: '99px' }} px={{ s: '10px', m: 0 }}>
+          <Card my=".75rem" p="1rem" bg="yellow.100" borderColor="yellow.400">
+            <Flex justifyContent="center">
+              <Box px="s" width="100%">
+                <Grid gridColumnGap="m">
+                  <Text justifySelf="center" textAlign="center" color="#826318">
+                    {lang.formatString(
+                      lang.notifications.alchemy_rpc_change,
+                      <Link
+                        css={{ textDecoration: 'underline' }}
+                        href={
+                          'https://www.notion.so/makerdao/How-to-connect-MetaMask-to-a-Custom-RPC-da53e6f2d1f54fb7abf38decc645a80c'
+                        }
+                        target="_blank"
+                      >
+                        {lang.here}
+                      </Link>
+                    )}
+                  </Text>
+                  <Box justifySelf="start" alignSelf="center"></Box>
+                </Grid>
+              </Box>
+            </Flex>
+          </Card>
+
+          <Text.h1 mt={'50px'}>{lang.landing_page.headline}</Text.h1>
         </Box>
         <FadeIn moveDistance="47px">
           <Cards mt="72px" />
