@@ -43,6 +43,22 @@ function Globals({ children }) {
   } = useEmergencyShutdown();
 
   useEffect(() => {
+    addNotification({
+      id: NotificationList.ALCHEMY_RPC_CHANGE,
+      content: lang.formatString(
+        lang.notifications.alchemy_rpc_change,
+        <Link
+          css={{ textDecoration: 'underline' }}
+          href={
+            'https://www.notion.so/makerdao/How-to-connect-MetaMask-to-a-Custom-RPC-da53e6f2d1f54fb7abf38decc645a80c'
+          }
+          target="_blank"
+        >
+          {lang.here}
+        </Link>
+      ),
+      level: SAFETY_LEVELS.WARNING
+    });
     if (emergencyShutdownActive) {
       addNotification({
         id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
@@ -71,7 +87,10 @@ function Globals({ children }) {
     }
 
     return () =>
-      deleteNotifications([NotificationList.EMERGENCY_SHUTDOWN_ACTIVE]);
+      deleteNotifications([
+        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
+        NotificationList.ALCHEMY_RPC_CHANGE
+      ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emergencyShutdownActive, emergencyShutdownTime]);
 
