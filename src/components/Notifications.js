@@ -45,18 +45,8 @@ function Globals({ children }) {
   useEffect(() => {
     addNotification({
       id: NotificationList.ALCHEMY_RPC_CHANGE,
-      content: lang.formatString(
-        lang.notifications.alchemy_rpc_change,
-        <Link
-          css={{ textDecoration: 'underline' }}
-          href={
-            'https://www.notion.so/makerdao/How-to-connect-MetaMask-to-a-Custom-RPC-da53e6f2d1f54fb7abf38decc645a80c'
-          }
-          target="_blank"
-        >
-          {lang.here}
-        </Link>
-      ),
+      content:
+        'The recent issues with Infura have now been resolved. If you are using Metamask, and switched your RPC to a custom endpoint using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to the Alchemy endpoint provided will soon be revoked',
       level: SAFETY_LEVELS.WARNING
     });
     if (emergencyShutdownActive) {
