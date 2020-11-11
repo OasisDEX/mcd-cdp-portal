@@ -514,7 +514,7 @@ function Landing() {
                 <Grid gridColumnGap="m">
                   <Text justifySelf="center" textAlign="center" color="#826318">
                     {
-                      'The recent issues with Infura have now been resolved. If you are using Metamask, and switched your RPC to a custom endpoint using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to the Alchemy endpoint provided will soon be revoked'
+                      'The recent issues with Infura have now been resolved. If you are using Metamask, and switched to a custom RPC using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to our Alchemy endpoint provided will soon be revoked'
                     }
                   </Text>
                   <Box justifySelf="start" alignSelf="center"></Box>
