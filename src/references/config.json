@@ -1,8 +1,8 @@
 {
   "supportedNetworkIds": ["1337", "999", "5", "4", "3", "42", "1"],
   "rpcUrls": {
-    "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "1": "https://eth-mainnet.alchemyapi.io/v2/Kmj43CpNy9pPV5JCfoPq3XIbX6-WnKA4",
+    "42": "https://eth-kovan.alchemyapi.io/v2/Kmj43CpNy9pPV5JCfoPq3XIbX6-WnKA4",
     "3": "https://ropsten.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "4": "https://rinkeby.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "5": "https://goerli.infura.io/v3/58073b4a32df4105906c702f167b91d2",
@@ -10,8 +10,8 @@
     "1337": "http://localhost:2000"
   },
   "wsRpcUrls": {
-    "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "1": "wss://eth-mainnet.ws.alchemyapi.io/v2/Z8mVj3Mv-Ejd-S97690_uHhlg8nZmvHl",
+    "42": "wss://eth-kovan.ws.alchemyapi.io/v2/7MEZk9wkx3MtinBz8NC6PZWCJFiA29OX",
     "3": "wss://ropsten.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
     "4": "wss://rinkeby.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
     "5": "wss://goerli.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
