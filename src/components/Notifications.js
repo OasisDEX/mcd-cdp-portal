@@ -46,7 +46,7 @@ function Globals({ children }) {
     addNotification({
       id: NotificationList.ALCHEMY_RPC_CHANGE,
       content:
-        'The recent issues with Infura have now been resolved. If you are using Metamask, and switched your RPC to a custom endpoint using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to the Alchemy endpoint provided will soon be revoked',
+        'The recent issues with Infura have now been resolved. If you are using Metamask, and switched to a custom RPC using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to our Alchemy endpoint provided will soon be revoked',
       level: SAFETY_LEVELS.WARNING
     });
     if (emergencyShutdownActive) {
