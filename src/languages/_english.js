@@ -90,7 +90,8 @@ export default {
       'You cannot buy crypto from your bank account using Oasis. Instead, you can use Dai to buy Ethereum and other supported tokens.',
     read_only: 'Read-Only',
     wallet_connect: 'Wallet Connect',
-    wallet_link: 'Coinbase Wallet'
+    wallet_link: 'Coinbase Wallet',
+    portis: 'Portis'
   },
   borrow_landing: {
     meta: {
@@ -373,10 +374,8 @@ export default {
     tx_hash: 'Transaction hash',
     view_tx_details: 'View transaction details',
     select_title: 'Select a collateral type',
-    select_text:
-      'Each collateral type has its own risk parameters.',
-    select_unavailable:
-      'Unavailable due to a token upgrade',
+    select_text: 'Each collateral type has its own risk parameters.',
+    select_unavailable: 'Unavailable due to a token upgrade',
     setup_proxy_title: 'Vault Setup and Management',
     setup_proxy_proxy_text:
       'Configure your Vault for easy management. This only has to be done once.',
@@ -636,6 +635,7 @@ export default {
     is_float: 'Please enter a valid number',
     default: 'Please enter a valid input'
   },
+  here: 'here',
   connect: 'Connect',
   disconnect: 'Disconnect',
   view: 'View',
@@ -697,7 +697,8 @@ export default {
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
     walletlink: 'Coinbase Wallet',
-    mewconnect: 'MEW Wallet'
+    mewconnect: 'MEW Wallet',
+    portis: 'Portis'
   },
   notifications: {
     claim: 'Claim',
@@ -718,6 +719,8 @@ export default {
     vault_is_liquidated:
       'Your Vault was recently liquidated and {0} was made available for Auction. Please check back here for more details.',
     vault_under_dust_limit:
-      'This Vault is currently under the required minimum amount by approximately {0} Dai which has resulted in reduced functionality. For full access again, you need to Payback the full Outstanding Dai Debt amount, or Deposit additional collateral and Generate at least {1} Dai'
+      'This Vault is currently under the required minimum amount by approximately {0} Dai which has resulted in reduced functionality. For full access again, you need to Payback the full Outstanding Dai Debt amount, or Deposit additional collateral and Generate at least {1} Dai',
+    alchemy_rpc_change:
+      'We are currently experiencing issues with Infura when connecting with Metamask. If you are using Metamask, please create a Custom RPC, you can see how to {0}'
   }
 };

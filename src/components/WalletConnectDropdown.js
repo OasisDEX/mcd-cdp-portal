@@ -28,6 +28,7 @@ import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as DCentLogo } from 'images/dcent.svg';
+import { ReactComponent as PortisLogo } from 'images/portis.svg';
 
 const negativeMarginY = css`
   margin-top: -5px;
@@ -267,6 +268,17 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             icon={<StyledDcentLogo />}
           >
             {lang.providers.dcent}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.PORTIS);
+              close();
+            }}
+            icon={<PortisLogo />}
+          >
+            {lang.providers.portis}
           </Option>
         </BrowserView>
         {account && (

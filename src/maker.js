@@ -14,6 +14,7 @@ import walletLinkPlugin from '@makerdao/dai-plugin-walletlink';
 import mewconnectPlugin from '@myetherwallet/dai-plugin-mewconnect';
 import walletConnectPlugin from '@makerdao/dai-plugin-walletconnect';
 import dcentPlugin from 'dai-plugin-dcent-web';
+import portisPlugin from '@makerdao/dai-plugin-portis';
 import configPlugin from '@makerdao/dai-plugin-config';
 import networkConfig from './references/config';
 import { networkNameToId } from './utils/network';
@@ -75,6 +76,7 @@ export async function instantiateMaker({
       mewconnectPlugin,
       walletConnectPlugin,
       dcentPlugin,
+      portisPlugin,
       [McdPlugin, mcdPluginConfig]
     ],
     smartContract: {
