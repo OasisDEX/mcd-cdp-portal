@@ -67,7 +67,7 @@
   "scripts": {
     "start": "NODE_ENV=development craco start",
     "start:https": "HTTPS=true NODE_ENV=development craco start",
-    "build": "craco --max_old_space_size=8192 build",
+    "build": "craco --max_old_space_size=10240 build",
     "precommit": "lint-staged",
     "test": "yarn testchain --ci craco test --runInBand --env=jest-environment-jsdom-sixteen",
     "testchain": "./node_modules/@makerdao/testchain/scripts/launch -s default --fast",
