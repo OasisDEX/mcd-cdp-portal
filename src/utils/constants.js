@@ -71,7 +71,9 @@ export const TokenNames = {
   PAXUSD: 'Paxos Standard',
   LRC: 'Loopring',
   COMP: 'Compound',
-  LINK: 'Chainlink'
+  LINK: 'Chainlink',
+  YFI: 'yearn.finance',
+  BAL: 'Balancer'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
