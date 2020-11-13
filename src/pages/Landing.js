@@ -256,6 +256,12 @@ const SupportedTokens = (() => {
     },
     {
       name: 'LRC'
+    },
+    {
+      name: 'YFI'
+    },
+    {
+      name: 'BAL'
     }
   ];
 

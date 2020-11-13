@@ -14,6 +14,8 @@ import { ReactComponent as UsdcIcon } from 'images/oasis-tokens/usdc.svg';
 import { ReactComponent as WbtcIcon } from 'images/oasis-tokens/wbtc.svg';
 import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
 import { ReactComponent as UsdtIcon } from 'images/oasis-tokens/usdt.svg';
+import { ReactComponent as YfiIcon } from 'images/oasis-tokens/yfi.svg';
+import { ReactComponent as BalIcon } from 'images/oasis-tokens/bal.svg';
 
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
 
@@ -32,7 +34,9 @@ const iconsByToken = {
   USDC: UsdcIcon,
   WBTC: WbtcIcon,
   ZRX: ZrxIcon,
-  USDT: UsdtIcon
+  USDT: UsdtIcon,
+  YFI: YfiIcon,
+  BAL: BalIcon
 };
 
 const TokenIcon = ({ symbol, size = 70, ...props }) => {
