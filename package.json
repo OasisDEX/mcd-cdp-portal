@@ -4,7 +4,7 @@
   "version": "0.2.6-rc.1",
   "license": "AGPL",
   "private": true,
-  "homepage": "https://mcd.makerdao.com",
+  "homepage": "/borrow/",
   "contributors": [
     "Michael Elliot <mike@makerdao.com>",
     "Joshua Levine <joshua@makerdao.com>",
@@ -18,7 +18,7 @@
     "@makerdao/dai-plugin-config": "^0.2.15",
     "@makerdao/dai-plugin-ledger-web": "^0.9.10",
     "@makerdao/dai-plugin-portis": "0.0.4",
-    "@makerdao/dai-plugin-mcd": "^1.6.8",
+    "@makerdao/dai-plugin-mcd": "^1.6.10",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.4",
@@ -79,19 +79,12 @@
     "node": ">=10.x.x"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote"
-    ]
+    "*.js": ["prettier --write --single-quote"]
   },
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
+  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",

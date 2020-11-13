@@ -20,27 +20,30 @@ const Body = styled.div`
 `;
 
 const navigation = createBrowserNavigation({
+  basename: process.env.PUBLIC_URL,
   routes
 });
 
 function App() {
   useEffect(() => {
-    const reactGa = gaInit(navigation);
-    const mixpanel = mixpanelInit(navigation);
-    fathomInit();
+    if (process.env.NODE_ENV === 'production') {
+      const reactGa = gaInit(navigation);
+      const mixpanel = mixpanelInit(navigation);
+      fathomInit();
 
-    navigation.subscribe(route => {
-      if (route.type === 'ready') {
-        log(`[Mixpanel] Tracked: ${route.title}`);
-        mixpanel.track('Pageview', { routeName: route.title });
+      navigation.subscribe(route => {
+        if (route.type === 'ready') {
+          log(`[Mixpanel] Tracked: ${route.title}`);
+          mixpanel.track('Pageview', { routeName: route.title });
 
-        log(`[GA] Tracked pageview: ${route.url.href}`);
-        reactGa.pageview(route.url.href);
+          log(`[GA] Tracked pageview: ${route.url.href}`);
+          reactGa.pageview(route.url.href);
 
-        log(`[Fathom] Tracked pageview: ${route.url.href}`);
-        window.fathom('trackPageview');
-      }
-    });
+          log(`[Fathom] Tracked pageview: ${route.url.href}`);
+          window.fathom('trackPageview');
+        }
+      });
+    }
   }, []);
 
   return (

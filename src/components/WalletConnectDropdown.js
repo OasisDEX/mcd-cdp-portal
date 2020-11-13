@@ -8,7 +8,7 @@ import {
   Flex
 } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import { useCurrentRoute } from 'react-navi';
+import { useCurrentRoute, useNavigation } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
@@ -19,7 +19,7 @@ import useBrowserIcon from 'hooks/useBrowserIcon';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
-import { AccountTypes, Routes } from 'utils/constants';
+import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
@@ -93,6 +93,7 @@ const Option = ({ icon, children, ...props }) => {
 
 const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { lang } = useLanguage();
+  const { basename } = useNavigation();
   const {
     maker,
     account,
@@ -112,10 +113,12 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const browserIcon = useBrowserIcon(providerName);
 
   function onAccountChosen({ address }) {
-    if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
+    if (url.pathname.startsWith(`${basename}/legacy/save/owner/`)) {
       const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
       if (address !== urlAddress) {
-        navigation.navigate(`/${Routes.SAVE}/owner/${address}${url.search}`);
+        navigation.navigate(
+          `${basename}/legacy/save/owner/${address}${url.search}`
+        );
       }
     }
     maker.useAccountWithAddress(address);

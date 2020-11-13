@@ -3,10 +3,9 @@ import SidebarFeeds from 'components/SidebarFeeds';
 import SidebarSystem from 'components/SidebarSystem';
 import SidebarDetails from 'components/SidebarDetails';
 import { Box, Grid } from '@makerdao/ui-components-core';
-import { useCurrentRoute } from 'react-navi';
-import { Routes } from 'utils/constants';
 import useCdpTypes from 'hooks/useCdpTypes';
 import { watch } from 'hooks/useObservable';
+import useCheckRoute from 'hooks/useCheckRoute';
 
 const SidebarGlobalPanel = () => {
   const { cdpTypesList } = useCdpTypes();
@@ -17,16 +16,14 @@ const SidebarGlobalPanel = () => {
   const annualDaiSavingsRate = watch.annualDaiSavingsRate();
   const systemCollateralization = watch.systemCollateralization(cdpTypesList);
 
-  const { url } = useCurrentRoute();
-  const routeIsBorrow = url.pathname.startsWith(`/${Routes.BORROW}`);
-  const routeIsSave = url.pathname.startsWith(`/${Routes.SAVE}`);
+  const { isBorrow, isSave } = useCheckRoute();
 
   return useMemo(() => {
     return (
       <Box>
         <Grid gridRowGap="s">
-          {routeIsBorrow && <SidebarFeeds feeds={prices} />}
-          {routeIsBorrow && (
+          {isBorrow && <SidebarFeeds feeds={prices} />}
+          {isBorrow && (
             <SidebarSystem
               system={{
                 totalDaiSupply,
@@ -35,7 +32,7 @@ const SidebarGlobalPanel = () => {
               }}
             />
           )}
-          {routeIsSave && (
+          {isSave && (
             <SidebarDetails
               system={{
                 totalDaiSupply,
@@ -48,8 +45,8 @@ const SidebarGlobalPanel = () => {
       </Box>
     );
   }, [
-    routeIsBorrow,
-    routeIsSave,
+    isBorrow,
+    isSave,
     prices,
     totalDaiSupply,
     totalVaultsCreated,

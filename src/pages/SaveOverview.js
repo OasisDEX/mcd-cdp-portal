@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import useMaker from 'hooks/useMaker';
 import AccountSelection from 'components/AccountSelection';
-import { Routes } from 'utils/constants';
 import {
   buildQuestionsFromLangObj,
   ConnectHero,
@@ -31,7 +30,7 @@ import { ReactComponent as Feat3 } from 'images/landing/save/feature-3.svg';
 import { ReactComponent as Feat4 } from 'images/landing/save/feature-4.svg';
 import { ReactComponent as CalculatorLeftTriangles } from 'images/landing/save/calculator-left-triangles.svg';
 import { ReactComponent as CalculatorRightTriangle } from 'images/landing/save/calculator-right-triangle.svg';
-import { Link } from 'react-navi';
+import { Link, useNavigation } from 'react-navi';
 import { useDaiSavingsRate } from '../components/Marketing/Calculators';
 import MarketingLayout from '../layouts/MarketingLayout';
 
@@ -94,14 +93,15 @@ const StyledQuotes = styled(Quotes)`
 `;
 
 function SaveOverview() {
-  const { account, network, navigation } = useMaker();
+  const navigation = useNavigation();
+  const { account, network } = useMaker();
   const { lang } = useLanguage();
   const dsr = useDaiSavingsRate()?.toNumber() - 1;
 
   useEffect(() => {
     if (account && account.address) {
       navigation.navigate(
-        `/${Routes.SAVE}/owner/${account.address}?network=${network}`
+        `${navigation.basename}/legacy/save/owner/${account.address}?network=${network}`
       );
     }
   }, [account, navigation, network]);

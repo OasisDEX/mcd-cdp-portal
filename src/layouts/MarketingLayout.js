@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider, css } from 'styled-components';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-navi';
-import { Routes } from 'utils/constants';
+import { Link, useNavigation } from 'react-navi';
 import useLanguage from 'hooks/useLanguage';
 import CookieNotice from '../components/CookieNotice';
 import { hot } from 'react-hot-loader/root';
@@ -58,25 +57,25 @@ const MainNavStyle = styled(Nav)`
 
 const MainNav = ({ onLinkClicked, ...props }) => {
   const { lang } = useLanguage();
-
+  const navigation = useNavigation();
   return (
     <MainNavStyle {...props}>
       <Link
-        href={`/${Routes.TRADE}`}
+        href={`${navigation.basename}/trade`}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.trade}
       </Link>
       <Link
-        href={`/${Routes.BORROW}`}
+        href={`${navigation.basename}`}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
         {lang.navbar.borrow}
       </Link>
       <Link
-        href={`/${Routes.SAVE}`}
+        href={'https://oasis.app'}
         activeStyle={{ fontWeight: 'bold' }}
         onClick={() => onLinkClicked && onLinkClicked()}
       >
@@ -364,8 +363,10 @@ const MarketingLayout = ({
               </Flex>
             )}
             <Nav className="legal-nav">
-              <Link href={`/${Routes.PRIVACY}`}>{lang.navbar.privacy}</Link>
-              <Link href={`/${Routes.TERMS}`}>{lang.navbar.terms}</Link>
+              <Link href={'https://oasis.app/privacy'}>
+                {lang.navbar.privacy}
+              </Link>
+              <Link href={'https://oasis.app/terms'}>{lang.navbar.terms}</Link>
               {extraLegalLinks.map(link => (
                 <Link
                   href={link.url}

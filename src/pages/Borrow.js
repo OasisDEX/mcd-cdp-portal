@@ -3,7 +3,6 @@ import { hot } from 'react-hot-loader/root';
 import { Link, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 import AccountSelection from 'components/AccountSelection';
-import { Routes } from 'utils/constants';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
 import { Box, Flex, Grid, Position, Text } from '@makerdao/ui-components-core';
@@ -188,12 +187,13 @@ const WBTCNoticeStyle = styled(Flex)`
 `;
 
 const WBTCNotice = ({ lang, ...props }) => {
+  const navigation = useNavigation();
   return (
     <WBTCNoticeStyle {...props}>
       <BtcToDai />
       <span>
         {lang.borrow_landing.wbtc_notice}{' '}
-        <Link href={`/${Routes.BORROW}/btc`}>{lang.learn_more}</Link>
+        <Link href={`${navigation.basename}/btc`}>{lang.learn_more}</Link>
       </span>
     </WBTCNoticeStyle>
   );
@@ -210,7 +210,7 @@ function Borrow({ disableConnect = false }) {
       if (!disableConnect && account) {
         const { search } = (await navigation.getRoute()).url;
         navigation.navigate({
-          pathname: `/${Routes.BORROW}/owner/${account.address}`,
+          pathname: `${navigation.basename}/owner/${account.address}`,
           search
         });
       }
@@ -301,7 +301,7 @@ function Borrow({ disableConnect = false }) {
                 body={lang.borrow_landing.quotes_block.body}
                 quote={lang.borrow_landing.quotes_block.quote1}
                 author={lang.borrow_landing.quotes_block.author1}
-                url={`/${Routes.BORROW}/2434`}
+                url={`${navigation.basename}/2434`}
                 quotesImg={<QuotesImg />}
               >
                 <Box
@@ -370,7 +370,7 @@ function Borrow({ disableConnect = false }) {
             pl={{ s: '6px', m: '37px' }}
           >
             <Link
-              href={`/${Routes.BORROW}/markets`}
+              href={`${navigation.basename}/markets`}
               style={{ textDecoration: 'underline' }}
             >
               {lang.borrow_landing.markets_link}

@@ -20,6 +20,7 @@ const SidebarStateContext = createContext(initialState);
 
 function SidebarProvider({ children }) {
   const [{ type, props }, dispatch] = useReducer(reducer, initialState);
+
   const { setToggle: setWalletBalancesCollapsed } = useToggle(
     Toggles.WALLETBALANCES
   );

@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import styled from 'styled-components';
 
 import CDPList from 'components/CDPList';
 import { Flex, Text } from '@makerdao/ui-components-core';
 import { ReactComponent as BorrowIcon } from 'images/active-borrow-icon.svg';
-import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 
 import CDPDropdown from './CDPDropdown';
+import useCheckRoute from 'hooks/useCheckRoute';
 
 const StyledBorrowIcon = styled(BorrowIcon)`
   path {
@@ -18,9 +18,11 @@ const StyledBorrowIcon = styled(BorrowIcon)`
 `;
 
 const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
+  const navigation = useNavigation();
   const { url } = useCurrentRoute();
   const { lang } = useLanguage();
-  const selected = url.pathname.startsWith(`/${Routes.BORROW}`);
+  const { isBorrow } = useCheckRoute();
+  const selected = isBorrow;
 
   const address = account
     ? account.address
@@ -28,9 +30,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
     ? viewedAddress
     : null;
 
-  const path = address
-    ? `/${Routes.BORROW}/owner/${address}`
-    : `/${Routes.BORROW}`;
+  const path = address ? `owner/${address}` : '';
 
   const textColor =
     selected && account
@@ -40,7 +40,6 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
       : selected && !account
       ? 'black'
       : 'gray';
-
   return (
     <Fragment>
       {mobile && selected ? (
@@ -58,7 +57,7 @@ const BorrowNav = ({ viewedAddress, account, mobile, ...props }) => {
           />
         </CDPDropdown>
       ) : (
-        <Link href={`${path}${url.search}`}>
+        <Link href={`${navigation.basename}/${path}${url.search}`}>
           <Flex
             bg={!account && selected && 'grey.200'}
             flexDirection="column"
