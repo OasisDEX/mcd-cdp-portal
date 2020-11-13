@@ -111,14 +111,12 @@ workflows:
       - deploy_staging:
           requires:
             - test
-            - install
           filters:
             branches:
               ignore: master
       - deploy_aws_staging:
           requires:
-            - test
-            - install
+            - deploy_staging
           filters:
             branches:
               only: develop
