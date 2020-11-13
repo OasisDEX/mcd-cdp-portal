@@ -21,6 +21,7 @@ export const AccountTypes = {
   METAMASK: 'browser',
   PORTIS: 'portis',
   WALLETLINK: 'walletlink',
+  MEWCONNECT: 'mewconnect',
   WALLETCONNECT: 'walletconnect'
 };
 
