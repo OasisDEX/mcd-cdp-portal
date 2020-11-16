@@ -76,6 +76,7 @@ jobs:
   deploy_prod:
     docker:
       - image: circleci/node:lts
+    resource_class: large
     steps:
       - checkout
       - restore_cache:
