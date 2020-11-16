@@ -48,6 +48,7 @@ jobs:
   deploy_aws_staging:
     docker:
       - image: circleci/node:lts
+    resource_class: large
     steps:
       - checkout
       - restore_cache:
