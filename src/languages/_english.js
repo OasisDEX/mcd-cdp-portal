@@ -91,7 +91,7 @@ export default {
     read_only: 'Read-Only',
     wallet_connect: 'Wallet Connect',
     wallet_link: 'Coinbase Wallet',
-    portis: "Portis"
+    portis: 'Portis'
   },
   borrow_landing: {
     meta: {
@@ -697,7 +697,8 @@ export default {
     ledger: 'Ledger',
     walletconnect: 'Wallet Connect',
     walletlink: 'Coinbase Wallet',
-    portis: "Portis"
+    mewconnect: 'MEW Wallet',
+    portis: 'Portis'
   },
   notifications: {
     claim: 'Claim',

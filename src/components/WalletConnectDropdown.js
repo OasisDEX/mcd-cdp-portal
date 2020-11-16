@@ -23,6 +23,7 @@ import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { ReactComponent as MewConnectLogo } from 'images/mew_wallet_icon.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
@@ -234,6 +235,17 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             icon={<StyledWalletConnectLogo style={{ width: '26.67px' }} />}
           >
             {lang.landing_page.wallet_connect}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.MEWCONNECT);
+              close();
+            }}
+            icon={<MewConnectLogo />}
+          >
+            {lang.providers.mewconnect}
           </Option>
         </BrowserView>
         <BrowserView>
