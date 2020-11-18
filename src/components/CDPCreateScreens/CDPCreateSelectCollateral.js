@@ -215,6 +215,8 @@ const CDPCreateSelectCollateral = ({
   );
   const cdpTypesWithBalance = cdpTypesByBalance.nonZero || [];
   const cdpTypesWithoutBalance = cdpTypesByBalance.zero || [];
+  const alwaysShowAllCT = // when they're all in the same group
+    cdpTypesWithBalance.length === 0 || cdpTypesWithoutBalance.length === 0;
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -296,7 +298,11 @@ const CDPCreateSelectCollateral = ({
             </thead>
             <tbody>
               {cdpTypesWithBalance
-                .concat(showAllCollateralTypes ? cdpTypesWithoutBalance : [])
+                .concat(
+                  showAllCollateralTypes || alwaysShowAllCT
+                    ? cdpTypesWithoutBalance
+                    : []
+                )
                 .map(
                   ilk =>
                     collateralTypesData &&
@@ -316,7 +322,7 @@ const CDPCreateSelectCollateral = ({
                 )}
             </tbody>
           </Table>
-          {!showAllCollateralTypes && (
+          {!showAllCollateralTypes && !alwaysShowAllCT && (
             <Flex alignItems="center" justifyContent="center" height="70px">
               <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
                 {lang.cdp_create.show_all_collateral}
