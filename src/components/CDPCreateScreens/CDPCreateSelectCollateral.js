@@ -8,6 +8,7 @@ import {
   Tooltip,
   Flex
 } from '@makerdao/ui-components-core';
+import groupBy from 'lodash.groupby';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber, formatter } from 'utils/ui';
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -209,6 +210,11 @@ const CDPCreateSelectCollateral = ({
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
+  const cdpTypesByBalance = groupBy(cdpTypes, ilk =>
+    balances[ilk.gem] > 0 ? 'nonZero' : 'zero'
+  );
+  const cdpTypesWithBalance = cdpTypesByBalance.nonZero || [];
+  const cdpTypesWithoutBalance = cdpTypesByBalance.zero || [];
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -289,8 +295,8 @@ const CDPCreateSelectCollateral = ({
               </tr>
             </thead>
             <tbody>
-              {cdpTypes
-                .filter(ilk => showAllCollateralTypes || balances[ilk.gem] > 0)
+              {cdpTypesWithBalance
+                .concat(showAllCollateralTypes ? cdpTypesWithoutBalance : [])
                 .map(
                   ilk =>
                     collateralTypesData &&
@@ -313,7 +319,7 @@ const CDPCreateSelectCollateral = ({
           {!showAllCollateralTypes && (
             <Flex alignItems="center" justifyContent="center" height="70px">
               <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
-                Show all collateral types
+                {lang.cdp_create.show_all_collateral}
               </ExpandButton>
             </Flex>
           )}
