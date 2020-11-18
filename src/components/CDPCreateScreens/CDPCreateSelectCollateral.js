@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Table,
@@ -17,6 +17,8 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import BigNumber from 'bignumber.js';
 import { getMaxDaiAvailable } from 'utils/cdp';
+import Carat from 'components/Carat';
+import { getColor } from 'styles/theme';
 
 const Help = ({ title, text, ...props }) => (
   <Tooltip
@@ -178,6 +180,22 @@ function IlkTableRow({
   );
 }
 
+const ExpandButton = ({ children, style, ...props }) => (
+  <Box
+    border={`1px solid ${getColor('steelLight')}`}
+    color={getColor('slate.400')}
+    fontSize="s"
+    p="11px 13px 10px 17px"
+    borderRadius="33px"
+    display="inline-block"
+    style={{ cursor: 'pointer', ...style }}
+    {...props}
+  >
+    {children}
+    <Carat color={getColor('slate.400')} style={{ marginLeft: '11px' }} />
+  </Box>
+);
+
 const CDPCreateSelectCollateral = ({
   selectedIlk,
   isFirstVault,
@@ -187,6 +205,7 @@ const CDPCreateSelectCollateral = ({
   collateralTypesData,
   dispatch
 }) => {
+  const [showAllCollateralTypes, setShowAllCollateralTypes] = useState(false);
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
@@ -270,25 +289,34 @@ const CDPCreateSelectCollateral = ({
               </tr>
             </thead>
             <tbody>
-              {cdpTypes.map(
-                ilk =>
-                  collateralTypesData &&
-                  balances[ilk.gem] && (
-                    <IlkTableRow
-                      key={ilk.symbol}
-                      checked={ilk.symbol === selectedIlk.symbol}
-                      dispatch={dispatch}
-                      ilk={ilk}
-                      gemBalance={balances[ilk.gem]}
-                      isFirstVault={isFirstVault}
-                      ilkData={collateralTypesData.find(
-                        x => x.symbol === ilk.symbol
-                      )}
-                    />
-                  )
-              )}
+              {cdpTypes
+                .filter(ilk => showAllCollateralTypes || balances[ilk.gem] > 0)
+                .map(
+                  ilk =>
+                    collateralTypesData &&
+                    balances[ilk.gem] && (
+                      <IlkTableRow
+                        key={ilk.symbol}
+                        checked={ilk.symbol === selectedIlk.symbol}
+                        dispatch={dispatch}
+                        ilk={ilk}
+                        gemBalance={balances[ilk.gem]}
+                        isFirstVault={isFirstVault}
+                        ilkData={collateralTypesData.find(
+                          x => x.symbol === ilk.symbol
+                        )}
+                      />
+                    )
+                )}
             </tbody>
           </Table>
+          {!showAllCollateralTypes && (
+            <Flex alignItems="center" justifyContent="center" height="70px">
+              <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
+                Show all collateral types
+              </ExpandButton>
+            </Flex>
+          )}
         </Overflow>
       </Card>
       <ScreenFooter
