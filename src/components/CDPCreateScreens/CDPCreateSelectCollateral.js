@@ -6,7 +6,8 @@ import {
   Card,
   Text,
   Tooltip,
-  Flex
+  Flex,
+  Loader
 } from '@makerdao/ui-components-core';
 import groupBy from 'lodash.groupby';
 import { TextBlock } from 'components/Typography';
@@ -190,6 +191,11 @@ const ExpandButton = ({ children, style, ...props }) => (
     borderRadius="33px"
     display="inline-block"
     style={{ cursor: 'pointer', ...style }}
+    css={`
+      &:hover {
+        border-color: #909ea7;
+      }
+    `}
     {...props}
   >
     {children}
@@ -297,32 +303,44 @@ const CDPCreateSelectCollateral = ({
               </tr>
             </thead>
             <tbody>
-              {cdpTypesWithBalance
-                .concat(
-                  showAllCollateralTypes || alwaysShowAllCT
-                    ? cdpTypesWithoutBalance
-                    : []
-                )
-                .map(
-                  ilk =>
-                    collateralTypesData &&
-                    balances[ilk.gem] && (
-                      <IlkTableRow
-                        key={ilk.symbol}
-                        checked={ilk.symbol === selectedIlk.symbol}
-                        dispatch={dispatch}
-                        ilk={ilk}
-                        gemBalance={balances[ilk.gem]}
-                        isFirstVault={isFirstVault}
-                        ilkData={collateralTypesData.find(
-                          x => x.symbol === ilk.symbol
-                        )}
-                      />
-                    )
-                )}
+              {collateralTypesData ? (
+                cdpTypesWithBalance
+                  .concat(
+                    showAllCollateralTypes || alwaysShowAllCT
+                      ? cdpTypesWithoutBalance
+                      : []
+                  )
+                  .map(
+                    ilk =>
+                      balances[ilk.gem] && (
+                        <IlkTableRow
+                          key={ilk.symbol}
+                          checked={ilk.symbol === selectedIlk.symbol}
+                          dispatch={dispatch}
+                          ilk={ilk}
+                          gemBalance={balances[ilk.gem]}
+                          isFirstVault={isFirstVault}
+                          ilkData={collateralTypesData.find(
+                            x => x.symbol === ilk.symbol
+                          )}
+                        />
+                      )
+                  )
+              ) : (
+                <tr>
+                  <td colSpan={7}>
+                    <Loader
+                      size="4rem"
+                      color={getColor('spinner')}
+                      bg="white"
+                      m="40px auto"
+                    />
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Table>
-          {!showAllCollateralTypes && !alwaysShowAllCT && (
+          {collateralTypesData && !showAllCollateralTypes && !alwaysShowAllCT && (
             <Flex alignItems="center" justifyContent="center" height="70px">
               <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
                 {lang.cdp_create.show_all_collateral}
