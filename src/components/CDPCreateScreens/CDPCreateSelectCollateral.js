@@ -9,7 +9,6 @@ import {
   Flex,
   Loader
 } from '@makerdao/ui-components-core';
-import groupBy from 'lodash.groupby';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber, formatter } from 'utils/ui';
 import useCdpTypes from 'hooks/useCdpTypes';
@@ -216,13 +215,9 @@ const CDPCreateSelectCollateral = ({
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
-  const cdpTypesByBalance = groupBy(cdpTypes, ilk =>
-    balances[ilk.gem] > 0 ? 'nonZero' : 'zero'
-  );
-  const cdpTypesWithBalance = cdpTypesByBalance.nonZero || [];
-  const cdpTypesWithoutBalance = cdpTypesByBalance.zero || [];
-  const alwaysShowAllCT = // when they're all in the same group
-    cdpTypesWithBalance.length === 0 || cdpTypesWithoutBalance.length === 0;
+  const hasBalance = ilk => balances[ilk.gem] > 0;
+  const alwaysShowAll = () =>
+    cdpTypes.every(hasBalance) || !cdpTypes.some(hasBalance);
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -304,10 +299,11 @@ const CDPCreateSelectCollateral = ({
             </thead>
             <tbody>
               {collateralTypesData ? (
-                cdpTypesWithBalance
+                cdpTypes
+                  .filter(hasBalance)
                   .concat(
-                    showAllCollateralTypes || alwaysShowAllCT
-                      ? cdpTypesWithoutBalance
+                    showAllCollateralTypes || alwaysShowAll()
+                      ? cdpTypes.filter(ilk => !hasBalance(ilk))
                       : []
                   )
                   .map(
@@ -340,7 +336,7 @@ const CDPCreateSelectCollateral = ({
               )}
             </tbody>
           </Table>
-          {collateralTypesData && !showAllCollateralTypes && !alwaysShowAllCT && (
+          {collateralTypesData && !showAllCollateralTypes && !alwaysShowAll() && (
             <Flex alignItems="center" justifyContent="center" height="70px">
               <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
                 {lang.cdp_create.show_all_collateral}
