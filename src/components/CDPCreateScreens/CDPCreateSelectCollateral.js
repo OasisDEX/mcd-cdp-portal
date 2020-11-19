@@ -186,19 +186,23 @@ const ExpandButton = ({ children, style, ...props }) => (
     border={`1px solid ${getColor('steelLight')}`}
     color={getColor('slate.400')}
     fontSize="s"
-    p="11px 13px 10px 17px"
+    p="8px 19px 9px 16px"
     borderRadius="33px"
     display="inline-block"
     style={{ cursor: 'pointer', ...style }}
     css={`
       &:hover {
-        border-color: #909ea7;
+        border-color: #7e8b93;
       }
     `}
     {...props}
   >
     {children}
-    <Carat color={getColor('slate.400')} style={{ marginLeft: '11px' }} />
+    <Carat
+      color={getColor('slate.400')}
+      style={{ marginLeft: '10px' }}
+      width="11px"
+    />
   </Box>
 );
 
@@ -231,8 +235,8 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Card px="l" pb="l" pt="26px" my="l" borderRadius="6px">
-        <Overflow x="scroll" y="visible">
+      <Card px="l" pb={0} pt="26px" my="l" borderRadius="6px">
+        <Overflow x="scroll" y="visible" style={{ paddingBottom: '32px' }}>
           <Table
             width="100%"
             css={`
@@ -337,7 +341,12 @@ const CDPCreateSelectCollateral = ({
             </tbody>
           </Table>
           {collateralTypesData && !showAllCollateralTypes && !alwaysShowAll() && (
-            <Flex alignItems="center" justifyContent="center" height="70px">
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              pt="14px"
+              pb="9px"
+            >
               <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
                 {lang.cdp_create.show_all_collateral}
               </ExpandButton>
