@@ -55,7 +55,8 @@
     "LRC",
     "LINK",
     "YFI",
-    "BAL"
+    "BAL",
+    "GUSD"
   ],
   "trackingPages": {
     "Overview": "Overview",
