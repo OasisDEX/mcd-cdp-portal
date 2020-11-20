@@ -2411,7 +2411,7 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
-"@makerdao/currency@^0.9.5", "@makerdao/currency@^0.9.9":
+"@makerdao/currency@0.9.9", "@makerdao/currency@^0.9.5", "@makerdao/currency@^0.9.9":
   version "0.9.9"
   resolved "https://registry.yarnpkg.com/@makerdao/currency/-/currency-0.9.9.tgz#b5f847362cb4648c30548313f005c80c1c878c9e"
   integrity sha512-fr6MaiWxQ1IxEaSO8znnhcZTPb8P5ZJU5PS76lx5zAX8CF/ZykfDCX7lb4AMaOVCWajQ8OPN8ekO5a0MOJb3wg==
@@ -2450,12 +2450,12 @@
     hdkey "^1.0.0"
     web3-provider-engine "14.0.4"
 
-"@makerdao/dai-plugin-mcd@^1.6.10":
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.6.10.tgz#a312340a5b32a58cbe43793d8abd58a2d6fe6165"
-  integrity sha512-UAkhMH0IiK9u+X/YaI51DsiC8k6zsDO6+VBnDgHNuOo6/S5vU3cXxF4YWr8oJh8An8rPDLY2Q2CFxoe3aFE3MA==
+"@makerdao/dai-plugin-mcd@^1.6.14":
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/@makerdao/dai-plugin-mcd/-/dai-plugin-mcd-1.6.14.tgz#aa6e26aaf7be7a8bcbed30fbb7ac8357520f930f"
+  integrity sha512-G6H8pKB1v5wHmptJ00mOWlfoVW+ColI5CE8abz5k0EP6aHqAtpO+laUb2bZL4jZMNta1wO3kM54OOqn9qwn5MQ==
   dependencies:
-    "@makerdao/currency" "^0.9.9"
+    "@makerdao/currency" "0.9.9"
     "@makerdao/services-core" "^0.9.9"
     bignumber.js "^8.1.1"
     rxjs "^6.5.4"
