@@ -13,7 +13,8 @@ import {
   LRC,
   LINK,
   YFI,
-  BAL
+  BAL,
+  GUSD
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -155,6 +156,14 @@ export default [
     key: 'BAL-A',
     gem: 'BAL',
     currency: BAL,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'gusd-a',
+    symbol: 'GUSD-A',
+    key: 'GUSD-A',
+    gem: 'GUSD',
+    currency: GUSD,
     networks: ['mainnet', 'kovan']
   }
 ];
