@@ -376,6 +376,7 @@ export default {
     select_title: 'Select a collateral type',
     select_text: 'Each collateral type has its own risk parameters.',
     select_unavailable: 'Unavailable due to a token upgrade',
+    show_all_collateral: 'Show all collateral types',
     setup_proxy_title: 'Vault Setup and Management',
     setup_proxy_proxy_text:
       'Configure your Vault for easy management. This only has to be done once.',

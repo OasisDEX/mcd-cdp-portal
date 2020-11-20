@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Table,
@@ -6,7 +6,8 @@ import {
   Card,
   Text,
   Tooltip,
-  Flex
+  Flex,
+  Loader
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
 import { prettifyNumber, formatter } from 'utils/ui';
@@ -17,6 +18,8 @@ import ScreenFooter from '../ScreenFooter';
 import ScreenHeader from '../ScreenHeader';
 import BigNumber from 'bignumber.js';
 import { getMaxDaiAvailable } from 'utils/cdp';
+import Carat from 'components/Carat';
+import { getColor } from 'styles/theme';
 
 const Help = ({ title, text, ...props }) => (
   <Tooltip
@@ -178,6 +181,31 @@ function IlkTableRow({
   );
 }
 
+const ExpandButton = ({ children, style, ...props }) => (
+  <Box
+    border={`1px solid ${getColor('steelLight')}`}
+    color={getColor('slate.400')}
+    fontSize="s"
+    p="8px 19px 9px 16px"
+    borderRadius="33px"
+    display="inline-block"
+    style={{ cursor: 'pointer', ...style }}
+    css={`
+      &:hover {
+        border-color: #7e8b93;
+      }
+    `}
+    {...props}
+  >
+    {children}
+    <Carat
+      color={getColor('slate.400')}
+      style={{ marginLeft: '10px' }}
+      width="11px"
+    />
+  </Box>
+);
+
 const CDPCreateSelectCollateral = ({
   selectedIlk,
   isFirstVault,
@@ -187,9 +215,13 @@ const CDPCreateSelectCollateral = ({
   collateralTypesData,
   dispatch
 }) => {
+  const [showAllCollateralTypes, setShowAllCollateralTypes] = useState(false);
   const { trackBtnClick } = useAnalytics('SelectCollateral', 'VaultCreate');
   const { lang } = useLanguage();
   const { cdpTypes } = useCdpTypes();
+  const hasBalance = ilk => balances[ilk.gem] > 0;
+  const alwaysShowAll = () =>
+    cdpTypes.every(hasBalance) || !cdpTypes.some(hasBalance);
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
   return (
@@ -203,8 +235,8 @@ const CDPCreateSelectCollateral = ({
         title={lang.cdp_create.select_title}
         text={lang.cdp_create.select_text}
       />
-      <Card px="l" pb="l" pt="26px" my="l" borderRadius="6px">
-        <Overflow x="scroll" y="visible">
+      <Card px="l" pb={0} pt="26px" my="l" borderRadius="6px">
+        <Overflow x="scroll" y="visible" style={{ paddingBottom: '32px' }}>
           <Table
             width="100%"
             css={`
@@ -270,25 +302,56 @@ const CDPCreateSelectCollateral = ({
               </tr>
             </thead>
             <tbody>
-              {cdpTypes.map(
-                ilk =>
-                  collateralTypesData &&
-                  balances[ilk.gem] && (
-                    <IlkTableRow
-                      key={ilk.symbol}
-                      checked={ilk.symbol === selectedIlk.symbol}
-                      dispatch={dispatch}
-                      ilk={ilk}
-                      gemBalance={balances[ilk.gem]}
-                      isFirstVault={isFirstVault}
-                      ilkData={collateralTypesData.find(
-                        x => x.symbol === ilk.symbol
-                      )}
-                    />
+              {collateralTypesData ? (
+                cdpTypes
+                  .filter(hasBalance)
+                  .concat(
+                    showAllCollateralTypes || alwaysShowAll()
+                      ? cdpTypes.filter(ilk => !hasBalance(ilk))
+                      : []
                   )
+                  .map(
+                    ilk =>
+                      balances[ilk.gem] && (
+                        <IlkTableRow
+                          key={ilk.symbol}
+                          checked={ilk.symbol === selectedIlk.symbol}
+                          dispatch={dispatch}
+                          ilk={ilk}
+                          gemBalance={balances[ilk.gem]}
+                          isFirstVault={isFirstVault}
+                          ilkData={collateralTypesData.find(
+                            x => x.symbol === ilk.symbol
+                          )}
+                        />
+                      )
+                  )
+              ) : (
+                <tr>
+                  <td colSpan={7}>
+                    <Loader
+                      size="4rem"
+                      color={getColor('spinner')}
+                      bg="white"
+                      m="40px auto"
+                    />
+                  </td>
+                </tr>
               )}
             </tbody>
           </Table>
+          {collateralTypesData && !showAllCollateralTypes && !alwaysShowAll() && (
+            <Flex
+              alignItems="center"
+              justifyContent="center"
+              pt="14px"
+              pb="9px"
+            >
+              <ExpandButton onClick={() => setShowAllCollateralTypes(true)}>
+                {lang.cdp_create.show_all_collateral}
+              </ExpandButton>
+            </Flex>
+          )}
         </Overflow>
       </Card>
       <ScreenFooter
