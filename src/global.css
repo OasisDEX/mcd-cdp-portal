@@ -8,7 +8,7 @@
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, Helvetica Neue,
     Roboto, Segoe UI, sans-serif;
-  color: #0E1029;
+  color: #0e1029;
   overflow-y: scroll;
 }
 a {
@@ -18,31 +18,31 @@ a {
 
 @font-face {
   font-family: 'FT Base';
-  src: url('/fonts/FTBase-Bold.woff2') format('woff2'),
-  url('/fonts/FTBase-Bold.woff') format('woff');
+  src: url('/borrow/fonts/FTBase-Bold.woff2') format('woff2'),
+    url('/borrow/fonts/FTBase-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FT Base';
-  src: url('/fonts/FTBase-Regular.woff2') format('woff2'),
-  url('/fonts/FTBase-Regular.woff') format('woff');
+  src: url('/borrow/fonts/FTBase-Regular.woff2') format('woff2'),
+    url('/borrow/fonts/FTBase-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FT Base';
-  src: url('/fonts/FTBase-Medium.woff2') format('woff2'),
-  url('/fonts/FTBase-Medium.woff') format('woff');
+  src: url('/borrow/fonts/FTBase-Medium.woff2') format('woff2'),
+    url('/borrow/fonts/FTBase-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: "SF Mono";
+  font-family: 'SF Mono';
   font-weight: 400;
-  src: url("/fonts/SFMono-Regular.otf");
+  src: url('/borrow/fonts/SFMono-Regular.otf');
   font-style: normal;
 }

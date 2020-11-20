@@ -19,16 +19,10 @@ export const AccountTypes = {
   TREZOR: 'trezor',
   DCENT: 'dcent',
   METAMASK: 'browser',
+  PORTIS: 'portis',
   WALLETLINK: 'walletlink',
+  MEWCONNECT: 'mewconnect',
   WALLETCONNECT: 'walletconnect'
-};
-
-export const Routes = {
-  BORROW: 'borrow',
-  SAVE: 'save',
-  TRADE: 'trade',
-  PRIVACY: 'privacy',
-  TERMS: 'terms'
 };
 
 export const Toggles = {

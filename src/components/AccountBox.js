@@ -22,8 +22,7 @@ import useToggle from 'hooks/useToggle';
 import useAnalytics from 'hooks/useAnalytics';
 import styled from 'styled-components';
 import Carat from './Carat';
-import { Link, useCurrentRoute } from 'react-navi';
-import { Routes } from 'utils/constants';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import theme from '../styles/theme';
 import FullScreenAction from './CDPDisplay/FullScreenAction';
 import useCdpTypes from '../hooks/useCdpTypes';
@@ -105,6 +104,7 @@ const TokenBalance = ({
 const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
   const { lang } = useLanguage();
   const { url } = useCurrentRoute();
+  const navigation = useNavigation();
   const { trackBtnClick } = useAnalytics('WalletBalances');
   const [actionShown, setActionShown] = useState(null);
 
@@ -202,9 +202,11 @@ const WalletBalances = ({ hasActiveAccount, closeSidebarDrawer }) => {
                     hasActiveAccount &&
                     (symbol === 'DSR' ? (
                       <Link
-                        href={`/${Routes.SAVE}${url.search}`}
+                        href={`${navigation.basename}/legacy/save${url.search}`}
                         style={{
-                          visibility: url.pathname.startsWith(`/${Routes.SAVE}`)
+                          visibility: url.pathname.startsWith(
+                            `${navigation.basename}/legacy/save`
+                          )
                             ? 'hidden'
                             : 'visible'
                         }}

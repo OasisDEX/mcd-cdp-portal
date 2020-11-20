@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { map, route, mount, withView, compose } from 'navi';
+import { map, route, mount, withView, compose, redirect } from 'navi';
 import { View } from 'react-navi';
 
 import Navbar from 'components/Navbar';
 import DashboardLayout from 'layouts/DashboardLayout';
-import Landing from 'pages/Landing';
 import Overview from 'pages/Overview';
 import Borrow from 'pages/Borrow';
 import BorrowWBTCLanding from 'pages/BorrowWBTCLanding';
@@ -12,8 +11,6 @@ import BorrowMarkets from 'pages/BorrowMarkets';
 import Save from 'pages/Save';
 import SaveOverview from 'pages/SaveOverview';
 import TradeLanding from 'pages/TradeLanding';
-import Privacy from 'pages/Privacy';
-import Terms from 'pages/Terms';
 import CDPDisplay from 'components/CDPDisplay';
 import modals, { templates } from 'components/Modals';
 import { ModalProvider } from 'providers/ModalProvider';
@@ -26,7 +23,6 @@ import NotificationProvider from 'providers/NotificationProvider';
 import config from 'references/config';
 import MobileNav from 'components/MobileNav';
 import { userSnapInit } from 'utils/analytics';
-import { Routes } from 'utils/constants';
 
 const { networkNames, defaultNetwork } = config;
 
@@ -81,14 +77,15 @@ const withDashboardLayout = childMatcher =>
   );
 
 export default mount({
-  '/': withView(() => <Landing />),
+  // basename ought to be set to '/borrow' and router will construct
+  // these routes as basename+route
 
-  [`/${Routes.BORROW}`]: compose(
+  '/': compose(
     withView(dappProvidersView),
     withView(() => <Borrow />)
   ),
 
-  [`/${Routes.BORROW}/owner/:viewedAddress`]: withDashboardLayout(
+  '/owner/:viewedAddress': withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -98,7 +95,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/:cdpId`]: withDashboardLayout(
+  '/:cdpId': withDashboardLayout(
     map(request => {
       const { cdpId } = request.params;
 
@@ -109,22 +106,24 @@ export default mount({
     })
   ),
 
-  [`/${Routes.BORROW}/btc`]: compose(
+  '/btc': compose(
     withView(dappProvidersView),
     withView(() => <BorrowWBTCLanding />)
   ),
 
-  [`/${Routes.BORROW}/markets`]: compose(
+  '/markets': compose(
     withView(dappProvidersView),
     withView(() => <BorrowMarkets />)
   ),
 
-  [`/${Routes.SAVE}`]: compose(
+  '/legacy': redirect(request => `./save${request.search}`),
+
+  '/legacy/save': compose(
     withView(dappProvidersView),
     withView(() => <SaveOverview />)
   ),
 
-  [`/${Routes.SAVE}/owner/:viewedAddress`]: withDashboardLayout(
+  '/legacy/save/owner/:viewedAddress': withDashboardLayout(
     route(request => {
       const { viewedAddress } = request.params;
       return {
@@ -134,17 +133,7 @@ export default mount({
     })
   ),
 
-  [`/${Routes.TRADE}`]: withView(() => <TradeLanding />),
-
-  [`/${Routes.PRIVACY}`]: route(() => ({
-    title: 'Oasis - Privacy Policy',
-    view: <Privacy />
-  })),
-
-  [`/${Routes.TERMS}`]: route(() => ({
-    title: 'Oasis - Terms of Service',
-    view: <Terms />
-  }))
+  '/trade': withView(() => <TradeLanding />)
 });
 
 function RouteEffects({ network }) {

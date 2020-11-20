@@ -3,13 +3,14 @@ import { useEffect } from 'react';
 import { watch } from 'hooks/useObservable';
 import useMaker from 'hooks/useMaker';
 import usePrevious from 'hooks/usePrevious';
-import { Routes } from 'utils/constants';
 import useCdpTypes from 'hooks/useCdpTypes';
+import { useNavigation } from 'react-navi';
 
 export const VaultsContext = createContext({});
 
 function VaultsProvider({ children, viewedAddress }) {
-  const { account, navigation, network } = useMaker();
+  const navigation = useNavigation();
+  const { account, network } = useMaker();
   const { cdpTypesList } = useCdpTypes();
 
   const userProxy = watch.proxyAddress(account?.address);
@@ -57,7 +58,9 @@ function VaultsProvider({ children, viewedAddress }) {
   useEffect(() => {
     if (newVaultCreated) {
       const newVaultId = userVaultIds[0];
-      navigation.navigate(`/${Routes.BORROW}/${newVaultId}?network=${network}`);
+      navigation.navigate(
+        `${navigation.basename}/${newVaultId}?network=${network}`
+      );
     }
   }, [newVaultCreated, navigation, network, userVaultIds]);
 

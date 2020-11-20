@@ -8,7 +8,7 @@ import {
   Flex
 } from '@makerdao/ui-components-core';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
-import { useCurrentRoute } from 'react-navi';
+import { useCurrentRoute, useNavigation } from 'react-navi';
 import styled, { css } from 'styled-components';
 
 import { cutMiddle } from 'utils/ui';
@@ -19,14 +19,16 @@ import useBrowserIcon from 'hooks/useBrowserIcon';
 import useBrowserProvider from 'hooks/useBrowserProvider';
 import useLanguage from 'hooks/useLanguage';
 import { getMeasurement, getColor } from 'styles/theme';
-import { AccountTypes, Routes } from 'utils/constants';
+import { AccountTypes } from 'utils/constants';
 import { BrowserView } from 'react-device-detect';
 import { ReactComponent as LedgerLogo } from 'images/ledger.svg';
 import { ReactComponent as WalletLinkLogo } from 'images/wallet-link.svg';
+import { ReactComponent as MewConnectLogo } from 'images/mew_wallet_icon.svg';
 import { ReactComponent as DisconnectIcon } from 'images/disconnect.svg';
 import { ReactComponent as TrezorLogo } from 'images/trezor.svg';
 import { ReactComponent as WalletConnectLogo } from 'images/wallet-connect.svg';
 import { ReactComponent as DCentLogo } from 'images/dcent.svg';
+import { ReactComponent as PortisLogo } from 'images/portis.svg';
 
 const negativeMarginY = css`
   margin-top: -5px;
@@ -92,6 +94,7 @@ const Option = ({ icon, children, ...props }) => {
 
 const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const { lang } = useLanguage();
+  const { basename } = useNavigation();
   const {
     maker,
     account,
@@ -111,10 +114,12 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
   const browserIcon = useBrowserIcon(providerName);
 
   function onAccountChosen({ address }) {
-    if (url.pathname.startsWith(`/${Routes.SAVE}/owner/`)) {
+    if (url.pathname.startsWith(`${basename}/legacy/save/owner/`)) {
       const urlAddress = url.pathname.split('/')[url.pathname.length - 1];
       if (address !== urlAddress) {
-        navigation.navigate(`/${Routes.SAVE}/owner/${address}${url.search}`);
+        navigation.navigate(
+          `${basename}/legacy/save/owner/${address}${url.search}`
+        );
       }
     }
     maker.useAccountWithAddress(address);
@@ -235,6 +240,17 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
         <BrowserView>
           <Option
             onClick={() => {
+              connectToProviderOfType(AccountTypes.MEWCONNECT);
+              close();
+            }}
+            icon={<MewConnectLogo />}
+          >
+            {lang.providers.mewconnect}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
               connectToProviderOfType(AccountTypes.WALLETLINK);
               close();
             }}
@@ -252,6 +268,17 @@ const WalletConnectDropdown = ({ trigger, close = () => {}, ...props }) => {
             icon={<StyledDcentLogo />}
           >
             {lang.providers.dcent}
+          </Option>
+        </BrowserView>
+        <BrowserView>
+          <Option
+            onClick={() => {
+              connectToProviderOfType(AccountTypes.PORTIS);
+              close();
+            }}
+            icon={<PortisLogo />}
+          >
+            {lang.providers.portis}
           </Option>
         </BrowserView>
         {account && (

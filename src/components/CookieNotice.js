@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Cookies from 'js-cookie';
 import { Link } from 'react-navi';
 import { ReactComponent as Cross } from '../images/cross2.svg';
-import { Routes } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
 import { hot } from 'react-hot-loader/root';
 
@@ -65,7 +64,7 @@ const CookieNotice = () => {
         <span style={{ fontSize: '14px', color: '#231536', flexShrink: 1 }}>
           {lang.formatString(
             lang.cookie_notice,
-            <Link href={`/${Routes.PRIVACY}`}>
+            <Link href={'https://oasis.app/privacy'}>
               <NoticeLinkStyle>{lang.privacy_policy}</NoticeLinkStyle>
             </Link>
           )}

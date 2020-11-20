@@ -12,7 +12,7 @@ import {
   Address,
   Flex
 } from '@makerdao/ui-components-core';
-import { Link, useCurrentRoute } from 'react-navi';
+import { Link, useCurrentRoute, useNavigation } from 'react-navi';
 import useMaker from 'hooks/useMaker';
 import RatioDisplay from '../components/RatioDisplay';
 import { getColor } from 'styles/theme';
@@ -22,7 +22,7 @@ import useNotification from 'hooks/useNotification';
 import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
-import { NotificationList, Routes, SAFETY_LEVELS } from 'utils/constants';
+import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -51,6 +51,7 @@ const InfoCard = ({ title, amount, denom }) => (
 );
 
 function Overview({ viewedAddress }) {
+  const navigation = useNavigation();
   const { trackBtnClick } = useAnalytics('Table');
   const { account } = useMaker();
   const { viewedAddressVaults } = useVaults();
@@ -286,7 +287,7 @@ function Overview({ viewedAddress }) {
                               }}
                             >
                               <Link
-                                href={`/${Routes.BORROW}/${id}${url.search}`}
+                                href={`${navigation.basename}/${id}${url.search}`}
                                 prefetch={true}
                               >
                                 <Text

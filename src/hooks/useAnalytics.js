@@ -1,7 +1,7 @@
 import mixpanel from 'mixpanel-browser';
 import { useCurrentRoute } from 'react-navi';
-import { Routes } from 'utils/constants';
 import references from 'references/config';
+import useCheckRoute from './useCheckRoute';
 
 const env = process.env.NODE_ENV === 'production' ? 'prod' : 'test';
 const fathomGoals = {
@@ -55,46 +55,52 @@ const fathomGoals = {
 
 export default function useAnalytics(section, page = null, product = null) {
   const { url, title } = useCurrentRoute();
+  const { isBorrow, isSave } = useCheckRoute();
 
-  const getPageName = title => {
-    return references.trackingPages[title] || title;
-  };
+  if (process.env.NODE_ENV !== 'production') {
+    return { trackBtnClick: () => null, trackInputChange: () => null };
+  } else {
+    const getPageName = title => {
+      return references.trackingPages[title] || title;
+    };
 
-  // Fathom interprets 'amount' in cents, multiply by 100 to get dollars
-  const trackFathomGoal = goal =>
-    window.fathom('trackGoal', fathomGoals[goal.id], goal.amount * 100 || 0);
+    // Fathom interprets 'amount' in cents, multiply by 100 to get dollars
+    const trackFathomGoal = goal =>
+      window.fathom('trackGoal', fathomGoals[goal.id], goal.amount * 100 || 0);
 
-  const getProductName = pathname => {
-    return pathname.startsWith(`/${Routes.BORROW}`)
-      ? 'Borrow'
-      : pathname.startsWith(`/${Routes.SAVE}`)
-      ? 'Save'
-      : pathname;
-  };
+    const getProductName = pathname => {
+      return isBorrow ? 'Borrow' : isSave ? 'Save' : pathname;
+    };
 
-  const mixpanelOptions = {
-    section,
-    page: page || getPageName(title),
-    product: product || getProductName(url.pathname)
-  };
+    const mixpanelOptions = {
+      section,
+      page: page || getPageName(title),
+      product: product || getProductName(url.pathname)
+    };
 
-  const trackBtnClick = (id, additionalProps = {}) => {
-    const { fathom } = additionalProps;
-    if (fathom) {
-      if (Array.isArray(fathom)) fathom.forEach(goal => trackFathomGoal(goal));
-      else trackFathomGoal(fathom);
-      delete additionalProps.fathom;
-    }
-    mixpanel.track('btn-click', { id, ...mixpanelOptions, ...additionalProps });
-  };
+    const trackBtnClick = (id, additionalProps = {}) => {
+      const { fathom } = additionalProps;
+      if (fathom) {
+        if (Array.isArray(fathom))
+          fathom.forEach(goal => trackFathomGoal(goal));
+        else trackFathomGoal(fathom);
+        delete additionalProps.fathom;
+      }
+      mixpanel.track('btn-click', {
+        id,
+        ...mixpanelOptions,
+        ...additionalProps
+      });
+    };
 
-  const trackInputChange = (id, additionalProps) => {
-    mixpanel.track('input-change', {
-      id,
-      ...mixpanelOptions,
-      ...additionalProps
-    });
-  };
+    const trackInputChange = (id, additionalProps) => {
+      mixpanel.track('input-change', {
+        id,
+        ...mixpanelOptions,
+        ...additionalProps
+      });
+    };
 
-  return { trackBtnClick, trackInputChange };
+    return { trackBtnClick, trackInputChange };
+  }
 }
