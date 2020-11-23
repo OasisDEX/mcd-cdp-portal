@@ -43,12 +43,6 @@ function Globals({ children }) {
   } = useEmergencyShutdown();
 
   useEffect(() => {
-    addNotification({
-      id: NotificationList.ALCHEMY_RPC_CHANGE,
-      content:
-        'The recent issues with Infura have now been resolved. If you are using Metamask, and switched to a custom RPC using our provided Alchemy endpoint, please switch back to Metamask Mainnet as access to our Alchemy endpoint provided will soon be revoked',
-      level: SAFETY_LEVELS.WARNING
-    });
     if (emergencyShutdownActive) {
       addNotification({
         id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
@@ -77,10 +71,7 @@ function Globals({ children }) {
     }
 
     return () =>
-      deleteNotifications([
-        NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
-        NotificationList.ALCHEMY_RPC_CHANGE
-      ]);
+      deleteNotifications([NotificationList.EMERGENCY_SHUTDOWN_ACTIVE]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emergencyShutdownActive, emergencyShutdownTime]);
 
