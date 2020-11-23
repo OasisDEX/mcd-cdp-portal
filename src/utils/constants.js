@@ -66,7 +66,8 @@ export const TokenNames = {
   COMP: 'Compound',
   LINK: 'Chainlink',
   YFI: 'yearn.finance',
-  BAL: 'Balancer'
+  BAL: 'Balancer',
+  GUSD: 'Gemini Dollar'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

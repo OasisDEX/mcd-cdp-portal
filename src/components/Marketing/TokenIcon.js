@@ -16,6 +16,7 @@ import { ReactComponent as ZrxIcon } from 'images/oasis-tokens/zrx.svg';
 import { ReactComponent as UsdtIcon } from 'images/oasis-tokens/usdt.svg';
 import { ReactComponent as YfiIcon } from 'images/oasis-tokens/yfi.svg';
 import { ReactComponent as BalIcon } from 'images/oasis-tokens/bal.svg';
+import { ReactComponent as GusdIcon } from 'images/oasis-tokens/gusd.svg';
 
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
 
@@ -36,7 +37,8 @@ const iconsByToken = {
   ZRX: ZrxIcon,
   USDT: UsdtIcon,
   YFI: YfiIcon,
-  BAL: BalIcon
+  BAL: BalIcon,
+  GUSD: GusdIcon
 };
 
 const TokenIcon = ({ symbol, size = 70, ...props }) => {
