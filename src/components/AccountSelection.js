@@ -23,7 +23,7 @@ import { ReactComponent as PortisLogo } from 'images/portis.svg';
 import { ReactComponent as CaratDown } from 'images/carat-down-filled.svg';
 
 import { AccountTypes } from 'utils/constants';
-import { BrowserView, isMobile } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 const ConnectDropdownStyle = styled.div`
   .dropdown-trigger-wrapper {
@@ -333,16 +333,16 @@ function AccountSelection({ width = '213px', ...props }) {
                 key="browser-provider-wallet"
               />
               {mainWallets.map((wallet, index) => (
-                <BrowserView key={index}>{wallet}</BrowserView>
+                <Box key={index}>{wallet}</Box>
               ))}
-              <BrowserView key="see-more-wallets-link">
+              <Box key="see-more-wallets-link">
                 <NavItem onClick={() => setShowMain(false)}>
                   {lang.providers.more_wallets}
                   {` (${otherWallets.length})`}
                 </NavItem>
-              </BrowserView>
+              </Box>
             </DropdownItems>
-            <BrowserView style={{ position: 'static' }}>
+            <Box style={{ position: 'static' }}>
               <DropdownItems
                 className={`${
                   otherWallets.length > mainWalletsCount ? 'larger' : 'smaller'
@@ -357,7 +357,7 @@ function AccountSelection({ width = '213px', ...props }) {
                 </NavItem>
                 {otherWallets}
               </DropdownItems>
-            </BrowserView>
+            </Box>
           </div>
         </ConnectDropdown>
       </DropdownWrapper>
