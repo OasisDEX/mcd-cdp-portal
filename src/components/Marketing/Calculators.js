@@ -24,6 +24,8 @@ const Dropdown = (() => {
   `;
 
   const Items = styled(Box)`
+    grid-template-columns: 40% 40%;
+    grid-column-gap: 8%;
     position: absolute;
     z-index: 2;
     width: calc(100% - 2px);
@@ -77,7 +79,7 @@ const Dropdown = (() => {
           {getSelectedItem().render()}
           <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
         </Trigger>
-        <Items display={isOpen ? 'block' : 'none'}>
+        <Items display={isOpen ? 'grid' : 'none'}>
           {items
             .filter(item => !hideSelected || item.value !== selectedValue)
             .map(item => (
