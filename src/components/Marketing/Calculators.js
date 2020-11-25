@@ -24,6 +24,8 @@ const Dropdown = (() => {
   `;
 
   const Items = styled(Box)`
+    grid-template-columns: 40% 40%;
+    grid-column-gap: 8%;
     position: absolute;
     z-index: 2;
     width: calc(100% - 2px);
@@ -77,7 +79,7 @@ const Dropdown = (() => {
           {getSelectedItem().render()}
           <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
         </Trigger>
-        <Items display={isOpen ? 'block' : 'none'}>
+        <Items display={isOpen ? 'grid' : 'none'}>
           {items
             .filter(item => !hideSelected || item.value !== selectedValue)
             .map(item => (
@@ -88,7 +90,7 @@ const Dropdown = (() => {
                   setIsOpen(false);
                 }}
               >
-                {item.render()}
+                {item.render(item.value === selectedValue)}
               </div>
             ))}
         </Items>
@@ -160,10 +162,18 @@ const DropdownItemStyle = styled.div`
   }
 `;
 
-const DropdownItem = ({ img, children }) => (
-  <DropdownItemStyle className="item">
+const DropdownItem = ({ img, children, isSelected }) => (
+  <DropdownItemStyle
+    className="item"
+    style={isSelected ? { cursor: 'default' } : {}}
+  >
     {img}
-    <Text className="text" fontSize="18px" letterSpacing="0.5px">
+    <Text
+      className="text"
+      fontSize="18px"
+      letterSpacing="0.5px"
+      style={isSelected ? { color: 'black', opacity: '1.0' } : {}}
+    >
       {children}
     </Text>
   </DropdownItemStyle>
@@ -375,6 +385,24 @@ const cdpTypesMetaData = {
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
+  },
+  'YFI-A': {
+    text: 'YFI',
+    colRatio: 200,
+    amountRange: [0.1, 35],
+    amountStart: 0.5
+  },
+  'BAL-A': {
+    text: 'BAL',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'GUSD-A': {
+    text: 'GUSD',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
   }
 };
 
@@ -418,9 +446,10 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
             {lang.collateral_type}
           </CapsText>
           <Dropdown
+            hideSelected={false}
             items={ilks.map(ilk => ({
               value: ilk.symbol,
-              render: () => (
+              render: isSelected => (
                 <DropdownItem
                   img={
                     <TokenIcon
@@ -429,6 +458,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                       height="28.33"
                     />
                   }
+                  isSelected={isSelected}
                 >
                   {ilk.text || ilk.symbol}
                 </DropdownItem>
