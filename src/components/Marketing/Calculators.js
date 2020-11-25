@@ -90,7 +90,7 @@ const Dropdown = (() => {
                   setIsOpen(false);
                 }}
               >
-                {item.render()}
+                {item.render(item.value === selectedValue)}
               </div>
             ))}
         </Items>
@@ -162,10 +162,18 @@ const DropdownItemStyle = styled.div`
   }
 `;
 
-const DropdownItem = ({ img, children }) => (
-  <DropdownItemStyle className="item">
+const DropdownItem = ({ img, children, isSelected }) => (
+  <DropdownItemStyle
+    className="item"
+    style={isSelected ? { cursor: 'default' } : {}}
+  >
     {img}
-    <Text className="text" fontSize="18px" letterSpacing="0.5px">
+    <Text
+      className="text"
+      fontSize="18px"
+      letterSpacing="0.5px"
+      style={isSelected ? { color: 'black', opacity: '1.0' } : {}}
+    >
       {children}
     </Text>
   </DropdownItemStyle>
@@ -438,9 +446,10 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
             {lang.collateral_type}
           </CapsText>
           <Dropdown
+            hideSelected={false}
             items={ilks.map(ilk => ({
               value: ilk.symbol,
-              render: () => (
+              render: isSelected => (
                 <DropdownItem
                   img={
                     <TokenIcon
@@ -449,6 +458,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                       height="28.33"
                     />
                   }
+                  isSelected={isSelected}
                 >
                   {ilk.text || ilk.symbol}
                 </DropdownItem>
