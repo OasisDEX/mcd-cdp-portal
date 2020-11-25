@@ -377,6 +377,24 @@ const cdpTypesMetaData = {
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
+  },
+  'YFI-A': {
+    text: 'YFI',
+    colRatio: 200,
+    amountRange: [0.1, 35],
+    amountStart: 0.5
+  },
+  'BAL-A': {
+    text: 'BAL',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'GUSD-A': {
+    text: 'GUSD',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
   }
 };
 
