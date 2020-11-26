@@ -321,85 +321,71 @@ const SmartStepSlider = ({
 
 const cdpTypesMetaData = {
   'ETH-A': {
-    text: 'Ethereum',
     colRatio: 200,
     amountRange: [1, 350],
     amountStart: 25
   },
   'BAT-A': {
-    text: 'BAT',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'MANA-A': {
-    text: 'MANA',
     colRatio: 240,
     amountRange: [1000, 350000],
     amountStart: 3000
   },
   'USDC-A': {
-    text: 'USDC',
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'WBTC-A': {
-    text: 'WBTC',
     colRatio: 200,
     amountRange: [0.1, 35],
     amountStart: 0.5
   },
   'TUSD-A': {
-    text: 'TUSD',
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'ZRX-A': {
-    text: 'ZRX',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'KNC-A': {
-    text: 'KNC',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'COMP-A': {
-    text: 'COMP',
     colRatio: 200,
     amountRange: [100, 5000],
     amountStart: 100
   },
   'LRC-A': {
-    text: 'LRC',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'LINK-A': {
-    text: 'LINK',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'YFI-A': {
-    text: 'YFI',
     colRatio: 200,
     amountRange: [0.1, 35],
     amountStart: 0.5
   },
   'BAL-A': {
-    text: 'BAL',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'GUSD-A': {
-    text: 'GUSD',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
@@ -460,7 +446,7 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                   }
                   isSelected={isSelected}
                 >
-                  {ilk.text || ilk.symbol}
+                  {getTokenName(ilk)}
                 </DropdownItem>
               )
             }))}
