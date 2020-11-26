@@ -24,6 +24,8 @@ const Dropdown = (() => {
   `;
 
   const Items = styled(Box)`
+    grid-template-columns: 40% 40%;
+    grid-column-gap: 8%;
     position: absolute;
     z-index: 2;
     width: calc(100% - 2px);
@@ -77,7 +79,7 @@ const Dropdown = (() => {
           {getSelectedItem().render()}
           <CaratDown style={{ fill: '#231536', marginTop: '2px' }} />
         </Trigger>
-        <Items display={isOpen ? 'block' : 'none'}>
+        <Items display={isOpen ? 'grid' : 'none'}>
           {items
             .filter(item => !hideSelected || item.value !== selectedValue)
             .map(item => (
@@ -88,7 +90,7 @@ const Dropdown = (() => {
                   setIsOpen(false);
                 }}
               >
-                {item.render()}
+                {item.render(item.value === selectedValue)}
               </div>
             ))}
         </Items>
@@ -160,10 +162,18 @@ const DropdownItemStyle = styled.div`
   }
 `;
 
-const DropdownItem = ({ img, children }) => (
-  <DropdownItemStyle className="item">
+const DropdownItem = ({ img, children, isSelected }) => (
+  <DropdownItemStyle
+    className="item"
+    style={isSelected ? { cursor: 'default' } : {}}
+  >
     {img}
-    <Text className="text" fontSize="18px" letterSpacing="0.5px">
+    <Text
+      className="text"
+      fontSize="18px"
+      letterSpacing="0.5px"
+      style={isSelected ? { color: 'black', opacity: '1.0' } : {}}
+    >
       {children}
     </Text>
   </DropdownItemStyle>
@@ -311,67 +321,71 @@ const SmartStepSlider = ({
 
 const cdpTypesMetaData = {
   'ETH-A': {
-    text: 'Ethereum',
     colRatio: 200,
     amountRange: [1, 350],
     amountStart: 25
   },
   'BAT-A': {
-    text: 'BAT',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'MANA-A': {
-    text: 'MANA',
     colRatio: 240,
     amountRange: [1000, 350000],
     amountStart: 3000
   },
   'USDC-A': {
-    text: 'USDC',
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'WBTC-A': {
-    text: 'WBTC',
     colRatio: 200,
     amountRange: [0.1, 35],
     amountStart: 0.5
   },
   'TUSD-A': {
-    text: 'TUSD',
     colRatio: 120,
     amountRange: [200, 70000],
     amountStart: 5000
   },
   'ZRX-A': {
-    text: 'ZRX',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'KNC-A': {
-    text: 'KNC',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
   },
   'COMP-A': {
-    text: 'COMP',
     colRatio: 200,
     amountRange: [100, 5000],
     amountStart: 100
   },
   'LRC-A': {
-    text: 'LRC',
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 600
   },
   'LINK-A': {
-    text: 'LINK',
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'YFI-A': {
+    colRatio: 200,
+    amountRange: [0.1, 35],
+    amountStart: 0.5
+  },
+  'BAL-A': {
+    colRatio: 200,
+    amountRange: [200, 70000],
+    amountStart: 100
+  },
+  'GUSD-A': {
     colRatio: 200,
     amountRange: [200, 70000],
     amountStart: 100
@@ -418,9 +432,10 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
             {lang.collateral_type}
           </CapsText>
           <Dropdown
+            hideSelected={false}
             items={ilks.map(ilk => ({
               value: ilk.symbol,
-              render: () => (
+              render: isSelected => (
                 <DropdownItem
                   img={
                     <TokenIcon
@@ -429,8 +444,9 @@ const BorrowCalculator = ({ prices, cdpTypesList, ...props }) => {
                       height="28.33"
                     />
                   }
+                  isSelected={isSelected}
                 >
-                  {ilk.text || ilk.symbol}
+                  {getTokenName(ilk)}
                 </DropdownItem>
               )
             }))}

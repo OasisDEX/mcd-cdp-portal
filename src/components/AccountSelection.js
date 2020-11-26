@@ -96,6 +96,16 @@ const DropdownWrapper = styled(Box)`
 
   ${DropdownItems} {
     &.smaller {
+      /* 
+      One of the two item lists needs to be absolutely positioned,
+      so they overlap each other.
+      
+      We choose the smaller one for this, because the larger one
+      needs to be used as hover area, therefore must remain with static
+      position. This prevents the dropdown from disappearing when going 
+      from the larger one to the small one through the navigation link 
+      at the bottom ("More wallets", etc).
+     */
       position: absolute;
       top: 0;
     }
