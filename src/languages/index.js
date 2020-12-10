@@ -1,6 +1,6 @@
 import LocalizedStrings from 'react-localization';
-import english from './_english';
-import chinese from './_chinese';
+import english from './_english.json';
+import chinese from './_chinese.json';
 
 export const defaultLocale = 'en';
 
