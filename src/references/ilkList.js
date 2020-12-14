@@ -14,7 +14,9 @@ import {
   LINK,
   YFI,
   BAL,
-  GUSD
+  GUSD,
+  UNI,
+  RENBTC
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -165,5 +167,22 @@ export default [
     gem: 'GUSD',
     currency: GUSD,
     networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'uni-a',
+    symbol: 'UNI-A',
+    key: 'UNI-A',
+    gem: 'UNI',
+    currency: UNI,
+    networks: ['mainnet', 'kovan']
+  },
+  {
+    slug: 'renbtc-a',
+    symbol: 'RENBTC-A',
+    key: 'RENBTC-A',
+    gem: 'RENBTC',
+    currency: RENBTC,
+    networks: ['mainnet', 'kovan']
   }
+
 ];
