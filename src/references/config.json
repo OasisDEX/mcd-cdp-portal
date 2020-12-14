@@ -56,7 +56,9 @@
     "LINK",
     "YFI",
     "BAL",
-    "GUSD"
+    "GUSD",
+    "UNI",
+    "RENBTC"
   ],
   "trackingPages": {
     "Overview": "Overview",
