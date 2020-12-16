@@ -67,7 +67,9 @@ export const TokenNames = {
   LINK: 'Chainlink',
   YFI: 'yearn.finance',
   BAL: 'Balancer',
-  GUSD: 'Gemini Dollar'
+  GUSD: 'Gemini Dollar',
+  UNI: 'Uniswap',
+  RENBTC: 'renBTC'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
