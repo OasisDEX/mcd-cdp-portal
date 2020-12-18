@@ -58,7 +58,9 @@
     "BAL",
     "GUSD",
     "UNI",
-    "RENBTC"
+    "RENBTC",
+    "AAVE",
+    "UNIV2DAIETH"
   ],
   "trackingPages": {
     "Overview": "Overview",
