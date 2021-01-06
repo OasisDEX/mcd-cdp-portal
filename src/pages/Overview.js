@@ -23,6 +23,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
+import Carat from '../components/Carat';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -331,12 +332,34 @@ function Overview({ viewedAddress }) {
                 vault =>
                   !vault.collateralAmount || !vault.collateralAmount.gt(0)
               ) && (
-                <Button
-                  variant="secondary-outline"
-                  onClick={() => setShowEmptyVaults(state => !state)}
-                >
-                  {showEmptyVaults ? 'Hide' : 'Show all'}
-                </Button>
+                <Flex justifyContent="center" mt="xs">
+                  <Button
+                    variant="secondary-outline"
+                    px="s"
+                    py="2xs"
+                    borderColor="steel"
+                    minWidth="107px"
+                    onClick={() => setShowEmptyVaults(state => !state)}
+                  >
+                    <Flex justifyContent="center" alignItems="center">
+                      {showEmptyVaults ? (
+                        <>
+                          <Text color="steel" pr="xs">
+                            {lang.overview_page.hide_empty_vaults}
+                          </Text>
+                          <Carat rotation={180} />
+                        </>
+                      ) : (
+                        <>
+                          <Text color="steel" pr="xs">
+                            {lang.overview_page.show_empty_vaults}
+                          </Text>
+                          <Carat />
+                        </>
+                      )}
+                    </Flex>
+                  </Button>
+                </Flex>
               )}
             </Card>
           </Box>
