@@ -227,49 +227,53 @@ const CDPList = memo(function({
               {lang.overview}
             </Text>
           </NavbarItem>
-          {userVaults.map(
-            ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
-              const linkPath = `${navigation.basename}/${id}`;
-              const active = currentPath === linkPath;
-              return (
-                <NavbarItem
-                  key={id}
-                  href={linkPath + currentQuery}
-                  mx={mobile && '7px'}
-                  mt={mobile ? '15px' : '5px'}
-                  bg={getBgColor(active, account)}
-                  height={`${getMeasurement('navbarItemHeight')}px`}
-                  width={`${getMeasurement('navbarItemWidth')}px`}
-                  trackBtnClick={() =>
-                    trackBtnClick('SelectVault', {
-                      collateral: vaultType,
-                      id
-                    })
-                  }
-                >
-                  <Text
-                    t="p6"
-                    fontWeight="bold"
-                    color={account ? 'white' : 'darkPurple'}
+          {userVaults
+            .filter(
+              vault => vault.collateralAmount && vault.collateralAmount.gt(0)
+            )
+            .map(
+              ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
+                const linkPath = `${navigation.basename}/${id}`;
+                const active = currentPath === linkPath;
+                return (
+                  <NavbarItem
+                    key={id}
+                    href={linkPath + currentQuery}
+                    mx={mobile && '7px'}
+                    mt={mobile ? '15px' : '5px'}
+                    bg={getBgColor(active, account)}
+                    height={`${getMeasurement('navbarItemHeight')}px`}
+                    width={`${getMeasurement('navbarItemWidth')}px`}
+                    trackBtnClick={() =>
+                      trackBtnClick('SelectVault', {
+                        collateral: vaultType,
+                        id
+                      })
+                    }
                   >
-                    {vaultType}
-                  </Text>
-                  <RatioDisplay
-                    fontSize="1.3rem"
-                    ratio={collateralizationRatio
-                      .toBigNumber()
-                      .dp(2)
-                      .times(100)}
-                    ilkLiqRatio={liquidationRatio
-                      .toBigNumber()
-                      .dp(2)
-                      .times(100)}
-                    active={active}
-                  />
-                </NavbarItem>
-              );
-            }
-          )}
+                    <Text
+                      t="p6"
+                      fontWeight="bold"
+                      color={account ? 'white' : 'darkPurple'}
+                    >
+                      {vaultType}
+                    </Text>
+                    <RatioDisplay
+                      fontSize="1.3rem"
+                      ratio={collateralizationRatio
+                        .toBigNumber()
+                        .dp(2)
+                        .times(100)}
+                      ilkLiqRatio={liquidationRatio
+                        .toBigNumber()
+                        .dp(2)
+                        .times(100)}
+                      active={active}
+                    />
+                  </NavbarItem>
+                );
+              }
+            )}
           {account && !emergencyShutdownActive && (
             <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
