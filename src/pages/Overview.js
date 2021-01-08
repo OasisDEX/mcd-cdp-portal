@@ -341,21 +341,12 @@ function Overview({ viewedAddress }) {
                     onClick={() => setShowEmptyVaults(state => !state)}
                   >
                     <Flex justifyContent="center" alignItems="center">
-                      {showEmptyVaults ? (
-                        <>
-                          <Text color="steel" pr="xs" fontSize="1.3rem">
-                            {lang.overview_page.hide_empty_vaults}
-                          </Text>
-                          <Carat rotation={180} />
-                        </>
-                      ) : (
-                        <>
-                          <Text color="steel" pr="xs" fontSize="1.3rem">
-                            {lang.overview_page.show_empty_vaults}
-                          </Text>
-                          <Carat />
-                        </>
-                      )}
+                      <Text color="steel" pr="xs" fontSize="1.3rem">
+                        {showEmptyVaults
+                          ? lang.overview_page.hide_empty_vaults
+                          : lang.overview_page.show_empty_vaults}
+                      </Text>
+                      <Carat rotation={showEmptyVaults ? 180 : 0} />
                     </Flex>
                   </Button>
                 </Flex>
