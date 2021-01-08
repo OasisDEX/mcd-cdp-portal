@@ -338,7 +338,6 @@ function Overview({ viewedAddress }) {
                     px="s"
                     py="2xs"
                     borderColor="steel"
-                    minWidth="107px"
                     onClick={() => setShowEmptyVaults(state => !state)}
                   >
                     <Flex justifyContent="center" alignItems="center">
