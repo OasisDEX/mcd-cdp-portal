@@ -105,6 +105,11 @@ const CDPList = memo(function({
   const [listOpen, setListOpen] = useState(false);
   const { maker, account } = useMaker();
   const { userVaults } = useVaults();
+  const userActiveVaults =
+    userVaults &&
+    userVaults.filter(
+      vault => vault.collateralAmount && vault.collateralAmount.gt(0)
+    );
   const [overviewPath, setOverviewPath] = useState(currentPath);
   const { trackBtnClick } = useAnalytics('NavBar');
   const active = currentPath === overviewPath;
@@ -150,7 +155,8 @@ const CDPList = memo(function({
 
   const onDirectionalClick = direction => {
     const scrollAmount =
-      userVaults && cdpContainerRef.current.scrollHeight / userVaults.length;
+      userActiveVaults &&
+      cdpContainerRef.current.scrollHeight / userActiveVaults.length;
     const maxScrollTop =
       cdpContainerRef.current.scrollHeight -
       cdpContainerRef.current.clientHeight;
@@ -184,9 +190,9 @@ const CDPList = memo(function({
       ? 'white'
       : 'grey.200';
 
-  return listOpen && userVaults ? (
+  return listOpen && userActiveVaults ? (
     <Fragment>
-      {userVaults.length >= 4 && !mobile && (
+      {userActiveVaults.length >= 4 && !mobile && (
         <DirectionalButton
           onClick={() => onDirectionalClick('up')}
           show={scrollTop > 0}
@@ -205,12 +211,12 @@ const CDPList = memo(function({
         <CdpContainer
           onScroll={debounced}
           ref={cdpContainerRef}
-          cdpsLength={userVaults.length}
+          cdpsLength={userActiveVaults.length}
           mobile={mobile}
           pb="5px"
         >
           <NavbarItem
-            key={userVaults.length * 10}
+            key={userActiveVaults.length * 10}
             href={overviewPath + currentQuery}
             mx={mobile && '7px'}
             mt={mobile ? '15px' : '5px'}
@@ -227,59 +233,55 @@ const CDPList = memo(function({
               {lang.overview}
             </Text>
           </NavbarItem>
-          {userVaults
-            .filter(
-              vault => vault.collateralAmount && vault.collateralAmount.gt(0)
-            )
-            .map(
-              ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
-                const linkPath = `${navigation.basename}/${id}`;
-                const active = currentPath === linkPath;
-                return (
-                  <NavbarItem
-                    key={id}
-                    href={linkPath + currentQuery}
-                    mx={mobile && '7px'}
-                    mt={mobile ? '15px' : '5px'}
-                    bg={getBgColor(active, account)}
-                    height={`${getMeasurement('navbarItemHeight')}px`}
-                    width={`${getMeasurement('navbarItemWidth')}px`}
-                    trackBtnClick={() =>
-                      trackBtnClick('SelectVault', {
-                        collateral: vaultType,
-                        id
-                      })
-                    }
+          {userActiveVaults.map(
+            ({ id, liquidationRatio, collateralizationRatio, vaultType }) => {
+              const linkPath = `${navigation.basename}/${id}`;
+              const active = currentPath === linkPath;
+              return (
+                <NavbarItem
+                  key={id}
+                  href={linkPath + currentQuery}
+                  mx={mobile && '7px'}
+                  mt={mobile ? '15px' : '5px'}
+                  bg={getBgColor(active, account)}
+                  height={`${getMeasurement('navbarItemHeight')}px`}
+                  width={`${getMeasurement('navbarItemWidth')}px`}
+                  trackBtnClick={() =>
+                    trackBtnClick('SelectVault', {
+                      collateral: vaultType,
+                      id
+                    })
+                  }
+                >
+                  <Text
+                    t="p6"
+                    fontWeight="bold"
+                    color={account ? 'white' : 'darkPurple'}
                   >
-                    <Text
-                      t="p6"
-                      fontWeight="bold"
-                      color={account ? 'white' : 'darkPurple'}
-                    >
-                      {vaultType}
-                    </Text>
-                    <RatioDisplay
-                      fontSize="1.3rem"
-                      ratio={collateralizationRatio
-                        .toBigNumber()
-                        .dp(2)
-                        .times(100)}
-                      ilkLiqRatio={liquidationRatio
-                        .toBigNumber()
-                        .dp(2)
-                        .times(100)}
-                      active={active}
-                    />
-                  </NavbarItem>
-                );
-              }
-            )}
+                    {vaultType}
+                  </Text>
+                  <RatioDisplay
+                    fontSize="1.3rem"
+                    ratio={collateralizationRatio
+                      .toBigNumber()
+                      .dp(2)
+                      .times(100)}
+                    ilkLiqRatio={liquidationRatio
+                      .toBigNumber()
+                      .dp(2)
+                      .times(100)}
+                    active={active}
+                  />
+                </NavbarItem>
+              );
+            }
+          )}
           {account && !emergencyShutdownActive && (
             <AddCdpButton account={account} show={show} mobile={mobile} />
           )}
         </CdpContainer>
       </Box>
-      {userVaults.length >= 4 && !mobile && (
+      {userActiveVaults.length >= 4 && !mobile && (
         <DirectionalButton
           onClick={() => onDirectionalClick('down')}
           show={scrollTop < maxScrollTop}
