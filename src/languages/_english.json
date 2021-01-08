@@ -247,8 +247,8 @@
     "no_vaults": "Address {0} has no Vaults.",
     "vault_unavailable": "Sorry, this vault is unavailable",
     "loading_vaults": "Loading Vaults...",
-    "show_empty_vaults": "Show all",
-    "hide_empty_vaults": "Hide"
+    "show_empty_vaults": "Show empty Vaults",
+    "hide_empty_vaults": "Hide empty Vaults"
   },
   "navbar": {
     "save": "Save",

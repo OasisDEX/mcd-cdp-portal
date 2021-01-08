@@ -343,14 +343,14 @@ function Overview({ viewedAddress }) {
                     <Flex justifyContent="center" alignItems="center">
                       {showEmptyVaults ? (
                         <>
-                          <Text color="steel" pr="xs">
+                          <Text color="steel" pr="xs" fontSize="1.3rem">
                             {lang.overview_page.hide_empty_vaults}
                           </Text>
                           <Carat rotation={180} />
                         </>
                       ) : (
                         <>
-                          <Text color="steel" pr="xs">
+                          <Text color="steel" pr="xs" fontSize="1.3rem">
                             {lang.overview_page.show_empty_vaults}
                           </Text>
                           <Carat />
