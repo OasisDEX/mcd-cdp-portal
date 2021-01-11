@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import PageContentLayout from 'layouts/PageContentLayout';
 import LoadingLayout from 'layouts/LoadingLayout';
@@ -23,6 +23,7 @@ import useAnalytics from 'hooks/useAnalytics';
 import useVaults from 'hooks/useVaults';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { NotificationList, SAFETY_LEVELS } from 'utils/constants';
+import Carat from '../components/Carat';
 
 const InfoCard = ({ title, amount, denom }) => (
   <Card py={{ s: 'm', xl: 'l' }} px="m" minWidth="22.4rem">
@@ -59,6 +60,7 @@ function Overview({ viewedAddress }) {
   const { lang } = useLanguage();
   const { emergencyShutdownActive } = useEmergencyShutdown();
   const { addNotification, deleteNotifications } = useNotification();
+  const [showEmptyVaults, setShowEmptyVaults] = useState(false);
 
   useEffect(() => {
     if (
@@ -209,110 +211,146 @@ function Overview({ viewedAddress }) {
                   </Table.tr>
                 </Table.thead>
                 <tbody>
-                  {viewedAddressVaults.map(
-                    ({
-                      id,
-                      collateralizationRatio,
-                      liquidationRatio,
-                      collateralAmount,
-                      collateralAvailableAmount,
-                      debtValue
-                    }) => (
-                      <Table.tr key={id}>
-                        <Table.td>
-                          <Text
-                            t="body"
-                            fontSize={{ s: '1.7rem', xl: 'm' }}
-                            fontWeight={{ s: 'medium', xl: 'normal' }}
-                            color="darkPurple"
-                          >
-                            {collateralAmount.symbol}
-                          </Text>
-                        </Table.td>
-                        <Table.td>
-                          <Text
-                            t="body"
-                            fontSize={{ s: '1.7rem', xl: 'm' }}
-                            color={{ s: 'darkLavender', xl: 'darkPurple' }}
-                          >
-                            {id}
-                          </Text>
-                        </Table.td>
-                        <Table.td>
-                          {isFinite(collateralizationRatio.toNumber()) ? (
-                            <RatioDisplay
-                              fontSize={{ s: '1.7rem', xl: '1.3rem' }}
-                              ratio={collateralizationRatio
-                                .toBigNumber()
-                                .dp(4)
-                                .times(100)}
-                              ilkLiqRatio={liquidationRatio
-                                .toBigNumber()
-                                .dp(4)
-                                .times(100)}
-                            />
-                          ) : (
-                            <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
-                              N/A
-                            </Text>
-                          )}
-                        </Table.td>
-                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
-                            {collateralAmount.toString()}
-                          </Text>
-                        </Table.td>
-                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
-                            {collateralAvailableAmount.toString()}
-                          </Text>
-                        </Table.td>
-                        <Table.td display={{ s: 'none', xl: 'table-cell' }}>
-                          <Text t="caption" color="darkLavender">
-                            {debtValue.toBigNumber().toFixed(2)} DAI
-                          </Text>
-                        </Table.td>
-                        <Table.td>
-                          <Flex justifyContent="flex-end">
-                            <Button
-                              variant="secondary-outline"
-                              px="s"
-                              py="2xs"
-                              borderColor="steel"
-                              onClick={() => {
-                                trackBtnClick('Manage', {
-                                  collateral: collateralAmount.symbol,
-                                  vaultId: id
-                                });
-                              }}
-                            >
-                              <Link
-                                href={`${navigation.basename}/${id}${url.search}`}
-                                prefetch={true}
-                              >
-                                <Text
-                                  fontSize="1.3rem"
-                                  color="steel"
-                                  css={`
-                                    white-space: nowrap;
-                                  `}
-                                >
-                                  <Box display={{ s: 'none', xl: 'inline' }}>
-                                    {lang.overview_page.view_cdp}
-                                  </Box>
-                                  <Box display={{ s: 'inline', xl: 'none' }}>
-                                    {lang.overview_page.view_cdp_mobile}
-                                  </Box>
-                                </Text>
-                              </Link>
-                            </Button>
-                          </Flex>
-                        </Table.td>
-                      </Table.tr>
+                  {viewedAddressVaults
+                    .filter(
+                      vault =>
+                        showEmptyVaults ||
+                        (vault.collateralAmount && vault.collateralAmount.gt(0))
                     )
-                  )}
+                    .sort((a, b) =>
+                      a.collateralAmount.gt(0)
+                        ? -1
+                        : b.collateralAmount.gt(0)
+                        ? 1
+                        : 0
+                    )
+                    .map(
+                      ({
+                        id,
+                        collateralizationRatio,
+                        liquidationRatio,
+                        collateralAmount,
+                        collateralAvailableAmount,
+                        debtValue
+                      }) => (
+                        <Table.tr key={id}>
+                          <Table.td>
+                            <Text
+                              t="body"
+                              fontSize={{ s: '1.7rem', xl: 'm' }}
+                              fontWeight={{ s: 'medium', xl: 'normal' }}
+                              color="darkPurple"
+                            >
+                              {collateralAmount.symbol}
+                            </Text>
+                          </Table.td>
+                          <Table.td>
+                            <Text
+                              t="body"
+                              fontSize={{ s: '1.7rem', xl: 'm' }}
+                              color={{ s: 'darkLavender', xl: 'darkPurple' }}
+                            >
+                              {id}
+                            </Text>
+                          </Table.td>
+                          <Table.td>
+                            {isFinite(collateralizationRatio.toNumber()) ? (
+                              <RatioDisplay
+                                fontSize={{ s: '1.7rem', xl: '1.3rem' }}
+                                ratio={collateralizationRatio
+                                  .toBigNumber()
+                                  .dp(4)
+                                  .times(100)}
+                                ilkLiqRatio={liquidationRatio
+                                  .toBigNumber()
+                                  .dp(4)
+                                  .times(100)}
+                              />
+                            ) : (
+                              <Text fontSize={{ s: '1.7rem', xl: '1.3rem' }}>
+                                N/A
+                              </Text>
+                            )}
+                          </Table.td>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                            <Text t="caption" color="darkLavender">
+                              {collateralAmount.toString()}
+                            </Text>
+                          </Table.td>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                            <Text t="caption" color="darkLavender">
+                              {collateralAvailableAmount.toString()}
+                            </Text>
+                          </Table.td>
+                          <Table.td display={{ s: 'none', xl: 'table-cell' }}>
+                            <Text t="caption" color="darkLavender">
+                              {debtValue.toBigNumber().toFixed(2)} DAI
+                            </Text>
+                          </Table.td>
+                          <Table.td>
+                            <Flex justifyContent="flex-end">
+                              <Button
+                                variant="secondary-outline"
+                                px="s"
+                                py="2xs"
+                                borderColor="steel"
+                                onClick={() => {
+                                  trackBtnClick('Manage', {
+                                    collateral: collateralAmount.symbol,
+                                    vaultId: id
+                                  });
+                                }}
+                              >
+                                <Link
+                                  href={`${navigation.basename}/${id}${url.search}`}
+                                  prefetch={true}
+                                >
+                                  <Text
+                                    fontSize="1.3rem"
+                                    color="steel"
+                                    css={`
+                                      white-space: nowrap;
+                                    `}
+                                  >
+                                    <Box display={{ s: 'none', xl: 'inline' }}>
+                                      {lang.overview_page.view_cdp}
+                                    </Box>
+                                    <Box display={{ s: 'inline', xl: 'none' }}>
+                                      {lang.overview_page.view_cdp_mobile}
+                                    </Box>
+                                  </Text>
+                                </Link>
+                              </Button>
+                            </Flex>
+                          </Table.td>
+                        </Table.tr>
+                      )
+                    )}
                 </tbody>
               </Table>
+              {viewedAddressVaults.some(
+                vault =>
+                  !vault.collateralAmount || !vault.collateralAmount.gt(0)
+              ) && (
+                <Flex justifyContent="center" mt="xs">
+                  <Button
+                    variant="secondary-outline"
+                    px="s"
+                    py="2xs"
+                    borderColor="steel"
+                    onClick={() => setShowEmptyVaults(state => !state)}
+                  >
+                    <Flex justifyContent="center" alignItems="center">
+                      <Text color="steel" pr="xs" fontSize="1.3rem">
+                        {showEmptyVaults
+                          ? lang.overview_page.hide_empty_vaults
+                          : lang.overview_page.show_empty_vaults}
+                      </Text>
+                      <Carat rotation={showEmptyVaults ? 180 : 0} />
+                    </Flex>
+                  </Button>
+                </Flex>
+              )}
             </Card>
           </Box>
         </Grid>
