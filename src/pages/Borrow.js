@@ -231,7 +231,6 @@ function Borrow({ disableConnect = false }) {
         <PageHead
           title={lang.borrow_landing.meta.title}
           description={lang.borrow_landing.meta.description}
-          imgUrl="https://oasis.app/meta/Oasis_Borrow.png"
         />
         <VimeoPlayer
           id="427849477"
