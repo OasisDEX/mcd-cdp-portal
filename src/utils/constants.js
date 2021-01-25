@@ -69,7 +69,9 @@ export const TokenNames = {
   BAL: 'Balancer',
   GUSD: 'Gemini Dollar',
   UNI: 'Uniswap',
-  RENBTC: 'renBTC'
+  RENBTC: 'renBTC',
+  AAVE: 'Aave',
+  UNIV2DAIETH: 'Uniswap V2 DAI/ETH'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
