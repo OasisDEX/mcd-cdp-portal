@@ -60,7 +60,10 @@
     "UNI",
     "RENBTC",
     "AAVE",
-    "UNIV2DAIETH"
+    "UNIV2DAIETH",
+    "UNIV2WBTCETH",
+    "UNIV2USDCETH"
+
   ],
   "trackingPages": {
     "Overview": "Overview",
