@@ -1,20 +1,20 @@
 {
   "supportedNetworkIds": ["1337", "999", "5", "4", "3", "42", "1"],
   "rpcUrls": {
-    "1": "https://mainnet.infura.io/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "42": "https://kovan.infura.io/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "3": "https://ropsten.infura.io/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "4": "https://rinkeby.infura.io/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "5": "https://goerli.infura.io/v3/f38a32c5f3a94e518ba5de2884e9cb01",
+    "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "3": "https://ropsten.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "https://rinkeby.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "5": "https://goerli.infura.io/v3/58073b4a32df4105906c702f167b91d2",
     "999": "http://localhost:2000",
     "1337": "http://localhost:2000"
   },
   "wsRpcUrls": {
-    "1": "wss://mainnet.infura.io/ws/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "42": "wss://kovan.infura.io/ws/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "3": "wss://ropsten.infura.io/ws/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "4": "wss://rinkeby.infura.io/ws/v3/f38a32c5f3a94e518ba5de2884e9cb01",
-    "5": "wss://goerli.infura.io/ws/v3/f38a32c5f3a94e518ba5de2884e9cb01"
+    "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "3": "wss://ropsten.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "4": "wss://rinkeby.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
+    "5": "wss://goerli.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
   },
   "networkNames": {
     "1": "mainnet",
