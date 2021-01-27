@@ -56,14 +56,13 @@ const SidebarFeeds = ({ feeds }) => {
                     t="smallCaps"
                   >
                     {value.symbol
-                      .split('/')
-                      .reverse()
-                      .join('/')}
+                      .split('/')[1]
+                      }
                   </Text>
                   <Text fontSize="1.4rem" color="darkPurple">
                     {`${formatter(value, {
                       rounding: BigNumber.ROUND_HALF_UP
-                    })} ${value.symbol}`}
+                    })} USD`}
                   </Text>
                 </Flex>
               )
