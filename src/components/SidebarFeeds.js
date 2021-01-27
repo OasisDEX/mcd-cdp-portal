@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Text, Card, Flex, Link, CardBody } from '@makerdao/ui-components-core';
-import { formatter, prettifyNumber } from 'utils/ui';
+import { prettifyNumber } from 'utils/ui';
 import Carat from './Carat';
 import styled from 'styled-components';
 import { ReactComponent as ExternalLinkIcon } from 'images/external-link.svg';
 import useLanguage from 'hooks/useLanguage';
-import BigNumber from 'bignumber.js';
 
 const StyledCardBody = styled(CardBody)`
   cursor: pointer;
@@ -58,9 +57,6 @@ const SidebarFeeds = ({ feeds }) => {
                     {value.symbol.split('/')[1]}
                   </Text>
                   <Text fontSize="1.4rem" color="darkPurple">
-                    {/* {`${formatter(value, {
-                      rounding: BigNumber.ROUND_HALF_UP
-                    })} USD`} */}
                     {`${prettifyNumber(value, null, null, false)} USD`}
                   </Text>
                 </Flex>

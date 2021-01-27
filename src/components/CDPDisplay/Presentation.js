@@ -352,7 +352,6 @@ export default function({
             title={
               <TextBlock fontSize="l">
                 {lang.cdp_page.current_price_info}
-                {/* <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo> */}
               </TextBlock>
             }
             value={`${prettifyNumber(
