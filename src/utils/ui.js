@@ -60,6 +60,7 @@ export function prettifyNumber(
     } else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     if (num < 1 && num !== 0) decimalPlaces = 4;
+    else if (decimalPlaces == null && num < 999999999) decimalPlaces = 2;
     formattedNumber = num.toLocaleString(lang, {
       minimumFractionDigits: decimalPlaces
     });
