@@ -342,7 +342,10 @@ export default function({
       >
         <CdpViewCard title={lang.cdp_page.liquidation_price}>
           <Flex alignItems="flex-end" mt="s" mb="xs">
-            <AmountDisplay amount={prettifyNumber(liquidationPrice, null, null, false)} denomination="USD" />
+            <AmountDisplay
+              amount={prettifyNumber(liquidationPrice, null, null, false)}
+              denomination="USD"
+            />
             <ExtraInfo>({gem}/USD)</ExtraInfo>
           </Flex>
           <InfoContainerRow
@@ -352,7 +355,12 @@ export default function({
                 {/* <ExtraInfo ml="2xs">{`(${gem}/USD)`}</ExtraInfo> */}
               </TextBlock>
             }
-            value={`${prettifyNumber(vault.collateralTypePrice, null, null, false)} USD`}
+            value={`${prettifyNumber(
+              vault.collateralTypePrice,
+              null,
+              null,
+              false
+            )} USD`}
           />
           <InfoContainerRow
             title={lang.cdp_page.liquidation_penalty}
