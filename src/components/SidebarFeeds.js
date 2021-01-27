@@ -55,9 +55,7 @@ const SidebarFeeds = ({ feeds }) => {
                     fontWeight="semibold"
                     t="smallCaps"
                   >
-                    {value.symbol
-                      .split('/')[1]
-                      }
+                    {value.symbol.split('/')[1]}
                   </Text>
                   <Text fontSize="1.4rem" color="darkPurple">
                     {`${formatter(value, {
