@@ -20,7 +20,9 @@ import {
   AAVE,
   UNIV2DAIETH,
   UNIV2WBTCETH,
-  UNIV2USDCETH
+  UNIV2USDCETH,
+  UNIV2DAIUSDC,
+  UNIV2ETHUSDT
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -213,6 +215,14 @@ export default [
     networks: ['mainnet']
   },
   {
+    slug: 'univ2daiusdc-a',
+    symbol: 'UNIV2DAIUSDC-A',
+    key: 'UNIV2DAIUSDC-A',
+    gem: 'UNIV2DAIUSDC',
+    currency: UNIV2DAIUSDC,
+    networks: ['mainnet']
+  },
+  {
     slug: 'univ2usdceth-a',
     symbol: 'UNIV2USDCETH-A',
     key: 'UNIV2USDCETH-A',
@@ -220,4 +230,13 @@ export default [
     currency: UNIV2USDCETH,
     networks: ['mainnet']
   },
+  {
+    slug: 'univ2ethusdt-a',
+    symbol: 'UNIV2ETHUSDT-A',
+    key: 'UNIV2ETHUSDT-A',
+    gem: 'UNIV2ETHUSDT',
+    currency: UNIV2ETHUSDT,
+    networks: ['mainnet']
+  },
+
 ];

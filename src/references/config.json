@@ -62,8 +62,9 @@
     "AAVE",
     "UNIV2DAIETH",
     "UNIV2WBTCETH",
-    "UNIV2USDCETH"
-
+    "UNIV2USDCETH",
+    "UNIV2DAIUSDC",
+    "UNIV2ETHUSDT"
   ],
   "trackingPages": {
     "Overview": "Overview",
