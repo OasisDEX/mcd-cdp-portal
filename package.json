@@ -19,7 +19,7 @@
     "@makerdao/dai-plugin-config": "^0.2.15",
     "@makerdao/dai-plugin-ledger-web": "^0.9.10",
     "@makerdao/dai-plugin-portis": "0.0.4",
-    "@makerdao/dai-plugin-mcd": "^1.6.26",
+    "@makerdao/dai-plugin-mcd": "^1.6.27",
     "@makerdao/dai-plugin-trezor-web": "^0.9.6",
     "@makerdao/dai-plugin-walletconnect": "^0.0.8",
     "@makerdao/dai-plugin-walletlink": "^0.0.4",
