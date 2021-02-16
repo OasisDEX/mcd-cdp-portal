@@ -280,7 +280,7 @@
       "generate_dai": "生成 Dai",
       "confirmation": "确认"
     },
-    "dust_notification": "The dust limit for {0} is {1}. Please make sure you have enough collateral before continuing",
+    "dust_notification": "The dust limit for {0} vaults is {1} DAI. The dust limit is the minimum amount of DAI that can be generated in a vault. Please make sure you have enough collateral to generate at least this amount of DAI before continuing.",
     "set_allowance": "许可资产",
     "seconds_wait_time": "秒",
     "minutes_wait_time_singular": "分钟",
