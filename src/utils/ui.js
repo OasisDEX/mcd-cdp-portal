@@ -56,8 +56,10 @@ export function prettifyNumber(
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
     if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
     if (num < 1) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
-    if (num < 0.001) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(6);
-    if (num < 0.00001) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(8);
+    if (num < 0.001)
+      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(6);
+    if (num < 0.00001)
+      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(8);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     if (num < 1 && num !== 0) decimalPlaces = 4;
