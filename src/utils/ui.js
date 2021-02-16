@@ -60,11 +60,14 @@ export function prettifyNumber(
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(6);
     if (num < 0.00001)
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(8);
+    if (num < 0.0000001)
+      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(10);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     if (num < 1 && num !== 0) decimalPlaces = 4;
     if (num < 0.001 && num !== 0) decimalPlaces = 6;
     if (num < 0.00001 && num !== 0) decimalPlaces = 8;
+    if (num < 0.0000001 && num !== 0) decimalPlaces = 10;
     else if (decimalPlaces == null && num < 999999999) decimalPlaces = 2;
     formattedNumber = num.toLocaleString(lang, {
       minimumFractionDigits: decimalPlaces
