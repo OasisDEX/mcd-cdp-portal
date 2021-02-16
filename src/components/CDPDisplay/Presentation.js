@@ -223,7 +223,8 @@ export default function({
       const claimCollateralNotification = lang.formatString(
         lang.notifications.claim_collateral,
         gem,
-        unlockedCollateral && prettifyNumber(unlockedCollateral, false, null, false),
+        unlockedCollateral &&
+          prettifyNumber(unlockedCollateral, false, null, false),
         gem
       );
 
