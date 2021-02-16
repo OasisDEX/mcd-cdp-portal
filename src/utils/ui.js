@@ -54,12 +54,15 @@ export function prettifyNumber(
     if (num > 999999999999) formattedNumber = (num / 1000000).toFixed(2) + 'T';
     if (num > 999999999) formattedNumber = (num / 1000000).toFixed(2) + 'B';
     if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
-    else if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
-    else if (num < 1) {
-      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
-    } else formattedNumber = num.toFixed(decimalPlaces);
+    if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
+    if (num < 1) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
+    if (num < 0.001) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(6);
+    if (num < 0.00001) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(8);
+    else formattedNumber = num.toFixed(decimalPlaces);
   } else {
     if (num < 1 && num !== 0) decimalPlaces = 4;
+    if (num < 0.001 && num !== 0) decimalPlaces = 6;
+    if (num < 0.00001 && num !== 0) decimalPlaces = 8;
     else if (decimalPlaces == null && num < 999999999) decimalPlaces = 2;
     formattedNumber = num.toLocaleString(lang, {
       minimumFractionDigits: decimalPlaces

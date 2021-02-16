@@ -55,7 +55,7 @@ function OpenCDPForm({
   const userCanDrawDaiAmount = daiAvailable?.gte(
     BigNumber(cdpParams.daiToDraw === '' ? '0' : cdpParams.daiToDraw)
   );
-
+        
   const fields = [
     [
       lang.formatString(
