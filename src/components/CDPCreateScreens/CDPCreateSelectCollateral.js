@@ -363,14 +363,16 @@ const CDPCreateSelectCollateral = ({
       </Card>
 
       {selectedIlk.symbol && collateralTypesData && (
-        <Flex mb={'14px'} justifyContent="center" backgroundColor="red">
-          <Text>
-            {lang.formatString(
-              lang.cdp_create.dust_notification,
-              selectedIlk.symbol,
-              `${prettifyNumber(selectedIlkDustLimit)} DAI`
-            )}
-          </Text>
+        <Flex mb={'14px'} justifyContent="center">
+          <Box width="800px">
+            <Text wrap="flexwrap">
+              {lang.formatString(
+                lang.cdp_create.dust_notification,
+                selectedIlk.symbol,
+                prettifyNumber(selectedIlkDustLimit)
+              )}
+            </Text>
+          </Box>
         </Flex>
       )}
 
