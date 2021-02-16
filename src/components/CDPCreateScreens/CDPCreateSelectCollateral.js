@@ -7,6 +7,7 @@ import {
   Text,
   Tooltip,
   Flex,
+  Grid, 
   Loader
 } from '@makerdao/ui-components-core';
 import { TextBlock } from 'components/Typography';
@@ -224,8 +225,10 @@ const CDPCreateSelectCollateral = ({
     cdpTypes.every(hasBalance) || !cdpTypes.some(hasBalance);
   const hasAllowanceAndProxy = hasAllowance && !!proxyAddress;
 
+  const selectedIlkDustLimit = selectedIlk.symbol && collateralTypesData ? collateralTypesData.find(({ symbol })=> symbol === selectedIlk.symbol).debtFloor : undefined 
   return (
-    <Box
+    <Grid
+      justifyItems="center"
       maxWidth="1040px"
       css={`
         margin: 0 auto;
@@ -354,6 +357,17 @@ const CDPCreateSelectCollateral = ({
           )}
         </Overflow>
       </Card>
+      
+      {selectedIlk.symbol && collateralTypesData &&
+       <Flex mb={'14px'} justifyContent="center" backgroundColor="red">
+         <Text>
+           {lang.formatString(lang.cdp_create.dust_notification, selectedIlk.symbol, 
+                              `${prettifyNumber(selectedIlkDustLimit)} DAI`
+                             )}
+         </Text>
+       </Flex>
+      }
+
       <ScreenFooter
         onNext={() => {
           trackBtnClick('Next', {
@@ -372,7 +386,7 @@ const CDPCreateSelectCollateral = ({
         canGoBack={false}
         canProgress={!!selectedIlk.symbol}
       />
-    </Box>
+    </Grid>
   );
 };
 export default CDPCreateSelectCollateral;
