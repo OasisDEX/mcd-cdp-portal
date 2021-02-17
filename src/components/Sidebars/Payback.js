@@ -175,7 +175,7 @@ const Payback = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${prettifyNumber(liquidationPrice,false,null,false)} USD`}
+          body={`${prettifyNumber(liquidationPrice, false, null, false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

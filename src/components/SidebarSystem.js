@@ -26,7 +26,7 @@ const SidebarSystem = ({ system }) => {
       totalVaultsCreated
         ? lang.formatString(
             lang.sidebar.active_cdps_figure,
-            prettifyNumber(totalVaultsCreated,false,0,false)
+            prettifyNumber(totalVaultsCreated, false, 0, false)
           )
         : ''
     ]

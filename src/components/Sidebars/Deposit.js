@@ -9,7 +9,11 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { formatCollateralizationRatio, formatter, prettifyNumber } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  formatter,
+  prettifyNumber
+} from 'utils/ui';
 import { multiply } from 'utils/bignumber';
 import { getCurrency } from 'utils/cdp';
 import ProxyAllowanceToggle from 'components/ProxyAllowanceToggle';
@@ -131,14 +135,19 @@ const Deposit = ({ vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${prettifyNumber(collateralTypePrice,false,null,false)} USD`}
+          body={`${prettifyNumber(
+            collateralTypePrice,
+            false,
+            null,
+            false
+          )} USD`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
           // body={`${formatter(liquidationPrice, {
           //   infinity: BigNumber(0).toFixed(medium)
           // })} USD/${symbol}`}
-          body={`${prettifyNumber(liquidationPrice,false,null,false)} USD`}
+          body={`${prettifyNumber(liquidationPrice, false, null, false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

@@ -10,7 +10,11 @@ import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import useValidatedInput from 'hooks/useValidatedInput';
 import { add, greaterThan } from 'utils/bignumber';
-import { formatCollateralizationRatio, formatter, prettifyNumber } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  formatter,
+  prettifyNumber
+} from 'utils/ui';
 import { decimalRules } from '../../styles/constants';
 const { long, medium } = decimalRules;
 
@@ -143,7 +147,7 @@ const Generate = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${prettifyNumber(liquidationPrice,false,null,false)} USD`}
+          body={`${prettifyNumber(liquidationPrice, false, null, false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
