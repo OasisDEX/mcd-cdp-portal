@@ -347,7 +347,7 @@ export default function({
               amount={prettifyNumber(liquidationPrice, null, null, false)}
               denomination="USD"
             />
-            <ExtraInfo>({gem}/USD)</ExtraInfo>
+            {/* <ExtraInfo>({gem}/USD)</ExtraInfo> */}
           </Flex>
           <InfoContainerRow
             title={
@@ -398,7 +398,7 @@ export default function({
         <CdpViewCard title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}>
           <ActionContainerRow
             title={`${gem} ${lang.cdp_page.locked.toLowerCase()}`}
-            value={`${prettifyNumber(vault.collateralAmount)}`}
+            value={`${prettifyNumber(vault.collateralAmount._amount, false, null, false)}`}
             conversion={`${prettifyNumber(vault.collateralValue)}`}
             button={
               <ActionButton
@@ -417,7 +417,7 @@ export default function({
           />
           <ActionContainerRow
             title={lang.cdp_page.able_withdraw}
-            value={`${prettifyNumber(vault.collateralAvailableAmount)}`}
+            value={`${prettifyNumber(vault.collateralAvailableAmount._amount,false,null,false)}`}
             conversion={`${prettifyNumber(vault.collateralAvailableValue)}`}
             button={
               <ActionButton

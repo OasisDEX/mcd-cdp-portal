@@ -211,10 +211,10 @@ const CDPCreateDepositSidebar = ({
 
   const maxDaiAvailableToGenerate = getMaxDaiAvailable(ilkData);
 
-  let liquidationPriceDisplay = formatter(
+  let liquidationPriceDisplay = prettifyNumber(
     ilkData.calculateliquidationPrice(
       currency(cdpParams.gemsToLock || '0'),
-      DAI(cdpParams.daiToDraw || '0')
+      DAI(cdpParams.daiToDraw || '0'),false,null,false
     )
   );
   if ([Infinity, 'Infinity'].includes(liquidationPriceDisplay))
@@ -242,7 +242,8 @@ const CDPCreateDepositSidebar = ({
         [lang.liquidation_price, `$${liquidationPriceDisplay}`],
         [
           lang.formatString(lang.current_ilk_price, selectedIlk.gem),
-          `$${formatter(collateralTypePrice)}`
+          //`$${formatter(collateralTypePrice)}`
+          `$${prettifyNumber(collateralTypePrice,false,null,false)} USD`
         ],
         [
           lang.stability_fee,

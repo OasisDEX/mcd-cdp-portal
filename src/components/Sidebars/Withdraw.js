@@ -11,7 +11,7 @@ import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
 import useValidatedInput from 'hooks/useValidatedInput';
 import { greaterThan, multiply } from 'utils/bignumber';
-import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import { formatCollateralizationRatio, formatter, prettifyNumber } from 'utils/ui';
 import { getCurrency } from 'utils/cdp';
 import { decimalRules } from '../../styles/constants';
 const { long } = decimalRules;
@@ -156,11 +156,11 @@ const Withdraw = ({ vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
+          body={`${prettifyNumber(collateralTypePrice,false,null,false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice)} USD/${symbol}`}
+          body={`${prettifyNumber(liquidationPrice,false,null,false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

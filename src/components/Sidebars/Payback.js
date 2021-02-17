@@ -12,7 +12,7 @@ import useWalletBalances from 'hooks/useWalletBalances';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useLanguage from 'hooks/useLanguage';
 import useAnalytics from 'hooks/useAnalytics';
-import { formatter } from '../../utils/ui';
+import { formatter, prettifyNumber } from '../../utils/ui';
 import { subtract, greaterThan, equalTo, minimum } from '../../utils/bignumber';
 
 import Info from './shared/Info';
@@ -175,9 +175,7 @@ const Payback = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(liquidationPrice, {
-            infinity: BigNumber(0).toFixed(medium)
-          })} USD/${symbol}`}
+          body={`${prettifyNumber(liquidationPrice,false,null,false)} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}
