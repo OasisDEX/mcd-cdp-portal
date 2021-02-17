@@ -56,39 +56,48 @@ const iconsByToken = {
 
 const UniPairIconStyle = styled.div`
   display: inline-block;
-  
+  position: relative;
+
+  .base,
+  .quote {
+    width: 66.6%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .base {
     z-index: 2;
+    left: 0;
   }
-  
+
   .quote {
-    display: inline-block;
-    position: relative;
-    transform: translateX(-50%);
     z-index: 1;
+    right: 0;
   }
 
   .stamp {
     position: absolute;
-    top: -35%;
-    left: 50%;
+    top: -5%;
+    right: -15%;
     z-index: 3;
   }
 `;
 
 const UniPairIcon = ({ pair, size }) => {
-  const scaleToken = 0.615;
   const scaleUniStamp = 0.42;
   const BaseIcon = iconsByToken[pair[0]];
   const QuoteIcon = iconsByToken[pair[1]];
 
   return (
-    <UniPairIconStyle style={{height: `${size}px`}}>
-      <BaseIcon className="base" width={size * scaleToken} height={size * scaleToken} />
-      <div className="quote">
-        <QuoteIcon width={size * scaleToken} height={size * scaleToken} />
-        <UniPairStamp className="stamp" width={size * scaleUniStamp} height={size * scaleUniStamp}/>
-      </div>
+    <UniPairIconStyle style={{ height: `${size}px`, width: `${size}px` }}>
+      <BaseIcon className="base" />
+      <QuoteIcon className="quote" />
+      <UniPairStamp
+        className="stamp"
+        width={size * scaleUniStamp}
+        height={size * scaleUniStamp}
+      />
     </UniPairIconStyle>
   );
 };
