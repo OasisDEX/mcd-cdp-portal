@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styled from 'styled-components';
+
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as CompIcon } from 'images/oasis-tokens/comp.svg';
 import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
@@ -23,6 +25,8 @@ import { ReactComponent as AaveIcon } from 'images/oasis-tokens/aave.svg';
 import { ReactComponent as Univ2daiethIcon } from 'images/oasis-tokens/univ2daieth.svg';
 
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
+import { ReactComponent as UniPairStamp } from 'images/oasis-tokens/uni-pair-stamp.svg';
+
 import { parseUniPair } from 'utils/ui';
 
 const iconsByToken = {
@@ -50,14 +54,42 @@ const iconsByToken = {
   UNIV2DAIETH: Univ2daiethIcon
 };
 
+const UniPairIconStyle = styled.div`
+  display: inline-block;
+  
+  .base {
+    z-index: 2;
+  }
+  
+  .quote {
+    display: inline-block;
+    position: relative;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .stamp {
+    position: absolute;
+    top: -35%;
+    left: 50%;
+    z-index: 3;
+  }
+`;
+
 const UniPairIcon = ({ pair, size }) => {
-  const scale = 0.615;
+  const scaleToken = 0.615;
+  const scaleUniStamp = 0.42;
+  const BaseIcon = iconsByToken[pair[0]];
+  const QuoteIcon = iconsByToken[pair[1]];
 
   return (
-    <div style={{position: 'relative'}}>
-      <TokenIcon symbol={pair[0]} size={size * scale} />
-      <TokenIcon symbol={pair[1]} size={size * scale} />
-    </div>
+    <UniPairIconStyle style={{height: `${size}px`}}>
+      <BaseIcon className="base" width={size * scaleToken} height={size * scaleToken} />
+      <div className="quote">
+        <QuoteIcon width={size * scaleToken} height={size * scaleToken} />
+        <UniPairStamp className="stamp" width={size * scaleUniStamp} height={size * scaleUniStamp}/>
+      </div>
+    </UniPairIconStyle>
   );
 };
 
