@@ -23,6 +23,7 @@ import { ReactComponent as AaveIcon } from 'images/oasis-tokens/aave.svg';
 import { ReactComponent as Univ2daiethIcon } from 'images/oasis-tokens/univ2daieth.svg';
 
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
+import { parseUniPair } from 'utils/ui';
 
 const iconsByToken = {
   BAT: BatIcon,
@@ -49,7 +50,22 @@ const iconsByToken = {
   UNIV2DAIETH: Univ2daiethIcon
 };
 
+const UniPairIcon = ({ pair, size }) => {
+  const scale = 0.615;
+
+  return (
+    <div style={{position: 'relative'}}>
+      <TokenIcon symbol={pair[0]} size={size * scale} />
+      <TokenIcon symbol={pair[1]} size={size * scale} />
+    </div>
+  );
+};
+
 const TokenIcon = ({ symbol, size = 70, ...props }) => {
+  const uniPair = parseUniPair(symbol, Object.keys(iconsByToken));
+  if (uniPair) {
+    return <UniPairIcon pair={uniPair} size={size} />;
+  }
   const Icon = iconsByToken[symbol.toUpperCase()] || DefaultIcon;
 
   return <Icon width={size} height={size} {...props} />;
