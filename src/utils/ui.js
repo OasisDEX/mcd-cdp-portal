@@ -222,3 +222,17 @@ export const formatCurrencyValue = ({
 export function formatter(target, options = {}) {
   return formatCurrencyValue({ value: target, ...options });
 }
+
+function splitAtIndex(value, index) {
+  return [value.substring(0, index), value.substring(index)];
+}
+
+export function parseUniPair(symbol, possibleTokens) {
+  if (!symbol.startsWith('UNIV2') || symbol.length < 11) {
+    return null;
+  }
+  const baseAndQuote = symbol.substring(5);
+  return [...Array(baseAndQuote.length - 5).keys()]
+    .map(index => splitAtIndex(baseAndQuote, index + 3))
+    .find(pair => pair.every(t => possibleTokens.includes(t)));
+}

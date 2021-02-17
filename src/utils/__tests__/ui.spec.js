@@ -1,5 +1,9 @@
 import ReactDOMServer from 'react-dom/server';
-import { formatEventDescription, firstLetterLowercase } from '../ui';
+import {
+  formatEventDescription,
+  firstLetterLowercase,
+  parseUniPair
+} from '../ui';
 import lang from '../../languages';
 
 export const mockEventDataFromSDK = [
@@ -143,4 +147,31 @@ test('formatEventDescription', () => {
 
 test('firstLetterLowercase', () => {
   expect(firstLetterLowercase('Word')).toBe('word');
+});
+
+test('parseUniPair works', () => {
+  const tokens = ['ETH', 'DAI', 'BAL', 'RENBTC', 'PAXUSD'];
+  const pair1 = parseUniPair('UNIV2ETHDAI', tokens);
+  expect(pair1[0]).toEqual('ETH');
+  expect(pair1[1]).toEqual('DAI');
+
+  const pair2 = parseUniPair('UNIV2BALRENBTC', tokens);
+  expect(pair2[0]).toEqual('BAL');
+  expect(pair2[1]).toEqual('RENBTC');
+
+  const pair3 = parseUniPair('UNIV2PAXUSDRENBTC', tokens);
+  expect(pair3[0]).toEqual('PAXUSD');
+  expect(pair3[1]).toEqual('RENBTC');
+
+  const pairNotFound = parseUniPair('UNIV2FOOBAR', tokens);
+  expect(pairNotFound).toBeFalsy();
+
+  const pairNotFound2 = parseUniPair('UNIV2ETHXXDAI', tokens);
+  expect(pairNotFound2).toBeFalsy();
+
+  const notLongEnough = parseUniPair('UNIV2ETHDA', tokens);
+  expect(notLongEnough).toBeFalsy();
+
+  const justWrong = parseUniPair('HELLOTHERE', tokens);
+  expect(justWrong).toBeFalsy();
 });
