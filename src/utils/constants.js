@@ -70,8 +70,7 @@ export const TokenNames = {
   GUSD: 'Gemini Dollar',
   UNI: 'Uniswap',
   RENBTC: 'renBTC',
-  AAVE: 'Aave',
-  UNIV2DAIETH: 'Uniswap V2 DAI/ETH'
+  AAVE: 'Aave'
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
