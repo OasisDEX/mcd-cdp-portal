@@ -49,20 +49,6 @@ const iconsByToken = {
   UNIV2DAIETH: Univ2daiethIcon
 };
 
-function splitAtIndex(value, index) {
-  return [value.substring(0, index), value.substring(index)];
-}
-
-export function parseUniPair(symbol) {
-  if (!symbol.startsWith('UNIV2') || symbol.length < 11) {
-    return null;
-  }
-  const baseAndQuote = symbol.substring(5);
-  return [...Array(baseAndQuote.length - 5).keys()]
-    .map(index => splitAtIndex(baseAndQuote, index + 3))
-    .find(symbols => symbols.every(s => iconsByToken[s]));
-}
-
 const TokenIcon = ({ symbol, size = 70, ...props }) => {
   const Icon = iconsByToken[symbol.toUpperCase()] || DefaultIcon;
 
