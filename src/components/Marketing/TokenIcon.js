@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styled from 'styled-components';
+
 import { ReactComponent as BatIcon } from 'images/oasis-tokens/bat.svg';
 import { ReactComponent as CompIcon } from 'images/oasis-tokens/comp.svg';
 import { ReactComponent as DaiIcon } from 'images/oasis-tokens/dai.svg';
@@ -20,9 +22,11 @@ import { ReactComponent as GusdIcon } from 'images/oasis-tokens/gusd.svg';
 import { ReactComponent as UniIcon } from 'images/oasis-tokens/uni.svg';
 import { ReactComponent as RenbtcIcon } from 'images/oasis-tokens/renbtc.svg';
 import { ReactComponent as AaveIcon } from 'images/oasis-tokens/aave.svg';
-import { ReactComponent as Univ2daiethIcon } from 'images/oasis-tokens/univ2daieth.svg';
 
 import { ReactComponent as DefaultIcon } from 'images/oasis-tokens/default.svg';
+import { ReactComponent as UniPairStamp } from 'images/oasis-tokens/uni-pair-stamp.svg';
+
+import { parseUniPair } from 'utils/ui';
 
 const iconsByToken = {
   BAT: BatIcon,
@@ -45,11 +49,62 @@ const iconsByToken = {
   GUSD: GusdIcon,
   UNI: UniIcon,
   RENBTC: RenbtcIcon,
-  AAVE: AaveIcon,
-  UNIV2DAIETH: Univ2daiethIcon
+  AAVE: AaveIcon
+};
+
+const UniPairIconStyle = styled.div`
+  display: inline-block;
+  position: relative;
+
+  .base,
+  .quote {
+    width: 66.6%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .base {
+    z-index: 2;
+    left: 0;
+  }
+
+  .quote {
+    z-index: 1;
+    right: 0;
+  }
+
+  .stamp {
+    position: absolute;
+    top: -5%;
+    right: -15%;
+    z-index: 3;
+  }
+`;
+
+const UniPairIcon = ({ pair, size }) => {
+  const scaleUniStamp = 0.42;
+  const BaseIcon = iconsByToken[pair[0]];
+  const QuoteIcon = iconsByToken[pair[1]];
+
+  return (
+    <UniPairIconStyle style={{ height: `${size}px`, width: `${size}px` }}>
+      <BaseIcon className="base" />
+      <QuoteIcon className="quote" />
+      <UniPairStamp
+        className="stamp"
+        width={size * scaleUniStamp}
+        height={size * scaleUniStamp}
+      />
+    </UniPairIconStyle>
+  );
 };
 
 const TokenIcon = ({ symbol, size = 70, ...props }) => {
+  const uniPair = parseUniPair(symbol, Object.keys(iconsByToken));
+  if (uniPair) {
+    return <UniPairIcon pair={uniPair} size={size} />;
+  }
   const Icon = iconsByToken[symbol.toUpperCase()] || DefaultIcon;
 
   return <Icon width={size} height={size} {...props} />;

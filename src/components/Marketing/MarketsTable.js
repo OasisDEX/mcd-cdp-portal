@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Loader, Table, Text } from '@makerdao/ui-components-core';
 import BigNumber from 'bignumber.js';
 import { TokenIcon } from './index';
-import { prettifyNumber } from 'utils/ui';
+import { parseUniPair, prettifyNumber } from 'utils/ui';
 import Carat from '../Carat';
 import { getColor } from 'styles/theme';
 import useLanguage from 'hooks/useLanguage';
@@ -206,6 +206,14 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
           );
           const totalDaiAvailable = BigNumber.sum.apply(null, daiAvailableList);
 
+          const uniPair = parseUniPair(
+            gem,
+            Object.keys(cdpTypesByGem).concat(['DAI'])
+          );
+          const tokenName = uniPair
+            ? `Uniswap v2 ${uniPair[0]}/${uniPair[1]}`
+            : TokenNames[gem];
+
           return [
             <Table.tbody
               key={gem}
@@ -218,14 +226,12 @@ const MarketsTable = ({ cdpTypesList, ...props }) => {
                   <TokenIcon symbol={gem} size={31.67} />
                 </Table.td>
                 <Table.td>
-                  {TokenNames[gem] && (
+                  {tokenName && (
                     <Text display={{ s: 'none', m: 'inline' }} mr="8px">
-                      {TokenNames[gem]}
+                      {tokenName}
                     </Text>
                   )}
-                  <Text className={`gem ${TokenNames[gem] && 'dimmed'}`}>
-                    {gem}
-                  </Text>
+                  <Text className={`gem ${tokenName && 'dimmed'}`}>{gem}</Text>
                 </Table.td>
                 <Table.td>
                   <Number>

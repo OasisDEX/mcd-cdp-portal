@@ -32,19 +32,6 @@ jobs:
             # yarn test --coverage
             # npm i --no-save codecov
             # ./node_modules/.bin/codecov
-  deploy_staging:
-    docker:
-      - image: circleci/node:lts
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Deploy to Now
-          command: |
-            npm i --no-save now@16.7.3
-            ./scripts/now-deploy.sh
   deploy_aws_staging:
     docker:
       - image: circleci/node:lts
@@ -110,13 +97,6 @@ workflows:
       - test:
           requires:
             - install
-      - deploy_staging:
-          requires:
-            - test
-            - install
-          filters:
-            branches:
-              ignore: master
       - deploy_aws_staging:
           requires:
             - test
