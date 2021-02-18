@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { Text, Input, Grid, Button } from '@makerdao/ui-components-core';
-import { formatCollateralizationRatio, formatter } from 'utils/ui';
+import {
+  formatCollateralizationRatio,
+  formatter,
+  prettifyNumber
+} from 'utils/ui';
 import useValidatedInput from 'hooks/useValidatedInput';
 import useMaker from 'hooks/useMaker';
 import useLanguage from 'hooks/useLanguage';
@@ -207,7 +211,12 @@ const DepositAndGenerate = ({ vault, reset }) => {
             lang.action_sidebar.gem_usd_price_feed,
             symbol
           )}
-          body={`${formatter(collateralTypePrice)} USD/${symbol}`}
+          body={`${prettifyNumber(
+            collateralTypePrice,
+            false,
+            null,
+            false
+          )} USD`}
         />
         <Info
           title={lang.action_sidebar.maximum_available_to_generate}
@@ -215,9 +224,12 @@ const DepositAndGenerate = ({ vault, reset }) => {
         />
         <Info
           title={lang.action_sidebar.new_liquidation_price}
-          body={`${formatter(calculatedLiquidationPrice, {
-            infinity: BigNumber(0).toFixed(medium)
-          })} USD/${symbol}`}
+          body={`${prettifyNumber(
+            calculateLiquidationPrice,
+            false,
+            null,
+            false
+          )} USD`}
         />
         <Info
           title={lang.action_sidebar.new_collateralization_ratio}

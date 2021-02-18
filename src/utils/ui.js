@@ -48,19 +48,21 @@ export function prettifyNumber(
   let symbol = '';
   if (_num.symbol !== undefined) symbol += ' ' + cleanSymbol(_num.symbol);
   const num = parseFloat(_num.toString());
-  if (num > Number.MAX_SAFE_INTEGER) return 'NUMBER TOO BIG';
+  if (num > Number.MAX_SAFE_INTEGER) return '-';
   let formattedNumber;
   if (truncate) {
     if (num > 999999999999) formattedNumber = (num / 1000000).toFixed(2) + 'T';
-    if (num > 999999999) formattedNumber = (num / 1000000).toFixed(2) + 'B';
-    if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
-    if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
-    if (num < 1) formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
-    if (num < 0.001)
+    else if (num > 999999999)
+      formattedNumber = (num / 1000000).toFixed(2) + 'B';
+    else if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
+    else if (num > 999) formattedNumber = (num / 1000).toFixed(2) + 'K';
+    else if (num < 1)
+      formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(4);
+    else if (num < 0.001)
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(6);
-    if (num < 0.00001)
+    else if (num < 0.00001)
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(8);
-    if (num < 0.0000001)
+    else if (num < 0.0000001)
       formattedNumber = num === 0 ? num.toFixed(2) : num.toFixed(10);
     else formattedNumber = num.toFixed(decimalPlaces);
   } else {
@@ -69,8 +71,10 @@ export function prettifyNumber(
     if (num < 0.00001 && num !== 0) decimalPlaces = 8;
     if (num < 0.0000001 && num !== 0) decimalPlaces = 10;
     else if (decimalPlaces == null && num < 999999999) decimalPlaces = 2;
+
     formattedNumber = num.toLocaleString(lang, {
-      minimumFractionDigits: decimalPlaces
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionalDigital: decimalPlaces
     });
   }
   return keepSymbol ? formattedNumber + symbol : formattedNumber;
