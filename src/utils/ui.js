@@ -52,7 +52,7 @@ export function prettifyNumber(
   let formattedNumber;
   if (truncate) {
     if (num > 999999999999)
-      formattedNumber = (num / 1000000000).toFixed(2) + 'T';
+      formattedNumber = (num / 1000000000000).toFixed(2) + 'T';
     else if (num > 999999999)
       formattedNumber = (num / 1000000000).toFixed(2) + 'B';
     else if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
