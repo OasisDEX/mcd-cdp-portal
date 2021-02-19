@@ -51,7 +51,8 @@ export function prettifyNumber(
   if (num > Number.MAX_SAFE_INTEGER) return '-';
   let formattedNumber;
   if (truncate) {
-    if (num > 999999999999) formattedNumber = (num / 1000000000).toFixed(2) + 'T';
+    if (num > 999999999999)
+      formattedNumber = (num / 1000000000).toFixed(2) + 'T';
     else if (num > 999999999)
       formattedNumber = (num / 1000000000).toFixed(2) + 'B';
     else if (num > 999999) formattedNumber = (num / 1000000).toFixed(2) + 'M';
