@@ -29,7 +29,7 @@ import BigNumber from 'bignumber.js';
 import NextPriceLiquidation from '../NotificationContent/NextPriceLiquidatation';
 import useOraclePrices from 'hooks/useOraclePrices';
 import { fromRad } from '@makerdao/dai/dist/src/utils/conversion';
-import { DAI } from '@makerdao/dai-plugin-mcd'
+import { DAI } from '@makerdao/dai-plugin-mcd';
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
@@ -47,7 +47,7 @@ export default function({
   const { emergencyShutdownActive } = useEmergencyShutdown();
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
-    ownerAddress, 
+    ownerAddress,
     collateralAmount,
     collateralValue,
     collateralizationRatio: rawCollateralizationRatio,
@@ -260,24 +260,23 @@ export default function({
   }, [isOwner, account, vault, unlockedCollateral]);
 
   useEffect(() => {
-
-    const reclaimDAI = async (daiAmount) => {
+    const reclaimDAI = async daiAmount => {
       const txObject = maker
-            .service('mcd:cdpManager')
-            .draw(vault.id, vaultType, daiAmount);
+        .service('mcd:cdpManager')
+        .draw(vault.id, vaultType, daiAmount);
       await txObject;
       deleteNotifications([NotificationList.CLAIM_DAI]);
     };
 
     (async () => {
-
-      const daiSentToUrn = DAI(fromRad(await maker.service('mcd:systemData').vat.dai(vaultAddress)))
-      console.log(daiSentToUrn)
+      const daiSentToUrn = DAI(
+        fromRad(await maker.service('mcd:systemData').vat.dai(vaultAddress))
+      );
+      console.log(daiSentToUrn);
       if (isOwner && daiSentToUrn.gt(0)) {
         const claimDaiNotification = lang.formatString(
           lang.notifications.claim_dai,
-          daiSentToUrn &&
-            prettifyNumber(daiSentToUrn, false, null, false),
+          daiSentToUrn && prettifyNumber(daiSentToUrn, false, null, false)
         );
 
         addNotification({
@@ -289,8 +288,8 @@ export default function({
           onClick: () => reclaimDAI(daiSentToUrn)
         });
       }
-    })()
-    
+    })();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vault]);
 
