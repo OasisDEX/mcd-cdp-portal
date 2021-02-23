@@ -36,7 +36,6 @@ export const FeatureFlags = {
 
 export const NotificationList = {
   CLAIM_COLLATERAL: { name: 'claimCollateral', priority: 2 },
-  CLAIM_DAI: { name: 'claimDAI', priority: 2 },
   NON_VAULT_OWNER: { name: 'nonVaultOwner', priority: 1 },
   NON_OVERVIEW_OWNER: { name: 'nonOverviewOwner', priority: 1 },
   EMERGENCY_SHUTDOWN_ACTIVE: { name: 'emergencyShutdownActive', priority: 1 },
