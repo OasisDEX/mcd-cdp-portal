@@ -28,6 +28,8 @@ import { formatter, prettifyNumber } from 'utils/ui';
 import BigNumber from 'bignumber.js';
 import NextPriceLiquidation from '../NotificationContent/NextPriceLiquidatation';
 import useOraclePrices from 'hooks/useOraclePrices';
+import { fromRad } from '@makerdao/dai/dist/src/utils/conversion';
+import { DAI } from '@makerdao/dai-plugin-mcd'
 const log = debug('maker:CDPDisplay/Presentation');
 const { FF_VAULT_HISTORY } = FeatureFlags;
 
@@ -45,6 +47,7 @@ export default function({
   const { emergencyShutdownActive } = useEmergencyShutdown();
   const { trackBtnClick } = useAnalytics('CollateralView');
   let {
+    ownerAddress, 
     collateralAmount,
     collateralValue,
     collateralizationRatio: rawCollateralizationRatio,
@@ -54,7 +57,8 @@ export default function({
     liquidationRatio,
     minSafeCollateralAmount,
     debtValue,
-    debtFloor
+    debtFloor,
+    vaultAddress
   } = vault;
 
   log(`Rendering vault #${vault.id}`);
@@ -254,6 +258,41 @@ export default function({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOwner, account, vault, unlockedCollateral]);
+
+  useEffect(() => {
+
+    const reclaimDAI = async (daiAmount) => {
+      const txObject = maker
+            .service('mcd:cdpManager')
+            .draw(vault.id, vaultType, daiAmount);
+      await txObject;
+      deleteNotifications([NotificationList.CLAIM_DAI]);
+    };
+
+    (async () => {
+
+      const daiSentToUrn = DAI(fromRad(await maker.service('mcd:systemData').vat.dai(vaultAddress)))
+      console.log(daiSentToUrn)
+      if (isOwner && daiSentToUrn.gt(0)) {
+        const claimDaiNotification = lang.formatString(
+          lang.notifications.claim_dai,
+          daiSentToUrn &&
+            prettifyNumber(daiSentToUrn, false, null, false),
+        );
+
+        addNotification({
+          id: NotificationList.CLAIM_DAI,
+          content: claimDaiNotification,
+          level: SAFETY_LEVELS.WARNING,
+          hasButton: isOwner,
+          buttonLabel: lang.notifications.claim,
+          onClick: () => reclaimDAI(daiSentToUrn)
+        });
+      }
+    })()
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vault]);
 
   useEffect(() => {
     if (isOwner && vaultUnderDustLimit) {
