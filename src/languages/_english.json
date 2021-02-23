@@ -587,6 +587,7 @@
   "notifications": {
     "claim": "Claim",
     "claim_collateral": "Your {0} Vault auction(s) have completed. You have {1} {2} to claim",
+    "claim_dai": "You have {0} DAI to claim",
     "non_vault_owner": "The owner of this position ({0}) does not match the connected wallet address",
     "non_overview_owner": "You are currently viewing the Overview of another address ({0})",
     "non_savings_owner": "You are currently viewing the savings of another address ({0})",
