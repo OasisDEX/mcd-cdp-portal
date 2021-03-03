@@ -68,7 +68,8 @@
     "UNIV2LINKETH",
     "UNIV2UNIETH",
     "UNIV2WBTCDAI",
-    "UNIV2AAVEETH"
+    "UNIV2AAVEETH",
+    "UNIV2DAIUSDT"
   ],
   "trackingPages": {
     "Overview": "Overview",
