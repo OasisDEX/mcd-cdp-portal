@@ -14,8 +14,9 @@ export default function useCdpTypes() {
 
   const cdpTypesWithNonZeroDebtCeilings = Object.entries(ceilings).reduce(
     (acc, [type, ceiling]) => {
-      if (ceiling.gt(0)) return [...acc, type];
-      return acc;
+      //if (ceiling.gt(0)) return [...acc, type];
+      //return acc;
+      return [...acc, type];
     },
     []
   );
