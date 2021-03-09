@@ -108,7 +108,7 @@ function TradeLanding() {
       extraLegalLinks={[
         {
           url:
-            'https://github.com/makerdao/oasis-landing/raw/master/static/Oasis%20Trade%20Digital%20Asset%20Assessment%20Framework.pdf',
+            'https://github.com/OasisDEX/OasisTradeDigitalAssessmentFramework/raw/main/Oasis%20Trade%20Digital%20Asset%20Assessment%20Framework.pdf',
           text: 'Asset Ass. Framework'
         }
       ]}
