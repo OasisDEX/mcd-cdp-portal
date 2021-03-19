@@ -5,18 +5,19 @@ import { MakerObjectContext } from '../providers/MakerProvider';
 
 export default function useCdpTypes() {
   const { network } = useContext(MakerObjectContext);
+
   const types = ilks.filter(ilk => ilk.networks.includes(network));
+  const debtAvailableList = watch.collateralDebtAvailableList(types.map(type => type.symbol))
   const ceilings = watch.collateralDebtCeilings(types.map(type => type.symbol));
 
-  if (!ceilings) {
+  if (!ceilings || !debtAvailableList) {
     return { cdpTypes: [], cdpTypesList: [], gemTypeList: [] };
   }
 
   const cdpTypesWithNonZeroDebtCeilings = Object.entries(ceilings).reduce(
     (acc, [type, ceiling]) => {
-      //if (ceiling.gt(0)) return [...acc, type];
-      //return acc;
-      return [...acc, type];
+      if (ceiling.gt(0) && debtAvailableList[type].gt(0)) return [...acc, type];
+      return acc;
     },
     []
   );
