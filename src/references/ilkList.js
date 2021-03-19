@@ -48,6 +48,14 @@ export default [
     networks: ['kovan', 'mainnet']
   },
   {
+    slug: 'eth-c',
+    symbol: 'ETH-C',
+    key: 'ETH-C',
+    gem: 'ETH',
+    currency: ETH,
+    networks: ['kovan', 'mainnet']
+  },
+  {
     slug: 'bat-a',
     symbol: 'BAT-A',
     key: 'BAT-A',
