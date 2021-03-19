@@ -7,7 +7,9 @@ export default function useCdpTypes() {
   const { network } = useContext(MakerObjectContext);
 
   const types = ilks.filter(ilk => ilk.networks.includes(network));
-  const debtAvailableList = watch.collateralDebtAvailableList(types.map(type => type.symbol))
+  const debtAvailableList = watch.collateralDebtAvailableList(
+    types.map(type => type.symbol)
+  );
   const ceilings = watch.collateralDebtCeilings(types.map(type => type.symbol));
 
   if (!ceilings || !debtAvailableList) {
