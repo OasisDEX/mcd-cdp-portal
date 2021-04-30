@@ -15,6 +15,7 @@ import styled from 'styled-components';
 import useEmergencyShutdown from 'hooks/useEmergencyShutdown';
 import { NotificationList } from 'utils/constants';
 import useLanguage from 'hooks/useLanguage';
+import { ReactComponent as ArrowIcon } from 'images/arrow.svg';
 
 const ButtonBackgroundWrapper = styled.div`
   background-color: #fff;
@@ -41,8 +42,21 @@ function Globals({ children }) {
     emergencyShutdownActive,
     emergencyShutdownTime
   } = useEmergencyShutdown();
-
+  
   useEffect(() => {
+    addNotification({
+      id: NotificationList.NEW_BORROW_REDIRECT,
+      content: <Box py="20px">
+      <Text fontWeight="bold">{
+        lang.formatString(
+          lang.go_to_new_borrow,
+          <Link href="https://blog.oasis.app" pr="10px"><Text fontWeight="bold">Read the blog <ArrowIcon/></Text></Link>,
+          <Link href="https://oasis.app/borrow" pl="10px"><Text fontWeight="bold">Visit the new Oasis <ArrowIcon/></Text></Link>
+        )
+      }</Text>
+               </Box>
+    })
+
     if (emergencyShutdownActive) {
       addNotification({
         id: NotificationList.EMERGENCY_SHUTDOWN_ACTIVE,
@@ -71,7 +85,7 @@ function Globals({ children }) {
     }
 
     return () =>
-      deleteNotifications([NotificationList.EMERGENCY_SHUTDOWN_ACTIVE]);
+    deleteNotifications([NotificationList.EMERGENCY_SHUTDOWN_ACTIVE, NotificationList.NEW_BORROW_REDIRECT]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emergencyShutdownActive, emergencyShutdownTime]);
 

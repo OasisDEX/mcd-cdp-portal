@@ -1,4 +1,5 @@
 {
+  "go_to_new_borrow": "The new Oasis Borrow is live! {0} | {1}",
   "cdp_page": {
     "liquidation_price": "Liquidation price",
     "collateralization_ratio": "Collateralization ratio",

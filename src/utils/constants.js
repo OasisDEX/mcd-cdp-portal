@@ -42,7 +42,9 @@ export const NotificationList = {
   VAULT_BELOW_NEXT_PRICE: { name: 'vaultBelowNextPrice', priority: 2 },
   VAULT_BELOW_CURRENT_PRICE: { name: 'vaultBelowCurrentPrice', priority: 1 },
   VAULT_IS_LIQUIDATED: { name: 'vaultIsLiquidated', priority: 1 },
-  VAULT_UNDER_DUST: { name: 'vaultUnderDust', priority: 1 }
+  VAULT_UNDER_DUST: { name: 'vaultUnderDust', priority: 1 },
+  NEW_BORROW_REDIRECT: { name: 'NEW_BORROW_REDIRECT', priority: 1 }
+
 };
 
 export const VendorErrors = {
