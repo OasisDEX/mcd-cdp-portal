@@ -86,7 +86,7 @@ jobs:
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 
-            aws --profile default s3 sync build s3://$AWS_BUCKET_NAME/borrow/ --delete --exclude 'trade/*' --exclude 'expired/*'
+            aws --profile default s3 sync build s3://$AWS_BUCKET_NAME/borrow-old/ --delete --exclude 'trade/*' --exclude 'expired/*'
             aws --profile default cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
 
 workflows:
