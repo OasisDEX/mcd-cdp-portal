@@ -17,17 +17,7 @@ import {
   GUSD,
   UNI,
   RENBTC,
-  AAVE,
-  UNIV2DAIETH,
-  UNIV2WBTCETH,
-  UNIV2USDCETH,
-  UNIV2DAIUSDC,
-  UNIV2ETHUSDT,
-  UNIV2LINKETH,
-  UNIV2UNIETH,
-  UNIV2WBTCDAI,
-  UNIV2AAVEETH,
-  UNIV2DAIUSDT
+  AAVE
 } from '@makerdao/dai-plugin-mcd';
 
 export default [
@@ -210,85 +200,5 @@ export default [
     gem: 'AAVE',
     currency: AAVE,
     networks: ['mainnet', 'kovan']
-  },
-  {
-    slug: 'univ2daieth-a',
-    symbol: 'UNIV2DAIETH-A',
-    key: 'UNIV2DAIETH-A',
-    gem: 'UNIV2DAIETH',
-    currency: UNIV2DAIETH,
-    networks: ['mainnet', 'kovan']
-  },
-  {
-    slug: 'univ2wbtceth-a',
-    symbol: 'UNIV2WBTCETH-A',
-    key: 'UNIV2WBTCETH-A',
-    gem: 'UNIV2WBTCETH',
-    currency: UNIV2WBTCETH,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2daiusdc-a',
-    symbol: 'UNIV2DAIUSDC-A',
-    key: 'UNIV2DAIUSDC-A',
-    gem: 'UNIV2DAIUSDC',
-    currency: UNIV2DAIUSDC,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2usdceth-a',
-    symbol: 'UNIV2USDCETH-A',
-    key: 'UNIV2USDCETH-A',
-    gem: 'UNIV2USDCETH',
-    currency: UNIV2USDCETH,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2ethusdt-a',
-    symbol: 'UNIV2ETHUSDT-A',
-    key: 'UNIV2ETHUSDT-A',
-    gem: 'UNIV2ETHUSDT',
-    currency: UNIV2ETHUSDT,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2linketh-a',
-    symbol: 'UNIV2LINKETH-A',
-    key: 'UNIV2LINKETH-A',
-    gem: 'UNIV2LINKETH',
-    currency: UNIV2LINKETH,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2unieth-a',
-    symbol: 'UNIV2UNIETH-A',
-    key: 'UNIV2UNIETH-A',
-    gem: 'UNIV2UNIETH',
-    currency: UNIV2UNIETH,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2wbtcdai-a',
-    symbol: 'UNIV2WBTCDAI-A',
-    key: 'UNIV2WBTCDAI-A',
-    gem: 'UNIV2WBTCDAI',
-    currency: UNIV2WBTCDAI,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2aaveeth-a',
-    symbol: 'UNIV2AAVEETH-A',
-    key: 'UNIV2AAVEETH-A',
-    gem: 'UNIV2AAVEETH',
-    currency: UNIV2AAVEETH,
-    networks: ['mainnet']
-  },
-  {
-    slug: 'univ2daiusdt-a',
-    symbol: 'UNIV2DAIUSDT-A',
-    key: 'UNIV2DAIUSDT-A',
-    gem: 'UNIV2DAIUSDT',
-    currency: UNIV2DAIUSDT,
-    networks: ['mainnet']
   }
-];
+ ];
