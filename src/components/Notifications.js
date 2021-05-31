@@ -51,7 +51,11 @@ function Globals({ children }) {
           <Text fontWeight="bold">
             {lang.formatString(
               lang.go_to_new_borrow,
-              <Link href="https://blog.oasis.app" pr="10px">
+              <Link
+                pl="20px"
+                href="https://blog.oasis.app/introducing-the-redesigned-oasis-borrow/"
+                pr="10px"
+              >
                 <Text fontWeight="bold">
                   Read the blog <ArrowIcon />
                 </Text>

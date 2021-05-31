@@ -1,20 +1,20 @@
 {
   "supportedNetworkIds": ["1337", "999", "5", "4", "3", "42", "1"],
   "rpcUrls": {
-    "1": "https://mainnet.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "https://kovan.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "3": "https://ropsten.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "4": "https://rinkeby.infura.io/v3/58073b4a32df4105906c702f167b91d2",
-    "5": "https://goerli.infura.io/v3/58073b4a32df4105906c702f167b91d2",
+    "1": "https://mainnet.infura.io/v3/516f946979bc4fa187edcdc164e0bac0",
+    "42": "https://kovan.infura.io/v3/516f946979bc4fa187edcdc164e0bac0",
+    "3": "https://ropsten.infura.io/v3/516f946979bc4fa187edcdc164e0bac0",
+    "4": "https://rinkeby.infura.io/v3/516f946979bc4fa187edcdc164e0bac0",
+    "5": "https://goerli.infura.io/v3/516f946979bc4fa187edcdc164e0bac0",
     "999": "http://localhost:2000",
     "1337": "http://localhost:2000"
   },
   "wsRpcUrls": {
-    "1": "wss://mainnet.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "42": "wss://kovan.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "3": "wss://ropsten.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "4": "wss://rinkeby.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2",
-    "5": "wss://goerli.infura.io/ws/v3/58073b4a32df4105906c702f167b91d2"
+    "1": "wss://mainnet.infura.io/ws/v3/516f946979bc4fa187edcdc164e0bac0",
+    "42": "wss://kovan.infura.io/ws/v3/516f946979bc4fa187edcdc164e0bac0",
+    "3": "wss://ropsten.infura.io/ws/v3/516f946979bc4fa187edcdc164e0bac0",
+    "4": "wss://rinkeby.infura.io/ws/v3/516f946979bc4fa187edcdc164e0bac0",
+    "5": "wss://goerli.infura.io/ws/v3/516f946979bc4fa187edcdc164e0bac0"
   },
   "networkNames": {
     "1": "mainnet",
@@ -59,17 +59,7 @@
     "GUSD",
     "UNI",
     "RENBTC",
-    "AAVE",
-    "UNIV2DAIETH",
-    "UNIV2WBTCETH",
-    "UNIV2USDCETH",
-    "UNIV2DAIUSDC",
-    "UNIV2ETHUSDT",
-    "UNIV2LINKETH",
-    "UNIV2UNIETH",
-    "UNIV2WBTCDAI",
-    "UNIV2AAVEETH",
-    "UNIV2DAIUSDT"
+    "AAVE"
   ],
   "trackingPages": {
     "Overview": "Overview",
