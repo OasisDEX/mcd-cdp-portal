@@ -88,7 +88,7 @@ jobs:
 
             aws --profile default s3 sync build s3://$AWS_BUCKET_NAME/borrow-old/ --delete --exclude 'trade/*' --exclude 'expired/*'
             aws --profile default cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
-  deploy_oasis_prod:
+  deploy_new_oasis_prod:
     docker:
       - image: circleci/node:lts
     resource_class: large
@@ -138,7 +138,7 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy_oasis_prod:
+      - deploy_new_oasis_prod:
           requires:
             - install
           filters:
