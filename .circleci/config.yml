@@ -81,13 +81,13 @@ jobs:
             pip install --upgrade --user awscli
             export PATH=$HOME/.local/bin:$PATH
 
-            aws configure set default.region $AWS_REGION
+            aws configure set default.region $OAZO_PROD_AWS_REGION
             aws configure set default.output json
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set aws_access_key_id $OAZO_PROD_AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $OAZO_PROD_AWS_SECRET_ACCESS_KEY
 
-            aws --profile default s3 sync build s3://$AWS_BUCKET_NAME/borrow-old/ --delete --exclude 'trade/*' --exclude 'expired/*'
-            aws --profile default cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
+            aws --profile default s3 sync build s3://$OAZO_PROD_AWS_BUCKET_NAME/borrow-old/ --delete --exclude 'trade/*' --exclude 'expired/*'
+            aws --profile default cloudfront create-invalidation --distribution-id $OAZO_PROD_AWS_CF_ID --paths "/*"
 
 workflows:
   version: 2
