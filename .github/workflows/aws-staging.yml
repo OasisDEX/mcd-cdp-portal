@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - cicd-migration
+      - develop
 
 name: Deploy to AWS Staging
 
