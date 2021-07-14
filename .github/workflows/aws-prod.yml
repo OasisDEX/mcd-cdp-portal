@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Deploy to AWS Production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-1
+      S3_BUCKET: oasis-trade-borrow
+      CF_DISTRIBUTION_ID: E1WAM5PXGL64FP
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup Node Version
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          '**/node_modules'
+        key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Build artifact
+      run: CI=false yarn build
+
+    - name: Set AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Deploy to S3
+      run: |
+        aws s3 sync ./build s3://${{ env.S3_BUCKET }}/borrow-old/ --delete --exclude 'trade/*' --exclude 'expired/*'
+
+    - name: Invalidate CloudFront
+      run: aws cloudfront create-invalidation --distribution-id ${{ env.CF_DISTRIBUTION_ID }} --paths "/borrow-old"
+
