@@ -19,7 +19,7 @@ const config = {
       config: {
         debug: true,
         ip: false,
-        api_host: 'https://mpp.oazolabs.xyz'
+        api_host: 'https://mpp.staging.oasis.app'
       }
     },
     gaTrackingId: 'UA-128164213-4',
@@ -30,7 +30,7 @@ const config = {
   prod: {
     mixpanel: {
       token: 'eceaac79053a2f9538c8e404607c44f0',
-      config: { ip: false, api_host: 'https://mpp.oazolabs.xyz' }
+      config: { ip: false, api_host: 'https://mpp.oasis.app' }
     },
     gaTrackingId: 'UA-128164213-3',
     userSnap: {
