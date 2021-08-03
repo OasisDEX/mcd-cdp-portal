@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - master
 
 name: Deploy to AWS Production
 
@@ -52,5 +52,3 @@ jobs:
 
     - name: Invalidate CloudFront
       run: aws cloudfront create-invalidation --distribution-id ${{ env.CF_DISTRIBUTION_ID }} --paths "/borrow-old"
-
-
