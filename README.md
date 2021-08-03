@@ -1,6 +1,7 @@
 # Oasis Borrow/Save
 
-![Build Workflow](https://github.com/OasisDex/mcd-cdp-portal//actions/workflows/aws-staging.yml/badge.svg)
+
+![Build Workflow](https://github.com/OasisDex/mcd-cdp-portal//actions/workflows/aws-prod.yml/badge.svg)
 
 
 ## The official Maker dapp for managing Vaults and generating Dai
